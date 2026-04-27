@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_view_form_inherit_project_forecast" model="ir.ui.view">
+        <field name="name">project.view.form.inherit.project.forecast</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_time_managment']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

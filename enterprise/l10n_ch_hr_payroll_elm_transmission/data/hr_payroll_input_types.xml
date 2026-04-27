@@ -1,0 +1,1484 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- DO NOT MODIFY ANY RULE HERE UNDER ANY CIRCUMSTANCE BEFORE CONSULTATION WITH AN L10N_CH_HR_PAYROLL EXPERT-->
+<!-- Wage Types -->
+
+    <record id="l10n_ch_elm_input_WT_hours" model="hr.payslip.input.type">
+        <field name="name">Paid Hours</field>
+        <field name="code">WT_Hours</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_hours_100" model="hr.payslip.input.type">
+        <field name="name">Paid Overtime Hours (100%)</field>
+        <field name="code">WT_Overtime</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_hours_125" model="hr.payslip.input.type">
+        <field name="name">Paid Overtime Hours (125%)</field>
+        <field name="code">WT_Overtime_125</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_on_call_125" model="hr.payslip.input.type">
+        <field name="name">Paid On-call duty hours (125%)</field>
+        <field name="code">WT_on_call_125</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_night_110" model="hr.payslip.input.type">
+        <field name="name">Paid Nigh-Shift hours (110%)</field>
+        <field name="code">WT_night_110</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_hours_150" model="hr.payslip.input.type">
+        <field name="name">Paid Overtime Hours (150%)</field>
+        <field name="code">WT_Overtime_150</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+        <record id="l10n_ch_elm_input_WT_hours_200" model="hr.payslip.input.type">
+        <field name="name">Paid Overtime Hours (200%)</field>
+        <field name="code">WT_Overtime_200</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_lessons" model="hr.payslip.input.type">
+        <field name="name">Paid Lessons</field>
+        <field name="code">WT_Lesson_input</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_1000" model="hr.payslip.input.type">
+        <field name="name">(1000) Monthly Salary</field>
+        <field name="code">WT_1000</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+    
+    <record id="l10n_ch_elm_input_WT_1001" model="hr.payslip.input.type">
+        <field name="name">(1001) Monthly Salary Correction</field>
+        <field name="code">WT_1001</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_1005" model="hr.payslip.input.type">
+        <field name="name">(1005) Hourly Salary</field>
+        <field name="code">WT_1005</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_1006" model="hr.payslip.input.type">
+        <field name="name">(1006) Lesson Salary</field>
+        <field name="code">WT_1006</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1065" model="hr.payslip.input.type">
+        <field name="name">(1065) Overtime</field>
+        <field name="code">WT_1065</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_1061" model="hr.payslip.input.type">
+        <field name="name">(1061) Overtime 125%</field>
+        <field name="code">WT_1061</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_1066" model="hr.payslip.input.type">
+        <field name="name">(1066) Overtime 150%</field>
+        <field name="code">WT_1066</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_1068" model="hr.payslip.input.type">
+        <field name="name">(1068) Overtime 200%</field>
+        <field name="code">WT_1068</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_1067" model="hr.payslip.input.type">
+        <field name="name">(1067) Overtime after departure</field>
+        <field name="code">WT_1067</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_1010" model="hr.payslip.input.type">
+        <field name="name">(1010) Professional Fees</field>
+        <field name="code">WT_1010</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1015" model="hr.payslip.input.type">
+        <field name="name">(1015) Auxiliary wages</field>
+        <field name="code">WT_1015</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1016" model="hr.payslip.input.type">
+        <field name="name">(1016) Salary for working from home</field>
+        <field name="code">WT_1016</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1017" model="hr.payslip.input.type">
+        <field name="name">(1017) Salary for cleaning</field>
+        <field name="code">WT_1017</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1018" model="hr.payslip.input.type">
+        <field name="name">(1018) Salary by task</field>
+        <field name="code">WT_1018</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1020" model="hr.payslip.input.type">
+        <field name="name">(1020) Indemnity for absence</field>
+        <field name="code">WT_1020</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1021" model="hr.payslip.input.type">
+        <field name="name">(1021) Authorities and commissions</field>
+        <field name="code">WT_1021</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1030" model="hr.payslip.input.type">
+        <field name="name">(1030) Length-of-service allowance</field>
+        <field name="code">WT_1030</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1031" model="hr.payslip.input.type">
+        <field name="name">(1031) Function allowance</field>
+        <field name="code">WT_1031</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1032" model="hr.payslip.input.type">
+        <field name="name">(1032) Compensation for replacement</field>
+        <field name="code">WT_1032</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1033" model="hr.payslip.input.type">
+        <field name="name">(1033) Residence allowance</field>
+        <field name="code">WT_1033</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1034" model="hr.payslip.input.type">
+        <field name="name">(1034) Cost-of-living allowance</field>
+        <field name="code">WT_1034</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1040" model="hr.payslip.input.type">
+        <field name="name">(1040) Family cost-of-living allowance</field>
+        <field name="code">WT_1040</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1050" model="hr.payslip.input.type">
+        <field name="name">(1050) Housing allowance</field>
+        <field name="code">WT_1050</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1055" model="hr.payslip.input.type">
+        <field name="name">(1055) Travel allowance</field>
+        <field name="code">WT_1055</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1056" model="hr.payslip.input.type">
+        <field name="name">(1056) Transfer allowance</field>
+        <field name="code">WT_1056</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1060" model="hr.payslip.input.type">
+        <field name="name">(1060) Extra work</field>
+        <field name="code">WT_1060</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1070" model="hr.payslip.input.type">
+        <field name="name">(1070) Team Work Allowance</field>
+        <field name="code">WT_1070</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1071" model="hr.payslip.input.type">
+        <field name="name">(1071) On-call duty allowance</field>
+        <field name="code">WT_1071</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1072" model="hr.payslip.input.type">
+        <field name="name">(1072) Commitment allowance</field>
+        <field name="code">WT_1072</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1073" model="hr.payslip.input.type">
+        <field name="name">(1073) Sunday work allowance</field>
+        <field name="code">WT_1073</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1074" model="hr.payslip.input.type">
+        <field name="name">(1074) Compensation for inconvenience</field>
+        <field name="code">WT_1074</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1075" model="hr.payslip.input.type">
+        <field name="name">(1075) Night shift allowance</field>
+        <field name="code">WT_1075</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1076" model="hr.payslip.input.type">
+        <field name="name">(1076) Night work allowance</field>
+        <field name="code">WT_1076</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1100" model="hr.payslip.input.type">
+        <field name="name">(1100) Compensation for site inconvenience</field>
+        <field name="code">WT_1100</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1101" model="hr.payslip.input.type">
+        <field name="name">(1101) Compensation for arduous work</field>
+        <field name="code">WT_1101</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1102" model="hr.payslip.input.type">
+        <field name="name">(1102) Allowance for dirty work</field>
+        <field name="code">WT_1102</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1103" model="hr.payslip.input.type">
+        <field name="name">(1103) Dust allowance</field>
+        <field name="code">WT_1103</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1104" model="hr.payslip.input.type">
+        <field name="name">(1104) Compensation for underground work</field>
+        <field name="code">WT_1104</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1110" model="hr.payslip.input.type">
+        <field name="name">(1110) Advancement</field>
+        <field name="code">WT_1110</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1111" model="hr.payslip.input.type">
+        <field name="name">(1111) Bonus for drilling</field>
+        <field name="code">WT_1111</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1112" model="hr.payslip.input.type">
+        <field name="name">(1112) Tenacity bonus</field>
+        <field name="code">WT_1112</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1130" model="hr.payslip.input.type">
+        <field name="name">(1130) Commitment bonus</field>
+        <field name="code">WT_1130</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1131" model="hr.payslip.input.type">
+        <field name="name">(1131) Non-commitment indemnity</field>
+        <field name="code">WT_1131</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1160" model="hr.payslip.input.type">
+        <field name="name">(1160) Vacation compensation</field>
+        <field name="code">WT_1160</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1161" model="hr.payslip.input.type">
+        <field name="name">(1161) Compensation for public holidays</field>
+        <field name="code">WT_1161</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1162" model="hr.payslip.input.type">
+        <field name="name">(1162) Vacation payments</field>
+        <field name="code">WT_1162</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1163" model="hr.payslip.input.type">
+        <field name="name">(1163) Vacation payment after departure</field>
+        <field name="code">WT_1163</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1200" model="hr.payslip.input.type">
+        <field name="name">(1200) Thirteenth Month</field>
+        <field name="code">WT_1200</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_1205" model="hr.payslip.input.type">
+        <field name="name">(1205) Fourteenth Month</field>
+        <field name="code">WT_1205</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_1207" model="hr.payslip.input.type">
+        <field name="name">(1207) Thirteenth Month (Hourly)</field>
+        <field name="code">WT_1207</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_1208" model="hr.payslip.input.type">
+        <field name="name">(1208) Fourteenth Month (Hourly)</field>
+        <field name="code">WT_1208</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1202" model="hr.payslip.input.type">
+        <field name="name">(1202) Christmas Gratification</field>
+        <field name="code">WT_1202</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1204" model="hr.payslip.input.type">
+        <field name="name">(1204) Gratification</field>
+        <field name="code">WT_1204</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_1209" model="hr.payslip.input.type">
+        <field name="name">(1209) Previous year's bonus payment</field>
+        <field name="code">WT_1209</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_1210" model="hr.payslip.input.type">
+        <field name="name">(1210) Bonus</field>
+        <field name="code">WT_1210</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1211" model="hr.payslip.input.type">
+        <field name="name">(1211) Profit sharing</field>
+        <field name="code">WT_1211</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1212" model="hr.payslip.input.type">
+        <field name="name">(1212) Special allowance</field>
+        <field name="code">WT_1212</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1213" model="hr.payslip.input.type">
+        <field name="name">(1213) Success bonus</field>
+        <field name="code">WT_1213</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1214" model="hr.payslip.input.type">
+        <field name="name">(1214) Performance bonus</field>
+        <field name="code">WT_1214</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1215" model="hr.payslip.input.type">
+        <field name="name">(1215) Recognition bonus</field>
+        <field name="code">WT_1215</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1216" model="hr.payslip.input.type">
+        <field name="name">(1216) Incentive for improvement proposals</field>
+        <field name="code">WT_1216</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1217" model="hr.payslip.input.type">
+        <field name="name">(1217) Sales bonus</field>
+        <field name="code">WT_1217</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1218" model="hr.payslip.input.type">
+        <field name="name">(1218) Commission</field>
+        <field name="code">WT_1218</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1219" model="hr.payslip.input.type">
+        <field name="name">(1219) Attendance bonus</field>
+        <field name="code">WT_1219</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1230" model="hr.payslip.input.type">
+        <field name="name">(1230) Length of service gift</field>
+        <field name="code">WT_1230</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1231" model="hr.payslip.input.type">
+        <field name="name">(1231) Jubilee gift</field>
+        <field name="code">WT_1231</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1232" model="hr.payslip.input.type">
+        <field name="name">(1232) Loyalty bonus</field>
+        <field name="code">WT_1232</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1250" model="hr.payslip.input.type">
+        <field name="name">(1250) Damage prevention bonus</field>
+        <field name="code">WT_1250</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1299" model="hr.payslip.input.type">
+        <field name="name">(1299) Wages in the event of Maternity/Paternity Leave</field>
+        <field name="code">WT_1299</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1300" model="hr.payslip.input.type">
+        <field name="name">(1300) Wages in the event of an accident</field>
+        <field name="code">WT_1300</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1301" model="hr.payslip.input.type">
+        <field name="name">(1301) Wages in the event of illness</field>
+        <field name="code">WT_1301</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1302" model="hr.payslip.input.type">
+        <field name="name">(1302) Salary for military service/civil defense</field>
+        <field name="code">WT_1302</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1303" model="hr.payslip.input.type">
+        <field name="name">(1303) Training and development salary</field>
+        <field name="code">WT_1303</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1400" model="hr.payslip.input.type">
+        <field name="name">(1400) Severance pay (not subject to AHV)</field>
+        <field name="code">WT_1400</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1401" model="hr.payslip.input.type">
+        <field name="name">(1401) Severance pay (subject to AHV)</field>
+        <field name="code">WT_1401</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1410" model="hr.payslip.input.type">
+        <field name="name">(1410) Lump-sum retirement benefit</field>
+        <field name="code">WT_1410</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1411" model="hr.payslip.input.type">
+        <field name="name">(1411) Lump-sum benefit (subject to AHV)</field>
+        <field name="code">WT_1411</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1420" model="hr.payslip.input.type">
+        <field name="name">(1420) Payment of salary after death</field>
+        <field name="code">WT_1420</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1500" model="hr.payslip.input.type">
+        <field name="name">(1500) Board fees</field>
+        <field name="code">WT_1500</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1501" model="hr.payslip.input.type">
+        <field name="name">(1501) Board indemnity</field>
+        <field name="code">WT_1501</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1503" model="hr.payslip.input.type">
+        <field name="name">(1503) Director fees</field>
+        <field name="code">WT_1503</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1510" model="hr.payslip.input.type">
+        <field name="name">(1510) Directors' profit-sharing</field>
+        <field name="code">WT_1510</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1900" model="hr.payslip.input.type">
+        <field name="name">(1900) Free meals</field>
+        <field name="code">WT_1900</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1901" model="hr.payslip.input.type">
+        <field name="name">(1901) Free room</field>
+        <field name="code">WT_1901</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1902" model="hr.payslip.input.type">
+        <field name="name">(1902) Free accommodation</field>
+        <field name="code">WT_1902</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1910" model="hr.payslip.input.type">
+        <field name="name">(1910) Private share of company car</field>
+        <field name="code">WT_1910</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1920" model="hr.payslip.input.type">
+        <field name="name">(1920) Tips subject to AHV contributions</field>
+        <field name="code">WT_1920</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1950" model="hr.payslip.input.type">
+        <field name="name">(1950) Rental housing rent reduction</field>
+        <field name="code">WT_1950</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1953" model="hr.payslip.input.type">
+        <field name="name">(1953) Expatriate benefits in kind</field>
+        <field name="code">WT_1953</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1955" model="hr.payslip.input.type">
+        <field name="name">(1955) Cash benefit</field>
+        <field name="code">WT_1955</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1960" model="hr.payslip.input.type">
+        <field name="name">(1960) Taxable profit-sharing rights</field>
+        <field name="code">WT_1960</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1961" model="hr.payslip.input.type">
+        <field name="name">(1961) Employee shares</field>
+        <field name="code">WT_1961</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1962" model="hr.payslip.input.type">
+        <field name="name">(1962) Employee options</field>
+        <field name="code">WT_1962</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1971" model="hr.payslip.input.type">
+        <field name="name">(1971) Employee portion of KTG assumed by employer</field>
+        <field name="code">WT_1971</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1972" model="hr.payslip.input.type">
+        <field name="name">(1972) Employee portion benefits purchase PP assumed by employer</field>
+        <field name="code">WT_1972</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1973" model="hr.payslip.input.type">
+        <field name="name">(1973) Employee portion benefits purchase PP assumed by employer</field>
+        <field name="code">WT_1973</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1974" model="hr.payslip.input.type">
+        <field name="name">(1974) Employee portion CM assumed by employer</field>
+        <field name="code">WT_1974</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1975" model="hr.payslip.input.type">
+        <field name="name">(1975) Optional employer contribution AANP</field>
+        <field name="code">WT_1975</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1976" model="hr.payslip.input.type">
+        <field name="name">(1976) Optional employer contribution LAAC</field>
+        <field name="code">WT_1976</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1977" model="hr.payslip.input.type">
+        <field name="name">(1977) 3rd pillar B paid by employer</field>
+        <field name="code">WT_1977</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1978" model="hr.payslip.input.type">
+        <field name="name">(1978) 3rd pillar A paid by employer</field>
+        <field name="code">WT_1978</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1979" model="hr.payslip.input.type">
+        <field name="name">(1979) Source-Tax paid by employer</field>
+        <field name="code">WT_1979</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_1980" model="hr.payslip.input.type">
+        <field name="name">(1980) Further training (salary certificate)</field>
+        <field name="code">WT_1980</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2000" model="hr.payslip.input.type">
+        <field name="name">(2000) Loss-of-earnings indemnity (APG)</field>
+        <field name="code">WT_2000</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2005" model="hr.payslip.input.type">
+        <field name="name">(2005) Military compensation benefit (CCM)</field>
+        <field name="code">WT_2005</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2010" model="hr.payslip.input.type">
+        <field name="name">(2010) Subsidiary military fund</field>
+        <field name="code">WT_2010</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2015" model="hr.payslip.input.type">
+        <field name="name">(2015) Parifonds</field>
+        <field name="code">WT_2015</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2020" model="hr.payslip.input.type">
+        <field name="name">(2020) Military insurance compensation</field>
+        <field name="code">WT_2020</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2021" model="hr.payslip.input.type">
+        <field name="name">(2021) Military insurance pension</field>
+        <field name="code">WT_2021</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2022" model="hr.payslip.input.type">
+        <field name="name">(2022) Partial pension military insurance (AM)</field>
+        <field name="code">WT_2022</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2025" model="hr.payslip.input.type">
+        <field name="name">(2025) DI allowance</field>
+        <field name="code">WT_2025</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2026" model="hr.payslip.input.type">
+        <field name="name">(2026) DI pension</field>
+        <field name="code">WT_2026</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2027" model="hr.payslip.input.type">
+        <field name="name">(2027) Partial DI pension</field>
+        <field name="code">WT_2027</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2030" model="hr.payslip.input.type">
+        <field name="name">(2030) Accident - daily allowance</field>
+        <field name="code">WT_2030</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2031" model="hr.payslip.input.type">
+        <field name="name">(2031) Accident - Pension</field>
+        <field name="code">WT_2031</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2032" model="hr.payslip.input.type">
+        <field name="name">(2032) Accident - Partial Pension</field>
+        <field name="code">WT_2032</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2035" model="hr.payslip.input.type">
+        <field name="name">(2035) Daily sickness allowance</field>
+        <field name="code">WT_2035</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2040" model="hr.payslip.input.type">
+        <field name="name">(2040) Maternity/Paternity allowance</field>
+        <field name="code">WT_2040</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2050" model="hr.payslip.input.type">
+        <field name="name">(2050) Third Party Correction</field>
+        <field name="code">WT_2050</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2060" model="hr.payslip.input.type">
+        <field name="name">(2060) Short-time work monthly</field>
+        <field name="code">WT_2060</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2065" model="hr.payslip.input.type">
+        <field name="name">(2065) Short-time work hourly</field>
+        <field name="code">WT_2065</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2070" model="hr.payslip.input.type">
+        <field name="name">(2070) ALV compensation</field>
+        <field name="code">WT_2070</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_2075" model="hr.payslip.input.type">
+        <field name="name">(2075) Waiting day</field>
+        <field name="code">WT_2075</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_3000" model="hr.payslip.input.type">
+        <field name="name">(3000) Child allowance</field>
+        <field name="code">WT_3000</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_3001" model="hr.payslip.input.type">
+        <field name="name">(3001) Backpayment Child allowance</field>
+        <field name="code">WT_3001</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+    
+    <record id="l10n_ch_elm_3004_input_fcf" model="hr.payslip.input.type">
+        <field name="country_id" ref="base.ch"/>
+        <field name="name">(3004) Child allowance paid by FCF (Geneva)</field>
+        <field name="code">WT_3004</field>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_3005_input_fcf" model="hr.payslip.input.type">
+        <field name="country_id" ref="base.ch"/>
+        <field name="name">(3005) Child allowance back payment paid by FCF (Geneva)</field>
+        <field name="code">WT_3005</field>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+    
+
+    <record id="l10n_ch_elm_input_WT_3010" model="hr.payslip.input.type">
+        <field name="name">(3010) Education allowance</field>
+        <field name="code">WT_3010</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_3011" model="hr.payslip.input.type">
+        <field name="name">(3011) Backpayment Education allowance</field>
+        <field name="code">WT_3011</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_3014_input_fcf" model="hr.payslip.input.type">
+        <field name="country_id" ref="base.ch"/>
+        <field name="name">(3014) Education allowance paid by FCF (Geneva)</field>
+        <field name="code">WT_3014</field>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+    
+    <record id="l10n_ch_elm_3015_input_fcf" model="hr.payslip.input.type">
+        <field name="country_id" ref="base.ch"/>
+        <field name="name">(3015) Backpayment Education allowance paid by FCF (Geneva)</field>
+        <field name="code">WT_3015</field>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_3030" model="hr.payslip.input.type">
+        <field name="name">(3030) Family allowance</field>
+        <field name="code">WT_3030</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_3031" model="hr.payslip.input.type">
+        <field name="name">(3031) Family allowance Backpayment</field>
+        <field name="code">WT_3031</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_3032" model="hr.payslip.input.type">
+        <field name="name">(3032) Household allowance</field>
+        <field name="code">WT_3032</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_3033" model="hr.payslip.input.type">
+        <field name="name">(3033) Backpayment Household allowance</field>
+        <field name="code">WT_3033</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_3034" model="hr.payslip.input.type">
+        <field name="name">(3034) Childbirth allowance</field>
+        <field name="code">WT_3034</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_3035" model="hr.payslip.input.type">
+        <field name="name">(3035) Wedding allowance</field>
+        <field name="code">WT_3035</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_3036" model="hr.payslip.input.type">
+        <field name="name">(3036) Attendant care allowance</field>
+        <field name="code">WT_3036</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_3037" model="hr.payslip.input.type">
+        <field name="name">(3037) Backpayment Attendant care allowance</field>
+        <field name="code">WT_3037</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_elm_input_WT_4900" model="hr.payslip.input.type">
+        <field name="name">(4900) Net/Gross compensation</field>
+        <field name="code">WT_4900</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_5060" model="hr.payslip.input.type">
+        <field name="name">(5060) Source-Tax : Manual Correction</field>
+        <field name="code">IS_MANUAL_CORR</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_5080" model="hr.payslip.input.type">
+        <field name="name">(5080) Deduction Private portion of company car</field>
+        <field name="code">WT_5080</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_5081" model="hr.payslip.input.type">
+        <field name="name">(5081) Deduction for Prosecution Office</field>
+        <field name="code">WT_5081</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_5082" model="hr.payslip.input.type">
+        <field name="name">(5082) Alimony Deduction</field>
+        <field name="code">WT_5082</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_5100" model="hr.payslip.input.type">
+        <field name="name">(5100) Correction benefits in kind</field>
+        <field name="code">WT_5100</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_5110" model="hr.payslip.input.type">
+        <field name="name">(5110) Cash Advantage Correction</field>
+        <field name="code">WT_5110</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+    
+    <record id="l10n_ch_elm_input_WT_5310" model="hr.payslip.input.type">
+        <field name="country_id" ref="base.ch"/>
+        <field name="name">(5310) Joint National Commission</field>
+        <field name="code">WT_5310</field>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_7310" model="hr.payslip.input.type">
+        <field name="country_id" ref="base.ch"/>
+        <field name="name">(7310) Joint National Commission Employer</field>
+        <field name="code">WT_7310</field>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_5300" model="hr.payslip.input.type">
+        <field name="country_id" ref="base.ch"/>
+        <field name="name">(5300) Joint Commission</field>
+        <field name="code">WT_5300</field>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_7300" model="hr.payslip.input.type">
+        <field name="country_id" ref="base.ch"/>
+        <field name="name">(7300) Joint Commission Employer</field>
+        <field name="code">WT_7300</field>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_hr_elm_input_WT_5050" model="hr.payslip.input.type">
+        <field name="country_id" ref="base.ch"/>
+        <field name="name">(5050) PP Contributions</field>
+        <field name="code">LPP</field>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_hr_elm_input_WT_5052" model="hr.payslip.input.type">
+        <field name="country_id" ref="base.ch"/>
+        <field name="name">(5052) PP Complementary Contributions</field>
+        <field name="code">LPP.COMPL</field>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_hr_elm_input_WT_7052" model="hr.payslip.input.type">
+        <field name="country_id" ref="base.ch"/>
+        <field name="name">(7052) PP Complementary Employer Contributions</field>
+        <field name="code">LPP.COMP.COMPL</field>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_hr_elm_input_WT_7050" model="hr.payslip.input.type">
+        <field name="country_id" ref="base.ch"/>
+        <field name="name">(7050) PP Employer Contributions</field>
+        <field name="code">LPP.COMP</field>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+    
+    <record id="l10n_ch_hr_elm_input_WT_5051" model="hr.payslip.input.type">
+        <field name="country_id" ref="base.ch"/>
+        <field name="name">(5051) PP Benefits Purchase</field>
+        <field name="code">LPP.RACHAT</field>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+    
+    <record id="l10n_ch_hr_elm_input_WT_7051" model="hr.payslip.input.type">
+        <field name="country_id" ref="base.ch"/>
+        <field name="name">(7051) PP Benefits Purchase Employer Contributions</field>
+        <field name="code">LPP.RACHAT.COMP</field>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+
+    <record id="l10n_ch_hr_elm_input_WT_5111" model="hr.payslip.input.type">
+        <field name="country_id" ref="base.ch"/>
+        <field name="name">(5111) PP Employer Contributions Compensation</field>
+        <field name="code">LPP.COMP.CONT</field>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_hr_elm_input_WT_5112" model="hr.payslip.input.type">
+        <field name="country_id" ref="base.ch"/>
+        <field name="name">(5112) PP Benefits Purchase Employer Contributions Compensation</field>
+        <field name="code">LPP.P.COMP.CONT</field>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_5400" model="hr.payslip.input.type">
+        <field name="name">(5400) General AVS Deduction in %</field>
+        <field name="code">AVS.GENERIC</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_7400" model="hr.payslip.input.type">
+        <field name="name">(7400) General AVS Deduction in % Employer</field>
+        <field name="code">AVS.GENERIC.COMP</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_5401" model="hr.payslip.input.type">
+        <field name="name">(5401) General AVS Deduction in % (2)</field>
+        <field name="code">AVS.GENERIC.2</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_7401" model="hr.payslip.input.type">
+        <field name="name">(7401) General AVS Deduction in % Employer (2)</field>
+        <field name="code">AVS.GENERIC.COMP.2</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_5402" model="hr.payslip.input.type">
+        <field name="name">(5402) General AVS Deduction in % (3)</field>
+        <field name="code">AVS.GENERIC.3</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_7402" model="hr.payslip.input.type">
+        <field name="name">(7402) General AVS Deduction in % Employer (3)</field>
+        <field name="code">AVS.GENERIC.COMP.3</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_5403" model="hr.payslip.input.type">
+        <field name="name">(5403) General AVS Deduction in % (4)</field>
+        <field name="code">AVS.GENERIC.4</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_7403" model="hr.payslip.input.type">
+        <field name="name">(7403) General AVS Deduction in % Employer (4)</field>
+        <field name="code">AVS.GENERIC.COMP.4</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_5404" model="hr.payslip.input.type">
+        <field name="name">(5404) General AVS Deduction in % (5)</field>
+        <field name="code">AVS.GENERIC.5</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_7404" model="hr.payslip.input.type">
+        <field name="name">(7404) General AVS Deduction in % Employer (5)</field>
+        <field name="code">AVS.GENERIC.COMP.5</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_5405" model="hr.payslip.input.type">
+        <field name="name">(5405) General AVS Deduction in % (6)</field>
+        <field name="code">AVS.GENERIC.6</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_7405" model="hr.payslip.input.type">
+        <field name="name">(7405) General AVS Deduction in % Employer (6)</field>
+        <field name="code">AVS.GENERIC.COMP.6</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_5406" model="hr.payslip.input.type">
+        <field name="name">(5406) General AVS Deduction in % (7)</field>
+        <field name="code">AVS.GENERIC.7</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_7406" model="hr.payslip.input.type">
+        <field name="name">(7406) General AVS Deduction in % Employer (7)</field>
+        <field name="code">AVS.GENERIC.COMP.7</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_5407" model="hr.payslip.input.type">
+        <field name="name">(5407) General AVS Deduction in % (8)</field>
+        <field name="code">AVS.GENERIC.8</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_7407" model="hr.payslip.input.type">
+        <field name="name">(7407) General AVS Deduction in % Employer (8)</field>
+        <field name="code">AVS.GENERIC.COMP.8</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_5408" model="hr.payslip.input.type">
+        <field name="name">(5408) General AVS Deduction in % (9)</field>
+        <field name="code">AVS.GENERIC.9</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_7408" model="hr.payslip.input.type">
+        <field name="name">(7408) General AVS Deduction in % Employer (9)</field>
+        <field name="code">AVS.GENERIC.COMP.9</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_hr_elm_input_WT_6000" model="hr.payslip.input.type">
+        <field name="name">(6000) Expenses travel, car, overnight accommodation</field>
+        <field name="code">EXP6000</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_hr_elm_input_WT_6020" model="hr.payslip.input.type">
+        <field name="name">(6020) Effective expenses expatriates</field>
+        <field name="code">EXP6020</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_hr_elm_input_WT_6030" model="hr.payslip.input.type">
+        <field name="name">(6030) Other Effective Expenses</field>
+        <field name="code">EXP6030</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_hr_elm_input_WT_6035" model="hr.payslip.input.type">
+        <field name="name">(6035) Lump sum professional expenses expatriates</field>
+        <field name="code">EXP6035</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_hr_elm_input_WT_6040" model="hr.payslip.input.type">
+        <field name="name">(6040) Lump-sum representation expenses</field>
+        <field name="code">EXP6040</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_hr_elm_input_WT_6050" model="hr.payslip.input.type">
+        <field name="name">(6050) Lump sum car expenses</field>
+        <field name="code">EXP6050</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_hr_elm_input_WT_6070" model="hr.payslip.input.type">
+        <field name="name">(6070) Other lump sum expenses</field>
+        <field name="code">EXP6070</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_WT_6510" model="hr.payslip.input.type">
+        <field name="name">(6510) Salary Advance Already Paid</field>
+        <field name="code">WT_6510</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_ISWORKEDDAYSINCH" model="hr.payslip.input.type">
+        <field name="name">Source-Tax: Work Days in Switzerland</field>
+        <field name="code">ISWORKEDDAYSINCH</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+
+    <record id="l10n_ch_elm_input_ACTIVITYRATE" model="hr.payslip.input.type">
+        <field name="name">Activity Rate in %</field>
+        <field name="code">ACTIVITYRATE</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm'))]"/>
+    </record>
+</odoo>

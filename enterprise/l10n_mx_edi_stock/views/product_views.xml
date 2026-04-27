@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="product_template_l10n_mx_hazardous" model="ir.ui.view">
+            <field name="name">product.template.form.l10n_mx_hazardous</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product_unspsc.product_template_unspsc"/>
+            <field name="arch" type="xml">
+                <field name="unspsc_code_id" position="after">
+                    <field name="l10n_mx_edi_hazardous_material_code_id"
+                           invisible="'MX' not in fiscal_country_codes or not l10n_mx_edi_hazardous_material"/>
+                    <field name="l10n_mx_edi_hazard_package_type"
+                           invisible="'MX' not in fiscal_country_codes or not l10n_mx_edi_hazardous_material"/>
+                    <field name="l10n_mx_edi_material_type"
+                           invisible="'MX' not in fiscal_country_codes"/>
+                    <field name="l10n_mx_edi_material_description"
+                           invisible="'MX' not in fiscal_country_codes or l10n_mx_edi_material_type != '05'"/>
+                </field>
+            </field>
+        </record>
+
+       <record model="ir.ui.view" id="view_product_uom_categ_tree_unspsc_l10n_mx_edi_stock">
+            <field name="name">view.uom.categ.unspsc.list.l10n_mx_edi_stock</field>
+            <field name="model">product.unspsc.code</field>
+            <field name="inherit_id" ref="product_unspsc.view_product_uom_categ_tree_unspsc"/>
+            <field name="arch" type="xml">
+                <field name="code" position="after">
+                    <field name="l10n_mx_edi_hazardous_material"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="product_template_unspsc_l10n_mx_stock" model="ir.ui.view">
+            <field name="name">view.uom.categ.unspsc.code.form.l10n_mx_stock</field>
+            <field name="model">product.unspsc.code</field>
+            <field name="inherit_id" ref="product_unspsc.view_product_unspsc_code_form"/>
+            <field name="arch" type="xml">
+                <field name="code" position="after">
+                    <field name="l10n_mx_edi_hazardous_material"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

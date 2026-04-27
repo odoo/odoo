@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="account_accountant.MoveLineListView" t-inherit="web.ListView">
+        <xpath expr="//div[@t-ref='root']" position="attributes" type="add">
+            <attribute name="class" add="o_move_line_list_view" separator=" "/>
+        </xpath>
+        <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
+            <attribute name="setSelectedRecord.bind">this.setSelectedRecord</attribute>
+        </xpath>
+        <xpath expr="//Layout" position="inside">
+            <t t-call="account_accountant.AttachmentPreview"/>
+        </xpath>
+    </t>
+
+    <t t-name="account_accountant.AttachmentPreview">
+        <div t-if="previewEnabled" class="o_attachment_preview d-print-none" t-att-class="{'hidden': !attachmentPreviewState.displayAttachment || mailPopoutService.externalWindow}">
+            <t t-if="this.attachmentPreviewState.displayAttachment || mailPopoutService.externalWindow">
+                <t t-if="this.attachmentPreviewState.thread and this.attachmentPreviewState.thread.attachmentsInWebClientView.length > 0">
+                    <AttachmentViewMoveLine
+                        threadId="this.attachmentPreviewState.thread.id"
+                        threadModel="this.attachmentPreviewState.thread.model"
+                        openInPopout="0"
+                    />
+                </t>
+                <t t-elif="!this.attachmentPreviewState.selectedRecord">
+                    <p class="text-center">Choose a line to preview its attachments.</p>
+                </t>
+                <t t-else="">
+                    <p class="text-center">No attachments linked.</p>
+                </t>
+            </t>
+            <div class="o_attachment_control toggle" t-on-click="togglePreview" t-if="!mailPopoutService.externalWindow"/>
+        </div>
+        <t t-else="">
+            <div class="o_popout_icon" t-on-click="() => this.setPopout(true)">
+                <i class="fa fa-window-restore" title="Open attachment in pop out"/>
+            </div>
+            <t t-if="this.popout.active">
+                <div class="o_attachment_preview d-print-none"
+                     t-if="this.attachmentPreviewState.thread?.attachmentsInWebClientView.length"
+                >
+                    <AttachmentViewMoveLine
+                        threadId="this.attachmentPreviewState.thread.id"
+                        threadModel="this.attachmentPreviewState.thread.model"
+                        openInPopout="1"
+                    />
+                </div>
+            </t>
+        </t>
+    </t>
+</templates>

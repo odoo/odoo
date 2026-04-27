@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <record id="product_product_view_form_normalized_stock_barcode" model="ir.ui.view">
+        <field name="name">product.view.form.normalized.stock.barcodelookup.inherit</field>
+        <field name="model">product.product</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="product.product_product_view_form_normalized"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='barcode']" position="attributes">
+                <attribute name="widget"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_barcodelookup_product_product_action" model="ir.actions.act_window">
+        <field name="name">New Product</field>
+        <field name="res_model">product.product</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context" eval="{'dialog_size': 'medium'}"/>
+        <field name="view_id" ref="stock_barcode_barcodelookup.product_product_view_form_normalized_stock_barcode"/>
+    </record>
+</odoo>

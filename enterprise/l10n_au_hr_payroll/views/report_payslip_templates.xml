@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_payslip_au">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <h2 id="payslip_name" t-field="o.name"/>
+                <t t-set="is_invalid" t-value="o._is_invalid()"/>
+                <t t-if="is_invalid">
+                    <strong id="invalid_warning"><t t-esc="is_invalid"/></strong>
+                </t>
+                <h5 class="mt-1 mb-2 p-0">
+                    <strong><t t-esc="o.employee_id.name"/></strong>
+                </h5><br/>
+                <div class="row mb-3">
+                    <div class="col-8">
+                        <span>
+                            <strong>Pay Frequency: </strong>
+                            <t t-esc="o.contract_id.schedule_pay.capitalize()"/>
+                        </span><br/>
+                        <span>
+                            <strong>Pay Period: </strong>
+                            <t t-esc="o.date_from"/> to <t t-esc="o.date_to"/>
+                        </span><br/>
+                        <span>
+                            <strong>Annual Salary: </strong>
+                            <t t-esc="o.contract_id.l10n_au_yearly_wage"
+                                t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                        </span><br/>
+                        <t t-set="attendance" t-value="o.worked_days_line_ids.filtered(lambda line: line.code == 'WORK100')"/>
+                        <span t-if="attendance">
+                            <strong>Hourly Rate: </strong>
+                            <t t-esc="attendance._get_l10n_au_hourly_rate()"
+                                t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                        </span><br/>
+                        <span>
+                            <strong>Employment Classification: </strong>
+                            <t t-esc="o.contract_id.job_id.name or o.employee_id.job_id.name"/>
+                        </span><br/>
+                        <strong>Superannuation Fund(s): </strong>
+                        <t t-foreach="o.employee_id._get_active_super_accounts()" t-as="super_account">
+                                <div class="row">
+                                    <t t-esc="super_account.fund_id.display_name"/>
+                                    <t t-if="super_account_size > 1">
+                                        (<t t-out="super_account.proportion * 100"/>%)
+                                    </t>
+                                    <br/>
+                                </div>
+                        </t>
+                    </div>
+                    <div class="col-4 text-end">
+
+                        <span t-if="o.paid_date">Payment Date: <t t-esc="o.paid_date"/></span><br/>
+                        <span>Gross Pay: <t t-esc="sum(o.line_ids.filtered(lambda line: line.code in ('GROSS', 'ETP.GROSS', 'ETP.LEAVE.GROSS')).mapped('total'))"
+                            t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/></span><br/>
+                        <span>Net Pay: <t t-esc="o.line_ids.filtered(lambda line: line.code == 'NET').total"
+                            t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/></span><br/>
+                        <span>Super Payments: <t t-esc="sum(o.line_ids.filtered(lambda line: line.code in ('SUPER', 'SUPER.CONTRIBUTION')).mapped('total'))"
+                            t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/></span><br/>
+                    </div>
+                </div>
+                <table class="o_ignore_layout_styling table table-sm">
+                    <thead class="o_black_border">
+                        <tr>
+                            <th>DESCRIPTION</th>
+                            <th>HOURS</th>
+                            <th>CALC. RATE</th>
+                            <th>AMOUNT</th>
+                            <th>YTD</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="year_to_date_totals" t-value="o._l10n_au_get_year_to_date_totals(l10n_au_include_current_slip=True)"/>
+                        <t t-set="unused_leaves" t-value="o._l10n_au_get_unused_leave_hours()"/>
+                        <t t-set="total_hours" t-value="0.0"/>
+                        <!-- show the detail of the worked lines -->
+                        <tr t-if="o.use_worked_day_lines">
+                            <td colspan="5"><strong>Worked Days</strong></td>
+                        </tr>
+                        <!-- class="align-middle" is required for a proper PDF positioning of hours and currency symbols-->
+                        <tr t-if="o.use_worked_day_lines" t-foreach="o.worked_days_line_ids" t-as="worked_line">
+                            <td class="align-middle">
+                                <t t-esc="worked_line.name"/>
+                            </td>
+                            <td class="text-end align-middle">
+                                <t t-esc="worked_line.number_of_hours" t-options="{'widget': 'float_time'}"/>
+                                <t t-set="total_hours" t-value="total_hours + worked_line.number_of_hours"/>
+                            </td>
+                            <td class="text-end align-middle">
+                                <t t-if="worked_line" t-esc="worked_line._get_l10n_au_hourly_rate()"
+                                    t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                            </td>
+                            <td class="text-end align-middle">
+                                <t t-esc="worked_line.amount"
+                                    t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                            </td>
+                            <td class="text-end align-middle">
+                                <t t-esc="worked_line.ytd"
+                                    t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5"><strong>Payslip Lines</strong></td>
+                        </tr>
+                        <!-- Hide Medicare Adjustment line if the amount is 0 -->
+                        <tr t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip and
+                            not (line.salary_rule_id == env.ref('l10n_au_hr_payroll.l10n_au_medicare_structure_1') and line.amount == 0))"
+                            t-as="line" class="align-middle">
+                            <td class="align-middle"><t t-esc="line.name"/></td>
+                            <td class="text-end align-middle">
+                                <t t-if="line.code == 'LEAVE'" t-esc="unused_leaves" t-options="{'widget': 'float_time'}"/>
+                                <t t-elif="line.code == 'BASIC'" t-esc="total_hours" t-options="{'widget': 'float_time'}"/>
+                            </td>
+                            <td class="text-end align-middle">
+                                <t t-if="line.category_id.name == 'BASIC'"
+                                    t-esc="line.amount"
+                                    t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"
+                                />
+                            </td>
+                            <td class="text-end align-middle">
+                                <t t-esc="line.total" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                            </td>
+                            <td class="text-end align-middle">
+                                <t t-esc="line.ytd" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p t-if="o.net_wage &gt;= 0">To pay on <b><span t-field="o.employee_id.bank_account_id"/></b> of <i><span t-field="o.employee_id"/></i>: <span t-field="o.net_wage"/></p>
+                <p t-if="o.net_wage &lt; 0">The net amount will be recovered from the first positive remuneration established after this.</p>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_payslip_au_lang">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="o" t-value="o.with_context(lang=o.employee_id.sudo().lang or o.env.lang)"/>
+                <t t-call="l10n_au_hr_payroll.report_payslip_au" t-lang="o.env.lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>

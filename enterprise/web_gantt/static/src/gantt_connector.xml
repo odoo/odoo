@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web_gantt.GanttConnector">
+        <t t-set="xmlAttributes" t-value="{ version: '1.1', xmlns: 'http://www.w3.org/2000/svg' }" />
+        <svg t-if="sourcePoint and targetPoint"
+            t-ref="root"
+            t-att-data-connector-id="id"
+            class="o_gantt_connector position-absolute start-0 top-0 w-100 h-100"
+            t-att-class="{ o_connector_highlighted: highlighted }"
+            pointer-events="none"
+            t-att="xmlAttributes"
+        >
+            <t t-set="strokeColor" t-value="style.stroke.color" />
+            <t t-set="outlineStrokeColor" t-value="style.outlineStroke.color" />
+
+            <defs>
+                <marker t-att-id="id"
+                    markerHeight="6"
+                    markerWidth="6"
+                    markerUnits="strokeWidth"
+                    orient="auto"
+                    refX="9"
+                    refY="6"
+                    stroke-linejoin="round"
+                    viewBox="0 0 12 12"
+                >
+                    <t t-call="web_gantt.ConnectorStrokeHead">
+                        <t t-set="color" t-value="strokeColor" />
+                        <t t-set="width" t-value="style.stroke.width" />
+                    </t>
+                </marker>
+            </defs>
+
+            <t t-call="web_gantt.ConnectorStroke">
+                <t t-set="class" t-value="'o_connector_stroke_hover_ease'" />
+                <t t-set="color" t-value="transparent" />
+                <t t-set="width" t-value="style.stroke.width + style.hoverEaseWidth + style.outlineStroke.width" />
+            </t>
+            <t t-if="style.outlineStroke.width gt 0">
+                <t t-call="web_gantt.ConnectorStroke">
+                    <t t-set="class" t-value="'o_connector_stroke_outline'" />
+                    <t t-set="color" t-value="outlineStrokeColor" />
+                    <t t-set="width" t-value="style.stroke.width + style.outlineStroke.width" />
+                </t>
+            </t>
+            <t t-call="web_gantt.ConnectorStroke">
+                <t t-set="class" t-value="'o_connector_stroke'" />
+                <t t-set="color" t-value="strokeColor" />
+                <t t-set="markerEnd" t-value="id" />
+                <t t-set="width" t-value="style.stroke.width" />
+            </t>
+
+            <t t-if="displayButtons">
+                <svg class="o_connector_stroke_buttons"
+                    width="48"
+                    height="16"
+                    pointer-events="all"
+                    viewBox="0 0 1536 512"
+                    t-att="xmlAttributes"
+                >
+                    <rect fill="transparent" x="0" y="0" width="1536" height="512" />
+                    <g class="o_connector_stroke_button o_connector_stroke_reschedule_button"
+                        t-on-click.stop="onLeftButtonClick"
+                    >
+                        <rect fill="white" x="20" y="20" width="472" height="472" rx="236" ry="236" />
+                        <g pointer-events="none">
+                            <line x1="192" y1="256" x2="320" y2="128" stroke-width="56" />
+                            <line x1="192" y1="256" x2="320" y2="384" stroke-width="56" />
+                        </g>
+                    </g>
+                    <g class="o_connector_stroke_button o_connector_stroke_remove_button"
+                        t-on-click.stop="onRemoveButtonClick"
+                    >
+                        <rect fill="white" x="532" y="20" width="472" height="472" rx="236" ry="236" />
+                        <g transform="rotate(45,768,256)" pointer-events="none">
+                            <rect x="740" y="100" fill="rgb(221, 60, 79)" width="56" height="312" />
+                            <rect x="612" y="228" fill="rgb(221, 60, 79)" width="312" height="56" />
+                        </g>
+                    </g>
+                    <g class="o_connector_stroke_button o_connector_stroke_reschedule_button"
+                        t-on-click.stop="onRightButtonClick"
+                    >
+                        <rect fill="white" x="1044" y="20" width="472" height="472" rx="236" ry="236" />
+                        <g pointer-events="none">
+                            <line x1="1216" y1="128" x2="1344" y2="256" stroke-width="56" />
+                            <line x1="1216" y1="384" x2="1344" y2="256" stroke-width="56" />
+                        </g>
+                    </g>
+                </svg>
+            </t>
+        </svg>
+    </t>
+
+    <t t-name="web_gantt.ConnectorStroke">
+        <path
+            fill="none"
+            t-att-stroke="color"
+            t-att-stroke-width="width"
+            t-att-class="class"
+            t-att-marker-end="markerEnd ? `url(#${markerEnd})` : false"
+            t-att-pointer-events="isNew ? 'none' : 'stroke'"
+        />
+    </t>
+
+    <t t-name="web_gantt.ConnectorStrokeHead">
+        <path
+            d="M2,2 L10,6 L2,10 L6,6 L2,2"
+            class="o_connector_stroke_head"
+            t-att-fill="color"
+            t-att-stroke="color"
+            t-att="xmlAttributes"
+        />
+    </t>
+
+</templates>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="l10n_in_gst_return_period_view_inherit_spreadsheet" model="ir.ui.view">
+        <field name="name">l10n_in.gst.return.period.form.spreadsheet</field>
+        <field name="model">l10n_in.gst.return.period</field>
+        <field name="inherit_id" ref="l10n_in_reports_gstr.l10n_in_gst_return_period_form_view"/>
+        <field name="arch" type="xml">
+             <xpath expr="//ol[@id='gstr1-list']" position="inside">
+                <li>
+                    <span invisible="gstr1_spreadsheet">
+                        <button name="generate_gstr1_spreadsheet" class="btn btn-link p-0" type="object" string="Generate"/>
+                        and
+                        View
+                    </span>
+                    <span invisible="not gstr1_spreadsheet">
+                        <button name="generate_gstr1_spreadsheet" class="btn btn-link p-0" type="object" string="Regenerate"/>
+                        and
+                        <button name="action_open_gstr1_spreadsheet" class="btn btn-link p-0" type="object" string="View"/>
+                    </span>
+                </li>
+            </xpath>
+        </field>
+    </record>
+</odoo>

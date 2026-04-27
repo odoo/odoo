@@ -1,0 +1,263 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_payroll_expense
+#
+# Translators:
+# Wil Odoo, 2024
+# Manon Rondou, 2025
+#
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2025-11-03 21:21+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-18/"
+"hr_payroll_expense/fr/>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: hr_payroll_expense
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.view_account_payment_register_form_inherit_hr_payroll_expense
+msgid ""
+"<span class=\"fw-bold\">\n"
+"                            The expenses will already be reimbursed in a "
+"payslip. Make sure this payment is intended.\n"
+"                        </span>"
+msgstr ""
+"<span class=\"fw-bold\">\n"
+"                            Les dépenses seront automatiquement remboursées "
+"sur une fiche de paie. Assurez-vous que ce paiement est prévu.\n"
+"                        </span>"
+
+#. module: hr_payroll_expense
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_expense_sheet_view_form_inherit_payroll
+msgid "<span class=\"o_stat_text\">Payslip</span>"
+msgstr "<span class=\"o_stat_text\">Fiche de paie</span>"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_expense_sheet
+msgid "Expense Report"
+msgstr "Dépense"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"Expense reimbursement rule needs to be configured to add expenses to "
+"payslips.\n"
+"Please create one salary rule with the \"%(code)s\" code on the relevant "
+"salary structures."
+msgstr ""
+"La règle de remboursement des dépenses doit être configurée pour ajouter les "
+"frais aux fiches de paie.\n"
+"Veuillez créer une règle salariale avec le code \"%(code)s\" sur les "
+"structures salariales concernées."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "Expense report (\"%(name)s\") was removed from the next payslip."
+msgstr ""
+"Le rapport de dépense (\"%(name)s\") a été retiré de la prochaine fiche de "
+"paie."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "Expense report (\"%(name)s\") will be added to the next payslip."
+msgstr ""
+"Le rapport de dépense (\"%(name)s\") sera ajouté à la prochaine fiche de "
+"paie."
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_payslip__expense_sheet_ids
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_payslip_view_form_inherit_expense
+msgid "Expenses"
+msgstr "Notes de Frais"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_payslip__expenses_count
+msgid "Expenses Count"
+msgstr "Nombre de notes de frais"
+
+#. module: hr_payroll_expense
+#: model:hr.salary.rule,name:hr_payroll_expense.hr_salary_rule_expense_refund
+msgid "Expenses Reimbursement"
+msgstr "Remboursement des notes de frais"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,help:hr_payroll_expense.field_hr_payslip__expense_sheet_ids
+msgid "Expenses to reimburse to employee."
+msgstr "Notes de frais à rembourser à l'employé."
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_payslip_employees
+msgid "Generate payslips for all selected employees"
+msgstr "Générer des fiches de paie pour tous les employés sélectionnés"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "Go to salary rules"
+msgstr "Aller aux règles salariales"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_account_payment_register__is_already_paid_through_a_payslip
+msgid "Is Already Paid Through A Payslip"
+msgstr "Est déjà payé via une fiche de paie"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_account_move
+msgid "Journal Entry"
+msgstr "Écriture comptable"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payroll_structure.py:0
+msgid ""
+"No debit account found in the '%(rule_name)s' payslip salary rule. Please "
+"add a payable debit account to be able to create an accounting entry for the "
+"expense reports linked to this payslip."
+msgstr ""
+"Aucun compte de débit n'a été trouvé dans la règle salariale de la fiche de "
+"paie '%(rule_name)s'. Veuillez ajouter un compte de débit afin de pouvoir "
+"créer une écriture comptable dans les rapports de dépenses liés à cette "
+"fiche de paie."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid ""
+"No salary rule was found to handle expenses in structure '%"
+"(structure_name)s'."
+msgstr ""
+"Aucune règle salariale n'a été trouvée pour gérer les dépenses dans la "
+"structure. '%(structure_name)s'."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"Only approved expense reports that were paid by an employee can be "
+"reimbursed in a payslip."
+msgstr ""
+"Seules les dépenses approuvées et payées par un employé peuvent être "
+"remboursées dans une fiche de paie."
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_account_payment_register
+msgid "Pay"
+msgstr "Payer"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Fiche de paie"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_expense_sheet__payslip_id
+msgid "Payslip"
+msgstr "Fiche de paie"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_expense_sheet__refund_in_payslip
+msgid "Reimburse In Next Payslip"
+msgstr "Rembourser dans la prochaine fiche de paie"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid "Reimbursed Expenses"
+msgstr "Dépenses remboursées"
+
+#. module: hr_payroll_expense
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_expense_sheet_view_form_inherit_payroll
+msgid "Remove from Payslip"
+msgstr "Supprimer de la fiche de paie"
+
+#. module: hr_payroll_expense
+#: model:ir.actions.server,name:hr_payroll_expense.hr_expense_add_to_payslip_action_server
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_expense_sheet_view_form_inherit_payroll
+msgid "Report in Next Payslip"
+msgstr "Rapporter dans la prochaine fiche de paie"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_payroll_structure
+msgid "Salary Structure"
+msgstr "Structure salariale"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payroll_structure.py:0
+msgid ""
+"The '%(account_name)s' account for the salary rule '%(rule_name)s' must be "
+"of type 'Payable'."
+msgstr ""
+"Le compte '%(account_name)s' pour la règle salariale '%(rule_name)s' doit "
+"être de type \" Payable \"."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid ""
+"The salary rules with the code 'EXPENSES' must have a debit account set to "
+"be able to properly reimburse the linked expenses. This must be an account "
+"of type 'Payable'."
+msgstr ""
+"Les règles salariales avec le code \" EXPENSES \" doivent avoir un compte de "
+"débit défini pour pouvoir effectuer correctement le remboursement des "
+"dépenses liées. Il doit s'agir d'un compte de type \" Payable \"."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"The state of the accounting entries linked to this expense report do not "
+"allow it to be reimbursed through a payslip."
+msgstr ""
+"Le statut des écritures comptables liées à cette dépense ne permet pas de la "
+"rembourser au moyen d'une fiche de paie."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "There are no valid expense sheets selected."
+msgstr "Aucun relevé de dépenses valide n'a été sélectionné."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"You cannot remove an expense from a payslip that has already been "
+"validated.\n"
+"Expenses can only be removed from draft or canceled payslips."
+msgstr ""
+"Vous ne pouvez pas supprimer une dépense d'une fiche de paie déjà validée.\n"
+"Les dépenses peuvent uniquement être supprimées sur des fiches de paie "
+"provisoires ou annulées."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid ""
+"You don't have the access rights to link an expense report to a payslip. You "
+"need to be a payroll officer to do that."
+msgstr ""
+"Vous n'avez pas les droits d'accès nécessaires pour lier une dépense à une "
+"fiche de paie. Pour ce faire, vous devez être un gestionnaire payroll."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/account_move.py:0
+msgid "You don't have the access rights to post an invoice."
+msgstr "Vous n'avez pas les droits suffisants pour comptabiliser une facture."

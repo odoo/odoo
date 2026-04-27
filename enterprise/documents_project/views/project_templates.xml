@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="documents_project.portal_tasks_list" inherit_id="project.portal_tasks_list">
+        <xpath expr="//div[@name='project_name']" position="inside">
+            <t t-set="_project" t-value="project or tasks[0].project_id"/>
+            <span t-if="uid and _project.document_count" class="ms-auto">
+                <a class="btn btn-light px-1 py-0" target="_blank"
+                   t-attf-href="/my/projects/#{_project.id}/documents?access_token=#{_project.access_token}">
+                    <t t-out="_project.document_count"/> Documents
+                </a>
+            </span>
+        </xpath>
+        <xpath expr="//div[@name='stage_name']" position="inside">
+            <span t-if="project and uid and project.document_count and grouped_tasks[0] == tasks" class="ms-auto">
+                <a class="btn btn-light px-1 py-0" target="_blank"
+                   t-attf-href="/my/projects/#{project.id}/documents?access_token=#{project.access_token}">
+                    <t t-out="project.document_count"/> Documents
+                </a>
+            </span>
+        </xpath>
+    </template>
+</odoo>

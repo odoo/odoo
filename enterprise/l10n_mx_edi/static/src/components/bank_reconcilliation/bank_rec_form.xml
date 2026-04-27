@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_mx_edi.BankRecRecordNotebookManualOperations" t-inherit="account_accountant.BankRecRecordNotebookManualOperations" t-inherit-mode="extension">
+        <xpath expr="//div[@name='suggestion']" position="before">
+            <div name="payment_way"
+                 t-if="line.data.flag === 'liquidity' and line.data.country_code === 'MX'"
+                 class="o_wrap_field d-flex d-sm-contents flex-column mb-3 mb-sm-0">
+                <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900">
+                    <label class="o_form_label">Payment Way</label>
+                </div>
+                <div class="o_cell o_wrap_input flex-grow-1 flex-sm-grow-0 w-100 mb-1">
+                    <div class="o_field_widget o_field_many2one">
+                        <Many2OneField
+                            name="'l10n_mx_edi_payment_method_id'"
+                            record="line"
+                            canOpen="false"
+                            canQuickCreate="false"
+                        />
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

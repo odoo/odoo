@@ -1,0 +1,31 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing" xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+	<s:Header>
+		<a:Action s:mustUnderstand="1">http://wcf.dian.colombia/IWcfDianCustomerServices/GetNumberingRangeResponse</a:Action>
+		<o:Security s:mustUnderstand="1" xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+			<u:Timestamp u:Id="_0">
+				<u:Created>2024-10-24T09:36:27.592Z</u:Created>
+				<u:Expires>2024-10-24T09:41:27.592Z</u:Expires>
+			</u:Timestamp>
+		</o:Security>
+	</s:Header>
+	<s:Body>
+		<GetNumberingRangeResponse xmlns="http://wcf.dian.colombia">
+			<GetNumberingRangeResult xmlns:b="http://schemas.datacontract.org/2004/07/NumberRangeResponseList" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+				<b:OperationCode>100</b:OperationCode>
+				<b:OperationDescription>Acción completada OK.</b:OperationDescription>
+				<b:ResponseList xmlns:c="http://schemas.datacontract.org/2004/07/NumberRangeResponse">
+					<c:NumberRangeResponse>
+						<c:ResolutionNumber>18760000001</c:ResolutionNumber>
+						<c:ResolutionDate>2024-01-01</c:ResolutionDate>
+						<c:Prefix>DS</c:Prefix>
+						<c:FromNumber>984000000</c:FromNumber>
+						<c:ToNumber>985000000</c:ToNumber>
+						<c:ValidDateFrom>2024-01-01</c:ValidDateFrom>
+						<c:ValidDateTo>2024-12-31</c:ValidDateTo>
+						<c:TechnicalKey i:nil="true"/>
+					</c:NumberRangeResponse>
+				</b:ResponseList>
+			</GetNumberingRangeResult>
+		</GetNumberingRangeResponse>
+	</s:Body>
+</s:Envelope>

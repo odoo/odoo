@@ -1,0 +1,53 @@
+<odoo>
+    <record id="hr_payslip_line_view_pivot" model="ir.ui.view">
+        <field name="name">hr.payslip.line.pivot</field>
+        <field name="model">hr.payslip.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Payslip Lines Pivot" default_order="sequence asc">
+                <field name="name" type="row"/>
+                <field name="date_from" type="col" interval="month"/>
+                <field name="total" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hr_payslip_line_view_search" model="ir.ui.view">
+        <field name="name">hr.payslip.line.search</field>
+        <field name="model">hr.payslip.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="employee_id"/>
+                <field name="date_from"/>
+
+                <filter name="filter_appears_on_payslip"
+                        string="Appears on Payslip"
+                        domain="[('appears_on_payslip','=',True)]"/>
+                <separator/>
+                <filter name="filter_current_year"
+                        string="This Year"
+                        domain="[
+                        ('date_to', '&gt;=', (context_today()).strftime('%Y-01-01')),
+                        ('date_to', '&lt;=', (context_today()).strftime('%Y-12-31'))]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hr_payslip_line_pivot" model="ir.actions.act_window">
+        <field name="name">Payslip Lines</field>
+        <field name="res_model">hr.payslip.line</field>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="hr_payslip_line_view_pivot"/>
+        <field name="search_view_id" ref="hr_payslip_line_view_search"/>
+        <field name="context">
+            {
+                "search_default_filter_current_year": 1,
+                "search_default_filter_appears_on_payslip": 2
+            }
+        </field>
+        <field name="domain">
+            [('slip_id.state','in',['paid','done'])]
+        </field>
+    </record>
+</odoo>

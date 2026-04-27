@@ -1,0 +1,24 @@
+<odoo>
+    <record id="view_shipping_method_envia" model="ir.ui.view">
+        <field name="name">Envia Shipping Wizard</field>
+        <field name="model">envia.shipping.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Shipping Product">
+                <field name="available_services" invisible="1"/> <!-- will be used by envia_service_selection widget-->
+                <field name="carrier_id" invisible="1"/> <!-- will be used by envia_service_selection widget-->
+                <field name="selected_carrier_code" invisible="1"/> <!-- will be used by envia_service_selection widget-->
+
+                <div colspan="2" class="alert alert-info d-flex align-items-center" role="status">
+                    <div><i class="fa fa-info-circle"/> Available shipping services depend on enabled carriers in your Envia account.</div>
+                </div>
+                <div class="g-col-sm-2"><div class="o_horizontal_separator mt-4 mb-3 text-uppercase fw-bolder small">Delivery Service</div></div>
+                <field name="selected_service_code" widget="envia_service_selection" />
+                <footer>
+                    <button name="action_validate" type="object" string="Confirm" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
+

@@ -1,0 +1,183 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * quality_mrp
+#
+# Translators:
+# Wil Odoo, 2025
+# Junko Augias, 2025
+#
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2026-01-31 09:14+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/"
+"quality_mrp/ja/>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: quality_mrp
+#: model_terms:ir.ui.view,arch_db:quality_mrp.mrp_production_view_form_inherit_quality
+msgid "<span class=\"o_stat_text text-danger\">Quality Checks</span>"
+msgstr "<span class=\"o_stat_text text-danger\">品質検査</span>"
+
+#. module: quality_mrp
+#: model_terms:ir.ui.view,arch_db:quality_mrp.mrp_production_view_form_inherit_quality
+msgid "<span class=\"o_stat_text text-success\">Quality Checks</span>"
+msgstr "<span class=\"o_stat_text text-success\">品質検査</span>"
+
+#. module: quality_mrp
+#: model_terms:ir.ui.view,arch_db:quality_mrp.mrp_production_view_form_inherit_quality
+msgid "<span class=\"o_stat_text\">Quality Alerts</span>"
+msgstr "<span class=\"o_stat_text\">品質アラート</span>"
+
+#. module: quality_mrp
+#: model_terms:ir.ui.view,arch_db:quality_mrp.mrp_production_view_form_inherit_quality
+msgid "<span class=\"o_stat_text\">Quality Checks</span>"
+msgstr "<span class=\"o_stat_text\">品質検査</span>"
+
+#. module: quality_mrp
+#: model_terms:ir.ui.view,arch_db:quality_mrp.worksheet_page
+msgid "<strong>Manufacturing Order: </strong>"
+msgstr "<strong>製造オーダ </strong>"
+
+#. module: quality_mrp
+#: model:ir.model.fields,field_description:quality_mrp.field_mrp_production__quality_alert_ids
+msgid "Alerts"
+msgstr "アラート"
+
+#. module: quality_mrp
+#: model:ir.model.fields,field_description:quality_mrp.field_mrp_production__check_ids
+msgid "Checks"
+msgstr "検査"
+
+#. module: quality_mrp
+#. odoo-python
+#: code:addons/quality_mrp/models/quality.py:0
+msgid ""
+"It will not be possible to edit the failed quantity of a quantity type "
+"quality check on a manufacturing order"
+msgstr ""
+"製造オーダ上の「数量タイプ」の品質検査では、不合格数量を編集することはできま"
+"せん。"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_mrp_production
+#: model:ir.model.fields,field_description:quality_mrp.field_quality_check_on_demand__production_id
+msgid "Manufacturing Order"
+msgstr "製造オーダ"
+
+#. module: quality_mrp
+#. odoo-python
+#: code:addons/quality_mrp/models/mrp_production.py:0
+msgid "On-Demand Quality Check"
+msgstr "オンデマンド品質検査"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "プロダクトの移動(在庫移動ライン)"
+
+#. module: quality_mrp
+#: model:ir.model.fields,field_description:quality_mrp.field_quality_alert__production_id
+#: model:ir.model.fields,field_description:quality_mrp.field_quality_check__production_id
+msgid "Production Order"
+msgstr "製造オーダ"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_quality_alert
+#: model_terms:ir.ui.view,arch_db:quality_mrp.mrp_production_view_form_inherit_quality
+msgid "Quality Alert"
+msgstr "品質アラート"
+
+#. module: quality_mrp
+#: model:ir.model.fields,field_description:quality_mrp.field_mrp_production__quality_alert_count
+msgid "Quality Alert Count"
+msgstr "品質アラート数"
+
+#. module: quality_mrp
+#: model:ir.actions.server,name:quality_mrp.mrp_production_action_quality_check_on_demand
+#: model:ir.model,name:quality_mrp.model_quality_check
+msgid "Quality Check"
+msgstr "品質検査"
+
+#. module: quality_mrp
+#: model:ir.model.fields,field_description:quality_mrp.field_mrp_production__quality_check_fail
+msgid "Quality Check Fail"
+msgstr "品質検査不合格"
+
+#. module: quality_mrp
+#: model:ir.model.fields,field_description:quality_mrp.field_mrp_production__quality_check_todo
+msgid "Quality Check Todo"
+msgstr "品質検査 Todo"
+
+#. module: quality_mrp
+#: model:ir.actions.act_window,name:quality_mrp.quality_check_action_mo
+#: model_terms:ir.ui.view,arch_db:quality_mrp.mrp_production_view_form_inherit_quality
+msgid "Quality Checks"
+msgstr "品質検査"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_quality_point
+msgid "Quality Control Point"
+msgstr "品質検査ポイント"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_stock_move
+msgid "Stock Move"
+msgstr "在庫移動"
+
+#. module: quality_mrp
+#. odoo-python
+#: code:addons/quality_mrp/models/quality.py:0
+msgid "Warning"
+msgstr "警告"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_quality_check_wizard
+msgid "Wizard for Quality Check Pop Up"
+msgstr "品質検査ポップアップ用ウィザード"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_quality_check_on_demand
+msgid "Wizard to select on-demand quality check points"
+msgstr "オンデマンド品質検査ポイント選択ウィザード"
+
+#. module: quality_mrp
+#. odoo-python
+#: code:addons/quality_mrp/models/mrp_production.py:0
+#: code:addons/quality_mrp/wizard/on_demand_quality_check_wizard.py:0
+msgid ""
+"You can not create quality check for a draft, done or cancelled "
+"manufacturing order."
+msgstr ""
+"ドラフト、完了済、取消済の製造オーダに対して品質検査を作成することはできませ"
+"ん。"
+
+#. module: quality_mrp
+#. odoo-python
+#: code:addons/quality_mrp/models/mrp_production.py:0
+msgid ""
+"You cannot perform a quality check if the quantity producing is zero. Please "
+"set the production quantity first."
+msgstr ""
+"製造数量がゼロの場合、品質チェックはできません。最初にプロダクト数量を設定し"
+"て下さい。"
+
+#. module: quality_mrp
+#. odoo-python
+#: code:addons/quality_mrp/models/mrp_production.py:0
+msgid "You still need to do the quality checks!"
+msgstr "品質検査が必要です。"
+
+#~ msgid ""
+#~ "The Quantity quality check type is not possible with work order "
+#~ "operations."
+#~ msgstr "作業オーダオペレーションでは、数量品質検査タイプは使用できません。"

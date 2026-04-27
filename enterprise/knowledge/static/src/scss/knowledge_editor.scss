@@ -1,0 +1,27 @@
+.o_knowledge_editor {
+    .o_field_html .note-editable {
+        /* We are removing the bar when inside the knowledge app in order to keep the blank pad look of the app. */
+        border: none !important;
+    }
+}
+
+@include media-breakpoint-down(xl) {
+    .o_knowledge_editor .o_field_knowledge_html_field_container:not(.oe_empty) .note-editable,
+    .o_knowledge_editor .o_readonly {
+        padding-bottom: 1rem !important; //overriding html field's padding (web_enterprise style)
+    }
+}
+
+@include media-breakpoint-up(lg) {
+    .o_knowledge_editor .o_field_knowledge_html_field_container:not(.oe_empty) .note-editable,
+    .o_knowledge_editor .o_readonly {
+        padding-bottom: 50vh !important; //overriding html field's padding (web_enterprise style)
+    }
+}
+
+@media print {
+    .o_knowledge_editor .note-editable,
+    .o_knowledge_editor .o_readonly {
+        padding-bottom: 0 !important; // overriding html field's padding (web_enterprise style)
+    }
+}

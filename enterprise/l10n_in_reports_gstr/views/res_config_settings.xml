@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_l10n_in_gstr" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n_in_gstr</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="india_integration_section" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </div>
+            <xpath expr="//block[@id='india_localization']" position="inside">
+                <setting name="vendor_einvoice_in"
+                         string="Fetch Vendor E-Invoiced Document"
+                         invisible="country_code != 'IN'"
+                         help="This feature helps you to quickly create draft vendor bills using the data your vendor submitted during E-invoicing on the GST portal."
+                         company_dependent="1">
+                    <field name="l10n_in_gstr_activate_einvoice_fetch" widget="radio" class="oe_inline" string="Fetch Vendor E-Invoiced Document"/>
+                </setting>
+                <setting id="l10n_in_gst_iap"
+                         string="Indian GST"
+                         help="Setup GST Service for this company"
+                         company_dependent="1"
+                         invisible="not module_l10n_in_edi">
+                    <div id="gsp_setting">
+                        <div class="text-warning" invisible="l10n_in_gstr_gst_username in (False, '')">
+                            Click on Send OTP to create token and verify username.
+                            <br/>
+                            <small>
+                                *If you send OTP continuously more than 3 times your username will be blocked for 6 hours
+                            </small>
+                        </div>
+                        <div class="content-group">
+                            <div class="mt16 row">
+                                <label for="l10n_in_gstr_gst_username" string="GST Username" class="col-3 col-lg-4 o_light_label"/>
+                                <field name="l10n_in_gstr_gst_username" nolabel="1"/>
+                            </div>
+                            <div class="row" title="if OTP is verified then the token will expire in 6 hours if you activate this it will refresh the token before expiring until the duration you set in GST Portal.">
+                                <label for="l10n_in_gstr_gst_auto_refresh_token" string="Refresh Token" class="col-3 col-lg-4 o_light_label"/>
+                                <field name="l10n_in_gstr_gst_auto_refresh_token" nolabel="1"/>
+                            </div>
+                        </div>
+                        <div class='mt8'>
+                            <button name="l10n_in_gstr_gst_send_otp" icon="oi-arrow-right" type="object" string=" Send OTP" class="btn-link"/>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

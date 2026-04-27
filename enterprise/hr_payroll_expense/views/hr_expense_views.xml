@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_expense_sheet_view_form_inherit_payroll" model="ir.ui.view">
+        <field name="name">hr.expense.sheet.view.form.payroll</field>
+        <field name="model">hr.expense.sheet</field>
+        <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <field name="payslip_id" invisible="1"/>
+                <button class="oe_stat_button" name="action_open_payslip" type="object" icon="fa-dollar" invisible="not payslip_id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Payslip</span>
+                    </div>
+                </button>
+            </div>
+            <button name="action_sheet_move_post" position="after">
+                <field name="refund_in_payslip" invisible="1"/>
+                <field name="payslip_id" invisible="1"/>
+                <button name="action_report_in_next_payslip" string="Report in Next Payslip" type="object"
+                        groups="account.group_account_invoice,hr_payroll.group_hr_payroll_user"
+                        invisible="refund_in_payslip or state != 'approve' or payment_mode == 'company_account'"
+                        class="oe_highlight" data-hotkey="g"/>
+                <button name="action_remove_from_payslip" string="Remove from Payslip" type="object"
+                        groups="account.group_account_invoice,hr_payroll.group_hr_payroll_user"
+                        invisible="not refund_in_payslip or state == 'done' or payment_mode == 'company_account'"
+                        class="oe_highlight" data-hotkey="g"/>
+            </button>
+            <button name="action_sheet_move_post" position="attributes">
+                <attribute name="invisible">refund_in_payslip or state != 'approve'</attribute>
+            </button>
+            <button name="action_refuse_expense_sheets" position="attributes">
+                <attribute name="invisible">state not in ('submit', 'approve') or refund_in_payslip</attribute>
+            </button>
+        </field>
+    </record>
+
+    <record id="hr_expense_add_to_payslip_action_server" model="ir.actions.server">
+        <field name="name">Report in Next Payslip</field>
+        <field name="model_id" ref="model_hr_expense_sheet"/>
+        <field name="binding_model_id" ref="model_hr_expense_sheet"/>
+        <field name="binding_type">action</field>
+        <field name="binding_view_types">list</field>
+        <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
+        <field name="state">code</field>
+        <field name="code">
+            records.action_report_in_next_payslip()
+        </field>
+    </record>
+</odoo>

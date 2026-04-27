@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="jpk_fa_export_template">
+        <JPK xmlns="http://jpk.mf.gov.pl/wzor/2022/02/17/02171/"
+            xmlns:etd="http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2018/08/24/eD/DefinicjeTypy/">
+            <Naglowek>
+                <KodFormularza kodSystemowy="JPK_FA (4)" wersjaSchemy="1-0">JPK_FA</KodFormularza>
+                <WariantFormularza>4</WariantFormularza>
+                <CelZlozenia>1</CelZlozenia>
+                <DataWytworzeniaJPK t-out="date_now"/> <!-- Date and time of creation of JPK_FA -->
+                <DataOd t-out="date_from"/> <!-- Start date of the period covered by JPK_FA -->
+                <DataDo t-out="date_to"/> <!-- End date of the period covered by JPK_FA -->
+                <KodUrzedu t-out="company.l10n_pl_reports_tax_office_id.code"/> <!-- Tax office code applicable to taxpayers submitting JPK_FA -->
+            </Naglowek>
+
+            <Podmiot1>
+                <IdentyfikatorPodmiotu> <!-- Entity identification data -->
+                    <NIP t-out="vat_without_country_prefix"/> <!-- Tax Identification Number -->
+                    <PelnaNazwa t-out="company.name"/> <!-- FullName -->
+                </IdentyfikatorPodmiotu>
+                <AdresPodmiotu t-if="company.country_code == 'PL'"> <!-- Used when the address is in Poland -->
+                    <etd:KodKraju t-out="company.country_code"/> <!-- Country Code -->
+                    <etd:Wojewodztwo t-out="company.state_id.name"/> <!-- Province, corresponding to 'state_id' in odoo -->
+                    <etd:Powiat t-out="company.city"/>
+                    <etd:Gmina t-out="company.city"/>
+                    <etd:Ulica t-out="partner.street_name"/> <!-- Street -->
+                    <etd:NrDomu t-out="partner.street_number"/> <!-- House Number -->
+                    <etd:NrLokalu t-out="partner.street_number2"/> <!-- Room number -->
+                    <etd:Miejscowosc t-out="company.city"/>
+                    <etd:KodPocztowy t-out="company.zip"/> <!-- PostalCode -->
+                </AdresPodmiotu>
+                <AdresPodmiotu2 t-if="company.country_code != 'PL'"> <!-- Used when the address is not in Poland -->
+                    <etd:KodKraju t-out="company.country_code"/>
+                    <etd:KodPocztowy t-out="company.zip"/>
+                    <etd:Miejscowosc t-out="company.city"/>
+                    <etd:Ulica t-out="partner.street_name"/>
+                    <etd:NrDomu t-out="partner.street_number"/>
+                    <etd:NrLokalu t-out="partner.street_number2"/>
+                </AdresPodmiotu2>
+            </Podmiot1>
+            <t t-foreach="invoices.values()" t-as="invoice">
+                <Faktura>
+                    <KodWaluty t-out="invoice['currency_name']"/> <!-- Three-letter currency code (ISO-4217) in which the invoice, order, or contract was issued -->
+                    <P_1 t-out="invoice['invoice_date']"/> <!-- Date of issue -->
+                    <P_2A t-out="invoice['move_name']"/> <!-- Document Number -->
+                    <P_3A t-out="invoice['partner_name']"/> <!-- Customer name (optional) -->
+                    <P_3B t-out="invoice['partner_address']"/> <!-- Customer address (optional) -->
+                    <P_3C t-out="company.name"/> <!-- Supplier name -->
+                    <P_3D t-out="partner.contact_address_complete"/> <!-- Supplier address -->
+                    <P_4B t-if="company.vat" t-out="vat_without_country_prefix"/> <!-- Tax Registration Number (without country prefix) - Supplier - (optional) -->
+                    <P_5B t-if="invoice.get('partner_vat')" t-out="invoice['vat_without_country_prefix']"/> <!-- Tax Registration Number (without country prefix) - Customer - (optional) -->
+                    <P_13_1 t-out="invoice['tax_detail']['23']['net_amount']"/> <!-- Net Amount – Taxable sales with standard rate (now 23% or 22%) (decided : in entered currency) -->
+                    <P_14_1 t-out="invoice['tax_detail']['23']['tax_amount']"/> <!-- Tax Amount - Taxable sales with standard rate (now 22% or 23%) - in entered currency -->
+                    <P_14_1W t-if="invoice['currency_name'] != 'PLN'" t-out="invoice['tax_detail']['23']['tax_amount_in_PLN']"/> <!-- Tax Amount - Taxable sales with standard rate (now 22% or 23%) - in PLN - (optional) -->
+                    <P_13_2 t-out="invoice['tax_detail']['8']['net_amount']"/> <!-- Net Amount – Taxable sales with reduced rate (now 7% or 8%) -->
+                    <P_14_2 t-out="invoice['tax_detail']['8']['tax_amount']"/> <!-- Tax Amount - Taxable sales with reduced rate (now 7% or 8%) - in entered currency -->
+                    <P_14_2W t-if="invoice['currency_name'] != 'PLN'" t-out="invoice['tax_detail']['8']['tax_amount_in_PLN']"/> <!-- Tax Amount - Taxable sales with reduced rate (now 7% or 8%) - in PLN - (optional) -->
+                    <P_13_3 t-out="invoice['tax_detail']['5']['net_amount']"/> <!-- Net Amount – Taxable sales with second level reduced rate (now 5%) -->
+                    <P_14_3 t-out="invoice['tax_detail']['5']['tax_amount']"/> <!-- Tax Amount - Taxable sales with second reduced rate (now 5%) - in entered currency -->
+                    <P_14_3W t-if="invoice['currency_name'] != 'PLN'" t-out="invoice['tax_detail']['5']['tax_amount_in_PLN']"/> <!-- Tax Amount - Taxable sales with second reduced rate (now 5%) - in PLN (optional) -->
+                    <P_13_4 t-out="0.0"/> <!-- Reserve field for taxable sales with third reduced tax rate (net amount) -->
+                    <P_14_4 t-out="0.0"/> <!-- Reserve field for taxable sales with third lowered tax rate (VAT amount) - in entered currency -->
+                    <P_13_6 t-out="invoice['tax_detail']['0']['net_amount']"/> <!-- Total net sales with 0% tax rate (optional) -->
+                    <P_15 t-out="invoice['total_gross_amount']"/> <!-- Invoice Total amount (Invoice Total) (Gemini : in entered currency) -->
+                    <P_16>false</P_16>
+                    <P_17>false</P_17>
+                    <P_18>false</P_18>
+                    <P_18A>false</P_18A>
+                    <P_19 t-out="invoice['vat_exempt'] or 'false'"/> <!-- Indicator of the VAT exempt use -->
+                    <P_19A>false</P_19A>
+                    <P_19B>false</P_19B>
+                    <P_19C>false</P_19C>
+                    <P_20>false</P_20>
+                    <P_20A>false</P_20A>
+                    <P_20B>false</P_20B>
+                    <P_21>false</P_21>
+                    <P_21A>false</P_21A>
+                    <P_21B>false</P_21B>
+                    <P_21C>false</P_21C>
+                    <P_22>false</P_22>
+                    <P_23>false</P_23>
+                    <P_106E_2>false</P_106E_2>
+                    <P_106E_3>false</P_106E_3>
+                    <P_106E_3A>false</P_106E_3A>
+                    <RodzajFaktury t-out="invoice['type']"/> <!-- Invoice Type: VAT, KOREKTA -->
+                    <NrFaKorygowanej t-if="invoice['type'] == 'KOREKTA'" t-out="invoice['inverted_invoice']"/> <!-- If KOREKTA, invoice number being corrected -->
+                </Faktura>
+            </t>
+
+
+            <FakturaCtrl>
+                <LiczbaFaktur t-out="number_invoices"/> <!-- Number of invoices in the period covered by JPK_FA -->
+                <WartoscFaktur t-out="total_amount_invoices"/>  <!-- Total value of column P_15 in the Invoice table -->
+            </FakturaCtrl>
+            <t t-foreach="invoices.values()" t-as="invoice">
+                <t t-foreach="invoice['move_product_lines']" t-as="move_line">
+                    <FakturaWiersz> <!-- Invoice line -->
+                        <P_2B t-out="invoice['move_name']"/> <!-- Document number -->
+                        <P_7 t-out="move_line['name']"/> <!-- Line description -->
+                        <P_8B t-out="move_line['quantity']"/> <!-- Quantity -->
+                        <P_9A t-out="move_line['price_unit']"/> <!-- Net unit price -->
+                        <P_10 t-out="move_line['discount']"/> <!-- Discount amount -->
+                        <P_11 t-out="move_line['price_subtotal']"/> <!-- Net amount (Gemini: in entered currency) -->
+                        <P_11A t-out="move_line['price_total']"/> <!-- Gross amount (optional) (Gemini: in entered currency) -->
+                        <P_12 t-out="int(move_line.get('tax_rate') or '0')"/> <!-- Tax rate -->
+                    </FakturaWiersz>
+                </t>
+            </t>
+            <FakturaWierszCtrl>
+                <LiczbaWierszyFaktur t-out="number_invoice_lines"/> <!-- Number of invoice lines -->
+                <WartoscWierszyFaktur t-out="total_amount_invoices"/> <!-- Total amount of invoice lines -->
+            </FakturaWierszCtrl>
+        </JPK>
+    </template>
+</odoo>

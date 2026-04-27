@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.DocumentsKanbanView" t-inherit="web.KanbanView" t-inherit-mode="primary">
+        <xpath expr="//Layout" position="attributes">
+            <attribute name="className">(model.useSampleModel ? 'o_view_sample_data' : '')
+                + ' o_documents_content o_documents_kanban' + (env.isSmall ? ' overflow-hidden' : '')</attribute>
+        </xpath>
+        <xpath expr="//Layout" position="inside">
+            <t t-set-slot="control-panel-create-button">
+                <t t-call="documents.DocumentsViews.ControlPanel"/>
+            </t>
+
+            <!-- Remove the search bar and let the control panel handle it -->
+            <t t-set-slot="layout-actions"/>
+            <!-- Insert a simple Selection controller -->
+            <t t-set-slot="control-panel-selection-actions">
+                <t t-call="web.ListView.Selection" t-if="model.root.selection.length">
+                    <t t-set="isDomainSelected" t-value="false"/>
+                    <t t-set="isPageSelected" t-value="false"/>
+                    <t t-set="nbSelected" t-value="model.root.selection.length"/>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-component='searchBarToggler.component']" position="attributes">
+            <attribute name="t-if">!model.root.selection.length</attribute>
+        </xpath>
+        <xpath expr="//Layout/t[@t-component='props.Renderer']" position="attributes">
+            <attribute name="previewStore">documentStates.previewStore</attribute>
+        </xpath>
+    </t>
+</templates>

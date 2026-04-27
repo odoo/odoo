@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_workorder_view_form_tablet_expiry_inherit" model="ir.ui.view">
+        <field name="name">mrp.workorder.tablet.view.expiry.inherit</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp_workorder.mrp_workorder_view_form_tablet"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='do_finish']" position="attributes">
+                <attribute name="context">{'skip_expired': True}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_open_manufacturing_order']" position="attributes">
+                <attribute name="context">{'skip_expired': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

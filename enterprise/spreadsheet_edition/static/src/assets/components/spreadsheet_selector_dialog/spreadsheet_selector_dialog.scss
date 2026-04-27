@@ -1,0 +1,54 @@
+.o-spreadsheet-templates-dialog {
+    .o-sp-dialog-meta-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding-bottom: 20px;
+
+        .o-sp-dialog-meta-name {
+            display: flex;
+            width: 45%;
+
+            .o-sp-dialog-meta-name-label {
+                flex-shrink: 0;
+                padding-right: 5px;
+            }
+        }
+
+        .o-sp-dialog-meta-threshold {
+            display: flex;
+            width: 45%;
+
+            .o-sp-dialog-meta-threshold-input {
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+
+            .o-sp-dialog-meta-threshold-text {
+                flex-shrink: 0;
+            }
+        }
+    }
+
+    .o-sp-dialog-cp {
+        padding-top: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        .o-sp-searchview {
+            width: 50%;
+            border-bottom: 1px solid $o-gray-300;
+            display: flex;
+            flex-direction: row;
+
+            .o-sp-searchview-input {
+                border: none;
+            }
+
+            .o-sp-searchview-icon {
+                padding-top: 8px;
+            }
+        }
+    }
+}

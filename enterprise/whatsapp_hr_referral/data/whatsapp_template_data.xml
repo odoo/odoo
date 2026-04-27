@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<odoo noupdate="1">
+    <record id="whatsapp_template_referral_sharing" model="whatsapp.template" forcecreate="0">
+        <field name="name">Referral Sharing</field>
+        <field name="template_name">referral_sharing</field>
+        <field name="status">draft</field>
+        <field name="lang_code">en</field>
+        <field name="template_type">marketing</field>
+        <field name="phone_field">recipient</field>
+        <field name="model_id" ref="model_hr_referral_link_to_share"/>
+        <field name="body">Hi!
+*{{1}}* is hiring for a *{{2}}* position.
+I think you would be a great fit for this role.
+If you are interested, please apply here: {{3}}
+        </field>
+        <field name="variable_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {
+                'name': '{{1}}',
+                'demo_value': 'My company',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'job_id.company_id'
+            }),
+            (0, 0, {
+                'name': '{{2}}',
+                'demo_value': 'wonderful job',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'job_id'
+            }),
+            (0, 0, {
+                'name': '{{3}}',
+                'demo_value': 'https://example.com/jobs/',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'url'
+            })
+        ]" />
+    </record>
+</odoo>

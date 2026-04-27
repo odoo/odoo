@@ -1,0 +1,66 @@
+.ph_page {
+  position: relative;
+  font-size: 10pt;
+  width: 8in !important;
+  zoom: 1.25;
+  margin-left: -15px;
+  margin-right: -15px;
+
+  &:after {
+    display: block;
+    content: ".";
+    width: 8.25in;
+    visibility: hidden;
+  }
+
+  .ph_check {
+    width: 8in;
+    height: 3in;
+  }
+
+  .ph_check > * {
+    position: absolute;
+    white-space: nowrap;
+  }
+
+  .ph_check_date {
+    top: 0.45in;
+    letter-spacing: 0.11in;
+  }
+
+  .ph_check_date_month {
+    left: 5.925in;
+  }
+
+  .ph_check_date_day {
+    left: 6.39in;
+  }
+
+  .ph_check_date_year {
+    left: 6.89in;
+  }
+
+  .ph_check_partner_name {
+    top: 0.76in;
+    left: 1.1in;
+    width: 4.36in;
+    font-size: 12pt;
+    font-weight: bold;
+  }
+
+  .ph_check_amount {
+    top: 0.76in;
+    left: 5.7in;
+    width: 2in;
+    font-size: 12pt;
+    font-weight: bold;
+  }
+
+  .ph_check_amount_words {
+    top: 1.1in;
+    left: 0.78in;
+    width: 6.82in;
+    font-weight: bold;
+    overflow: hidden;
+  }
+}

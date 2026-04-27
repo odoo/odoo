@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="account.BankRecQuickCreate">
+        <BankRecQuickCreateController t-if="state.isLoaded" t-props="quickCreateProps" />
+    </t>
+
+    <t t-name="account.BankRecQuickCreateController">
+        <div
+            class="o_bank_rec_quick_create o_kanban_record o_form_view w-100"
+            t-ref="root"
+        >
+            <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="props.archInfo"/>
+            <div class="d-flex flex-wrap justify-content-end gap-1 button_group border-top-0 mt-2">
+                <button class="btn btn-primary o_kanban_add me-1" t-on-click="() => this.validate('add')" data-hotkey="s">
+                    Add &amp; New
+                </button>
+                <button class="btn btn-secondary o_kanban_edit me-1" t-on-click="() => this.validate('add_close')" data-hotkey="shift+s">
+                    Add &amp; Close
+                </button>
+                <span class="flex-grow-1"></span>
+                <button class="btn btn-secondary o_kanban_cancel" t-on-click="() => this.cancel(true)" data-hotkey="d">
+                    <i class="fa fa-trash" />
+                </button>
+            </div>
+        </div>
+    </t>
+
+</templates>

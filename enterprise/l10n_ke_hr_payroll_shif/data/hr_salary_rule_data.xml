@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ke_employees_salary_shif_amount_hidden" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ke_hr_payroll.HIDDEN"/>
+        <field name="name">SHIF Amount (Hidden)</field>
+        <field name="code">SHIF_AMOUNT_HIDDEN</field>
+        <field name="sequence">40</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = False</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+basic = categories['BASIC']
+result = 0
+if basic &lt; float(payslip._rule_parameter('l10n_ke_shif_min_basic')):
+    result = payslip._rule_parameter('l10n_ke_shif_min_amount')
+else:
+    result = payslip._rule_parameter('l10n_ke_shif_rate') * basic
+        </field>
+        <field name="struct_id" ref="l10n_ke_hr_payroll.hr_payroll_structure_ken_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="l10n_ke_employees_shif_relief" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ke_hr_payroll.INS_RELIEF"/>
+        <field name="name">SHIF Relief</field>
+        <field name="code">SHIF_RELIEF</field>
+        <field name="sequence">41</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+result = False
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['SHIF_AMOUNT_HIDDEN']['total']
+result_rate = -15
+        </field>
+        <field name="struct_id" ref="l10n_ke_hr_payroll.hr_payroll_structure_ken_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="l10n_ke_employees_salary_shif_amount" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ke_hr_payroll.STATUTORY_DED"/>
+        <field name="name">SHIF Amount</field>
+        <field name="code">SHIF_AMOUNT</field>
+        <field name="sequence">54</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = not contract.l10n_ke_is_secondary and payslip._rule_parameter('l10n_ke_shif_rate')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+gross = result_rules['GROSS']['total']
+result = 0
+if gross &lt; float(payslip._rule_parameter('l10n_ke_shif_min_gross')):
+    result = payslip._rule_parameter('l10n_ke_shif_min_amount')
+else:
+    result = payslip._rule_parameter('l10n_ke_shif_rate') * gross
+        </field>
+        <field name="struct_id" ref="l10n_ke_hr_payroll.hr_payroll_structure_ken_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="l10n_ke_hr_payroll.l10n_ke_employees_salary_gross_taxable" model="hr.salary.rule">
+        <field name="amount_python_compute">
+taxable_pension = min(contract.l10n_ke_pension_contribution, payslip._rule_parameter('l10n_ke_max_pension_contribution')) - max(0, contract.l10n_ke_pension_allowance - payslip._rule_parameter('l10n_ke_pension_alw_max'))
+result = result_rules['GROSS']['total'] - categories['KE_UT_ALW'] - employee.l10n_ke_mortgage - taxable_pension - result_rules['NSSF_AMOUNT']['total']
+if payslip.date_to &gt;= datetime(2024,12,27).date():
+    result -= result_rules['SHIF_AMOUNT']['total'] + result_rules['AHL_AMOUNT']['total']
+        </field>
+    </record>
+</odoo>

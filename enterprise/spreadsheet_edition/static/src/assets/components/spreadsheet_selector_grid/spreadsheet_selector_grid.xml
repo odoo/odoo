@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="documents_spreadsheet.SpreadsheetSelectorGrid">
+        <div class="o-spreadsheets-grid-container">
+            <div
+                t-foreach="spreadsheets"
+                t-as="spreadsheet"
+                t-key="spreadsheet.id"
+                class="o-spreadsheet-grid"
+                t-att-class="spreadsheet.id === null ? 'o-blank-spreadsheet-grid' : ''"
+            >
+                <div
+                    tabindex="0"
+                    t-on-focus="() => this.props.onSpreadsheetSelected(spreadsheet.id)"
+                    t-on-dblclick="this.props.onSpreadsheetDblClicked"
+                    t-att-class="{'o-spreadsheet-grid-image': true, 'o-spreadsheet-grid-selected': this.props.selectedSpreadsheetId === spreadsheet.id}"
+                    t-att-data-id="spreadsheet.id"
+                >
+					<t t-set="thumbnail" t-value="spreadsheet.id === null ? this.blankThumbnailPlaceholder : props.getThumbnailURL(spreadsheet)" />
+                    <img
+                        t-if="thumbnail"
+                        t-att-src="thumbnail"
+                        t-att-title="spreadsheet.display_name"
+                    />
+                    <!-- Display no preview message if no thumbnail is available -->
+                    <div t-else="1" class="o-spreadsheet-grid-no-preview d-flex flex-grow-1 align-items-center justify-content-center">
+                        <p class="text-truncate text-muted m-1">No preview</p>
+                    </div>
+                </div>
+                <div class="o-spreadsheet-grid-item-name" t-esc="spreadsheet.display_name" />
+            </div>
+
+            <!-- Ghost items for proper spacing -->
+            <div t-foreach="Array(itemsPerPage)" t-as="i" t-key="i_index" class="o-spreadsheet-grid o-spreadsheet-grid-ghost-item mh-0" />
+        </div>
+    </t>
+</templates>

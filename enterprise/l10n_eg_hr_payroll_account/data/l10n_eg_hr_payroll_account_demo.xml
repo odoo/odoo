@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.partner_demo_company_eg" model="res.partner" forcecreate="1">
+        <field name="name">My Egyptian Company</field>
+        <field name="street">Egyptian Street</field>
+        <field name="zip">1000</field>
+        <field name="city">Cairo</field>
+        <field name="country_id" ref="base.eg"/>
+    </record>
+
+    <record id="base.demo_company_eg" model="res.company" forcecreate="1">
+        <field name="name">My Egyptian Company</field>
+        <field name="currency_id" ref="base.EGP"/>
+        <field name="partner_id" ref="base.partner_demo_company_eg"/>
+    </record>
+
+    <record id="res_partner_employee_eg" model="res.partner">
+        <field name="name">Luke Tyson</field>
+        <field name="company_id" ref="base.demo_company_eg"/>
+    </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_eg'))]"/>
+        <field name="tz">Asia/Dhaka</field>
+    </record>
+
+    <record id="hr_employee_eg" model="hr.employee">
+        <field name="company_id" ref="base.demo_company_eg"/>
+        <field name="name">Luke Tyson</field>
+        <field name="work_contact_id" ref="l10n_eg_hr_payroll_account.res_partner_employee_eg"/>
+        <field name="job_title">Salesperson</field>
+        <field name="work_phone">0123 456 789</field>
+        <field name="work_email">luke.tyson@example.com</field>
+        <field name="private_street">Egyptian Street</field>
+        <field name="private_city">Cairo</field>
+        <field name="private_country_id" ref="base.eg"/>
+        <field name="birthday" eval="datetime(1985, 5, 12).date()"/>
+        <field name="image_1920" type="base64" file="hr/static/img/employee_ngh-image.jpg"/>
+        <field name="gender">male</field>
+    </record>
+
+    <record id="hr_contract_eg" model="hr.contract">
+        <field name="company_id" ref="base.demo_company_eg"/>
+        <field name="employee_id" ref="l10n_eg_hr_payroll_account.hr_employee_eg"/>
+        <field name="name">Luke Tyson Contract</field>
+        <field name="date_start" eval="datetime(2020, 1, 1).date()"/>
+        <field name="wage">13000</field>
+        <field name="structure_type_id" ref="l10n_eg_hr_payroll.structure_type_employee_eg"/>
+        <field name="state">open</field>
+        <field name="l10n_eg_transportation_allowance">100</field>
+        <field name="l10n_eg_housing_allowance">500</field>
+        <field name="l10n_eg_other_allowances">50</field>
+        <field name="l10n_eg_social_insurance_reference">200</field>
+    </record>
+
+    <data noupdate="1">
+        <function model="account.chart.template" name="try_loading">
+            <value eval="[]"/>
+            <value>eg</value>
+            <value model="res.company" eval="obj().env.ref('base.demo_company_eg')"/>
+            <value name="install_demo" eval="True"/>
+        </function>
+    </data>
+</odoo>

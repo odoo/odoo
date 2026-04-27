@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp_plm.BomOverviewLine" t-inherit="mrp.BomOverviewLine" t-inherit-mode="extension">
+        <xpath expr="//td[@name='td_mrp_bom']" position="after">
+            <td t-if="props.showOptions.ecos" class="text-end">
+                <span t-if="data.version" t-esc="data.version"/>
+            </td>
+            <td t-if="props.showOptions.ecos" class="text-end">
+                <a href="#" t-on-click.prevent="goToEco" t-esc="data.ecos"/>
+            </td>
+        </xpath>
+    </t>
+
+</templates>

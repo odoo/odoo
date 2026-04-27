@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+    <t t-name="l10n_in.mybeautifulbutton">
+        <button type="button" class="btn btn-secondary" t-on-click="() => this.openScanWizard()" t-if="this.isButtonDisplayed">
+            Scan
+        </button>
+    </t>
+    
+    <t t-name="l10n_in.KanbanView.ScanButton" t-inherit="account.AccountMoveKanbanView.Buttons" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_cp_buttons')]" position="inside">
+            <t t-call="l10n_in.mybeautifulbutton" />
+        </xpath>
+    </t>
+
+    <t t-name="l10n_in.ListView.ScanButton" t-inherit="account.AccountMoveListView.Buttons" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+            <t t-call="l10n_in.mybeautifulbutton" />
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="hr_payroll_dashboard_warning_ip_eligible_contract" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees without Intellectual Property</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="evaluation_code">
+belgian_companies = self.env.companies.filtered(lambda c: c.country_id.code == 'BE')
+ip_eligible_contract = self.env['hr.contract'].search([
+    ('job_id.l10n_be_contract_ip', '=', True),
+    ('ip', '=', False),
+    ('state', 'in', ['draft', 'open']),
+    ('company_id', 'in', belgian_companies.ids),
+])
+if ip_eligible_contract:
+    warning_count = len(ip_eligible_contract)
+    warning_records = ip_eligible_contract
+            </field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_employee_without_exemption" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees without Withholding Taxes Exemption</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="evaluation_code">
+belgian_companies = self.env.companies.filtered(lambda c: c.country_id.code == 'BE')
+tax_exemption_eligible_contract = self.env['hr.contract'].search([
+    ('rd_percentage', '=', 0),
+    ('job_id.l10n_be_contract_withholding_taxes_exemption', '=', True),
+    ('employee_id.certificate', 'in', ['bachelor', 'master', 'doctor', 'civil_engineer']),
+    ('state', 'in', ['draft', 'open']),
+    ('company_id', 'in', belgian_companies.ids),
+])
+if tax_exemption_eligible_contract:
+    warning_count = len(tax_exemption_eligible_contract)
+    warning_records = tax_exemption_eligible_contract
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_iot_six.SixIoTBalanceButton" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        <xpath expr="//DropdownItem[contains(text(), 'Create Product')]" position="before">
+            <DropdownItem onSelected="() => sendBalance()">
+                Six Terminal Balance
+            </DropdownItem>
+        </xpath>
+    </t>
+</templates>

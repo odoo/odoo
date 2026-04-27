@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="l10n_ph_reports.SlspReportFilterExtraOptions" t-inherit="account_reports.AccountReportFilterExtraOptions">
+        <xpath expr="//div[contains(@class, 'dropdown-divider')]" position="before">
+            <DropdownItem
+                class="{ 'selected': controller.options.include_no_tin }"
+                onSelected="() => this.filterClicked({ optionKey: 'include_no_tin', reload: true})"
+                closingMode="'none'"
+            >
+                Including Partners Without TIN
+            </DropdownItem>
+
+            <DropdownItem
+                class="{ 'selected': controller.options.include_imports }"
+                onSelected="() => this.filterClicked({ optionKey: 'include_imports', reload: true})"
+                closingMode="'none'"
+            >
+                Including Importations
+            </DropdownItem>
+        </xpath>
+    </t>
+</templates>

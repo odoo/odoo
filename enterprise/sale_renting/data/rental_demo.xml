@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+    <record id="cat_renting" model="product.category">
+        <field name="parent_id" ref="product.product_category_all"/>
+        <field name="name">Rental</field>
+    </record>
+
+    <!-- Rentable products -->
+    <record id="rental_product_1" model="product.product">
+        <field name="name">Projector</field>
+        <field name="categ_id" ref="sale_renting.cat_renting"/>
+        <field name="type">consu</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        <field name="default_code">RENT001</field>
+        <field name="image_1920" type="base64" file="sale_renting/static/img/projector.jpg"/>
+        <field name="rent_ok" eval="True"/>
+        <field name="extra_hourly" eval="7.00"/>
+        <field name="extra_daily" eval="30.00"/>
+    </record>
+
+    <record id="rental_product_2" model="product.product">
+        <field name="name">Meeting Room</field>
+        <field name="categ_id" ref="sale_renting.cat_renting"/>
+        <field name="type">service</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        <field name="image_1920" type="base64" file="sale_renting/static/img/meeting_room.jpeg"/>
+        <field name="rent_ok" eval="True"/>
+        <field name="extra_hourly" eval="20.0"/>
+        <field name="extra_daily" eval="200.0"/>
+    </record>
+
+    <record id="rental_product_3" model="product.product">
+        <field name="name">Printer</field>
+        <field name="categ_id" ref="sale_renting.cat_renting"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        <field name="default_code">RENT003</field>
+        <field name="image_1920" type="base64" file="sale_renting/static/img/printer.png"/>
+        <field name="rent_ok" eval="True"/>
+        <field name="extra_hourly" eval="7.50"/>
+        <field name="extra_daily" eval="75.00"/>
+    </record>
+
+    <!-- Rental pricings -->
+
+    <record id="rental_pricing_1" model="product.pricing">
+        <field name="recurrence_id" ref="sale_renting.recurrence_3_hours"/>
+        <field name="price" eval="5.00"/>
+        <field name="currency_id" ref="base.USD"/>
+    </record>
+    <record id="rental_pricing_2" model="product.pricing">
+        <field name="recurrence_id" ref="recurrence_weekly"/>
+        <field name="price" eval="25"/>
+        <field name="currency_id" ref="base.USD"/>
+    </record>
+
+    <record id="rental_pricing_3" model="product.pricing">
+        <field name="recurrence_id" ref="sale_renting.recurrence_3_hours"/>
+        <field name="price" eval="150.00"/>
+        <field name="currency_id" ref="base.USD"/>
+    </record>
+
+    <record id="rental_pricing_4" model="product.pricing">
+        <field name="recurrence_id" ref="recurrence_weekly"/>
+        <field name="price" eval="900.00"/> <!-- One day of reduction -->
+        <field name="currency_id" ref="base.USD"/>
+    </record>
+
+    <record id="rental_pricing_5" model="product.pricing">
+        <field name="recurrence_id" ref="sale_renting.recurrence_2_weeks"/>
+        <field name="price" eval="1750"/> <!-- 3 days of reduction -->
+        <field name="currency_id" ref="base.USD"/>
+    </record>
+
+    <record id="rental_pricing_6" model="product.pricing">
+        <field name="recurrence_id" ref="sale_renting.recurrence_hourly"/>
+        <field name="price" eval="5.0"/>
+    </record>
+
+    <record id="rental_pricing_7" model="product.pricing">
+        <field name="recurrence_id" ref="sale_renting.recurrence_daily"/>
+        <field name="price" eval="20.0"/>
+    </record>
+
+    <record id="rental_pricing_8" model="product.pricing">
+        <field name="recurrence_id" ref="sale_renting.recurrence_weekly"/>
+        <field name="price" eval="100.0"/>
+    </record>
+
+    <record id="rental_product_1" model="product.product"> <!-- Projector -->
+        <field name="product_pricing_ids" eval="[(6,0,[ref('rental_pricing_1'), ref('rental_pricing_2')])]"/>
+    </record>
+
+    <record id="rental_product_2" model="product.product"> <!-- Meeting Room -->
+        <field name="product_pricing_ids" eval="[(6,0,[ref('rental_pricing_3'), ref('rental_pricing_4'), ref('rental_pricing_5')])]"/>
+    </record>
+
+    <record id="rental_product_3" model="product.product">
+        <!-- Needed to avoid triggering the constraint -->
+        <field name="product_pricing_ids" eval="[Command.clear()]"/>
+    </record>
+
+    <record id="rental_product_3" model="product.product"> <!-- Printer -->
+        <field
+            name="product_pricing_ids"
+            eval="[Command.set([
+                    ref('rental_pricing_6'),
+                    ref('rental_pricing_7'),
+                    ref('rental_pricing_8')
+                  ])]"
+        />
+    </record>
+
+    <!-- Rental Sale orders -->
+
+    <!-- Draft SO -->
+
+    <record id="rental_order_1" model="sale.order">
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="partner_invoice_id" ref="base.res_partner_2"/>
+        <field name="partner_shipping_id" ref="base.res_partner_2"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="team_id" ref="sales_team.team_sales_department"/>
+        <field name="date_order" eval="DateTime.today() - relativedelta(months=3)"/>
+        <field name="rental_start_date" eval="DateTime.today()"/>
+        <field name="rental_return_date" eval="DateTime.today() + relativedelta(days=3)"/>
+    </record>
+
+    <record id="rental_order_line_1" model="sale.order.line">
+        <field name="order_id" ref="rental_order_1"/>
+        <field name="product_id" ref="rental_product_2"/>
+        <field name="product_uom_qty">3</field>
+        <field name="product_uom" ref="uom.product_uom_unit"/>
+        <field name="name" eval="'[RENT002] Meeting Room'"/>
+        <field name="price_unit" eval="450.0"/>
+    </record>
+
+    <record id="rental_order_line_1" model="sale.order.line"> <!-- After creation to avoid the compute and force the value -->
+        <field name="is_rental" eval="True"/>
+    </record>
+
+    <record id="rental_order_line_2" model="sale.order.line">
+        <field name="order_id" ref="rental_order_1"/>
+        <field name="product_id" ref="product.product_delivery_02"/>
+        <field name="product_uom_qty">5</field>
+        <field name="price_unit">145.00</field>
+    </record>
+
+    <!-- Confirmed SO : reserved products -->
+
+    <record id="rental_order_2" model="sale.order"> <!-- NOTE: CONFIRMED RENTAL ORDER WITH LATE RETURN-->
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="partner_invoice_id" ref="base.res_partner_2"/>
+        <field name="partner_shipping_id" ref="base.res_partner_2"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="team_id" ref="sales_team.team_sales_department"/>
+        <field name="date_order" eval="DateTime.today() - relativedelta(months=3)"/>
+        <field name="rental_start_date" eval="DateTime.today() - relativedelta(days=5)"/>
+        <field name="rental_return_date" eval="DateTime.today() - relativedelta(days=1)"/>
+        <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor3')), (4, ref('sales_team.categ_oppor7'))]"/>
+    </record>
+
+    <record id="rental_order_line_3" model="sale.order.line"> <!-- NOTE: partial pickup -->
+        <field name="order_id" ref="rental_order_2"/>
+        <field name="product_id" ref="rental_product_1"/>
+        <field name="product_uom_qty">3</field>
+        <field name="product_uom" ref="uom.product_uom_unit"/>
+        <field name="name" eval="'[RENT001] Projector'"/>
+        <field name="qty_delivered">2</field>
+        <field name="price_unit" eval="150.0"/>
+    </record>
+
+    <record id="rental_order_line_3" model="sale.order.line"> <!-- After creation to avoid the compute and force the value -->
+        <field name="is_rental" eval="True"/>
+    </record>
+
+    <record id="rental_order_line_4" model="sale.order.line">
+        <field name="order_id" ref="rental_order_2"/>
+        <field name="product_id" ref="product.product_delivery_01"/>
+        <field name="product_uom_qty">2</field>
+        <field name="price_unit">65.00</field>
+    </record>
+
+    <record id="rental_order_3" model="sale.order"> <!-- NOTE: CONFIRMED RENTAL ORDER ALREADY PICKED-UP-->
+        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="partner_invoice_id" ref="base.res_partner_1"/>
+        <field name="partner_shipping_id" ref="base.res_partner_1"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="team_id" ref="sales_team.team_sales_department"/>
+        <field name="date_order" eval="DateTime.today() - relativedelta(months=2)"/>
+        <field name="rental_start_date" eval="DateTime.today() - relativedelta(days=5)"/>
+        <field name="rental_return_date" eval="DateTime.today() + relativedelta(days=5)"/>
+        <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor3')), (4, ref('sales_team.categ_oppor7'))]"/>
+    </record>
+
+    <record id="rental_order_line_5" model="sale.order.line">
+        <field name="order_id" ref="rental_order_3"/>
+        <field name="product_id" ref="rental_product_1"/>
+        <field name="product_uom_qty">2</field>
+        <field name="product_uom" ref="uom.product_uom_unit"/>
+        <field name="name" eval="'[RENT001] Projector'"/>
+        <field name="qty_delivered">2</field>
+        <field name="price_unit" eval="100.0"/>
+    </record>
+
+    <record id="rental_order_line_5" model="sale.order.line"> <!-- After creation to avoid the compute and force the value -->
+        <field name="is_rental" eval="True"/>
+    </record>
+
+    <record id="rental_order_activity_1" model="mail.activity">
+        <field name="res_id" ref="sale_renting.rental_order_2"/>
+        <field name="res_model_id" ref="sale_renting.model_sale_order"/>
+        <field name="activity_type_id" ref="sale.mail_act_sale_upsell"/>
+        <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
+        <field name="summary">Follow-up on upsell</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+    <!-- Confirm rental order -->
+    <function model="sale.order" name="action_confirm" eval="[[ref('rental_order_2'), ref('rental_order_3')]]" context="{'action_no_send_mail': True}"/>
+
+</odoo>

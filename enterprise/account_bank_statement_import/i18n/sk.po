@@ -1,0 +1,208 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_bank_statement_import
+#
+# Translators:
+# Wil Odoo, 2025
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2026-01-24 09:13+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Slovak <https://translate.odoo.com/projects/odoo-18/"
+"account_bank_statement_import/sk/>\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
+">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "%d transactions had already been imported and were ignored."
+msgstr "%d transakcie už boli importovné a boli ignorovné."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "1 transaction had already been imported and was ignored."
+msgstr "1 transakcia už bola importovaná a bola ignorovaná."
+
+#. module: account_bank_statement_import
+#: model:ir.model.constraint,message:account_bank_statement_import.constraint_account_bank_statement_line_unique_import_id
+msgid "A bank account transactions can be imported only once!"
+msgstr "Transakcie z bankového účtu je možné importovať len raz!"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Riadok bankového výpisu"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_setup_bank_manual_config
+msgid "Bank setup manual config"
+msgstr "Manuálna konfigurácia nastavenia banky"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"Cannot find in which journal import this statement. Please manually select a "
+"journal."
+msgstr ""
+"Nemožno nájsť v ktorej účtovnej knihe je import výpisu. Prosím zvoľte ho "
+"manuálne."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "Click \"New\" or upload a %s."
+msgstr "Kliknite na „Nový“ alebo nahrajte %s."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"Could not make sense of the given file.\n"
+"Did you install the module to support this type of file?"
+msgstr ""
+"Daný súbor sa nedal spracovať.\n"
+"Nainštalovali ste modul na podporu tohto typu súboru?"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "Go to Apps"
+msgstr "Prejsť na Aplikácie"
+
+#. module: account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
+msgid "Import File"
+msgstr "Importovať súbor"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__unique_import_id
+msgid "Import ID"
+msgstr "Import ID"
+
+#. module: account_bank_statement_import
+#. odoo-javascript
+#: code:addons/account_bank_statement_import/static/src/account_bank_statement_import_model.js:0
+msgid "Import Template for Bank Statements"
+msgstr "Šablóna na import bankových výpisov"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_journal
+msgid "Journal"
+msgstr "Účtovný denník"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "Manual (or import %(import_formats)s)"
+msgstr "Ručne (alebo import %(import_formats)s)"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "No attachment was provided"
+msgstr "Nebola poskytnutá žiadna príloha"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "No currency found matching '%s'."
+msgstr "Žiadna menanenájdena zhodujúca sa s '%s'."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "No transactions matching your filters were found."
+msgstr "Nenašli sa žiadne transakcie zodpovedajúce vašim filtrom."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "Nothing to do here!"
+msgstr "Tu nie je čo robiť!"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"The account of this statement (%(account)s) is not the same as the journal (%"
+"(journal)s)."
+msgstr ""
+"Účet tohoto výpisu (%(account)s) nie je rovnaký ako účtovná kniha (%"
+"(journal)s)."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"The currency of the bank statement (%(code)s) is not the same as the "
+"currency of the journal (%(journal)s)."
+msgstr ""
+"Finančná mena bankového výpisu (%(code)s) nie je totožná ako mena účtovnej "
+"knihy (%(journal)s)."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "The following files could not be imported:\n"
+msgstr "Nasledujúce súbory sa nepodarilo importovať:\n"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"This file doesn't contain any statement for account %s.\n"
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
+msgstr ""
+"Tento súbor neobsahuje žiadne výpisy pre účet %s.\n"
+"Ak obsahuje transakcie pre viac ako jeden účet, musí byť importovaný do "
+"každého z nich."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"This file doesn't contain any transaction for account %s.\n"
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
+msgstr ""
+"Tento súbor neobsahuje žiadne transakcie pre účet %s.\n"
+"Ak obsahuje transakcie pre viac ako jeden účet, musí sa importovať do "
+"každého z nich."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "View successfully imported statements"
+msgstr "Zobraziť úspešne importované výpisy"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "You already have imported that file."
+msgstr "Ten súbor už bol importovaný. "
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "You have to set a Default Account for the journal: %s"
+msgstr "Pre denník musíte nastaviť predvolený účet: %s"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "You uploaded an invalid or empty file."
+msgstr "Nahrali ste neplatný alebo prázdny súbor."

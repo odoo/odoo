@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="documents.DocumentCogMenuItem">
+        <DropdownItem onSelected.bind="onItemSelected">
+            <i t-attf-class="fa fa-fw #{icon} me-1" aria-hidden="true"></i><t t-out="label"/>
+        </DropdownItem>
+    </t>
+</templates>

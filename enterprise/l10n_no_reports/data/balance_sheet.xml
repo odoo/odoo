@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_financial_report_NO_balancesheet" model="account.report">
+        <field name="name">Balance Sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.no"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_NO_balancesheet_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_NO_active_title" model="account.report.line">
+                <field name="name">ACTIVE</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_NO_active" model="account.report.line">
+                        <field name="name">ACTIVE TOTAL</field>
+                        <field name="code">NO_ACTIVE</field>
+                        <field name="aggregation_formula">NO_ACTIVE_A.balance + NO_ACTIVE_B.balance</field>
+                    </record>
+                    <record id="account_financial_report_NO_active_FA" model="account.report.line">
+                        <field name="name">A. Fixed Assets</field>
+                        <field name="code">NO_ACTIVE_A</field>
+                        <field name="aggregation_formula">NO_10.balance + NO_11_12.balance + NO_13.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_NO_active_Intangible_Assets" model="account.report.line">
+                                <field name="name">I. Intangible Assets</field>
+                                <field name="code">NO_10</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">NO_100.balance + NO_102_106.balance + NO_107.balance + NO_108_109.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_NO_active_RD" model="account.report.line">
+                                        <field name="name">Development</field>
+                                        <field name="code">NO_100</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">100</field>
+                                    </record>
+                                    <record id="account_financial_report_NO_active_Licences" model="account.report.line">
+                                        <field name="name">Licences</field>
+                                        <field name="code">NO_102_106</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">103 + 105 + 102 + 106 + 104</field>
+                                    </record>
+                                    <record id="account_financial_report_NO_active_Deferred_Tax_Assets" model="account.report.line">
+                                        <field name="name">Deferred Tax Assets</field>
+                                        <field name="code">NO_107</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">107</field>
+                                    </record>
+                                    <record id="account_financial_report_NO_active_Goodwill" model="account.report.line">
+                                        <field name="name">Goodwill</field>
+                                        <field name="code">NO_108_109</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">109 + 108</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_NO_active_Fixed_Assets" model="account.report.line">
+                                <field name="name">II. Fixed Assets</field>
+                                <field name="code">NO_11_12</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">NO_11.balance + NO_120_121.balance + NO_122.balance + NO_123_129.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_NO_active_land" model="account.report.line">
+                                        <field name="name">Land, Building and Other Real Estate</field>
+                                        <field name="code">NO_11</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">11</field>
+                                    </record>
+                                    <record id="account_financial_report_NO_active_machinery" model="account.report.line">
+                                        <field name="name">Machinery and Equipment</field>
+                                        <field name="code">NO_120_121</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">120 + 121</field>
+                                    </record>
+                                    <record id="account_financial_report_NO_active_ships" model="account.report.line">
+                                        <field name="name">Ships, Rigs, Aeroplans etc</field>
+                                        <field name="code">NO_122</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">122</field>
+                                    </record>
+                                    <record id="account_financial_report_NO_active_operating_movable_property_furniture_tools_other" model="account.report.line">
+                                        <field name="name">Operating Movable Property, Furniture, Tools, Other</field>
+                                        <field name="code">NO_123_129</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">124 + 123 + 128 + 126 + 127 + 125 + 129</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_NO_Fixed_Financial_Assets" model="account.report.line">
+                                <field name="name">III. Fixed Financial Assets</field>
+                                <field name="code">NO_13</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">NO_130.balance + NO_131.balance + NO_132.balance + NO_133.balance + NO_134.balance + NO_135.balance + NO_136.balance + NO_137_139.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_NO_active_investment_in_subsidiaries" model="account.report.line">
+                                        <field name="name">Investment in Subsidiaries</field>
+                                        <field name="code">NO_130</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">130</field>
+                                    </record>
+                                    <record id="account_financial_report_NO_active_investment_in_group_companies_etc" model="account.report.line">
+                                        <field name="name">Investment in Group Companies etc</field>
+                                        <field name="code">NO_131</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">131</field>
+                                    </record>
+                                    <record id="account_financial_report_NO_active_loan_to_group_companies" model="account.report.line">
+                                        <field name="name">Loan to Group Companies</field>
+                                        <field name="code">NO_132</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">132</field>
+                                    </record>
+                                    <record id="account_financial_report_NO_active_investment_in_associated_companies" model="account.report.line">
+                                        <field name="name">Investment in Associated Companies</field>
+                                        <field name="code">NO_133</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">133</field>
+                                    </record>
+                                    <record id="account_financial_report_NO_active_loan_to_associated_companies" model="account.report.line">
+                                        <field name="name">Loan to Associated Companies and Joint Venture Activities</field>
+                                        <field name="code">NO_134</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">134</field>
+                                    </record>
+                                    <record id="account_financial_report_NO_active_equities_and_investments" model="account.report.line">
+                                        <field name="name">Equities and Investments</field>
+                                        <field name="code">NO_135</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">135</field>
+                                    </record>
+                                    <record id="account_financial_report_NO_active_bonds" model="account.report.line">
+                                        <field name="name">Bonds</field>
+                                        <field name="code">NO_136</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">136\(1369)</field>
+                                    </record>
+                                    <record id="account_financial_report_NO_active_other_receivables" model="account.report.line">
+                                        <field name="name">Other Receivables</field>
+                                        <field name="code">NO_137_139</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">139 + 1369 + 137 + 138</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_NO_CurA" model="account.report.line">
+                        <field name="name">B. Current Assets</field>
+                        <field name="code">NO_ACTIVE_B</field>
+                        <field name="aggregation_formula">NO_14.balance + NO_15_16_17.balance + NO_18.balance + NO_19.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_NO_Inv" model="account.report.line">
+                                <field name="name">I. Inventories</field>
+                                <field name="code">NO_14</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">14</field>
+                            </record>
+                            <record id="account_financial_report_NO_Deb" model="account.report.line">
+                                <field name="name">II. Debitors</field>
+                                <field name="code">NO_15_16_17</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">NO_150_155.balance + NO_156_176.balance + NO_178.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_NO_active_account_recceivable" model="account.report.line">
+                                        <field name="name">Account Receivable</field>
+                                        <field name="code">NO_150_155</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">150 + 155 + 153</field>
+                                    </record>
+                                    <record id="account_financial_report_NO_active_other_receivables_2" model="account.report.line">
+                                        <field name="name">Other Receivables</field>
+                                        <field name="code">NO_156_176</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">170 + 156 + 176 + 158 + 174 + 175 + 159 + 171 + 16 + 157</field>
+                                    </record>
+                                    <record id="account_financial_report_NO_active_other_payment_to_be_received_by_owner" model="account.report.line">
+                                        <field name="name">Payment to be Received by Owner</field>
+                                        <field name="code">NO_178</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">178</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_NO_sti" model="account.report.line">
+                                <field name="name">III. Short-Term Investments</field>
+                                <field name="code">NO_18</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">NO_180.balance + NO_181_182.balance + NO_183_186.balance + NO_187_189.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_NO_active_equities_and_investments_in_group_companies" model="account.report.line">
+                                        <field name="name">Equities and Investments in Group Companies</field>
+                                        <field name="code">NO_180</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">180</field>
+                                    </record>
+                                    <record id="account_financial_report_NO_active_marketable_shares" model="account.report.line">
+                                        <field name="name">Marketable Shares</field>
+                                        <field name="code">NO_181_182</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">181 + 182</field>
+                                    </record>
+                                    <record id="account_financial_report_NO_active_marketable_bonds" model="account.report.line">
+                                        <field name="name">Marketable Bonds</field>
+                                        <field name="code">NO_183_186</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">184 + 183 + 185 + 186</field>
+                                    </record>
+                                    <record id="account_financial_report_NO_active_other_marketable_financial_instruments" model="account.report.line">
+                                        <field name="name">Other Marketable Financial Instruments</field>
+                                        <field name="code">NO_187_189</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">187 + 188 + 189</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_NO_CASH" model="account.report.line">
+                                <field name="name">IV. Cash and deposits</field>
+                                <field name="code">NO_19</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">19</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_NO_passive_title" model="account.report.line">
+                <field name="name">Passive</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_NO_passive" model="account.report.line">
+                        <field name="name">Passive TOTAL</field>
+                        <field name="code">NO_Passive</field>
+                        <field name="aggregation_formula">NO_PASSIVE_C.balance + NO_PASSIVE_D.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_NO_equity" model="account.report.line">
+                                <field name="name">C. Equity</field>
+                                <field name="code">NO_PASSIVE_C</field>
+                                <field name="aggregation_formula">NO_200_203.balance + NO_204_209.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_NO_equity_paid_in_capital" model="account.report.line">
+                                        <field name="name">I. Paid-in Capital</field>
+                                        <field name="code">NO_200_203</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="aggregation_formula">NO_200_201.balance + NO_202.balance + NO_203.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_NO_passive_share_capital" model="account.report.line">
+                                                <field name="name">Share Capital</field>
+                                                <field name="code">NO_200_201</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">- 201 - 200</field>
+                                            </record>
+                                            <record id="account_financial_report_NO_passive_share_premium_reserve" model="account.report.line">
+                                                <field name="name">Share Premium Reserve</field>
+                                                <field name="code">NO_202</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">- 202</field>
+                                            </record>
+                                            <record id="account_financial_report_NO_equity_other_paid_in_capital" model="account.report.line">
+                                                <field name="name">Other Paid-in Capital</field>
+                                                <field name="code">NO_203</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-203</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_NO_retained_earnings" model="account.report.line">
+                                        <field name="name">II. Retained Earnings</field>
+                                        <field name="code">NO_204_209</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="aggregation_formula">NO_204.balance + NO_205_208.balance + NO_209.balance + NO_current_profit.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_NO_passive_reserves" model="account.report.line">
+                                                <field name="name">Reserves</field>
+                                                <field name="code">NO_204</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-204</field>
+                                            </record>
+                                            <record id="account_financial_report_NO_passive_share_premium_retained_equity" model="account.report.line">
+                                                <field name="name">Retained Equity</field>
+                                                <field name="code">NO_205_208</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">- 207 - 206 - 208 - 205</field>
+                                            </record>
+                                            <record id="account_financial_report_NO_passive_previous_year_earnings" model="account.report.line">
+                                                <field name="name">Previous years' profit / loss</field>
+                                                <field name="code">NO_209</field>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_NO_passive_previous_year_earnings_accounts" model="account.report.expression">
+                                                        <field name="label">accounts</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-209 - 88 - 89</field>
+                                                    </record>
+                                                    <record id="account_financial_report_NO_passive_previous_year_earnings_cross_report" model="account.report.expression">
+                                                        <field name="label">cross_report</field>
+                                                        <field name="engine">aggregation</field>
+                                                        <field name="formula">NO_profit_loss.balance</field>
+                                                        <field name="subformula">cross_report</field>
+                                                        <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                                    </record>
+                                                    <record id="account_financial_report_NO_passive_previous_year_earnings_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">aggregation</field>
+                                                        <field name="formula">NO_209.accounts + NO_209.cross_report</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_NO_passive_current_year_earnings" model="account.report.line">
+                                                <field name="name">Current year's profit / loss</field>
+                                                <field name="code">NO_current_profit</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_NO_passive_current_year_earnings_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">aggregation</field>
+                                                        <field name="formula">NO_profit_loss.balance</field>
+                                                        <field name="subformula">cross_report</field>
+                                                        <field name="date_scope">from_fiscalyear</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_NO_liabilities" model="account.report.line">
+                                <field name="name">D. Liabilities</field>
+                                <field name="code">NO_PASSIVE_D</field>
+                                <field name="aggregation_formula">NO_21.balance + NO_22.balance + NO_23_29.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_NO_Allowances_for_liability" model="account.report.line">
+                                        <field name="name">I. Allowances for liability</field>
+                                        <field name="code">NO_21</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="aggregation_formula">NO_210.balance + NO_212.balance + NO_216_218.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_NO_pension_liability" model="account.report.line">
+                                                <field name="name">Pension Liability</field>
+                                                <field name="code">NO_210</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-210</field>
+                                            </record>
+                                            <record id="account_financial_report_NO_deferred_tax" model="account.report.line">
+                                                <field name="name">Deferred Tax</field>
+                                                <field name="code">NO_212</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-212</field>
+                                            </record>
+                                            <record id="account_financial_report_NO_other_provisions" model="account.report.line">
+                                                <field name="name">Other Provisions</field>
+                                                <field name="code">NO_216_218</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-218 - 216</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_NO_Other_longterm_liabilities" model="account.report.line">
+                                        <field name="name">II. Other longterm liabilities</field>
+                                        <field name="code">NO_22</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="aggregation_formula">NO_220.balance + NO_221.balance + NO_222.balance + NO_225_229.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_NO_convertible_debt" model="account.report.line">
+                                                <field name="name">Convertible Debt</field>
+                                                <field name="code">NO_220</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-220</field>
+                                            </record>
+                                            <record id="account_financial_report_NO_debenture_loan" model="account.report.line">
+                                                <field name="name">Debenture Loan</field>
+                                                <field name="code">NO_221</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-221</field>
+                                            </record>
+                                            <record id="account_financial_report_NO_debt_to_financial_institutions" model="account.report.line">
+                                                <field name="name">Debt to Financial Institutions</field>
+                                                <field name="code">NO_222</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-222</field>
+                                            </record>
+                                            <record id="account_financial_report_NO_other_long_term_liabilities" model="account.report.line">
+                                                <field name="name">Other Long Term Liabilities</field>
+                                                <field name="code">NO_225_229</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-225 - 228 - 226 - 229</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_NO_Current_liability" model="account.report.line">
+                                        <field name="name">III. Current liability</field>
+                                        <field name="code">NO_23_29</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="aggregation_formula">NO_230.balance + NO_232.balance + NO_233.balance + NO_236_239.balance + NO_24.balance + NO_25.balance + NO_26_27.balance + NO_28_29.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_NO_short_term_convertible_loans" model="account.report.line">
+                                                <field name="name">Short-Term Convertible Loans</field>
+                                                <field name="code">NO_230</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-230</field>
+                                            </record>
+                                            <record id="account_financial_report_NO_short_term_debenture_loans" model="account.report.line">
+                                                <field name="name">Short-Term Debenture Loans</field>
+                                                <field name="code">NO_232</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-232</field>
+                                            </record>
+                                            <record id="account_financial_report_NO_derivatives" model="account.report.line">
+                                                <field name="name">Derivatives</field>
+                                                <field name="code">NO_233</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-233</field>
+                                            </record>
+                                            <record id="account_financial_report_NO_short_term_debt_to_financial_institutions" model="account.report.line">
+                                                <field name="name">Short-Term Debt to Financial Institutions</field>
+                                                <field name="code">NO_236_239</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-239 - 238 - 236</field>
+                                            </record>
+                                            <record id="account_financial_report_NO_trade_creditors" model="account.report.line">
+                                                <field name="name">Trade Creditors</field>
+                                                <field name="code">NO_24</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-24</field>
+                                            </record>
+                                            <record id="account_financial_report_NO_tax_payable" model="account.report.line">
+                                                <field name="name">Tax Payable</field>
+                                                <field name="code">NO_25</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-25</field>
+                                            </record>
+                                            <record id="account_financial_report_NO_value_added_tax" model="account.report.line">
+                                                <field name="name">Value Added Tax</field>
+                                                <field name="code">NO_26_27</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-26 - 27</field>
+                                            </record>
+                                            <record id="account_financial_report_NO_other_short_term_liabilities" model="account.report.line">
+                                                <field name="name">Other Short-Term Liabilities</field>
+                                                <field name="code">NO_28_29</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-28 - 29 - 234</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="quality_iot.TabletImageIoTField" t-inherit="quality.TabletImageField" t-inherit-mode="primary">
+        <xpath expr="//div[@id='picture_button']//button" position="attributes">
+            <attribute name="t-on-click">onTakePicture</attribute>
+        </xpath>
+    </t>
+
+</templates>

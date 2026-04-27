@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ca_balance_sheet" model="account.report">
+        <field name="name">Balance sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_ca_balance_sheet_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_ca_bs_assets" model="account.report.line">
+                <field name="name">Assets</field>
+                <field name="code">l10n_ca_a</field>
+                <field name="aggregation_formula">l10n_ca_a_current.balance + l10n_ca_a_noncurrent.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_ca_bs_assets_current" model="account.report.line">
+                        <field name="name">Current Assets</field>
+                        <field name="code">l10n_ca_a_current</field>
+                        <field name="aggregation_formula">
+                            l10n_ca_a_cash.balance
+                            + l10n_ca_a_trade_receivables.balance
+                            + l10n_ca_a_government_receivables.balance
+                            + l10n_ca_a_prepaid.balance
+                            + l10n_ca_a_other_financial.balance
+                            + l10n_ca_a_inventories.balance
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_ca_bs_assets_cash" model="account.report.line">
+                                <field name="name">Cash and cash equivalents</field>
+                                <field name="code">l10n_ca_a_cash</field>
+                                <field name="account_codes_formula">111</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_assets_trade_receivables" model="account.report.line">
+                                <field name="name">Trade and other receivables</field>
+                                <field name="code">l10n_ca_a_trade_receivables</field>
+                                <field name="account_codes_formula">112\(11216)</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_assets_government_receivables" model="account.report.line">
+                                <field name="name">Government assistance receivable</field>
+                                <field name="code">l10n_ca_a_government_receivables</field>
+                                <field name="account_codes_formula">11216</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_assets_prepaid" model="account.report.line">
+                                <field name="name">Prepaid expenses</field>
+                                <field name="code">l10n_ca_a_prepaid</field>
+                                <field name="account_codes_formula">131</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_assets_other_financial" model="account.report.line">
+                                <field name="name">Other financial assets</field>
+                                <field name="code">l10n_ca_a_other_financial</field>
+                                <field name="account_codes_formula">11\(111,112,113,114)</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_assets_inventories" model="account.report.line">
+                                <field name="name">Inventories</field>
+                                <field name="code">l10n_ca_a_inventories</field>
+                                <field name="account_codes_formula">121\(1213) + 122</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ca_bs_assets_noncurrent" model="account.report.line">
+                        <field name="name">Non-current Assets</field>
+                        <field name="code">l10n_ca_a_noncurrent</field>
+                        <field name="aggregation_formula">
+                            l10n_ca_a_investment_subsidiaries.balance
+                            + l10n_ca_a_investment_other.balance
+                            + l10n_ca_a_property_equipment.balance
+                            + l10n_ca_a_biological.balance
+                            + l10n_ca_a_goodwill.balance
+                            + l10n_ca_a_intangibles.balance
+                            + l10n_ca_a_held_sales.balance
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_ca_bs_assets_investment_subsidiaries" model="account.report.line">
+                                <field name="name">Investments in non-consolidated subsidiaries and non-proportionately consolidated joint ventures</field>
+                                <field name="code">l10n_ca_a_investment_subsidiaries</field>
+                                <field name="account_codes_formula">113</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_assets_investment_other" model="account.report.line">
+                                <field name="name">Other investments</field>
+                                <field name="code">l10n_ca_a_investment_other</field>
+                                <field name="account_codes_formula">114</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_assets_property_equipment" model="account.report.line">
+                                <field name="name">Property, plant and equipment</field>
+                                <field name="code">l10n_ca_a_property_equipment</field>
+                                <field name="account_codes_formula">124</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_assets_biological" model="account.report.line">
+                                <field name="name">Biological assets</field>
+                                <field name="code">l10n_ca_a_biological</field>
+                                <field name="account_codes_formula">123</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_assets_intangible" model="account.report.line">
+                                <field name="name">Intangible assets</field>
+                                <field name="code">l10n_ca_a_intangibles</field>
+                                <field name="account_codes_formula">132\(1321) + 14</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_assets_goodwill" model="account.report.line">
+                                <field name="name">Goodwill</field>
+                                <field name="code">l10n_ca_a_goodwill</field>
+                                <field name="account_codes_formula">1321</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_assets_held_sales" model="account.report.line">
+                                <field name="name">Long-terms assets held for sales</field>
+                                <field name="code">l10n_ca_a_held_sales</field>
+                                <field name="account_codes_formula">1213</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_ca_bs_liabilities" model="account.report.line">
+                <field name="name">Liabilities</field>
+                <field name="code">l10n_ca_l</field>
+                <field name="aggregation_formula">l10n_ca_l_current.balance + l10n_ca_l_noncurrent.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_ca_bs_liabilities_current" model="account.report.line">
+                        <field name="name">Current liabilities</field>
+                        <field name="code">l10n_ca_l_current</field>
+                        <field name="aggregation_formula">
+                            l10n_ca_l_payable.balance
+                            + l10n_ca_l_taxes_current.balance
+                            + l10n_ca_l_provisions_current.balance
+                            + l10n_ca_l_long_term_current.balance
+                            + l10n_ca_l_lease_current.balance
+                            + l10n_ca_l_other_current.balance
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_ca_bs_liabilities_payable" model="account.report.line">
+                                <field name="name">Accounts payable and accrued liabilities</field>
+                                <field name="code">l10n_ca_l_payable</field>
+                                <field name="account_codes_formula">-22 -23</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_liabilities_taxes_current" model="account.report.line">
+                                <field name="name">Current portion of future income tax</field>
+                                <field name="code">l10n_ca_l_taxes_current</field>
+                                <field name="account_codes_formula">-241</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_liabilities_provisions_current" model="account.report.line">
+                                <field name="name">Current portion of provisions</field>
+                                <field name="code">l10n_ca_l_provisions_current</field>
+                                <field name="account_codes_formula">-27\(276)</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_liabilities_long_term_current" model="account.report.line">
+                                <field name="name">Current portion of long-term debt</field>
+                                <field name="code">l10n_ca_l_long_term_current</field>
+                                <field name="account_codes_formula">-215</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_liabilities_lease_current" model="account.report.line">
+                                <field name="name">Current portion of lease obligations</field>
+                                <field name="code">l10n_ca_l_lease_current</field>
+                                <field name="account_codes_formula">-21252</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_liabilities_other_current" model="account.report.line">
+                                <field name="name">Other current liabilities</field>
+                                <field name="code">l10n_ca_l_other_current</field>
+                                <field name="account_codes_formula">-298</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ca_bs_liabilities_noncurrent" model="account.report.line">
+                        <field name="name">Non-current liabilities</field>
+                        <field name="code">l10n_ca_l_noncurrent</field>
+                        <field name="aggregation_formula">
+                            l10n_ca_l_future_taxes.balance
+                            + l10n_ca_l_held_for_sales.balance
+                            + l10n_ca_l_obligations.balance
+                            + l10n_ca_l_defined_benefit.balance
+                            + l10n_ca_l_debt_long_term.balance
+                            + l10n_ca_l_asset_retirement.balance
+                            + l10n_ca_l_other.balance
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_ca_bs_liabilities_future_taxes" model="account.report.line">
+                                <field name="name">Liabilities for future income taxes</field>
+                                <field name="code">l10n_ca_l_future_taxes</field>
+                                <field name="account_codes_formula">-242</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_liabilities_held_for_sales" model="account.report.line">
+                                <field name="name">Liabilities of disposal groups classified as held for sale</field>
+                                <field name="code">l10n_ca_l_held_for_sales</field>
+                                <field name="account_codes_formula">-296</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_liabilities_obligations" model="account.report.line">
+                                <field name="name">Obligations under capital leases</field>
+                                <field name="code">l10n_ca_l_obligations</field>
+                                <field name="account_codes_formula">-21251</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_liabilities_defined_benefit" model="account.report.line">
+                                <field name="name">Defined benefit liability</field>
+                                <field name="code">l10n_ca_l_defined_benefit</field>
+                                <field name="account_codes_formula">-26</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_liabilities_debt_long_term" model="account.report.line">
+                                <field name="name">Long-term debt</field>
+                                <field name="code">l10n_ca_l_debt_long_term</field>
+                                <field name="account_codes_formula">-211</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_liabilities_asset_retirement" model="account.report.line">
+                                <field name="name">Asset retirement obligations</field>
+                                <field name="code">l10n_ca_l_asset_retirement</field>
+                                <field name="account_codes_formula">-276</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                            <record id="l10n_ca_bs_liabilities_other" model="account.report.line">
+                                <field name="name">Other liabilities</field>
+                                <field name="code">l10n_ca_l_other</field>
+                                <field name="account_codes_formula">-21\(211,215,2125) - 29\(296,298)</field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="l10n_ca_bs_equity" model="account.report.line">
+                <field name="name">Equity</field>
+                <field name="code">l10n_ca_e</field>
+                <field name="aggregation_formula">
+                    l10n_ca_e_share_capital.balance
+                    + l10n_ca_e_retained_earnings.balance
+                    + l10n_ca_e_contributed_surplus.balance
+                    + l10n_ca_e_reserves.balance
+                    + l10n_ca_e_noncontrolling_interests.balance
+                    + l10n_ca_e_other_components.balance
+                </field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_ca_bs_equity_retained_earnings" model="account.report.line">
+                        <field name="name">Retained earnings</field>
+                        <field name="code">l10n_ca_e_retained_earnings</field>
+                        <field name="account_codes_formula">-32</field>
+                        <field name="aggregation_formula">l10n_ca_e_unallocated.balance + l10n_ca_e_allocated.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_ca_bs_equity_unallocated" model="account.report.line">
+                                <field name="name">Unallocated Earnings</field>
+                                <field name="code">l10n_ca_e_unallocated</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="aggregation_formula">l10n_ca_e_unallocated_current.balance + l10n_ca_e_unallocated_previous.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_ca_bs_equity_unallocated_current" model="account.report.line">
+                                        <field name="name">Current Year Unallocated Earnings</field>
+                                        <field name="code">l10n_ca_e_unallocated_current</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_ca_bs_equity_unallocated_current_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">l10n_ca_net_profit.balance + l10n_ca_e_unallocated_current.account_balance</field>
+                                                <field name="date_scope">from_fiscalyear</field>
+                                                <field name="subformula">cross_report</field>
+                                            </record>
+                                            <record id="l10n_ca_bs_equity_unallocated_current_account_balance" model="account.report.expression">
+                                                <field name="label">account_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-322</field>
+                                                <field name="date_scope">from_fiscalyear</field>
+                                            </record>
+                                        </field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                    </record>
+                                    <record id="l10n_ca_bs_equity_unallocated_previous" model="account.report.line">
+                                        <field name="name">Previous Years Unallocated Earnings</field>
+                                        <field name="code">l10n_ca_e_unallocated_previous</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_ca_bs_equity_unallocated_previous_balance_broad"
+                                                    model="account.report.expression">
+                                                <field name="label">balance_broad</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">l10n_ca_net_profit.balance</field>
+                                                <field name="date_scope">from_beginning</field>
+                                                <field name="subformula">cross_report</field>
+                                            </record>
+                                            <record id="l10n_ca_bs_equity_unallocated_previous_account_balance" model="account.report.expression">
+                                                <field name="label">account_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-322</field>
+                                            </record>
+                                            <record id="l10n_ca_bs_equity_unallocated_previous_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">l10n_ca_e_unallocated_previous.balance_broad + l10n_ca_e_unallocated_previous.account_balance - l10n_ca_e_unallocated_current.balance</field>
+                                            </record>
+                                        </field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_ca_bs_equity_allocated" model="account.report.line">
+                                <field name="name">Allocated Earnings</field>
+                                <field name="code">l10n_ca_e_allocated</field>
+                                <field name="aggregation_formula">l10n_ca_e_allocated_current.balance + l10n_ca_e_allocated_previous.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_ca_bs_equity_allocated_current" model="account.report.line">
+                                        <field name="name">Current Year Allocated Earnings</field>
+                                        <field name="code">l10n_ca_e_allocated_current</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_ca_bs_equity_allocated_current_account_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-321</field>
+                                                <field name="date_scope">from_fiscalyear</field>
+                                            </record>
+                                        </field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                    </record>
+                                    <record id="l10n_ca_bs_equity_allocated_previous" model="account.report.line">
+                                        <field name="name">Previous Years Allocated Earnings</field>
+                                        <field name="code">l10n_ca_e_allocated_previous</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_ca_bs_equity_allocated_previous_balance_broad"
+                                                    model="account.report.expression">
+                                                <field name="label">account_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-321</field>
+                                                <field name="date_scope">from_beginning</field>
+                                            </record>
+                                            <record id="l10n_ca_bs_equity_allocated_previous_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">l10n_ca_e_allocated_previous.account_balance - l10n_ca_e_allocated_current.balance</field>
+                                            </record>
+                                        </field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                    </record>
+                                </field>
+                                <field name="hide_if_zero" eval="1"/>
+                            </record>
+                        </field>
+                        <field name="hide_if_zero" eval="1"/>
+                    </record>
+                    <record id="l10n_ca_bs_equity_share_capital" model="account.report.line">
+                        <field name="name">Share Capital</field>
+                        <field name="code">l10n_ca_e_share_capital</field>
+                        <field name="account_codes_formula">-31</field>
+                        <field name="hide_if_zero" eval="1"/>
+                    </record>
+                    <record id="l10n_ca_bs_equity_contributed_surplus" model="account.report.line">
+                        <field name="name">Contributed surplus</field>
+                        <field name="code">l10n_ca_e_contributed_surplus</field>
+                        <field name="account_codes_formula">-33</field>
+                        <field name="hide_if_zero" eval="1"/>
+                    </record>
+                    <record id="l10n_ca_bs_equity_reserves" model="account.report.line">
+                        <field name="name">Reserves</field>
+                        <field name="code">l10n_ca_e_reserves</field>
+                        <field name="account_codes_formula">-36</field>
+                        <field name="hide_if_zero" eval="1"/>
+                    </record>
+                    <record id="l10n_ca_bs_equity_noncontrolling_interests" model="account.report.line">
+                        <field name="name">Non-controlling interests</field>
+                        <field name="code">l10n_ca_e_noncontrolling_interests</field>
+                        <field name="account_codes_formula">-35</field>
+                        <field name="hide_if_zero" eval="1"/>
+                    </record>
+                    <record id="l10n_ca_bs_equity_other_components" model="account.report.line">
+                        <field name="name">Other components of equity</field>
+                        <field name="code">l10n_ca_e_other_components</field>
+                        <field name="account_codes_formula">-34</field>
+                        <field name="hide_if_zero" eval="1"/>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_ca_bs_equity_liability" model="account.report.line">
+                <field name="name">Liabilities + Equity</field>
+                <field name="code">l10n_ca_equity_liabilities</field>
+                <field name="aggregation_formula">l10n_ca_e.balance + l10n_ca_l.balance</field>
+            </record>
+        </field>
+    </record>
+</odoo>

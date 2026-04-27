@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="delivery_starshipit.StarshipitServiceWidget">
+        <div class="d-flex flex-column gap-1">
+            <div class="row">
+                <div class="btn-group col-12">
+                    <Dropdown t-if="available_services">
+                        <button class="btn btn-primary o-dropdown-caret">
+                            <t t-out="activeService.carrier_name"/> - <t t-out="activeService.service_name"/> (<t t-out="activeService.service_code"/>)
+                        </button>
+                        <t t-set-slot="content">
+                            <t t-foreach="available_services" t-as="service" t-key='service.service_code'>
+                                <DropdownItem onSelected="() => this._onSelected(service.service_code)"><t t-out="service.carrier_name"/> - <t t-out="service.service_name"/> (<t t-out="service.service_code"/>)</DropdownItem>
+                            </t>
+                        </t>
+                    </Dropdown>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

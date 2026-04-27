@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="quality_check_view_form_inherit_worksheet" model="ir.ui.view">
+        <field name="name">quality.check.view.form.inherit.worksheet</field>
+        <field name="model">quality.check</field>
+        <field name="inherit_id" ref="quality_control.quality_check_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='do_measure']" position="after">
+                <button
+                    string="Check Worksheet" data-hotkey="z"
+                    name="action_worksheet_check" type="object"
+                    invisible="test_type != 'worksheet' or quality_state != 'none'"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="worksheet_count" invisible="1"/>
+                <button
+                    string="Worksheet"
+                    class="oe_stat_button"
+                    name="action_open_quality_check_wizard"
+                    icon="fa-pencil" type="object"
+                    groups="quality.group_quality_user"
+                    invisible="not worksheet_template_id or worksheet_count != 0">
+                </button>
+                <button
+                    string="Worksheet Completed"
+                    class="oe_stat_button text-success"
+                    name="action_open_quality_check_wizard"
+                    icon="fa-check" type="object"
+                    groups="quality.group_quality_user"
+                    invisible="not worksheet_template_id or worksheet_count == 0">
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='test_type_id']" position="after">
+                <field name="worksheet_template_id" invisible="test_type != 'worksheet'" readonly="point_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="quality_point_view_form_inherit_quality_control_worksheet" model="ir.ui.view">
+        <field name="name">quality.point.view.form.inherit.quality.worksheet</field>
+        <field name="model">quality.point</field>
+        <field name="inherit_id" ref="quality.quality_point_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='test_type_id']" position="after">
+                <field name="worksheet_template_id" invisible="test_type != 'worksheet'" required="test_type == 'worksheet'" options="{'no_create': True, 'no_create_edit':True}"/>
+                <field name="worksheet_model_name" invisible="1"/>
+                <field name="worksheet_success_conditions" widget="quality_domain_field" options="{'model': 'worksheet_model_name'}" invisible="test_type != 'worksheet'" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

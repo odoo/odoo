@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="account_disallowed_expenses_rate_tree" model="ir.ui.view">
+        <field name="name">account.disallowed.expenses.rate.list</field>
+        <field name="model">account.disallowed.expenses.rate</field>
+        <field name="arch" type="xml">
+            <list default_order="date_from" editable="bottom" create="1" delete="1">
+                <field name="date_from"/>
+                <field name="rate"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_account_disallowed_expenses_category_tree" model="ir.ui.view">
+        <field name="name">account.disallowed.expenses.category.list</field>
+        <field name="model">account.disallowed.expenses.category</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="account_ids" string="Related Account(s)" widget="many2many_tags" domain="[('internal_group', 'in', ('expense', 'income')), ('disallowed_expenses_category_id', '=', None)]" options="{'no_create': True}"/>
+                <field name="company_id" optional="hide"/>
+                <field name="current_rate" invisible="not current_rate"/>
+                <button name="action_read_category" type="object" string="Set Rates" class="float-end btn-secondary"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_account_disallowed_expenses_category_search" model="ir.ui.view">
+        <field name="name">account.disallowed.expenses.category.search</field>
+        <field name="model">account.disallowed.expenses.category</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_account_disallowed_expenses_category_form" model="ir.ui.view">
+        <field name="name">account.disallowed.expenses.category.form</field>
+        <field name="model">account.disallowed.expenses.category</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="account_ids" invisible="1"/>
+                <sheet>
+                    <div>
+                        <h1 style="font-size: 1.9rem;">
+                            <div class="row">
+                                <div class="col">
+                                    <label for="code" string="Code"/>
+                                    <div>
+                                        <field name="code" placeholder="e.g. 1201"/>
+                                    </div>
+                                </div>
+                                <div class="col col-md-10">
+                                    <label for="name" string="Category Name"/>
+                                    <div>
+                                        <field name="name"
+                                               placeholder="e.g. Non-Deductible Tax"
+                                               class="oe_inline"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="left_column">
+                            <field name="company_id" options="{'no_create': True}"/>
+                            <field name="account_ids" string="Related Account(s)" widget="many2many_tags" domain="[('internal_group', 'in', ('expense', 'income'))]" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="rates" string="Rates">
+                            <field name="rate_ids" nolabel="1">
+                                <list order="date_from desc" editable="bottom">
+                                    <field name="date_from" width="200px"/>
+                                    <field name="rate" width="200px"/>
+                                    <field name="company_id" groups="base.group_multi_company"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_account_disallowed_expenses_category_list" model="ir.actions.act_window">
+        <field name="name">Disallowed Expenses Categories</field>
+        <field name="res_model">account.disallowed.expenses.category</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a Disallowed Expenses Category
+            </p>
+        </field>
+    </record>
+
+    <menuitem action="action_account_disallowed_expenses_category_list"
+              id="menu_action_account_disallowed_expenses_category_list"
+              parent="account.account_management_menu"
+              groups="account.group_account_readonly"/>
+</odoo>

@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 
+        Sources:
+        https://taxsummaries.pwc.com/poland/individual/other-taxes
+        https://www.papayaglobal.com/countrypedia/country/poland/
+        https://hlb-poland.global/payroll-information-some-things-you-need-to-know-about-payroll-in-poland/
+     -->
+    <record id="l10n_pl_pension_contribution" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_pl_hr_payroll.social_security_employee"/>
+        <field name="name">Pension Contribution</field>
+        <field name="code">PENSION</field>
+        <field name="sequence">50</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_pl_pension_employee_rate')
+already_taxed = payslip.search([
+    ('employee_id', '=', payslip.employee_id.id),
+    ('state', 'in', ['paid', 'done']),
+    ('date_from', '&gt;=', payslip.date_from + relativedelta(day=1, month=1)),
+    ('date_to', '&lt;=', payslip.date_from + relativedelta(day=31, months=-1)),
+])._get_line_values(['BASIC'], compute_sum=True)['BASIC']['sum']['total']
+cap = payslip._rule_parameter('l10n_pl_social_security_cap')
+if already_taxed &gt; cap:
+    result = categories['BASIC']
+else:
+    if cap - already_taxed &lt; categories['BASIC']:
+        result = categories['BASIC'] - (cap - already_taxed)
+    else:
+        result = categories['BASIC']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="l10n_pl_hr_payroll.hr_payroll_structure_pl_employee_salary"/>
+    </record>
+
+    <record id="l10n_pl_pension_contribution_employer" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_pl_hr_payroll.social_security_employer"/>
+        <field name="name">Pension Contribution (Employer)</field>
+        <field name="code">PENSION.EMPLOYER</field>
+        <field name="sequence">50</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_pl_pension_employer_rate')
+already_taxed = payslip.search([
+    ('employee_id', '=', payslip.employee_id.id),
+    ('state', 'in', ['paid', 'done']),
+    ('date_from', '&gt;=', payslip.date_from + relativedelta(day=1, month=1)),
+    ('date_to', '&lt;=', payslip.date_from + relativedelta(day=31, months=-1)),
+])._get_line_values(['BASIC'], compute_sum=True)['BASIC']['sum']['total']
+cap = payslip._rule_parameter('l10n_pl_social_security_cap')
+if already_taxed &gt; cap:
+    result = categories['BASIC']
+else:
+    if cap - already_taxed &lt; categories['BASIC']:
+        result = categories['BASIC'] - (cap - already_taxed)
+    else:
+        result = categories['BASIC']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_pl_hr_payroll.hr_payroll_structure_pl_employee_salary"/>
+    </record>
+
+    <record id="l10n_pl_disability_contribution" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_pl_hr_payroll.social_security_employee"/>
+        <field name="name">Disability Insurance Contribution</field>
+        <field name="code">DISABILITY</field>
+        <field name="sequence">55</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_pl_disability_employee_rate')
+result = categories['BASIC']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="l10n_pl_hr_payroll.hr_payroll_structure_pl_employee_salary"/>
+    </record>
+
+    <record id="l10n_pl_disability_contribution_employer" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_pl_hr_payroll.social_security_employer"/>
+        <field name="name">Disability Insurance Contribution (Employer)</field>
+        <field name="code">DISABILITY.EMPLOYER</field>
+        <field name="sequence">55</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_pl_disability_employer_rate')
+result = categories['BASIC']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_pl_hr_payroll.hr_payroll_structure_pl_employee_salary"/>
+    </record>
+
+    <record id="l10n_pl_sickness_contribution" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_pl_hr_payroll.social_security_employee"/>
+        <field name="name">Sickness Insurance Contribution</field>
+        <field name="code">SICKNESS</field>
+        <field name="sequence">60</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_pl_sickness_employee_rate')
+result = categories['BASIC']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="l10n_pl_hr_payroll.hr_payroll_structure_pl_employee_salary"/>
+    </record>
+
+    <record id="l10n_pl_accident_contribution_employer" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_pl_hr_payroll.social_security_employer"/>
+        <field name="name">Accident Insurance Contribution (Employer)</field>
+        <field name="code">ACCIDENT.EMPLOYER</field>
+        <field name="sequence">60</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_pl_accident_employer_rate')
+result = categories['BASIC']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_pl_hr_payroll.hr_payroll_structure_pl_employee_salary"/>
+    </record>
+
+    <record id="l10n_pl_labour_contribution_employer" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_pl_hr_payroll.social_security_employer"/>
+        <field name="name">Labour Fund and Solidarity Fund (Employer)</field>
+        <field name="code">LABOUR.EMPLOYER</field>
+        <field name="sequence">65</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_pl_labour_employer_rate')
+result = categories['BASIC']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_pl_hr_payroll.hr_payroll_structure_pl_employee_salary"/>
+    </record>
+
+    <record id="l10n_pl_social_employee_total" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_pl_hr_payroll.social_security_employee_total"/>
+        <field name="name">Social Security Total (Employee)</field>
+        <field name="code">SOCIAL.TOTAL</field>
+        <field name="sequence">70</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['SOCIAL']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_pl_hr_payroll.hr_payroll_structure_pl_employee_salary"/>
+    </record>
+
+    <record id="l10n_pl_social_employer_total" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_pl_hr_payroll.social_security_employer_total"/>
+        <field name="name">Social Security Total (Employer)</field>
+        <field name="code">SOCIAL.TOTAL.EMPLOYER</field>
+        <field name="sequence">70</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['SOCIAL.EMPLOYER']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_pl_hr_payroll.hr_payroll_structure_pl_employee_salary"/>
+    </record>
+
+    <record id="l10n_pl_standard_earning_costs" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_pl_hr_payroll.standard_earning"/>
+        <field name="name">Standard Earning Costs</field>
+        <field name="code">STANDARD.EARNING</field>
+        <field name="sequence">110</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -payslip._rule_parameter('l10n_pl_standard_earning')
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_pl_hr_payroll.hr_payroll_structure_pl_employee_salary"/>
+    </record>
+
+    <record id="l10n_pl_taxable_amount" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_pl_hr_payroll.taxable_amount"/>
+        <field name="name">Taxable Amount</field>
+        <field name="code">TAXABLE</field>
+        <field name="sequence">115</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['GROSS'] + result_rules['STANDARD.EARNING']['total']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_pl_hr_payroll.hr_payroll_structure_pl_employee_salary"/>
+    </record>
+
+    <record id="l10n_pl_withholding_taxes" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_pl_hr_payroll.withholding_taxes"/>
+        <field name="name">Withholding Taxes</field>
+        <field name="code">TAX</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+taxable = categories['TAXABLE']
+already_taxed = payslip.search([
+    ('employee_id', '=', payslip.employee_id.id),
+    ('state', 'in', ['paid', 'done']),
+    ('date_from', '&gt;=', payslip.date_from + relativedelta(day=1, month=1)),
+    ('date_to', '&lt;=', payslip.date_from + relativedelta(day=31, months=-1)),
+])._get_line_values(['TAXABLE'], compute_sum=True)['TAXABLE']['sum']['total']
+cap_low = payslip._rule_parameter('l10n_pl_withholding_tax_threshold_low')
+cap_high = payslip._rule_parameter('l10n_pl_withholding_tax_threshold_high')
+rate_low = payslip._rule_parameter('l10n_pl_withholding_tax_rate_low')
+rate_high = payslip._rule_parameter('l10n_pl_withholding_tax_rate_high')
+
+# Everything at 32%
+if already_taxed &gt; cap_high:
+    result = taxable
+    result_rate = rate_high
+# Everything at 0%
+elif already_taxed + taxable &lt; cap_low:
+    result = taxable
+    result_rate = 0
+# Everything at 12%
+elif already_taxed &gt;= cap_low and cap_low &lt;= already_taxed + taxable &lt;= cap_high:
+    result = taxable
+    result_rate = rate_low
+# Part exceeding cap_low taxed at 12%
+elif already_taxed &lt;= cap_low and already_taxed + taxable &lt;= cap_high:
+    result = (already_taxed + taxable - cap_low)
+    result_rate = rate_low
+# Part exceeding cap_high taxed at 32% + Part below cap_high taxed at 12%
+elif already_taxed &gt;= cap_low and already_taxed + taxable &gt;= cap_high:
+    result = (already_taxed + taxable - cap_high) * rate_high / 100 + (cap_high - already_taxed) * rate_low / 100
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_pl_hr_payroll.hr_payroll_structure_pl_employee_salary"/>
+    </record>
+
+    <record id="l10n_pl_health_insurance" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Health Insurance Contributions</field>
+        <field name="code">HEALTH</field>
+        <field name="sequence">160</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['GROSS']
+result_rate = payslip._rule_parameter('l10n_pl_health_employee_rate')
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_pl_hr_payroll.hr_payroll_structure_pl_employee_salary"/>
+    </record>
+
+    <record id="l10n_pl_childcare_relief" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Childcare relief</field>
+        <field name="code">CHILD</field>
+        <field name="sequence">165</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+children = payslip.employee_id.children
+amounts = payslip._rule_parameter('l10n_pl_childcare_relief')
+if not children:
+    result = 0
+elif children == 1:
+    result = amounts[0]
+elif children == 2:
+    result = amounts[0] + amounts[1]
+elif children == 3:
+    result = amounts[0] + amounts[1] + amounts[2]
+elif children &gt;= 4:
+    result = amounts[0] + amounts[1] + amounts[2] + (children - 3) * amounts[3]
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_pl_hr_payroll.hr_payroll_structure_pl_employee_salary"/>
+    </record>
+
+</odoo>
+
+

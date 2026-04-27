@@ -1,0 +1,400 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="calendar_event_view_form" model="ir.ui.view">
+        <field name="name">calendar.event.view.form.inherit.appointment</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+        <field name="arch" type="xml">
+            <field name="categ_ids" position="after">
+                <field name="appointment_type_id" invisible="not appointment_type_id"/>
+                <field name="appointment_status" string="Status" required="appointment_type_id" invisible="not appointment_type_id"/>
+                <field name="resource_ids" options="{'no_create': True}"
+                    invisible="not appointment_type_id or appointment_type_schedule_based_on != 'resources'"
+                    domain="[('appointment_type_ids', 'in', appointment_type_id)]" widget="many2many_tags"/>
+                <field name="appointment_type_schedule_based_on" invisible="1"/>
+                <field name="appointment_type_manage_capacity" invisible="1"/>
+            </field>
+            <xpath expr="//widget[@name='web_ribbon']" position="replace">
+                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active or appointment_type_id"/>
+                <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="active or not appointment_type_id"/>
+            </xpath>
+            <xpath expr="//page[@name='page_invitations']" position="after">
+                <page name="page_appointment" string="Appointment Details"
+                    invisible="not appointment_type_id or appointment_type_schedule_based_on != 'resources' or not appointment_type_manage_capacity">
+                    <field name="booking_line_ids" invisible="not active">
+                        <list editable="bottom">
+                            <field name="appointment_type_id" column_invisible="True"/>
+                            <field name="appointment_resource_id" domain="[('appointment_type_ids', 'in', appointment_type_id)]" options="{'no_create': True}"/>
+                            <field name="capacity_reserved" sum="Total Capacity Reserved"/>
+                            <field name="capacity_used" optional="hide" sum="Total Capacity Used"/>
+                        </list>
+                    </field>
+                </page>
+                <page name="page_questions" string="Questions"
+                    invisible="not appointment_type_id or not appointment_answer_input_ids">
+                    <field name="appointment_answer_input_ids">
+                        <list editable="bottom" create="false">
+                            <field name="appointment_type_id" column_invisible="True"/>
+                            <field name="question_id" domain="[('appointment_type_id', '=', appointment_type_id)]" options="{'no_create': True}"/>
+                            <field name="question_type" string="Type"/>
+                            <field name="value_answer_id"
+                                invisible="question_type not in ('radio','checkbox','select')"
+                                domain="[('question_id','=', question_id)]"
+                                options="{'no_create': True}"/>
+                            <field name="value_text_box" invisible="question_type in ('radio','checkbox','select')"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="calendar_event_view_tree" model="ir.ui.view">
+        <field name="name">calendar.event.view.list.inherit.appointment</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='duration']" position="after">
+                <field name="appointment_type_id" groups="base.group_no_one"/>
+                <field name="appointment_resource_ids" widget="many2many_tags" groups="base.group_no_one"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="calendar_event_view_search" model="ir.ui.view">
+        <field name="name">calendar.event.view.search.inherit.appointment</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="before">
+                <separator/>
+                <filter string="Appointments" domain="[('appointment_type_id', '!=', False)]" name="online"/>
+                <separator/>
+            </xpath>
+            <xpath expr="//filter[@name='responsible']" position="after">
+                <field name="appointment_type_id"/>
+                <filter string="Appointment Type" name="group_by_appointment_type_id" context="{'group_by': 'appointment_type_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="calendar_event_view_search_booking" model="ir.ui.view">
+        <field name="name">calendar.event.view.search.inherit.appointment.booking</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_search"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='busy']" position="replace"/>
+            <xpath expr="//filter[@name='free']" position="replace"/>
+            <xpath expr="//filter[@name='default']" position="replace"/>
+            <xpath expr="//filter[@name='public']" position="replace"/>
+            <xpath expr="//filter[@name='private']" position="replace"/>
+            <xpath expr="//filter[@name='recurrent']" position="replace"/>
+            <xpath expr="//filter[@name='online']" position="replace"/>
+            <xpath expr="//filter[@name='confidential']" position="replace">
+                <field name="appointment_status"/>
+                <filter string="Cancelled" name="filter_appointment_status_cancelled" domain="['&amp;', ('appointment_status', '=', 'cancelled'), ('active', '=', False)]"/>
+                <filter string="Requests" name="filter_appointment_status_request" domain="[('appointment_status', '=', 'request')]"/>
+                <filter string="Booked" name="filter_appointment_status_booked" domain="[('appointment_status', '=', 'booked')]"/>
+                <filter string="Checked-in" name="filter_appointment_status_attended" domain="[('appointment_status', '=', 'attended')]"/>
+                <filter string="No Show" name="filter_appointment_status_no_show" domain="[('appointment_status', '=', 'no_show')]"/>
+            </xpath>
+            <xpath expr="//filter[@name='responsible']" position="before">
+                <filter string="Status" name="group_by_appointment_status" context="{'group_by': 'appointment_status'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- BOOKING MANAGEMENT -->
+
+    <record id="calendar_event_view_tree_booking" model="ir.ui.view">
+        <field name="name">calendar.event.view.list.booking</field>
+        <field name="model">calendar.event</field>
+        <field name="arch" type="xml">
+            <list sample="1" decoration-danger="not active" js_class="appointment_booking_list" multi_edit="1">
+                <field name="active" column_invisible="True"/>
+                <field name="name" string="Subject"/>
+                <field name="appointment_type_id"/>
+                <field name="attendee_ids" string="Booked by" widget="many2many_tags"/>
+                <field name="appointment_resource_ids" widget="many2many_tags"/>
+                <field name="start"/>
+                <field name="stop"/>
+                <field name="resource_total_capacity_reserved" sum="Total Capacity Reserved"/>
+                <field name="resource_total_capacity_used" optional="show" sum="Total Capacity Used"/>
+                <field name="appointment_status" string="Status"/>
+           </list>
+        </field>
+    </record>
+
+    <record id="calendar_event_view_form_gantt_booking" model="ir.ui.view">
+        <field name="name">calendar.event.view.form.gantt.booking</field>
+        <field name="model">calendar.event</field>
+        <field name="arch" type="xml">
+            <form string="Bookings">
+                <sheet>
+                    <div class="alert alert-warning d-flex flex-wrap" role="alert" invisible="not on_leave_partner_ids">
+                        <span class="me-1">Attendees marked as busy at the selected time</span><field name="on_leave_partner_ids" widget="many2many_tags"/>
+                    </div>
+                    <div class="alert alert-warning d-flex flex-wrap" role="alert" invisible="not on_leave_resource_ids">
+                        <field name="appointment_resource_ids" invisible="1"/>
+                        <span class="me-1">You are scheduling a booking outside the available hours of</span>
+                        <field name="on_leave_resource_ids" widget="many2many_tags" readonly="1"/>
+                    </div>
+                    <div class="oe_title mb-3">
+                        <label for="name" string="Booking Name"/>
+                        <h1>
+                            <field name="name" placeholder='e.g. "John Doe - Tennis Court Booking"' required="True"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="appointment_status" string="Status" invisible="not appointment_type_id" required="appointment_type_id"/>
+                            <field name="appointment_type_id" options="{'no_create': True}" widget="appointment_type_sync_duration"/>
+                            <label for="start" string="Date"/>
+                            <div class="o_row">
+                                <field name="start"/>
+                                <i class="fa fa-long-arrow-right mx-2" aria-label="Until Icon" title="Arrow"/>
+                                <field name="stop"/>
+                            </div>
+                            <field name="user_id" widget="many2one_avatar_user" options="{'no_create': True}"/>
+                            <div invisible="not resource_ids or not appointment_type_manage_capacity or appointment_type_schedule_based_on != 'resources'" colspan="2">
+                                <label for="resource_total_capacity_reserved" class="me-5"/>
+                                <field name="resource_total_capacity_reserved" string="Total Reserved" class="oe_inline"/>
+                                <span>people</span>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="partner_ids" widget="many2many_tags_avatar"
+                                   placeholder="Select attendees..."
+                                   options="{'no_quick_create': True}"
+                                   context="{'form_view_ref': 'base.view_partner_simple_form'}"
+                                   class="oe_inline o_required_modifier o_field_highlight"  colspan="2"/>
+                            <label for="duration"/>
+                            <div>
+                                <field name="duration" widget="float_time" string="Duration" class="oe_inline"/>
+                                <span> hours</span>
+                            </div>
+                            <field name="appointment_type_manage_capacity" invisible="1"/>
+                            <field name="appointment_type_schedule_based_on" invisible="1"/>
+                            <field name="appointment_resource_ids" invisible="1"/>
+                            <field name="resource_ids" string="Resources" options="{'no_create': True}"
+                                   invisible="not appointment_type_id or appointment_type_schedule_based_on != 'resources'"
+                                   domain="[('appointment_type_ids', 'in', appointment_type_id)]" widget="many2many_tags"/>
+                        </group>
+                        <field name="description" placeholder="Extra Comments..."/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Save" special="save" data-hotkey="s" class="btn btn-primary" close="1"/>
+                    <button string="Discard" special="cancel" data-hotkey="j" class="btn-secondary" close="1"/>
+                    <button string="Remove" name="unlink" type="object" data-hotkey="x" invisible="not id"
+                            class="btn btn-secondary o_form_button_remove" close="1" confirm-title="Delete Booking" confirm-label="Delete Booking"
+                            confirm="Are you sure you want to delete this Booking? Once it's gone, it's gone for good!"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="calendar_event_view_gantt_booking_resource" model="ir.ui.view">
+        <field name="name">calendar.event.view.gantt.booking.resource</field>
+        <field name="model">calendar.event</field>
+        <field name="arch" type="xml">
+            <gantt class="o_appointment_ressource_booking_gantt"
+                create="1" delete="1" plan="0"
+                date_start="start"
+                date_stop="stop"
+                decoration-info="appointment_status == 'request'"
+                default_group_by="resource_ids"
+                default_scale="day"
+                display_unavailability="1"
+                form_view_id="%(calendar_event_view_form_gantt_booking)d"
+                js_class="appointment_booking_gantt"
+                precision="{'day': 'hour:quarter', 'week': 'day:half', 'month': 'day:half', 'year': 'day:full'}"
+                sample="0"
+                string="Resources"
+                total_row="0">
+
+                <field name="active"/>
+                <field name="appointment_resource_ids"/>
+                <field name="appointment_type_id"/>
+                <field name="appointment_type_manage_capacity"/>
+                <field name="appointment_type_schedule_based_on"/>
+                <field name="booking_line_ids"/>
+                <field name="resource_total_capacity_reserved"/>
+                <field name="start"/>
+                <field name="stop"/>
+                <field name="user_id"/>
+                <!--required for the 'set appointment status' feature-->
+                <field name="appointment_status"/>
+                <!--required for popover-->
+                <field name="partner_id"/>
+                <field name="partner_ids"/>
+
+                <templates>
+                    <div t-name="gantt-popover">
+                        <ul class="ps-1 mb-0 list-unstyled">
+                            <!--X_js field values are set directly in the renderer-->
+                            <t t-if="gantt_pill_contact_phone || gantt_pill_contact_email || gantt_pill_contact_name">
+                                <strong>Contact Information</strong>
+                                <li t-if="gantt_pill_contact_name"><strong>Name: </strong><t t-out="gantt_pill_contact_name"/></li>
+                                <li t-if="gantt_pill_contact_phone"><strong>Phone: </strong><t t-out="gantt_pill_contact_phone"/></li>
+                                <li t-if="gantt_pill_contact_email"><strong>Email: </strong><t t-out="gantt_pill_contact_email"/></li>
+                                <br/>
+                                <strong t-if="appointment_type_id">Booking Details</strong>
+                                <strong t-else="">Event Details</strong>
+                            </t>
+                            <li t-if="appointment_type_manage_capacity"><strong>Booked for: </strong> <t t-out="resource_total_capacity_reserved"/></li>
+                            <li t-if="appointment_type_id"><strong>Type: </strong> <t t-out="appointment_type_id[1]"/></li>
+                            <li><strong>Start Date: </strong> <t t-out="start.toFormat('f')"/></li>
+                            <li><strong>Stop Date: </strong> <t t-out="stop.toFormat('f')"/></li>
+                            <li t-if="appointment_status" class="o_field_selection d-flex align-items-center gap-2 mt-2">
+                                <strong>Status: </strong>
+                                <select t-if="can_edit" class="o_appointment_booking_status o_input">
+                                    <option value="request" t-att-selected="appointment_status === 'request'">Request</option>
+                                    <option value="booked" t-att-selected="appointment_status === 'booked'">Booked</option>
+                                    <option value="attended" t-att-selected="appointment_status === 'attended'">Checked-In</option>
+                                    <option value="no_show" t-att-selected="appointment_status === 'no_show'">No Show</option>
+                                    <option value="cancelled" t-att-selected="appointment_status === 'cancelled'">Cancelled</option>
+                                </select>
+                                <t t-else="">
+                                    <t t-if="appointment_status === 'request'">Request</t>
+                                    <t t-elif="appointment_status === 'booked'">Booked</t>
+                                    <t t-elif="appointment_status === 'attended'">Checked-In</t>
+                                    <t t-elif="appointment_status === 'no_show'">No Show</t>
+                                    <t t-elif="appointment_status === 'cancelled'">Cancelled</t>
+                                </t>
+                            </li>
+                        </ul>
+                    </div>
+                </templates>
+
+            </gantt>
+        </field>
+    </record>
+
+    <record id="calendar_event_view_gantt_booking_user" model="ir.ui.view">
+        <field name="name">calendar.event.view.gantt.meeting.user</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="appointment.calendar_event_view_gantt_booking_resource"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <gantt position="attributes">
+                <attribute name="default_group_by">partner_ids</attribute>
+            </gantt>
+        </field>
+    </record>
+
+    <record id="calendar_event_action_view_bookings_resources" model="ir.actions.act_window">
+        <field name="name">Resource Bookings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">calendar.event</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'gantt', 'view_id': ref('appointment.calendar_event_view_gantt_booking_resource')}),
+            (0, 0, {'view_mode': 'calendar', 'view_id': False}),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('appointment.calendar_event_view_tree_booking')}),
+        ]"/>
+        <field name="view_mode">gantt,calendar,list,form</field>
+        <field name="search_view_id" ref="appointment.calendar_event_view_search_booking"/>
+        <field name="context">{'appointment_booking_gantt_domain': [('appointment_resource_ids', '!=', False)],
+                               'appointment_default_assign_user_attendees': False,
+                               'default_partner_ids': [],
+                               'default_resource_total_capacity_reserved': 1}</field>
+        <field name="domain">['|', ('appointment_resource_ids.company_id', '=', False), ('appointment_resource_ids.company_id', 'in', allowed_company_ids)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Appointment or Resource were found.
+            </p>
+        </field>
+    </record>
+
+    <record id="calendar_event_action_view_bookings_users" model="ir.actions.act_window">
+        <field name="name">Staff Bookings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">calendar.event</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'gantt', 'view_id': ref('appointment.calendar_event_view_gantt_booking_user')}),
+            (0, 0, {'view_mode': 'calendar', 'view_id': False}),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('appointment.calendar_event_view_tree_booking')}),
+        ]"/>
+        <field name="view_mode">gantt,calendar,list,form</field>
+        <field name="search_view_id" ref="appointment.calendar_event_view_search_booking"/>
+        <field name="context">{'appointment_default_assign_user_attendees': True,
+                               'default_partner_ids': []}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Appointment or Resource were found.
+            </p>
+        </field>
+    </record>
+
+    <record id="calendar_event_action_all_resources_bookings" model="ir.actions.server" >
+        <field name="name">Resource Bookings</field>
+        <field name="model_id" ref="appointment.model_appointment_type"/>
+        <field name="path">resource-bookings</field>
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="code">action = model.action_calendar_meetings_resources_all()</field>
+    </record>
+    <record id="calendar_event_action_all_users_appointments" model="ir.actions.server" >
+        <field name="name">Staff Bookings</field>
+        <field name="model_id" ref="appointment.model_appointment_type"/>
+        <field name="path">staff-bookings</field>
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="code">action = model.action_calendar_meetings_users_all()</field>
+    </record>
+
+    <!-- Calendar Reporting -->
+    <record id="calendar_event_view_graph" model="ir.ui.view">
+        <field name="name">calendar.event.view.graph</field>
+        <field name="model">calendar.event</field>
+        <field name="arch" type="xml">
+            <graph string="Appointments" type="line" sample="1">
+                <field name="start"/>
+                <field name="res_id" invisible="1"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="calendar_event_view_pivot" model="ir.ui.view">
+        <field name="name">calendar.event.view.pivot</field>
+        <field name="model">calendar.event</field>
+        <field name="arch" type="xml">
+            <pivot string="Appointments" display_quantity="1" sample="1">
+                <field name="start" type="row"/>
+                <field name="categ_ids" type="row"/>
+                <field name="name" type="row"/>
+                <field name="user_id" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="calendar_event_action_report_all" model="ir.actions.act_window">
+        <field name="name">All Appointments</field>
+        <field name="res_model">calendar.event</field>
+        <field name="view_mode">graph,pivot,calendar,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p><p>
+                Use this menu to overview your Appointments once you get some bookings.
+            </p>
+        </field>
+    </record>
+
+    <record id="calendar_event_action_appointment_reporting" model="ir.actions.act_window">
+        <field name="name">Appointments</field>
+        <field name="res_model">calendar.event</field>
+        <field name="view_mode">pivot,graph,calendar,list,form</field>
+        <field name="context">{'search_default_online': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p><p>
+                Use this menu to overview your Appointments once you get some bookings.
+            </p>
+        </field>
+    </record>
+
+</odoo>

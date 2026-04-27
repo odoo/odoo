@@ -1,0 +1,876 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_bg_bs" model="account.report">
+        <field name="name">Balance sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="country_id" ref="base.bg"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_bg_bs_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_bg_bs_assets" model="account.report.line">
+                <field name="name">Assets</field>
+                <field name="code">bg_assets</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="expression_ids">
+                    <record id="l10n_bg_bs_assets_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">bg_assets_a.balance + bg_assets_b.balance + bg_assets_c.balance + bg_assets_d.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_bg_bs_assets_a" model="account.report.line">
+                        <field name="name">A. Subscribed but unpaid capital</field>
+                        <field name="code">bg_assets_a</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">426</field>
+                    </record>
+                    <record id="l10n_bg_bs_assets_b" model="account.report.line">
+                        <field name="name">B. Non-current (fixed) assets</field>
+                        <field name="code">bg_assets_b</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_bs_assets_b_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">bg_assets_b_1.balance + bg_assets_b_2.balance + bg_assets_b_3.balance + bg_assets_b_4.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_bg_bs_assets_b_1" model="account.report.line">
+                                <field name="name">I. Intangible assets</field>
+                                <field name="code">bg_assets_b_1</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_bg_bs_assets_b_1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">bg_assets_b_1_1.balance + bg_assets_b_1_2.balance + bg_assets_b_1_3.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_bg_bs_assets_b_1_1" model="account.report.line">
+                                        <field name="name">Development products</field>
+                                        <field name="code">bg_assets_b_1_1</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">2421 + 211</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_assets_b_1_2" model="account.report.line">
+                                        <field name="name">Concessions, patents, licenses, trademarks, software products and other similar rights and assets</field>
+                                        <field name="code">bg_assets_b_1_2</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">2420 + 214 + 2424 + 219 + 212 + 2422 + 2429 + 213 + 2423</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_assets_b_1_3" model="account.report.line">
+                                        <field name="name">Goodwill</field>
+                                        <field name="code">bg_assets_b_1_3</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">232 + 231</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_bg_bs_assets_b_2" model="account.report.line">
+                                <field name="name">II. Fixed assets</field>
+                                <field name="code">bg_assets_b_2</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_bg_bs_assets_b_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">bg_assets_b_2_1.balance + bg_assets_b_2_2.balance + bg_assets_b_2_3.balance + bg_assets_b_2_4.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_bg_bs_assets_b_2_1" model="account.report.line">
+                                        <field name="name">Lands and buildings</field>
+                                        <field name="code">bg_assets_b_2_1</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_bg_bs_assets_b_2_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">bg_assets_b_2_1_1.balance + bg_assets_b_2_1_2.balance</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="l10n_bg_bs_assets_b_2_1_1" model="account.report.line">
+                                                <field name="name">Lands</field>
+                                                <field name="code">bg_assets_b_2_1_1</field>
+                                                <field name="hierarchy_level" eval="4"/>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">201 + 202</field>
+                                            </record>
+                                            <record id="l10n_bg_bs_assets_b_2_1_2" model="account.report.line">
+                                                <field name="name">Buildings</field>
+                                                <field name="code">bg_assets_b_2_1_2</field>
+                                                <field name="hierarchy_level" eval="4"/>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">203 + 2413</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_bg_bs_assets_b_2_2" model="account.report.line">
+                                        <field name="name">Machinery, production equipment and apparatus</field>
+                                        <field name="code">bg_assets_b_2_2</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">2416 + 206</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_assets_b_2_3" model="account.report.line">
+                                        <field name="name">Equipment and other</field>
+                                        <field name="code">bg_assets_b_2_3</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">2415 + 208 + 209 + 2419 + 2414 + 204 + 2417 + 2410 + 205 + 2418 + 207</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_assets_b_2_4" model="account.report.line">
+                                        <field name="name">Long-term biological assets</field>
+                                        <field name="code">bg_assets_b_2_4</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">27</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_bg_bs_assets_b_3" model="account.report.line">
+                                <field name="name">III. Long-term financial assets</field>
+                                <field name="code">bg_assets_b_3</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_bg_bs_assets_b_3_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">bg_assets_b_3_1.balance + bg_assets_b_3_2.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_bg_bs_assets_b_3_1" model="account.report.line">
+                                        <field name="name">Long-term financial assets</field>
+                                        <field name="code">bg_assets_b_3_1</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">22</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_assets_b_3_2" model="account.report.line">
+                                        <field name="name">Other loans</field>
+                                        <field name="code">bg_assets_b_3_2</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">26</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_bg_bs_assets_b_4" model="account.report.line">
+                                <field name="name">IV. Postponed taxes</field>
+                                <field name="code">bg_assets_b_4</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="account_codes_formula">496D</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bg_bs_assets_c" model="account.report.line">
+                        <field name="name">C. Current assets</field>
+                        <field name="code">bg_assets_c</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_bs_assets_c_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">bg_assets_c_1.balance + bg_assets_c_2.balance + bg_assets_c_3.balance + bg_assets_c_4.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_bg_bs_assets_c_1" model="account.report.line">
+                                <field name="name">I. Inventories</field>
+                                <field name="code">bg_assets_c_1</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_bg_bs_assets_c_1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">bg_assets_c_1_1.balance + bg_assets_c_1_2.balance + bg_assets_c_1_3.balance + bg_assets_c_1_4.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_bg_bs_assets_c_1_1" model="account.report.line">
+                                        <field name="name">Raw materials</field>
+                                        <field name="code">bg_assets_c_1_1</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">302</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_assets_c_1_2" model="account.report.line">
+                                        <field name="name">Work in progress</field>
+                                        <field name="code">bg_assets_c_1_2</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">305</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_assets_c_1_3" model="account.report.line">
+                                        <field name="name">Products and goods</field>
+                                        <field name="code">bg_assets_c_1_3</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_bg_bs_assets_c_1_3_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">bg_assets_c_1_3_1.balance + bg_assets_c_1_3_2.balance + bg_assets_c_1_3_3.balance</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="l10n_bg_bs_assets_c_1_3_1" model="account.report.line">
+                                                <field name="name">Products</field>
+                                                <field name="code">bg_assets_c_1_3_1</field>
+                                                <field name="hierarchy_level" eval="4"/>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">303</field>
+                                            </record>
+                                            <record id="l10n_bg_bs_assets_c_1_3_2" model="account.report.line">
+                                                <field name="name">Goods</field>
+                                                <field name="code">bg_assets_c_1_3_2</field>
+                                                <field name="hierarchy_level" eval="4"/>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">304</field>
+                                            </record>
+                                            <record id="l10n_bg_bs_assets_c_1_3_3" model="account.report.line">
+                                                <field name="name">Short-term biological assets</field>
+                                                <field name="code">bg_assets_c_1_3_3</field>
+                                                <field name="hierarchy_level" eval="4"/>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">31</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_bg_bs_assets_c_1_4" model="account.report.line">
+                                        <field name="name">Advances provided</field>
+                                        <field name="code">bg_assets_c_1_4</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">301</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_bg_bs_assets_c_2" model="account.report.line">
+                                <field name="name">II. Receivables</field>
+                                <field name="code">bg_assets_c_2</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_bg_bs_assets_c_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">bg_assets_c_2_1.balance + bg_assets_c_2_2.balance + bg_assets_c_2_3.balance + bg_assets_c_2_4.balance + bg_assets_c_2_5.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_bg_bs_assets_c_2_1" model="account.report.line">
+                                        <field name="name">Receivables from suppliers</field>
+                                        <field name="code">bg_assets_c_2_1</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">40D</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_assets_c_2_2" model="account.report.line">
+                                        <field name="name">Receivables from customers</field>
+                                        <field name="code">bg_assets_c_2_2</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">41\(416)D</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_assets_c_2_3" model="account.report.line">
+                                        <field name="name">Receivables from group companies</field>
+                                        <field name="code">bg_assets_c_2_3</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">416D</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_assets_c_2_4" model="account.report.line">
+                                        <field name="name">Receivables related to associates and joint ventures</field>
+                                        <field name="code">bg_assets_c_2_4</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">424</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_assets_c_2_5" model="account.report.line">
+                                        <field name="name">Other receivables</field>
+                                        <field name="code">bg_assets_c_2_5</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_bg_bs_assets_c_2_5_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">bg_assets_c_2_5_1.balance + bg_assets_c_2_5_2.balance + bg_assets_c_2_5_3.balance + bg_assets_c_2_5_4.balance + bg_assets_c_2_5_5.balance + bg_assets_c_2_5_6.balance + bg_assets_c_2_5_7.balance + bg_assets_c_2_5_8.balance</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="l10n_bg_bs_assets_c_2_5_1" model="account.report.line">
+                                                <field name="name">Accountable persons</field>
+                                                <field name="code">bg_assets_c_2_5_1</field>
+                                                <field name="hierarchy_level" eval="4"/>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">422</field>
+                                            </record>
+                                            <record id="l10n_bg_bs_assets_c_2_5_2" model="account.report.line">
+                                                <field name="name">Translation estimates and internal estimates</field>
+                                                <field name="code">bg_assets_c_2_5_2</field>
+                                                <field name="hierarchy_level" eval="4"/>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">43</field>
+                                            </record>
+                                            <record id="l10n_bg_bs_assets_c_2_5_3" model="account.report.line">
+                                                <field name="name">Receivables from absences, deductions and litigation</field>
+                                                <field name="code">bg_assets_c_2_5_3</field>
+                                                <field name="hierarchy_level" eval="4"/>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">44</field>
+                                            </record>
+                                            <record id="l10n_bg_bs_assets_c_2_5_4" model="account.report.line">
+                                                <field name="name">Estimates from the budget and departments</field>
+                                                <field name="code">bg_assets_c_2_5_4</field>
+                                                <field name="hierarchy_level" eval="4"/>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">45D</field>
+                                            </record>
+                                            <record id="l10n_bg_bs_assets_c_2_5_5" model="account.report.line">
+                                                <field name="name">Settlements with insurers</field>
+                                                <field name="code">bg_assets_c_2_5_5</field>
+                                                <field name="hierarchy_level" eval="4"/>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">46D</field>
+                                            </record>
+                                            <record id="l10n_bg_bs_assets_c_2_5_6" model="account.report.line">
+                                                <field name="name">Settlements with international financial institutions</field>
+                                                <field name="code">bg_assets_c_2_5_6</field>
+                                                <field name="hierarchy_level" eval="4"/>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">47D</field>
+                                            </record>
+                                            <record id="l10n_bg_bs_assets_c_2_5_7" model="account.report.line">
+                                                <field name="name">Insurance and co-insurance estimates</field>
+                                                <field name="code">bg_assets_c_2_5_7</field>
+                                                <field name="hierarchy_level" eval="4"/>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">48D</field>
+                                            </record>
+                                            <record id="l10n_bg_bs_assets_c_2_5_8" model="account.report.line">
+                                                <field name="name">Other creditors</field>
+                                                <field name="code">bg_assets_c_2_5_8</field>
+                                                <field name="hierarchy_level" eval="4"/>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">499</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_bg_bs_assets_c_3" model="account.report.line">
+                                <field name="name">III. Investments</field>
+                                <field name="code">bg_assets_c_3</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_bg_bs_assets_c_3_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">bg_assets_c_3_1.balance + bg_assets_c_3_2.balance + bg_assets_c_3_3.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_bg_bs_assets_c_3_1" model="account.report.line">
+                                        <field name="name">Shares and interests in group companies</field>
+                                        <field name="code">bg_assets_c_3_1</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">517</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_assets_c_3_2" model="account.report.line">
+                                        <field name="name">Repurchased treasury shares nominal value</field>
+                                        <field name="code">bg_assets_c_3_2</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">512</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_assets_c_3_3" model="account.report.line">
+                                        <field name="name">Other investments</field>
+                                        <field name="code">bg_assets_c_3_3</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">519 + 514 + 516 + 515 + 511 + 513</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_bg_bs_assets_c_4" model="account.report.line">
+                                <field name="name">IV. Financial assets</field>
+                                <field name="code">bg_assets_c_4</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_bg_bs_assets_c_4_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">bg_assets_c_4_1.balance + bg_assets_c_4_2.balance + bg_assets_c_4_3.balance + bg_assets_c_4_4.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_bg_bs_assets_c_4_1" model="account.report.line">
+                                        <field name="name">Cash</field>
+                                        <field name="code">bg_assets_c_4_1</field>
+                                        <field name="hierarchy_level" eval="4"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">502 + 501</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_assets_c_4_2" model="account.report.line">
+                                        <field name="name">In perpetual accounts (deposits)</field>
+                                        <field name="code">bg_assets_c_4_2</field>
+                                        <field name="hierarchy_level" eval="4"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">504 + 503</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_assets_c_4_3" model="account.report.line">
+                                        <field name="name">Other cash</field>
+                                        <field name="code">bg_assets_c_4_3</field>
+                                        <field name="hierarchy_level" eval="4"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">508 + 506 + 509 + 507 + 505</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_assets_c_4_4" model="account.report.line">
+                                        <field name="name">Current receivables and loans</field>
+                                        <field name="code">bg_assets_c_4_4</field>
+                                        <field name="hierarchy_level" eval="4"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">52</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bg_bs_assets_d" model="account.report.line">
+                        <field name="name">D. Deferred expenses</field>
+                        <field name="code">bg_assets_d</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">531</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_bg_bs_liabilities" model="account.report.line">
+                <field name="name">Liabilities</field>
+                <field name="code">bg_liabilities</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="expression_ids">
+                    <record id="l10n_bg_bs_liabilities_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">bg_liabilities_a.balance + bg_liabilities_b.balance + bg_liabilities_c.balance + bg_liabilities_d.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_bg_bs_liabilities_a" model="account.report.line">
+                        <field name="name">A. Equity</field>
+                        <field name="code">bg_liabilities_a</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_bs_liabilities_a_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">bg_liabilities_a_1.balance + bg_liabilities_a_2.balance + bg_liabilities_a_3.balance + bg_liabilities_a_4.balance + bg_liabilities_a_5.balance + bg_liabilities_a_6.balance + bg_liabilities_a_7.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_bg_bs_liabilities_a_1" model="account.report.line">
+                                <field name="name">I. Subscribed capital</field>
+                                <field name="code">bg_liabilities_a_1</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-10\(105)</field>
+                            </record>
+                            <record id="l10n_bg_bs_liabilities_a_2" model="account.report.line">
+                                <field name="name">ІІ. Emission premiums</field>
+                                <field name="code">bg_liabilities_a_2</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-105</field>
+                            </record>
+                            <record id="l10n_bg_bs_liabilities_a_3" model="account.report.line">
+                                <field name="name">III. Reserve of ex-post evaluations</field>
+                                <field name="code">bg_liabilities_a_3</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-113 - 114 - 112</field>
+                            </record>
+                            <record id="l10n_bg_bs_liabilities_a_4" model="account.report.line">
+                                <field name="name">IV. Reserves</field>
+                                <field name="code">bg_liabilities_a_4</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_bg_bs_liabilities_a_4_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">bg_liabilities_a_4_1.balance + bg_liabilities_a_4_2.balance + bg_liabilities_a_4_3.balance + bg_liabilities_a_4_4.balance + bg_liabilities_a_4_5.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_bg_bs_liabilities_a_4_1" model="account.report.line">
+                                        <field name="name">Legal reserves</field>
+                                        <field name="code">bg_liabilities_a_4_1</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-111</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_liabilities_a_4_2" model="account.report.line">
+                                        <field name="name">Reserve related to repurchased own shares</field>
+                                        <field name="code">bg_liabilities_a_4_2</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-116</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_liabilities_a_4_3" model="account.report.line">
+                                        <field name="name">Reserve according to constitutive act</field>
+                                        <field name="code">bg_liabilities_a_4_3</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-117</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_liabilities_a_4_4" model="account.report.line">
+                                        <field name="name">Specific non-capital reserves</field>
+                                        <field name="code">bg_liabilities_a_4_4</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-13</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_liabilities_a_4_5" model="account.report.line">
+                                        <field name="name">Other reserves</field>
+                                        <field name="code">bg_liabilities_a_4_5</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-115 - 119</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_bg_bs_liabilities_a_5" model="account.report.line">
+                                <field name="name">V. Accumulated profit (loss) from previous years</field>
+                                <field name="code">bg_liabilities_a_5</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-12\(123)</field>
+                            </record>
+                            <record id="l10n_bg_bs_liabilities_a_6" model="account.report.line">
+                                <field name="name">VI. Current profit (loss)</field>
+                                <field name="code">bg_liabilities_a_6</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_bg_bs_liabilities_a_6_balance_account_codes" model="account.report.expression">
+                                        <field name="label">balance_account_codes</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-141 - 142 - 123</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_liabilities_a_6_balance_aggregate" model="account.report.expression">
+                                        <field name="label">balance_aggregate</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">bg_pl_expenses_12.balance - bg_pl_income_10.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                        <field name="date_scope">from_fiscalyear</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_liabilities_a_6_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">bg_liabilities_a_6.balance_account_codes + bg_liabilities_a_6.balance_aggregate</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_bg_bs_liabilities_a_7" model="account.report.line">
+                                <field name="name">VII. Unallocated earnings</field>
+                                <field name="code">bg_liabilities_a_7</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_bg_bs_liabilities_a_7_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[
+                                            '|', ('account_id.account_type', '=', 'income'),
+                                            '|', ('account_id.account_type', '=', 'income_other'),
+                                            '|', ('account_id.account_type', '=', 'expense'),
+                                            '|', ('account_id.account_type', '=', 'expense_depreciation'),
+                                                 ('account_id.account_type', '=', 'expense_direct_cost')
+                                        ]"/>
+                                        <field name="subformula">-sum</field>
+                                        <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bg_bs_liabilities_b" model="account.report.line">
+                        <field name="name">B. Provisions and similar obligations</field>
+                        <field name="code">bg_liabilities_b</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_bs_liabilities_b_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">bg_liabilities_b_1.balance + bg_liabilities_b_2.balance + bg_liabilities_b_3.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_bg_bs_liabilities_b_1" model="account.report.line">
+                                <field name="name">Provisions for pensions and other similar obligations</field>
+                                <field name="code">bg_liabilities_b_1</field>
+                                <field name="hierarchy_level" eval="3"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-4971</field>
+                            </record>
+                            <record id="l10n_bg_bs_liabilities_b_2" model="account.report.line">
+                                <field name="name">Provisions for taxes</field>
+                                <field name="code">bg_liabilities_b_2</field>
+                                <field name="hierarchy_level" eval="3"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-496C</field>
+                            </record>
+                            <record id="l10n_bg_bs_liabilities_b_3" model="account.report.line">
+                                <field name="name">Other provisions and similar obligations</field>
+                                <field name="code">bg_liabilities_b_3</field>
+                                <field name="hierarchy_level" eval="3"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-4970 - 4972</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bg_bs_liabilities_c" model="account.report.line">
+                        <field name="name">C. Obligations</field>
+                        <field name="code">bg_liabilities_c</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_bs_liabilities_c_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">bg_liabilities_c_1.balance + bg_liabilities_c_2.balance + bg_liabilities_c_3.balance + bg_liabilities_c_4.balance + bg_liabilities_c_5.balance + bg_liabilities_c_6.balance + bg_liabilities_c_7.balance + bg_liabilities_c_8.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_bg_bs_liabilities_c_1" model="account.report.line">
+                                <field name="name">Mandatory loans with a separate indication of convertibles</field>
+                                <field name="code">bg_liabilities_c_1</field>
+                                <field name="hierarchy_level" eval="3"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-153</field>
+                            </record>
+                            <record id="l10n_bg_bs_liabilities_c_2" model="account.report.line">
+                                <field name="name">Liabilities to financial institutions</field>
+                                <field name="code">bg_liabilities_c_2</field>
+                                <field name="hierarchy_level" eval="3"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-152 - 151</field>
+                            </record>
+                            <record id="l10n_bg_bs_liabilities_c_3" model="account.report.line">
+                                <field name="name">Advances received</field>
+                                <field name="code">bg_liabilities_c_3</field>
+                                <field name="hierarchy_level" eval="3"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-41C</field>
+                            </record>
+                            <record id="l10n_bg_bs_liabilities_c_4" model="account.report.line">
+                                <field name="name">Liabilities to suppliers</field>
+                                <field name="code">bg_liabilities_c_4</field>
+                                <field name="hierarchy_level" eval="3"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_bg_bs_liabilities_c_4_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">bg_liabilities_c_4_1.balance + bg_liabilities_c_4_2.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_bg_bs_liabilities_c_4_1" model="account.report.line">
+                                        <field name="name">Liabilities to suppliers</field>
+                                        <field name="code">bg_liabilities_c_4_1</field>
+                                        <field name="hierarchy_level" eval="4"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-40\(406)C</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_liabilities_c_4_2" model="account.report.line">
+                                        <field name="name">Other loans and debts</field>
+                                        <field name="code">bg_liabilities_c_4_2</field>
+                                        <field name="hierarchy_level" eval="4"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-159</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_bg_bs_liabilities_c_5" model="account.report.line">
+                                <field name="name">Liabilities under policies</field>
+                                <field name="code">bg_liabilities_c_5</field>
+                                <field name="hierarchy_level" eval="3"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-48C</field>
+                            </record>
+                            <record id="l10n_bg_bs_liabilities_c_6" model="account.report.line">
+                                <field name="name">Liabilities to group enterprises</field>
+                                <field name="code">bg_liabilities_c_6</field>
+                                <field name="hierarchy_level" eval="3"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-406C</field>
+                            </record>
+                            <record id="l10n_bg_bs_liabilities_c_7" model="account.report.line">
+                                <field name="name">Liabilities related to associates and joint ventures</field>
+                                <field name="code">bg_liabilities_c_7</field>
+                                <field name="hierarchy_level" eval="3"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-425</field>
+                            </record>
+                            <record id="l10n_bg_bs_liabilities_c_8" model="account.report.line">
+                                <field name="name">Other obligations</field>
+                                <field name="code">bg_liabilities_c_8</field>
+                                <field name="hierarchy_level" eval="3"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_bg_bs_liabilities_c_8_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">bg_liabilities_c_8_1.balance + bg_liabilities_c_8_2.balance + bg_liabilities_c_8_3.balance + bg_liabilities_c_8_4.balance + bg_liabilities_c_8_5.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_bg_bs_liabilities_c_8_1" model="account.report.line">
+                                        <field name="name">To the staff</field>
+                                        <field name="code">bg_liabilities_c_8_1</field>
+                                        <field name="hierarchy_level" eval="4"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-421 - 429 - 423</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_liabilities_c_8_2" model="account.report.line">
+                                        <field name="name">Insurance liabilities</field>
+                                        <field name="code">bg_liabilities_c_8_2</field>
+                                        <field name="hierarchy_level" eval="4"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-46C</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_liabilities_c_8_3" model="account.report.line">
+                                        <field name="name">Tax obligations</field>
+                                        <field name="code">bg_liabilities_c_8_3</field>
+                                        <field name="hierarchy_level" eval="4"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-45C</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_liabilities_c_8_4" model="account.report.line">
+                                        <field name="name">Settlements with international financial institutions</field>
+                                        <field name="code">bg_liabilities_c_8_4</field>
+                                        <field name="hierarchy_level" eval="4"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-47C</field>
+                                    </record>
+                                    <record id="l10n_bg_bs_liabilities_c_8_5" model="account.report.line">
+                                        <field name="name">Miscellaneous debtors and creditors</field>
+                                        <field name="code">bg_liabilities_c_8_5</field>
+                                        <field name="hierarchy_level" eval="4"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-49\(496,497,499)</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bg_bs_liabilities_d" model="account.report.line">
+                        <field name="name">D. Financing and deferred income</field>
+                        <field name="code">bg_liabilities_d</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="l10n_bg_bs_liabilities_d_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">bg_liabilities_d_1.balance + bg_liabilities_d_2.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_bg_bs_liabilities_d_1" model="account.report.line">
+                                <field name="name">Funding</field>
+                                <field name="code">bg_liabilities_d_1</field>
+                                <field name="hierarchy_level" eval="4"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-518</field>
+                            </record>
+                            <record id="l10n_bg_bs_liabilities_d_2" model="account.report.line">
+                                <field name="name">Income for future periods</field>
+                                <field name="code">bg_liabilities_d_2</field>
+                                <field name="hierarchy_level" eval="4"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-532</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

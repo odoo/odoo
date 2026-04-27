@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="order_form_inherit" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <group name="sale_info" position="inside">
+                    <field name="l10n_br_is_service_transaction" invisible="1"/>
+                    <field name="l10n_br_edi_payment_method"
+                           options="{'no_create': True, 'no_open': True}"
+                           required="True"
+                           invisible="country_code != 'BR'"/>
+                    <field name="l10n_br_edi_freight_model" invisible="country_code != 'BR' or l10n_br_is_service_transaction"/>
+                    <field name="l10n_br_edi_transporter_id"
+                           invisible="country_code != 'BR' or l10n_br_edi_freight_model in ('SenderVehicle', 'ReceiverVehicle') or l10n_br_is_service_transaction"/>
+                </group>
+            </field>
+        </record>
+    </data>
+</odoo>

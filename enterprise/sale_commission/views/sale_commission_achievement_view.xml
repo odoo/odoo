@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_commission_achievement_view_list" model="ir.ui.view">
+        <field name="name">sale.commission.achievement.view.list</field>
+        <field name="model">sale.commission.achievement</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="user_id"/>
+                <field name="team_id" optional="hide"/>
+                <field name="company_id" optional="hide"/>
+                <field name="date"/>
+                <field name="type"/>
+                <field name="amount"/>
+                <field name="currency_id" optional="hide"/>
+                <field name="note"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="sale_commission_achievement_view_search" model="ir.ui.view">
+        <field name="name">sale.commission.achievement.view.search</field>
+        <field name="model">sale.commission.achievement</field>
+        <field name="arch" type="xml">
+            <search string="Commission Achievement">
+                <field name="user_id"/>
+                <field name="team_id"/>
+                <field name="date"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="sale_commission_action_achievement" model="ir.actions.act_window">
+        <field name="name">Adjustments</field>
+        <field name="res_model">sale.commission.achievement</field>
+        <field name="view_mode">list</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" eval='sale_commission_achievement_view_search'/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an adjustment
+            </p>
+            <p>
+                Allows you to manually adjust a salesperson's achievements
+                for a specific period and commission plan.
+            </p>
+        </field>
+    </record>
+</odoo>

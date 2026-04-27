@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.social.push.notifications</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='website_marketing_automation']" position="after">
+                <setting help="Send push notifications and configure this website's notifications permission request">
+                    <field name="firebase_enable_push_notifications"/>
+                    <div class="content-group" invisible="not firebase_enable_push_notifications">
+                        <div class="mt16">
+                            <label for="notification_request_title" string="Title" class="o_form_label"/>
+                            <field name="notification_request_title" class="w-100"
+                                placeholder="Want to discover new versions?"/>
+                        </div>
+                        <div class="mt16">
+                            <label for="notification_request_body" string="Body" class="o_form_label align-top"/>
+                            <field name="notification_request_body" class="w-100"
+                                placeholder="Enable push notifications to be notified about new features."/>
+                        </div>
+                        <div class="mt16">
+                            <label for="notification_request_delay" string="Delay" class="o_form_label pe-2"/>
+                            <field name="notification_request_delay" class="oe_inline"/>
+                            <span class="ps-2">seconds</span>
+                        </div>
+                        <div class="mt16">
+                            <label for="notification_request_icon" string="Icon" class="o_form_label pe-2"/>
+                            <field name="notification_request_icon" class="oe_inline"/>
+                        </div>
+                    </div>
+                </setting>
+                <setting invisible="not firebase_enable_push_notifications" groups="base.group_no_one" help="Use your own Firebase Account for this website's push notifications">
+                    <field name="firebase_use_own_account"/>
+                    <div class="content-group" invisible="not firebase_use_own_account">
+                        <div class="mt16">
+                            <label for="firebase_project_id" string="Project ID" class="o_form_label"/>
+                            <field name="firebase_project_id" class="w-100" placeholder='e.g. "my-project-id"'/>
+                        </div>
+                        <div class="mt16">
+                            <label for="firebase_web_api_key" string="Web API Key" class="o_form_label"/>
+                            <field name="firebase_web_api_key" class="w-100" placeholder='e.g. "BIzbSyXhhsFHEgphW55CSg5cV7h7c_S-AuTMKc9"'/>
+                        </div>
+                        <div class="mt16">
+                            <label for="firebase_push_certificate_key" string="Push Certificate Key ID" class="o_form_label"/>
+                            <field name="firebase_push_certificate_key" class="w-100"
+                                    placeholder='e.g. "CCSc77KP_LX8dTAogFakOoJ_VqNP15u0-43psDJe__a9B..."'/>
+                        </div>
+                        <div class="mt16">
+                            <label for="firebase_sender_id" string="Sender ID" class="o_form_label"/>
+                            <field name="firebase_sender_id" class="w-100" placeholder='e.g. "280765099157"'/>
+                        </div>
+                        <div class="mt16">
+                            <label for="firebase_admin_key_file" string="Key File" class="o_form_label pe-2"/>
+                            <field name="firebase_admin_key_file"/>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

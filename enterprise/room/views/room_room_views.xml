@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="room_room_view_search" model="ir.ui.view">
+        <field name="name">Room search view</field>
+        <field name="model">room.room</field>
+        <field name="arch" type="xml">
+            <search string="Room">
+                <field name="name" string="Room"/>
+                <field name="office_id"/>
+                <field name="room_properties"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <filter name="filter_archived" string="Archived" domain="[('active', '=', False)]"/>
+                <filter name="group_by_office_id" context="{'group_by': 'office_id'}"/>
+                <filter name="group_by_company_id" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                <filter string="Properties" name="group_by_room_properties" context="{'group_by':'room_properties'}"/>
+                <searchpanel>
+                    <field name="company_id"/>
+                    <field name="office_id" select="multi" domain="[['company_id', '=', company_id]]" enable_counters="1" icon="fa-building"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="room_room_view_kanban" model="ir.ui.view">
+        <field name="name">room.room.view.kanban</field>
+        <field name="model">room.room</field>
+        <field name="arch" type="xml">
+            <kanban sample="1">
+                <field name="is_available"/>
+                <field name="next_booking_start"/>
+                <field name="office_id"/>
+                <field name="active"/>
+                <templates>
+                    <t t-name="card" class="flex-row">
+                        <aside invisible="not room_background_image" class="o_kanban_aside_full">
+                            <field name="room_background_image" options="{'size': [150,100]}" widget="image"/>
+                        </aside>
+                        <main class="ml8">
+                            <field name="name" class="fw-bolder fs-5"/>
+                            <field name="room_properties" widget="properties"/>
+                            <footer class="pt-0">
+                                <div t-if="record.active.raw_value" t-attf-class="py-1 px-2 text-bg-#{record.is_available.raw_value ? 'success' : 'danger'}">
+                                    <t t-if="record.is_available.raw_value">Available</t>
+                                    <t t-else="">Busy</t>
+                                    <!-- Show time if next booking is today, otherwise show date -->
+                                    <t t-if="record.next_booking_start.value">
+                                        <t t-set="start_datetime"
+                                            t-value="luxon.DateTime.fromISO(record.next_booking_start.raw_value)"/>
+                                        Until
+                                        <t t-if="start_datetime.hasSame(luxon.DateTime.now(), 'day')"
+                                            t-out="start_datetime.toLocaleString(luxon.DateTime.TIME_SIMPLE)"/>
+                                        <t t-else="" t-out="start_datetime.toLocaleString(luxon.DateTime.DATE_SHORT)"/>
+                                    </t>
+                                </div>
+                            </footer>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="room_room_view_list" model="ir.ui.view">
+        <field name="name">room.room.view.list</field>
+        <field name="model">room.room</field>
+        <field name="arch" type="xml">
+            <list sample="1">
+                <field name="name"/>
+                <field name="office_id"/>
+                <field name="is_available" string="Is Currently Available"/>
+                <field name="next_booking_start"/>
+                <field name="room_properties"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="room_room_view_form" model="ir.ui.view">
+        <field name="name">room.room.view.form</field>
+        <field name="model">room.room</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="active" invisible="1"/>
+                <field name="room_booking_ids" invisible="1" />
+                <field name="is_available" invisible="1"/>
+                <header>
+                    <button string="Open" type="object" name="action_open_booking_view"  invisible="not active"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_bookings" type="object"
+                                class="oe_stat_button" icon="fa-calendar">
+                            <div class="o_stat_info">
+                                <div invisible="not next_booking_start" >
+                                    <span class="o_stat_text">Next Meeting</span>
+                                    <field class="o_stat_value" name="next_booking_start"/>
+                                </div>
+                                <span invisible="next_booking_start">No Upcoming Meetings</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div invisible="not name or not active">
+                        <div class="badge rounded-pill text-bg-success float-end fs-6 border-0" invisible="not is_available">
+                            Available
+                        </div>
+                        <div class="badge rounded-pill text-bg-danger float-end fs-6 border-0" invisible="is_available">
+                            Busy
+                        </div>
+                    </div>
+                    <div class="oe_title mb24">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Blue Meeting Room"/>
+                        </h1>
+                        <div class="o_row">
+                            <field name="office_id" placeholder="e.g. Headquarters"/>
+                        </div>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="short_code"/>
+                        </group>
+                        <group>
+                            <field name="room_booking_url" widget="CopyClipboardChar" invisible="not active"/>
+                        </group>
+                    </group>
+                    <field name="room_properties" columns="2"/>
+                    <notebook>
+                        <page string="Appearance" name="Appearance">
+                            <group>
+                                <group>
+                                    <field name="bookable_background_color" widget="color"/>
+                                    <field name="booked_background_color" widget="color"/>
+                                </group>
+                                <group>
+                                    <field name="room_background_image" widget="image"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Amenities" name="Amenities">
+                            <field name="description" placeholder="e.g. projector, capacity 6 people"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="room_room_action" model="ir.actions.act_window">
+        <field name="name">Room</field>
+        <field name="res_model">room.room</field>
+        <field name="path">meeting-rooms</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create Rooms
+          </p>
+          <p>
+            They can then be booked for meetings from a Tablet or the back-end.
+          </p>
+        </field>
+    </record>
+</odoo>

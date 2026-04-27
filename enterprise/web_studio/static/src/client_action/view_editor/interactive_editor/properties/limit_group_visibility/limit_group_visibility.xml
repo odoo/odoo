@@ -1,0 +1,17 @@
+<templates>
+
+<t t-name="web_studio.ViewEditor.LimitGroupVisibility">
+    <div class="o_limit_group_visibility o_web_studio_sidebar_tags">
+        <label for="groups_id" class="mb-1">Allow visibility to groups</label>
+        <div class="o_field_widget o_field_many2many_tags" name="groups_id">
+            <MultiRecordSelector t-props="allowGroupsProps" />
+        </div>
+
+        <label for="negated_groups_id" class="mb-1">Forbid visibility to groups</label>
+        <div class="o_field_widget o_field_many2many_tags" name="negated_groups_id">
+            <MultiRecordSelector t-props="forbidGroupsProps" />
+        </div>
+    </div>
+</t>
+
+</templates>

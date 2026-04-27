@@ -1,0 +1,16 @@
+<odoo>
+    <t t-inherit="web.ActionInstallKioskPWA" t-inherit-mode="extension">
+        <xpath expr="//div/*[last()]" position="after">
+            <div t-if="state.tags.length > 0">
+                <br/>
+                <div class="text-center fs-2 mb-2">Or open the Kiosk on your IoT Boxes:</div>
+                <div>
+                    <TagsList tags="state.tags"/>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//footer/*[last()]" position="after">
+            <button class="btn btn-primary" t-on-click="actionOpenKioskIot" t-out="'Open on IoT Box' + (state.tags.length > 1 ? 'es' : '')" t-if="state.tags.length > 0"/>
+        </xpath>
+    </t>
+</odoo>

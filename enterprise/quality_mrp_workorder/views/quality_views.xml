@@ -1,0 +1,176 @@
+<odoo>
+    <record id="quality_alert_view_form_inherit_mrp" model="ir.ui.view">
+        <field name="name">quality.alert.view.form.inherit.mrp</field>
+        <field name="model">quality.alert</field>
+        <field name="inherit_id" ref="quality_control.quality_alert_view_form"/>
+        <field name="arch" type="xml">
+            <field name="lot_id" position="after">
+                <field name="workcenter_id" groups="mrp.group_mrp_routings"/>
+            </field>
+            <xpath expr="//chatter" position="after">
+                <div invisible="not context.get('discard_on_footer_button', False)">
+                    <footer class="oe_edit_only">
+                        <button special="save" data-hotkey="q" string="Save" class="oe_highlight"/>
+                        <button string="Discard" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="quality_check_action_wo" model="ir.actions.act_window">
+        <field name="name">Quality Checks</field>
+        <field name="res_model">quality.check</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('workorder_id', '=', active_id)]</field>
+        <field name="target">main</field>
+        <field name="context">{
+            'search_default_workorder_id': [active_id],
+            'default_workorder_id': active_id,
+         }
+        </field>
+    </record>
+
+    <record id="quality_alert_view_search_inherit_quality_mrp_workorder" model="ir.ui.view">
+        <field name="name">quality.alert.view.search.inherit.mrp</field>
+        <field name="model">quality.alert</field>
+        <field name="inherit_id" ref="quality.quality_alert_view_search"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="workorder_id" string="Operation" filter_domain="[
+                    '|', '|', ('picking_id', 'ilike', self), ('production_id', 'ilike', self), ('workorder_id', 'ilike', self)]"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="quality_check_view_search_inherit_quality_mrp_workorder" model="ir.ui.view">
+        <field name="name">quality.check.view.search.inherit.quality.mrp.workorder</field>
+        <field name="model">quality.check</field>
+        <field name="inherit_id" ref="quality_control.quality_check_view_search"/>
+        <field name="arch" type="xml">
+            <field name="lot_id" position="after">
+                <field name="finished_lot_id"/>
+            </field>
+            <filter name="groupby_team_id" position="before">
+                <filter string="Finished Lot/Serial" name="groupby_finished_lot_id" context="{'group_by': 'finished_lot_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="quality_check_view_form_inherit_mrp_workorder" model="ir.ui.view">
+        <field name="name">quality.check.view.form.inherit.mrp.workorder</field>
+        <field name="model">quality.check</field>
+        <field name="inherit_id" ref="quality_control.quality_check_view_form"/>
+        <field name="arch" type="xml">
+            <field name="lot_id" position="after">
+                <field name="workorder_id" invisible="1"/>
+                <field name="production_id" invisible="1"/>
+                <field name="finished_lot_id" invisible="not finished_lot_id" groups="stock.group_production_lot"/>
+            </field>
+            <xpath expr="//field[@name='lot_id']" position="after">
+                <field name="lot_id" invisible="not workorder_id" groups="stock.group_production_lot" string="Component Lot/Serial"/>
+            </xpath>
+            <xpath expr="//field[@name='measure_on']" position="after">
+                <field name="operation_id" string="Work Order Operation" invisible="not operation_id" groups="mrp.group_mrp_routings"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="quality_check_view_tree_inherit_mrp_workorder" model="ir.ui.view">
+        <field name="name">quality.check.view.list.inherit.mrp.workorder</field>
+        <field name="model">quality.check</field>
+        <field name="inherit_id" ref="quality_control.quality_check_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="lot_name" position="after">
+                <field name="finished_lot_id" optional="hide" groups="stock.group_production_lot"/>
+            </field>
+            <xpath expr="//field[@name='measure_on']" position="after">
+                <field name="operation_id" optional="hide" string="Work Order Operation" groups="mrp.group_mrp_routings"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- MRP.WORKORDER TABLET VIEW -->
+    <record id="quality_check_view_form_tablet_inherit_quality" model="ir.ui.view">
+        <field name="name">mrp.workorder.view.form.inherit.quality.tablet</field>
+        <field name="model">quality.check</field>
+        <field name="inherit_id" ref="mrp_workorder.quality_check_view_form_tablet"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='production_id']" position="after">
+                <field name="measure_success" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='action_next']" position="before">
+                <button name="action_fail_and_next" type="object" class="btn-danger" invisible="test_type != 'passfail'" barcode_trigger="FAIL" string="Fail"/>
+                <button name="action_pass_and_next" type="object" class="btn-success" invisible="test_type != 'passfail'" barcode_trigger="PASS" string="Pass"/>
+                <button name="do_measure" type="object" class="btn-primary" string="Validate" invisible="test_type != 'measure'" barcode_trigger="NEXT"/>
+            </xpath>
+            <xpath expr="//field[@name='note']" position="before">
+                <div invisible="test_type != 'measure'" class="o_workorder_bar_left o_workorder_bar_content">
+                    <label for="measure" string="Measure:" />
+                    <field name="measure" class="oe_inline"/>
+                    <field name="norm_unit" class="text-lowercase" readonly="1" />
+                </div>
+           </xpath>
+        </field>
+    </record>
+
+    <record id="quality_point_view_search_inherit_mrp_workorder" model="ir.ui.view">
+        <field name="name">quality.point.view.search.inherit.mrp.workorder</field>
+        <field name="model">quality.point</field>
+        <field name="inherit_id" ref="quality_control.quality_point_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="inactive" position="after">
+                <separator/>
+                <filter string="Quality Points" name="quality_points" domain="[('operation_id', '=', False)]"/>
+                <filter string="Manufacturing Steps" name="manufacturing_steps" domain="[('operation_id', '!=', False)]"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="quality_control.quality_point_action" model="ir.actions.act_window">
+        <field name="context">{'search_default_quality_points': 1}</field>
+    </record>
+
+    <record id="quality_check_view_search_inherit_mrp_workorder" model="ir.ui.view">
+        <field name="name">quality.check.view.search.inherit.mrp.workorder</field>
+        <field name="model">quality.check</field>
+        <field name="inherit_id" ref="quality_control.quality_check_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="control_date" position="after">
+                <separator/>
+                <filter string="Quality Checks" name="quality_checks"
+                    domain="['|', ('point_id', '=', False), ('point_id.operation_id', '=', False), ('test_type', 'not in', ('register_consumed_materials', 'register_byproducts', 'print_label'))]"/>
+                <filter string="Manufacturing Steps" name="manufacturing_steps"
+                    domain="['|', ('point_id.operation_id', '!=', False), ('test_type', 'in', ('register_consumed_materials', 'register_byproducts', 'print_label'))]"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="quality_control.quality_check_action_main" model="ir.actions.act_window">
+        <field name="context">{'search_default_quality_checks': 1}</field>
+    </record>
+
+    <record id="quality_check_view_pivot_inherit_mrp_workorder" model="ir.ui.view">
+        <field name="name">quality.check.view.pivot.inherit.mrp.workorder</field>
+        <field name="model">quality.check</field>
+        <field name="inherit_id" ref="quality_control.quality_check_view_pivot"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="worksheet_page" invisible="1"/>
+                <field name="finished_product_sequence" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="quality_check_view_graph_inherit_mrp_workorder" model="ir.ui.view">
+        <field name="name">quality.check.view.graph.inherit.mrp.workorder</field>
+        <field name="model">quality.check</field>
+        <field name="inherit_id" ref="quality_control.quality_check_view_graph"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='quality_state']" position="after">
+                <field name="worksheet_page" invisible="1"/>
+                <field name="finished_product_sequence" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

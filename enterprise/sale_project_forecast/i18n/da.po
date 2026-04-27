@@ -1,0 +1,80 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_project_forecast
+#
+# Translators:
+# Mads Søndergaard, 2024
+# Martin Trigaux, 2024
+# Kira Petersen, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:48+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Kira Petersen, 2025\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"Language: da\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,help:sale_project_forecast.field_product_product__planning_enabled
+#: model:ir.model.fields,help:sale_project_forecast.field_product_template__planning_enabled
+msgid ""
+"If enabled, a shift will automatically be generated for the selected role "
+"when confirming the Sales Order.                 With the 'auto plan' "
+"feature, only employees with this role will be automatically assigned shifts "
+"for Sales Orders containing this service.                 The system will "
+"consider employee availability and the remaining time to be "
+"planned.                 You can also manually schedule open shifts for your "
+"Sales Order or assign them to any employee you prefer."
+msgstr ""
+"Hvis denne indstilling er aktiveret, oprettes der automatisk en vagt for den "
+"valgte rolle, når salgsordren bekræftes.                 Med funktionen "
+"'automatisk planlægning' vil kun medarbejdere med denne rolle automatisk "
+"blive tildelt vagter for salgsordrer, der omfatter denne "
+"service.                 Systemet tager højde for både medarbejderens "
+"tilgængelighed og den tid, der skal planlægges.                 Du har også "
+"mulighed for at planlægge åbne vagter manuelt eller tildele dem til en "
+"medarbejder efter eget valg."
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,field_description:sale_project_forecast.field_product_product__planning_enabled
+#: model:ir.model.fields,field_description:sale_project_forecast.field_product_template__planning_enabled
+msgid "Plan Services"
+msgstr "Planlæg services"
+
+#. module: sale_project_forecast
+#: model:ir.model,name:sale_project_forecast.model_planning_slot
+msgid "Planning Shift"
+msgstr "Planlægning vagt"
+
+#. module: sale_project_forecast
+#: model:ir.model,name:sale_project_forecast.model_product_template
+msgid "Product"
+msgstr "Produkt"
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,field_description:sale_project_forecast.field_planning_slot__sale_line_id
+msgid "Sales Order Item"
+msgstr "Salgsordre Emne"
+
+#. module: sale_project_forecast
+#: model:ir.model,name:sale_project_forecast.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Salgsordrelinje"
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,help:sale_project_forecast.field_planning_slot__sale_line_id
+msgid ""
+"Sales order item for which this shift will be performed. When sales orders "
+"are automatically planned, the remaining hours of the sales order item, as "
+"well as the role defined on the service, are taken into account."
+msgstr ""
+"Salgsordrelinjen, som denne vagt udføres for. Ved automatisk planlægning af "
+"salgsordrer tages der højde for de resterende timer på salgsordrelinjen samt "
+"de roller, der er knyttet til tjenesten."

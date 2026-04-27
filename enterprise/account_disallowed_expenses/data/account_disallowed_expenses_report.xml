@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="disallowed_expenses_report" model="account.report">
+        <field name="name">Disallowed Expenses Report</field>
+        <field name="filter_multi_company">selector</field>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="default_opening_date_filter">previous_year</field>
+        <field name="search_bar" eval="True"/>
+        <field name="custom_handler_model_id" ref="model_account_disallowed_expenses_report_handler"/>
+        <field name="column_ids">
+            <record id="disallowed_expenses_report_total_amount" model="account.report.column">
+                <field name="name">Total Amount</field>
+                <field name="expression_label">total_amount</field>
+            </record>
+            <record id="disallowed_expenses_report_rate" model="account.report.column">
+                <field name="name">Rate</field>
+                <field name="expression_label">rate</field>
+                <field name="figure_type">percentage</field>
+            </record>
+            <record id="disallowed_expenses_report_disallowed_amount" model="account.report.column">
+                <field name="name">Disallowed Amount</field>
+                <field name="expression_label">disallowed_amount</field>
+            </record>
+        </field>
+    </record>
+</odoo>

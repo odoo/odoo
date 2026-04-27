@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Source: https://www.fiduciaire-lpg.lu/fr/publications/comptabilit%C3%A9/les-param%C3%A8tres-sociaux-luxembourgeois -->
+    <record id="rule_parameter_lu_index" model="hr.rule.parameter">
+        <field name="name">Lux: Index</field>
+        <field name="code">l10n_lu_index</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+    <record id="rule_parameter_lu_index_2011" model="hr.rule.parameter.value">
+        <field name="parameter_value">737.83</field>
+        <field name="rule_parameter_id" ref="rule_parameter_lu_index"/>
+        <field name="date_from" eval="datetime(2011, 10, 1).date()"/>
+    </record>
+    <record id="rule_parameter_lu_index_2013" model="hr.rule.parameter.value">
+        <field name="parameter_value">775.17</field>
+        <field name="rule_parameter_id" ref="rule_parameter_lu_index"/>
+        <field name="date_from" eval="datetime(2013, 10, 1).date()"/>
+    </record>
+    <record id="rule_parameter_lu_index_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">794.54</field>
+        <field name="rule_parameter_id" ref="rule_parameter_lu_index"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_lu_index_2018" model="hr.rule.parameter.value">
+        <field name="parameter_value">814.40</field>
+        <field name="rule_parameter_id" ref="rule_parameter_lu_index"/>
+        <field name="date_from" eval="datetime(2018, 8, 1).date()"/>
+    </record>
+    <record id="rule_parameter_lu_index_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">834.76</field>
+        <field name="rule_parameter_id" ref="rule_parameter_lu_index"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_lu_index_2021" model="hr.rule.parameter.value">
+        <field name="parameter_value">855.62</field>
+        <field name="rule_parameter_id" ref="rule_parameter_lu_index"/>
+        <field name="date_from" eval="datetime(2021, 10, 1).date()"/>
+    </record>
+    <record id="rule_parameter_lu_index_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">877.01</field>
+        <field name="rule_parameter_id" ref="rule_parameter_lu_index"/>
+        <field name="date_from" eval="datetime(2022, 4, 1).date()"/>
+    </record>
+    <record id="rule_parameter_lu_index_2023_2" model="hr.rule.parameter.value">
+        <field name="parameter_value">898.93</field>
+        <field name="rule_parameter_id" ref="rule_parameter_lu_index"/>
+        <field name="date_from" eval="datetime(2023, 2, 1).date()"/>
+    </record>
+    <record id="rule_parameter_lu_index_2023_4" model="hr.rule.parameter.value">
+        <field name="parameter_value">921.40</field>
+        <field name="rule_parameter_id" ref="rule_parameter_lu_index"/>
+        <field name="date_from" eval="datetime(2023, 4, 1).date()"/>
+    </record>
+    <record id="rule_parameter_lu_index_2023_9" model="hr.rule.parameter.value">
+        <field name="parameter_value">944.43</field>
+        <field name="rule_parameter_id" ref="rule_parameter_lu_index"/>
+        <field name="date_from" eval="datetime(2023, 9, 1).date()"/>
+    </record>
+
+    <!-- Source: https://impotsdirects.public.lu/fr/az/c/credit-impot-salaire-social-minimum.html -->
+    <record id="rule_parameter_withholding_taxes_min_social_pay" model="hr.rule.parameter">
+        <field name="name">Lux Tax: Minimal Social Pay</field>
+        <field name="code">l10n_lu_min_social_pay</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+    <record id="rule_parameter_withholding_taxes_min_social_pay_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">2256.95</field>
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_taxes_min_social_pay"/>
+        <field name="date_from" eval="datetime(2022, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_withholding_taxes_min_social_pay_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">2387.40</field>
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_taxes_min_social_pay"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_withholding_taxes_min_social_pay_2023_04" model="hr.rule.parameter.value">
+        <field name="parameter_value">2508.24</field>
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_taxes_min_social_pay"/>
+        <field name="date_from" eval="datetime(2023, 4, 1).date()"/>
+    </record>
+    <record id="rule_parameter_withholding_taxes_min_social_pay_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">2570.93</field>
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_taxes_min_social_pay"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_withholding_taxes_min_social_pay_2025" model="hr.rule.parameter.value">
+        <field name="parameter_value">2637.79</field>
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_taxes_min_social_pay"/>
+        <field name="date_from" eval="datetime(2025, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_withholding_taxes_min_social_pay_2025_05" model="hr.rule.parameter.value">
+        <field name="parameter_value">2703.74</field>
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_taxes_min_social_pay"/>
+        <field name="date_from" eval="datetime(2025, 5, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_vat_rate" model="hr.rule.parameter">
+        <field name="name">Lux: VAT rate</field>
+        <field name="code">l10n_vat_rate</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+    <record id="rule_parameter_vat_rate_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.16</field>
+        <field name="rule_parameter_id" ref="rule_parameter_vat_rate"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_vat_rate_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.17</field>
+        <field name="rule_parameter_id" ref="rule_parameter_vat_rate"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_days_per_month" model="hr.rule.parameter">
+        <field name="name">Lux: Days Per Month</field>
+        <field name="code">l10n_lu_days_per_month</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+    <record id="rule_parameter_days_per_month_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">25</field>
+        <field name="rule_parameter_id" ref="rule_parameter_days_per_month"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_hours_per_month" model="hr.rule.parameter">
+        <field name="name">Lux: Hours Per Month</field>
+        <field name="code">l10n_lu_hours_per_month</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+    <record id="rule_parameter_hours_per_month_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">173</field>
+        <field name="rule_parameter_id" ref="rule_parameter_hours_per_month"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <!-- Meal Vouchers -->
+    <record id="rule_parameter_meal_voucher_max_value" model="hr.rule.parameter">
+        <field name="name">Lux Meal Vouchers: Max Value</field>
+        <field name="code">l10n_lu_meal_voucher_max_value</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+    <record id="rule_parameter_meal_voucher_max_value_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">10.8</field>
+        <field name="rule_parameter_id" ref="rule_parameter_meal_voucher_max_value"/>
+        <field name="date_from" eval="datetime(2022, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_meal_voucher_max_value_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">15</field>
+        <field name="rule_parameter_id" ref="rule_parameter_meal_voucher_max_value"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_meal_voucher_max_days" model="hr.rule.parameter">
+        <field name="name">Lux Meal Vouchers: Max Amount Days</field>
+        <field name="code">l10n_lu_meal_voucher_max_days</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+    <record id="rule_parameter_meal_voucher_max_days_2000" model="hr.rule.parameter.value">
+        <field name="parameter_value">18</field>
+        <field name="rule_parameter_id" ref="rule_parameter_meal_voucher_max_days"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+</odoo>

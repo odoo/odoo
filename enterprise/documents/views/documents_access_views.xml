@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="access_list" model="ir.ui.view">
+        <field name="name">documents.access.list</field>
+        <field name="model">documents.access</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="partner_id"/>
+                <field name="role"/>
+                <field name="expiration_date"/>
+             </list>
+        </field>
+    </record>
+</odoo>

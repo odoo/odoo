@@ -1,0 +1,46 @@
+$o-ranking-colors: (1: #eca801, 2: #acacac, 3: #ba651f);
+$table-height-base: 29vh;
+$table-max-height-lg: 46vh;
+$td-width-avatar: 32px;
+
+@each $name, $color in $o-ranking-colors {
+    .o-bg-#{$name} { background-color: $color; }
+    .o-border-#{$name} { box-shadow: 0 0 0 $border-width*2 $o-view-background-color, 0 0 0 $border-width*4 $color; }
+}
+
+.o_timesheet_leaderboard_tip {
+    background-color: var(--timesheet-leaderboard-tip-background-color, #{$o-gray-200});
+}
+
+.o_leaderboard_modal_table {
+    min-height: $table-height-base;
+    max-height: $table-height-base;
+    overflow-y: auto;
+
+    td:nth-child(2) {
+        width: $td-width-avatar;
+        padding-right: map-get($spacers, 1);
+    }
+
+    &.o_table_height_extra {
+        max-height: $table-max-height-lg;
+    }
+
+    @include media-breakpoint-down(lg) {
+        max-height: 100%;
+        overflow-y: hidden;
+
+        &.o_table_height_extra {
+            max-height: 100%;
+        }
+    }
+}
+
+.o_timesheet_leaderboard_confetti {
+    animation: o_timesheet_leaderboard_fadeInOut ease-in-out 5s 1 forwards;
+}
+
+@keyframes o_timesheet_leaderboard_fadeInOut {
+    10%, 66% { opacity: 1; }
+    0%, 100% { opacity: 0; }
+}

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- MRR Breakdown -->
+    <record id="view_sale_order_log_growth_pivot" model="ir.ui.view">
+        <field name="name">sale.order.log.report.pivot</field>
+        <field name="model">sale.order.log.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Sale Order Log Analysis" sample="1">
+                <field name="event_date" interval="month" type="rowt"/>
+                <field name="mrr_change_normalized" string="MRR Change" type="measure"/>
+                <field name="arr_change_normalized" string="ARR Change"/>
+                <field name="amount_signed" invisible="1"/>
+                <field name="recurring_monthly" invisible="1"/>
+                <field name="recurring_yearly" invisible="1"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_sale_order_log_growth_graph" model="ir.ui.view">
+        <field name="name">sale.order.log.report.graph</field>
+        <field name="model">sale.order.log.report</field>
+        <field name="arch" type="xml">
+            <graph string="Sale Order Log Analysis" type="bar" sample="1" cumulated_start="1">
+                <field name="event_date" interval="month" type="col"/>
+                <field name="mrr_change_normalized" string="MRR Change" type="measure"/>
+                <field name="arr_change_normalized" string="ARR Change"/>
+                <field name="amount_signed" invisible="1"/>
+                <field name="recurring_monthly" invisible="1"/>
+                <field name="recurring_yearly" invisible="1"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_sale_order_log_growth_tree" model="ir.ui.view">
+        <field name="name">sale.order.log.report.list</field>
+        <field name="model">sale.order.log.report</field>
+        <field name="arch" type="xml">
+            <list string="Subscription Log Analysis" create="0" delete="0"
+                  decoration-muted="event_type == '3_transfer'"
+                  default_order="id desc"
+                  action="action_open_sale_order" type="object">
+                <field name="id" groups="base.group_no_one"/>
+                <field name="order_id"/>
+                <field name="event_date" optional="show"/>
+                <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                <field name="event_type" optional="show"/>
+                <field name="partner_id" optional="hide"/>
+                <field name="origin_order_id" optional="hide"/>
+                <field name="team_id" optional="show"/>
+                <field name="company_id" optional="show" groups="base.group_multi_company"/>
+                <field name="amount_signed" string="MRR change"
+                       decoration-warning="event_type == '15_contraction'"
+                       decoration-success="event_type == '1_expansion'"
+                       decoration-danger="event_type == '2_churn'"
+                       sum="MRR"
+                       optional="show"/>
+                <field name="recurring_monthly" string="New MRR" optional="show"/>
+                <field name="log_currency_id" optional="show" string="Currency"/>
+                <field name="subscription_state" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="sale_order_log_growth_action" model="ir.actions.act_window">
+        <field name="name">MRR Breakdown</field>
+        <field name="res_model">sale.order.log.report</field>
+        <field name="view_mode">graph,list,pivot</field>
+        <field name="context">{
+            'search_default_group_by_event_date': 1,
+            'search_default_group_by_event_type': 1,
+            }
+        </field>
+    </record>
+
+    <!-- MRR TIMELINE   -->
+
+    <record id="view_sale_order_log_analysis_graph" model="ir.ui.view">
+        <field name="name">sale.order.log.report.graph</field>
+        <field name="model">sale.order.log.report</field>
+        <field name="arch" type="xml">
+            <graph string="Sale Order Log Analysis" type="line" sample="1" cumulated="1" cumulated_start="1">
+                <field name="event_date" interval="month" type="col"/>
+                <field name="mrr_change_normalized" string="MRR Change" type="measure"/>
+                <field name="arr_change_normalized" string="ARR Change"/>
+                <field name="amount_signed" invisible="1"/>
+                <field name="recurring_monthly" invisible="1"/>
+                <field name="recurring_yearly" invisible="1"/>
+            </graph>
+        </field>
+    </record>
+
+
+    <record id="sale_order_log_analysis_action" model="ir.actions.act_window">
+        <field name="name">MRR Analysis</field>
+        <field name="res_model">sale.order.log.report</field>
+        <field name="view_mode">graph,list,pivot</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="sale_order_log_analysis_action_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_sale_order_log_analysis_graph"/>
+        <field name="act_window_id" ref="sale_order_log_analysis_action"/>
+    </record>
+
+    <record id="sale_order_log_report_search" model="ir.ui.view">
+        <field name="name">sale.order.log.report.search</field>
+        <field name="model">sale.order.log.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="subscription_state"/>
+                <field name="order_id" string="Subscription"/>
+                <field name="origin_order_id" string="First Contract"/>
+                <field name="user_id"/>
+                <field name="team_id" string="Sales Team"/>
+                <field name="health"/>
+                <field name="end_date"/>
+                <field name="partner_id" operator="child_of"/>
+                <filter name="my_subscriptions" string="My Subscriptions" domain="[('user_id','=',uid)]"/>
+                <field name="close_reason_id"/>
+                <field name="template_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <separator/>
+                <filter name="filter_new" string="New" domain="[('event_type','=','0_creation')]"/>
+                <filter name="filter_expansion" string="Expansion" domain="[('event_type','=','1_expansion')]"/>
+                <filter name="filter_contraction" string="Contraction" domain="[('event_type','=','15_contraction')]"/>
+                <filter name="filter_churn" string="Churn" domain="[('event_type','=','2_churn')]"/>
+                <separator/>
+                <filter name="filter_bad_health" string="Bad Health" domain="[('health','=','bad')]"/>
+                <filter name="filter_good_health" string="Good Health" domain="[('health','=','done')]"/>
+                <separator/>
+                <filter name="filter_first_contract_date" date="first_contract_date"/>
+                <separator/>
+                <filter name="filter_event_date" date="event_date"/>
+                <separator/>
+                <filter name="filter_end_date" date="end_date"/>
+                <separator/>
+                <group expand="1" string="Group By">
+                    <filter string="Event Date" name="group_by_event_date" domain="[]"
+                            context="{'group_by': 'event_date'}"/>
+                    <filter string="Event Type" name="group_by_event_type" domain="[]"
+                            context="{'group_by': 'event_type'}"/>
+                    <filter string="Order" name="group_by_order" domain="[]" context="{'group_by': 'order_id'}"/>
+                    <filter string="Salesperson" name="sales_person" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string="Sales Team" name="group_by_team" domain="[]" context="{'group_by': 'team_id'}"/>
+                    <filter string="Template" name="group_by_template" domain="[]" context="{'group_by': 'template_id'}"/>
+                    <filter string="Plan" name="group_by_plan" domain="[]" context="{'group_by': 'plan_id'}"/>
+                    <filter string="Customer" name="group_by_customer" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Country" name="group_by_country" domain="[]" context="{'group_by': 'country_id'}"/>
+                    <filter string="Company" name="group_by_company" domain="[]" context="{'group_by': 'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <menuitem id="menu_sale_order_log_growth_report" name="MRR Breakdown"
+              parent="sale_subscription.menu_sale_subscription_report" action="sale_order_log_growth_action"
+              sequence="30"/>
+    <menuitem id="menu_sale_order_log_analysis_report" name="MRR Timeline"
+              parent="sale_subscription.menu_sale_subscription_report" action="sale_order_log_analysis_action"
+              sequence="40"/>
+
+</odoo>

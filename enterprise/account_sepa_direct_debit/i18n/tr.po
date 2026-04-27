@@ -1,0 +1,2274 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_sepa_direct_debit
+#
+# Translators:
+# emre oktem, 2024
+# Tiffany Chang, 2024
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2024
+# Halil, 2024
+# Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2024
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2024
+# Buket Şeker <buket_skr@hotmail.com>, 2024
+# Ayhan Kızıltan, 2024
+# Ediz Duman <neps1192@gmail.com>, 2024
+# Levent Karakaş <levent@mektup.at>, 2024
+# Tugay Hatıl <tugayh@projetgrup.com>, 2024
+# Murat Kaplan <muratk@projetgrup.com>, 2024
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2024
+# Martin Trigaux, 2024
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
+# abc Def <hdogan1974@gmail.com>, 2024
+# Umur Akın <umura@projetgrup.com>, 2024
+# Melih Melik Sonmez, 2025
+# Hakan Türkün, 2025
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-10 18:48+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "(if applicable)"
+msgstr "(uygunsa)"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "(optional)"
+msgstr "(opsiyonel)"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sepa_direct_debit_mandate_form
+msgid ""
+".\n"
+"                                Make sure the mandate isn't meant for the "
+"parent contact."
+msgstr ""
+".\n"
+"                                Yetkilendirmenin üst kişi için "
+"verilmediğinden emin olun."
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.view_batch_payment_form_inherit
+msgid ""
+".\n"
+"                        SEPA requires a 5 days notice."
+msgstr ""
+".\n"
+"                        SEPA en az 5 gün önceden bildirim gerektirir."
+
+#. module: account_sepa_direct_debit
+#: model:mail.template,body_html:account_sepa_direct_debit.email_template_sdd_new_mandate
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;"
+"\">\n"
+"                        Dear <t t-out=\"object.partner_id.display_name or "
+"''\">Azure Interior</t>\n"
+"                        <br/>\n"
+"                        <br/>\n"
+"                        Here is your SEPA Direct Debit Mandate to sign to "
+"authorize\n"
+"                        <t t-out=\"object.company_id.display_name or "
+"''\">YourCompany</t>\n"
+"                        to send instructions to your bank to debit your "
+"account in accordance with the instructions from\n"
+"                        <t t-out=\"object.company_id.display_name or "
+"''\">YourCompany</t>\n"
+"                        Do not hesitate to contact us if you have any "
+"questions.\n"
+"                        <br/>\n"
+"                        Best regards,\n"
+"                        <t t-if=\"not is_html_empty(user.signature)\" data-o-"
+"mail-quote-container=\"1\">\n"
+"                            <br/><br/>\n"
+"                            <t t-out=\"user.signature\" data-o-mail-"
+"quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;"
+"\">\n"
+"                        Sayın <t t-out=\"object.partner_id.display_name or "
+"''\">Azure Interior</t>\n"
+"                        <br/>\n"
+"                        <br/>\n"
+"                        <t t-out=\"object.company_id.display_name or "
+"''\">YourCompany</t>'nin\n"
+"                        <t t-out=\"object.company_id.display_name or "
+"''\">YourCompany</t>\n"
+"                        talimatlarına uygun olarak hesabınızdan para çekmesi "
+"için bankanıza talimat göndermesine izin vermek üzere imzalamanız gereken "
+"SEPA Otomatik Ödeme Talimatı aşağıdadır.\n"
+"                       Sorularınız olması durumunda lütfen bizimle iletişime "
+"geçmekten çekinmeyin. \n"
+"                        <br/>\n"
+"                         Saygılarımızla,\n"
+"                        <t t-if=\"not is_html_empty(user.signature)\" data-o-"
+"mail-quote-container=\"1\">\n"
+"                            <br/><br/>\n"
+"                            <t t-out=\"user.signature\" data-o-mail-"
+"quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sepa_direct_debit_mandate_form
+msgid "<span> day(s)</span>"
+msgstr "<span> gün</span>"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "<strong>Address:</strong>"
+msgstr "<strong>Adres:</strong>"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "<strong>City: </strong>"
+msgstr "<strong>Şehir: </strong>"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "<strong>Country: </strong>"
+msgstr "<strong>Ülke: </strong>"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "<strong>Creditor identifier:</strong>"
+msgstr "<strong>Alacaklı Kimliği:</strong>"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid ""
+"<strong>Date and place of signature:</"
+"strong> ......................................"
+msgstr ""
+"<strong>İmza tarihi ve yeri:</strong> ......................................"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "<strong>Email:</strong>"
+msgstr "<strong>Email:</strong>"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "<strong>IBAN:</strong>"
+msgstr "<strong>IBAN:</strong>"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "<strong>Mandate identifier:</strong>"
+msgstr "<strong>Yetki Tanımlayıcı:</strong>"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid ""
+"<strong>Name of the reference party:</"
+"strong> ......................................"
+msgstr ""
+"<strong>Referans partinin adı:</"
+"strong> ......................................"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "<strong>Phone:</strong>"
+msgstr "<strong>Telefon:</strong>"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "<strong>Signature:</strong>"
+msgstr "<strong>İmza:</strong>"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "<strong>Start date:</strong>"
+msgstr "<strong>Başlangıç tarihi:</strong>"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "<strong>Transaction type:</strong> recurrent"
+msgstr "<strong>İşlem türü:</strong> tekrarlayan"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "<strong>Zip: </strong>"
+msgstr "<strong>Posta kodu: </strong>"
+
+#. module: account_sepa_direct_debit
+#: model:mail.template,body_html:account_sepa_direct_debit.email_template_sdd_pre_notification
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id\"/>\n"
+"                    <span style=\"font-size: 10px;\">Your Direct Debit "
+"Payment Notification</span><br/>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"right\" t-if=\"not "
+"company.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ company.id }}\" "
+"style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-"
+"alt=\"company.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    Dear <t t-out=\"object.partner_id.name or ''\">Azure "
+"Interior</t><br/>\n"
+"                    <br/>\n"
+"                    A Direct Debit payment request amounting to\n"
+"                    <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 0.00</"
+"span>\n"
+"                    will be sent to your bank.<br/>\n"
+"                    Your account ending with <t t-"
+"out=\"ctx.get('iban_last_4') or ''\">1234</t> will be automatically debited "
+"on the\n"
+"                    <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(ctx.get('collection_date'))\">2020-04-18</span>,\n"
+"                    or shortly thereafter.<br/>\n"
+"                    please make sure you have the requested funds.<br/>\n"
+"                    <br/>\n"
+"                    <t t-if=\"ctx.get('creditor_iban') or "
+"ctx.get('mandate_ref')\">\n"
+"                        Merchant data:<br/>\n"
+"                        <ul>\n"
+"                            <t t-if=\"ctx.get('creditor_iban')\">\n"
+"                                <li>IBAN: <t t-out=\"ctx['creditor_iban'] or "
+"''\">NO 93 8601 1117947</t></li>\n"
+"                            </t>\n"
+"                            <t t-if=\"ctx.get('mandate_ref')\">\n"
+"                                <li>SEPA DIRECT DEBIT MANDATE REFERENCE: <t "
+"t-out=\"ctx['mandate_ref'] or ''\"/></li>\n"
+"                            </t>\n"
+"                        </ul>\n"
+"                    </t>\n"
+"                    <br/>\n"
+"                    Do not hesitate to contact us if you have any question.\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; font-size: "
+"11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"company.name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
+"0.7;\">\n"
+"                    <t t-if=\"company.phone\">\n"
+"                        <t t-out=\"company.phone or ''\">+1 650-123-4567</t> "
+"|\n"
+"                    </t>\n"
+"                    <t t-if=\"company.email\">\n"
+"                        <a t-attf-href=\"'mailto:%s' % {{ company.email }}\" "
+"style=\"text-decoration:none; color: #454748;\" t-out=\"company.email or "
+"''\">info@yourcompany.com</a> |\n"
+"                    </t>\n"
+"                    <t t-if=\"company.website\">\n"
+"                        <a t-attf-href=\"'%s' % {{ company.website }}\" "
+"style=\"text-decoration:none; color: #454748;\" t-out=\"company.website or "
+"''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; "
+"padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?"
+"utm_source=db&amp;utm_medium=mail\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- BAŞLIK -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id\"/>\n"
+"                    <span style=\"font-size: 10px;\">Otomatik Ödeme Uyarısı</"
+"span><br/>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"right\" t-if=\"not "
+"company.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ company.id }}\" "
+"style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-"
+"alt=\"company.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"\n"
+"    <!-- İÇERİK -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    Sayın <t t-out=\"object.partner_id.name or ''\">Azure "
+"Interior</t><br/>\n"
+"                    <br/>\n"
+"                    Bir Otomatik Ödeme (SEPA Direct Debit) talebi ile \n"
+"                    <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 0.00</"
+"span>\n"
+"                    tutarında bir ödeme bankanıza iletilecektir.<br/>\n"
+"                    <t t-out=\"ctx.get('iban_last_4') or ''\">1234</t>  ile "
+"biten hesabınız, \n"
+"                    <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(ctx.get('collection_date'))\">18-04-2020</span>\n"
+"                    tarihinde veya bu tarihten kısa bir süre sonra otomatik "
+"olarak borçlandırılacaktır.<br/>\n"
+"                    Lütfen hesabınızda yeterli bakiye bulunduğundan emin "
+"olun.<br/>\n"
+"                    <br/>\n"
+"                    <t t-if=\"ctx.get('creditor_iban') or "
+"ctx.get('mandate_ref')\">\n"
+"                        Ticari Bilgiler:<br/>\n"
+"                        <ul>\n"
+"                            <t t-if=\"ctx.get('creditor_iban')\">\n"
+"                                <li>IBAN: <t t-out=\"ctx['creditor_iban'] or "
+"''\">NO 93 8601 1117947</t></li>\n"
+"                            </t>\n"
+"                            <t t-if=\"ctx.get('mandate_ref')\">\n"
+"                                <li>SEPA OTOMATİK ÖDEME YETKİ REFERANSI: <t "
+"t-out=\"ctx['mandate_ref'] or ''\"/></li>\n"
+"                            </t>\n"
+"                        </ul>\n"
+"                    </t>\n"
+"                    <br/>\n"
+"                    Herhangi bir sorunuz olursa bizimle iletişime geçmekten "
+"çekinmeyin.\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- ALT BAŞLIK -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; font-size: "
+"11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"company.name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
+"0.7;\">\n"
+"                    <t t-if=\"company.phone\">\n"
+"                        <t t-out=\"company.phone or ''\">+1 650-123-4567</t> "
+"|\n"
+"                    </t>\n"
+"                    <t t-if=\"company.email\">\n"
+"                        <a t-attf-href=\"'mailto:%s' % {{ company.email }}\" "
+"style=\"text-decoration:none; color: #454748;\" t-out=\"company.email or "
+"''\">info@yourcompany.com</a> |\n"
+"                    </t>\n"
+"                    <t t-if=\"company.website\">\n"
+"                        <a t-attf-href=\"'%s' % {{ company.website }}\" "
+"style=\"text-decoration:none; color: #454748;\" t-out=\"company.website or "
+"''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- DESTEKLEYEN -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; "
+"padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        <a target=\"_blank\" href=\"https://www.odoo.com?"
+"utm_source=db&amp;utm_medium=mail\" style=\"color: #875A7B;\">Odoo</a> "
+"tarafıdan desteklenmektedir\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+
+#. module: account_sepa_direct_debit
+#: model:mail.template,body_html:account_sepa_direct_debit.email_template_sdd_mandate_expiring
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\">\n"
+"                    <tr>\n"
+"                        <td align=\"center\">\n"
+"                            <table border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: "
+"#FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"                                <tbody>\n"
+"                                    <!-- CONTENT -->\n"
+"                                    <tr>\n"
+"                                        <td align=\"center\" style=\"min-"
+"width: 590px;\">\n"
+"                                            <table border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; "
+"background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;"
+"\">\n"
+"                                                <tr>\n"
+"                                                    <td valign=\"top\" "
+"style=\"font-size: 13px;\">\n"
+"                                                        <div>\n"
+"                                                            Hello,<br/><br/"
+">\n"
+"                                                            A SEPA Direct "
+"Debit mandate will reach its automatic expiration date on <span t-"
+"out=\"format_date(object._get_expiry_date_per_mandate()[object])"
+"\">2020-04-18</span><br/>\n"
+"                                                            This can be "
+"caused by one of the following reason:\n"
+"                                                            <ul>\n"
+"                                                                <li>\n"
+"                                                                    That "
+"date is the mandate end date agreed upon signature.\n"
+"                                                                </li>\n"
+"                                                                <li>\n"
+"                                                                    It would "
+"then be more than 36 months since the last time this mandate was used.\n"
+"                                                                </li>\n"
+"                                                            </ul>\n"
+"                                                            <div "
+"style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                                                <a t-attf-"
+"href=\"{{ website_url }}/odoo/sdd-mandates/{{ object.id }}\" "
+"style=\"background-color: #4caf50; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                                                    Go to "
+"Mandate\n"
+"                                                                </a>\n"
+"                                                            </div>\n"
+"                                                            Security Tip: "
+"Check that the domain name you are redirected to is: <b><a t-att-"
+"href=\"object.get_base_url()\" t-out=\"object.get_base_url() or ''\">\n"
+"                                                            https://"
+"yourcompany.odoo.com</a></b>\n"
+"                                                        </div>\n"
+"                                                    </td>\n"
+"                                                </tr>\n"
+"                                                <tr>\n"
+"                                                    <td style=\"text-"
+"align:center;\">\n"
+"                                                        <hr width=\"100%\" "
+"style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"/>\n"
+"                                                    </td>\n"
+"                                                </tr>\n"
+"                                            </table>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </tbody>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <!-- POWERED BY -->\n"
+"                    <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                            <table border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: "
+"#F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                                <tr>\n"
+"                                    <td style=\"text-align: center; font-"
+"size: 13px;\">\n"
+"                                        Powered by <a target=\"_blank\" "
+"href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" "
+"style=\"color: #875A7B;\">Odoo</a>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                            <table border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; color: #454748; "
+"padding: 8px; border-collapse:separate;\">\n"
+"                                <tr>\n"
+"                                    <td style=\"text-align: center; font-"
+"size: 11px;\">\n"
+"                                        PS: This is an automated email sent "
+"by Odoo Accounting to notify you a SEPA Direct Debit mandate is going to get "
+"automatically closed.\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\">\n"
+"                    <tr>\n"
+"                        <td align=\"center\">\n"
+"                            <table border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: "
+"#FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"                                <tbody>\n"
+"                                    <!-- İÇERİK -->\n"
+"                                    <tr>\n"
+"                                        <td align=\"center\" style=\"min-"
+"width: 590px;\">\n"
+"                                            <table border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; "
+"background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;"
+"\">\n"
+"                                                <tr>\n"
+"                                                    <td valign=\"top\" "
+"style=\"font-size: 13px;\">\n"
+"                                                        <div>\n"
+"                                                            Merhaba,<br/><br/"
+">\n"
+"                                                            <span t-"
+"out=\"format_date(object._get_expiry_date_per_mandate()[object])"
+"\">18-04-2020</span>tarihinde otomatik son geçerlilik tarihi gelecek olan "
+"bir SEPA Otomatik Ödeme Yetkisi bulunmaktadır.<br/>\n"
+"                                                            Bunun sebebi, "
+"aşağıdakilerden biri olabilir:\n"
+"                                                            <ul>\n"
+"                                                                <li>\n"
+"                                                                    Bu "
+"tarih, imza sırasında kararlaştırılan yetki süresinin sona erme tarihidir.\n"
+"                                                                </li>\n"
+"                                                                <li>\n"
+"                                                                    Bu "
+"yetkinin en son kullanıldığı tarihten bu yana 36 aydan fazla bir süre geçmiş "
+"olacaktır.\n"
+"                                                                </li>\n"
+"                                                            </ul>\n"
+"                                                            <div "
+"style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                                                <a t-attf-"
+"href=\"{{ website_url }}/odoo/sdd-mandates/{{ object.id }}\" "
+"style=\"background-color: #4caf50; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                                                    Yetkiye "
+"Git\n"
+"                                                                </a>\n"
+"                                                            </div>\n"
+"                                                            Güvenlik İpucu: "
+"Yönlendirildiğiniz alan adının şu olup olmadığını kontrol edin: <b><a t-att-"
+"href=\"object.get_base_url()\" t-out=\"object.get_base_url() or ''\">\n"
+"                                                            https://"
+"yourcompany.odoo.com</a></b>\n"
+"                                                        </div>\n"
+"                                                    </td>\n"
+"                                                </tr>\n"
+"                                                <tr>\n"
+"                                                    <td style=\"text-"
+"align:center;\">\n"
+"                                                        <hr width=\"100%\" "
+"style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"/>\n"
+"                                                    </td>\n"
+"                                                </tr>\n"
+"                                            </table>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </tbody>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <!-- DESTEKLEYEN -->\n"
+"                    <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                            <table border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: "
+"#F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                                <tr>\n"
+"                                    <td style=\"text-align: center; font-"
+"size: 13px;\">\n"
+"                                        <a target=\"_blank\" href=\"https://"
+"www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;"
+"\">Odoo</a> tarafından desteklenmektedir\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                            <table border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; color: #454748; "
+"padding: 8px; border-collapse:separate;\">\n"
+"                                <tr>\n"
+"                                    <td style=\"text-align: center; font-"
+"size: 11px;\">\n"
+"                                        Not: Bu, Odoo Muhasebe departmanı "
+"tarafından SEPA Otomatik Ödeme talimatının otomatik olarak kapatılacağını "
+"bildirmek için gönderilen otomatize bir e-postadır.\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            "
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_payment.py:0
+msgid ""
+"A SEPA direct debit version should be selected to generate the addresses in "
+"the export file."
+msgstr ""
+"Dışa aktarım dosyasındaki adresleri oluşturmak için bir SEPA doğrudan "
+"borçlandırma sürümü seçilmelidir."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_payment.py:0
+msgid ""
+"A SEPA direct debit version should be selected to generate the export file."
+msgstr ""
+"Dışa aktarım dosyasını oluşturmak için bir SEPA otomatik tahsilat sürümü "
+"seçilmelidir."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/sdd_mandate.py:0
+msgid "A customer account is required to validate a SEPA Direct Debit mandate."
+msgstr ""
+"SEPA Otomatik Tahsilat talimatını onaylamak için bir müşteri hesabı "
+"gereklidir."
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.actions.act_window,help:account_sepa_direct_debit.account_sepa_direct_debit_mandate_tree_act
+msgid ""
+"A mandate represents the authorization you receive from a customer\n"
+"                    to automatically collect money on her account."
+msgstr ""
+"Yetkilendirme belgesi, müşteriden\n"
+"                    hesabından otomatik olarak para tahsil etme izni "
+"aldığınız anlamına gelir."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__partner_bank_id
+msgid "Account of the customer to collect payments from."
+msgstr "Tahsilat yapılacak müşteriye ait hesap."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__message_needaction
+msgid "Action Needed"
+msgstr "Aksiyon Gerekiyor"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields.selection,name:account_sepa_direct_debit.selection__sdd_mandate__state__active
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sdd_mandate_search_view
+msgid "Active"
+msgstr "Etkin"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__activity_ids
+msgid "Activities"
+msgstr "Aktiviteler"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Etkinlik İstisna Dekorasyonu"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__activity_state
+msgid "Activity State"
+msgstr "Aktivite Durumu"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Aktivite Türü İmgesi"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_batch_payment.py:0
+msgid "All the payments in the batch must have the same SDD scheme."
+msgstr ""
+"Toplu ödeme içindeki tüm ödemelerin aynı SDD planına sahip olması gerekir."
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "Antwerp"
+msgstr "Anvers"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid ""
+"As part of your rights, you are entitled to a refund from your bank under "
+"the terms and conditions of your agreement with your bank. Your rights are "
+"explained in a statement that you can obtain from your bank. A refund must "
+"be claimed within 8 weeks starting from the date on which your account was "
+"debited."
+msgstr ""
+"Haklarınız kapsamında, bankanızla yaptığınız anlaşmanın hüküm ve koşulları "
+"çerçevesinde bankadan geri ödeme alma hakkına sahipsiniz. Haklarınız, "
+"bankanızdan temin edebileceğiniz bir belgede açıklanmaktadır. Geri ödeme "
+"talebi, hesabınızdan para çekildiği tarihten itibaren 8 hafta içinde "
+"yapılmalıdır."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__message_attachment_count
+msgid "Attachment Count"
+msgstr "Ek Sayısı"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__author_id
+msgid "Author"
+msgstr "Üretici"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields.selection,name:account_sepa_direct_debit.selection__account_batch_payment__sdd_scheme__b2b
+#: model:ir.model.fields.selection,name:account_sepa_direct_debit.selection__sdd_mandate__sdd_scheme__b2b
+msgid "B2B"
+msgstr "B2B"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model,name:account_sepa_direct_debit.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Banka Hesapları"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.view_batch_payment_form_inherit
+msgid "Batch Booking"
+msgstr "Toplu Rezervasyon"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model,name:account_sepa_direct_debit.model_account_batch_payment
+msgid "Batch Payment"
+msgstr "Toplu Ödeme"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "Belgium"
+msgstr "Belçika"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__body_has_template_value
+msgid "Body content is the same as the template"
+msgstr "Gövde içeriği şablonla aynı"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "Building C"
+msgstr "C Binası"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "By signing this mandate form, you authorise (A)"
+msgstr ""
+"Bu yetkilendirme formunu imzalayarak şu tarafı yetkilendirmiş olursunuz: (A)"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields.selection,name:account_sepa_direct_debit.selection__account_batch_payment__sdd_scheme__core
+#: model:ir.model.fields.selection,name:account_sepa_direct_debit.selection__sdd_mandate__sdd_scheme__core
+msgid "CORE"
+msgstr "CORE"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "CREDIT-1234"
+msgstr "CREDIT-1234"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__can_edit_body
+msgid "Can Edit Body"
+msgstr "Gövdeyi Düzenleyebilir"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sepa_direct_debit_mandate_form
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sepa_direct_debit_mandate_send_form
+msgid "Cancel"
+msgstr "İptal"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields.selection,name:account_sepa_direct_debit.selection__sdd_mandate__state__cancelled
+msgid "Cancelled"
+msgstr "İptal Edildi"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/wizard/sdd_mandate_send.py:0
+msgid "Check Partner(s) Email(s)"
+msgstr "İş Ortaklarının Epostalarını Kontrol Et"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sepa_direct_debit_mandate_form
+msgid "Close"
+msgstr "Kapat"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields.selection,name:account_sepa_direct_debit.selection__sdd_mandate__state__closed
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sdd_mandate_search_view
+msgid "Closed"
+msgstr "Kapanmış"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sepa_direct_debit_mandate_form
+msgid "Collections"
+msgstr "Tahsilatlar"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model,name:account_sepa_direct_debit.model_res_company
+msgid "Companies"
+msgstr "Şirketler"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__company_id
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__company_id
+msgid "Company"
+msgstr "Firma"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__company_id
+msgid "Company for whose invoices the mandate can be used."
+msgstr "Bu yetkilendirme ile faturaları tahsil edilecek şirket."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model,name:account_sepa_direct_debit.model_res_config_settings
+msgid "Config Settings"
+msgstr "Yapılandırma Ayarları"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model,name:account_sepa_direct_debit.model_res_partner
+msgid "Contact"
+msgstr "Kontak"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__body
+msgid "Contents"
+msgstr "İçerikler"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_account_payment__sdd_mandate_usable
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_account_payment_register__sdd_mandate_usable
+msgid "Could a SDD mandate be used?"
+msgstr "SDD talimatı kullanılabilir mi?"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.actions.act_window,help:account_sepa_direct_debit.account_sepa_direct_debit_mandate_tree_act
+msgid "Create a new direct debit customer mandate"
+msgstr "Yeni bir otomatik ödeme müşteri talimatı oluşturun"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_account_payment_form
+msgid "Create it."
+msgstr "Oluşturun"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__create_uid
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__create_uid
+msgid "Created by"
+msgstr "Tarafından oluşturuldu"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__create_date
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__create_date
+msgid "Created on"
+msgstr "Oluşturuldu"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "Creditor"
+msgstr "Alacaklı"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_res_config_settings__sdd_creditor_identifier
+msgid "Creditor Identifier"
+msgstr "Alacaklı Kimliği"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_res_config_settings__sdd_creditor_identifier
+msgid "Creditor identifier of your company within SEPA scheme."
+msgstr "SEPA şemasında şirketinizin alacaklı kimliği."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__partner_id
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__partner_id
+msgid "Customer"
+msgstr "Müşteri"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sepa_direct_debit_mandate_form
+msgid "Customer mandate"
+msgstr "Müşteri talimatı"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__partner_id
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate_send__partner_id
+msgid "Customer whose payments are to be managed by this mandate."
+msgstr "Bu yetkilendirme ile ödemeleri yönetilecek müşteri."
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "DEBT1234"
+msgstr "BORÇ1234"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__start_date
+msgid "Date from which the mandate can be used (inclusive)."
+msgstr "Yetkilendirmenin kullanılabileceği tarih (dahil)."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__end_date
+msgid ""
+"Date until which the mandate can be used. It will automatically be closed "
+"after this date."
+msgstr ""
+"Yetkilendirme belgesinin kullanılabileceği son tarih. Bu tarihten sonra "
+"otomatik olarak kapatılır."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_account_batch_payment__sdd_required_collection_date
+msgid ""
+"Date when the company expects to receive the payments of this batch. It "
+"can't be inferior to the sending day + the minimum pre-notification period."
+msgstr ""
+"Şirketin bu grup ödemeleri almayı beklediği tarih. Bu tarih, gönderim günü + "
+"minimum ön bildirim süresinden önce olamaz."
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "Debtor"
+msgstr "Borçlu"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__debtor_id_code
+msgid "Debtor Identifier"
+msgstr "Borçlu Kimliği"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields.selection,name:account_sepa_direct_debit.selection__account_journal__debit_sepa_pain_version__pain_008_001_02
+msgid "Default (Pain 008.001.02)"
+msgstr "Varsayılan (Pain 008.001.02)"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "Demo@email.com"
+msgstr "Demo@email.com"
+
+#. module: account_sepa_direct_debit
+#: model:ir.actions.act_window,name:account_sepa_direct_debit.account_sepa_direct_debit_mandate_tree_act
+#: model:ir.actions.act_window,name:account_sepa_direct_debit.account_sepa_direct_debit_partner_mandates
+#: model:ir.ui.menu,name:account_sepa_direct_debit.account_sepa_direct_debit_customer_mandates_menu
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sdd_res_partner_view
+msgid "Direct Debit Mandates"
+msgstr "Otomatik Tahsilat Talimatları"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_account_journal_dashboard_kanban_view
+msgid "Direct Debit Payment to Collect"
+msgstr "Tahsil Edilecek Otomatik Ödeme"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__payments_to_collect_nber
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_account_journal_dashboard_kanban_view
+msgid "Direct Debit Payments to Collect"
+msgstr "Tahsil Edilecek Otomatik Ödemeler"
+
+#. module: account_sepa_direct_debit
+#: model:ir.actions.act_window,name:account_sepa_direct_debit.action_sdd_payments_to_collect
+msgid "Direct debit payments to collect"
+msgstr "Tahsil edilecek otomatik ödemeler"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__display_name
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__display_name
+msgid "Display Name"
+msgstr "İsim Göster"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__checkbox_download
+msgid "Download"
+msgstr "İndir"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields.selection,name:account_sepa_direct_debit.selection__sdd_mandate__state__draft
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sdd_mandate_search_view
+msgid "Draft"
+msgstr "Taslak"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__state
+msgid ""
+"Draft: Validate before use.\n"
+"Active: Valid mandates to collect payments.\n"
+"Cancelled: Mandates never validated.\n"
+"Closed: Expired or manually closed mandates. Previous transactions remain "
+"valid.\n"
+"Revoked: Fraudulent mandates. Previous invoices might need reimbursement.\n"
+msgstr ""
+"Taslak: Kullanımdan önce onaylanmalıdır.\n"
+"Aktif: Ödeme tahsilatı için geçerli yetki belgeleri.\n"
+"İptal edildi: Hiç onaylanmamış yetki belgeleri.\n"
+"Kapatıldı: Süresi dolmuş veya manuel olarak kapatılmış yetki belgeleri. "
+"Önceki işlemler geçerliliğini korur.\n"
+"Geri alındı: Hileli yetki belgeleri. Önceki faturalar için geri ödeme "
+"gerekebilir.\n"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__checkbox_send_mail
+msgid "Email"
+msgstr "E-Posta"
+
+#. module: account_sepa_direct_debit
+#: model:mail.template,description:account_sepa_direct_debit.email_template_sdd_new_mandate
+msgid "Email requesting the customer to sign the mandate attached"
+msgstr "Müşteriden ekli yetki formunu imzalamasını talep eden e-posta"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__template_id
+msgid "Email template"
+msgstr "E-posta şablonu"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__end_date
+msgid "End Date"
+msgstr "Bitiş Tarihi"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "End date"
+msgstr "Bitiş tarihi"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_res_partner__sdd_mandate_ids
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_res_users__sdd_mandate_ids
+msgid "Every mandate belonging to this partner."
+msgstr "Bu partnere ait tüm talimatlar."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__expiration_warning_already_sent
+msgid "Expiration warning sent"
+msgstr "Son kullanma uyarısı gönderildi"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.view_batch_payment_form_inherit
+msgid "First-Time Payments"
+msgstr "İlk Ödemeler"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__message_follower_ids
+msgid "Followers"
+msgstr "Takipçiler"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Takipçiler (İş ortakları)"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Yazı tipi harika simgesi ör. fa-görevler"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__debtor_id_code
+msgid "Free reference identifying the debtor in your company."
+msgstr "Şirketinizdeki borçluyu tanımlayan serbest referans."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_batch_payment.py:0
+msgid "Go to journal"
+msgstr "Yevmiyeye git"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_batch_payment.py:0
+msgid "Go to mandates"
+msgstr "Talimatlara git"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_batch_payment.py:0
+msgid "Go to payments"
+msgstr "Ödemelere git"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_batch_payment.py:0
+msgid "Go to settings"
+msgstr "Ayarlara gidin"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_payment_register_form_inherit_account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_account_payment_form
+msgid "Good news! A valid SEPA Mandate is available."
+msgstr "İyi haber: geçerli bir SEPA Yetkilendirmesi mevcut."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__has_message
+msgid "Has Message"
+msgstr "Mesaj Var"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__partner_bank_id
+msgid "IBAN"
+msgstr "IBAN"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__id
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__activity_exception_icon
+msgid "Icon"
+msgstr "Simge"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "İstisnai bir etkinliği belirtmek için kullanılan simge."
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "Identification code"
+msgstr "Kimliklendirme kodu"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__name
+msgid "Identifier"
+msgstr "Tanımlayıcı"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__message_has_error
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "İşaretliyse, bazı mesajlar gönderi hatası içermektedir."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__payment_ids
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sepa_direct_debit_mandate_form
+msgid "In-process and completed payments generated under this mandate."
+msgstr ""
+"Bu yetkilendirme kapsamında oluşturulmuş işlemdeki ve tamamlanmış ödemeler"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/res_company.py:0
+msgid "Invalid creditor identifier. Make sure you made no typo."
+msgstr ""
+"Geçersiz alacaklı tanımlayıcısı. Yazım hatası yapmadığınızdan emin olun."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/res_company.py:0
+msgid "Invalid creditor identifier. Wrong format."
+msgstr "Geçersiz alacaklı tanımlayıcısı. Format hatalı."
+
+#. module: account_sepa_direct_debit
+#: model:mail.message.subtype,description:account_sepa_direct_debit.sdd_mt_invoice_paid_with_mandate
+msgid "Invoice paid via direct debit."
+msgstr "Fatura otomatik ödeme ile ödendi."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__paid_invoice_ids
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sepa_direct_debit_mandate_form
+msgid "Invoices Paid"
+msgstr "Ödenen Faturalar"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.view_account_invoice_filter
+msgid "Invoices matching a valid SEPA Direct Debit Mandate"
+msgstr ""
+"Geçerli bir SEPA Otomatik Tahsilat Yetkilendirmesi ile eşleşen faturalar"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__paid_invoice_ids
+msgid "Invoices paid using this mandate."
+msgstr "Bu talimatla ödenmiş faturalar."
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sepa_direct_debit_mandate_form
+msgid "Invoices paid with this mandate."
+msgstr "Bu talimatla ödenen faturalar."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__is_mail_template_editor
+msgid "Is Editor"
+msgstr "İş Düzenleyicisi"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__message_is_follower
+msgid "Is Follower"
+msgstr "Takipçi mi"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model,name:account_sepa_direct_debit.model_account_journal
+msgid "Journal"
+msgstr "Yevmiye"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model,name:account_sepa_direct_debit.model_account_move
+msgid "Journal Entry"
+msgstr "Yevmiye Kaydı"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__lang
+msgid "Language"
+msgstr "Dil"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__write_uid
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__write_uid
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__write_date
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__write_date
+msgid "Last Updated on"
+msgstr "Son Güncelleme"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Ana Ek"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__mandate_id
+msgid "Mandate"
+msgstr "Yetki"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__mandate_pdf_file
+msgid "Mandate Form PDF"
+msgstr "Talimat Formu PDF"
+
+#. module: account_sepa_direct_debit
+#: model:ir.actions.report,name:account_sepa_direct_debit.sdd_mandate_form_report_main
+msgid "Mandate form"
+msgstr "Talimat formu"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.constraint,message:account_sepa_direct_debit.constraint_sdd_mandate_name_unique
+msgid "Mandate identifier must be unique! Please choose another one."
+msgstr ""
+"Yetkilendirme tanımlayıcısı benzersiz olmalıdır! Lütfen başka bir "
+"tanımlayıcı seçin."
+
+#. module: account_sepa_direct_debit
+#: model:ir.actions.server,name:account_sepa_direct_debit.sdd_mandate_state_cron_ir_actions_server
+msgid "Mandate state updater"
+msgstr "Talimat durumu güncelleyici"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "Marc Demo"
+msgstr "Marc Demo"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__message_has_error
+msgid "Message Delivery error"
+msgstr "Mesaj Teslim hatası"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__message_ids
+msgid "Messages"
+msgstr "Mesajlar"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Aktivite Son Tarihim"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Sonraki Aktivite Takvimi Etkinliği"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Sonraki Aktivite Son Tarihi"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__activity_summary
+msgid "Next Activity Summary"
+msgstr "Sonraki Aktivite Özeti"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__activity_type_id
+msgid "Next Activity Type"
+msgstr "Sonraki Aktivitie Türü"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_account_payment_register__no_sdd_mandate_partner_ids
+msgid "No Sdd Mandate Partner"
+msgstr "SDD talimatı olmayan partner"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.actions.act_window,help:account_sepa_direct_debit.action_sdd_payments_to_collect
+msgid "No direct debit payment to collect"
+msgstr "Tahsil edilecek otomatik ödeme yok"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Aksiyon Sayısı"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__message_has_error_counter
+msgid "Number of errors"
+msgstr "Hata adedi"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__payments_to_collect_nber
+msgid ""
+"Number of in-process and completed payments generated under this mandate."
+msgstr ""
+"Bu yetkilendirme kapsamında oluşturulan işlemdeki ve tamamlanmış ödeme "
+"sayısı."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__paid_invoices_nber
+msgid "Number of invoices paid with this mandate."
+msgstr "Bu talimatla ödenen fatura sayısı."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "İşlem gerektiren mesaj sayısı"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Teslimat hatası olan mesaj adedi"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "Odoo PVT LTD"
+msgstr "Odoo PVT LTD"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.actions.act_window,help:account_sepa_direct_debit.account_sepa_direct_debit_mandate_tree_act
+msgid ""
+"Once an invoice is made\n"
+"                    in Odoo for a customer having a mandate active on the "
+"invoice date,\n"
+"                    its validation will trigger its automatic payment, and "
+"you will\n"
+"                    then only have to generate a SEPA Direct Debit (SDD) XML "
+"file containing this operation\n"
+"                    and send it to your bank to effectively get paid."
+msgstr ""
+"Fatura tarihi itibarıyla geçerli bir yetkilendirme \n"
+"                    bulunan bir müşteri için Odoo’da bir fatura "
+"oluşturulduğunda,\n"
+"                    bu faturanın onaylanması otomatik ödemeyi tetikler.\n"
+"                    Ardından, bu işleme ait SEPA Otomatik Ödeme (SDD) XML "
+"dosyasını oluşturup \n"
+"                    bankanıza göndererek tahsilatı gerçekleştirebilirsiniz."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_account_bank_statement_line__sdd_mandate_id
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_account_move__sdd_mandate_id
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_account_payment__sdd_mandate_id
+msgid ""
+"Once this invoice has been paid with Direct Debit, contains the mandate that "
+"allowed the payment."
+msgstr ""
+"Bu fatura doğrudan borçlandırma ile ödendiğinde, ödemeyi mümkün kılan yetki "
+"belgesini içerir."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__one_off
+msgid "One-off Mandate"
+msgstr "Tek Seferlik Talimat"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_batch_payment.py:0
+msgid ""
+"Only IBAN account numbers can receive SEPA Direct Debit payments. Please "
+"select a journal associated to one or add an IBAN bank account to the "
+"current journal"
+msgstr ""
+"SEPA Otomatik Ödeme tahsilatları yalnızca IBAN numaralı hesaplara "
+"yapılabilir. Lütfen bir IBAN’a bağlı bir günlük seçin ya da mevcut günlüğe "
+"bir IBAN hesabı ekleyin"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/sdd_mandate.py:0
+msgid "Only mandates in draft state can be deleted."
+msgstr "Yalnızca taslak durumundaki yetkilendirmeler silinebilir."
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_payment_register_form_inherit_account_sepa_direct_debit
+msgid "Oops! No valid SEPA mandate for the following partner(s):"
+msgstr ""
+"Hata! Aşağıdaki partner(ler) için geçerli bir SEPA yetkilendirmesi "
+"bulunamadı:"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_account_payment_form
+msgid "Oops! No valid SEPA mandate for this customer."
+msgstr "Hata! Bu müşteri için geçerli bir SEPA yetkilendirmesi bulunamadı."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/sdd_mandate.py:0
+msgid "Open customer"
+msgstr "Müşteriyi Aç"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/sdd_mandate.py:0
+msgid "Open customers"
+msgstr "Müşterileri Aç"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sdd_res_partner_view
+msgid "Open this partner's mandates"
+msgstr "Bu partnerin talimatlarını aç"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate_send__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
+msgstr ""
+"E-posta gönderirken seçmek için isteğe bağlı çeviri dili (ISO kodu). "
+"Ayarlanmazsa, İngilizce sürüm kullanılacaktır. Bu genellikle uygun dili "
+"sağlayan bir yer tutucu ifadesi olmalıdır, örn. {{ object.partner_id.lang }}."
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_account_payment_form
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_account_payment_with_mandates_tree
+msgid "Originating SEPA mandate"
+msgstr "Kaynak SEPA talimatı"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/sdd_mandate.py:0
+msgid "Paid Invoices"
+msgstr "Ödenmiş Faturalar"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__paid_invoices_nber
+msgid "Paid Invoices Number"
+msgstr "Ödenen Fatura Sayısı"
+
+#. module: account_sepa_direct_debit
+#: model:mail.message.subtype,name:account_sepa_direct_debit.sdd_mt_invoice_paid_with_mandate
+msgid "Paid via direct debit"
+msgstr "Otomatik ödeme ile ödendi"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__partner_parent_id
+msgid "Parent Partner"
+msgstr "Üst Partner"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model,name:account_sepa_direct_debit.model_account_partial_reconcile
+msgid "Partial Reconcile"
+msgstr "Kısmi Denkleştir"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/wizard/sdd_mandate_send.py:0
+msgid "Partner should have an email address."
+msgstr "Partnerin bir e-posta adresi olmalı."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/sdd_mandate.py:0
+msgid "Partner's Parent"
+msgstr "Partnerin Üstü"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model,name:account_sepa_direct_debit.model_account_payment_register
+msgid "Pay"
+msgstr "Ödeme İşlemi"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model,name:account_sepa_direct_debit.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Ödeme Yöntemleri"
+
+#. module: account_sepa_direct_debit
+#: model:mail.template,subject:account_sepa_direct_debit.email_template_sdd_pre_notification
+msgid "Payment notification {{ object.memo }}"
+msgstr "Ödeme bildirimi {{ object.memo }}"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model,name:account_sepa_direct_debit.model_account_payment
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__payment_ids
+msgid "Payments"
+msgstr "Ödemeler"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.view_account_move_line_payment_filter
+msgid "Payments matching a valid SEPA Direct Debit Mandate"
+msgstr ""
+"Geçerli bir SEPA Otomatik Tahsilat Yetkilendirmesi ile eşleşen ödemeler"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/sdd_mandate.py:0
+msgid "Payments to Collect"
+msgstr "Tahsil edilecek ödemeler"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_batch_payment.py:0
+msgid "Payments without mandate"
+msgstr "Talimatı olmayan ödemeler"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_report_invoice_document
+msgid ""
+"Please do not pay it manually, the payment will be asked to your bank to be "
+"processed\n"
+"                        automatically."
+msgstr ""
+"Lütfen bu ödemeyi manuel olarak yapmayın, ödeme işlemi bankanıza otomatik "
+"olarak\n"
+"                        iletilecektir."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__pre_notification_period
+msgid "Pre-notification"
+msgstr "Ön Bildirim"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_batch_payment.py:0
+msgid "Problematic mandates"
+msgstr "Sorunlu talimatlar"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__rating_ids
+msgid "Ratings"
+msgstr "Değerlendirmeler"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__recipient_ids
+msgid "Recipients"
+msgstr "Alıcılar"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__render_model
+msgid "Rendering Model"
+msgstr "İşleme Modeli"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_account_batch_payment__sdd_batch_booking
+msgid "Request batch booking from the bank for the related bank statements."
+msgstr ""
+"İlgili banka ekstreleri için bankadan toplu işlem rezervasyonu talep "
+"edin.İlgili banka ekstreleri için bankadan toplu işlem rezervasyonu talep "
+"edin."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_account_batch_payment__sdd_required_collection_date
+msgid "Required Collection Date"
+msgstr "Gerekli Tahsilat Tarihi"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__activity_user_id
+msgid "Responsible User"
+msgstr "Sorumlu Kullanıcı"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sepa_direct_debit_mandate_form
+msgid "Revoke"
+msgstr "Geriye al"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields.selection,name:account_sepa_direct_debit.selection__sdd_mandate__state__revoked
+msgid "Revoked"
+msgstr "Geriye al"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_view_account_payment_search
+msgid "Revoked SDD Mandate"
+msgstr "İptal Edilmiş SDD Talimatı"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "Rue de la Loi, 16"
+msgstr "Rue de la Loi, 16"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.view_account_payment_search
+msgid "SDD B2B"
+msgstr "SDD B2B"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_account_batch_payment__sdd_batch_booking
+msgid "SDD Batch Booking"
+msgstr "SDD Toplu Kayıt"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.view_account_payment_search
+msgid "SDD CORE"
+msgstr "SDD CORE"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model,name:account_sepa_direct_debit.model_sdd_mandate
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.view_account_move_line_payment_filter
+msgid "SDD Mandate"
+msgstr "SDD Talimatı"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model,name:account_sepa_direct_debit.model_sdd_mandate_send
+msgid "SDD Mandate Send"
+msgstr "SDD Talimatı Gönder"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_account_batch_payment__sdd_scheme
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_account_payment__sdd_mandate_scheme
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__sdd_scheme
+msgid "SDD Scheme"
+msgstr "SDD Şeması"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_res_partner__sdd_count
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_res_users__sdd_count
+msgid "SDD count"
+msgstr "SDD sayısı"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_res_company__sdd_creditor_identifier
+msgid "SDD creditor identifier"
+msgstr "SDD alacaklı kimliği"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_batch_payment.py:0
+msgid "SDD scheme is set on the customer mandate."
+msgstr "SDD şeması müşteri yetkilendirmesinde tanımlı."
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "SEPA Business-to-Business Direct Debit Mandate"
+msgstr "SEPA B2B Otomatik Ödeme Talimatı"
+
+#. module: account_sepa_direct_debit
+#: model:account.payment.method,name:account_sepa_direct_debit.payment_method_sdd
+msgid "SEPA Direct Debit"
+msgstr "SEPA Doğrudan Ödeme"
+
+#. module: account_sepa_direct_debit
+#: model:mail.template,name:account_sepa_direct_debit.email_template_sdd_pre_notification
+msgid "SEPA Direct Debit Customer Pre-Notification mail"
+msgstr "SEPA Otomatik Ödeme Ön Bildirim E-postası"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "SEPA Direct Debit Mandate"
+msgstr "SEPA Otomatik Ödeme Talimatı"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_account_journal__debit_sepa_pain_version
+msgid "SEPA Direct Debit Pain Version"
+msgstr "SEPA Otomatik Ödeme Pain Sürümü"
+
+#. module: account_sepa_direct_debit
+#: model:mail.template,name:account_sepa_direct_debit.email_template_sdd_new_mandate
+msgid "SEPA Direct Debit Sending"
+msgstr "EPA Otomatik Ödeme Gönderimi"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_res_company__sdd_creditor_identifier
+msgid ""
+"SEPA Direct Debit creditor identifier of the company, given by the bank."
+msgstr ""
+"Banka tarafından verilen, şirketin SEPA Otomatik Tahsilat alacaklı "
+"tanımlayıcısı."
+
+#. module: account_sepa_direct_debit
+#: model:mail.template,name:account_sepa_direct_debit.email_template_sdd_mandate_expiring
+#: model:mail.template,subject:account_sepa_direct_debit.email_template_sdd_mandate_expiring
+msgid "SEPA Direct Debit mandate expiration warning"
+msgstr "SEPA Otomatik Ödeme talimatı sona erme uyarısı"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/sdd_mandate.py:0
+msgid ""
+"SEPA Direct Debit scheme only accepts IBAN account numbers. Please select an "
+"IBAN-compliant debtor account for this mandate."
+msgstr ""
+"SEPA Doğrudan Borçlandırma sistemi yalnızca IBAN hesap numaralarını kabul "
+"eder. Bu yetkilendirme için IBAN uyumlu bir borçlu hesabı seçin."
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.view_account_journal_form
+msgid "SEPA Pain Version"
+msgstr "SEPA Pain Sürümü"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.view_account_journal_form
+msgid "SEPA Pain version"
+msgstr "SEPA Pain sürümü"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_payment_register_form_inherit_account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_account_payment_form
+msgid "SEPA Scheme operates in Euro."
+msgstr "SEPA sistemi Euro cinsinden çalışır."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/sdd_mandate.py:0
+msgid "SEPA direct debit stateless customer"
+msgstr "SEPA otomatik ödeme bağlamında statüsüz müşteri"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/sdd_mandate.py:0
+msgid ""
+"SEPA regulations set the minimum pre-notification period to a minimum of %s "
+"days to allow enough time for the customer to check that their account is "
+"adequately funded."
+msgstr ""
+"SEPA düzenlemeleri, müşterinin hesabında yeterli bakiye olduğundan emin "
+"olabilmesi için en az %s günlük bir ön bilgilendirme süresi öngörmektedir."
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "SEPA-CUST-001"
+msgstr "SEPA-CUST-001"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "SEPA1234"
+msgstr "SEPA1234"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS İleti hatası"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_account_bank_statement_line__sdd_has_usable_mandate
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_account_move__sdd_has_usable_mandate
+msgid "Sdd Has Usable Mandate"
+msgstr "Kullanılabilir SDD talimatı mevcut"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_account_bank_statement_line__sdd_mandate_id
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_account_move__sdd_mandate_id
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_account_payment__sdd_mandate_id
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_res_partner__sdd_mandate_ids
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_res_users__sdd_mandate_ids
+msgid "Sdd Mandate"
+msgstr "SDD Talimatı"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_payment.py:0
+msgid "Select a SEPA Direct Debit version before generating the XML."
+msgstr "XML oluşturmadan önce bir SEPA Otomatik Ödeme sürümü seçin."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/sdd_mandate.py:0
+msgid "Send"
+msgstr "Gönder"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sepa_direct_debit_mandate_form
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sepa_direct_debit_mandate_send_form
+msgid "Send & Print"
+msgstr "Gönder & Yazdır"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__is_sent
+msgid "Sent to the customer"
+msgstr "Müşteriye gönderildi"
+
+#. module: account_sepa_direct_debit
+#: model:mail.template,description:account_sepa_direct_debit.email_template_sdd_pre_notification
+msgid "Sent to the customer to indicate their account will be charged"
+msgstr "Müşterinin hesabının borçlandırılacağını bildirmek üzere gönderildi"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "Signature"
+msgstr "İmza"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_batch_payment.py:0
+msgid ""
+"Some draft payments could not be posted because of the lack of any active "
+"mandate."
+msgstr ""
+"Bazı taslak ödemeler, geçerli bir yetkilendirme belgesi bulunmadığı için "
+"muhasebeleştirilemedi."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_batch_payment.py:0
+msgid "Some payments are linked to an inactive mandate."
+msgstr "Bazı ödemeler pasif bir yetkilendirmeye bağlı."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_batch_payment.py:0
+msgid "Some payments are not linked to any mandate."
+msgstr "Bazı ödemeler hiçbir yetkilendirmeyle ilişkilendirilmemiş."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__start_date
+msgid "Start Date"
+msgstr "Başlama Tarihi"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__state
+msgid "State"
+msgstr "İl/Eyalet"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Aktivitelere göre durum \n"
+"Gecikmiş\\: Son tarih geçmiş\n"
+"Bugün\\: Aktivite tarihi bugün\n"
+"Planlanmış\\: Gelecek Aktiviteler."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__subject
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sepa_direct_debit_mandate_send_form
+msgid "Subject"
+msgstr "Konu"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_account_batch_payment__sdd_scheme
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_account_payment__sdd_mandate_scheme
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__sdd_scheme
+msgid ""
+"The B2B scheme is an optional scheme,\n"
+"offered exclusively to business payers.\n"
+"Some banks/businesses might not accept B2B SDD."
+msgstr ""
+"B2B planı, yalnızca işletmelere sunulan, \n"
+"isteğe bağlı bir plandır. \n"
+"Bazı banka veya işletmeler B2B Otomatik Ödemeyi kabul etmeyebilir."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_payment.py:0
+msgid ""
+"The SEPA Direct Debit mandate associated to the payment has been revoked and "
+"cannot be used anymore."
+msgstr ""
+"Ödeme ile ilişkili SEPA Doğrudan Borçlandırma yetkisi iptal edilmiştir ve "
+"artık kullanılamaz."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_batch_payment.py:0
+msgid ""
+"The bank needs to be informed at least %(min_days_new)s days in advance for "
+"collections related to a new mandate and %(min_days)s days in advance when "
+"the mandate is already known by them.\n"
+"The minimum collection date must be %(date)s."
+msgstr ""
+"Yeni bir yetki belgesiyle ilişkili tahsilatlar için banka en az %"
+"(min_days_new)s gün önceden bilgilendirilmelidir; yetki belgesi bankada "
+"zaten kayıtlıysa bu süre yine en az %(min_days)s gün olmalıdır.\n"
+"Minimum tahsilat tarihi %(date)s olmalıdır."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/res_company.py:0
+msgid "The creditor identifier exceeds the maximum length of 35 characters."
+msgstr "Alacaklı tanımlayıcısı 35 karakterlik azami uzunluğu aşıyor."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/sdd_mandate.py:0
+msgid "The customer must have a country"
+msgstr "Müşterinin ülke bilgisi olmalıdır"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_payment.py:0
+msgid ""
+"The debtor and creditor city name is a compulsary information when "
+"generating the SDD XML."
+msgstr ""
+"SDD XML dosyası oluşturulurken, borçlu ve alacaklının şehir adı zorunlu bir "
+"bilgidir."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_payment.py:0
+msgid ""
+"The debtor and creditor country is a compulsary information when generating "
+"the SDD XML."
+msgstr ""
+"SDD XML dosyası oluşturulurken borçlu ve alacaklının ülke bilgisi zorunludur."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/sdd_mandate.py:0
+msgid ""
+"The debtor identifier you specified exceeds the limitation of 35 characters "
+"imposed by SEPA regulation"
+msgstr ""
+"Belirttiğiniz borçlu tanımlayıcısı, SEPA düzenlemeleri tarafından belirlenen "
+"35 karakter sınırını aşıyor."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/sdd_mandate.py:0
+msgid ""
+"The end date of the mandate must be posterior or equal to its start date."
+msgstr ""
+"Yetkilendirme belgesinin bitiş tarihi, başlangıç tarihinden sonraki bir "
+"tarih olmalı veya ona eşit olmalıdır."
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid ""
+"The mandate will only be used to pay invoices into the specified time range. "
+"If no end date is specified,\n"
+"                    you will have to contact us to stop its use. The minimum "
+"notification period for creditors\n"
+"                    to inform debtors about an upcoming collection is"
+msgstr ""
+"Bu yetki, yalnızca belirtilen zaman aralığında faturaları ödemek için "
+"kullanılacaktır. Son tarih belirtilmezse,\n"
+"                    kullanımını durdurmak için bizimle iletişime geçmeniz "
+"gerekecektir.  Alacaklıların borçlulara yaklaşan tahsilat hakkında bilgi "
+"vermek için\n"
+"                    asgari bildirim süresi şudur: "
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__pre_notification_period
+msgid ""
+"The minimum notice period in days, used to inform the customer prior to "
+"collection."
+msgstr ""
+"Müşteriyi tahsilat öncesinde bilgilendirmek için kullanılan minimum bildirim "
+"süresi (gün cinsinden)."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_payment.py:0
+msgid ""
+"The payment must be linked to a SEPA Direct Debit mandate in order to "
+"generate a Direct Debit XML."
+msgstr ""
+"Doğrudan borçlandırma XML dosyasının oluşturulabilmesi için ödemenin bir "
+"SEPA Otomatik Ödeme yetkilendirmesiyle ilişkilendirilmiş olması gerekir."
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sepa_direct_debit_mandate_form
+msgid "The selected customer is a child of"
+msgstr "Seçilen müşteri, bir üst müşterinin alt kaydıdır"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__name
+msgid "The unique identifier of this mandate."
+msgstr "Bu talimatın benzersiz tanımlayıcısı."
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.view_batch_payment_form_inherit
+msgid "This batch includes payments from mandates with no prior collections:"
+msgstr ""
+"Bu toplu işlemde, önceden tahsilat yapılmamış yetkilendirmelere ait ödemeler "
+"var:"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_report_invoice_document
+msgid ""
+"This invoice will be paid using direct debit and is only\n"
+"                        sent for informative purposes."
+msgstr ""
+"Bu fatura doğrudan borçlandırma ile ödenecek olup yalnızca\n"
+"                        bilgi amaçlı gönderilmektedir."
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid ""
+"This mandate is only intended for business-to-business transactions. You are "
+"not entitled to a refund from your bank after your account has been debited, "
+"but you are entitled to request your bank not to debit your account up until "
+"the day on which the payment is due."
+msgstr ""
+"Bu yetkilendirme yalnızca şirketler arası (B2B) işlemler için geçerlidir. "
+"Hesabınızdan ödeme tahsil edildikten sonra bankadan iade talep etme hakkınız "
+"yoktur; ancak ödeme vadesine kadar bankanıza hesabınızdan tahsilat "
+"yapılmaması yönünde talepte bulunabilirsiniz."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_batch_payment.py:0
+msgid ""
+"To solve that, you should create a mandate for each of the involved "
+"customers, valid at the moment of the payment date."
+msgstr ""
+"Bunu çözmek için ödeme tarihine kadar geçerli olacak şekilde her bir ilgili "
+"müşteri için bir yetkilendirme belgesi oluşturmalısınız."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__one_off
+msgid ""
+"True if and only if this mandate can be used for only one transaction. It "
+"will automatically go from 'active' to 'closed' after its first use in "
+"payment if this option is set.\n"
+msgstr ""
+"Bu yetki belgesi yalnızca tek bir işlem için kullanılabiliyorsa bu ifade "
+"doğrudur. Bu seçenek ayarlanmışsa, ilk ödeme kullanımından sonra yetki "
+"otomatik olarak 'aktif' durumdan 'kapatıldı' durumuna geçer.\n"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_payment.py:0
+msgid ""
+"Trying to generate a Direct Debit XML file containing payments from another "
+"company than that file's creditor."
+msgstr ""
+"XML formatında Doğrudan Borçlandırma dosyası oluşturulmaya çalışılıyor ancak "
+"içindeki ödemeler dosyanın alacaklısı olan şirketten farklı bir şirkete ait."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_payment.py:0
+msgid ""
+"Trying to generate a Direct Debit XML for payments coming from another "
+"payment method than SEPA Direct Debit."
+msgstr ""
+"SEPA Doğrudan Borçlandırma dışındaki bir ödeme yöntemiyle oluşturulan "
+"ödemeler için Doğrudan Borçlandırma XML’i oluşturulmaya çalışılıyor."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_payment.py:0
+msgid ""
+"Trying to register a payment on a mandate belonging to a different partner."
+msgstr ""
+"Farklı bir partnere ait bir vekaletnameye ödeme kaydilmeye çalışılıyor."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Kayıtlardaki istisna etkinliğinin türü."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/sdd_mandate.py:0
+msgid "Under B2B SDD Scheme, the customer must be a company."
+msgstr ""
+"B2B SEPA Otomatik Ödeme şeması kapsamında müşteri bir şirket olmalıdır."
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields.selection,name:account_sepa_direct_debit.selection__account_journal__debit_sepa_pain_version__pain_008_001_08
+msgid "Updated 2023 (Pain 008.001.08)"
+msgstr "2023 Güncellendi (Pain 008.001.08)"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.account_sepa_direct_debit_mandate_form
+msgid "Validate"
+msgstr "Doğrula"
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid "Validity"
+msgstr "Geçerlilik"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/wizard/sdd_mandate_send.py:0
+msgid "View Partner(s)"
+msgstr "İş Ortaklarını Görüntüle"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate_send__warnings
+msgid "Warnings"
+msgstr "Uyarılar"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account_sepa_direct_debit.field_sdd_mandate__website_message_ids
+msgid "Website Messages"
+msgstr "Websitesi Mesajları"
+
+#. module: account_sepa_direct_debit
+#: model:ir.model.fields,help:account_sepa_direct_debit.field_sdd_mandate__website_message_ids
+msgid "Website communication history"
+msgstr "Websitesi iletişim geçmişi"
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/wizard/account_payment_register.py:0
+msgid ""
+"You can't pay any of the selected invoices using the SEPA Direct Debit "
+"method, as no valid mandate is available"
+msgstr ""
+"Geçerli bir yetkilendirme belgesi bulunmadığından SEPA Doğrudan Borçlandırma "
+"yöntemiyle seçili faturalardan hiçbirini ödeyemezsiniz."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/res_partner_bank.py:0
+msgid ""
+"You cannot delete a bank account linked to an active SEPA Direct Debit "
+"mandate."
+msgstr ""
+"Etkin bir SEPA Doğrudan Borçlandırma yetkilendirmesiyle ilişkili banka "
+"hesabını silemezsiniz."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_batch_payment.py:0
+msgid ""
+"You cannot generate a SEPA Direct Debit file with a required collection date "
+"inferior to the sending day + the minimum pre-notification period of %"
+"(prenot_days)s days.\n"
+"The minimum required date should be %(minimum_date)s."
+msgstr ""
+"SEPA Otomatik Ödeme dosyasını, gönderim tarihinden %(prenot_days)s günlük "
+"asgari ön bildirim süresinden daha önceki bir tahsilat tarihiyle "
+"oluşturamazsınız.\n"
+"Gerekli minimum tarih, %(minimum_date)s olmalıdır."
+
+#. module: account_sepa_direct_debit
+#. odoo-python
+#: code:addons/account_sepa_direct_debit/models/account_batch_payment.py:0
+msgid ""
+"Your company must have a creditor identifier in order to issue SEPA Direct "
+"Debit payments requests. It can be defined in accounting module's settings."
+msgstr ""
+"Şirketinizin SEPA Doğrudan Borçlandırma ödeme talepleri oluşturabilmesi için "
+"bir alacaklı kimliğine sahip olması gerekir. Bu kimlik, muhasebe modülü "
+"ayarlarında tanımlanabilir."
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid ""
+"day(s).\n"
+"                    It will be sent to the debtor's email."
+msgstr ""
+"gün içinde.\n"
+"                    Borçlunun e-posta adresine gönderilecektir."
+
+#. module: account_sepa_direct_debit
+#: model_terms:ir.ui.view,arch_db:account_sepa_direct_debit.sdd_mandate_form
+msgid ""
+"to send instructions to your bank to debit your account and (B) your bank to "
+"debit your account in accordance with the instructions from"
+msgstr ""
+"banka hesabınızdan tahsilat talimatı göndermek ve (B) bankanızın "
+"hesabınızdan, verilen talimatlara uygun şekilde tahsilat yapması için"
+
+#. module: account_sepa_direct_debit
+#: model:mail.template,subject:account_sepa_direct_debit.email_template_sdd_new_mandate
+msgid "{{ object.partner_id.display_name }} SEPA Direct Debit Mandate"
+msgstr "{{ object.partner_id.display_name }} SEPA Otomatik Ödeme Talimatı"
+
+#~ msgid "123456789"
+#~ msgstr "123456789"
+
+#~ msgid "2023-08-10"
+#~ msgstr "10-08-2023"
+
+#~ msgid "2023-09-10"
+#~ msgstr "10-09-2023"
+
+#~ msgid "380055"
+#~ msgstr "380055"
+
+#~ msgid "3956012345678"
+#~ msgstr "3956012345678"

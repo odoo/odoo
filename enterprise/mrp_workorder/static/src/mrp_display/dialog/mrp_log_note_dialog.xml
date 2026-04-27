@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp_workorder.MrpLogNoteDialog">
+        <div class="o_tablet_popups">
+            <Dialog size="'md'" title="props.title" modalRef="modalRef">
+                <t t-set-slot="header">
+                    <div class="d-flex w-100">
+                        <div class="h4" t-esc="props.title"/>
+                        <div t-on-click="_cancel" type="button" class="btn-close" aria-label="Close"/>
+                    </div>
+                </t>
+                <TextField name="'log_note'" record="props.record"/>
+                <t t-set-slot="footer">
+                    <t t-if="false"/> <!-- Hide footer buttons -->
+                </t>
+            </Dialog>
+        </div>
+    </t>
+</templates>

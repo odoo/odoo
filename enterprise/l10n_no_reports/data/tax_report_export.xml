@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="no_evat_template">
+        <mvaMeldingDto t-attf-xmlns="#{xmlns}">
+            <innsending>
+                <!-- Submission ref in Odoo -->
+                <regnskapssystemsreferanse t-out="submission_ref"/>
+                <regnskapssystem>
+                    <systemnavn>Odoo SA</systemnavn>
+                    <systemversjon t-out="odoo_version"/>
+                </regnskapssystem>
+            </innsending>
+            <skattegrunnlagOgBeregnetSkatt>
+                <skattleggingsperiode>
+                    <periode>
+                        <t t-if="number_of_months == 1">
+                            <skattleggingsperiodeMaaned t-out="time_period"/>
+                        </t>
+                        <t t-if="number_of_months == 2">
+                            <skattleggingsperiodeToMaaneder t-out="time_period"/>
+                        </t>
+                        <t t-if="number_of_months == 3">
+                            <skattleggingsperiodeTreMaaneder t-out="time_period"/>
+                        </t>
+                        <t t-if="number_of_months == 6">
+                            <skattleggingsperiodeSeksMaaneder t-out="time_period"/>
+                        </t>
+                        <t t-if="number_of_months == 12">
+                            <skattleggingsperiodeAar t-out="time_period"/>
+                        </t>
+                    </periode>
+                    <aar t-out="year"/>
+                </skattleggingsperiode>
+                <!-- Total fixed VAT for the period -->
+                <fastsattMerverdiavgift t-out="tax_total"/>
+                <mvaSpesifikasjonslinje t-foreach="tax_details_list" t-as="tax_details">
+                    <!--
+                    A few examples (in English) of how taxes should be displayed in the xml report:
+
+                    Standard output tax (one item per tax)
+
+                    | <code>3</code>
+                    | <name>tax name</name>
+                    | <base>1000</base>
+                    | <rate>25</rate>
+                    | <tax>250</tax>
+
+                    Standard input tax (no base amount displayed):
+
+                    | <code>11</code>
+                    | <name>tax name</name>
+                    | <tax>-150</tax>
+
+                    However, a few taxes are deductible. In such cases, taxes are not only grouped by their code,
+                    but also by the fact that they are deductions or not. This means that each tax will have
+                    two items; one with the tax amount and one with the deductible amount. It also means that
+                    the total tax amount of those taxes always sums up to zero (tax amount - deduction amount = 0).
+                    In the xml report, it is required to have the two items separate to clearly indicate the deductible
+                    transactions amounts.
+
+                    Deductible tax (two items per tax):
+
+                    | <code>81</code>
+                    | <name>tax name</name>
+                    | <base>2000</base>
+                    | <rate>25</rate>
+                    | <tax>500</tax>
+                    |
+                    | <code>81</code>
+                    | <name>tax name</name>
+                    | <tax>-500</tax>
+                    -->
+                    <!-- Tax code -->
+                    <mvaKode t-out="tax_details['tax_code']"/>
+                    <!-- Tax name in Odoo -->
+                    <mvaKodeRegnskapsystem t-out="tax_details['name']"/>
+                    <!-- For negative tax amount (input tax) there is no need to display the following -->
+                    <t t-if="tax_details['tax_amount'] > 0">
+                        <!-- Tax base (grunnlag * sats = merverdiavgift) -->
+                        <grunnlag t-out="tax_details['base_amount']"/>
+                        <!-- Tax rate -->
+                        <sats t-out="tax_details['rate']"/>
+                    </t>
+                    <merverdiavgift t-out="tax_details['tax_amount']"/>
+                </mvaSpesifikasjonslinje>
+            </skattegrunnlagOgBeregnetSkatt>
+            <betalingsinformasjon>
+                <kundeIdentifikasjonsnummer t-out="company_kid"/>
+            </betalingsinformasjon>
+            <skattepliktig>
+                <!-- 9 digit number given to those registered in the Register of Legal Entities (aka Brønnøysund) -->
+                <organisasjonsnummer t-out="company_bronnoysund_number"/>
+            </skattepliktig>
+            <meldingskategori t-out="category"/>
+            <!-- Note -->
+            <merknad>
+                <beskrivelse t-out="note"/>
+            </merknad>
+        </mvaMeldingDto>
+    </template>
+</odoo>

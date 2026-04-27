@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mrp_product_forecast_list_view" model="ir.ui.view">
+            <field name="name">mrp.product.forecast.list</field>
+            <field name="model">mrp.product.forecast</field>
+            <field name="arch" type="xml">
+                <list string="Product Forecast" edit="false" create="false" default_order="production_schedule_id, date">
+                    <field name="production_schedule_id"/>
+                    <field name="date"/>
+                    <field name="forecast_qty"/>
+                </list>
+            </field>
+        </record>
+    </data>
+</odoo>

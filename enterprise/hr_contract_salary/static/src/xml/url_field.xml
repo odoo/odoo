@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_contract_salary.UrlField" t-inherit="web.UrlField" t-inherit-mode="primary">
+        <xpath expr="//a[@class='o_field_widget o_form_uri']" position="attributes">
+            <attribute name="t-on-click.stop">(ev) =&gt; this.saveOfferAndRedirect(ev)</attribute>{}
+        </xpath>
+    </t>
+
+</templates>

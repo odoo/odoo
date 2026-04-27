@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.demo_company_be" model="res.company" forcecreate="1">
+        <field name="name">My Belgian Company</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="currency_id" ref="base.EUR"/>
+        <field name="l10n_be_company_number">0477472701</field>
+        <field name="l10n_be_revenue_code">1293</field>
+        <field name="onss_expeditor_number">123456</field>
+        <field name="street">Rue du Paradis</field>
+        <field name="zip">6870</field>
+        <field name="city">Eghezee</field>
+        <field name="vat">BE0897223670</field>
+        <field name="phone">061928374</field>
+        <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+    </record>
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_be'))]"/>
+    </record>
+    <record id="base.user_demo" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_be'))]"/>
+    </record>
+
+    <record id="holiday_type_european" model="hr.leave.type">
+        <field name="company_id" ref="base.demo_company_be"/>
+    </record>
+
+    <!-- Public Holiday -->
+    <record id="resource_public_time_off_be" model="resource.calendar.leaves">
+        <field name="name">Celebration Day</field>
+        <field name="company_id" ref="base.demo_company_be"/>
+        <field name="date_from" eval="time.strftime('%Y-03-01 05:00:00')"/>
+        <field name="date_to" eval="time.strftime('%Y-03-01 17:00:00')"/>
+        <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_legal_leave"/>
+    </record>
+
+    <!-- Mandatory day -->
+    <record id="hr_leave_mandatory_day_be" model="hr.leave.mandatory.day">
+        <field name="name">Annual Event</field>
+        <field name="company_id" ref="base.demo_company_be"/>
+        <field name="start_date" eval="(datetime.today() + relativedelta(days=+21)).strftime('%Y-%m-%d 05:00:00')"></field>
+        <field name="end_date" eval="(datetime.today() + relativedelta(days=+21)).strftime('%Y-%m-%d 19:00:00')"></field>
+        <field name="color">9</field>
+    </record>
+
+    <data noupdate="1">
+        <function model="res.company"
+            name="_create_dashboard_notes"
+            eval="[ref('base.demo_company_be')]"/>
+    </data>
+</odoo>

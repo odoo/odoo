@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="appointment_type_view_form_inherit_appointment_hr" model="ir.ui.view">
+        <field name="name">appointment.type.form.inherit.appointment.hr</field>
+        <field name="model">appointment.type</field>
+        <field name="inherit_id" ref="appointment.appointment_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='reminder_ids']" position="before">
+                <field name="work_hours_activated" invisible="schedule_based_on == 'resources'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

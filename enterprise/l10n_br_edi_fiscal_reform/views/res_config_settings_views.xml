@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_br_avatax.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting id="l10n_br_edi_avatax_settings" position="inside">
+                <div class="mt-3 d-flex">
+                    <field name="l10n_br_is_icbs" string="Enable Brazilian fiscal reform"/>
+                    <div>
+                        <label for="l10n_br_is_icbs"/><br/>
+                    </div>
+                </div>
+                <div class="row" invisible="l10n_br_tax_regime != 'simplified'">
+                    <label for="l10n_br_is_cbs_ibs_normal" class="col-lg-3 o_light_label" />
+                    <field name="l10n_br_is_cbs_ibs_normal" class="w-50"/>
+                </div>
+                <div class="row" invisible="l10n_br_tax_regime != 'simplified' or l10n_br_is_cbs_ibs_normal">
+                    <label for="l10n_br_cbs_credit" class="col-lg-3 o_light_label" />
+                    <field name="l10n_br_cbs_credit" class="w-50"/>
+                </div>
+                <div class="row" invisible="l10n_br_tax_regime != 'simplified' or l10n_br_is_cbs_ibs_normal">
+                    <label for="l10n_br_ibs_credit" class="col-lg-3 o_light_label" />
+                    <field name="l10n_br_ibs_credit" class="w-50"/>
+                </div>
+            </setting>
+        </field>
+    </record>
+</odoo>

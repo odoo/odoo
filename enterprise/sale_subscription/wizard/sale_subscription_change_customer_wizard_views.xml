@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- View Subscriptions Change Customer wizard -->
+    <record id="sale_subscription_change_customer_view_form" model="ir.ui.view">
+        <field name="name">sale.subscription.change.customer.form</field>
+        <field name="model">sale.subscription.change.customer.wizard</field>
+        <field name="arch" type="xml">
+            <form string="New Customer Information">
+                <group class="oe_title">
+                    <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}"/>
+                    <field name="partner_invoice_id" groups="account.group_delivery_invoice_address" context="{'default_type': 'invoice'}"/>
+                    <field name="partner_shipping_id" groups="account.group_delivery_invoice_address" context="{'default_type': 'delivery'}"/>
+                </group>
+                <footer>
+                    <button name="close" string="Submit" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action Subscriptions Change Customer -->
+    <record id="sale_subscription_change_customer_wizard_action" model="ir.actions.act_window">
+        <field name="name">Change Customer</field>
+        <field name="res_model">sale.subscription.change.customer.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="sale_subscription_change_customer_view_form"/>
+        <field name="context">{'active_so_ids': active_ids}</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

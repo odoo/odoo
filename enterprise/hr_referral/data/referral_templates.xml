@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="referral_email_body_template">
+            <t t-if="not job_id">
+                Hello,<br/><br/>
+                There are some amazing job offers in my company! Have a look, they can be interesting for you:
+                <t t-foreach="companies" t-as="company">
+                    <br/>
+                    <a t-att-href="company.website_id.domain if company.website_id.domain else company.website + '/jobs'">
+                        <t t-esc="company.name"/> / Job Offers
+                    </a>
+                </t>
+            </t>
+            <t t-else="">
+                Hello,<br/><br/>
+                There is an amazing job offer for a <t t-esc="job_id.name"/> in my company! It will be a fit for you.
+                <br/>
+                <a t-att-href="url">See Job Offer</a>
+            </t>
+        </template>
+
+        <template id="referral_campaign_email_body_template">
+            Hello <t t-esc="employee_name"/>,
+            <br/>
+            <br/>
+            <span>
+                Our company is hiring for a <t t-esc="job_id.name"/> position.
+                If you know someone who would be a great fit for this position, please share this link with them:
+            </span>
+            <br/>
+            <a t-att-href="job_url"><t t-esc="job_url"/></a>
+            <br/>
+            <br/>
+            Thanks!
+        </template>
+    
+        <template id="referral_campaign_sms_template">Hello <t t-esc="employee_name"/>,
+<t t-esc="company_id.name"/> is hiring for a position <t t-esc="job_id.name"/>.
+If you know someone who would be a great fit for this position, please share this link with them:
+<t t-esc="job_url"/>
+Thanks!
+        </template>
+    </data>
+</odoo>

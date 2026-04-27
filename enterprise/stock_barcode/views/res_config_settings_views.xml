@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.stock.barcode</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='process_operations_barcodes']" position="inside">
+                <field name="show_barcode_nomenclature" invisible="1"/>
+                <div class="content-group row mt16" invisible="not show_barcode_nomenclature">
+                    <label for="barcode_nomenclature_id" string="Barcode Nomenclature" class="col-lg-3 o_light_label"/>
+                    <field name="barcode_nomenclature_id" required="module_stock_barcode" options="{'no_open': 1}"/>
+                </div>
+                <div class="content-group row mt16" invisible="not module_stock_barcode" groups="base.group_no_one">
+                    <label for="barcode_separator_regex" class="col-lg-3 o_light_label"/>
+                    <field name="barcode_separator_regex" required="module_stock_barcode"/>
+                    <p class="text-muted">This regex is used in the Barcode application to separate individual barcodes when an aggregate barcode (i.e. single barcode consisting of multiple barcode encodings) is scanned.</p>
+                </div>
+                <div class="content-group row mt16" invisible="not module_stock_barcode" groups="base.group_no_one">
+                    <label for="barcode_rfid_batch_time" class="col-lg-3 o_light_label"/>
+                    <field name="barcode_rfid_batch_time" required="module_stock_barcode"/>
+                    <p class="text-muted">Time before processing a batch. Used to group communication to the server and improve global performance at the cost of reactivity.</p>
+                </div>
+                <div class="content-group">
+                    <div class="mt8" invisible="not module_stock_barcode">
+                        <button class="btn-link" type="action" string="Configure Product Barcodes" name="%(stock_barcode.product_action_barcodes)d" icon="oi-arrow-right"/>
+                    </div>
+                </div>
+                <div>
+                    <a href="/stock_barcode/print_inventory_commands?barcode_type=barcode_commands_and_operation_types" class="oe_link" target="_blank">
+                        <i class="fa fa-print"/> Print barcode commands and operation types
+                    </a>
+                </div>
+                <div groups="stock.group_stock_multi_locations">
+                    <a href="/stock_barcode/print_inventory_commands?barcode_type=locations" class="oe_link" target="_blank">
+                        <i class="fa fa-print"/> Print storage locations
+                    </a>
+                </div>
+                <field name="stock_barcode_demo_active" invisible="1"/>
+                <div invisible="not stock_barcode_demo_active">
+                    <a href="/stock_barcode/static/img/barcodes_demo.pdf" class="oe_link" target="_blank">
+                        <i class="fa fa-print"/> Print barcode demo sheet
+                    </a>
+                </div>
+            </xpath>
+            <xpath expr="//block[@name='barcode_setting_container']" position="inside">
+                <setting id="show_qty_to_count" help="Allow users to see the expected quantity of a product to count in a location">
+                    <field name="group_barcode_show_quantity_count"/>
+                </setting>
+                <setting id="count_entire_location" help="When scanning a location in inventory adjustments, you will be assigned to count all products from this location" invisible="group_stock_multi_locations == False">
+                    <field name="group_barcode_count_entire_location"/>
+                </setting>
+                <setting id="mute_sound_notifications" groups="base.group_no_one"
+                         help="Disable sound effect while scanning a barcode.">
+                    <field name="stock_barcode_mute_sound_notifications"/>
+                </setting>
+                <setting id="max_time_between_keys_in_ms" groups="base.group_no_one"
+                         help="Set the maximum delay between each key in ms (100 ms by default.)">
+                    <field name="barcode_max_time_between_keys_in_ms"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

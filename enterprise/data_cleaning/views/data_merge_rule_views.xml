@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_data_merge_rule_form">
+            <field name="name">Deduplication Rule Form</field>
+            <field name="model">data_merge.rule</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <h1><field name="field_id" options="{'no_create': True, 'no_open': True}" class="oe_inline" /></h1>
+                        <group>
+                            <group>
+                                <field name="match_mode" />
+                            </group>
+                            <group>
+                                <field name="res_model_id" options="{'no_create': True, 'no_open': True}" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="addenda_legend_exoneracion_impuesto_renta" model="l10n_uy_edi.addenda">
+        <field name="is_legend">True</field>
+        <field name="name">Exoneración Impuesto a la Renta</field>
+        <field name="content">Honorarios por servicios de diseño, desarrollo e implementación de soportes lógicos, exonerados de impuesto a la renta según lo dispuesto en el apartado ii del primer inciso del artículo 161 bis del Decreto 150/007 del 26 de abril de 2007.</field>
+        <field name="company_id" ref="base.demo_company_uy"/>
+    </record>
+
+    <record id="addenda_info" model="l10n_uy_edi.addenda">
+        <field name="name">Addenda Info</field>
+        <field name="content">Addenda extra info</field>
+        <field name="company_id" ref="base.demo_company_uy"/>
+    </record>
+
+    <record id="cfe_doc_legend" model="l10n_uy_edi.addenda">
+        <field name="is_legend">True</field>
+        <field name="type">cfe_doc</field>
+        <field name="name">CFE Legend</field>
+        <field name="content">CFE Legend</field>
+        <field name="company_id" ref="base.demo_company_uy"/>
+    </record>
+
+    <record id="cfe_doc_info" model="l10n_uy_edi.addenda">
+        <field name="type">cfe_doc</field>
+        <field name="name">Info Adicional Doc</field>
+        <field name="content">Info Adicional del Comprobante</field>
+        <field name="company_id" ref="base.demo_company_uy"/>
+    </record>
+
+    <record id="issuer_legend" model="l10n_uy_edi.addenda">
+        <field name="type">issuer</field>
+        <field name="is_legend">True</field>
+        <field name="name">Leyenda Emisor</field>
+        <field name="content">Leyenda Emisor</field>
+        <field name="company_id" ref="base.demo_company_uy"/>
+    </record>
+
+    <record id="issuer_info" model="l10n_uy_edi.addenda">
+        <field name="type">issuer</field>
+        <field name="name">Info Emisor</field>
+        <field name="content">Info Emisor</field>
+        <field name="company_id" ref="base.demo_company_uy"/>
+    </record>
+
+    <record id="receiver_legend" model="l10n_uy_edi.addenda">
+        <field name="type">receiver</field>
+        <field name="is_legend">True</field>
+        <field name="name">Leyenda Receptor</field>
+        <field name="content">Leyenda Receptor</field>
+        <field name="company_id" ref="base.demo_company_uy"/>
+    </record>
+
+    <record id="receiver_info" model="l10n_uy_edi.addenda">
+        <field name="type">receiver</field>
+        <field name="name">Info Receptor</field>
+        <field name="content">Info Receptor</field>
+        <field name="company_id" ref="base.demo_company_uy"/>
+    </record>
+
+    <record id="item_legend" model="l10n_uy_edi.addenda">
+        <field name="type">item</field>
+        <field name="is_legend">True</field>
+        <field name="name">Leyenda Product/Service Detail</field>
+        <field name="content">Leyenda Product/Service Detail</field>
+        <field name="company_id" ref="base.demo_company_uy"/>
+    </record>
+
+    <record id="item_info" model="l10n_uy_edi.addenda">
+        <field name="type">item</field>
+        <field name="name">Info Product/Service Detail</field>
+        <field name="content">Info Product/Service Detail</field>
+        <field name="company_id" ref="base.demo_company_uy"/>
+    </record>
+
+</odoo>

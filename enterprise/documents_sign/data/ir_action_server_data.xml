@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data noupdate="1">
+        <record id="ir_actions_server_create_sign_template_direct_create" model="ir.actions.server" forcecreate="0">
+            <field name="name">Sign create</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="usage">ir_actions_server</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.document_sign_create_sign_template_x('sign.template.direct', env.ref('documents.document_internal_folder').id)
+            </field>
+        </record>
+
+        <record id="ir_actions_server_create_sign_template_direct" model="ir.actions.server" forcecreate="0">
+            <field name="name">Sign</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="usage">ir_actions_server</field>
+            <field name="state">multi</field>
+            <field name="child_ids" eval="[
+                ref('documents_sign.ir_actions_server_create_sign_template_direct_create'),
+                ref('documents.ir_actions_server_create_activity'),
+            ]"/>
+        </record>
+
+        <function model="documents.document" name="_data_embed_sign_create_sign_template_direct"/>
+
+    </data>
+</odoo>

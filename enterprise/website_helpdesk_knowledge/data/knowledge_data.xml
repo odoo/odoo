@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+        <record id="helpdesk_knwoledge_article_help" model="knowledge.article" forcecreate="False">
+            <field name="name">Help</field>
+            <field name="icon">🔑</field>
+            <field name="is_article_visible_by_everyone" eval="True"/>
+            <field name="body" type="html">
+                <h1>
+                    <span style="font-weight: bolder;">
+                        <font class="text-o-color-2">Help</font>
+                    </span>
+                </h1>
+                <hr />
+                <p>Gather here helpful information for your customers.</p>
+                <br />
+                <p>You can also use this article as a folder of more detailed articles.</p>
+             </field>
+            <field name="is_published" eval="True" />
+            <field name="parent_id" eval="False" />
+            <field name="internal_permission">write</field>
+        </record>
+    </data>
+</odoo>

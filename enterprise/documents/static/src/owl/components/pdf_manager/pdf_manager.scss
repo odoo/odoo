@@ -1,0 +1,213 @@
+$o-pdf-manager-background-color: $o-gray-100;
+$o-pdf-manager-separator-color: $warning;
+$o-pdf-manager-border-color: $o-gray-300;
+$o-pdf-manager-selection-area-color: solid 1px #047078;
+
+.o_dialog_split_tools {
+    margin-top: 40px;
+    z-index: 995;
+    height: -webkit-fill-available;
+}
+
+#area_selection {
+    display: none;
+    position: absolute;
+    border: $o-pdf-manager-selection-area-color;
+    background: transparent;
+    width: 0;
+    height: 0;
+    z-index: 1;
+}
+
+.o_documents_pdf_manager {
+    background-color: $o-pdf-manager-background-color;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    overflow: hidden;
+    position: sticky;
+}
+
+.o_documents_pdf_manager_top_bar {
+    background-color: $o-view-background-color;
+    width: 100%;
+    border-bottom: solid 1px $o-pdf-manager-border-color;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 1300;
+
+    .o_pdf_manager_button {
+        margin: 1px;
+        height: 30px;
+    }
+
+    .pdf_manager_topbar_buttons_right {
+        display: flex;
+    }
+}
+
+.o_documents_pdf_page_preview {
+    width: 100%;
+    background-color: rgba($color: #000000, $alpha: 0.7);
+    position: absolute;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+    z-index: 10;
+    top: 52px;
+    padding: 0 15vw 2vw;
+    height: -webkit-fill-available;
+}
+
+.o_top_bar_previewer {
+    height: 40px;
+    width: 100vw;
+    background-color: black;
+    margin-bottom: 5px;
+    z-index: 2;
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
+}
+
+.o_delete_button {
+    background-color: black;
+    border: none;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+        color: #c6c8ce;
+    }
+}
+
+.o_close_button {
+    background-color: black;
+    border: none;
+    
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+        color: #c6c8ce;
+    }
+}
+
+.o_navigation_left {
+    position: fixed;
+    top: 53%;
+    left: 8vw;
+}
+
+.o_navigation_right {
+    position: fixed;
+    top: 53%;
+    right: 8vw;
+}
+
+.o_documents_pdf_page_viewer {
+    display: flex;
+    overflow: auto;
+    flex-wrap: wrap;
+    padding: 20px;
+    width: 100%;
+}
+
+.o_documents_pdf_block {
+    max-height: 100%;
+    display: flex;
+    flex: 1 1 auto;
+    flex-flow: column;
+}
+
+.o_pdf_global_buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.o_page_splitter_wrapper {
+    cursor: pointer;
+    padding: 0px 10px 5px 10px;
+
+    .o_page_splitter {
+        height: 236px;
+        width: 2px;
+        border: 1px solid transparent;
+    }
+
+    .o_pdf_scissors {
+        margin: -8px;
+        color: transparent;
+        transform: rotate(270deg);
+    }
+
+    &.o_pdf_separator_selected {
+        .o_page_splitter {
+            border: 1px solid $o-pdf-manager-separator-color;
+        }
+        .o_pdf_scissors {
+            color: $o-black;
+        }
+    }
+
+    &:hover {
+        .o_page_splitter {
+            border: 1px dashed gray;
+        }
+        &.o_pdf_separator_selected  > .o_page_splitter {
+            border: 1px solid gray;
+        }
+    }
+
+    &:active {
+        .o_page_splitter {
+            border: 1px solid gray;
+        }
+        &.o_pdf_separator_selected  > .o_page_splitter {
+            border: 1px dashed gray;
+        }
+    }
+}
+
+.o_pdf_group_name_wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.o_pdf_archive_menu {
+    display: flex;
+    align-items: center;
+    user-select: none;
+    cursor: pointer;
+}
+
+@include media-breakpoint-down(md) {
+    .o_documents_pdf_page_viewer {
+        flex-flow: column;
+        align-items: center;
+    }
+
+    .o_page_splitter_wrapper {
+        padding: 10px;
+        display: flex;
+        direction: rtl;
+        align-items: center;
+
+        .o_page_splitter {
+            height: 0;
+            width: 236px;
+        }
+
+        .o_pdf_scissors {
+            margin: 0;
+            transform: none;
+        }
+    }
+
+    .o_documents_pdf_canvas {
+        width: 100%;
+        height: auto;
+    }
+}

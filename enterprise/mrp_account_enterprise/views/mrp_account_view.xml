@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="mrp_workcenter_view_inherit" model="ir.ui.view">
+            <field name="name">mrp.workcenter.form.inherit</field>
+            <field name="model">mrp.workcenter</field>
+            <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+            <field name="arch" type="xml">
+                <group name="costing" position="inside">
+                    <field name="analytic_distribution" widget="analytic_distribution"
+                           groups="analytic.group_analytic_accounting"
+                           options="{'product_field': 'product_id'}"
+                    />
+                </group>
+            </field>
+        </record>
+
+        <record id="mrp_workcenter_tree_view_inherited" model="ir.ui.view">
+            <field name="name">mrp.workcenter.list.inherited</field>
+            <field name="model">mrp.workcenter</field>
+            <field name="inherit_id" ref="mrp.mrp_workcenter_tree_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='costs_hour']" position="after">
+                    <field name="analytic_distribution" widget="analytic_distribution"
+                           groups="analytic.group_analytic_accounting"
+                           options="{'product_field': 'product_id'}"
+                           optional="hide"
+                    />
+                </xpath>
+            </field>
+        </record>
+
+        <!-- cost structure report -->
+        <record id="action_cost_struct_mrp_production" model="ir.actions.report">
+            <field name="name">Cost Analysis</field>
+            <field name="model">mrp.production</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">mrp_account_enterprise.mrp_cost_structure</field>
+            <field name="report_file">mrp_account_enterprise.mrp_cost_structure</field>
+            <field name="print_report_name">'Cost Analysis - %s ' % object.name</field>
+            <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_cost_struct_product_template" model="ir.actions.report">
+            <field name="name">Cost Structure Analysis</field>
+            <field name="model">product.product</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">mrp_account_enterprise.product_template_cost_structure</field>
+            <field name="report_file">mrp_account_enterprise.product_template_cost_structure</field>
+            <field name="print_report_name">'Cost Structure Analysis - %s' % object.name</field>
+            <field name="binding_model_id" ref="product.model_product_product"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="product_template_inherit_form_view_cost_structure" model="ir.ui.view">
+            <field name="name">cost_structure_product_template_inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="mrp.product_template_form_view_bom_button"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_view_mos']" position="after">
+                    <field name="mrp_product_qty" invisible="1" groups="mrp.group_mrp_user"/>
+                    <button groups="mrp.group_mrp_user" name="action_cost_structure" type="object"
+                        class="oe_stat_button" icon="fa-dollar" invisible="mrp_product_qty == 0">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Cost Analysis</span>
+                        </div>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+    <record id="product_product_inherit_form_view_cost_structure" model="ir.ui.view">
+        <field name="name">cost_structure_product_product_inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="mrp.product_product_form_view_bom_button"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_mos']" position="after">
+                <field name="mrp_product_qty" invisible="1" groups="mrp.group_mrp_user"/>
+                <button name="action_cost_structure" type="object"
+                    groups="mrp.group_mrp_user"
+                    class="oe_stat_button" icon="fa-dollar" invisible="mrp_product_qty == 0">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Cost Analysis</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+
+
+</odoo>

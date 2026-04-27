@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="hr_payroll_holidays.WorkEntriesGanttController" t-inherit="web_gantt.GanttController">
+        <xpath expr="//Layout//t[@t-component='props.Renderer']" position="before">
+            <TimeOffToDeferWarning t-if="timeOff.hasTimeOffToDefer"/>
+        </xpath>
+    </t>
+
+</templates>

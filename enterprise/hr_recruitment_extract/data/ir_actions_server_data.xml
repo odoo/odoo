@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_actions_server_digitize_cv" model="ir.actions.server">
+        <field name="name">Digitize document</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_candidate"/>
+        <field name="binding_model_id" ref="hr_recruitment.model_hr_candidate"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_send_batch_for_digitization()
+        </field>
+    </record>
+</odoo>

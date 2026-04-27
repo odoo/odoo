@@ -1,0 +1,33 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope"
+    xmlns:a="http://www.w3.org/2005/08/addressing"
+    xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+    <s:Header>
+        <a:Action s:mustUnderstand="1">http://wcf.dian.colombia/IWcfDianCustomerServices/SendBillSyncResponse</a:Action>
+        <o:Security s:mustUnderstand="1"
+            xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <u:Timestamp u:Id="_0">
+                <u:Created>2024-02-15T10:36:38.302Z</u:Created>
+                <u:Expires>2024-02-15T10:41:38.302Z</u:Expires>
+            </u:Timestamp>
+        </o:Security>
+    </s:Header>
+    <s:Body>
+        <SendBillSyncResponse xmlns="http://wcf.dian.colombia">
+            <SendBillSyncResult xmlns:b="http://schemas.datacontract.org/2004/07/DianResponse"
+                xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+                <b:ErrorMessage xmlns:c="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+                    <c:string>Regla: FAJ44b, Notificación: Nit o Documento de Identificación informado No BlaBlaBla.</c:string>
+                    <c:string>Regla: FAJ43b, Notificación: Nombre informado No corresponde al registrado en el BlaBlaBla.</c:string>
+                </b:ErrorMessage>
+                <b:IsValid>true</b:IsValid>
+                <b:StatusCode>00</b:StatusCode>
+                <b:StatusDescription>Procesado Correctamente.</b:StatusDescription>
+                <b:StatusMessage>La Factura electrónica SETP990000002, ha sido autorizada.</b:StatusMessage>
+                <b:XmlBase64Bytes>base64</b:XmlBase64Bytes>
+                <b:XmlBytes i:nil="true"/>
+                <b:XmlDocumentKey>long_key</b:XmlDocumentKey>
+                <b:XmlFileName>invoice</b:XmlFileName>
+            </SendBillSyncResult>
+        </SendBillSyncResponse>
+    </s:Body>
+</s:Envelope>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_disallowed_expenses_fleet.DisallowedExpensesFleetReportFilterExtraOptions" t-inherit="account_reports.AccountReportFilterExtraOptions">
+        <xpath expr="//DropdownItem[contains(@class, 'filter_show_all_hook')]" position="after">
+            <DropdownItem
+                class="{ 'selected': controller.options.vehicle_split }"
+                onSelected="() => this.filterClicked({ optionKey: 'vehicle_split'})"
+                closingMode="'none'"
+            >
+                Vehicle Split
+            </DropdownItem>
+        </xpath>
+    </t>
+</templates>

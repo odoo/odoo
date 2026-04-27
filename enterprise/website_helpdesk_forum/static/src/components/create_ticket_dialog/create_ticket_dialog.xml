@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="website_helpdesk_forum.CreateTicketDialog">
+        <Dialog size="'md'" title.translate="Create Ticket">
+            <div class="row">
+                <div class="mb-3">
+                    <label for="ticketTitle" class="form-label">Title</label>
+                    <input class="form-control" type="text" t-ref="inputText" t-att-value="state.data.post_title" title="Please fill out this field." t-on-change="(ev) => this.state.data.post_title = ev.target.value" id="ticketTitle"/>
+                </div>
+                <div class="mb-3">
+                    <label for="ticketTeam" class="form-label">Helpdesk Team</label>
+                    <select class="form-select" t-on-change="(ev) => state.data.team_id = ev.target.value" id="ticketTeam">
+                        <t t-foreach="state.data.teams" t-as="team" t-key="team[0]">
+                            <option
+                                t-att-value="team[0]"
+                                t-out="team[1]"
+                            />
+                        </t>
+                    </select>
+                </div>
+                <t t-set-slot="footer">
+                    <button class="btn btn-primary" t-on-click="this.onCreateAndViewTicket">Create &amp; View Ticket</button>
+                    <button class="btn btn-secondary" t-on-click="this.onCreateTicket">Create Ticket</button>
+                    <button class="btn btn-secondary" t-on-click="this.props.close">Discard</button>
+                </t>
+            </div>
+        </Dialog>
+    </t>
+</templates>

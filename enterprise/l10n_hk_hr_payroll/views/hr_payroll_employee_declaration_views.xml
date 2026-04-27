@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_employee_declaration_view_tree" model="ir.ui.view">
+        <field name="name">hr.payroll.employee.declaration.view.list</field>
+        <field name="model">hr.payroll.employee.declaration</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payroll_employee_declaration_view_tree"/>
+        <field name="arch" type="xml">
+            <list position="inside">
+                <button string="Configure" class="float-end btn-secondary" type="object" name="action_open_ir56g_details" invisible="res_model != 'l10n_hk.ir56g'"/>
+            </list>
+        </field>
+    </record>
+</odoo>

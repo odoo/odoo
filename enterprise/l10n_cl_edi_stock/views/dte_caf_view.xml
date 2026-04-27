@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.actions.act_window" id="action_stock_l10n_cl_dte_caf">
+            <field name="name">CAFs</field>
+            <field name="res_model">l10n_cl.dte.caf</field>
+            <field name="domain">[('l10n_latam_document_type_id.internal_type', '=', 'stock_picking'), '|', ('status', '=', 'in_use'), ('status', '=', 'spent')]</field>
+            <field name="context">{"search_default_active":1}</field>
+        </record>
+    </data>
+</odoo>

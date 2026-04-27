@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_salary_rule_category_social_security_employee" model="hr.salary.rule.category">
+        <field name="name">Employee Social Security Deductions</field>
+        <field name="code">SOCIALSECURITYEMPLOYEE</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_salary_rule_category_income_tax" model="hr.salary.rule.category">
+        <field name="name">Income Tax</field>
+        <field name="code">INCOMETAX</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_salary_rule_category_social_security_employer" model="hr.salary.rule.category">
+        <field name="name">Employer Social Security Deductions</field>
+        <field name="code">SOCIALSECURITYEMPLOYER</field>
+    </record>
+
+    <record id="hr_salary_rule_category_taxable_income" model="hr.salary.rule.category">
+        <field name="name">Taxable Income</field>
+        <field name="code">TAXABLE</field>
+    </record>
+</odoo>

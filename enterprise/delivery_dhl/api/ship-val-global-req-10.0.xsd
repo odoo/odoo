@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:dhl="http://www.dhl.com/datatypes_global" xmlns="http://www.dhl.com" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.dhl.com" elementFormDefault="unqualified">
+	<xsd:import namespace="http://www.dhl.com/datatypes_global" schemaLocation="datatypes_global_v10.xsd"/>
+	<xsd:element name="ShipmentRequest">
+		<xsd:annotation>
+			<xsd:documentation>Root element of Shipment Validation Global request</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="Request" type="dhl:Request">
+					<xsd:annotation>
+						<xsd:documentation>The element contains the header information for the message. It is present in both the request and response XML message. The request element contains a complex data type Service Header</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="RegionCode" type="dhl:RegionCode" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The RegionCode element indicates the shipment to be route to the specific region eCom backend. It is a optional field. The valid values are AP, EU and AM</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="RequestedPickupTime" type="dhl:YesNo" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The RequestedPickupTime element indicates whether a pickup time is requested or not. It is a mandatory field. The valid vaues are Y (Yes) and N (No). If the value equals to Y, eCom Backend will return ReadyByTime and CallInTime, which query based on Postcode or City name. This logic only applicable for AM region</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="LanguageCode" type="dhl:LanguageCode" default="en">
+					<xsd:annotation>
+						<xsd:documentation>LanguageCode element contains the ISO language code used by the requestor. This element should be declared once in the Shipment validation request message</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="LatinResponseInd" type="dhl:YesNo" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The LatinResponseInd element contains the indication from user whether the response xml will be transliterated to Latin characters. Currently, it is only workable for Cyrillic configured countries</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Billing" type="dhl:Billing">
+					<xsd:annotation>
+						<xsd:documentation>The Billing element contains the billing information of the shipment</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Consignee" type="dhl:Consignee">
+					<xsd:annotation>
+						<xsd:documentation>Consignee element contains the details of the Consignee (Receiver of the shipment). This element should be declared once in the shipment validation request message</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Commodity" type="dhl:Commodity" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>The commodity element identifies the commodity or commodities being shipped. This element should be declared once in the shipment validation request message</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Dutiable" type="dhl:Dutiable" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>For non-domestic shipments, the Dutiable element provides information which defines the types of duties to be levied</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="UseDHLInvoice" type="dhl:YesNo" minOccurs="0" default="N">
+					<xsd:annotation>
+						<xsd:documentation>UseDHLInvoice element is an optional field. By providing UseDHLInvoice field value of ‘Y’, Shipment Validation service will generate DHL Custom Invoice image. With value of ‘N’, this means customer will use their own custom invoice for shipment</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="DHLInvoiceLanguageCode" type="dhl:InvLanguageCode" minOccurs="0" default="en">
+					<xsd:annotation>
+						<xsd:documentation>DHLInvoiceLanguageCode element is an optional field. This field indicates the DHL custom invoice language code. Default language code is en (English)</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="DHLInvoiceType" type="dhl:InvoiceType" minOccurs="0" default="CMI">
+					<xsd:annotation>
+						<xsd:documentation>DHLInvoiceType element is an optional field. This field indicates the DHL Custom Invoice type. CMI for Commercial Invoice and PFI for Proforma Invoice</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ExportDeclaration" type="dhl:ExportDeclaration" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>For non-domestic shipments, the ExportDeclaration element provides information which is used to aid in the export of a shipment</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Reference" type="dhl:Reference" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>This element identifies the reference information. It is an optional field in the shipment validation request. Only the first reference will be taken currently</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ShipmentDetails" type="dhl:ShipmentDetails">
+					<xsd:annotation>
+						<xsd:documentation>The ShipmentDetails element contains the details of the shipment. It must be declared once in the request message</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Shipper" type="dhl:Shipper">
+					<xsd:annotation>
+						<xsd:documentation>Shipper element contains the details of the Shipper. This element should be declared once in the Shipment validation Request message</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="SpecialService" type="dhl:SpecialService" minOccurs="0" maxOccurs="10">
+					<xsd:annotation>
+						<xsd:documentation>The SpecialService Element provides various special services for the shipment. It is an optional field. Please refer to the Reference Data and use appropriate Service codes enabled for the Country/Region</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Notification" type="dhl:Notification" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The Notification element contains the notification address and customized message to the designated recipient address for the shipment</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Place" type="dhl:Place" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The place element contains the address from the shipment has to be picked. This element should be declared once in the request message</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="EProcShip" type="dhl:YesNo" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The EProcShip element indicates whether shipment has to generate waybill or not. It is an optional field. Its value is either Y (Yes – For not generating the waybill and not manifest the shipment) or N (No – To generate the waybill)</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Airwaybill" type="dhl:AWBNumber" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The Airwaybill element indicates the waybill number of the Paperless Trade (PLT) shipment that will be used for Image Upload service. Note: This is only applicable for Image Upload service</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="DocImages" type="dhl:DocImages" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The DocImages element indicates Paperless Trade (PLT) shipment related Commercial Invoice or other supporting document images</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="LabelImageFormat" type="dhl:LabelImageFormat" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The LabelImageFormat element indicates to receive the GLS’s generated Transport label and Archive document image in Shipment Validation response XML for the required output format that supported by GLS</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="RequestArchiveDoc" type="dhl:YesNo" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The RequestArchiveDoc element indicates to receive the GLS’s generated Archive document image in Shipment Validation response XML for the required output format that supported by GLS. With value of ‘Y’, Archive document image will be returned to Shipment Validation response XML if LabelImageFormat element is defined</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="NumberOfArchiveDoc" type="dhl:NumberOfArchiveDoc" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The NumberOfArchiveDoc element indicates the number of archive doc that user wants to generate. With value of ‘1’, one archive document image will be returned to Shipment Validation response XML. With value of ‘2’, two archive document image will be returned</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="RequestQRCode" type="dhl:YesNo" default="N" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The RequestQRCode element indicates for labelless shipment that user wants to generate the QR code. With value of 'Y', it will return the QR code in Shipment Validation response XML. With value of 'N', it will not return QR code in Shipment Validation response XML.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="RequestTransportLabel" type="dhl:YesNo" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The RequestTransportLabel element indicates whether user wants to generate the Transport Label. With value of 'Y', it will return the Transport Label in Shipment Validation response XML. With value of 'N', it will not return Transport Label in Shipment Validation response XML.The RequestTransportLabel element is an optional value to request for Transport Label. This element can be set as N only when requesting for a QRCode in the Shipment Validation response if RequestQRCode = Y ).</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Label" type="dhl:Label" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The Label element defines the required label template, customer’s logo image plus image format, and DPI resolution</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ODDLinkReq" type="dhl:YesNo" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The ODDLinkReq element indicates to receive the URL link for On Demand Delivery (ODD) page for the specified Waybill number, Shipper Account Number, Origin Service Area Code and Destination Service Area Code in Shipment Validation response XML. With value of ‘Y’, URL link for On Demand Delivery (ODD) page will be returned to Shipment Validation response XML if ODDLinkReq element is defined</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="DGs" type="dhl:DGs" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The DGs element defines the details of the Dangerous Goods items that included in shipment</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="GetPriceEstimate" type="dhl:YesNo" minOccurs="0" default="Y">
+					<xsd:annotation>
+						<xsd:documentation>The GetPriceEstimate element is the option for retrieving the product capability or/and estimatd tariff for the given origin, destination and shipment details. Default option is Yes (Y)</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="SinglePieceImage" type="dhl:YesNo" default="N" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>SinglePieceImage element is the option is generate the Transport Label and Waybill Document in single piece output.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ShipmentIdentificationNumber" type="dhl:AWBNumber" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The shipment identification number does not need to be transmitted in the request as the operation will assign a new number and return it in the response. Only used when UseOwnShipmentdentificationNumber set to Y and this feature enabled within customer profile.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="UseOwnShipmentIdentificationNumber" default="N" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Customer able to provide SID if set to Y. The default is N. 
+						Y or 1 = allows you to define your own AWB in the tag above N or 0 = Auto-allocates the AWB from DHL Express</xsd:documentation>
+					</xsd:annotation>
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:maxLength value="1"/>
+							<xsd:enumeration value="Y"/>
+							<xsd:enumeration value="N"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="Importer" type="dhl:Importer" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Party that makes (or on whose behalf an agent or broker makes) the import declaration, and who is liable for the payment of duties (if any) on the imported goods. Normally, this party is named either as the consignee in the shipping documents and/or as the buyer in the exporter's invoice.></xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Exporter" type="dhl:Exporter" minOccurs="0">			
+					<xsd:annotation>
+						<xsd:documentation>The party who is responsible for the legality of the shipment under applicable export control laws, which includes determining the proper export classification and authorization needed to ship the Items.The Exporter is usually the party who controls the transaction, acts as declarant in its own name and provides the corresponding instructions for the export, regardless of who files the export declaration. The Exporter may or may not be the Shipper.></xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Seller" type="dhl:Seller" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>The party that makes, offers or contracts to make a sale to an actual or potential buyer. Also called vendor.</xsd:documentation>
+				</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Payer" type="dhl:Payer" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>The party responsible for the full or partial payment of associated charges/cost. There can be many payers related to the different elements linked to a Shipment (e.g Services, fiscal charges).</xsd:documentation>
+				</xsd:annotation>				
+				</xsd:element>
+			</xsd:sequence>
+			<xsd:attribute name="schemaVersion" type="xsd:decimal" use="required" fixed="10.0"/>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

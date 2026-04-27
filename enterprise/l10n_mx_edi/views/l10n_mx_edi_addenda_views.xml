@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="l10n_mx_edi_addenda_form_view" model="ir.ui.view">
+        <field name="name">l10n_mx_edi_addenda.form</field>
+        <field name="model">l10n_mx_edi.addenda</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet string="Addenda">
+                    <group>
+                        <field name="name"/>
+                        <field name="arch" widget="code" options="{'mode': 'xml'}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_mx_edi_addenda_tree_view" model="ir.actions.act_window">
+        <field name="name">Addendas (MX)</field>
+        <field name="res_model">l10n_mx_edi.addenda</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="l10n_mx_edi_addenda_menu"
+              action="action_l10n_mx_edi_addenda_tree_view"
+              parent="account.account_invoicing_menu"
+              groups="account.group_account_manager"
+              sequence="5"
+    />
+
+</odoo>

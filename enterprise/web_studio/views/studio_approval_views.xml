@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Approval Entries -->
+    <record id="studio_approval_entry_tree_view" model="ir.ui.view">
+        <field name="name">studio.approval.entry.list</field>
+        <field name="model">studio.approval.entry</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="write_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="studio_approval_entry_form_view" model="ir.ui.view">
+        <field name="name">studio.approval.entry.form</field>
+        <field name="model">studio.approval.entry</field>
+        <field name="arch" type="xml">
+            <form string="Studio Approval Entry">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="rule_id"/>
+                        </group>
+                        <group>
+                            <field name="model"/>
+                            <field name="res_id"/>
+                            <field name="reference" widget="reference" string="Record"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="studio_approval_entry_search_view" model="ir.ui.view">
+        <field name="name">studio.approval.entry.search</field>
+        <field name="model">studio.approval.entry</field>
+        <field name="arch" type="xml">
+            <search string="Approval Entries">
+                <field name="name"/>
+                <field name="res_id"/>
+                <field name="user_id"/>
+                <field name="rule_id" invisible="1"/>
+                <separator/>
+                <filter string="My entries" name="my_entries" domain="[('user_id','=',uid)]"/>
+                <separator/>
+                <filter string="Approved" name="approved" domain="[('approved','=', True)]"/>
+                <filter string="Rejected" name="rejected" domain="[('user_id','=', False)]"/>
+                <group>
+                    <filter string="Model" name="model" domain="[]" context="{'group_by':'model'}"/>
+                    <filter string="Method" name="model" domain="[]" context="{'group_by':'method'}"/>
+                    <filter string="Action" name="model" domain="[]" context="{'group_by':'action_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="studio_approval_entry_action" model="ir.actions.act_window">
+        <field name="name">Studio Approval Entries</field>
+        <field name="res_model">studio.approval.entry</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_studio_approval_entry" name="Studio Approval Entries" sequence="11" action="studio_approval_entry_action" parent="base.next_id_2" groups="base.group_system"/>
+    <!-- Approval Rules -->
+    <record id="studio_approval_rule_tree_view" model="ir.ui.view">
+        <field name="name">studio.approval.list</field>
+        <field name="model">studio.approval.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="approver_ids"/>
+                <field name="approval_group_id"/>
+                <field name="message"/>
+                <field name="model_id"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="studio_approval_rule_kanban_view" model="ir.ui.view">
+        <field name="name">studio.approval.kanban</field>
+        <field name="model">studio.approval.rule</field>
+        <field name="arch" type="xml">
+            <kanban quick_create_view="web_studio.studio_approval_rule_form_view_quick_create" highlight_color="kanban_color" class="o-studio-approval-rule-kanban">
+                <field name="can_validate"/>
+                <field name="kanban_color"/>
+                <field name="exclusive_user"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="row justify-content-between py-1">
+                            <div class="col fs-4 text-truncate" t-att-title="record.message.raw_value">
+                                <field t-if="record.message.raw_value" name="message"/>
+                                <span t-else="" class="text-muted">Step</span>
+                            </div>
+                            <div t-if="record.exclusive_user.raw_value" class="col-2"><i role="img" class="fa fa-user-times" title="Exclusive approval"/></div>
+                        </div>
+                        <div class="text-truncate" t-att-title="record.approval_group_id.value">
+                            <field name="approval_group_id"/>
+                        </div>
+                        <footer class="justify-content-between py-1">
+                            <a t-if="record.can_validate.raw_value" role="button" class="btn btn-link px-0 py-0" name="open_delegate_action" type="object" string="Delegate"/>
+                            <field t-if="record.approver_ids.raw_value.length" class="justify-content-end align-items-center ms-auto" readonly="1" name="approver_ids" widget="many2many_avatar_user"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="studio_approval_rule_form_view_quick_create" model="ir.ui.view">
+        <field name="name">studio.approval.form.quick_create</field>
+        <field name="model">studio.approval.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="approver_ids" required="not approval_group_id" placeholder="Select users..." widget="many2many_tags"/>
+                    <field name="approval_group_id" required= "not approver_ids" placeholder="Select a group..."/>
+                    <field name="users_to_notify" placeholder="Select users..." widget="many2many_tags"/>
+                    <field name="exclusive_user" widget="boolean_toggle"/>
+                </group>
+                <field name="model_id" invisible="1"/>
+                <field name="action_id" invisible="1"/>
+                <field name="method" invisible="1"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="studio_approval_rule_form_view" model="ir.ui.view">
+        <field name="name">studio.approval.form</field>
+        <field name="model">studio.approval.rule</field>
+        <field name="arch" type="xml">
+            <form string="Studio Approval Rule">
+                <header>
+                    <field name="notification_order" widget="statusbar" options="{'clickable': '1'}"/>
+                    <button name="open_delegate_action" type="object" string="Delegate" class="btn btn-primary" invisible="not can_validate"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box" invisible="not id">
+                        <button class="oe_stat_button" type="action" name="%(studio_approval_entry_action)d"
+                                icon="fa-thumbs-up"
+                                context="{'search_default_rule_id':id, 'default_chart_id': id}">
+                            <field string="Entries" name="entries_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <field name="active" invisible="1"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="message"/>
+                            <field name="approver_ids" required="not approval_group_id" placeholder="Select users..." widget="many2many_tags"/>
+                            <field name="approval_group_id" required= "not approver_ids" placeholder="Select group"/>
+                            <field name="exclusive_user" widget="boolean_toggle"/>
+                            <field name="model_id" required="1" readonly="context.get('studio')" groups="base.group_no_one"/>
+                            <field name="action_id" required="not method" readonly="method or context.get('studio')"  groups="base.group_no_one"/>
+                            <field name="method" required="not action_id" readonly="action_id or context.get('studio')"  groups="base.group_no_one"/>
+                        </group>
+                        <group>
+                            <field name="users_to_notify" placeholder="Select users..." widget="many2many_tags"/>
+                            <field name="model_id" invisible="1"/>
+                            <field name="model_name" invisible="1"/>
+                            <field name="domain" widget="domain" options="{'foldable': True,'model': 'model_name'}"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="studio_approval_rule_button_configuration_search_view" model="ir.ui.view">
+        <field name="name">studio.approval.search</field>
+        <field name="model">studio.approval.rule</field>
+        <field name="arch" type="xml">
+            <search string="Approval Rules">
+                <field name="name"/>
+                <field name="approval_group_id"/>
+                <field name="approver_ids"/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                <filter string="Step" name="notification_order" domain="[]" context="{'group_by':'notification_order'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="studio_approval_rule_search_view" model="ir.ui.view">
+        <field name="name">studio.approval.search</field>
+        <field name="model">studio.approval.rule</field>
+        <field name="inherit_id" ref="studio_approval_rule_button_configuration_search_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <filter name="inactive" position="before">
+                <filter string="Active" name="active" domain="[('active','=',True)]"/>
+            </filter>
+            <filter name="notification_order" position="replace">
+                <filter string="Model" name="model" domain="[]" context="{'group_by':'model_id'}"/>
+                <filter string="Method" name="method" domain="[]" context="{'group_by':'method'}"/>
+                <filter string="Action" name="action" domain="[]" context="{'group_by':'action_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+
+    <record id="studio_approval_rule_delegate_approvers" model="ir.ui.view">
+        <field name="name">studio.approval.rule.delegate.form</field>
+        <field name="model">studio.approval.rule.delegate</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <label for="approver_ids">Approvers</label>
+                    <div>
+                        <field name="approver_ids" widget="many2many_tags"/>
+                        <div class="d-flex mt-2">
+                            <label for="date_to" />
+                            <field name="date_to" class="d-inline ms-2" placeholder="Forever"/>
+                        </div>
+                    </div>
+                    <field name="users_to_notify" widget="many2many_tags" />
+                </group>
+                <footer>
+                    <button special="save" string="Apply" class="btn btn-primary" />
+                    <button special="cancel" string="Discard" class="btn btn-secondary" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="studio_approval_rule_action" model="ir.actions.act_window">
+        <field name="name">Studio Approval Rules</field>
+        <field name="res_model">studio.approval.rule</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'active_test': False, 'search_view_ref': 'web_studio.studio_approval_rule_search_view'}</field>
+    </record>
+
+    <menuitem id="menu_studio_approval_rule" name="Studio Approval Rules" sequence="10" action="studio_approval_rule_action" parent="base.next_id_2" groups="base.group_system"/>
+
+</odoo>

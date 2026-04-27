@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ch_hr_employee_children_view_tree" model="ir.ui.view">
+        <field name="name">l10n.ch.hr.employee.children.view.tree</field>
+        <field name="model">l10n.ch.hr.employee.children</field>
+        <field name="arch" type="xml">
+            <list string="Children" editable="bottom">
+                <field name="name"/>
+                <field name="birthdate"/>
+                <field name="deduction_start"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_ch_hr_employee_children_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.hr.employee.children.view.form</field>
+        <field name="model">l10n.ch.hr.employee.children</field>
+        <field name="arch" type="xml">
+            <form string="Children">
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="name"/>
+                        <field name="birthdate"/>
+                        <field name="deduction_start"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

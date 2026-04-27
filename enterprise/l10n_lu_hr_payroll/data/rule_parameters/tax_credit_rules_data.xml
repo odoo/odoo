@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- CIS -->
+    <!-- Source: https://impotsdirects.public.lu/fr/az/c/credit-impot-salaries.html -->
+    <record id="rule_parameter_cis" model="hr.rule.parameter">
+        <field name="name">Lux Tax Credit: CIS</field>
+        <field name="code">l10n_lu_cis</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+    <record id="rule_parameter_cis_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            (936, 11265, 300, 0.029),
+            (11266, 40000, 600, 0),
+            (40001, 79999, 600, -0.015),
+        ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_cis"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <!-- CIS CI-CO2 -->
+    <!-- Source: https://impotsdirects.public.lu/fr/az/c/credit-impot-salaries.html -->
+    <record id="rule_parameter_cis_ci_co2" model="hr.rule.parameter">
+        <field name="name">Lux Tax Credit: CI-CO2 (CIS)</field>
+        <field name="code">l10n_lu_cis_ci_co2</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+    <record id="rule_parameter_cis_ci_co2_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            (936, 40000, 168, 0),
+            (40001, 79999, 168, -0.0042),
+        ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_cis_ci_co2"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_cis_ci_co2_2025" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            (936, 40000, 192, 0),
+            (40001, 79999, 192, -0.0048),
+        ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_cis_ci_co2"/>
+        <field name="date_from" eval="datetime(2025, 1, 1).date()"/>
+    </record>
+
+    <!-- CIM -->
+    <!-- Source: https://impotsdirects.public.lu/fr/az/c/cim.html -->
+    <record id="rule_parameter_cim" model="hr.rule.parameter">
+        <field name="name">Lux Single-Parent Tax Credit: CIM</field>
+        <field name="code">l10n_lu_cim</field>
+        <field name="country_id" ref="base.lu"/>
+        <field name="description" type="html">
+<div>
+    <strong>Single-Parent Tax Credit (CIM):</strong>
+    <p>Passed parameters are used in the computation of the CIM. They are in the given order:</p>
+    <ul>
+        <li><code>gross_lower</code></li>
+        <li><code>gross_upper</code></li>
+        <li><code>amount_lower</code></li>
+        <li><code>base_amount_mid</code></li>
+        <li><code>rate_mid</code></li>
+        <li><code>amount_upper</code></li>
+    </ul>
+    <p><strong>Computation:</strong></p>
+    <ul>
+        <li>If the yearly taxable income is less than <code>gross_lower</code>, the CIM is <code>amount_lower</code>.</li>
+        <li>If it's between <code>gross_lower</code> and <code>gross_upper</code>, the CIM is computed as follows:
+            <ul>
+                <li><code>base_amount_mid - (yearly_taxable_income - gross_lower) * rate_mid</code></li>
+            </ul>
+        </li>
+        <li>If it's more than <code>gross_upper</code>, the CIM is <code>amount_upper</code>.</li>
+    </ul>
+    <p><strong>Source:</strong> <a href="https://impotsdirects.public.lu/fr/az/c/cim.html" target="_blank">Luxembourg Tax Authorities</a></p>
+</div>
+        </field>
+    </record>
+    <record id="rule_parameter_cim_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">
+            (60000, 105000, 2505, 2505, 0.039, 750)
+        </field>
+        <field name="rule_parameter_id" ref="rule_parameter_cim"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_cim_2025" model="hr.rule.parameter.value">
+        <field name="parameter_value">
+            (60000, 105000, 3504, 3504, 0.0612, 750)
+        </field>
+        <field name="rule_parameter_id" ref="rule_parameter_cim"/>
+        <field name="date_from" eval="datetime(2025, 1, 1).date()"/>
+    </record>
+
+    <!-- CIP -->
+    <!-- Source: https://impotsdirects.public.lu/fr/az/c/CIP/cip2024.html -->
+    <record id="rule_parameter_cip" model="hr.rule.parameter">
+        <field name="name">Lux Tax Credit: CIP</field>
+        <field name="code">l10n_lu_cip</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+    <record id="rule_parameter_cip_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            (300, 935, 300, 0),
+            (936, 11265, 300, 0.029),
+            (11266, 40000, 600, 0),
+            (40001, 79999, 600, -0.015),
+        ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_cip"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <!-- CIP CI-CO2 -->
+    <!-- Source: https://impotsdirects.public.lu/fr/az/c/CIP/cip2024.html -->
+    <record id="rule_parameter_cip_ci_co2" model="hr.rule.parameter">
+        <field name="name">Lux Tax Credit: CI-CO2 (CIP)</field>
+        <field name="code">l10n_lu_cip_ci_co2</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+    <record id="rule_parameter_cip_ci_co2_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            (300, 40000, 168, 0),
+            (40001, 79999, 168, -0.0042),
+        ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_cip_ci_co2"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_cip_ci_co2_2025" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            (300, 40000, 192, 0),
+            (40001, 79999, 192, -0.0048),
+        ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_cip_ci_co2"/>
+        <field name="date_from" eval="datetime(2025, 1, 1).date()"/>
+    </record>
+
+    <!-- CISSM -->
+    <!-- Source: https://impotsdirects.public.lu/fr/az/c/credit-impot-salaire-social-minimum.html -->
+    <record id="rule_parameter_cissm_max_amount" model="hr.rule.parameter">
+        <field name="name">Lux Tax Credit: CISSM Max Amount</field>
+        <field name="code">l10n_lu_cissm_max_amount</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+    <record id="rule_parameter_cissm_max_amount_2019" model="hr.rule.parameter.value">
+        <field name="parameter_value">70</field>
+        <field name="rule_parameter_id" ref="rule_parameter_cissm_max_amount"/>
+        <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_cissm_max_amount_2025" model="hr.rule.parameter.value">
+        <field name="parameter_value">81</field>
+        <field name="rule_parameter_id" ref="rule_parameter_cissm_max_amount"/>
+        <field name="date_from" eval="datetime(2025, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_cissm_lower_bound" model="hr.rule.parameter">
+        <field name="name">Lux Tax Credit: CISSM Lower Bound</field>
+        <field name="code">l10n_lu_cissm_lower_bound</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+    <record id="rule_parameter_cissm_lower_bound_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">1500</field>
+        <field name="rule_parameter_id" ref="rule_parameter_cissm_lower_bound"/>
+        <field name="date_from" eval="datetime(2022, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_cissm_lower_bound_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">1800</field>
+        <field name="rule_parameter_id" ref="rule_parameter_cissm_lower_bound"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_cissm_middle_bound" model="hr.rule.parameter">
+        <field name="name">Lux Tax Credit: CISSM Middle Bound</field>
+        <field name="code">l10n_lu_cissm_middle_bound</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+    <record id="rule_parameter_cissm_middle_bound_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">2500</field>
+        <field name="rule_parameter_id" ref="rule_parameter_cissm_middle_bound"/>
+        <field name="date_from" eval="datetime(2022, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_cissm_middle_bound_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">3000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_cissm_middle_bound"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_cissm_upper_bound" model="hr.rule.parameter">
+        <field name="name">Lux Tax Credit: CISSM Upper Bound</field>
+        <field name="code">l10n_lu_cissm_upper_bound</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+    <record id="rule_parameter_cissm_upper_bound_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">3000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_cissm_upper_bound"/>
+        <field name="date_from" eval="datetime(2022, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_cissm_upper_bound_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">3600</field>
+        <field name="rule_parameter_id" ref="rule_parameter_cissm_upper_bound"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+    </record>
+</odoo>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_salary_statement">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+                <div t-if="report_data" class="page">
+                    <h2>
+                        <span t-field="employee.company_id">IN Company</span>
+                    </h2>
+                    <h2>Salary Statement Report,
+                    <span t-out="report_data['month']">May</span>
+                    <span t-out="report_data['year']">2024</span>
+                    </h2>
+                    <table class="table table-sm table-borderless">
+                        <tbody>
+                            <tr>
+                                <td><strong>Employee Name</strong></td>
+                                <td><span t-field="employee.name">Lakshya</span></td>
+                                <td><strong>Date of Joining</strong></td>
+                                <td><span t-field="employee.contract_id.date_start">01/01/2024</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Designation</strong></td>
+                                <td><span t-field="employee.job_title">Software Developer</span></td>
+                                <td><strong>Salary Effective from</strong></td>
+                                <td><span t-out="report_data['date']">01/05/2024</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Salary Components</th>
+                                <th class="text-center">Monthly Amount</th>
+                                <th class="text-center">Yearly Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><h5 class="mb-0 mt-2"><strong>Allowance:</strong></h5></td></tr>
+                            <t t-foreach="report_data['allow_rules']" t-as="rule">
+                                <t t-set="value" t-value="report_data['allow_rules'][rule]"/>
+                                <tr>
+                                    <td><t t-out="value['name']">Basic Salary</t></td>
+                                    <td><t t-out="value['total']">10000</t></td>
+                                    <td><t t-out="round(value['total_annual'],2)">120000</t></td>
+                                </tr>
+                            </t>
+                            <tr><td><h5 class="mb-0 mt-2"><strong>Deduction:</strong></h5></td></tr>
+                            <t t-foreach="report_data['deduct_rules']" t-as="rule">
+                                <t t-set="value" t-value="report_data['deduct_rules'][rule]"/>
+                                <tr>
+                                    <td><t t-out="value['name']">PF</t></td>
+                                    <td><t t-out="value['total']">-1000</t></td>
+                                    <td><t t-out="round(value['total_annual'],2)">-12000</t></td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td><strong>Cost to Company</strong></td>
+                                <td><strong><t t-out="round(report_data['ctc'],2)">10000</t></strong></td>
+                                <td><strong><t t-out="round(report_data['ctc_annual'],2)">120000</t></strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

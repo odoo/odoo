@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="l10n_mx_input_commissions" model="hr.payslip.input.type">
+        <field name="name">Commissions</field>
+        <field name="code">COMMISSIONS</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary'))]"/>
+    </record>
+
+    <record id="l10n_mx_input_bonus" model="hr.payslip.input.type">
+        <field name="name">Bonus</field>
+        <field name="code">BONUS</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary'))]"/>
+    </record>
+</odoo>

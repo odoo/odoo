@@ -1,0 +1,37 @@
+<odoo>
+    <t t-name="spreadsheet_edition.CommonOdooChartConfigPanel">
+        <t t-if="!isDataLoaded">
+            <div class="text-center mt-4">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </t>
+        <t t-elif="isModelValid">
+            <Section>
+                <t t-set-slot="title">Model</t>
+                <div><t t-esc="modelDisplayName" /> (<t t-esc="model" />)</div>
+            </Section>
+            <Section>
+                <t t-set-slot="title">Domain</t>
+                <DomainSelector resModel="model" domain="domain" t-key="'odoo_chart_' + props.figureId" />
+                <div class="btn btn-link o_edit_domain" t-on-click="openDomainEdition">
+                    <i class="oi oi-arrow-right me-1" />Edit domain</div>
+            </Section>
+            <div>
+                <!-- requires <irMenuSelector> component -->
+                <t t-call="spreadsheet_edition.OdooMenuChartPanelSection" />
+            </div>
+            <Section class="'pt-1'">
+                <div class="o_pivot_last_update text-muted">
+                    <i>Last updated at <t t-esc="getLastUpdate()" /></i>
+                </div>
+                <br />
+            </Section>
+        </t>
+        <Section t-else="1">
+            <ValidationMessages messages="[invalidChartModel]" msgType="'error'" />
+            <button class="mx o-button o-button-primary mt-2 m-1" t-on-click="delete">Delete Chart</button>
+        </Section>
+    </t>
+</odoo>

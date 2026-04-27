@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="stock_barcode.PackageLineComponent" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_barcode_line')]" position="attributes">
+            <attribute name="t-att-style">line.colorLine !== undefined ? 'border-color: hsla(' + line.colorLine + ', 80%, 50%, 0.6);' : ''</attribute>
+        </xpath>
+    </t>
+
+</templates>

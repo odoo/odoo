@@ -1,0 +1,212 @@
+// Reusable set of design rules to be applied on any button in order to mimic
+// the barcode "Back" one.
+@mixin barcode-back-button-design {
+    padding-left: var(--btn-padding-x) !important;
+    padding-right: var(--btn-padding-x) !important;
+    margin-inline-end: map-get($spacers, 3);
+
+    $-socondary-button-design: map-get($o-btns-bs-override, secondary);
+    @include button-variant(
+        o-safe-get($-socondary-button-design, background),
+        o-safe-get($-socondary-button-design, border),
+        o-safe-get($-socondary-button-design, color),
+        o-safe-get($-socondary-button-design, hover-background),
+        o-safe-get($-socondary-button-design, hover-border),
+        o-safe-get($-socondary-button-design, hover-color),
+        o-safe-get($-socondary-button-design, active-background),
+        o-safe-get($-socondary-button-design, active-border),
+        o-safe-get($-socondary-button-design, active-color),
+    );
+
+    .oi, &.oi {
+        width: auto;
+
+        &::before {
+            content: '\e83a';
+        }
+    }
+}
+
+// Set buttons minimum 'tap' dimensions
+@mixin barcode-btn-tap-dimension() {
+    min-width: 42px;
+    min-height: 42px;
+}
+
+// Tweak general value contextually.
+// Target barcode native views + any barcode's kanbanView.
+.o_web_client:has(.o_barcode_client_action, .o_stock_barcode_list_kanban_view, .o_stock_barcode_operations_kanban_view, .o_stock_barcode_main_menu) {
+    .o_stock_mobile_barcode .fa {
+        --s: 7px; /* the size on the corner */
+        --t: 1px;  /* the thickness of the border */
+        --g: 5px; /* the gap between the border and image */
+
+        padding: calc(var(--g) + var(--t));
+        outline: var(--t) solid currentColor;
+        outline-offset: calc(-1*var(--t));
+        mask: conic-gradient(at var(--s) var(--s),#0000 75%,#000 0)
+          0 0/calc(100% - var(--s)) calc(100% - var(--s)),
+          linear-gradient(#000 0 0) content-box;
+    }
+
+    @include media-breakpoint-down(md) {
+        --body-font-size: 1rem;
+        --font-size-base: 1rem;
+        --small-font-size: 0.88rem;
+
+        --btn-font-size: 1rem;
+        --btn-padding-x: 0.75rem;
+        --btn-padding-y: 0.375rem;
+        --btn-line-height: 20px;
+
+        small, .small {
+            font-size: var(--small-font-size);
+        }
+
+        .btn {
+            font-size: var(--btn-font-size);
+            padding: var(--btn-padding-y) var(--btn-padding-x);
+
+            &.btn-lg {
+                --btn-font-size: 1.09375rem;
+                --btn-padding-x: 1rem;
+                --btn-padding-y: 0.5rem;
+            }
+        }
+
+        .modal-header {
+            padding: map-get($spacers, 2) + map-get($spacers, 1) !important;
+            height: auto !important;
+
+            > button[aria-label="Close"] {
+                @include barcode-back-button-design;
+            }
+        }
+    }
+}
+
+// Target barcode native views
+.o_web_client:has(.o_barcode_client_action, .o_stock_barcode_main_menu) {
+    .btn {
+        @include barcode-btn-tap-dimension;
+    }
+
+    .o-mail-Chatter-topbar {
+        .btn:not(.btn-link) {
+            min-width: auto;
+        }
+    }
+}
+
+// Target any barcode kanbanView
+.o_web_client:has(.o_stock_barcode_list_kanban_view, .o_stock_barcode_operations_kanban_view) {
+    @include media-breakpoint-down(md) {
+        min-height: auto;
+
+        .o-kanban-button-new, .o_control_panel_navigation > .btn-secondary {
+            @include barcode-btn-tap-dimension;
+        }
+
+        .o_breadcrumb {
+            .o_back_button {
+                @include barcode-back-button-design;
+                @include barcode-btn-tap-dimension;
+            }
+        }
+
+        .o_embedded_actions {
+            display: none !important;
+        }
+
+        .o_control_panel {
+            padding: map-get($spacers, 2) + map-get($spacers, 1) !important;
+            position: relative !important;
+            top: 0 !important;
+        }
+
+        .o_control_panel_breadcrumbs {
+            display: contents !important;
+        }
+
+        .o_control_panel_breadcrumbs_actions {
+            display: none !important;
+        }
+
+        .o_breadcrumb {
+            justify-content: start !important;
+            order: 0;
+        }
+
+        .o_cp_pager {
+            display: none !important;
+        }
+
+        .o_control_panel_main_buttons {
+            order: 1;
+        }
+    }
+
+    @for $size from 2 through length($o-colors) { // Starts at 2 because first index = no color.
+        .o_barcode_picking_type.o_kanban_color_#{$size - 1} {
+            $-color: rgba(nth($o-colors, $size), 0.5);
+            $-color-contrast: color-contrast($-color);
+
+            background-color: $-color;
+
+            .o_kanban_record_title {
+                color: $-color-contrast;
+            }
+
+            .badge {
+                background: $-color-contrast;
+                color: color-contrast($-color-contrast);
+            }
+        }
+    }
+
+    .o_barcode_picking_type {
+        &:after {
+            // Hide the left colored bar.
+            border-color: transparent !important;
+        }
+    }
+}
+
+// Target `o_stock_barcode_list_kanban_view` kanbanView specifically
+.o_web_client:has(.o_stock_barcode_list_kanban_view) {
+    .o_kanban_view {
+        --ControlPanel-border-bottom: #{$border-width} solid #{$border-color};
+    }
+
+    @include media-breakpoint-down(md) {
+        .o_breadcrumb {
+            width: 100%;
+        }
+    }
+    .o_kanban_renderer {
+        position: relative;
+    }
+}
+
+// Defines animation for highlighting flash.
+$highlighting-colors: (
+    "primary": theme-color("primary"),
+    "white": white
+);
+
+@each $c-name, $c-value in $highlighting-colors {
+    @keyframes highlighting-flash-#{$c-name} {
+        0% {
+            background-color: #{$c-value};
+        }
+        20% {
+            background-color: transparent;
+        }
+        21% {
+            background-color: #{$c-value};
+        }
+        100% {
+            background-color: transparent;
+        }
+    }
+}

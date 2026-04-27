@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_vat_pay_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_be_reports.vat_pay_wizard_view_form</field>
+        <field name="model">l10n_be.vat.pay.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="move_id" invisible="1"/> <!-- used to compute the qr_code -->
+                        <field name="company_currency_id" invisible="1"/> <!-- used as the currency for amount -->
+                        <field name="partner_id" readonly="1"/>
+                        <field name="amount" widget="monetary" options="{'currency_field': 'company_currency_id'}" readonly="1"/>
+                        <field name="acc_number" readonly="1"/>
+                        <field name="communication" readonly="1"/>
+                    </group>
+                    <group>
+                        <div colspan="2">
+                            <field name="qr_code" readonly="1" no_label="1"/>
+                        </div>
+                    </group>
+                </group>
+                <footer>
+                    <button name="mark_paid" string="Mark Paid" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Pay Later" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

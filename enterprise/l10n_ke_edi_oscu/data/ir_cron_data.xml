@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="ir_cron_fetch_kra_codes_cron" model="ir.cron">
+            <field name="name">KE eTIMS: Fetch KRA standard codes</field>
+            <field name="model_id" ref="model_l10n_ke_edi_oscu_code"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_get_codes_from_device()</field>
+            <field name="interval_number">2</field>
+            <field name="interval_type">days</field>
+        </record>
+        <record id="ir_cron_fetch_purchases" model="ir.cron">
+            <field name="name">KE eTIMS: Receive invoices from eTIMS</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="code">model._cron_l10n_ke_oscu_fetch_purchases()</field>
+            <field name="state">code</field>
+        </record>
+        <record id="ir_cron_fetch_unspsc" model="ir.cron">
+            <field name="name">KE eTIMS: Fetch UNSPSC codes from eTIMS</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="model_id" ref="product_unspsc.model_product_unspsc_code"/>
+            <field name="code">model._cron_l10n_ke_oscu_get_codes_from_device()</field>
+            <field name="state">code</field>
+        </record>
+        <record id="ir_cron_fetch_notice" model="ir.cron">
+            <field name="name">KE eTIMS: Fetch KRA notices from eTIMS</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="model_id" ref="model_l10n_ke_edi_oscu_notice"/>
+            <field name="code">model._cron_l10n_ke_oscu_get_notices()</field>
+            <field name="state">code</field>
+        </record>
+    </data>
+</odoo>

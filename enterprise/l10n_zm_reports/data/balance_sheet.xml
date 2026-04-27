@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_zm_account_pl_action" model="ir.actions.client">
+        <field name="name">Profit And Loss</field>
+        <field name="context" eval="{'model': 'account.report', 'report_id': ref('profit_loss_zm')}"/>
+        <field name="tag">account_report</field>
+    </record>
+
+    <record id="balance_sheet_zm" model="account.report">
+        <field name="name">Balance Sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.zm"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="balance_sheet_zm_balance_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="balance_sheet_zm_assets" model="account.report.line">
+                <field name="name">ASSETS</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">ZM_ASSETS</field>
+                <field name="aggregation_formula">ZM_ASSETS_CURRENT_ASSETS.balance + ZM_ASSETS_FIXED_ASSETS.balance</field>
+                <field name="children_ids">
+                    <record id="balance_sheet_zm_assets_current_assets" model="account.report.line">
+                        <field name="name">Current Assets</field>
+                        <field name="code">ZM_ASSETS_CURRENT_ASSETS</field>
+                        <field name="aggregation_formula">ZM_ASSETS_CURRENT_ASSETS_CURRENT.balance + ZM_ASSETS_CURRENT_RECEIVABLES_PAYMENTS.balance</field>
+                        <field name="children_ids">
+                            <record id="balance_sheet_zm_assets_current_assets_cash" model="account.report.line">
+                                <field name="name">Current Assets</field>
+                                <field name="code">ZM_ASSETS_CURRENT_ASSETS_CURRENT</field>
+                                <field name="account_codes_formula">82 + 83 + 84</field>
+                            </record>
+                            <record id="balance_sheet_zm_assets_current_assets_receivables_prepayments" model="account.report.line">
+                                <field name="name">Receivables and Prepayments</field>
+                                <field name="code">ZM_ASSETS_CURRENT_RECEIVABLES_PAYMENTS</field>
+                                <field name="account_codes_formula">71 + 80 + 81 + 89</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="balance_sheet_zm_assets_fixed_assets" model="account.report.line">
+                        <field name="name">Fixed Assets</field>
+                        <field name="code">ZM_ASSETS_FIXED_ASSETS</field>
+                        <field name="aggregation_formula">ZM_ASSETS_FIXED_ASSETS_INTANGIBLE.balance + ZM_ASSETS_FIXED_ASSETS_TANGIBLE.balance</field>
+                        <field name="children_ids">
+                            <record id="balance_sheet_zm_assets_fixed_assets_intangible" model="account.report.line">
+                                <field name="name">Intangible Fixed Assets</field>
+                                <field name="code">ZM_ASSETS_FIXED_ASSETS_INTANGIBLE</field>
+                                <field name="account_codes_formula">61 + 62 + 63 + 66</field>
+                            </record>
+                            <record id="balance_sheet_zm_assets_fixed_assets_tangible" model="account.report.line">
+                                <field name="name">Tangible Fixed Assets</field>
+                                <field name="code">ZM_ASSETS_FIXED_ASSETS_TANGIBLE</field>
+                                <field name="account_codes_formula">70</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="balance_sheet_zm_liabilities" model="account.report.line">
+                <field name="name">LIABILITIES</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">ZM_LIABILITIES</field>
+                <field name="aggregation_formula">ZM_LIABILITIES_NON_CURRENT.balance + ZM_LIABILITIES_CURRENT.balance</field>
+                <field name="children_ids">
+                    <record id="balance_sheet_zm_liabilities_current" model="account.report.line">
+                        <field name="name">Current Liabilities</field>
+                        <field name="code">ZM_LIABILITIES_CURRENT</field>
+                        <field name="aggregation_formula">ZM_LIABILITIES_CURRENT_OTHER_CURRENT_LIABILITIES.balance + ZM_LIABILITIES_PAYABLES.balance</field>
+                        <field name="children_ids">
+                            <record id="balance_sheet_zm_liabilities_current_other_current_liabilities" model="account.report.line">
+                                <field name="name">Other Current Liabilities</field>
+                                <field name="code">ZM_LIABILITIES_CURRENT_OTHER_CURRENT_LIABILITIES</field>
+                                <field name="account_codes_formula">-52 - 77 - 92 - 94 - 950 - 952 - 990</field>
+                            </record>
+                            <record id="balance_sheet_zm_liabilities_current_payables" model="account.report.line">
+                                <field name="name">Payables</field>
+                                <field name="code">ZM_LIABILITIES_PAYABLES</field>
+                                <field name="account_codes_formula">-90 - 91 - 951</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="balance_sheet_zm_liabilities_non_current" model="account.report.line">
+                        <field name="name">Non-Current Liabilities</field>
+                        <field name="code">ZM_LIABILITIES_NON_CURRENT</field>
+                        <field name="account_codes_formula">-55 - 56</field>
+                    </record>
+                </field>
+            </record>
+            <record id="balance_sheet_zm_equity" model="account.report.line">
+                <field name="name">EQUITY</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">ZM_EQUITY</field>
+                <field name="aggregation_formula">ZM_LIABILITIES_UNALLOCATED.balance + ZM_EQUITY_RETAINED_EARNINGS.balance</field>
+                <field name="children_ids">
+                    <record id="balance_sheet_zm_equity_unallocated" model="account.report.line">
+                        <field name="name">Unallocated Earnings</field>
+                        <field name="code">ZM_LIABILITIES_UNALLOCATED</field>
+                        <field name="aggregation_formula">ZM_LIABILITIES_CURRENT_YEAR.balance + ZM_EQUITY_PREVIOUS_YEAR_UNALLOCATED.balance</field>
+                        <field name="children_ids">
+                            <record id="balance_sheet_zm_equity_current_year" model="account.report.line">
+                                <field name="name">Current Year</field>
+                                <field name="code">ZM_LIABILITIES_CURRENT_YEAR</field>
+                                <field name="aggregation_formula">ZM_EQUITY_CURRENT_YEAR_UNALLOCATED.balance + ZM_EQUITY_CURRENT_YEAR_ALLOCATED.balance</field>
+                                <field name="children_ids">
+                                    <record id="balance_sheet_zm_equity_current_year_unallocated" model="account.report.line">
+                                        <field name="name">Current Year Earnings</field>
+                                        <field name="code">ZM_EQUITY_CURRENT_YEAR_UNALLOCATED</field>
+                                        <field name="action_id" ref="l10n_zm_account_pl_action"/>
+                                        <field name="expression_ids">
+                                            <record id="balance_sheet_zm_equity_unallocated_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">ZM_NET_PROFIT.balance</field>
+                                                <field name="date_scope">from_fiscalyear</field>
+                                                <field name="subformula">cross_report</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="balance_sheet_zm_equity_current_year_allocated" model="account.report.line">
+                                        <field name="name">Current Year Allocated Earnings</field>
+                                        <field name="code">ZM_EQUITY_CURRENT_YEAR_ALLOCATED</field>
+                                        <field name="expression_ids">
+                                            <record id="balance_sheet_zm_equity_current_year_allocated_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.account_type', '=', 'equity_unaffected')]"/>
+                                                <field name="date_scope">from_fiscalyear</field>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="balance_sheet_zm_equity_previous_year_unallocated" model="account.report.line">
+                                <field name="name">Previous Year Unallocated Earnings</field>
+                                <field name="code">ZM_EQUITY_PREVIOUS_YEAR_UNALLOCATED</field>
+                                <field name="expression_ids">
+                                    <record id="balance_sheet_zm_equity_previous_year_unallocated_allocated_earnings" model="account.report.expression">
+                                        <field name="label">allocated_earnings</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.account_type', '=', 'equity_unaffected')]"/>
+                                        <field name="subformula">-sum</field>
+                                        <field name="date_scope">from_beginning</field>
+                                    </record>
+                                    <record id="balance_sheet_zm_equity_previous_year_unallocated_balance_domain" model="account.report.expression">
+                                        <field name="label">balance_domain</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.account_type', 'in', ('income', 'income_other', 'expense_direct_cost', 'expense', 'expense_depreciation'))]"/>
+                                        <field name="subformula">-sum</field>
+                                        <field name="date_scope">from_beginning</field>
+                                    </record>
+                                    <record id="balance_sheet_zm_equity_previous_year_unallocated_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">ZM_EQUITY_PREVIOUS_YEAR_UNALLOCATED.balance_domain + ZM_EQUITY_PREVIOUS_YEAR_UNALLOCATED.allocated_earnings - ZM_LIABILITIES_CURRENT_YEAR.balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="balance_sheet_zm_equity_retained" model="account.report.line">
+                        <field name="name">Retained Earnings</field>
+                        <field name="code">ZM_EQUITY_RETAINED_EARNINGS</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="domain_formula">-sum([('account_id.account_type', '=', 'equity')])</field>
+                    </record>
+                </field>
+            </record>
+            <record id="balance_sheet_zm_liabilities_and_equities" model="account.report.line">
+                <field name="name">LIABILITIES + EQUITY</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">ZM_ASSETS_LIABILITIES_EQUITIES</field>
+                <field name="aggregation_formula">ZM_LIABILITIES.balance + ZM_EQUITY.balance</field>
+            </record>
+        </field>
+    </record>
+</odoo>

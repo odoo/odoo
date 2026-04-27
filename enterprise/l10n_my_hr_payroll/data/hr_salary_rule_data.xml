@@ -1,0 +1,338 @@
+<odoo>
+    <data>
+    <record id="l10n_my_hr_payroll_structure_my_employee_salary_basic_salary_rule" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="name">Basic Salary</field>
+        <field name="sequence">1</field>
+        <field name="code">BASIC</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = payslip.paid_amount
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <record id="l10n_my_rule_basic_allowance" model="hr.salary.rule">
+        <field name="name">Allowance</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="code">MY_GENERIC_ALW</field>
+        <field name="sequence">5</field>
+        <field name="condition_select">input</field>
+        <field name="condition_other_input_id" ref="l10n_my_hr_payroll.l10n_my_hr_payroll_input_generic"/>
+        <field name="amount_select">input</field>
+        <field name="amount_other_input_id" ref="l10n_my_hr_payroll.l10n_my_hr_payroll_input_generic"/>
+        <field name="struct_id" ref="l10n_my_hr_payroll.hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <record id="l10n_my_rule_dearness_allowance" model="hr.salary.rule">
+        <field name="name">Dearness Allowance</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="code">MY_DA</field>
+        <field name="sequence">6</field>
+        <field name="condition_select">input</field>
+        <field name="condition_other_input_id" ref="l10n_my_hr_payroll.l10n_my_hr_payroll_dearness_allowance"/>
+        <field name="amount_select">input</field>
+        <field name="amount_other_input_id" ref="l10n_my_hr_payroll.l10n_my_hr_payroll_dearness_allowance"/>
+        <field name="struct_id" ref="l10n_my_hr_payroll.hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <record id="l10n_my_rule_house_rent_allowance" model="hr.salary.rule">
+        <field name="name">House Rent Allowance</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="code">MY_HRA</field>
+        <field name="sequence">6</field>
+        <field name="condition_select">input</field>
+        <field name="condition_other_input_id" ref="l10n_my_hr_payroll.l10n_my_hr_payroll_house_rent_allowance"/>
+        <field name="amount_select">input</field>
+        <field name="amount_other_input_id" ref="l10n_my_hr_payroll.l10n_my_hr_payroll_house_rent_allowance"/>
+        <field name="struct_id" ref="l10n_my_hr_payroll.hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <record id="l10n_my_rule_conveyance_allowance" model="hr.salary.rule">
+        <field name="name">Conveyance Allowance</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="code">MY_CONV_ALW</field>
+        <field name="sequence">6</field>
+        <field name="condition_select">input</field>
+        <field name="condition_other_input_id" ref="l10n_my_hr_payroll.l10n_my_hr_payroll_conveyance_allowance"/>
+        <field name="amount_select">input</field>
+        <field name="amount_other_input_id" ref="l10n_my_hr_payroll.l10n_my_hr_payroll_conveyance_allowance"/>
+        <field name="struct_id" ref="l10n_my_hr_payroll.hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+
+    <record id="l10n_my_hr_payroll_structure_my_employee_salary_gross_salary_rule" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.GROSS"/>
+        <field name="name">Taxable Salary</field>
+        <field name="sequence">100</field>
+        <field name="code">GROSS</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['BASIC'] + categories['ALW']
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <!-- EPF -->
+    <record id="l10n_my_rule_epf_employee" model="hr.salary.rule">
+        <field name="name">EPF</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="code">EPF_EMP</field>
+        <field name="sequence">110</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -ceil(categories['GROSS'] * payslip._rule_parameter("l10n_my_epf_rate_employee") / 100)
+        </field>
+        <field name="struct_id" ref="l10n_my_hr_payroll.hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <!-- EPF - Employer -->
+    <record id="l10n_my_rule_epf_employer" model="hr.salary.rule">
+        <field name="name">EPF - Employer</field>
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="code">EPF_EMPLR</field>
+        <field name="sequence">115</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['GROSS']
+rate = 0
+if result &lt;= payslip._rule_parameter("l10n_my_epf_threshold_employer"):
+    rate = payslip._rule_parameter("l10n_my_epf_rate_employer_low")
+else:
+    rate = payslip._rule_parameter("l10n_my_epf_rate_employer_high")
+result = ceil(result * rate / 100)
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_my_hr_payroll.hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <!-- SOCSO -->
+    <record id="l10n_my_rule_socso_800_employee" model="hr.salary.rule">
+        <field name="name">SOCSO - Act 800</field>
+        <field name="category_id" ref="hr_payroll_socso_employee"/>
+        <field name="code">SOCSO_800_EMP</field>
+        <field name="sequence">120</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+def _find_contribution(wage, contributions):
+    for (limit, contribution) in contributions:
+        if wage &lt;= limit:
+            return contribution
+if employee.l10n_my_socso_exempted:
+    result = 0
+else:
+    contributions = payslip._rule_parameter('l10n_my_socso_act_800_employee')
+    wage = categories['GROSS']
+    result = -_find_contribution(wage, contributions)
+        </field>
+        <field name="struct_id" ref="l10n_my_hr_payroll.hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <record id="l10n_my_rule_socso_800_employer" model="hr.salary.rule">
+        <field name="name">SOCSO - Act 800 - Employer</field>
+        <field name="category_id" ref="hr_payroll_socso_employer"/>
+        <field name="code">SOCSO_800_EMPLR</field>
+        <field name="sequence">121</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if employee.l10n_my_socso_exempted:
+    result = 0
+else:
+    result = -result_rules['SOCSO_800_EMP']['total']
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_my_hr_payroll.hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <record id="l10n_my_rule_socso_4_employee" model="hr.salary.rule">
+        <field name="name">SOCSO - Act 4</field>
+        <field name="category_id" ref="hr_payroll_socso_employee"/>
+        <field name="code">SOCSO_4_EMP</field>
+        <field name="sequence">125</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+def _find_contribution(wage, contributions):
+    for (limit, contribution) in contributions:
+        if wage &lt;= limit:
+            return contribution
+if employee.l10n_my_socso_exempted:
+    result = 0
+else:
+    contributions = payslip._rule_parameter('l10n_my_socso_act_4_first_category_employee')
+    wage = categories['GROSS']
+    result = -_find_contribution(wage, contributions)
+        </field>
+        <field name="struct_id" ref="l10n_my_hr_payroll.hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <record id="l10n_my_rule_socso_4_employer" model="hr.salary.rule">
+        <field name="name">SOCSO - Act 4 - Employer</field>
+        <field name="category_id" ref="hr_payroll_socso_employer"/>
+        <field name="code">SOCSO_4_EMPLR</field>
+        <field name="sequence">126</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+def _find_contribution(wage, contributions):
+    for (limit, contribution) in contributions:
+        if wage &lt;= limit:
+            return contribution
+wage = categories['GROSS']
+if employee.l10n_my_socso_exempted:
+    contributions = payslip._rule_parameter('l10n_my_socso_act_4_second_category_employer')
+    result = -_find_contribution(wage, contributions)
+else:
+    contributions = payslip._rule_parameter('l10n_my_socso_act_4_first_category_employer')
+    result = -_find_contribution(wage, contributions)
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_my_hr_payroll.hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <record id="l10n_my_rule_socso_employee" model="hr.salary.rule">
+        <field name="name">SOCSO Employee Share</field>
+        <field name="category_id" ref="hr_payroll_socso_employee"/>
+        <field name="code">SOCSO_EMP</field>
+        <field name="sequence">150</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -categories['SOCSO_EMP']
+        </field>
+        <field name="struct_id" ref="l10n_my_hr_payroll.hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <record id="l10n_my_rule_socso_employer" model="hr.salary.rule">
+        <field name="name">SOCSO Employer Share</field>
+        <field name="category_id" ref="hr_payroll_socso_employer"/>
+        <field name="code">SOCSO_EMPLR</field>
+        <field name="sequence">151</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['SOCSO_EMPLR']
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_my_hr_payroll.hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <!-- EIS -->
+    <record id="l10n_my_rule_eis_employee" model="hr.salary.rule">
+        <field name="name">EIS</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="code">EIS_EMP</field>
+        <field name="sequence">160</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['GROSS']
+result_rate = -payslip._rule_parameter("l10n_my_eis_rate_employee")
+        </field>
+        <field name="struct_id" ref="l10n_my_hr_payroll.hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <!-- EIS - Employer -->
+    <record id="l10n_my_rule_eis_employer" model="hr.salary.rule">
+        <field name="name">EIS - Employer</field>
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="code">EIS_EMPLR</field>
+        <field name="sequence">161</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['GROSS']
+result_rate = payslip._rule_parameter("l10n_my_eis_rate_employer")
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_my_hr_payroll.hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <record id="l10n_my_hr_payroll_structure_my_employee_salary_attachment_of_salary_rule" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Attachment of Salary</field>
+        <field name="sequence">174</field>
+        <field name="code">ATTACH_SALARY</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'ATTACH_SALARY' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -inputs['ATTACH_SALARY'].amount
+result_name = inputs['ATTACH_SALARY'].name
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <record id="l10n_my_hr_payroll_structure_my_employee_salary_assignment_of_salary_rule" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Assignment of Salary</field>
+        <field name="sequence">174</field>
+        <field name="code">ASSIG_SALARY</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'ASSIG_SALARY' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -inputs['ASSIG_SALARY'].amount
+result_name = inputs['ASSIG_SALARY'].name
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <record id="l10n_my_hr_payroll_structure_my_employee_salary_child_support" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Child Support</field>
+        <field name="code">CHILD_SUPPORT</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">174</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'CHILD_SUPPORT' in inputs</field>
+        <field name="amount_python_compute">
+result = -inputs['CHILD_SUPPORT'].amount
+result_name = inputs['CHILD_SUPPORT'].name
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <record id="l10n_my_hr_payroll_structure_my_employee_salary_deduction_salary_rule" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Deduction</field>
+        <field name="sequence">198</field>
+        <field name="code">DEDUCTION</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'DEDUCTION' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -inputs['DEDUCTION'].amount
+result_name = inputs['DEDUCTION'].name
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <record id="l10n_my_hr_payroll_structure_my_employee_salary_reimbursement_salary_rule" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Reimbursement</field>
+        <field name="sequence">199</field>
+        <field name="code">REIMBURSEMENT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'REIMBURSEMENT' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['REIMBURSEMENT'].amount
+result_name = inputs['REIMBURSEMENT'].name
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    <record id="l10n_my_hr_payroll_structure_my_employee_salary_net_salary" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="name">Net Salary</field>
+        <field name="sequence">200</field>
+        <field name="code">NET</field>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['BASIC'] + categories['ALW'] + categories['DED']
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_my_employee_salary"/>
+    </record>
+
+    </data>
+</odoo>
+

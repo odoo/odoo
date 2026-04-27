@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="move_io_start" model="ir.config_parameter">
+            <field name="key">l10n_ke.start_stock_date</field>
+            <field name="value" eval="DateTime.now().strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_delivery_carrier_form_with_provider_ups" model="ir.ui.view">
+        <field name="name">delivery.carrier.form.provider.ups</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='destination']" position='before'>
+                <page string="UPS Configuration" name="ups_configuration"
+                    invisible="delivery_type != 'ups'">
+                    <group>
+                        <group>
+                            <field name="ups_username" required="delivery_type == 'ups'"/>
+                            <field name="ups_passwd" required="delivery_type == 'ups'"/>
+                            <field name="ups_shipper_number" required="delivery_type == 'ups'"/>
+                            <field name="ups_access_number" required="delivery_type == 'ups'"/>
+                            <field name="ups_default_service_type" required="delivery_type == 'ups'"/>
+                        </group>
+                        <group>
+                            <field name="ups_default_package_type_id" required="delivery_type == 'ups'" domain="[('package_carrier_type', '=', 'ups')]"/>
+                            <field name="ups_package_weight_unit" string="Package Weight Unit" required="delivery_type == 'ups'"/>
+                            <field name="ups_package_dimension_unit" required="delivery_type == 'ups'"/>
+                            <field name="ups_label_file_type" string="Label Format" required="delivery_type == 'ups'"/>
+                        </group>
+                        <group string="Options" name="ups_vas">
+                            <field name="ups_bill_my_account" invisible="delivery_type != 'ups'"/>
+                            <field name="ups_saturday_delivery" string="Saturday Delivery" invisible="ups_default_service_type in ['03', '11', '13', '59', '12', '65', '08']" required="delivery_type == 'ups'"/>
+                            <field name="ups_cod" invisible="ups_default_service_type == '96'" required="delivery_type == 'ups'"/>
+                            <field name="ups_cod_funds_code" invisible="not ups_cod" required="delivery_type == 'ups'" widget="radio"/>
+                            <field name="can_generate_return" invisible="1"/>
+                            <field name="return_label_on_delivery" invisible="not can_generate_return"/>
+                            <field name="get_return_label_from_portal" invisible="not return_label_on_delivery"/>
+                            <field name="ups_duty_payment" string="Duties paid by" required="delivery_type == 'ups'"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_withcarrier_out_form_inherit_delivery_ups" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.ups</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock_delivery.view_picking_withcarrier_out_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='carrier_id']" position="attributes">
+                <attribute name="domain">[('ups_cod', '=', False)]</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

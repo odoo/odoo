@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_account_move_form_inherit_account" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.account</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position='after'>
+                 <div role="status" class="alert alert-warning" invisible="l10n_in_exception in ('', False) or move_type not in ('in_invoice', 'in_receipt', 'in_refund')">
+                    <field name="l10n_in_exception" readonly="1"/>
+                </div>
+                <div class="alert alert-warning mb-0" role="alert"
+                    invisible="not l10n_in_reversed_entry_warning">
+                    Credit notes for invoices from the financial year cannot be included in GSTR after November 30th.
+                    Hence, it is advisable to remove the tax from the credit note.
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='checked']" position="after">
+                <field name="l10n_in_gstr2b_reconciliation_status" readonly="1" invisible="move_type not in ('in_invoice', 'in_receipt', 'in_refund') or country_code != 'IN'"/>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')]" position="inside">
+                <div class="fs-6 d-flex gap-2" invisible="country_code != 'IN' or not l10n_in_irn_number">
+                    <label class="fs-6" for="l10n_in_irn_number" string="IRN"/>
+                    <field name="l10n_in_irn_number" class="oe_inline"/>
+                </div>
+            </xpath>
+            <xpath expr="//header" position='after'>
+                <div role="status" class="alert alert-warning"
+                     invisible="l10n_in_gstr_activate_einvoice_fetch == 'do_nothing' or not l10n_in_irn_number or state != 'draft'">
+                    <div class="o_row">
+                        E-Invoice IRN is available. Fetching data from the GSTN portal.
+                        <button name="l10n_in_update_move_using_irn" type="object" class="oe_link oe_inline">
+                            <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                            Fetch
+                        </button>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.invoice.select.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search/group/filter[@name='status']" position="after">
+                <filter string="GSTR2B status" name="gstr2b_status" context="{'group_by': 'l10n_in_gstr2b_reconciliation_status'}" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

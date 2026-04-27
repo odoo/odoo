@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.partner_demo_company_bd" model="res.partner" forcecreate="1">
+        <field name="name">My Bangladeshi Company</field>
+        <field name="street">Bangladeshi Street</field>
+        <field name="zip">1000</field>
+        <field name="city">Dhaka</field>
+        <field name="country_id" ref="base.bd"/>
+    </record>
+
+    <record id="base.demo_company_bd" model="res.company" forcecreate="1">
+        <field name="name">My Bangladeshi Company</field>
+        <field name="currency_id" ref="base.BDT"/>
+        <field name="partner_id" ref="base.partner_demo_company_bd"/>
+    </record>
+
+    <record id="res_partner_employee_bd" model="res.partner">
+        <field name="name">Samuel Tyson</field>
+        <field name="company_id" ref="base.demo_company_bd"/>
+    </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_bd'))]"/>
+        <field name="tz">Asia/Dhaka</field>
+    </record>
+
+    <record id="hr_employee_bd" model="hr.employee">
+        <field name="company_id" ref="base.demo_company_bd"/>
+        <field name="name">Mia Robinson</field>
+        <field name="work_contact_id" ref="l10n_bd_hr_payroll_account.res_partner_employee_bd"/>
+        <field name="job_title">Salesperson</field>
+        <field name="work_phone">0123 456 789</field>
+        <field name="work_email">mia.robinson@example.com</field>
+        <field name="private_street">Bangladeshi Street</field>
+        <field name="private_city">Dhaka</field>
+        <field name="private_country_id" ref="base.bd"/>
+        <field name="birthday" eval="datetime(1985, 5, 12).date()"/>
+        <field name="image_1920" type="base64" file="hr/static/img/employee_mit-image.jpg"/>
+        <field name="l10n_bd_gazetted_war_founded_freedom_fighter">False</field>
+        <field name="gender">female</field>
+    </record>
+
+    <record id="hr_contract_bd" model="hr.contract">
+        <field name="company_id" ref="base.demo_company_bd"/>
+        <field name="employee_id" ref="l10n_bd_hr_payroll_account.hr_employee_bd"/>
+        <field name="name">Mia Contract</field>
+        <field name="date_start" eval="datetime(2020, 1, 1).date()"/>
+        <field name="wage">40000</field>
+        <field name="structure_type_id" ref="l10n_bd_hr_payroll.structure_type_employee_bd"/>
+        <field name="state">open</field>
+    </record>
+
+    <data noupdate="1">
+        <function model="account.chart.template" name="try_loading">
+            <value eval="[]"/>
+            <value>bd</value>
+            <value model="res.company" eval="obj().env.ref('base.demo_company_bd')"/>
+            <value name="install_demo" eval="True"/>
+        </function>
+    </data>
+</odoo>

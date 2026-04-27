@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GovTalkMessage xmlns="http://www.govtalk.gov.uk/CM/envelope">
+            <EnvelopeVersion>2.0</EnvelopeVersion>
+            <Header>
+                <MessageDetails>
+                    <Class>IR-CIS-CIS300MR</Class>
+                    <Qualifier>request</Qualifier>
+                    <Function>submit</Function>
+                    <CorrelationID></CorrelationID>
+                    <Transformation>XML</Transformation>
+                </MessageDetails>
+                <SenderDetails>
+                    <IDAuthentication>
+                        <SenderID>CISRUSER1033</SenderID>
+                        <Authentication>
+                            <Method>clear</Method>
+                            <Role>principal</Role>
+                            <Value>fGuR34fAOEJf</Value>
+                        </Authentication>
+                    </IDAuthentication>
+                </SenderDetails>
+            </Header>
+            <GovTalkDetails>
+                <Keys>
+                    <Key Type="TaxOfficeNumber">123</Key>
+                    <Key Type="TaxOfficeReference">R234</Key>
+                </Keys>
+                <ChannelRouting>
+                    <Channel>
+                        <URI>9117</URI>
+                        <Product>Odoo</Product>
+                        <Version>1.0</Version>
+                    </Channel>
+                </ChannelRouting>
+            </GovTalkDetails>
+        <Body>
+            <IRenvelope xmlns="http://www.govtalk.gov.uk/taxation/CISreturn">
+                <IRheader>
+                    <Keys>
+                        <Key Type="TaxOfficeNumber">123</Key>
+                        <Key Type="TaxOfficeReference">R234</Key>
+                    </Keys>
+                    <PeriodEnd>2009-05-05</PeriodEnd>
+                    <DefaultCurrency>GBP</DefaultCurrency>
+                    <IRmark Type="generic">7BVCxFljtC86PVPu/i1wq49Qsdc=</IRmark>
+                    <Sender>Individual</Sender>
+                </IRheader>
+                <CISreturn>
+                    <Contractor>
+                        <UTR>7325648155</UTR>
+                        <AOref>123PP87654321</AOref>
+                    </Contractor>
+                        <Subcontractor>
+                                <Name>
+                                    <Fore>John</Fore>
+                                    <Fore>Peter</Fore>
+                                    <Sur>Brown</Sur>
+                                </Name>
+                            <WorksRef>45</WorksRef>
+                            <UnmatchedRate>yes</UnmatchedRate>
+                            <VerificationNumber>V6499876214A</VerificationNumber>
+                            <TotalPayments>2000.00</TotalPayments>
+                            <CostOfMaterials>500.00</CostOfMaterials>
+                            <TotalDeducted>450.00</TotalDeducted>
+                        </Subcontractor>
+                        <Subcontractor>
+                                <TradingName>TA Plumbing</TradingName>
+                            <WorksRef>46</WorksRef>
+                            <UnmatchedRate>yes</UnmatchedRate>
+                            <VerificationNumber>V8745678309AA</VerificationNumber>
+                            <TotalPayments>2750.00</TotalPayments>
+                            <CostOfMaterials>0.00</CostOfMaterials>
+                            <TotalDeducted>825.00</TotalDeducted>
+                        </Subcontractor>
+                    <Declarations>
+                            <EmploymentStatus>yes</EmploymentStatus>
+                            <Verification>yes</Verification>
+                        <InformationCorrect>yes</InformationCorrect>
+                        <Inactivity>yes</Inactivity>
+                    </Declarations>
+                </CISreturn>
+            </IRenvelope> 
+        </Body>
+</GovTalkMessage>

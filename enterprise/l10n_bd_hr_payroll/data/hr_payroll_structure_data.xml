@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="hr_payroll_structure_bd_employee_salary" model="hr.payroll.structure">
+        <field name="name">Bangladesh: Regular Pay</field>
+        <field name="country_id" ref="base.bd"/>
+        <field name="type_id" ref="l10n_bd_hr_payroll.structure_type_employee_bd"/>
+    </record>
+    <record id="l10n_bd_hr_payroll.structure_type_employee_bd" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure_bd_employee_salary"/>
+    </record>
+</odoo>

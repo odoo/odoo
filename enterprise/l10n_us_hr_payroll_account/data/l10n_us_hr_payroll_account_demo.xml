@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <function model="account.chart.template" name="try_loading"
+            context="{'bypass_payment_method_ids_forbidden_change': True}">
+            <value eval="[]"/>
+            <value>generic_coa</value>
+            <value model="res.company" eval="obj().env.ref('base.main_company')"/>
+            <value name="install_demo" eval="True"/>
+        </function>
+    </data>
+</odoo>

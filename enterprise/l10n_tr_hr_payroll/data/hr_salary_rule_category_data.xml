@@ -1,0 +1,38 @@
+<odoo>
+    <record id="hr_salary_rule_category_tr_ssid" model="hr.salary.rule.category">
+        <field name="name">SSI Deduction</field>
+        <field name="code">SSID</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_salary_rule_category_tr_taxded" model="hr.salary.rule.category">
+        <field name="name">Tax Deduction</field>
+        <field name="code">TAXDED</field>
+    </record>
+
+    <record id="hr_salary_rule_category_tr_net_taxded" model="hr.salary.rule.category">
+        <field name="name">Net Tax Deduction</field>
+        <field name="code">BNETTAX</field>
+    </record>
+
+    <record id="hr_salary_rule_category_tr_ssid_net" model="hr.salary.rule.category">
+        <field name="name">SSI Deduction Net</field>
+        <field name="code">SSIENET</field>
+    </record>
+
+    <record id="hr_salary_rule_category_tr_taxbase" model="hr.salary.rule.category">
+        <field name="name">Tax Base</field>
+        <field name="code">TBASE</field>
+    </record>
+
+    <record id="hr_salary_rule_category_tr_stamp_tax" model="hr.salary.rule.category">
+        <field name="name">Stamp Tax Deduction</field>
+        <field name="code">STAXD</field>
+    </record>
+
+    <record id="hr_salary_rule_category_tax_deduction_net" model="hr.salary.rule.category">
+        <field name="name">Tax Deduction Net</field>
+        <field name="code">TNET</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+</odoo>

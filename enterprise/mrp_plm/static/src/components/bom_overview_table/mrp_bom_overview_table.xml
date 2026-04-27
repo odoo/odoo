@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp_plm.BomOverviewTable" t-inherit="mrp.BomOverviewTable" t-inherit-mode="extension">
+        <xpath expr="//th[@name='th_mrp_bom_h']" position="after">
+            <th t-if="showEcos" class="text-end">BoM Version</th>
+            <th t-if="showEcos" class="text-end">ECOs</th>
+        </xpath>
+
+        <xpath expr="//td[@name='td_mrp_bom_f']" position="after">
+            <td t-if="showEcos"/>
+            <td t-if="showEcos"/>
+        </xpath>
+
+        <xpath expr="//td[@name='td_mrp_bom_b']" position="after">
+            <td t-if="showEcos"/>
+            <td t-if="showEcos"/>
+        </xpath>
+    </t>
+
+</templates>

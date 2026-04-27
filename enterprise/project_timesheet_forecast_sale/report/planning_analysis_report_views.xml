@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="planning_slot_report_view_graph_inherit_project_timesheet_forecast_sale" model="ir.ui.view">
+        <field name="name">planning.slot.report.view.graph.inherit</field>
+        <field name="inherit_id" ref="planning.planning_slot_report_view_graph"/>
+        <field name="model">planning.analysis.report</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='effective_hours']" position="after">
+                <field name="billable_allocated_hours" widget="timesheet_uom"/>
+                <field name="non_billable_allocated_hours" widget="timesheet_uom"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="hr_recruitment_post_job_wizard_view_form" model="ir.ui.view">
+        <field name="name">hr.recruitment.post.job.wizard.form</field>
+        <field name="model">hr.recruitment.post.job.wizard</field>
+        <field name="inherit_id" ref="hr_recruitment_integration_base.hr_recruitment_post_job_wizard_view_form"/>
+        <field name="arch" type="xml">
+            <field name="job_apply_mail" position="replace">
+                <field name="apply_method" widget="radio"/>
+                <field name="job_apply_mail" invisible="apply_method != 'email'"/>
+                <field name="job_apply_url" invisible="apply_method != 'redirect'"/>
+            </field>
+            <xpath expr="//button[@name='action_post_job']" position="after">
+                 <button name="action_generate_post"
+                        type="object"
+                        invisible="post_html"
+                        class="btn-primary"
+                        data-hotkey="q">
+                        Generate Description (<i class="fa fa-fw fa-magic"/>AI)
+                </button>
+                <button name="action_generate_post"
+                        type="object"
+                        invisible="not post_html"
+                        data-hotkey="q">
+                        Generate Description (<i class="fa fa-fw fa-magic"/>AI)
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_recruitment_post_job_wizard_action_regenerate_post" model="ir.actions.server">
+        <field name="name">Regenerate Post</field>
+        <field name="model_id" ref="model_hr_recruitment_post_job_wizard"/>
+        <field name="binding_model_id" ref="model_hr_recruitment_post_job_wizard"/>
+        <field name="state">code</field>
+        <field name="code">
+active_wizard = env['hr.recruitment.post.job.wizard'].browse(env.context.get('active_id'))
+action = active_wizard.action_generate_post(warning=False)
+        </field>
+    </record>
+</odoo>

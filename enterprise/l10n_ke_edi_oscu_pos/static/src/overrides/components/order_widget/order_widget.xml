@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_ke_edi_oscu_pos.OrderWidget" t-inherit="point_of_sale.OrderWidget" t-inherit-mode="extension">
+        <xpath expr="//div[@t-ref='scrollable']" position="before">
+            <div t-if="showUnregisteredProductsWarning(props.lines)" class="alert alert-warning text-center">
+                When sending to eTIMS, the products used must have a defined Cost, tax, Product Type,
+                Origin Country, Packaging Unit, Packaging Quantity and UNSPSC Code.
+                <div class="button btn btn-link" t-on-click="(ev) => this.openProductView(props.lines)">View Product(s)</div>
+            </div>
+        </xpath>
+    </t>
+</templates>

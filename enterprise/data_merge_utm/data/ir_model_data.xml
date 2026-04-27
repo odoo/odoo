@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+        <function model="ir.model" name="action_merge_contextual_enable"
+                  eval="[[ref('utm.model_utm_campaign'), ref('utm.model_utm_medium'), ref('utm.model_utm_source')], 'data_merge_utm']"/>
+    </data>
+</odoo>

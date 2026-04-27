@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_2" model="res.partner">
+        <field name="name">General public customer</field>
+        <field name="country_id" ref="base.pe"/>
+        <field name="vat">10000000</field>
+        <field name="l10n_latam_identification_type_id" ref="l10n_pe.it_DNI"/>
+    </record>
+
+    <data noupdate="1">
+        <record id="demo_certificate" model="certificate.certificate">
+            <field name="name">PE demo certificate</field>
+            <field name="content" type="base64" file="l10n_pe_edi/demo/certificates/certificate.pfx"/>
+            <field name="pkcs12_password">12345678a</field>
+            <field name="company_id" ref="base.demo_company_pe"/>
+        </record>
+    </data>
+
+    <record id="base.demo_company_pe" model="res.company">
+        <field name="name">PE Company</field>
+        <field name="vat">20557912879</field>
+        <field name="l10n_pe_edi_provider">iap</field>
+        <field name="l10n_pe_edi_certificate_id" eval="ref('demo_certificate')"/>
+        <field name="l10n_pe_edi_provider_username">MODDATOS</field>
+        <field name="l10n_pe_edi_provider_password">MODDATOS</field>
+        <field name="l10n_pe_edi_test_env">True</field>
+    </record>
+</odoo>

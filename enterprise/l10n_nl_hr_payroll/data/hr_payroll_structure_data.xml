@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_structure_nl_employee_salary" model="hr.payroll.structure">
+        <field name="name">Netherlands: Regular Pay</field>
+        <field name="code">NLMONTHLY</field>
+        <field name="country_id" ref="base.nl"/>
+        <field name="type_id" ref="l10n_nl_hr_payroll.structure_type_employee_nl"/>
+        <field name="report_id" ref="l10n_nl_hr_payroll.action_report_payslip_nl"/>
+    </record>
+    <record id="l10n_nl_hr_payroll.structure_type_employee_nl" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure_nl_employee_salary"/>
+    </record>
+</odoo>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="utm_campaign_view_form">
+        <field name="name">utm.campaign.view.form.inherit.social</field>
+        <field name="model">utm.campaign</field>
+        <field name="inherit_id" ref="utm.utm_campaign_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_create_new_post"
+                        type="object"
+                        class="oe_highlight order-2"
+                        string="Add Post"
+                        groups="social.group_social_user"/>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_redirect_to_social_media_posts"
+                    type="object" class="oe_stat_button order-10" icon="fa-newspaper-o"
+                    invisible="social_posts_count == 0" groups="social.group_social_user">
+                    <field name="social_posts_count" widget="statinfo" string="Posts"/>
+                </button>
+                <button icon="fa-thumbs-up" disabled="disabled"
+                    invisible="social_engagement == 0" groups="social.group_social_user">
+                    <field name="social_engagement" widget="statinfo" string="Engagement"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Social Media" name="social_media" class="order-2"
+                    invisible="social_posts_count == 0" groups="social.group_social_user">
+                    <field name="social_post_ids" mode="kanban" widget="one2many" nolabel="1" context="{'default_campaign_id': id}"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="utm_campaign_view_form_quick_create_social" model="ir.ui.view">
+        <field name="name">utm.campaign.view.form.quick.create.social</field>
+        <field name="model">utm.campaign</field>
+        <field name="arch" type="xml">
+            <form string="Campaign">
+                <group>
+                    <field name="name"/>
+                    <field name="user_id" widget="many2one_avatar_user"/>
+                    <field name="tag_ids" widget="many2many_tags"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="utm_campaign_view_kanban">
+        <field name="name">utm.campaign.view.kanban.inherit.social</field>
+        <field name="model">utm.campaign</field>
+        <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//ul[@id='o_utm_actions']">
+                <a name="action_redirect_to_social_media_posts" type="object"
+                    t-attf-class="pe-2 #{record.social_posts_count.raw_value === 0 ? 'text-muted' : ''}" groups="social.group_social_user">
+                    <field name="social_posts_count"/> Posts
+                </a>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_view_utm_campaigns" model="ir.actions.act_window">
+        <field name="name">Campaigns</field>
+        <field name="res_model">utm.campaign</field>
+        <field name="path">social-campaigns</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a Campaign
+          </p>
+          <p>
+            Campaigns are used to centralize your marketing efforts and track their results.
+          </p>
+        </field>
+        <field name="domain">[('is_auto_campaign', '=', False)]</field>
+    </record>
+
+    <menuitem
+        id="menu_social_campaign"
+        parent="menu_social_global"
+        name="Campaigns"
+        sequence="25"
+        groups="group_social_user"
+        action="action_view_utm_campaigns"/>
+</odoo>

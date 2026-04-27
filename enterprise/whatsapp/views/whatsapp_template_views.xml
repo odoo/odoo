@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="whatsapp_template_view_form" model="ir.ui.view">
+        <field name="name">whatsapp.template.view.form</field>
+        <field name="model">whatsapp.template</field>
+        <field name="arch" type="xml">
+            <form string="WhatsApp Template">
+                <field name="has_invalid_button_number" invisible="1"/>
+                <header>
+                    <field name="has_action" invisible="1"/>
+                    <button name="button_reset_to_draft"
+                        string="Reset to draft" type="object"
+                        invisible="status not in ['rejected', 'approved']"
+                        groups="whatsapp.group_whatsapp_admin"/>
+                    <button name="button_submit_template" string="Submit for Approval"
+                        class="btn btn-primary" type="object"
+                        invisible="not wa_account_id or status != 'draft'"
+                        groups="whatsapp.group_whatsapp_admin"/>
+                    <button name="button_create_action" string="Allow Multi"
+                        class="btn btn-primary" type="object"
+                        invisible="has_action or status != 'approved'"
+                        groups="whatsapp.group_whatsapp_admin"/>
+                    <button name="button_delete_action" string="Disallow Multi"
+                        type="object"
+                        groups="whatsapp.group_whatsapp_admin"
+                        invisible="not has_action or status != 'approved'"
+                        confirm="There might be other templates that still need the Multi"/>
+                    <button name="button_sync_template" string="Sync Template"
+                        type="object"
+                        invisible="not wa_template_uid"
+                        groups="whatsapp.group_whatsapp_admin"/>
+                    <button name="%(whatsapp_preview_action_from_template)d" string="Preview"
+                        type="action" target="new"
+                        context="{'active_id': id, 'dialog_size': 'medium'}"/>
+                    <field name="status" widget="statusbar" statusbar_visible="draft,pending,approved"/>
+                </header>
+                <div class="alert alert-warning mb0 pb8" role="alert" invisible="not has_invalid_button_number">
+                    The phone number set in "Buttons" does not look correct.
+                </div>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_open_messages" class="oe_stat_button" icon="fa-whatsapp">
+                            <field name="messages_count" string="Messages" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" required="1" placeholder='e.g. "Send Order Document"'/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="wa_account_id"
+                                groups="whatsapp.group_whatsapp_admin"
+                                readonly="status != 'draft'"
+                                placeholder="Pick an Account..."/>
+                            <field name="model" invisible="1"/>
+                            <field name="model_id"/>
+                            <field name="phone_field"
+                                widget="DynamicModelFieldSelectorChar"
+                                options="{'model': 'model'}"/>
+                            <field name="template_type" readonly="status != 'draft'"/>
+                            <field name="allowed_user_ids"
+                                widget="many2many_tags_avatar"
+                                placeholder="Accessible to all Users"/>
+                        </group>
+                        <group>
+                            <field name="template_name"
+                                readonly="not wa_template_uid or status != 'draft'"/>
+                            <field name="lang_code"
+                                readonly="status != 'draft'"/>
+                            <field name="header_type"
+                                readonly="status != 'draft'" required="1"/>
+                            <field name="header_text"
+                                invisible="header_type != 'text'" required="header_type == 'text'" readonly="status != 'draft'"
+                                placeholder="e.g. Invitation for {{1}}"/>
+                            <field name="header_attachment_ids"
+                                widget="many2many_binary"
+                                options="{'accepted_file_extensions': 'image/jpeg, image/png', 'number_of_files': 1}"
+                                invisible="header_type != 'image'"/>
+                            <field name="header_attachment_ids"
+                                widget="many2many_binary"
+                                options="{
+                                    'accepted_file_extensions': 'text/plain, application/pdf, application/vnd.ms-powerpoint, application/msword, application/vnd.ms-excel,
+                                    application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.presentationml.presentation,
+                                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                                    'number_of_files': 1
+                                }"
+                                invisible="header_type != 'document' or report_id != False"/>
+                            <field name="header_attachment_ids"
+                                widget="many2many_binary"
+                                options="{'accepted_file_extensions': 'video/mp4', 'number_of_files': 1}"
+                                invisible="header_type != 'video'"/>
+                            <field name="report_id"
+                                invisible="header_type != 'document' or header_attachment_ids"/>
+                            <field name="footer_text"
+                                readonly="status != 'draft'"/>
+                            <field name="quality" widget="priority"
+                                invisible="quality == 'none'" readonly="1"/>
+                            <field name="wa_template_uid" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page id="body" name="Body">
+                            <field name="body" widget="whatsapp_text_variables"
+                                placeholder="Hello {{1}}, here is your order with the reference {{2}} ..."
+                                readonly="status != 'draft'" required="1"/>
+                        </page>
+                        <page id="buttons" name="Buttons">
+                            <field name="button_ids" readonly="status != 'draft'">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="button_type"/>
+                                    <field name="name" required="1"/>
+                                    <field name="call_number"
+                                        readonly="button_type != 'phone_number'" required="button_type == 'phone_number'" invisible="button_type != 'phone_number'"/>
+                                    <field name="website_url"
+                                        readonly="button_type != 'url'" required="button_type == 'url'" invisible="button_type != 'url'"
+                                        placeholder="e.g. https://www.example.com"/>
+                                    <field name="url_type"
+                                        required="button_type == 'url'" invisible="button_type != 'url'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page id="variables" name="Variables">
+                            <field name="variable_ids">
+                                <list editable="bottom" create="false" delete="false">
+                                    <field name="display_name" string="Name"/>
+                                    <field name="demo_value" required="1"/>
+                                    <field name="field_type"/>
+                                    <field name="field_name"
+                                        widget="DynamicModelFieldSelectorChar"
+                                        required="field_type == 'field'" readonly="field_type != 'field'" invisible="field_type != 'field'"
+                                        options="{'model': 'model'}"/>
+                                    <field name="model" column_invisible="True"/>
+                                    <field name="line_type" column_invisible="True" force_save="1"/>
+                                    <field name="name" column_invisible="True" force_save="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="whatsapp_template_view_tree" model="ir.ui.view">
+        <field name="name">whatsapp.template.view.list</field>
+        <field name="model">whatsapp.template</field>
+        <field name="arch" type="xml">
+            <list string="WhatsApp Template">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="wa_account_id"
+                       groups="whatsapp.group_whatsapp_admin"
+                       optional="hidden"/>
+                <field name="template_name" optional="hidden"/>
+                <field name="header_type" optional="hidden"/>
+                <field name="create_uid" widget="many2one_avatar"/>
+                <field name="create_date" optional="hidden"/>
+                <field name="quality" widget="priority" optional="hidden" readonly="1"/>
+                <field name="status"
+                       decoration-success="status == 'approved'"
+                       decoration-danger="status == 'rejected'"
+                       widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="whatsapp_template_view_kanban" model="ir.ui.view">
+        <field name="name">whatsapp.template.view.kanban</field>
+        <field name="model">whatsapp.template</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex">
+                            <div class="d-flex flex-column">
+                                <field name="name" class="fw-bold fs-5"/>
+                                <field name="model_id" class="text-muted o_row"/>
+                            </div>
+                            <field name="status"
+                                    widget="label_selection"
+                                    options="{'classes': {'approved': 'success', 'rejected': 'danger'}}" class="ms-auto"/>
+                        </div>
+                        <footer class="mt-1" t-if="!selection_mode">
+                            <div class="d-flex align-items-center">
+                                <field name="quality" widget="priority" readonly="1" class="me-2 lh-1"/>
+                                <field name="create_date" class="me-2"/>
+                                <i class="fa fa-whatsapp me-1" title="Messages Count" aria-label="Messages Count"/>
+                                <field name="messages_count"/>
+                            </div>
+                            <field t-if="!selection_mode" name="allowed_user_ids" widget="many2many_avatar_user" class="ms-auto"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="whatsapp_template_view_search" model="ir.ui.view">
+            <field name="name">whatsapp.template.view.search</field>
+            <field name="model">whatsapp.template</field>
+            <field name="arch" type="xml">
+                <search string="Templates">
+                    <field name="name"/>
+                    <field name="body" string="Body"/>
+                    <field name="model_id"/>
+                    <field name="model" invisible="1"/>
+                    <separator/>
+                    <filter string="My Templates" name="my" domain="[('create_uid', '=', uid)]"/>
+                    <separator/>
+                    <filter string="Draft" name="draft" domain="[('status', '=', 'draft')]"/>
+                    <filter string="Pending" name="pending" domain="[('status', '=', 'pending')]"/>
+                    <filter string="Approved" name="approved" domain="[('status', '=', 'approved')]"/>
+                    <separator/>
+                    <filter string="Archived" name="filter_archived" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Model" name="model_id" domain="[]" context="{'group_by': 'model_id'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by': 'status'}"/>
+                        <filter string="Account" name="groupby_wa_account_id" domain="[]" context="{'group_by': 'wa_account_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+    <record id="whatsapp_template_action" model="ir.actions.act_window">
+        <field name="name">WhatsApp Template</field>
+        <field name="path">whatsapp</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">whatsapp.template</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No Templates Found!
+            </p>
+            <p>
+                Templates created on your <a href="https://business.facebook.com/wa/manage/message-templates" target="_blank">WhatsApp Account</a> will be visible here once they're synced.
+                You can also write new ones from here and submit them for approval, following the <a href="https://developers.facebook.com/docs/whatsapp/message-templates/guidelines" target="_blank">Template Guidelines</a>
+            </p>
+        </field>
+    </record>
+</odoo>

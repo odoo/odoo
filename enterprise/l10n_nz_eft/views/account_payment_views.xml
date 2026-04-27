@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_payment_form_inherit_l10n_nz" model="ir.ui.view">
+        <field name="name">account.payment.form.inherit.l10n.nz</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook name="payment_notebook" position="inside">
+                    <page name="l10n_nz_eft_info" string="EFT Information" invisible="payment_method_code not in ('l10n_nz_eft_in', 'l10n_nz_eft_out')">
+                        <group>
+                            <group string="Payee">
+                                <field name="l10n_nz_payee_particulars" string="Particulars"/>
+                                <field name="l10n_nz_payee_code" string="Analysis Code"/>
+                            </group>
+                            <group string="Payer">
+                                <field name="l10n_nz_payer_particulars" string="Particulars"/>
+                                <field name="l10n_nz_payer_code" string="Analysis Code"/>
+                                <field name="l10n_nz_available_dd_bank_ids" invisible="True"/>
+                                <field name="l10n_nz_dd_account_id"
+                                       context="{'default_partner_id': partner_id, 'display_account_trust': True}"
+                                       invisible="payment_method_code != 'l10n_nz_eft_in'"
+                                       required="payment_method_code == 'l10n_nz_eft_in'"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>

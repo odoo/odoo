@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_tax_form" model="ir.ui.view">
+            <field name="name">account.tax.form.l10n_cz_reports_2025</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <field name="tax_group_id" position="after">
+                    <field name="l10n_cz_reverse_charge" invisible="country_code != 'CZ'"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

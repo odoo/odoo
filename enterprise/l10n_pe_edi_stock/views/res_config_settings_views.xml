@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_form_inherit_l10n_pe_edi" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n.pe.edi</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='stock']/block[@name='shipping_setting_container']" position="after">
+                <block title="Peru Delivery Guide" name="pe_delivery_guide_setting_container">
+                    <setting
+                        string="Sunat Delivery Guide API"
+                        help="Configure SUNAT API credentials for delivery guide. Please be aware that there is no testing environment for delivery guide.">
+                            <div class="content-group">
+                                <div class="row mt32">
+                                    <label for="l10n_pe_edi_stock_client_id" class="col-md-5 o_light_label"/>
+                                    <field name="l10n_pe_edi_stock_client_id"/>
+                                    <label for="l10n_pe_edi_stock_client_secret" class="col-md-5 o_light_label"/>
+                                    <field name="l10n_pe_edi_stock_client_secret" password="True"/>
+                                    <label for="l10n_pe_edi_stock_client_username" class="col-md-5 o_light_label"/>
+                                    <field name="l10n_pe_edi_stock_client_username"/>
+                                    <label for="l10n_pe_edi_stock_client_password" class="col-md-5 o_light_label"/>
+                                    <field name="l10n_pe_edi_stock_client_password" password="True"/>
+                                </div>
+                            </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

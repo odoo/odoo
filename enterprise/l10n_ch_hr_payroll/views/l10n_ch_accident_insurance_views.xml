@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ch_accident_insurance_view_tree" model="ir.ui.view">
+        <field name="name">l10n.ch.accident.insurance.view.list</field>
+        <field name="model">l10n.ch.accident.insurance</field>
+        <field name="arch" type="xml">
+            <list string="Accident Insurances">
+                <field name="name"/>
+                <field name="insurance_company"/>
+                <field name="customer_number"/>
+                <field name="contract_number"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_ch_accident_insurance_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.accident.insurance.view.form</field>
+        <field name="model">l10n.ch.accident.insurance</field>
+        <field name="arch" type="xml">
+            <form string="Accident Insurances">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder='e.g. "Accident Insurance Gastrosocial"'/></h1>
+                    </div>
+                    <group>
+                        <group string="Insurer Information">
+                            <field name="customer_number"/>
+                            <field name="contract_number"/>
+                            <field name="insurance_company"/>
+                            <field name="insurance_code"/>
+                            <field name="insurance_company_address_id"/>
+                        </group>
+                    </group>
+                    <group string="LAA Solution" colspan="2">
+                        <field name="line_ids" nolabel="1" colspan="2">
+                            <list>
+                                <field name="solution_name"/>
+                                <field name="solution_type"/>
+                                <field name="solution_number"/>
+                                <field name="rate_ids"/>
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_ch_accident_insurance_line_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.accident.insurance.line.view.form</field>
+        <field name="model">l10n.ch.accident.insurance.line</field>
+        <field name="arch" type="xml">
+            <form string="Accident Insurances Solutions">
+                <group>
+                    <group>
+                        <field name="solution_name"/>
+                        <field name="solution_type"/>
+                        <field name="solution_number"/>
+                    </group>
+                    <field name="rate_ids" nolabel="1" colspan="2">
+                        <list>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="threshold"/>
+                            <field name="employer_occupational_part"/>
+                            <field name="employer_non_occupational_part"/>
+                        </list>
+                        <form>
+                            <group>
+                                <group>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <label for="threshold"/>
+                                    <div class="o_row o_hr_narrow_field">
+                                        <field name="threshold" nolabel="1"/>
+                                        <span>CHF</span>
+                                    </div>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Occupational">
+                                    <field name="occupational_male_rate" string="Male Rate (%)"/>
+                                    <field name="occupational_female_rate" string="Female Rate (%)"/>
+                                    <field name="employer_occupational_part" string="Employer Part"/>
+                                </group>
+                                <group string="Non-occupational">
+                                    <field name="non_occupational_male_rate" string="Male Rate (%)"/>
+                                    <field name="non_occupational_female_rate" string="Female Rate (%)"/>
+                                    <field name="employer_non_occupational_part" string="Employer Part"/>
+                                </group>
+                            </group>
+                        </form>
+                    </field>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_ch_accident_insurance" model="ir.actions.act_window">
+        <field name="name">AAP/AANP Insurances</field>
+        <field name="res_model">l10n.ch.accident.insurance</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

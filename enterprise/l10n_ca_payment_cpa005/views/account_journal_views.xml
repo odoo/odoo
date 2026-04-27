@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_journal_form_inherit_l10n_us_payment_cpa005" model="ir.ui.view">
+            <field name="name">account.journal.form.inherit.l10n_us_payment_cpa005</field>
+            <field name="model">account.journal</field>
+            <field name="priority">10</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@id='outbound_payment_settings']//group[@name='outgoing_payment']"
+                       position="inside">
+                    <group string="Canadian EFT/CPA configuration"
+                           invisible="',cpa005,'.lower() not in (selected_payment_method_codes or '').lower() or type != 'bank'">
+                        <field name="l10n_ca_cpa005_destination_data_center"/>
+                        <field name="l10n_ca_cpa005_originator_id"/>
+                        <field name="l10n_ca_cpa005_fcn_number_next"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

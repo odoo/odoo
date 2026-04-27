@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='accounting']" position="inside">
+                <group id="hmrc_group" string="HMRC Details" invisible="'GB' not in fiscal_country_codes">
+                    <group>
+                        <field name="l10n_uk_hmrc_unique_taxpayer_reference"/>
+                        <field name="l10n_uk_hmrc_national_insurance_number"/>
+                        <field name="l10n_uk_hmrc_company_registration_number"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <div t-name="sign.SignRequest" class="d-flex flex-column h-100">
+        <SignRequestControlPanel t-props="controlPanelProps"/>
+        <div class="o_content">
+            <div class="o_sign_document" t-ref="sign-document">
+                <t t-out="markupHtml"/>
+                <Document t-props="documentProps"/>
+            </div>
+        </div>
+    </div>
+</templates>

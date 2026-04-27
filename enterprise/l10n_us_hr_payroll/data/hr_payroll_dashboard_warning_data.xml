@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_dashboard_warning_employee_wa_without_worker_compensation" model="hr.payroll.dashboard.warning">
+        <field name="name">Employees Working in WA without Worker's Compensation</field>
+        <field name="country_id" ref="base.us"/>
+        <field name="evaluation_code">
+employees_without_worker_compensation = self.env['hr.employee']
+all_employees = self.env['hr.employee'].search([
+    ('employee_type', '=', 'employee'),
+    ('company_id', 'in', self.env.companies.ids),
+])
+for employee in all_employees:
+    contract = employee.contract_id.sudo()
+    if contract and not contract.l10n_us_worker_compensation_id and employee.address_id.state_id.code == 'WA':
+        employees_without_worker_compensation += employee
+if employees_without_worker_compensation:
+    warning_count = len(employees_without_worker_compensation)
+    warning_records = employees_without_worker_compensation
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,77 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_project_forecast
+#
+# Translators:
+# Wil Odoo, 2024
+# Sarah Park, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:48+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Sarah Park, 2025\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,help:sale_project_forecast.field_product_product__planning_enabled
+#: model:ir.model.fields,help:sale_project_forecast.field_product_template__planning_enabled
+msgid ""
+"If enabled, a shift will automatically be generated for the selected role "
+"when confirming the Sales Order.                 With the 'auto plan' "
+"feature, only employees with this role will be automatically assigned shifts "
+"for Sales Orders containing this service.                 The system will "
+"consider employee availability and the remaining time to be "
+"planned.                 You can also manually schedule open shifts for your "
+"Sales Order or assign them to any employee you prefer."
+msgstr ""
+"이 기능을 활성화하면 판매주문서 확정 시 지정된 역할에 대한 교대근무가 자동으"
+"로 생성됩니다. '자동 계획' 기능을 사용하면 이 역할이 배정된 직원에게만 이 서"
+"비스가 포함된 판매주문서 관련 근무조가 자동으로 할당됩니다.                 "
+"시스템에서는 직원의 근무 가능 여부와 잔여 시간을 종합적으로 고려합니"
+"다.                 또한 판매주문서에 대한 미결 근무조를 수동으로 예약하거나 "
+"원하는 직원에게 할당하는 것 역시 가능합니다."
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,field_description:sale_project_forecast.field_product_product__planning_enabled
+#: model:ir.model.fields,field_description:sale_project_forecast.field_product_template__planning_enabled
+msgid "Plan Services"
+msgstr "서비스 계획"
+
+#. module: sale_project_forecast
+#: model:ir.model,name:sale_project_forecast.model_planning_slot
+msgid "Planning Shift"
+msgstr "교대 근무 계획"
+
+#. module: sale_project_forecast
+#: model:ir.model,name:sale_project_forecast.model_product_template
+msgid "Product"
+msgstr "품목"
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,field_description:sale_project_forecast.field_planning_slot__sale_line_id
+msgid "Sales Order Item"
+msgstr "판매 주문 항목"
+
+#. module: sale_project_forecast
+#: model:ir.model,name:sale_project_forecast.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "판매 주문 내역"
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,help:sale_project_forecast.field_planning_slot__sale_line_id
+msgid ""
+"Sales order item for which this shift will be performed. When sales orders "
+"are automatically planned, the remaining hours of the sales order item, as "
+"well as the role defined on the service, are taken into account."
+msgstr ""
+"이 근무조에서 시행할 판매 주문 항목입니다. 판매 주문이 자동으로 계획되면 판"
+"매 주문 항목의 잔여 시간뿐 아니라 서비스에 정의되어 있는 업무가 함께 계산됩니"
+"다."

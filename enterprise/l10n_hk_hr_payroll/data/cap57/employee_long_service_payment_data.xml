@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cap57_employees_long_service_payment" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Long Service Payment</field>
+        <field name="code">LONG_SERVICE_PAYMENT</field>
+        <field name="sequence">1</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = employee.l10n_hk_years_of_service &gt;= 5</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+salary_base = min(contract._get_contract_wage(), payslip._rule_parameter('l10n_hk_final_payment_threshold'))
+result = salary_base * 2 / 3 * employee.l10n_hk_years_of_service
+        </field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_long_service_payment"/>
+    </record>
+
+    <record id="cap57_employees_long_service_payment_net" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="name">Net</field>
+        <field name="code">NET</field>
+        <field name="sequence">200</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories['ALW']</field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_long_service_payment"/>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+    </record>
+</odoo>

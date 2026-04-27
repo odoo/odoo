@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="stock_barcode.BackorderDialog">
+        <Dialog title.translate="Incomplete Transfer" size="'md'" fullscreen="false" contentClass="'o_barcode_backorder_dialog'">
+            <div class="container">
+                <div class="text-muted mb-4">
+                    If you validate now, the remaining products will be added to a backorder.
+                </div>
+                <div class="o_barcode_backorder_column_titles row mb-2 pb-3 border-bottom text-capitalize">
+                    <div class="col-4">Product</div>
+                    <div class="col-4">Done / To do</div>
+                    <div class="col-2 text-end">Backorder</div>
+                </div>
+                <t t-foreach="props.uncompletedLines" t-as="line" t-key="line.id">
+                    <t t-set="colorClass" t-value="line.qty_done ? 'text-warning' : 'text-danger'"/>
+                    <div class="o_barcode_backorder_product_row row mb-1">
+                        <div class="col-4" name="product" t-esc="line.product_id.display_name"/>
+                        <div class="col-4" t-att-class="colorClass">
+                            <span name="qty-done" t-esc="line.qty_done"/> /
+                            <span name="reserved-qty" t-esc="line.reserved_uom_qty"/>
+                            <span t-if="props.displayUoM" name="uom" class="ms-1" t-esc="line.product_uom_id.name"/>
+                        </div>
+                        <div class="col-2 text-end">
+                            <span name="backorder-qty" t-esc="line.reserved_uom_qty - line.qty_done"/>
+                            <span t-if="props.displayUoM" name="uom" class="ms-1" t-esc="line.product_uom_id.name"/>
+                        </div>
+                    </div>
+                </t>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click.prevent="_onApply">Validate</button>
+                <button class="btn btn-secondary" t-on-click="props.close">Stay on transfer</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

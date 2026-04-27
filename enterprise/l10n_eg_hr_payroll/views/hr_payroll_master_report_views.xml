@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="report_l10n_eg_hr_payroll_master_view_form" model="ir.ui.view">
+        <field name="name">l10n_eg_hr_payroll.hr.payroll.master.report.form</field>
+        <field name="model">report.l10n_eg_hr_payroll.master</field>
+        <field name="arch" type="xml">
+            <form string="Master Report">
+                <header>
+                    <button name="action_generate_report" type="object"
+                        string="Generate Report XLSX" class="btn-primary" invisible="xlsx_file" />
+                    <button name="action_generate_report" type="object"
+                        string="Generate Report XLSX" class="btn-secondary"
+                        invisible="not xlsx_file" />
+                </header>
+                <sheet>
+                    <h1>
+                        <field name="name" />
+                    </h1>
+                    <group>
+                        <label for="date_from" />
+                        <div class="d-flex gap-1">
+                            <field name="date_from" string="Period" class="w-auto" /> - <field
+                                name="date_to" class="w-auto" />
+                        </div>
+                        <div invisible="period_has_payslips" />
+                        <div class="alert alert-warning" role="alert"
+                            invisible="period_has_payslips">
+                            There are no eligible payslips for that period of time.
+                        </div>
+                        <field name="xlsx_filename" invisible="1" />
+                        <field name="xlsx_file" filename="xlsx_filename" invisible="not xlsx_file" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_payroll_report_action_master_report" model="ir.actions.act_window">
+        <field name="name">Master Report</field>
+        <field name="res_model">report.l10n_eg_hr_payroll.master</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="menu_reporting_l10n_eg"
+        name="Eygpt"
+        sequence="30"
+        parent="hr_payroll.menu_hr_payroll_report" />
+
+    <menuitem
+        id="menu_hr_payroll_master_report"
+        action="hr_payroll_report_action_master_report"
+        parent="l10n_eg_hr_payroll.menu_reporting_l10n_eg"
+        sequence="30"
+    />
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="appointment_validated" name="Website Appointment: Appointment Confirmed" inherit_id="appointment.appointment_validated">
+        <xpath expr="//t[@t-call='portal.portal_layout']" position="attributes">
+            <attribute name="t-call">website.layout</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_appointment_edit_in_backend')]" position="replace"/>
+        <xpath expr="//div[hasclass('o_appointment')]" position="before">
+            <div class="container">
+                <nav class="o_wappointment_navbar d-print-none d-flex justify-content-between mt-4">
+                    <a class="o_wappointment_navbar_link"
+                        t-attf-href="/appointment?#{keep_query('filter_appointment_type_ids', 'filter_resource_ids', 'filter_staff_user_ids', 'invite_token')}">
+                        <i class="fa fa-long-arrow-left me-2"/>All Appointments
+                    </a>
+                </nav>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='wrap']" position="after">
+            <input t-if='state == "new" and website.plausible_shared_key' type='hidden' class='js_plausible_push'
+                data-event-name='Lead Generation' data-event-params='{"CTA": "Appointment"}' />
+        </xpath>
+        <xpath expr="//div[@id='wrap']" position="attributes">
+            <attribute name="class">o_appointment h-100 o_wappointment_wrap mt-4</attribute>
+        </xpath>
+    </template>
+</odoo>

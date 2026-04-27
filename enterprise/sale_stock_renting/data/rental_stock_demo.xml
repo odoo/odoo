@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+  <record id="sale_renting.rental_product_1" model="product.product">
+      <field name="preparation_time" eval="0.05"/>
+      <!-- Projector : 3 minutes -->
+  </record>
+  <record id="sale_renting.rental_product_2" model="product.product">
+      <field name="preparation_time" eval="0.5"/>
+      <!-- Meeting Room : 30 minutes -->
+  </record>
+  <record id="sale_renting.rental_product_3" model="product.product">
+      <field name="is_storable" eval="True"/>
+      <field name="preparation_time" eval="0.05"/>
+      <field name="tracking">serial</field>
+  </record>
+
+  <record id="rental_stock_lot_1" model="stock.lot">
+    <field name="name">PRINT001</field>
+    <field name="product_id" ref="sale_renting.rental_product_3"/>
+  </record>
+
+  <record id="rental_stock_lot_2" model="stock.lot">
+    <field name="name">PRINT002</field>
+    <field name="product_id" ref="sale_renting.rental_product_3"/>
+  </record>
+
+  <record id="rental_stock_lot_3" model="stock.lot">
+    <field name="name">PRINT003</field>
+    <field name="product_id" ref="sale_renting.rental_product_3"/>
+  </record>
+
+  <record id="rental_stock_lot_4" model="stock.lot">
+    <field name="name">PRINT004</field>
+    <field name="product_id" ref="sale_renting.rental_product_3"/>
+  </record>
+
+  <!-- Set available meeting room serial numbers -->
+  <function model="stock.quant" name="unlink">
+    <value model="stock.quant" eval="obj().search([
+            ('product_id', '=', ref('sale_renting.rental_product_3'))
+        ]).ids"/>
+  </function>
+
+  <record id="rental_stock_inventory_1" model="stock.quant">
+    <field name="product_id" ref="sale_renting.rental_product_3"/>
+    <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    <field name="inventory_quantity">1.00</field>
+    <field name="lot_id" ref="rental_stock_lot_1"/>
+  </record>
+  <record id="rental_stock_inventory_2" model="stock.quant">
+    <field name="product_id" ref="sale_renting.rental_product_3"/>
+    <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    <field name="inventory_quantity">1.00</field>
+    <field name="lot_id" ref="rental_stock_lot_2"/>
+  </record>
+  <record id="rental_stock_inventory_3" model="stock.quant">
+    <field name="product_id" ref="sale_renting.rental_product_3"/>
+    <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    <field name="inventory_quantity">1.00</field>
+    <field name="lot_id" ref="rental_stock_lot_3"/>
+  </record>
+
+  <function model="stock.quant" name="action_apply_inventory">
+    <function eval="[[('id', 'in', (ref('rental_stock_inventory_1'),
+                                    ref('rental_stock_inventory_2'),
+                                    ref('rental_stock_inventory_3'),
+                                    ))]]" model="stock.quant" name="search"/>
+  </function>
+
+  <record id="rental_stock_order_1" model="sale.order">
+      <field name="partner_id" ref="base.res_partner_2"/>
+      <field name="partner_invoice_id" ref="base.res_partner_2"/>
+      <field name="partner_shipping_id" ref="base.res_partner_2"/>
+      <field name="user_id" ref="base.user_admin"/>
+      <field name="team_id" ref="sales_team.team_sales_department"/>
+      <field name="date_order" eval="DateTime.today() - relativedelta(months=3)"/>
+      <field name="rental_start_date" eval="DateTime.today() + relativedelta(days=1)"/>
+      <field name="rental_return_date" eval="DateTime.today() + relativedelta(days=5)"/>
+  </record>
+
+  <record id="rental_stock_order_line_1" model="sale.order.line">
+      <field name="order_id" ref="rental_stock_order_1"/>
+      <field name="product_id" ref="sale_renting.rental_product_3"/>
+      <field name="product_uom_qty">3</field>
+      <field name="product_uom" ref="uom.product_uom_unit"/>
+      <field name="name" eval="'[RENT003] Printer'"/>
+      <field name="price_unit" eval="100.0"/>
+  </record>
+
+  <record id="rental_stock_order_line_1" model="sale.order.line"> <!-- After creation to avoid the compute and force the value -->
+      <field name="is_rental" eval="True"/>
+  </record>
+
+  <record id="rental_stock_order_line_2" model="sale.order.line">
+      <field name="order_id" ref="rental_stock_order_1"/>
+      <field name="product_id" ref="sale_renting.rental_product_3"/>
+      <field name="product_uom_qty">2</field>
+      <field name="product_uom" ref="uom.product_uom_unit"/>
+      <field name="name" eval="'[RENT003] Printer'"/>
+      <field name="price_unit" eval="150.0"/>
+      <field
+          name="reserved_lot_ids"
+          eval="[Command.set([ref('rental_stock_lot_1'), ref('rental_stock_lot_2')])]"
+      />
+  </record>
+
+  <record id="rental_stock_order_line_2" model="sale.order.line"> <!-- After creation to avoid the compute and force the value -->
+      <field name="is_rental" eval="True"/>
+  </record>
+
+  <!-- CONFIRM Rental Sale Order -->
+  <function model="sale.order" name="action_confirm" eval="[[ref('rental_stock_order_1')]]" context="{'action_no_send_mail': True}"/>
+
+</odoo>

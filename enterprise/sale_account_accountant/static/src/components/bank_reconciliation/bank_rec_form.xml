@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- Notebook - batch_payments_tab -->
+    <t t-name="sale_account_accountant.BankRecRecordNotebookSaleOrders">
+        <div class="bank_rec_widget_form_sale_orders_anchor row">
+            <span>There are <button class="btn btn-link align-baseline p-0" t-on-click.stop="() => this.actionRedirectToSaleOrders()" style="padding: 0; vertical-align: baseline; text-transform: none">uninvoiced sales orders</button> matching the communication of the bank statement line.</span>
+        </div>
+    </t>
+
+    <t t-name="sale_account_accountant.BankRecRecordForm"
+       t-inherit="account_accountant.BankRecRecordForm"
+       t-inherit-mode="extension"
+      >
+        <xpath expr="//t[@t-set-slot='amls_tab']" position="after">
+            <t t-set-slot="sale_orders_tab"
+               name="'sale_orders_tab'"
+               title.translate="Sale Orders"
+               isVisible="['valid', 'invalid'].includes(data.state) and data.matched_sale_order_ids.currentIds.length">
+                <t t-call="sale_account_accountant.BankRecRecordNotebookSaleOrders"/>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

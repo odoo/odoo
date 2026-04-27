@@ -1,0 +1,13 @@
+<odoo>
+    <data noupdate="1">
+        <record id="hr_leave_type_maternity" model="hr.leave.type">
+            <field name="name">Maternity Time Off</field>
+            <field name="requires_allocation">no</field>
+            <field name="leave_validation_type">no_validation</field>
+            <field name="request_unit">half_day</field>
+            <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+            <field name="work_entry_type_id" ref="work_entry_type_maternity"></field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

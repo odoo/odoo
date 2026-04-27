@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="event_3_mail_1" model="event.mail">
+        <field name="event_id" ref="event.event_3"/>
+        <field name="interval_type">after_sub</field>
+        <field name="interval_unit">now</field>
+        <field name="template_ref" eval="'whatsapp.template,%i' % ref('whatsapp_event.whatsapp_template_event_ticket')"/>
+    </record>
+    <record id="event_3_mail_2" model="event.mail">
+        <field name="event_id" ref="event.event_3"/>
+        <field name="interval_nbr">3</field>
+        <field name="interval_unit">days</field>
+        <field name="template_ref" eval="'whatsapp.template,%i' % ref('whatsapp_event.whatsapp_template_event_reminder')"/>
+    </record>
+</odoo>

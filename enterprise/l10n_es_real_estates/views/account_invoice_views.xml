@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="invoice_form_inherit" model="ir.ui.view">
+            <field name="name">l10n_es_real_estates.invoice.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='l10n_es_reports_mod347_invoice_type']" position="after">
+                    <field name="l10n_es_real_estate_id"
+                           invisible="move_type not in ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund', 'in_receipt') or l10n_es_reports_mod347_invoice_type != 'real_estates'"
+                           required="move_type in ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund', 'in_receipt') and l10n_es_reports_mod347_invoice_type == 'real_estates'"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

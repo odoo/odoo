@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="create_fsm_task_view_form" model="ir.ui.view" >
+            <field name="name">Create a new FSM task from this ticket</field>
+            <field name="model">helpdesk.create.fsm.task</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="helpdesk_ticket_id" invisible="1"/>
+                            <field name="name" />
+                            <field name="company_id" invisible="1"/>
+                            <field name="project_id" widget="Many2one" options="{'no_create': 1, 'no_edit': 1, 'no_open': 1}"/>
+                            <field name="partner_id" widget="Many2one" context="{'res_partner_search_mode': 'customer'}"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Create &amp; View Task" class="btn btn-primary" name="action_generate_and_view_task" type="object" data-hotkey="q"/>
+                        <button string="Create Task" class="btn btn-primary" name="action_generate_task" type="object" data-hotkey="w"/>
+                        <button string="Discard" class="btn btn-secondary" special="cancel" data-hotkey="x" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

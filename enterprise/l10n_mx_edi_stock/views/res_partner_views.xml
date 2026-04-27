@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mx_partner_operator_form" model="ir.ui.view">
+        <field name="name">l10n_mx_edi.res.partner.operator.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='vat_vies_container']" position="after">
+                <field name="l10n_mx_edi_operator_licence" invisible="'MX' not in fiscal_country_codes"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

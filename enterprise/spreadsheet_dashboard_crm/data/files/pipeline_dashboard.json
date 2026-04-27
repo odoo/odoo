@@ -1,0 +1,1550 @@
+{
+  "version": 21,
+  "sheets": [
+    {
+      "id": "Sheet1",
+      "name": "Dashboard",
+      "colNumber": 7,
+      "rowNumber": 83,
+      "rows": {
+        "6": { "size": 40 },
+        "23": { "size": 49 },
+        "24": { "size": 40 },
+        "25": { "size": 27 },
+        "26": { "size": 27 },
+        "27": { "size": 27 },
+        "28": { "size": 27 },
+        "29": { "size": 27 },
+        "30": { "size": 27 },
+        "31": { "size": 27 },
+        "32": { "size": 27 },
+        "33": { "size": 27 },
+        "34": { "size": 27 },
+        "36": { "size": 40 },
+        "37": { "size": 40 },
+        "38": { "size": 27 },
+        "39": { "size": 27 },
+        "40": { "size": 27 },
+        "41": { "size": 27 },
+        "42": { "size": 27 },
+        "43": { "size": 27 },
+        "44": { "size": 27 },
+        "45": { "size": 27 },
+        "46": { "size": 27 },
+        "47": { "size": 27 },
+        "49": { "size": 40 },
+        "50": { "size": 40 },
+        "51": { "size": 27 },
+        "52": { "size": 27 },
+        "53": { "size": 27 },
+        "54": { "size": 27 },
+        "55": { "size": 27 },
+        "56": { "size": 27 },
+        "57": { "size": 27 },
+        "58": { "size": 27 },
+        "59": { "size": 27 },
+        "60": { "size": 27 },
+        "62": { "size": 40 },
+        "63": { "size": 40 },
+        "64": { "size": 27 },
+        "65": { "size": 27 },
+        "66": { "size": 27 },
+        "67": { "size": 27 },
+        "68": { "size": 27 },
+        "69": { "size": 27 },
+        "70": { "size": 27 },
+        "71": { "size": 27 },
+        "72": { "size": 27 },
+        "73": { "size": 27 }
+      },
+      "cols": {
+        "0": { "size": 275 },
+        "1": { "size": 100 },
+        "2": { "size": 100 },
+        "3": { "size": 50 },
+        "4": { "size": 275 },
+        "5": { "size": 100 },
+        "6": { "size": 100 }
+      },
+      "merges": [
+        "C25:D25",
+        "C26:D26",
+        "C27:D27",
+        "C28:D28",
+        "C29:D29",
+        "C30:D30",
+        "C31:D31",
+        "C32:D32",
+        "C33:D33",
+        "C34:D34",
+        "C35:D35"
+      ],
+      "cells": {
+        "A7": {
+          "content": "[Pipeline Stages](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"type\",\"=\",\"opportunity\"]],\"context\":{\"group_by\":[\"stage_id\",\"team_id\"],\"graph_measure\":\"prorated_revenue\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"stage_id\",\"team_id\"]},\"modelName\":\"crm.lead\",\"views\":[[false,\"kanban\"],[false,\"list\"],[false,\"calendar\"],[false,\"pivot\"],[false,\"graph\"],[false,\"map\"],[false,\"form\"],[false,\"activity\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Pipeline\",\"positional\":true})"
+        },
+        "A24": {
+          "content": "[Top Opportunities](odoo://view/{\"viewType\":\"list\",\"action\":{\"domain\":\"[[\\\"type\\\", \\\"=\\\", \\\"opportunity\\\"]]\",\"context\":{\"group_by\":[]},\"modelName\":\"crm.lead\",\"views\":[[false,\"kanban\"],[false,\"list\"],[false,\"calendar\"],[false,\"pivot\"],[false,\"graph\"],[false,\"map\"],[false,\"form\"],[false,\"activity\"]]},\"threshold\":0,\"name\":\"Pipeline\",\"positional\":true})"
+        },
+        "A25": { "content": "=_t(\"Opportunity\")" },
+        "A26": { "content": "=ODOO.LIST(1,1,\"name\")" },
+        "A27": { "content": "=ODOO.LIST(1,2,\"name\")" },
+        "A28": { "content": "=ODOO.LIST(1,3,\"name\")" },
+        "A29": { "content": "=ODOO.LIST(1,4,\"name\")" },
+        "A30": { "content": "=ODOO.LIST(1,5,\"name\")" },
+        "A31": { "content": "=ODOO.LIST(1,6,\"name\")" },
+        "A32": { "content": "=ODOO.LIST(1,7,\"name\")" },
+        "A33": { "content": "=ODOO.LIST(1,8,\"name\")" },
+        "A34": { "content": "=ODOO.LIST(1,9,\"name\")" },
+        "A35": { "content": "=ODOO.LIST(1,10,\"name\")" },
+        "A37": {
+          "content": "[Top Salespeople](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"type\",\"=\",\"opportunity\"],[\"user_id\",\"!=\",false]],\"context\":{\"group_by\":[\"user_id\"],\"pivot_measures\":[\"__count\",\"prorated_revenue\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"user_id\"]},\"modelName\":\"crm.lead\",\"views\":[[false,\"kanban\"],[false,\"list\"],[false,\"calendar\"],[false,\"pivot\"],[false,\"graph\"],[false,\"map\"],[false,\"form\"],[false,\"activity\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Pipeline\",\"positional\":true})"
+        },
+        "A38": { "content": "=_t(\"Salesperson\")" },
+        "A39": { "content": "=PIVOT.HEADER(3,\"#user_id\",1)" },
+        "A40": { "content": "=PIVOT.HEADER(3,\"#user_id\",2)" },
+        "A41": { "content": "=PIVOT.HEADER(3,\"#user_id\",3)" },
+        "A42": { "content": "=PIVOT.HEADER(3,\"#user_id\",4)" },
+        "A43": { "content": "=PIVOT.HEADER(3,\"#user_id\",5)" },
+        "A44": { "content": "=PIVOT.HEADER(3,\"#user_id\",6)" },
+        "A45": { "content": "=PIVOT.HEADER(3,\"#user_id\",7)" },
+        "A46": { "content": "=PIVOT.HEADER(3,\"#user_id\",8)" },
+        "A47": { "content": "=PIVOT.HEADER(3,\"#user_id\",9)" },
+        "A48": { "content": "=PIVOT.HEADER(3,\"#user_id\",10)" },
+        "A50": {
+          "content": "[Top Countries](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"type\",\"=\",\"opportunity\"],[\"country_id\",\"!=\",false]],\"context\":{\"group_by\":[\"country_id\"],\"pivot_measures\":[\"__count\",\"prorated_revenue\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"country_id\"]},\"modelName\":\"crm.lead\",\"views\":[[false,\"kanban\"],[false,\"list\"],[false,\"calendar\"],[false,\"pivot\"],[false,\"graph\"],[false,\"map\"],[false,\"form\"],[false,\"activity\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Pipeline\",\"positional\":true})"
+        },
+        "A51": { "content": "=_t(\"Country\")" },
+        "A52": { "content": "=PIVOT.HEADER(5,\"#country_id\",1)" },
+        "A53": { "content": "=PIVOT.HEADER(5,\"#country_id\",2)" },
+        "A54": { "content": "=PIVOT.HEADER(5,\"#country_id\",3)" },
+        "A55": { "content": "=PIVOT.HEADER(5,\"#country_id\",4)" },
+        "A56": { "content": "=PIVOT.HEADER(5,\"#country_id\",5)" },
+        "A57": { "content": "=PIVOT.HEADER(5,\"#country_id\",6)" },
+        "A58": { "content": "=PIVOT.HEADER(5,\"#country_id\",7)" },
+        "A59": { "content": "=PIVOT.HEADER(5,\"#country_id\",8)" },
+        "A60": { "content": "=PIVOT.HEADER(5,\"#country_id\",9)" },
+        "A61": { "content": "=PIVOT.HEADER(5,\"#country_id\",10)" },
+        "A63": {
+          "content": "[Top Mediums](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"type\",\"=\",\"opportunity\"],[\"medium_id\",\"!=\",false]],\"context\":{\"group_by\":[\"medium_id\"],\"pivot_measures\":[\"__count\",\"prorated_revenue\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"medium_id\"]},\"modelName\":\"crm.lead\",\"views\":[[false,\"kanban\"],[false,\"list\"],[false,\"calendar\"],[false,\"pivot\"],[false,\"graph\"],[false,\"map\"],[false,\"form\"],[false,\"activity\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Pipeline\",\"positional\":true})"
+        },
+        "A64": { "content": "=_t(\"Medium\")" },
+        "A65": { "content": "=PIVOT.HEADER(7,\"#medium_id\",1)" },
+        "A66": { "content": "=PIVOT.HEADER(7,\"#medium_id\",2)" },
+        "A67": { "content": "=PIVOT.HEADER(7,\"#medium_id\",3)" },
+        "A68": { "content": "=PIVOT.HEADER(7,\"#medium_id\",4)" },
+        "A69": { "content": "=PIVOT.HEADER(7,\"#medium_id\",5)" },
+        "A70": { "content": "=PIVOT.HEADER(7,\"#medium_id\",6)" },
+        "A71": { "content": "=PIVOT.HEADER(7,\"#medium_id\",7)" },
+        "A72": { "content": "=PIVOT.HEADER(7,\"#medium_id\",8)" },
+        "A73": { "content": "=PIVOT.HEADER(7,\"#medium_id\",9)" },
+        "A74": { "content": "=PIVOT.HEADER(7,\"#medium_id\",10)" },
+        "B25": { "content": "=_t(\"Stage\")" },
+        "B26": { "content": "=ODOO.LIST(1,1,\"stage_id\")" },
+        "B27": { "content": "=ODOO.LIST(1,2,\"stage_id\")" },
+        "B28": { "content": "=ODOO.LIST(1,3,\"stage_id\")" },
+        "B29": { "content": "=ODOO.LIST(1,4,\"stage_id\")" },
+        "B30": { "content": "=ODOO.LIST(1,5,\"stage_id\")" },
+        "B31": { "content": "=ODOO.LIST(1,6,\"stage_id\")" },
+        "B32": { "content": "=ODOO.LIST(1,7,\"stage_id\")" },
+        "B33": { "content": "=ODOO.LIST(1,8,\"stage_id\")" },
+        "B34": { "content": "=ODOO.LIST(1,9,\"stage_id\")" },
+        "B35": { "content": "=ODOO.LIST(1,10,\"stage_id\")" },
+        "B38": { "content": "=_t(\"# Leads\")" },
+        "B39": { "content": "=PIVOT.VALUE(3,\"__count\",\"#user_id\",1)" },
+        "B40": { "content": "=PIVOT.VALUE(3,\"__count\",\"#user_id\",2)" },
+        "B41": { "content": "=PIVOT.VALUE(3,\"__count\",\"#user_id\",3)" },
+        "B42": { "content": "=PIVOT.VALUE(3,\"__count\",\"#user_id\",4)" },
+        "B43": { "content": "=PIVOT.VALUE(3,\"__count\",\"#user_id\",5)" },
+        "B44": { "content": "=PIVOT.VALUE(3,\"__count\",\"#user_id\",6)" },
+        "B45": { "content": "=PIVOT.VALUE(3,\"__count\",\"#user_id\",7)" },
+        "B46": { "content": "=PIVOT.VALUE(3,\"__count\",\"#user_id\",8)" },
+        "B47": { "content": "=PIVOT.VALUE(3,\"__count\",\"#user_id\",9)" },
+        "B48": { "content": "=PIVOT.VALUE(3,\"__count\",\"#user_id\",10)" },
+        "B51": { "content": "=_t(\"# Leads\")" },
+        "B52": { "content": "=PIVOT.VALUE(5,\"__count\",\"#country_id\",1)" },
+        "B53": { "content": "=PIVOT.VALUE(5,\"__count\",\"#country_id\",2)" },
+        "B54": { "content": "=PIVOT.VALUE(5,\"__count\",\"#country_id\",3)" },
+        "B55": { "content": "=PIVOT.VALUE(5,\"__count\",\"#country_id\",4)" },
+        "B56": { "content": "=PIVOT.VALUE(5,\"__count\",\"#country_id\",5)" },
+        "B57": { "content": "=PIVOT.VALUE(5,\"__count\",\"#country_id\",6)" },
+        "B58": { "content": "=PIVOT.VALUE(5,\"__count\",\"#country_id\",7)" },
+        "B59": { "content": "=PIVOT.VALUE(5,\"__count\",\"#country_id\",8)" },
+        "B60": { "content": "=PIVOT.VALUE(5,\"__count\",\"#country_id\",9)" },
+        "B61": { "content": "=PIVOT.VALUE(5,\"__count\",\"#country_id\",10)" },
+        "B64": { "content": "=_t(\"# Leads\")" },
+        "B65": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",1)" },
+        "B66": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",2)" },
+        "B67": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",3)" },
+        "B68": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",4)" },
+        "B69": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",5)" },
+        "B70": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",6)" },
+        "B71": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",7)" },
+        "B72": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",8)" },
+        "B73": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",9)" },
+        "B74": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",10)" },
+        "C25": { "content": "=_t(\"Salesperson\")" },
+        "C26": { "content": "=ODOO.LIST(1,1,\"user_id\")" },
+        "C27": { "content": "=ODOO.LIST(1,2,\"user_id\")" },
+        "C28": { "content": "=ODOO.LIST(1,3,\"user_id\")" },
+        "C29": { "content": "=ODOO.LIST(1,4,\"user_id\")" },
+        "C30": { "content": "=ODOO.LIST(1,5,\"user_id\")" },
+        "C31": { "content": "=ODOO.LIST(1,6,\"user_id\")" },
+        "C32": { "content": "=ODOO.LIST(1,7,\"user_id\")" },
+        "C33": { "content": "=ODOO.LIST(1,8,\"user_id\")" },
+        "C34": { "content": "=ODOO.LIST(1,9,\"user_id\")" },
+        "C35": { "content": "=ODOO.LIST(1,10,\"user_id\")" },
+        "C38": { "content": "=_t(\"Revenue\")" },
+        "C39": {
+          "content": "=PIVOT.VALUE(3,\"prorated_revenue\",\"#user_id\",1)"
+        },
+        "C40": {
+          "content": "=PIVOT.VALUE(3,\"prorated_revenue\",\"#user_id\",2)"
+        },
+        "C41": {
+          "content": "=PIVOT.VALUE(3,\"prorated_revenue\",\"#user_id\",3)"
+        },
+        "C42": {
+          "content": "=PIVOT.VALUE(3,\"prorated_revenue\",\"#user_id\",4)"
+        },
+        "C43": {
+          "content": "=PIVOT.VALUE(3,\"prorated_revenue\",\"#user_id\",5)"
+        },
+        "C44": {
+          "content": "=PIVOT.VALUE(3,\"prorated_revenue\",\"#user_id\",6)"
+        },
+        "C45": {
+          "content": "=PIVOT.VALUE(3,\"prorated_revenue\",\"#user_id\",7)"
+        },
+        "C46": {
+          "content": "=PIVOT.VALUE(3,\"prorated_revenue\",\"#user_id\",8)"
+        },
+        "C47": {
+          "content": "=PIVOT.VALUE(3,\"prorated_revenue\",\"#user_id\",9)"
+        },
+        "C48": {
+          "content": "=PIVOT.VALUE(3,\"prorated_revenue\",\"#user_id\",10)"
+        },
+        "C51": { "content": "=_t(\"Revenue\")" },
+        "C52": {
+          "content": "=PIVOT.VALUE(5,\"prorated_revenue\",\"#country_id\",1)"
+        },
+        "C53": {
+          "content": "=PIVOT.VALUE(5,\"prorated_revenue\",\"#country_id\",2)"
+        },
+        "C54": {
+          "content": "=PIVOT.VALUE(5,\"prorated_revenue\",\"#country_id\",3)"
+        },
+        "C55": {
+          "content": "=PIVOT.VALUE(5,\"prorated_revenue\",\"#country_id\",4)"
+        },
+        "C56": {
+          "content": "=PIVOT.VALUE(5,\"prorated_revenue\",\"#country_id\",5)"
+        },
+        "C57": {
+          "content": "=PIVOT.VALUE(5,\"prorated_revenue\",\"#country_id\",6)"
+        },
+        "C58": {
+          "content": "=PIVOT.VALUE(5,\"prorated_revenue\",\"#country_id\",7)"
+        },
+        "C59": {
+          "content": "=PIVOT.VALUE(5,\"prorated_revenue\",\"#country_id\",8)"
+        },
+        "C60": {
+          "content": "=PIVOT.VALUE(5,\"prorated_revenue\",\"#country_id\",9)"
+        },
+        "C61": {
+          "content": "=PIVOT.VALUE(5,\"prorated_revenue\",\"#country_id\",10)"
+        },
+        "C64": { "content": "=_t(\"Revenue\")" },
+        "C65": {
+          "content": "=PIVOT.VALUE(7,\"prorated_revenue\",\"#medium_id\",1)"
+        },
+        "C66": {
+          "content": "=PIVOT.VALUE(7,\"prorated_revenue\",\"#medium_id\",2)"
+        },
+        "C67": {
+          "content": "=PIVOT.VALUE(7,\"prorated_revenue\",\"#medium_id\",3)"
+        },
+        "C68": {
+          "content": "=PIVOT.VALUE(7,\"prorated_revenue\",\"#medium_id\",4)"
+        },
+        "C69": {
+          "content": "=PIVOT.VALUE(7,\"prorated_revenue\",\"#medium_id\",5)"
+        },
+        "C70": {
+          "content": "=PIVOT.VALUE(7,\"prorated_revenue\",\"#medium_id\",6)"
+        },
+        "C71": {
+          "content": "=PIVOT.VALUE(7,\"prorated_revenue\",\"#medium_id\",7)"
+        },
+        "C72": {
+          "content": "=PIVOT.VALUE(7,\"prorated_revenue\",\"#medium_id\",8)"
+        },
+        "C73": {
+          "content": "=PIVOT.VALUE(7,\"prorated_revenue\",\"#medium_id\",9)"
+        },
+        "C74": {
+          "content": "=PIVOT.VALUE(7,\"prorated_revenue\",\"#medium_id\",10)"
+        },
+        "E7": {
+          "content": "[Expected Closing](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[\"&\",[\"type\",\"=\",\"opportunity\"],[\"date_deadline\",\"!=\",false]],\"context\":{\"group_by\":[\"date_deadline:month\",\"team_id\"],\"graph_measure\":\"prorated_revenue\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"date_deadline:month\",\"team_id\"]},\"modelName\":\"crm.lead\",\"views\":[[false,\"kanban\"],[false,\"list\"],[false,\"calendar\"],[false,\"pivot\"],[false,\"graph\"],[false,\"map\"],[false,\"form\"],[false,\"activity\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Pipeline\",\"positional\":true})"
+        },
+        "E25": { "content": "=_t(\"Country\")" },
+        "E26": { "content": "=ODOO.LIST(1,1,\"country_id\")" },
+        "E27": { "content": "=ODOO.LIST(1,2,\"country_id\")" },
+        "E28": { "content": "=ODOO.LIST(1,3,\"country_id\")" },
+        "E29": { "content": "=ODOO.LIST(1,4,\"country_id\")" },
+        "E30": { "content": "=ODOO.LIST(1,5,\"country_id\")" },
+        "E31": { "content": "=ODOO.LIST(1,6,\"country_id\")" },
+        "E32": { "content": "=ODOO.LIST(1,7,\"country_id\")" },
+        "E33": { "content": "=ODOO.LIST(1,8,\"country_id\")" },
+        "E34": { "content": "=ODOO.LIST(1,9,\"country_id\")" },
+        "E35": { "content": "=ODOO.LIST(1,10,\"country_id\")" },
+        "E37": {
+          "content": "[Top Sales Teams](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"type\",\"=\",\"opportunity\"],[\"team_id\",\"!=\",false]],\"context\":{\"group_by\":[\"team_id\"],\"pivot_measures\":[\"__count\",\"prorated_revenue\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"team_id\"]},\"modelName\":\"crm.lead\",\"views\":[[false,\"kanban\"],[false,\"list\"],[false,\"calendar\"],[false,\"pivot\"],[false,\"graph\"],[false,\"map\"],[false,\"form\"],[false,\"activity\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Pipeline\",\"positional\":true})"
+        },
+        "E38": { "content": "=_t(\"Sales Team\")" },
+        "E39": { "content": "=PIVOT.HEADER(4,\"#team_id\",1)" },
+        "E40": { "content": "=PIVOT.HEADER(4,\"#team_id\",2)" },
+        "E41": { "content": "=PIVOT.HEADER(4,\"#team_id\",3)" },
+        "E42": { "content": "=PIVOT.HEADER(4,\"#team_id\",4)" },
+        "E43": { "content": "=PIVOT.HEADER(4,\"#team_id\",5)" },
+        "E44": { "content": "=PIVOT.HEADER(4,\"#team_id\",6)" },
+        "E45": { "content": "=PIVOT.HEADER(4,\"#team_id\",7)" },
+        "E46": { "content": "=PIVOT.HEADER(4,\"#team_id\",8)" },
+        "E47": { "content": "=PIVOT.HEADER(4,\"#team_id\",9)" },
+        "E48": { "content": "=PIVOT.HEADER(4,\"#team_id\",10)" },
+        "E50": {
+          "content": "[Top Cities](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"type\",\"=\",\"opportunity\"],[\"city\",\"!=\",false]],\"context\":{\"group_by\":[\"city\"],\"pivot_measures\":[\"__count\",\"prorated_revenue\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"city\"]},\"modelName\":\"crm.lead\",\"views\":[[false,\"kanban\"],[false,\"list\"],[false,\"calendar\"],[false,\"pivot\"],[false,\"graph\"],[false,\"map\"],[false,\"form\"],[false,\"activity\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Pipeline\",\"positional\":true})"
+        },
+        "E51": { "content": "=_t(\"City\")" },
+        "E52": { "content": "=PIVOT.HEADER(6,\"#city\",1)" },
+        "E53": { "content": "=PIVOT.HEADER(6,\"#city\",2)" },
+        "E54": { "content": "=PIVOT.HEADER(6,\"#city\",3)" },
+        "E55": { "content": "=PIVOT.HEADER(6,\"#city\",4)" },
+        "E56": { "content": "=PIVOT.HEADER(6,\"#city\",5)" },
+        "E57": { "content": "=PIVOT.HEADER(6,\"#city\",6)" },
+        "E58": { "content": "=PIVOT.HEADER(6,\"#city\",7)" },
+        "E59": { "content": "=PIVOT.HEADER(6,\"#city\",8)" },
+        "E60": { "content": "=PIVOT.HEADER(6,\"#city\",9)" },
+        "E61": { "content": "=PIVOT.HEADER(6,\"#city\",10)" },
+        "E63": {
+          "content": "[Top Sources](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"type\",\"=\",\"opportunity\"],[\"source_id\",\"!=\",false]],\"context\":{\"group_by\":[\"source_id\"],\"pivot_measures\":[\"__count\",\"prorated_revenue\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"source_id\"]},\"modelName\":\"crm.lead\",\"views\":[[false,\"kanban\"],[false,\"list\"],[false,\"calendar\"],[false,\"pivot\"],[false,\"graph\"],[false,\"map\"],[false,\"form\"],[false,\"activity\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Pipeline\",\"positional\":true})"
+        },
+        "E64": { "content": "=_t(\"Source\")" },
+        "E65": { "content": "=PIVOT.HEADER(8,\"#source_id\",1)" },
+        "E66": { "content": "=PIVOT.HEADER(8,\"#source_id\",2)" },
+        "E67": { "content": "=PIVOT.HEADER(8,\"#source_id\",3)" },
+        "E68": { "content": "=PIVOT.HEADER(8,\"#source_id\",4)" },
+        "E69": { "content": "=PIVOT.HEADER(8,\"#source_id\",5)" },
+        "E70": { "content": "=PIVOT.HEADER(8,\"#source_id\",6)" },
+        "E71": { "content": "=PIVOT.HEADER(8,\"#source_id\",7)" },
+        "E72": { "content": "=PIVOT.HEADER(8,\"#source_id\",8)" },
+        "E73": { "content": "=PIVOT.HEADER(8,\"#source_id\",9)" },
+        "E74": { "content": "=PIVOT.HEADER(8,\"#source_id\",10)" },
+        "F25": { "content": "=_t(\"Revenue\")" },
+        "F26": { "content": "=ODOO.LIST(1,1,\"prorated_revenue\")" },
+        "F27": { "content": "=ODOO.LIST(1,2,\"prorated_revenue\")" },
+        "F28": { "content": "=ODOO.LIST(1,3,\"prorated_revenue\")" },
+        "F29": { "content": "=ODOO.LIST(1,4,\"prorated_revenue\")" },
+        "F30": { "content": "=ODOO.LIST(1,5,\"prorated_revenue\")" },
+        "F31": { "content": "=ODOO.LIST(1,6,\"prorated_revenue\")" },
+        "F32": { "content": "=ODOO.LIST(1,7,\"prorated_revenue\")" },
+        "F33": { "content": "=ODOO.LIST(1,8,\"prorated_revenue\")" },
+        "F34": { "content": "=ODOO.LIST(1,9,\"prorated_revenue\")" },
+        "F35": { "content": "=ODOO.LIST(1,10,\"prorated_revenue\")" },
+        "F38": { "content": "=_t(\"# Leads\")" },
+        "F39": { "content": "=PIVOT.VALUE(4,\"__count\",\"#team_id\",1)" },
+        "F40": { "content": "=PIVOT.VALUE(4,\"__count\",\"#team_id\",2)" },
+        "F41": { "content": "=PIVOT.VALUE(4,\"__count\",\"#team_id\",3)" },
+        "F42": { "content": "=PIVOT.VALUE(4,\"__count\",\"#team_id\",4)" },
+        "F43": { "content": "=PIVOT.VALUE(4,\"__count\",\"#team_id\",5)" },
+        "F44": { "content": "=PIVOT.VALUE(4,\"__count\",\"#team_id\",6)" },
+        "F45": { "content": "=PIVOT.VALUE(4,\"__count\",\"#team_id\",7)" },
+        "F46": { "content": "=PIVOT.VALUE(4,\"__count\",\"#team_id\",8)" },
+        "F47": { "content": "=PIVOT.VALUE(4,\"__count\",\"#team_id\",9)" },
+        "F48": { "content": "=PIVOT.VALUE(4,\"__count\",\"#team_id\",10)" },
+        "F51": { "content": "=_t(\"# Leads\")" },
+        "F52": { "content": "=PIVOT.VALUE(6,\"__count\",\"#city\",1)" },
+        "F53": { "content": "=PIVOT.VALUE(6,\"__count\",\"#city\",2)" },
+        "F54": { "content": "=PIVOT.VALUE(6,\"__count\",\"#city\",3)" },
+        "F55": { "content": "=PIVOT.VALUE(6,\"__count\",\"#city\",4)" },
+        "F56": { "content": "=PIVOT.VALUE(6,\"__count\",\"#city\",5)" },
+        "F57": { "content": "=PIVOT.VALUE(6,\"__count\",\"#city\",6)" },
+        "F58": { "content": "=PIVOT.VALUE(6,\"__count\",\"#city\",7)" },
+        "F59": { "content": "=PIVOT.VALUE(6,\"__count\",\"#city\",8)" },
+        "F60": { "content": "=PIVOT.VALUE(6,\"__count\",\"#city\",9)" },
+        "F61": { "content": "=PIVOT.VALUE(6,\"__count\",\"#city\",10)" },
+        "F64": { "content": "=_t(\"# Leads\")" },
+        "F65": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",1)" },
+        "F66": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",2)" },
+        "F67": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",3)" },
+        "F68": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",4)" },
+        "F69": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",5)" },
+        "F70": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",6)" },
+        "F71": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",7)" },
+        "F72": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",8)" },
+        "F73": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",9)" },
+        "F74": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",10)" },
+        "G25": { "content": "=_t(\"Success (%)\")" },
+        "G26": { "content": "=ODOO.LIST(1,1,\"probability\")" },
+        "G27": { "content": "=ODOO.LIST(1,2,\"probability\")" },
+        "G28": { "content": "=ODOO.LIST(1,3,\"probability\")" },
+        "G29": { "content": "=ODOO.LIST(1,4,\"probability\")" },
+        "G30": { "content": "=ODOO.LIST(1,5,\"probability\")" },
+        "G31": { "content": "=ODOO.LIST(1,6,\"probability\")" },
+        "G32": { "content": "=ODOO.LIST(1,7,\"probability\")" },
+        "G33": { "content": "=ODOO.LIST(1,8,\"probability\")" },
+        "G34": { "content": "=ODOO.LIST(1,9,\"probability\")" },
+        "G35": { "content": "=ODOO.LIST(1,10,\"probability\")" },
+        "G38": { "content": "=_t(\"Revenue\")" },
+        "G39": {
+          "content": "=PIVOT.VALUE(4,\"prorated_revenue\",\"#team_id\",1)"
+        },
+        "G40": {
+          "content": "=PIVOT.VALUE(4,\"prorated_revenue\",\"#team_id\",2)"
+        },
+        "G41": {
+          "content": "=PIVOT.VALUE(4,\"prorated_revenue\",\"#team_id\",3)"
+        },
+        "G42": {
+          "content": "=PIVOT.VALUE(4,\"prorated_revenue\",\"#team_id\",4)"
+        },
+        "G43": {
+          "content": "=PIVOT.VALUE(4,\"prorated_revenue\",\"#team_id\",5)"
+        },
+        "G44": {
+          "content": "=PIVOT.VALUE(4,\"prorated_revenue\",\"#team_id\",6)"
+        },
+        "G45": {
+          "content": "=PIVOT.VALUE(4,\"prorated_revenue\",\"#team_id\",7)"
+        },
+        "G46": {
+          "content": "=PIVOT.VALUE(4,\"prorated_revenue\",\"#team_id\",8)"
+        },
+        "G47": {
+          "content": "=PIVOT.VALUE(4,\"prorated_revenue\",\"#team_id\",9)"
+        },
+        "G48": {
+          "content": "=PIVOT.VALUE(4,\"prorated_revenue\",\"#team_id\",10)"
+        },
+        "G51": { "content": "=_t(\"Revenue\")" },
+        "G52": {
+          "content": "=PIVOT.VALUE(6,\"prorated_revenue\",\"#city\",1)"
+        },
+        "G53": {
+          "content": "=PIVOT.VALUE(6,\"prorated_revenue\",\"#city\",2)"
+        },
+        "G54": {
+          "content": "=PIVOT.VALUE(6,\"prorated_revenue\",\"#city\",3)"
+        },
+        "G55": {
+          "content": "=PIVOT.VALUE(6,\"prorated_revenue\",\"#city\",4)"
+        },
+        "G56": {
+          "content": "=PIVOT.VALUE(6,\"prorated_revenue\",\"#city\",5)"
+        },
+        "G57": {
+          "content": "=PIVOT.VALUE(6,\"prorated_revenue\",\"#city\",6)"
+        },
+        "G58": {
+          "content": "=PIVOT.VALUE(6,\"prorated_revenue\",\"#city\",7)"
+        },
+        "G59": {
+          "content": "=PIVOT.VALUE(6,\"prorated_revenue\",\"#city\",8)"
+        },
+        "G60": {
+          "content": "=PIVOT.VALUE(6,\"prorated_revenue\",\"#city\",9)"
+        },
+        "G61": {
+          "content": "=PIVOT.VALUE(6,\"prorated_revenue\",\"#city\",10)"
+        },
+        "G64": { "content": "=_t(\"Revenue\")" },
+        "G65": {
+          "content": "=PIVOT.VALUE(8,\"prorated_revenue\",\"#source_id\",1)"
+        },
+        "G66": {
+          "content": "=PIVOT.VALUE(8,\"prorated_revenue\",\"#source_id\",2)"
+        },
+        "G67": {
+          "content": "=PIVOT.VALUE(8,\"prorated_revenue\",\"#source_id\",3)"
+        },
+        "G68": {
+          "content": "=PIVOT.VALUE(8,\"prorated_revenue\",\"#source_id\",4)"
+        },
+        "G69": {
+          "content": "=PIVOT.VALUE(8,\"prorated_revenue\",\"#source_id\",5)"
+        },
+        "G70": {
+          "content": "=PIVOT.VALUE(8,\"prorated_revenue\",\"#source_id\",6)"
+        },
+        "G71": {
+          "content": "=PIVOT.VALUE(8,\"prorated_revenue\",\"#source_id\",7)"
+        },
+        "G72": {
+          "content": "=PIVOT.VALUE(8,\"prorated_revenue\",\"#source_id\",8)"
+        },
+        "G73": {
+          "content": "=PIVOT.VALUE(8,\"prorated_revenue\",\"#source_id\",9)"
+        },
+        "G74": {
+          "content": "=PIVOT.VALUE(8,\"prorated_revenue\",\"#source_id\",10)"
+        }
+      },
+      "styles": {
+        "A7": 1,
+        "A24": 1,
+        "A37": 1,
+        "A50": 1,
+        "A63": 1,
+        "E7": 1,
+        "E37": 1,
+        "E50": 1,
+        "E63": 1,
+        "A38": 2,
+        "A51": 2,
+        "A64": 2,
+        "A25:C25": 2,
+        "E25": 2,
+        "E38": 2,
+        "E51": 2,
+        "E64": 2,
+        "A26:A35": 3,
+        "B26:C35": 4,
+        "A39:C48": 4,
+        "A52:C58": 4,
+        "A65:C74": 4,
+        "E26:G35": 4,
+        "E39:G48": 4,
+        "E52:G61": 4,
+        "E65:G74": 4,
+        "B38:C38": 5,
+        "B51:C51": 5,
+        "B64:C64": 5,
+        "F25:G25": 5,
+        "F38:G38": 5,
+        "F51:G51": 5,
+        "F64:G64": 5
+      },
+      "formats": {},
+      "borders": {
+        "A7:C7": 1,
+        "A37:C37": 1,
+        "A50:C50": 1,
+        "A63:C63": 1,
+        "E7:G7": 1,
+        "A24:G24": 1,
+        "E37:G37": 1,
+        "E50:G50": 1,
+        "E63:G63": 1,
+        "A8:C8": 2,
+        "A38:C38": 2,
+        "A51:C51": 2,
+        "A64:C64": 2,
+        "E8:G8": 2,
+        "A25:G25": 2,
+        "E38:G38": 2,
+        "E51:G51": 2,
+        "E64:G64": 2
+      },
+      "conditionalFormats": [
+        {
+          "rule": {
+            "type": "DataBarRule",
+            "color": 15531509,
+            "rangeValues": "F26:F35"
+          },
+          "id": "13881108-f614-4278-89c4-a58fda80496c",
+          "ranges": ["A26:A35"]
+        },
+        {
+          "rule": {
+            "type": "DataBarRule",
+            "color": 15726335,
+            "rangeValues": "C39:C48"
+          },
+          "id": "160a3e6f-6265-4a3e-a84e-a93efce715c6",
+          "ranges": ["A39:A48"]
+        },
+        {
+          "rule": {
+            "type": "DataBarRule",
+            "color": 16775149,
+            "rangeValues": "G39:G48"
+          },
+          "id": "adcc4f6a-b796-4ad9-ab48-ecdb91c2ef05",
+          "ranges": ["E39:E48"]
+        },
+        {
+          "rule": {
+            "type": "DataBarRule",
+            "color": 16708338,
+            "rangeValues": "C52:C61"
+          },
+          "id": "14099357-8292-4a05-92d3-33656028ed9e",
+          "ranges": ["A52:A61"]
+        },
+        {
+          "rule": {
+            "type": "DataBarRule",
+            "color": 15531509,
+            "rangeValues": "G52:G61"
+          },
+          "id": "66f8207d-2f52-4321-a1e2-c8b76117aff0",
+          "ranges": ["E52:E61"]
+        },
+        {
+          "rule": {
+            "type": "DataBarRule",
+            "color": 15726335,
+            "rangeValues": "C65:C74"
+          },
+          "id": "0c8a2d29-0965-4f95-a091-6526cd056eea",
+          "ranges": ["A65:A74"]
+        },
+        {
+          "rule": {
+            "type": "DataBarRule",
+            "color": 16775149,
+            "rangeValues": "G65:G74"
+          },
+          "id": "bd248e0c-82e6-4f75-a8f0-7c25bb0e3ebe",
+          "ranges": ["E65:E74"]
+        }
+      ],
+      "figures": [
+        {
+          "id": "09ab3fe3-04d6-4c9f-97ff-bb37fee0e692",
+          "x": 0,
+          "y": 9,
+          "width": 200,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Expected", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#FFF7ED",
+            "baseline": "Data!E4",
+            "baselineDescr": "since last period",
+            "keyValue": "Data!D4",
+            "humanize": false
+          }
+        },
+        {
+          "id": "5dc98740-8fc9-432d-b386-59e6e5c8b7e8",
+          "x": 208,
+          "y": 9,
+          "width": 200,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Closed", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#FFF7ED",
+            "baseline": "Data!E5",
+            "baselineDescr": "since last period",
+            "keyValue": "Data!D5",
+            "humanize": false
+          }
+        },
+        {
+          "id": "735dabd8-96dc-44a1-9871-f35a94c347f5",
+          "x": 416,
+          "y": 9,
+          "width": 200,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": {
+              "text": "Open opportunities",
+              "color": "#434343",
+              "bold": true
+            },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baselineDescr": "to close",
+            "keyValue": "Data!D7",
+            "humanize": false
+          }
+        },
+        {
+          "id": "5adf5fa8-e0e4-4e13-a3ac-259d67389cfb",
+          "x": 0,
+          "y": 178,
+          "width": 475,
+          "height": 367,
+          "tag": "chart",
+          "data": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "top",
+            "metaData": {
+              "groupBy": ["stage_id", "team_id"],
+              "measure": "prorated_revenue",
+              "order": null,
+              "resModel": "crm.lead",
+              "mode": "bar"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {
+                "default_type": "opportunity",
+                "search_default_assigned_to_me": 1,
+                "default_team_id": 1
+              },
+              "domain": [["type", "=", "opportunity"]],
+              "groupBy": ["stage_id", "team_id"],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "verticalAxisPosition": "left",
+            "stacked": true,
+            "fieldMatching": {
+              "bf6dcdb0-d22d-468c-b6a9-64f717005043": {
+                "chain": "date_deadline",
+                "type": "date",
+                "offset": 0
+              },
+              "9f3d4602-0b4b-4eb4-b013-959d72af88ab": {
+                "chain": "stage_id",
+                "type": "many2one"
+              },
+              "9c8a3e99-903a-40a3-8799-5eaf098b884f": {
+                "chain": "user_id",
+                "type": "many2one"
+              },
+              "aaba8a27-cf83-4397-a9ad-a85bba4c8016": {
+                "chain": "team_id",
+                "type": "many2one"
+              },
+              "f6ef716d-3135-4963-b645-bc12c6a3421b": {
+                "chain": "country_id",
+                "type": "many2one"
+              },
+              "ec772492-b1db-4a63-be55-a4e0c3167edf": {
+                "chain": "city",
+                "type": "char"
+              },
+              "c21a4660-9a0a-4757-8d28-1c8d95f73edb": {
+                "chain": "medium_id",
+                "type": "many2one"
+              },
+              "c33d6d0a-df2d-4150-86b0-112cd250ddbd": {
+                "chain": "source_id",
+                "type": "many2one"
+              }
+            }
+          }
+        },
+        {
+          "id": "6c739756-da1e-4e9b-bd26-e74e6cd10c88",
+          "x": 525,
+          "y": 178,
+          "width": 475,
+          "height": 367,
+          "tag": "chart",
+          "data": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "top",
+            "metaData": {
+              "groupBy": ["date_deadline:month", "team_id"],
+              "measure": "prorated_revenue",
+              "order": null,
+              "resModel": "crm.lead",
+              "mode": "bar"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {
+                "default_type": "opportunity",
+                "search_default_assigned_to_me": 1,
+                "default_team_id": 1
+              },
+              "domain": [
+                "&",
+                ["type", "=", "opportunity"],
+                ["date_deadline", "!=", false]
+              ],
+              "groupBy": ["date_deadline:month", "team_id"],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "verticalAxisPosition": "left",
+            "stacked": true,
+            "fieldMatching": {
+              "bf6dcdb0-d22d-468c-b6a9-64f717005043": {
+                "chain": "date_deadline",
+                "type": "date",
+                "offset": 0
+              },
+              "9f3d4602-0b4b-4eb4-b013-959d72af88ab": {
+                "chain": "stage_id",
+                "type": "many2one"
+              },
+              "9c8a3e99-903a-40a3-8799-5eaf098b884f": {
+                "chain": "user_id",
+                "type": "many2one"
+              },
+              "aaba8a27-cf83-4397-a9ad-a85bba4c8016": {
+                "chain": "team_id",
+                "type": "many2one"
+              },
+              "f6ef716d-3135-4963-b645-bc12c6a3421b": {
+                "chain": "country_id",
+                "type": "many2one"
+              },
+              "ec772492-b1db-4a63-be55-a4e0c3167edf": {
+                "chain": "city",
+                "type": "char"
+              },
+              "c21a4660-9a0a-4757-8d28-1c8d95f73edb": {
+                "chain": "medium_id",
+                "type": "many2one"
+              },
+              "c33d6d0a-df2d-4150-86b0-112cd250ddbd": {
+                "chain": "source_id",
+                "type": "many2one"
+              }
+            }
+          }
+        }
+      ],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": { "ROW": [], "COL": [] },
+      "dataValidationRules": [],
+      "comments": {}
+    },
+    {
+      "id": "a51634aa-7103-45b3-ab61-fd26c0824a1f",
+      "name": "Data",
+      "colNumber": 26,
+      "rowNumber": 102,
+      "rows": {},
+      "cols": {
+        "0": { "size": 122 },
+        "1": { "size": 141 },
+        "2": { "size": 141 },
+        "3": { "size": 141 },
+        "4": { "size": 141 }
+      },
+      "merges": [],
+      "cells": {
+        "A1": { "content": "=_t(\"KPI\")" },
+        "A2": { "content": "=_t(\"Expected count\")" },
+        "A3": { "content": "=_t(\"Closed count\")" },
+        "A4": { "content": "=_t(\"Expected revenue\")" },
+        "A5": { "content": "=_t(\"Closed revenue\")" },
+        "A6": { "content": "=_t(\"Percentage closed\")" },
+        "A7": { "content": "=_t(\"To close\")" },
+        "B1": { "content": "=_t(\"Current\")" },
+        "B2": { "content": "=PIVOT.VALUE(1,\"__count\")" },
+        "B3": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"won_status\",\"won\")"
+        },
+        "B4": { "content": "=PIVOT.VALUE(1,\"prorated_revenue\")" },
+        "B5": {
+          "content": "=PIVOT.VALUE(1,\"prorated_revenue\",\"won_status\",\"won\")"
+        },
+        "B6": { "content": "=IFERROR(B3/B2)" },
+        "B7": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"won_status\",\"pending\")"
+        },
+        "C1": { "content": "=_t(\"Previous\")" },
+        "C2": { "content": "=PIVOT.VALUE(2,\"__count\")" },
+        "C3": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"won_status\",\"won\")"
+        },
+        "C4": { "content": "=PIVOT.VALUE(2,\"prorated_revenue\")" },
+        "C5": {
+          "content": "=PIVOT.VALUE(2,\"prorated_revenue\",\"won_status\",\"won\")"
+        },
+        "C6": { "content": "=IFERROR(C3/C2)" },
+        "C7": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"won_status\",\"pending\")"
+        },
+        "D1": { "content": "=_t(\"Current\")" },
+        "D2": { "content": "=FORMAT.LARGE.NUMBER(B2)" },
+        "D3": { "content": "=FORMAT.LARGE.NUMBER(B3)" },
+        "D4": { "content": "=FORMAT.LARGE.NUMBER(B4)" },
+        "D5": { "content": "=FORMAT.LARGE.NUMBER(B5)" },
+        "D6": { "content": "=B6" },
+        "D7": { "content": "=FORMAT.LARGE.NUMBER(B7)" },
+        "E1": { "content": "=_t(\"Previous\")" },
+        "E2": { "content": "=FORMAT.LARGE.NUMBER(C2)" },
+        "E3": { "content": "=FORMAT.LARGE.NUMBER(C3)" },
+        "E4": { "content": "=FORMAT.LARGE.NUMBER(C4)" },
+        "E5": { "content": "=FORMAT.LARGE.NUMBER(C5)" },
+        "E6": { "content": "=C6" },
+        "E7": { "content": "=FORMAT.LARGE.NUMBER(C7)" }
+      },
+      "styles": { "A1:E1": 6, "D2:E7": 7 },
+      "formats": { "B6:E6": 1 },
+      "borders": {},
+      "conditionalFormats": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": { "ROW": [], "COL": [] },
+      "dataValidationRules": [],
+      "comments": {}
+    }
+  ],
+  "styles": {
+    "1": { "textColor": "#01666b", "bold": true, "fontSize": 16 },
+    "2": { "fontSize": 11, "bold": true, "textColor": "#434343" },
+    "3": { "textColor": "#01666B", "verticalAlign": "middle" },
+    "4": { "textColor": "#434343", "verticalAlign": "middle" },
+    "5": {
+      "fontSize": 11,
+      "bold": true,
+      "textColor": "#434343",
+      "align": "center"
+    },
+    "6": { "bold": true },
+    "7": { "fillColor": "#f8f9fa" }
+  },
+  "formats": { "1": "0%" },
+  "borders": {
+    "1": { "bottom": { "style": "thin", "color": "#CCCCCC" } },
+    "2": { "top": { "style": "thin", "color": "#CCCCCC" } }
+  },
+  "revisionId": "START_REVISION",
+  "uniqueFigureIds": true,
+  "settings": {
+    "locale": {
+      "name": "English (US)",
+      "code": "en_US",
+      "thousandsSeparator": ",",
+      "decimalSeparator": ".",
+      "dateFormat": "mm/dd/yyyy",
+      "timeFormat": "hh:mm:ss",
+      "formulaArgSeparator": ",",
+      "weekStart": 7
+    }
+  },
+  "pivots": {
+    "1": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "bf6dcdb0-d22d-468c-b6a9-64f717005043": {
+          "chain": "date_deadline",
+          "type": "date",
+          "offset": 0
+        },
+        "9f3d4602-0b4b-4eb4-b013-959d72af88ab": {
+          "chain": "stage_id",
+          "type": "many2one"
+        },
+        "9c8a3e99-903a-40a3-8799-5eaf098b884f": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "aaba8a27-cf83-4397-a9ad-a85bba4c8016": {
+          "chain": "team_id",
+          "type": "many2one"
+        },
+        "f6ef716d-3135-4963-b645-bc12c6a3421b": {
+          "chain": "country_id",
+          "type": "many2one"
+        },
+        "ec772492-b1db-4a63-be55-a4e0c3167edf": {
+          "chain": "city",
+          "type": "char"
+        },
+        "c21a4660-9a0a-4757-8d28-1c8d95f73edb": {
+          "chain": "medium_id",
+          "type": "many2one"
+        },
+        "c33d6d0a-df2d-4150-86b0-112cd250ddbd": {
+          "chain": "source_id",
+          "type": "many2one"
+        }
+      },
+      "context": {
+        "default_type": "opportunity",
+        "search_default_assigned_to_me": 1,
+        "default_team_id": 1
+      },
+      "domain": [["type", "=", "opportunity"]],
+      "id": "1",
+      "measures": [
+        { "id": "__count", "fieldName": "__count" },
+        { "id": "prorated_revenue", "fieldName": "prorated_revenue" }
+      ],
+      "model": "crm.lead",
+      "name": "expected - current",
+      "sortedColumn": null,
+      "formulaId": "1",
+      "columns": [],
+      "rows": [{ "fieldName": "won_status" }]
+    },
+    "2": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "bf6dcdb0-d22d-468c-b6a9-64f717005043": {
+          "chain": "date_deadline",
+          "type": "date",
+          "offset": -1
+        },
+        "9f3d4602-0b4b-4eb4-b013-959d72af88ab": {
+          "chain": "stage_id",
+          "type": "many2one"
+        },
+        "9c8a3e99-903a-40a3-8799-5eaf098b884f": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "aaba8a27-cf83-4397-a9ad-a85bba4c8016": {
+          "chain": "team_id",
+          "type": "many2one"
+        },
+        "f6ef716d-3135-4963-b645-bc12c6a3421b": {
+          "chain": "country_id",
+          "type": "many2one"
+        },
+        "ec772492-b1db-4a63-be55-a4e0c3167edf": {
+          "chain": "city",
+          "type": "char"
+        },
+        "c21a4660-9a0a-4757-8d28-1c8d95f73edb": {
+          "chain": "medium_id",
+          "type": "many2one"
+        },
+        "c33d6d0a-df2d-4150-86b0-112cd250ddbd": {
+          "chain": "source_id",
+          "type": "many2one"
+        }
+      },
+      "context": {
+        "default_type": "opportunity",
+        "search_default_assigned_to_me": 1,
+        "default_team_id": 1
+      },
+      "domain": [["type", "=", "opportunity"]],
+      "id": "2",
+      "measures": [
+        { "id": "__count", "fieldName": "__count" },
+        { "id": "prorated_revenue", "fieldName": "prorated_revenue" }
+      ],
+      "model": "crm.lead",
+      "name": "expected - previous",
+      "sortedColumn": null,
+      "formulaId": "2",
+      "columns": [],
+      "rows": [{ "fieldName": "won_status" }]
+    },
+    "3": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "bf6dcdb0-d22d-468c-b6a9-64f717005043": {
+          "chain": "date_deadline",
+          "type": "date",
+          "offset": 0
+        },
+        "9f3d4602-0b4b-4eb4-b013-959d72af88ab": {
+          "chain": "stage_id",
+          "type": "many2one"
+        },
+        "9c8a3e99-903a-40a3-8799-5eaf098b884f": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "aaba8a27-cf83-4397-a9ad-a85bba4c8016": {
+          "chain": "team_id",
+          "type": "many2one"
+        },
+        "f6ef716d-3135-4963-b645-bc12c6a3421b": {
+          "chain": "country_id",
+          "type": "many2one"
+        },
+        "ec772492-b1db-4a63-be55-a4e0c3167edf": {
+          "chain": "city",
+          "type": "char"
+        },
+        "c21a4660-9a0a-4757-8d28-1c8d95f73edb": {
+          "chain": "medium_id",
+          "type": "many2one"
+        },
+        "c33d6d0a-df2d-4150-86b0-112cd250ddbd": {
+          "chain": "source_id",
+          "type": "many2one"
+        }
+      },
+      "context": {
+        "default_type": "opportunity",
+        "search_default_assigned_to_me": 1,
+        "default_team_id": 1
+      },
+      "domain": ["&", ["type", "=", "opportunity"], ["user_id", "!=", false]],
+      "id": "3",
+      "measures": [
+        { "id": "__count", "fieldName": "__count" },
+        { "id": "prorated_revenue", "fieldName": "prorated_revenue" }
+      ],
+      "model": "crm.lead",
+      "name": "top salespeople",
+      "sortedColumn": {
+        "groupId": [[], []],
+        "measure": "prorated_revenue",
+        "order": "desc"
+      },
+      "formulaId": "3",
+      "columns": [],
+      "rows": [{ "fieldName": "user_id" }]
+    },
+    "4": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "bf6dcdb0-d22d-468c-b6a9-64f717005043": {
+          "chain": "date_deadline",
+          "type": "date",
+          "offset": 0
+        },
+        "9f3d4602-0b4b-4eb4-b013-959d72af88ab": {
+          "chain": "stage_id",
+          "type": "many2one"
+        },
+        "9c8a3e99-903a-40a3-8799-5eaf098b884f": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "aaba8a27-cf83-4397-a9ad-a85bba4c8016": {
+          "chain": "team_id",
+          "type": "many2one"
+        },
+        "f6ef716d-3135-4963-b645-bc12c6a3421b": {
+          "chain": "country_id",
+          "type": "many2one"
+        },
+        "ec772492-b1db-4a63-be55-a4e0c3167edf": {
+          "chain": "city",
+          "type": "char"
+        },
+        "c21a4660-9a0a-4757-8d28-1c8d95f73edb": {
+          "chain": "medium_id",
+          "type": "many2one"
+        },
+        "c33d6d0a-df2d-4150-86b0-112cd250ddbd": {
+          "chain": "source_id",
+          "type": "many2one"
+        }
+      },
+      "context": {
+        "default_type": "opportunity",
+        "search_default_assigned_to_me": 1,
+        "default_team_id": 1
+      },
+      "domain": ["&", ["type", "=", "opportunity"], ["team_id", "!=", false]],
+      "id": "4",
+      "measures": [
+        { "id": "__count", "fieldName": "__count" },
+        { "id": "prorated_revenue", "fieldName": "prorated_revenue" }
+      ],
+      "model": "crm.lead",
+      "name": "top sales team",
+      "sortedColumn": {
+        "groupId": [[], []],
+        "measure": "prorated_revenue",
+        "order": "desc"
+      },
+      "formulaId": "4",
+      "columns": [],
+      "rows": [{ "fieldName": "team_id" }]
+    },
+    "5": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "bf6dcdb0-d22d-468c-b6a9-64f717005043": {
+          "chain": "date_deadline",
+          "type": "date",
+          "offset": 0
+        },
+        "9f3d4602-0b4b-4eb4-b013-959d72af88ab": {
+          "chain": "stage_id",
+          "type": "many2one"
+        },
+        "9c8a3e99-903a-40a3-8799-5eaf098b884f": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "aaba8a27-cf83-4397-a9ad-a85bba4c8016": {
+          "chain": "team_id",
+          "type": "many2one"
+        },
+        "f6ef716d-3135-4963-b645-bc12c6a3421b": {
+          "chain": "country_id",
+          "type": "many2one"
+        },
+        "ec772492-b1db-4a63-be55-a4e0c3167edf": {
+          "chain": "city",
+          "type": "char"
+        },
+        "c21a4660-9a0a-4757-8d28-1c8d95f73edb": {
+          "chain": "medium_id",
+          "type": "many2one"
+        },
+        "c33d6d0a-df2d-4150-86b0-112cd250ddbd": {
+          "chain": "source_id",
+          "type": "many2one"
+        }
+      },
+      "context": {
+        "default_type": "opportunity",
+        "search_default_assigned_to_me": 1,
+        "default_team_id": 1
+      },
+      "domain": [
+        "&",
+        ["type", "=", "opportunity"],
+        ["country_id", "!=", false]
+      ],
+      "id": "5",
+      "measures": [
+        { "id": "__count", "fieldName": "__count" },
+        { "id": "prorated_revenue", "fieldName": "prorated_revenue" }
+      ],
+      "model": "crm.lead",
+      "name": "top countries",
+      "sortedColumn": {
+        "groupId": [[], []],
+        "measure": "prorated_revenue",
+        "order": "desc"
+      },
+      "formulaId": "5",
+      "columns": [],
+      "rows": [{ "fieldName": "country_id" }]
+    },
+    "6": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "bf6dcdb0-d22d-468c-b6a9-64f717005043": {
+          "chain": "date_deadline",
+          "type": "date",
+          "offset": 0
+        },
+        "9f3d4602-0b4b-4eb4-b013-959d72af88ab": {
+          "chain": "stage_id",
+          "type": "many2one"
+        },
+        "9c8a3e99-903a-40a3-8799-5eaf098b884f": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "aaba8a27-cf83-4397-a9ad-a85bba4c8016": {
+          "chain": "team_id",
+          "type": "many2one"
+        },
+        "f6ef716d-3135-4963-b645-bc12c6a3421b": {
+          "chain": "country_id",
+          "type": "many2one"
+        },
+        "ec772492-b1db-4a63-be55-a4e0c3167edf": {
+          "chain": "city",
+          "type": "char"
+        },
+        "c21a4660-9a0a-4757-8d28-1c8d95f73edb": {
+          "chain": "medium_id",
+          "type": "many2one"
+        },
+        "c33d6d0a-df2d-4150-86b0-112cd250ddbd": {
+          "chain": "source_id",
+          "type": "many2one"
+        }
+      },
+      "context": {
+        "default_type": "opportunity",
+        "search_default_assigned_to_me": 1,
+        "default_team_id": 1
+      },
+      "domain": ["&", ["type", "=", "opportunity"], ["city", "!=", false]],
+      "id": "6",
+      "measures": [
+        { "id": "__count", "fieldName": "__count" },
+        { "id": "prorated_revenue", "fieldName": "prorated_revenue" }
+      ],
+      "model": "crm.lead",
+      "name": "top cities",
+      "sortedColumn": {
+        "groupId": [[], []],
+        "measure": "prorated_revenue",
+        "order": "desc"
+      },
+      "formulaId": "6",
+      "columns": [],
+      "rows": [{ "fieldName": "city" }]
+    },
+    "7": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "bf6dcdb0-d22d-468c-b6a9-64f717005043": {
+          "chain": "date_deadline",
+          "type": "date",
+          "offset": 0
+        },
+        "9f3d4602-0b4b-4eb4-b013-959d72af88ab": {
+          "chain": "stage_id",
+          "type": "many2one"
+        },
+        "9c8a3e99-903a-40a3-8799-5eaf098b884f": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "aaba8a27-cf83-4397-a9ad-a85bba4c8016": {
+          "chain": "team_id",
+          "type": "many2one"
+        },
+        "f6ef716d-3135-4963-b645-bc12c6a3421b": {
+          "chain": "country_id",
+          "type": "many2one"
+        },
+        "ec772492-b1db-4a63-be55-a4e0c3167edf": {
+          "chain": "city",
+          "type": "char"
+        },
+        "c21a4660-9a0a-4757-8d28-1c8d95f73edb": {
+          "chain": "medium_id",
+          "type": "many2one"
+        },
+        "c33d6d0a-df2d-4150-86b0-112cd250ddbd": {
+          "chain": "source_id",
+          "type": "many2one"
+        }
+      },
+      "context": {
+        "default_type": "opportunity",
+        "search_default_assigned_to_me": 1,
+        "default_team_id": 1
+      },
+      "domain": ["&", ["type", "=", "opportunity"], ["medium_id", "!=", false]],
+      "id": "7",
+      "measures": [
+        { "id": "__count", "fieldName": "__count" },
+        { "id": "prorated_revenue", "fieldName": "prorated_revenue" }
+      ],
+      "model": "crm.lead",
+      "name": "top mediums",
+      "sortedColumn": {
+        "groupId": [[], []],
+        "measure": "prorated_revenue",
+        "order": "desc"
+      },
+      "formulaId": "7",
+      "columns": [],
+      "rows": [{ "fieldName": "medium_id" }]
+    },
+    "8": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "bf6dcdb0-d22d-468c-b6a9-64f717005043": {
+          "chain": "date_deadline",
+          "type": "date",
+          "offset": 0
+        },
+        "9f3d4602-0b4b-4eb4-b013-959d72af88ab": {
+          "chain": "stage_id",
+          "type": "many2one"
+        },
+        "9c8a3e99-903a-40a3-8799-5eaf098b884f": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "aaba8a27-cf83-4397-a9ad-a85bba4c8016": {
+          "chain": "team_id",
+          "type": "many2one"
+        },
+        "f6ef716d-3135-4963-b645-bc12c6a3421b": {
+          "chain": "country_id",
+          "type": "many2one"
+        },
+        "ec772492-b1db-4a63-be55-a4e0c3167edf": {
+          "chain": "city",
+          "type": "char"
+        },
+        "c21a4660-9a0a-4757-8d28-1c8d95f73edb": {
+          "chain": "medium_id",
+          "type": "many2one"
+        },
+        "c33d6d0a-df2d-4150-86b0-112cd250ddbd": {
+          "chain": "source_id",
+          "type": "many2one"
+        }
+      },
+      "context": {
+        "default_type": "opportunity",
+        "search_default_assigned_to_me": 1,
+        "default_team_id": 1
+      },
+      "domain": ["&", ["type", "=", "opportunity"], ["source_id", "!=", false]],
+      "id": "8",
+      "measures": [
+        { "id": "__count", "fieldName": "__count" },
+        { "id": "prorated_revenue", "fieldName": "prorated_revenue" }
+      ],
+      "model": "crm.lead",
+      "name": "top sources",
+      "sortedColumn": {
+        "groupId": [[], []],
+        "measure": "prorated_revenue",
+        "order": "desc"
+      },
+      "formulaId": "8",
+      "columns": [],
+      "rows": [{ "fieldName": "source_id" }]
+    }
+  },
+  "pivotNextId": 9,
+  "customTableStyles": {},
+  "odooVersion": 12,
+  "globalFilters": [
+    {
+      "id": "bf6dcdb0-d22d-468c-b6a9-64f717005043",
+      "type": "date",
+      "label": "Period",
+      "defaultValue": {},
+      "rangeType": "relative"
+    },
+    {
+      "id": "9f3d4602-0b4b-4eb4-b013-959d72af88ab",
+      "type": "relation",
+      "label": "Stage",
+      "modelName": "crm.stage",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    },
+    {
+      "id": "9c8a3e99-903a-40a3-8799-5eaf098b884f",
+      "type": "relation",
+      "label": "Salesperson",
+      "modelName": "res.users",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    },
+    {
+      "id": "aaba8a27-cf83-4397-a9ad-a85bba4c8016",
+      "type": "relation",
+      "label": "Sales Team",
+      "modelName": "crm.team",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    },
+    {
+      "id": "f6ef716d-3135-4963-b645-bc12c6a3421b",
+      "type": "relation",
+      "label": "Country",
+      "modelName": "res.country",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    },
+    {
+      "id": "ec772492-b1db-4a63-be55-a4e0c3167edf",
+      "type": "text",
+      "label": "City",
+      "rangeType": "year"
+    },
+    {
+      "id": "c21a4660-9a0a-4757-8d28-1c8d95f73edb",
+      "type": "relation",
+      "label": "Medium",
+      "modelName": "utm.medium",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    },
+    {
+      "id": "c33d6d0a-df2d-4150-86b0-112cd250ddbd",
+      "type": "relation",
+      "label": "Source",
+      "modelName": "utm.source",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    }
+  ],
+  "lists": {
+    "1": {
+      "columns": [
+        "name",
+        "email_from",
+        "phone",
+        "country_id",
+        "user_id",
+        "activity_ids",
+        "my_activity_date_deadline",
+        "prorated_revenue",
+        "stage_id",
+        "probability"
+      ],
+      "domain": [["type", "=", "opportunity"]],
+      "model": "crm.lead",
+      "context": {
+        "default_type": "opportunity",
+        "search_default_assigned_to_me": 1,
+        "default_team_id": 1
+      },
+      "orderBy": [{ "name": "prorated_revenue", "asc": false }],
+      "id": "1",
+      "name": "list opps",
+      "fieldMatching": {
+        "bf6dcdb0-d22d-468c-b6a9-64f717005043": {
+          "chain": "date_deadline",
+          "type": "date",
+          "offset": 0
+        },
+        "9f3d4602-0b4b-4eb4-b013-959d72af88ab": {
+          "chain": "stage_id",
+          "type": "many2one"
+        },
+        "9c8a3e99-903a-40a3-8799-5eaf098b884f": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "aaba8a27-cf83-4397-a9ad-a85bba4c8016": {
+          "chain": "team_id",
+          "type": "many2one"
+        },
+        "f6ef716d-3135-4963-b645-bc12c6a3421b": {
+          "chain": "country_id",
+          "type": "many2one"
+        },
+        "ec772492-b1db-4a63-be55-a4e0c3167edf": {
+          "chain": "city",
+          "type": "char"
+        },
+        "c21a4660-9a0a-4757-8d28-1c8d95f73edb": {
+          "chain": "medium_id",
+          "type": "many2one"
+        },
+        "c33d6d0a-df2d-4150-86b0-112cd250ddbd": {
+          "chain": "source_id",
+          "type": "many2one"
+        }
+      }
+    }
+  },
+  "listNextId": 2,
+  "chartOdooMenusReferences": {
+    "5adf5fa8-e0e4-4e13-a3ac-259d67389cfb": "crm.crm_menu_root",
+    "6c739756-da1e-4e9b-bd26-e74e6cd10c88": "crm.crm_menu_root",
+    "09ab3fe3-04d6-4c9f-97ff-bb37fee0e692": "crm.crm_opportunity_report_menu",
+    "5dc98740-8fc9-432d-b386-59e6e5c8b7e8": "crm.crm_opportunity_report_menu",
+    "735dabd8-96dc-44a1-9871-f35a94c347f5": "crm.menu_crm_opportunities"
+  }
+}

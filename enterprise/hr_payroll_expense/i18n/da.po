@@ -1,0 +1,247 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_payroll_expense
+#
+# Translators:
+# lhmflexerp <lhm@flexerp.dk>, 2024
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
+# Mads Søndergaard, 2024
+# Martin Trigaux, 2024
+# Kira Petersen, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2026-03-21 09:02+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/"
+"hr_payroll_expense/da/>\n"
+"Language: da\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.16.2\n"
+
+#. module: hr_payroll_expense
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.view_account_payment_register_form_inherit_hr_payroll_expense
+msgid ""
+"<span class=\"fw-bold\">\n"
+"                            The expenses will already be reimbursed in a "
+"payslip. Make sure this payment is intended.\n"
+"                        </span>"
+msgstr ""
+"<span class=\"fw-bold\">\n"
+"                            Udlægget er allerede refunderet i en lønseddel. "
+"Bekræft, at betalingen skal gennemføres.\n"
+"                        </span>"
+
+#. module: hr_payroll_expense
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_expense_sheet_view_form_inherit_payroll
+msgid "<span class=\"o_stat_text\">Payslip</span>"
+msgstr "<span class=\"o_stat_text\">Lønseddel</span>"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_expense_sheet
+msgid "Expense Report"
+msgstr "Udgiftsrapport"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"Expense reimbursement rule needs to be configured to add expenses to "
+"payslips.\n"
+"Please create one salary rule with the \"%(code)s\" code on the relevant "
+"salary structures."
+msgstr ""
+"Reglen for udgiftsgodtgørelse skal konfigureres, før udlæg kan tilføjes til "
+"lønsedler.\n"
+"Opret en lønregel med koden \"%(code)s\" på de relevante lønstrukturer."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "Expense report (\"%(name)s\") was removed from the next payslip."
+msgstr ""
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "Expense report (\"%(name)s\") will be added to the next payslip."
+msgstr ""
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_payslip__expense_sheet_ids
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_payslip_view_form_inherit_expense
+msgid "Expenses"
+msgstr "Øvrige omkostninger"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_payslip__expenses_count
+msgid "Expenses Count"
+msgstr "Udgifter mængde"
+
+#. module: hr_payroll_expense
+#: model:hr.salary.rule,name:hr_payroll_expense.hr_salary_rule_expense_refund
+msgid "Expenses Reimbursement"
+msgstr "Udgifter refusion"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,help:hr_payroll_expense.field_hr_payslip__expense_sheet_ids
+msgid "Expenses to reimburse to employee."
+msgstr "Udgifter til refusion til medarbejder."
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_payslip_employees
+msgid "Generate payslips for all selected employees"
+msgstr "Generer lønsedler for alle valgte medarbejdere"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "Go to salary rules"
+msgstr "Gå til lønregler"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_account_payment_register__is_already_paid_through_a_payslip
+msgid "Is Already Paid Through A Payslip"
+msgstr "Er allerede betalt via en lønseddel"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_account_move
+msgid "Journal Entry"
+msgstr "Journalbilag"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payroll_structure.py:0
+msgid ""
+"No debit account found in the '%(rule_name)s' payslip salary rule. Please "
+"add a payable debit account to be able to create an accounting entry for the "
+"expense reports linked to this payslip."
+msgstr ""
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid ""
+"No salary rule was found to handle expenses in structure '%"
+"(structure_name)s'."
+msgstr ""
+"Der blev ikke fundet nogen lønregel til håndtering af udlæg i strukturen '%"
+"(structure_name)s'."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"Only approved expense reports that were paid by an employee can be "
+"reimbursed in a payslip."
+msgstr ""
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_account_payment_register
+msgid "Pay"
+msgstr "Betal"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Lønseddel"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_expense_sheet__payslip_id
+msgid "Payslip"
+msgstr "Lønseddel"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_expense_sheet__refund_in_payslip
+msgid "Reimburse In Next Payslip"
+msgstr "Refusionér i næste lønseddel"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid "Reimbursed Expenses"
+msgstr "Refusionerede udgifter"
+
+#. module: hr_payroll_expense
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_expense_sheet_view_form_inherit_payroll
+msgid "Remove from Payslip"
+msgstr "Fjern fra lønseddel"
+
+#. module: hr_payroll_expense
+#: model:ir.actions.server,name:hr_payroll_expense.hr_expense_add_to_payslip_action_server
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_expense_sheet_view_form_inherit_payroll
+msgid "Report in Next Payslip"
+msgstr "Rapportér i næste lønseddel"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_payroll_structure
+msgid "Salary Structure"
+msgstr "Løn struktur"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payroll_structure.py:0
+msgid ""
+"The '%(account_name)s' account for the salary rule '%(rule_name)s' must be "
+"of type 'Payable'."
+msgstr ""
+"Kontoen '%(account_name)s' for lønreglen '%(rule_name)s' skal være af typen "
+"'Kreditorer'."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid ""
+"The salary rules with the code 'EXPENSES' must have a debit account set to "
+"be able to properly reimburse the linked expenses. This must be an account "
+"of type 'Payable'."
+msgstr ""
+"Lønreglerne med koden 'UDLÆG' skal have en debetkonto, som er indstillet til "
+"korrekt at refundere de tilknyttede udlæg. Kontotypen skal være 'Kreditorer'."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"The state of the accounting entries linked to this expense report do not "
+"allow it to be reimbursed through a payslip."
+msgstr ""
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "There are no valid expense sheets selected."
+msgstr ""
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"You cannot remove an expense from a payslip that has already been "
+"validated.\n"
+"Expenses can only be removed from draft or canceled payslips."
+msgstr ""
+"Du kan ikke fjerne et udlæg fra en lønseddel, der allerede er valideret.\n"
+"Udlæg kan kun fjernes fra kladder eller annullerede lønsedler."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid ""
+"You don't have the access rights to link an expense report to a payslip. You "
+"need to be a payroll officer to do that."
+msgstr ""
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/account_move.py:0
+msgid "You don't have the access rights to post an invoice."
+msgstr "Du har ikke rettigheder til at postere en faktura."

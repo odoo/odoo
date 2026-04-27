@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_folder_settings_installer" model="ir.actions.act_window">
+         <field name="name">Journals to synchronize</field>
+         <field name="res_model">documents.account.folder.setting</field>
+         <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="documents_folder_setting_view_list" model="ir.ui.view">
+        <field name="name">documents folder setting list view</field>
+        <field name="model">documents.account.folder.setting</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="company_id" column_invisible="True"/>
+                <field name="journal_id" domain="[('company_id', '=', company_id)]"/>
+                <field name="folder_id" widget="documents_folder_many2one" context="{'default_type': 'folder', 'default_folder_id': company_account_folder_id}"/>
+                <field name="tag_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="documents_folder_setting_view_form" model="ir.ui.view">
+        <field name="name">documents folder setting form view</field>
+        <field name="model">documents.account.folder.setting</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="company_id" readonly="1"/>
+                        <field name="journal_id" domain="[('company_id', '=', company_id)]"/>
+                        <field name="folder_id" widget="documents_folder_many2one"
+                            domain="[('type', '=', 'folder'), ('shortcut_document_id', '=', False), '|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
+                        <field name="tag_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

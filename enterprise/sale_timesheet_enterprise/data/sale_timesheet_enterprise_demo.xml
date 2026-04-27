@@ -1,0 +1,95 @@
+<odoo>
+    <data noupdate="1">
+        <!-- Validate timesheets if older than 10 days -->
+        <function model="account.analytic.line" name="write">
+            <value model="account.analytic.line" eval="obj().search([('date', '&lt;', (DateTime.now() + relativedelta(days=-10)).date()), ('validated', '=', False)]).ids"/>
+            <value eval="{'validated': True}" />
+        </function>
+
+        <!-- Billing time target for most employees -->
+        <record id="hr.employee_admin" model="hr.employee">
+            <field name="billable_time_target">150</field>
+        </record>
+
+        <record id="hr.employee_ngh" model="hr.employee">
+            <field name="billable_time_target">135</field>
+        </record>
+
+        <record id="hr.employee_qdp" model="hr.employee">
+            <field name="billable_time_target">185</field>
+        </record>
+
+        <record id="hr.employee_al" model="hr.employee">
+            <field name="billable_time_target">185</field>
+        </record>
+
+        <record id="hr.employee_vad" model="hr.employee">
+            <field name="billable_time_target">155</field>
+        </record>
+
+        <record id="hr.employee_fpi" model="hr.employee">
+            <field name="billable_time_target">160</field>
+        </record>
+
+        <record id="hr.employee_lur" model="hr.employee">
+            <field name="billable_time_target">160</field>
+        </record>
+
+        <record id="hr.employee_fme" model="hr.employee">
+            <field name="billable_time_target">165</field>
+        </record>
+
+        <record id="hr.employee_jgo" model="hr.employee">
+            <field name="billable_time_target">145</field>
+        </record>
+
+        <record id="hr.employee_jth" model="hr.employee">
+            <field name="billable_time_target">160</field>
+        </record>
+
+        <record id="hr.employee_mit" model="hr.employee">
+            <field name="billable_time_target">160</field>
+        </record>
+
+        <record id="hr.employee_niv" model="hr.employee">
+            <field name="billable_time_target">155</field>
+        </record>
+
+        <record id="hr.employee_stw" model="hr.employee">
+            <field name="billable_time_target">140</field>
+        </record>
+
+        <record id="hr.employee_chs" model="hr.employee">
+            <field name="billable_time_target">165</field>
+        </record>
+
+        <record id="hr.employee_jve" model="hr.employee">
+            <field name="billable_time_target">175</field>
+        </record>
+
+        <record id="hr.employee_han" model="hr.employee">
+            <field name="billable_time_target">160</field>
+        </record>
+
+        <record id="hr.employee_jog" model="hr.employee">
+            <field name="billable_time_target">160</field>
+        </record>
+
+        <!-- function to set task planned_date_begin and date_deadline -->
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('sale_line_id', '=', ref('sale_timesheet.sale_line_construction_44'))]"/>
+            <value eval="{
+                'planned_date_begin': (DateTime.today() - relativedelta(days=4)).strftime('%Y-%m-%d %H:%M'),
+                'date_deadline': (DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M'),
+            }"/>
+        </function>
+
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('sale_line_id', '=', ref('sale_timesheet.sale_line_construction_42'))]"/>
+            <value eval="{
+                'planned_date_begin': (DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M'),
+                'date_deadline': (DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M'),
+            }"/>
+        </function>
+    </data>
+</odoo>

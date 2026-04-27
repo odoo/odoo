@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <record id="hr_CNSS_register" model="res.partner">
+            <field name="name">National Social Security Fund</field><!-- Caisse Nationale de Sécurité Sociale -->
+            <field name="street">649, Bd Mohammed V - BP</field>
+            <field name="city">Casablanca</field>
+            <field name="zip">10726</field>
+            <field name="phone">+212(0)522547054</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="hr_retraite_register" model="res.partner">
+            <field name="name">Supplementary Pension Organization CIMR</field><!-- Organisme de retraite complementaire CIMR -->
+            <field name="street">Intersection Boulevard de l'Aéropostale et boulevard Main street - Casa Anfa.</field>
+            <field name="city">Hay Hassani. Casablanca</field>
+            <field name="zip">20230</field>
+            <field name="phone">+212(0)522424888</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="hr_cci_register" model="res.partner">
+            <field name="name">Chamber of Commerce and Industry</field><!-- Chambre du commerce et de l'industrie -->
+            <!-- Depends on the region -->
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="hr_prevoyance_register" model="res.partner">
+            <field name="name">Mutual and Prevoyance Organization</field><!-- Organisme de Mutuelle et prévoyance -->
+            <field name="country_id" ref="base.ma"/>
+        </record>
+    </data>
+</odoo>

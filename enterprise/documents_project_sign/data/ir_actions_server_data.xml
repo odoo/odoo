@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <function model="documents.document" name="action_folder_embed_action" eval="[
+            ref('documents_project.document_project_folder'),
+            ref('documents_sign.ir_actions_server_create_sign_template_direct'),
+        ]"/>
+    </data>
+</odoo>

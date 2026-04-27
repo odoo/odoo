@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="vehicle_list_action" model="ir.actions.act_window">
+        <field name="name">vehicles</field>
+        <field name="res_model">l10n_mx_edi.vehicle</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create the first vehicle</p>
+        </field>
+    </record>
+
+    <record id="vehicle_form_view" model="ir.ui.view">
+        <field name="name">l10n_mx_edi.vehicle.form</field>
+        <field name="model">l10n_mx_edi.vehicle</field>
+        <field name="arch" type="xml">
+            <form string="vehicle Form">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="vehicle_licence"/>
+                            <field name="vehicle_model"/>
+                            <field name="vehicle_config"/>
+                            <field name="gross_vehicle_weight" invisible="not vehicle_config" required="vehicle_config"/>
+                        </group>
+                        <group>
+                            <field name="transport_perm_sct"/>
+                            <field name="name"/>
+                            <field name="transport_insurer"/>
+                            <field name="transport_insurance_policy"/>
+                        </group>
+                    </group>
+                    <group col="2">
+                        <field name="figure_ids">
+                            <list editable="bottom">
+                                <field name="type" required="1"/>
+                                <field name="operator_id"/>
+                                <field name="part_ids" widget="many2many_tags" options="{'no_create': True}" invisible="type == '01'"/>
+                            </list>
+                        </field>
+                        <field name="trailer_ids" invisible="vehicle_config in ('C2', 'C3', 'OTROSG', 'GPLUTA', 'GPLUTB', 'GPLUTC', 'GPLUTD', 'GPLATA', 'GPLATB', 'GPLATC', 'GPLATD')">
+                            <list editable="bottom">
+                                <field name="name"/>
+                                <field name="sub_type"/>
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="vehicle_search_view" model="ir.ui.view">
+        <field name="name">l10n_mx_edi.vehicle.search</field>
+        <field name="model">l10n_mx_edi.vehicle</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="transport_insurer"/>
+                <field name="transport_insurance_policy"/>
+                <field name="transport_perm_sct"/>
+                <field name="vehicle_model"/>
+                <field name="vehicle_config"/>
+                <field name="vehicle_licence"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="vehicle_tree_view">
+        <field name="name">l10n_mx_edi.vehicle.list</field>
+        <field name="model">l10n_mx_edi.vehicle</field>
+        <field name="arch" type="xml">
+            <list string="vehicle List">
+                <field name="vehicle_licence"/>
+                <field name="name"/>
+                <field name="transport_insurer"/>
+                <field name="transport_insurance_policy"/>
+                <field name="transport_perm_sct"/>
+                <field name="vehicle_model"/>
+                <field name="vehicle_config"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_mx_edi_vehicle_actions" model="ir.actions.act_window">
+        <field name="name">Vehicle Setups (MX)</field>
+        <field name="res_model">l10n_mx_edi.vehicle</field>
+        <field name="view_id" ref="vehicle_tree_view"/>
+        <field name="search_view_id" ref="vehicle_search_view"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Add a new vehicle setup for MX delivery guide
+          </p><p>
+            For delivery guides that use federal highways (federal transportation),
+            you need to supply lots of information about the vehicle setup you are using.
+            It defines not only the vehicle itself, but also which trailers or drivers you
+            are using, so you could have multiple setups for the same vehicle.
+          </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_stock_config_settings_mx" name="Mexico" parent="stock.menu_stock_config_settings"
+        sequence="100" groups="stock.group_stock_manager"/>
+    <menuitem action="l10n_mx_edi_vehicle_actions" id="menu_stock_mx_vehicles" name="Vehicle Setups" parent="menu_stock_config_settings_mx"
+        groups="stock.group_stock_manager"/>
+</odoo>

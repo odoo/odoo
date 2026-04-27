@@ -1,0 +1,47 @@
+.o_expense_flex {
+    flex: 1 1 0;
+    text-align: center;
+    object-fit: scale-down;
+    height: 12em;
+}
+
+.o_extract_sample {
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.o_extract_sample_animation_overlay {
+    transition: opacity .5s ease-in-out;
+    opacity: 0;
+    z-index: $zindex-dropdown + 1;
+}
+
+@keyframes ellipsis {
+    0% {
+        content: "Scanning\00a0\00a0\00a0";
+    }
+
+    25% {
+        content: "Scanning.\00a0\00a0";
+    }
+
+    50% {
+        content: "Scanning..\00a0";
+    }
+
+    75% {
+        content: "Scanning...";
+    }
+
+    100% {
+        content: "Scanning\00a0\00a0\00a0";
+    }
+}
+
+.o_expense_scanning::before {
+    content: "";
+    animation: ellipsis 2s infinite;
+}

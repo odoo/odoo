@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="view_delivery_easypost_carrier_type" model="ir.ui.view">
+            <field name="name">EasyPost Select Carrier</field>
+            <field name="model">delivery.carrier.easypost</field>
+            <field name="arch" type="xml">
+                <form string="Carrier Type">
+                    <group>
+                        <field name="carrier_type" widget="carrier_type_selection"/>
+                        <field name="delivery_carrier_id" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button name="action_validate" type="object" string="Select" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="act_delivery_easypost_carrier_type" model="ir.actions.act_window">
+            <field name="name">Select a carrier</field>
+            <field name="res_model">delivery.carrier.easypost</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+</odoo>

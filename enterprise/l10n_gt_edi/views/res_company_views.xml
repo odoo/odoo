@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_company_form_inherit_l10n_gt_edi" model="ir.ui.view">
+        <field name="name">res.company.form.inherit.l10n_gt_edi</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <field name="company_registry" position="before">
+                <field name="l10n_gt_edi_vat_affiliation" invisible="country_code != 'GT'"/>
+                <field name="l10n_gt_edi_legal_name" invisible="country_code != 'GT'"/>
+                <field name="l10n_gt_edi_establishment_code" invisible="country_code != 'GT'"/>
+                <field name="l10n_gt_edi_phrase_ids" widget="many2many_tags" invisible="country_code != 'GT'"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

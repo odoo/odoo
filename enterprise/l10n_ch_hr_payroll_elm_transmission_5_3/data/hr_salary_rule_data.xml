@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_parameter_minimum_lpp_salary" model="hr.rule.parameter">
+        <field name="name">Minimum LPP Salary</field>
+        <field name="code">minimum_lpp_salary</field>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="rule_parameter_minimum_lpp_salary_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">22680</field>
+        <field name="rule_parameter_id" ref="rule_parameter_minimum_lpp_salary"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_ch_hr_elm_9054" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ch_hr_payroll_elm_transmission.l10n_ch_elm_technical_category"/>
+        <field name="name">LPP Salary (for %)</field>
+        <field name="code">LPPSALARY</field>
+        <field name="sequence">340</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.l10n_ch_lpp_insurance_id and contract.l10n_ch_lpp_in_percentage and not contract.l10n_ch_lpp_not_insured</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+minimum_salary = contract.l10n_ch_lpp_insurance_id._get_minimum_lpp_salary(payslip.date_from)
+coordination_deduction, max_amount = contract.l10n_ch_lpp_insurance_id._find_coordination_amount(payslip.date_from)
+additional_wage_types = ['1200', '1205', '1207', '1208'] # 13th and 14th month should be computed in the base
+base = sum(result_rules[rule.code]['total'] for rule in payslip.struct_id.rule_ids if rule.l10n_ch_lpp_retroactive or rule.l10n_ch_lpp_forecast or rule.l10n_ch_code in additional_wage_types)
+result = min(max((coordination_deduction - minimum_salary) if base >= minimum_salary else 0, base - coordination_deduction), max_amount)
+        </field>
+        <field name="struct_id" ref="l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm"/>
+    </record>
+
+    <record id="l10n_ch_hr_elm_5053" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">PP Contributions in %</field>
+        <field name="code">PP.PERCENTAGE</field>
+        <field name="l10n_ch_code">5053</field>
+        <field name="sequence">350</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = result_rules['LPPSALARY']['total'] > 0</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['LPPSALARY']['total']
+result_rate = - contract.l10n_ch_lpp_percentage_employee
+        </field>
+        <field name="l10n_ch_salary_certificate">10.1</field>
+        <field name="l10n_ch_wage_statement">M</field>
+        <field name="struct_id" ref="l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm"/>
+    </record>
+
+    <record id="l10n_ch_hr_elm_7053" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ch_hr_payroll_elm_transmission.l10n_ch_elm_company_contributions"/>
+        <field name="name">PP Employer Contributions in %</field>
+        <field name="code">PP.PERCENTAGE.COMP</field>
+        <field name="l10n_ch_code">7053</field>
+        <field name="sequence">370</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = result_rules['LPPSALARY']['total'] > 0</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['LPPSALARY']['total']
+result_rate = contract.l10n_ch_lpp_percentage_employer
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll_elm_transmission.hr_payroll_structure_ch_elm"/>
+    </record>
+</odoo>

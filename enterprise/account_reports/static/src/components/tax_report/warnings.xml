@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.tax_report_warning_inactive_tags" owl="1">
+        Some journal items appear to point to obsolete report lines.
+        <a type="button" t-on-click="(ev) => controller.reportAction(ev, 'action_open_amls_with_archived_tags')">Check them</a>
+        and correct their tax tags if necessary.
+    </t>
+
+    <t t-name="account_reports.tax_report_warning_lines_consistency" owl="1">
+        This report contains inconsistencies. The affected lines are marked with a warning.
+    </t>
+
+    <t t-name="account_reports.tax_report_warning_tax_id_selected_companies">
+        All selected companies or branches do not share the same Tax ID. Please check the Tax ID of the selected companies.
+    </t>
+</templates>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_master_report">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <t t-set="docs" t-value="docs.with_context(lang=docs.env.lang)"/>
+                    <t t-set="payslips" t-value="report_data['payslips_data']"/>
+                    <t t-set="summary" t-value="report_data['sums']"/>
+                    <t t-set="headers" t-value="report_data['headers']"/>
+                    <div class="page container-fluid">
+                        <div class="mt-4 row text-center fw-bold">
+                            <div class="col-12">
+                                <h1>Master Report</h1>
+                                <h2>For the period of <t t-esc="report_data['payroll_month']"/>  <t t-esc="report_data['payroll_year']"/></h2>
+                            </div>
+                        </div>
+                        <div class="mt-4 row">
+                            <div class="col-12">
+                                <h3>Summary</h3>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th class="text-end">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="headers.items()" t-as="header_tuple">
+                                            <t t-set="line_code" t-value="header_tuple[0]"/>
+                                            <t t-set="header" t-value="header_tuple[1]"/>
+                                            <tr>
+                                                <td><t t-esc="header"/></td>
+                                                <td class="text-end"><t t-esc="summary[line_code]"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page container-fluid">
+                        <div class="mt-4 row">
+                            <div class="col-12">
+                                <t t-foreach="payslips.values()" t-as="payslip">
+                                    <p style="page-break-before:always;"/>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h3><t t-esc="payslip['payroll_number']"/></h3>
+                                            <table class="table table-bordered">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Employee Name</td>
+                                                        <td class="text-end"><t t-esc="payslip['employee_name']"/></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Department</td>
+                                                        <td><t t-esc="payslip['department']"/></td>
+                                                    </tr>
+                                                    <t t-foreach="headers.items()" t-as="header_tuple">
+                                                        <t t-set="line_code" t-value="header_tuple[0]"/>
+                                                        <t t-set="header" t-value="header_tuple[1]"/>
+                                                        <tr>
+                                                            <td><t t-esc="header"/></td>
+                                                            <td class="text-end"><t t-esc="payslip[line_code]"/></td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </t> 
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

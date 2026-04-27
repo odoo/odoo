@@ -1,0 +1,30 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope"
+    xmlns:a="http://www.w3.org/2005/08/addressing"
+    xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+    <s:Header>
+        <a:Action s:mustUnderstand="1">http://wcf.dian.colombia/IWcfDianCustomerServices/SendBillSyncResponse</a:Action>
+        <o:Security s:mustUnderstand="1"
+            xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <u:Timestamp u:Id="_0">
+                <u:Created>2024-02-21T15:09:48.004Z</u:Created>
+                <u:Expires>2024-02-21T15:14:48.004Z</u:Expires>
+            </u:Timestamp>
+        </o:Security>
+    </s:Header>
+    <s:Body>
+        <SendBillSyncResponse xmlns="http://wcf.dian.colombia">
+            <SendBillSyncResult xmlns:b="http://schemas.datacontract.org/2004/07/DianResponse"
+                xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+                <b:ErrorMessage xmlns:c="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+                <b:IsValid>false</b:IsValid>
+                <b:StatusCode>89</b:StatusCode>
+                <b:StatusDescription>Error al parsear xml. Namespace prefix 'sts' is not defined.</b:StatusDescription>
+                <b:StatusMessage i:nil="true"/>
+                <b:XmlBase64Bytes i:nil="true"/>
+                <b:XmlBytes i:nil="true"/>
+                <b:XmlDocumentKey i:nil="true"/>
+                <b:XmlFileName>invoice.zip</b:XmlFileName>
+            </SendBillSyncResult>
+        </SendBillSyncResponse>
+    </s:Body>
+</s:Envelope>

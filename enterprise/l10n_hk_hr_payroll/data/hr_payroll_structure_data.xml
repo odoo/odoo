@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_structure_cap57_employee_salary" model="hr.payroll.structure">
+        <field name="name">CAP57: Employees Monthly Pay</field>
+        <field name="code">CAP57MONTHLY</field>
+        <field name="country_id" ref="base.hk" />
+        <field name="type_id" ref="l10n_hk_hr_payroll.structure_type_employee_cap57" />
+        <field name="report_id" ref="l10n_hk_hr_payroll.action_report_payslip_hk"/>
+        <field name="unpaid_work_entry_type_ids" eval="[
+            (4, ref('hr_work_entry_contract.work_entry_type_unpaid_leave')),
+        ]"/>
+    </record>
+
+    <record id="l10n_hk_hr_payroll.structure_type_employee_cap57" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure_cap57_employee_salary" />
+    </record>
+
+    <record id="hr_payroll_structure_cap57_payment_in_lieu_of_notice" model="hr.payroll.structure">
+        <field name="name">CAP57: Payment in Lieu of Notice</field>
+        <field name="payslip_name">Payment in Lieu of Notice</field>
+        <field name="code">CAP57LIEU</field>
+        <field name="rule_ids" eval="[]"/>
+        <field name="type_id" ref="l10n_hk_hr_payroll.structure_type_employee_cap57" />
+        <field name="report_id" ref="l10n_hk_hr_payroll.action_report_payslip_hk"/>
+        <field name="country_id" ref="base.hk"/>
+        <field name="use_worked_day_lines" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_structure_cap57_long_service_payment" model="hr.payroll.structure">
+        <field name="name">CAP57: Long Service Payment</field>
+        <field name="payslip_name">Long Service Payment</field>
+        <field name="code">CAP57LONG</field>
+        <field name="rule_ids" eval="[]"/>
+        <field name="type_id" ref="l10n_hk_hr_payroll.structure_type_employee_cap57" />
+        <field name="report_id" ref="l10n_hk_hr_payroll.action_report_payslip_hk"/>
+        <field name="country_id" ref="base.hk"/>
+        <field name="use_worked_day_lines" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_structure_cap57_severance_payment" model="hr.payroll.structure">
+        <field name="name">CAP57: Severance Payment</field>
+        <field name="payslip_name">Severance Payment</field>
+        <field name="code">CAP57SEVERANCE</field>
+        <field name="rule_ids" eval="[]"/>
+        <field name="type_id" ref="l10n_hk_hr_payroll.structure_type_employee_cap57" />
+        <field name="report_id" ref="l10n_hk_hr_payroll.action_report_payslip_hk"/>
+        <field name="country_id" ref="base.hk"/>
+        <field name="use_worked_day_lines" eval="False"/>
+    </record>
+</odoo>

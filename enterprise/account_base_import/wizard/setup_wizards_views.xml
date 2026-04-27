@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_setup_base_import_list" model="ir.ui.view">
+        <field name="name">account.setup.opening.account.account.list.account.base.import</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.init_accounts_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <header>
+                   <button name="%(account_base_import.action_open_import_guide)d" type="action" string="Import" display="always"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

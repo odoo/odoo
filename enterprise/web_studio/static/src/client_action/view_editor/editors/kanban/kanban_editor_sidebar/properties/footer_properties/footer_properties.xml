@@ -1,0 +1,19 @@
+<templates>
+
+<t t-name="web_studio.ViewEditor.InteractiveEditorProperties.Footer">
+    <ViewStructureProperties>
+        <ClassAttribute
+            value="this.props.node.attrs.class"
+            onChange.bind="onChangeAttribute"
+        />
+        <Property
+            name="'style'"
+            type="'string'"
+            value="props.node.attrs.style"
+            onChange.bind="onChangeAttribute">
+                CSS style
+        </Property>
+    </ViewStructureProperties>
+</t>
+
+</templates>

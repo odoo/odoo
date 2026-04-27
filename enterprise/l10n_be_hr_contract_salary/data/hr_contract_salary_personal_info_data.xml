@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    <record id="hr_contract_salary_personal_info_km_home_work" model="hr.contract.salary.personal.info">
+        <field name="name">Km Home/Work</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'km_home_work')])"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">integer</field>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_address"/>
+        <field name="impacts_net_salary" eval="True"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_id_card" model="hr.contract.salary.personal.info">
+        <field name="name">ID card copy (Both Sides)</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'id_card')])"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">document</field>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_documents"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_driving_license" model="hr.contract.salary.personal.info">
+        <field name="name">Driving License</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'driving_license')])"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">document</field>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_documents"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_mobile_invoice" model="hr.contract.salary.personal.info">
+        <field name="name">Mobile Subscription Invoice</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'mobile_invoice')])"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">document</field>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_documents"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_sim_card" model="hr.contract.salary.personal.info">
+        <field name="name">Sim Card Copy</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'sim_card')])"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">document</field>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_documents"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_internet_invoice" model="hr.contract.salary.personal.info">
+        <field name="name">Internet Subscription Invoice</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'internet_invoice')])"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">document</field>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_documents"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_disabled" model="hr.contract.salary.personal.info">
+        <field name="name">Disabled</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'disabled')])"/>
+        <field name="applies_on">employee</field>
+        <field name="position">left</field>
+        <field name="display_type">checkbox</field>
+        <field name="impacts_net_salary" eval="True"/>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_family"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_marital" model="hr.contract.salary.personal.info">
+        <field name="name">Marital Status</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'marital')])"/>
+        <field name="placeholder">Select a status</field>
+        <field name="display_type">dropdown</field>
+        <field name="dropdown_selection">specific</field>
+        <field name="position">left</field>
+        <field name="impacts_net_salary" eval="True"/>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_family"/>
+        <field name="applies_on">employee</field>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="sequence">20</field>
+    </record>
+    <record id="hr_contract_salary_personal_info_marital_single" model="hr.contract.salary.personal.info.value">
+        <field name="name">Single</field>
+        <field name="value">single</field>
+        <field name="personal_info_id" ref="hr_contract_salary_personal_info_marital"/>
+        <field name="hide_children" eval="True"/>
+    </record>
+    <record id="hr_contract_salary_personal_info_marital_married" model="hr.contract.salary.personal.info.value">
+        <field name="name">Married</field>
+        <field name="value">married</field>
+        <field name="personal_info_id" ref="hr_contract_salary_personal_info_marital"/>
+    </record>
+    <record id="hr_contract_salary_personal_info_marital_cohabitant" model="hr.contract.salary.personal.info.value">
+        <field name="name">Legal Cohabitant</field>
+        <field name="value">cohabitant</field>
+        <field name="personal_info_id" ref="hr_contract_salary_personal_info_marital"/>
+    </record>
+    <record id="hr_contract_salary_personal_info_marital_widower" model="hr.contract.salary.personal.info.value">
+        <field name="name">Widower</field>
+        <field name="value">widower</field>
+        <field name="personal_info_id" ref="hr_contract_salary_personal_info_marital"/>
+        <field name="hide_children" eval="True"/>
+    </record>
+    <record id="hr_contract_salary_personal_info_marital_divorced" model="hr.contract.salary.personal.info.value">
+        <field name="name">Divorced</field>
+        <field name="value">divorced</field>
+        <field name="personal_info_id" ref="hr_contract_salary_personal_info_marital"/>
+        <field name="hide_children" eval="True"/>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_disabled_spouse_bool" model="hr.contract.salary.personal.info">
+        <field name="name">Disabled Spouse</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'disabled_spouse_bool')])"/>
+        <field name="applies_on">employee</field>
+        <field name="position">left</field>
+        <field name="display_type">checkbox</field>
+        <field name="impacts_net_salary" eval="True"/>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_family"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="parent_id" ref="hr_contract_salary_personal_info_marital"/>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_spouse_fiscal_status" model="hr.contract.salary.personal.info">
+        <field name="name">Spouse Professional Situation</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'spouse_fiscal_status')])"/>
+        <field name="placeholder">Select a Situation</field>
+        <field name="display_type">dropdown</field>
+        <field name="dropdown_selection">specific</field>
+        <field name="position">left</field>
+        <field name="impacts_net_salary" eval="True"/>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_family"/>
+        <field name="applies_on">employee</field>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="parent_id" ref="hr_contract_salary_personal_info_marital"/>
+        <field name="sequence">40</field>
+    </record>
+    <record id="hr_contract_salary_personal_info_without_income" model="hr.contract.salary.personal.info.value">
+        <field name="name">Without Income</field>
+        <field name="value">without_income</field>
+        <field name="personal_info_id" ref="hr_contract_salary_personal_info_spouse_fiscal_status"/>
+    </record>
+    <record id="hr_contract_salary_personal_info_high_income" model="hr.contract.salary.personal.info.value">
+        <field name="name">With High Income</field>
+        <field name="value">high_income</field>
+        <field name="personal_info_id" ref="hr_contract_salary_personal_info_spouse_fiscal_status"/>
+    </record>
+    <record id="hr_contract_salary_personal_info_low_income" model="hr.contract.salary.personal.info.value">
+        <field name="name">With Low Income</field>
+        <field name="value">low_income</field>
+        <field name="personal_info_id" ref="hr_contract_salary_personal_info_spouse_fiscal_status"/>
+    </record>
+    <record id="hr_contract_salary_personal_info_low_pension" model="hr.contract.salary.personal.info.value">
+        <field name="name">With Low Pension</field>
+        <field name="value">low_pension</field>
+        <field name="personal_info_id" ref="hr_contract_salary_personal_info_spouse_fiscal_status"/>
+    </record>
+    <record id="hr_contract_salary_personal_info_high_pension" model="hr.contract.salary.personal.info.value">
+        <field name="name">With High Pension</field>
+        <field name="value">high_pension</field>
+        <field name="personal_info_id" ref="hr_contract_salary_personal_info_spouse_fiscal_status"/>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_spouse_complete_name" model="hr.contract.salary.personal.info">
+        <field name="name">Spouse Name and First Name</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'spouse_complete_name')])"/>
+        <field name="applies_on">employee</field>
+        <field name="position">left</field>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_family"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="parent_id" ref="hr_contract_salary_personal_info_marital"/>
+        <field name="sequence">50</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_spouse_birthdate" model="hr.contract.salary.personal.info">
+        <field name="name">Spouse Birthdate</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'spouse_birthdate')])"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">date</field>
+        <field name="position">left</field>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_family"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="parent_id" ref="hr_contract_salary_personal_info_marital"/>
+        <field name="sequence">60</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_children" model="hr.contract.salary.personal.info">
+        <field name="name">Number of Dependent Children</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'children')])"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">integer</field>
+        <field name="impacts_net_salary" eval="True"/>
+        <field name="position">left</field>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_family"/>
+        <field name="placeholder">0</field>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="sequence">15</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_disabled_children_bool" model="hr.contract.salary.personal.info">
+        <field name="name">Disabled Children</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'disabled_children_bool')])"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">checkbox</field>
+        <field name="impacts_net_salary" eval="True"/>
+        <field name="position">left</field>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_family"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="sequence">80</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_disabled_children_number" model="hr.contract.salary.personal.info">
+        <field name="name">Number of Disabled Children</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'disabled_children_number')])"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">integer</field>
+        <field name="impacts_net_salary" eval="True"/>
+        <field name="position">left</field>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_family"/>
+        <field name="placeholder">0</field>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="parent_id" ref="hr_contract_salary_personal_info_disabled_children_bool"/>
+        <field name="sequence">90</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_other_dependent_people" model="hr.contract.salary.personal.info">
+        <field name="name">Other Dependent People</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'other_dependent_people')])"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">checkbox</field>
+        <field name="impacts_net_salary" eval="True"/>
+        <field name="position">left</field>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_family"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="sequence">100</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_other_senior_dependent" model="hr.contract.salary.personal.info">
+        <field name="name">Seniors</field>
+        <field name="helper">&gt;= 65 years old</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'other_senior_dependent')])"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">integer</field>
+        <field name="impacts_net_salary" eval="True"/>
+        <field name="position">left</field>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_family"/>
+        <field name="placeholder">0</field>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="parent_id" ref="hr_contract_salary_personal_info_other_dependent_people"/>
+        <field name="sequence">110</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_other_disabled_senior_dependent" model="hr.contract.salary.personal.info">
+        <field name="name">Disabled seniors</field>
+        <field name="helper">&gt;= 65 years old</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'other_disabled_senior_dependent')])"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">integer</field>
+        <field name="impacts_net_salary" eval="True"/>
+        <field name="position">left</field>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_family"/>
+        <field name="placeholder">0</field>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="parent_id" ref="hr_contract_salary_personal_info_other_dependent_people"/>
+        <field name="sequence">120</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_other_juniors_dependent" model="hr.contract.salary.personal.info">
+        <field name="name">People</field>
+        <field name="helper">&lt; 65 years old</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'other_juniors_dependent')])"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">integer</field>
+        <field name="impacts_net_salary" eval="True"/>
+        <field name="position">left</field>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_family"/>
+        <field name="placeholder">0</field>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="parent_id" ref="hr_contract_salary_personal_info_other_dependent_people"/>
+        <field name="sequence">130</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_other_disabled_juniors_dependant" model="hr.contract.salary.personal.info">
+        <field name="name">Disabled people</field>
+        <field name="helper">&lt; 65 years old</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'other_disabled_juniors_dependent')])"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">integer</field>
+        <field name="impacts_net_salary" eval="True"/>
+        <field name="position">left</field>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_family"/>
+        <field name="placeholder">0</field>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="parent_id" ref="hr_contract_salary_personal_info_other_dependent_people"/>
+        <field name="sequence">140</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_lang" model="hr.contract.salary.personal.info">
+        <field name="name">Payroll Language</field>
+        <field name="helper"></field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'lang')])"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">dropdown</field>
+        <field name="position">left</field>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_general"/>
+        <field name="dropdown_selection">lang</field>
+        <field name="is_required" eval="True"/>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_certificate_civil_engineer" model="hr.contract.salary.personal.info.value">
+        <field name="name">Civil Engineer</field>
+        <field name="value">civil_engineer</field>
+        <field name="personal_info_id" ref="hr_contract_salary.hr_contract_salary_personal_info_certificate"/>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_seniority" model="hr.contract.salary.personal.info">
+        <field name="name">Seniority at Hiring</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'l10n_be_scale_seniority')])"/>
+        <field name="display_type">integer</field>
+        <field name="applies_on">employee</field>
+        <field name="info_type_id" ref="hr_contract_salary.hr_contract_salary_personal_info_type_certificate"/>
+    </record>
+    </data>
+</odoo>

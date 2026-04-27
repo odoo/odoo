@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="daily_report" inherit_id="point_of_sale.pos_session_sales_details" name="Daily Report">
+        <xpath expr="//h2[@id='daily_report_title']" position="replace">
+            <div class="wrapper">
+                <t t-if="l10n_co_edi_pos_enable">
+                    <h2>Reporte comprobante de informe diario</h2>
+                    <div>NIT: <t t-out="company.vat"/></div>
+                    <div>Número de serie del punto de venta: <t t-out="l10n_co_edi_pos_serial_number"/></div>
+                </t>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='payments']" position="replace">
+            <div t-if="l10n_co_edi_pos_enable and l10n_co_edi_pos_payment_options" id="l10n_co_edi_pos_payment_options">
+                <h6 class="bg-secondary p-1 fw-bold w-50 ms-auto">Payments</h6>
+                <table class="table table-sm table-borderless w-50 ms-auto" >
+                    <thead>
+                        <tr>
+                            <th id="payment_option_name" class="text-start">Payment Option</th>
+                            <th id="payment_option_transaction_count" class="text-center">Number of Transactions</th>
+                            <th id="payment_option_total" class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach='l10n_co_edi_pos_payment_options' t-as='payment_option'>
+                            <td class="ps-2 fw-bold" ><span t-out="payment_option['name']">Payment Option Name Demo</span></td>
+                            <td class="text-center">
+                                <span t-out="payment_option['transaction_count']"/>
+                            </td>
+                            <td class="text-end">
+                                <span t-if="currency['position']">
+                                    <span t-out="payment_option['total']" t-options="{'widget': 'float', 'precision': currency['precision']}">123.45</span><span t-out='currency["symbol"]'>$</span>
+                                </span>
+                                <span t-else="">
+                                    <span t-out='currency["symbol"]'>$</span><span t-out="payment_option['total']" t-options="{'widget': 'float', 'precision': currency['precision']}">123.45</span>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </xpath>
+        <xpath expr="//t[@id='closing_session']/br" position="before">
+            <t t-if="l10n_co_edi_pos_enable">
+                <strong>From <t t-out="l10n_co_edi_pos_start_pos_order_number"/> to <t t-out="l10n_co_edi_pos_end_pos_order_number"/></strong>
+                <br/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

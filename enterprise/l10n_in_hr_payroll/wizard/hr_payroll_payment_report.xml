@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="l10n_in_hr_payroll.hr_payroll_payment_advice_report_view_form" model="ir.ui.view">
+        <field name="name">hr.payroll.payment.advice.report.wizard.form</field>
+        <field name="model">hr.payroll.payment.report.wizard</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payroll_payment_report_view_form"/>
+        <field name="arch" type="xml">
+            <group id="payment_report_group" position="inside">
+                <field name="l10n_in_reference" invisible="export_format != 'advice'"/>
+                <field name="l10n_in_cheque_number" invisible="export_format != 'advice' or l10n_in_neft"/>
+                <field name="l10n_in_neft" invisible="export_format != 'advice'"/>
+                <!-- this field will be used in the name of the pdf -->
+                <field name="l10n_in_payment_advice_filename_pdf" invisible="1"/>
+                <field name="l10n_in_payment_advice_pdf" filename="l10n_in_payment_advice_filename_pdf"
+                    invisible="export_format != 'advice' or not l10n_in_state_pdf"/>
+                <!-- this field will be used in the name of the XLSX -->
+                <field name="l10n_in_payment_advice_filename_xlsx" invisible="1"/>
+                <field name="l10n_in_payment_advice_xlsx" filename="l10n_in_payment_advice_filename_xlsx"
+                    invisible="export_format != 'advice' or not l10n_in_state_xlsx"/>
+            </group>
+            <xpath expr="//button[@name='generate_payment_report']" position="attributes">
+                <attribute name="invisible">export_format == 'advice'</attribute>
+            </xpath>
+            <xpath expr="//button[@name='generate_payment_report']" position="after">
+                <button string="Create PDF File" class="btn-primary" name="generate_payment_report_pdf" type="object"
+                    data-hotkey="q" invisible="export_format != 'advice' or l10n_in_state_pdf"/>
+                <button string="Create XLSX File" class="btn-primary" name="generate_payment_report_xls" type="object"
+                    data-hotkey="e" invisible="export_format != 'advice' or l10n_in_state_xlsx"/>
+                <button string="Create PDF File" class="btn-secondary" name="generate_payment_report_pdf" type="object"
+                    data-hotkey="w" invisible="export_format != 'advice' or not l10n_in_state_pdf"/>
+                <button string="Create XLSX File" class="btn-secondary" name="generate_payment_report_xls" type="object"
+                    data-hotkey="r" invisible="export_format != 'advice' or not l10n_in_state_xlsx"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

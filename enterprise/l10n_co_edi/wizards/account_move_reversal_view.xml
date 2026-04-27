@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="form_view_account_move_reversal_inherit" model="ir.ui.view">
+            <field name="name">form.view.account.move.reversal.inherit</field>
+            <field name="model">account.move.reversal</field>
+            <field name="inherit_id" ref="account.view_account_move_reversal"/>
+            <field name="arch" type="xml">
+                <field name="reason" position="after">
+                    <field name="country_code" invisible="1"/>
+                    <field name="l10n_co_edi_description_code_credit"
+                           invisible="country_code != 'CO'"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

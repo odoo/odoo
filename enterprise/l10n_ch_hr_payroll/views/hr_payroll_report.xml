@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_payslip_ch" model="ir.actions.report">
+        <field name="name">Switzerland: Payslip</field>
+        <field name="model">hr.payslip</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_ch_hr_payroll.report_payslip_ch_lang</field>
+        <field name="report_file">l10n_ch_hr_payroll.report_payslip_ch_lang</field>
+        <field name="print_report_name">'Payslip - %s' % (object.employee_id.name)</field>
+        <field name="binding_model_id" ref="hr_payroll.model_hr_payslip"/>
+        <field name="binding_type">report</field>
+        <!-- Erase fields to avoid double PDF posting -->
+        <field name="attachment"></field>
+        <field name="attachment_use" eval="False"/>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <record id="action_report_light_payslip_ch" model="ir.actions.report">
+        <field name="name">Switzerland: Payslip (Light)</field>
+        <field name="model">hr.payslip</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_ch_hr_payroll.report_light_payslip_ch_lang</field>
+        <field name="report_file">l10n_ch_hr_payroll.report_light_payslip_ch_lang</field>
+        <field name="print_report_name">'Payslip - %s' % (object.employee_id.name)</field>
+        <field name="binding_model_id" ref="hr_payroll.model_hr_payslip"/>
+        <field name="binding_type">report</field>
+        <!-- Erase fields to avoid double PDF posting -->
+        <field name="attachment"></field>
+        <field name="attachment_use" eval="False"/>
+        <field name="paperformat_id" ref="hr_payroll.paperformat_euro_light"/>
+    </record>
+
+    <record id="action_report_monthly_summary" model="ir.actions.report">
+        <field name="name">Switzerland: Monthly Summary</field>
+        <field name="model">l10n.ch.monthly.summary</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_ch_hr_payroll.report_monthly_summary</field>
+        <field name="report_file">l10n_ch_hr_payroll.report_monthly_summary</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <record id="action_report_individual_account" model="ir.actions.report">
+        <field name="name">Individual Account</field>
+        <field name="model">hr.employee</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_ch_hr_payroll.report_individual_account</field>
+        <field name="report_file">l10n_ch_hr_payroll.report_individual_account</field>
+        <field name="print_report_name">(object._get_report_base_filename())</field>
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="l10n_ch_hr_payroll.report_paperformat_individual_account"/>
+    </record>
+
+    <record id="action_insurance_yearly_report" model="ir.actions.report">
+        <field name="name">Insurance Yearly Report PDF</field>
+        <field name="model">ch.yearly.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_ch_hr_payroll.insurance_yearly_report</field>
+        <field name="report_file">l10n_ch_hr_payroll.insurance_yearly_report</field>
+    </record>
+
+    <record id="action_is_report" model="ir.actions.report">
+        <field name="name">Is Report PDF</field>
+        <field name="model">l10n.ch.is.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_ch_hr_payroll.insurance_yearly_report</field>
+        <field name="report_file">l10n_ch_hr_payroll.insurance_yearly_report</field>
+    </record>
+</odoo>

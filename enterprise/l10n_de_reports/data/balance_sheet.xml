@@ -1,0 +1,922 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="balance_sheet_l10n_de" model="account.report">
+        <field name="name">Balance Sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="False"/>
+        <field name="country_id" ref="base.de"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="balance_sheet_l10n_de_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="skr_asset_total" model="account.report.line">
+                <field name="name">Assets</field>
+                <field name="code">SKR_BS_ASSET_TOTAL</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="skr_asset_total_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">SKR_BS_ASSET_A.balance + SKR_BS_ASSET_B.balance + SKR_BS_ASSET_C.balance + SKR_BS_ASSET_D.balance + SKR_BS_ASSET_E.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="skr_bs_asset_a" model="account.report.line">
+                        <field name="name">A. Fixed assets</field>
+                        <field name="code">SKR_BS_ASSET_A</field>
+                        <field name="expression_ids">
+                            <record id="skr_bs_asset_a_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SKR_BS_ASSET_A1.balance + SKR_BS_ASSET_A2.balance + SKR_BS_ASSET_A3.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="skr_bs_asset_a_i" model="account.report.line">
+                                <field name="name">I. Intangible assets</field>
+                                <field name="code">SKR_BS_ASSET_A1</field>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_asset_a_i_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SKR_BS_ASSET_A11.balance + SKR_BS_ASSET_A12.balance + SKR_BS_ASSET_A13.balance + SKR_BS_ASSET_A14.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="skr_bs_asset_a_i_1" model="account.report.line">
+                                        <field name="name">1. Self-generated industrial property rights and similar rights and assets</field>
+                                        <field name="code">SKR_BS_ASSET_A11</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_a_i_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_A_I_1')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_asset_a_i_2" model="account.report.line">
+                                        <field name="name">2. Concessions, licenses and similar rights and assets</field>
+                                        <field name="code">SKR_BS_ASSET_A12</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_a_i_2_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_A_I_2')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_asset_a_i_3" model="account.report.line">
+                                        <field name="name">3. Goodwill</field>
+                                        <field name="code">SKR_BS_ASSET_A13</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_a_i_3_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_A_I_3')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_asset_a_i_4" model="account.report.line">
+                                        <field name="name">4. Prepayments on intangible assets</field>
+                                        <field name="code">SKR_BS_ASSET_A14</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_a_i_4_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_A_I_4')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_bs_asset_a_ii" model="account.report.line">
+                                <field name="name">II. Tangible assets</field>
+                                <field name="code">SKR_BS_ASSET_A2</field>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_asset_a_ii_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SKR_BS_ASSET_A21.balance + SKR_BS_ASSET_A22.balance + SKR_BS_ASSET_A23.balance + SKR_BS_ASSET_A24.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="skr_bs_asset_a_ii_1" model="account.report.line">
+                                        <field name="name">1. Land, land rights and buildings</field>
+                                        <field name="code">SKR_BS_ASSET_A21</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_a_ii_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_A_II_1')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_asset_a_ii_2" model="account.report.line">
+                                        <field name="name">2. Technical equipment and machines</field>
+                                        <field name="code">SKR_BS_ASSET_A22</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_a_ii_2_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_A_II_2')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_asset_a_ii_3" model="account.report.line">
+                                        <field name="name">3. Other equipment, factory and office equipment</field>
+                                        <field name="code">SKR_BS_ASSET_A23</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_a_ii_3_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_A_II_3')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_asset_a_ii_4" model="account.report.line">
+                                        <field name="name">4. Prepayments on intangible assets and construction in progress</field>
+                                        <field name="code">SKR_BS_ASSET_A24</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_a_ii_4_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_A_II_4')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_bs_asset_a_iii" model="account.report.line">
+                                <field name="name">III. Financial assets</field>
+                                <field name="code">SKR_BS_ASSET_A3</field>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_asset_a_iii_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SKR_BS_ASSET_A31.balance + SKR_BS_ASSET_A32.balance + SKR_BS_ASSET_A33.balance + SKR_BS_ASSET_A34.balance + SKR_BS_ASSET_A35.balance + SKR_BS_ASSET_A36.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="skr_bs_asset_a_iii_1" model="account.report.line">
+                                        <field name="name">1. Shares in affiliated companies</field>
+                                        <field name="code">SKR_BS_ASSET_A31</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_a_iii_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_A_III_1')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_asset_a_iii_2" model="account.report.line">
+                                        <field name="name">2. Loans to affiliated companies</field>
+                                        <field name="code">SKR_BS_ASSET_A32</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_a_iii_2_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_A_III_2')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_asset_a_iii_3" model="account.report.line">
+                                        <field name="name">3. Participations</field>
+                                        <field name="code">SKR_BS_ASSET_A33</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_a_iii_3_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_A_III_3')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_asset_a_iii_4" model="account.report.line">
+                                        <field name="name">4. Loans to companies in which participations are held</field>
+                                        <field name="code">SKR_BS_ASSET_A34</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_a_iii_4_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_A_III_4')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_asset_a_iii_5" model="account.report.line">
+                                        <field name="name">5. Long-term investments</field>
+                                        <field name="code">SKR_BS_ASSET_A35</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_a_iii_5_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_A_III_5')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_asset_a_iii_6" model="account.report.line">
+                                        <field name="name">6. Other loans</field>
+                                        <field name="code">SKR_BS_ASSET_A36</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_a_iii_6_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_A_III_6')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="skr_bs_asset_b" model="account.report.line">
+                        <field name="name">B. Current assets</field>
+                        <field name="code">SKR_BS_ASSET_B</field>
+                        <field name="expression_ids">
+                            <record id="skr_bs_asset_b_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SKR_BS_ASSET_B1.balance + SKR_BS_ASSET_B2.balance + SKR_BS_ASSET_B3.balance + SKR_BS_ASSET_B4.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="skr_bs_asset_b_i" model="account.report.line">
+                                <field name="name">I. Inventories</field>
+                                <field name="code">SKR_BS_ASSET_B1</field>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_asset_b_i_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SKR_BS_ASSET_B11.balance + SKR_BS_ASSET_B12.balance + SKR_BS_ASSET_B13.balance + SKR_BS_ASSET_B14.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="skr_bs_asset_b_i_1" model="account.report.line">
+                                        <field name="name">1. Raw materials and supplies</field>
+                                        <field name="code">SKR_BS_ASSET_B11</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_b_i_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_B_I_1')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_asset_b_i_2" model="account.report.line">
+                                        <field name="name">2. Work in progress</field>
+                                        <field name="code">SKR_BS_ASSET_B12</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_b_i_2_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_B_I_2')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_asset_b_i_3" model="account.report.line">
+                                        <field name="name">3. Finished goods and merchandise</field>
+                                        <field name="code">SKR_BS_ASSET_B13</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_b_i_3_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_B_I_3')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_asset_b_i_4" model="account.report.line">
+                                        <field name="name">4. Prepayments on inventories</field>
+                                        <field name="code">SKR_BS_ASSET_B14</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_b_i_4_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_B_I_4')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_bs_asset_b_ii" model="account.report.line">
+                                <field name="name">II. Receivables and other assets</field>
+                                <field name="code">SKR_BS_ASSET_B2</field>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_asset_b_ii_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SKR_BS_ASSET_B21.balance + SKR_BS_ASSET_B22.balance + SKR_BS_ASSET_B23.balance + SKR_BS_ASSET_B24.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="skr_bs_asset_b_ii_1" model="account.report.line">
+                                        <field name="name">1. Trade receivables</field>
+                                        <field name="code">SKR_BS_ASSET_B21</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_b_ii_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_B_II_1')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_asset_b_ii_2" model="account.report.line">
+                                        <field name="name">2. Receivables from affiliated companies</field>
+                                        <field name="code">SKR_BS_ASSET_B22</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_b_ii_2_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_B_II_2')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_asset_b_ii_3" model="account.report.line">
+                                        <field name="name">3. Receivables from companies in which participations are held</field>
+                                        <field name="code">SKR_BS_ASSET_B23</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_b_ii_3_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_B_II_3')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_asset_b_ii_4" model="account.report.line">
+                                        <field name="name">4. Other assets</field>
+                                        <field name="code">SKR_BS_ASSET_B24</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_b_ii_4_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_B_II_4')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_bs_asset_b_iii" model="account.report.line">
+                                <field name="name">III. Securities</field>
+                                <field name="code">SKR_BS_ASSET_B3</field>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_asset_b_iii_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SKR_BS_ASSET_B31.balance + SKR_BS_ASSET_B32.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="skr_bs_asset_b_iii_1" model="account.report.line">
+                                        <field name="name">1. Shares in affiliated companies</field>
+                                        <field name="code">SKR_BS_ASSET_B31</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_b_iii_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_B_III_1')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_asset_b_iii_2" model="account.report.line">
+                                        <field name="name">2. other short term investments</field>
+                                        <field name="code">SKR_BS_ASSET_B32</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_asset_b_iii_2_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_B_III_2')])]"/>
+                                                <field name="subformula">sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_bs_asset_b_iv" model="account.report.line">
+                                <field name="name">IV. Cash on hand, Bundesbank balances, bank balances and checks</field>
+                                <field name="code">SKR_BS_ASSET_B4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_asset_b_iv_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_B_IV')])]"/>
+                                        <field name="subformula">sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="skr_bs_asset_c" model="account.report.line">
+                        <field name="name">C. Prepaid expenses</field>
+                        <field name="code">SKR_BS_ASSET_C</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="skr_bs_asset_c_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_C')])]"/>
+                                <field name="subformula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="skr_bs_asset_d" model="account.report.line">
+                        <field name="name">D. Deferred tax assets</field>
+                        <field name="code">SKR_BS_ASSET_D</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="skr_bs_asset_d_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_D')])]"/>
+                                <field name="subformula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="skr_bs_asset_e" model="account.report.line">
+                        <field name="name">E. Difference on the assets side from the offsetting of assets</field>
+                        <field name="code">SKR_BS_ASSET_E</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="skr_bs_asset_e_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_asset_bs_E')])]"/>
+                                <field name="subformula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="skr_liabilities_total" model="account.report.line">
+                <field name="name">Equity and liabilities</field>
+                <field name="code">SKR_BS_LIABILITIES_TOTAL</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="skr_liabilities_total_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">SKR_BS_LIABILITIES_A.balance + SKR_BS_LIABILITIES_2023_B.balance + SKR_BS_LIABILITIES_2023_C.balance + SKR_BS_LIABILITIES_2023_D.balance + SKR_BS_LIABILITIES_2023_E.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="skr_bs_liabilities_a" model="account.report.line">
+                        <field name="name">A. Equity</field>
+                        <field name="code">SKR_BS_LIABILITIES_A</field>
+                        <field name="expression_ids">
+                            <record id="skr_bs_liabilities_a_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SKR_BS_LIABILITIES_A1.balance + SKR_BS_LIABILITIES_A2.balance + SKR_BS_LIABILITIES_A3.balance + SKR_BS_LIABILITIES_A4.balance + SKR_BS_LIABILITIES_A5.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="skr_bs_liabilities_a_i" model="account.report.line">
+                                <field name="name">I. Subscribed capital</field>
+                                <field name="code">SKR_BS_LIABILITIES_A1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_liabilities_a_i_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_A_I')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_bs_liabilities_a_ii" model="account.report.line">
+                                <field name="name">II. Subscribed capital</field>
+                                <field name="code">SKR_BS_LIABILITIES_A2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_liabilities_a_ii_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_A_II')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_bs_liabilities_a_iii" model="account.report.line">
+                                <field name="name">III. Revenue reserves</field>
+                                <field name="code">SKR_BS_LIABILITIES_A3</field>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_liabilities_a_iii_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SKR_BS_LIABILITIES_A31.balance + SKR_BS_LIABILITIES_A32.balance + SKR_BS_LIABILITIES_A33.balance + SKR_BS_LIABILITIES_A34.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="skr_bs_liabilities_a_iii_1" model="account.report.line">
+                                        <field name="name">1. Legal reserve</field>
+                                        <field name="code">SKR_BS_LIABILITIES_A31</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_liabilities_a_iii_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_A_III_1')])]"/>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_liabilities_a_iii_2" model="account.report.line">
+                                        <field name="name">2. Reserve for own shares</field>
+                                        <field name="code">SKR_BS_LIABILITIES_A32</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_liabilities_a_iii_2_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_A_III_2')])]"/>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_liabilities_a_iii_3" model="account.report.line">
+                                        <field name="name">3. Statutory reserves</field>
+                                        <field name="code">SKR_BS_LIABILITIES_A33</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_liabilities_a_iii_3_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_A_III_3')])]"/>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_bs_liabilities_a_iii_4" model="account.report.line">
+                                        <field name="name">4. Other retained earnings</field>
+                                        <field name="code">SKR_BS_LIABILITIES_A34</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_bs_liabilities_a_iii_4_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_A_III_4')])]"/>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_bs_liabilities_a_iv" model="account.report.line">
+                                <field name="name">IV. Retained earnings/accumulated losses brought forward</field>
+                                <field name="code">SKR_BS_LIABILITIES_A4</field>
+                                <field name="groupby" eval="False"/>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_liabilities_a_iv_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SKR_BS_LIABILITIES_A4.balance_liabilities + SKR_BS_LIABILITIES_A4.previous_year</field>
+                                        <field name="subformula" eval="False"/>
+                                    </record>
+                                    <record id="skr_bs_liabilities_a_iv_balance_liabilities" model="account.report.expression">
+                                        <field name="label">balance_liabilities</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_A_IV')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                    <!-- Profit and loss from previous year -->
+                                    <record id="skr_bs_liabilities_a_iv_previous_year" model="account.report.expression">
+                                        <field name="label">previous_year</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.account_type', 'in', ['income', 'income_other', 'expense_direct_cost', 'expense', 'expense_depreciation', 'equity_unaffected'])]"/>
+                                        <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_bs_liabilities_a_v" model="account.report.line">
+                                <field name="name">V. Net income/loss for the year</field>
+                                <field name="code">SKR_BS_LIABILITIES_A5</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_liabilities_a_v_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <!-- We add `equity_unaffected` to the domain to exclude the closing entry -->
+                                        <field name="formula" eval="[('account_id.account_type', 'in', ['income', 'income_other', 'expense_direct_cost', 'expense', 'expense_depreciation', 'equity_unaffected'])]"/>
+                                        <field name="date_scope">from_fiscalyear</field>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="skr_bs_liabilities_2023_b" model="account.report.line">
+                        <field name="name">B. Liabilities</field>
+                        <field name="code">SKR_BS_LIABILITIES_2023_B</field>
+                        <field name="expression_ids">
+                            <record id="skr_bs_liabilities_2023_b_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SKR_BS_LIABILITIES_2023_B1.balance + SKR_BS_LIABILITIES_2023_B2.balance + SKR_BS_LIABILITIES_2023_B3.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="skr_bs_liabilities_2023_b_1" model="account.report.line">
+                                <field name="name">1. Accrued pension and similar obligations</field>
+                                <field name="code">SKR_BS_LIABILITIES_2023_B1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_liabilities_2023_b_1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_B_1')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_bs_liabilities_2023_b_2" model="account.report.line">
+                                <field name="name">2. Tax accruals</field>
+                                <field name="code">SKR_BS_LIABILITIES_2023_B2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_liabilities_2023_b_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_B_2')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_bs_liabilities_2023_b_3" model="account.report.line">
+                                <field name="name">3. Other accruals</field>
+                                <field name="code">SKR_BS_LIABILITIES_2023_B3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_liabilities_2023_b_3_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_B_3')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="skr_bs_liabilities_2023_c" model="account.report.line">
+                        <field name="name">C. Liabilities</field>
+                        <field name="code">SKR_BS_LIABILITIES_2023_C</field>
+                        <field name="expression_ids">
+                            <record id="skr_bs_liabilities_2023_c_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SKR_BS_LIABILITIES_2023_C1.balance + SKR_BS_LIABILITIES_2023_C2.balance + SKR_BS_LIABILITIES_2023_C3.balance + SKR_BS_LIABILITIES_2023_C4.balance + SKR_BS_LIABILITIES_2023_C5.balance + SKR_BS_LIABILITIES_2023_C6.balance + SKR_BS_LIABILITIES_2023_C7.balance + SKR_BS_LIABILITIES_2023_C8.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="skr_bs_liabilities_2023_c_1" model="account.report.line">
+                                <field name="name">1. Loans, of which convertible</field>
+                                <field name="code">SKR_BS_LIABILITIES_2023_C1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_liabilities_2023_c_1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_C_1')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_bs_liabilities_2023_c_2" model="account.report.line">
+                                <field name="name">2. Liabilities to banks</field>
+                                <field name="code">SKR_BS_LIABILITIES_2023_C2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_liabilities_2023_c_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_C_2')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_bs_liabilities_2023_c_3" model="account.report.line">
+                                <field name="name">3. Payments received on account of orders</field>
+                                <field name="code">SKR_BS_LIABILITIES_2023_C3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_liabilities_2023_c_3_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_C_3')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_bs_liabilities_2023_c_4" model="account.report.line">
+                                <field name="name">4. Trade payable</field>
+                                <field name="code">SKR_BS_LIABILITIES_2023_C4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_liabilities_2023_c_4_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_C_4')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_bs_liabilities_2023_c_5" model="account.report.line">
+                                <field name="name">5. Liabilities on bills accepted and drawn</field>
+                                <field name="code">SKR_BS_LIABILITIES_2023_C5</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_liabilities_2023_c_5_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_C_5')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_bs_liabilities_2023_c_6" model="account.report.line">
+                                <field name="name">6. Payables to affiliated companies</field>
+                                <field name="code">SKR_BS_LIABILITIES_2023_C6</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_liabilities_2023_c_6_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_C_6')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_bs_liabilities_2023_c_7" model="account.report.line">
+                                <field name="name">7. Payables to companies in which participations are held</field>
+                                <field name="code">SKR_BS_LIABILITIES_2023_C7</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_liabilities_2023_c_7_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_C_7')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_bs_liabilities_2023_c_8" model="account.report.line">
+                                <field name="name">8. Other liabilities, of which taxes, of which relating to social security and similar obligations</field>
+                                <field name="code">SKR_BS_LIABILITIES_2023_C8</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_bs_liabilities_2023_c_8_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_C_8')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="skr_bs_liabilities_2023_d" model="account.report.line">
+                        <field name="name">D. Deferred income</field>
+                        <field name="code">SKR_BS_LIABILITIES_2023_D</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="skr_bs_liabilities_2023_d_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_D')])]"/>
+                                <field name="subformula">-sum</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="skr_bs_liabilities_2023_e" model="account.report.line">
+                        <field name="name">E. Deferred tax liabilities</field>
+                        <field name="code">SKR_BS_LIABILITIES_2023_E</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="skr_bs_liabilities_2023_e_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_liabilities_bs_E')])]"/>
+                                <field name="subformula">-sum</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_de_off_sheet" model="account.report.line">
+                <field name="name">OFF BALANCE SHEET ACCOUNTS</field>
+                <field name="code">DE_OS</field>
+                <field name="groupby">account_id</field>
+                <field name="hide_if_zero" eval="1"/>
+                <field name="foldable" eval="True"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_de_off_sheet_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">domain</field>
+                        <field name="formula" eval="[('account_id.account_type', '=', 'off_balance')]"/>
+                        <field name="subformula">-sum</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

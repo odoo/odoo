@@ -1,0 +1,756 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="l10n_cy_balance_sheet" model="account.report">
+        <field name="name">Balance sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_period_comparison" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="country_id" ref="base.cy"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_cy_balance_sheet_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_cy_active_line" model="account.report.line">
+                <field name="name">ACTIVE</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_cy_active_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">cy_current_asset.balance + cy_non_current_asset.balance + cy_fixed_asset.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_cy_current_asset" model="account.report.line">
+                        <field name="name">Current Assets</field>
+                        <field name="code">cy_current_asset</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_cy_current_asset_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">cy_stock.balance + cy_work_in_progress.balance + cy_raw_materials.balance + cy_accounts_receivable_other_payables.balance + cy_advance_payments.balance + cy_other_receivables.balance + cy_prepaid_expenses.balance + cy_short_term_loans.balance + cy_short_term_investments.balance + cy_cash_and_cash_equivalents.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_cy_stock" model="account.report.line">
+                                <field name="name">Stock</field>
+                                <field name="code">cy_stock</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_stock_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">100</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_cy_work_in_progress" model="account.report.line">
+                                <field name="name">Work in Progress</field>
+                                <field name="code">cy_work_in_progress</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_work_in_progress_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">101</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_cy_raw_materials" model="account.report.line">
+                                <field name="name">Raw Materials</field>
+                                <field name="code">cy_raw_materials</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_raw_materials_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">102</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_cy_accounts_receivables_and_other_payables" model="account.report.line">
+                                <field name="name">Accounts Receivables/Other Payables</field>
+                                <field name="code">cy_accounts_receivable_other_payables</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_accounts_receivables_and_other_payables_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">110</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_cy_advance_payments" model="account.report.line">
+                                <field name="name">Advance Payments</field>
+                                <field name="code">cy_advance_payments</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_advance_payments_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">109</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_cy_other_receivables" model="account.report.line">
+                                <field name="name">Other Receivables</field>
+                                <field name="code">cy_other_receivables</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_other_receivables_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">111 + 112 + 114 + 115</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_cy_prepaid_expenses" model="account.report.line">
+                                <field name="name">Prepaid Expenses</field>
+                                <field name="code">cy_prepaid_expenses</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_prepaid_expenses_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">116</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_cy_short_term_loans" model="account.report.line">
+                                <field name="name">Short-term Loans</field>
+                                <field name="code">cy_short_term_loans</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_short_term_loans_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">117</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_cy_short_term_investments" model="account.report.line">
+                                <field name="name">Short-term Investments</field>
+                                <field name="code">cy_short_term_investments</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_short_term_investments_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">118</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_cy_cash_and_cash_equivalents" model="account.report.line">
+                                <field name="name">Cash and Cash Equivalents</field>
+                                <field name="code">cy_cash_and_cash_equivalents</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_cash_and_cash_equivalents_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">12</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_cy_non_current_asset" model="account.report.line">
+                        <field name="name">non-current assets</field>
+                        <field name="code">cy_non_current_asset</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_cy_non_current_asset_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">cy_patents_trademarks_licences_and_software_parent.balance + cy_long_term_financial_investments.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_cy_patents_trademarks_licences_and_software_parent" model="account.report.line">
+                                <field name="name">Patents, Trademarks, Licenses &amp; Software</field>
+                                <field name="code">cy_patents_trademarks_licences_and_software_parent</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_patents_trademarks_licences_and_software_parent_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">cy_patents_trademarks_licenses_and_software.balance + cy_patents_trademarks_licenses_and_software_accumulated_amortization.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_cy_patents_trademarks_licenses_and_software" model="account.report.line">
+                                        <field name="name">Patents, Trademarks, Licenses &amp; Software</field>
+                                        <field name="code">cy_patents_trademarks_licenses_and_software</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_patents_trademarks_licenses_and_software_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">001 + 002 + 003 + 004</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_cy_patents_trademarks_licenses_and_software_accumulated_amortization" model="account.report.line">
+                                        <field name="name">Accumulated Amortization</field>
+                                        <field name="code">cy_patents_trademarks_licenses_and_software_accumulated_amortization</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_patents_trademarks_licenses_and_software_accumulated_amortization_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">005</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_cy_long_term_financial_investments" model="account.report.line">
+                                <field name="name">Long-term Financial Investments</field>
+                                <field name="code">cy_long_term_financial_investments</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_long_term_financial_investments_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">015 + 016</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_cy_fixed_asset" model="account.report.line">
+                        <field name="name">Fixed Assets</field>
+                        <field name="code">cy_fixed_asset</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_cy_fixed_asset_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">cy_property_plant_and_machinery_parent.balance + cy_equipments_parent.balance + cy_computers_parent.balance + cy_other_tangible_assets.balance + cy_motor_vehicles_parent.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_cy_property_plant_and_machinery_parent" model="account.report.line">
+                                <field name="name">Property, Plant and Machinery</field>
+                                <field name="code">cy_property_plant_and_machinery_parent</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_property_plant_and_machinery_parent_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">cy_property_plant_and_machinery.balance + cy_property_plant_and_machinery_accumulated_depreciation.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_cy_property_plant_and_machinery" model="account.report.line">
+                                        <field name="name">Property, Plant and Machinery</field>
+                                        <field name="code">cy_property_plant_and_machinery</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_property_plant_and_machinery_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">006 + 007 + 008</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_cy_property_plant_and_machinery_accumulated_depreciation" model="account.report.line">
+                                        <field name="name">Accumulated Depreciation</field>
+                                        <field name="code">cy_property_plant_and_machinery_accumulated_depreciation</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_property_plant_and_machinery_accumulated_depreciation_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">0140 + 0141</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_cy_equipments_parent" model="account.report.line">
+                                <field name="name">Equipments</field>
+                                <field name="code">cy_equipments_parent</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_equipments_parent_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">cy_equipments.balance + cy_equipments_accumulated_depreciation.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_cy_equipments" model="account.report.line">
+                                        <field name="name">Equipments</field>
+                                        <field name="code">cy_equipments</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_equipments_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">009 + 012</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_cy_equipments_accumulated_depreciation" model="account.report.line">
+                                        <field name="name">Accumulated Depreciation</field>
+                                        <field name="code">cy_equipments_accumulated_depreciation</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_equipments_accumulated_depreciation_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">0142 + 0145</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_cy_computers_parent" model="account.report.line">
+                                <field name="name">Computers</field>
+                                <field name="code">cy_computers_parent</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_computers_parent_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">cy_computers.balance + cy_accumulated_computers_depreciation.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_cy_computers" model="account.report.line">
+                                        <field name="name">Computers</field>
+                                        <field name="code">cy_computers</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_computers_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">010</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_cy_accumulated_computers_depreciation" model="account.report.line">
+                                        <field name="name">Accumulated Depreciation</field>
+                                        <field name="code">cy_accumulated_computers_depreciation</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_accumulated_computers_depreciation_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">0143</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_cy_other_tangible_assets" model="account.report.line">
+                                <field name="name">Other Tangible Assets</field>
+                                <field name="code">cy_other_tangible_assets</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_other_tangible_assets_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">cy_furniture_and_fixtures.balance + cy_accumulated_other_tangible_assets_depreciation.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_cy_furniture_and_fixtures" model="account.report.line">
+                                        <field name="name">Furniture and Fixtures</field>
+                                        <field name="code">cy_furniture_and_fixtures</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_furniture_and_fixtures_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">011</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_cy_accumulated_other_tangible_assets_depreciation" model="account.report.line">
+                                        <field name="name">Accumulated Depreciation</field>
+                                        <field name="code">cy_accumulated_other_tangible_assets_depreciation</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_accumulated_other_tangible_assets_depreciation_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">0144</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_cy_motor_vehicles_parent" model="account.report.line">
+                                <field name="name">Motor Vehicles</field>
+                                <field name="code">cy_motor_vehicles_parent</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_motor_vehicles_parent_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">cy_motor_vehicles.balance + cy_accumulated_motor_vehicles_depreciation.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_cy_motor_vehicles" model="account.report.line">
+                                        <field name="name">Motor Vehicles</field>
+                                        <field name="code">cy_motor_vehicles</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_motor_vehicles_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">013</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_cy_accumulated_motor_vehicles_depreciation" model="account.report.line">
+                                        <field name="name">Accumulated Depreciation</field>
+                                        <field name="code">cy_accumulated_motor_vehicles_depreciation</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_accumulated_motor_vehicles_depreciation_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">0146</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_cy_passive_line" model="account.report.line">
+                <field name="name">PASSIVE</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_cy_passive_line_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">cy_liabilities.balance + cy_equity.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_cy_liabilities" model="account.report.line">
+                        <field name="name">Liabilities</field>
+                        <field name="code">cy_liabilities</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_cy_liabilities_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">cy_current_liabilities.balance + cy_non_current_liabilities.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_cy_current_liabilities" model="account.report.line">
+                                <field name="name">Current Liabilities</field>
+                                <field name="code">cy_current_liabilities</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_current_liabilities_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">cy_other_receivables_accounts_payables.balance + cy_other_payables.balance + cy_accrued_liabilities.balance + cy_other_receivables_tax_payables.balance + cy_other_receivables_accrued_liabilities.balance + cy_dividends_payable.balance + cy_accruals_and_deferred_revenue.balance + cy_short_term_financial_liabilities.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_cy_other_receivables_accounts_payables" model="account.report.line">
+                                        <field name="name">Other Receivables/Accounts Payables</field>
+                                        <field name="code">cy_other_receivables_accounts_payables</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_other_receivables_accounts_payables_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-210</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_cy_other_payables" model="account.report.line">
+                                        <field name="name">Other Payables</field>
+                                        <field name="code">cy_other_payables</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_other_payables_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-212 - 213 - 215 - 216 - 225</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_cy_accrued_liabilities" model="account.report.line">
+                                        <field name="name">Accrued Liabilities</field>
+                                        <field name="code">cy_accrued_liabilities</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_accrued_liabilities_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-214</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_cy_other_receivables_tax_payables" model="account.report.line">
+                                        <field name="name">Other Receivables/Tax Payable</field>
+                                        <field name="code">cy_other_receivables_tax_payables</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_other_receivables_tax_payables_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-220\(2209) - 221 - 222</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_cy_other_receivables_accrued_liabilities" model="account.report.line">
+                                        <field name="name">Other Receivables/Accrued Liabilities</field>
+                                        <field name="code">cy_other_receivables_accrued_liabilities</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_other_receivables_accrued_liabilities_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2209</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_cy_dividends_payable" model="account.report.line">
+                                        <field name="name">Dividends Payable</field>
+                                        <field name="code">cy_dividends_payable</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_dividends_payable_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-226</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_cy_accruals_and_deferred_revenue" model="account.report.line">
+                                        <field name="name">Accruals and Deferred Revenue</field>
+                                        <field name="code">cy_accruals_and_deferred_revenue</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_accruals_and_deferred_revenue_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-227</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_cy_short_term_financial_liabilities" model="account.report.line">
+                                        <field name="name">Short-term Financial Liabilities</field>
+                                        <field name="code">cy_short_term_financial_liabilities</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_short_term_financial_liabilities_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-228</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_cy_non_current_liabilities" model="account.report.line">
+                                <field name="name">Non-current Liabilities</field>
+                                <field name="code">cy_non_current_liabilities</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_non_current_liabilities_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">cy_other_financial_liabilities.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_cy_other_financial_liabilities" model="account.report.line">
+                                        <field name="name">Other Financial Liabilities</field>
+                                        <field name="code">cy_other_financial_liabilities</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_other_financial_liabilities_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-23</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_cy_equity" model="account.report.line">
+                        <field name="name">Equity</field>
+                        <field name="code">cy_equity</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_cy_equity_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">cy_share_capital.balance + cy_reserves.balance + cy_net_profit_loss_current_period.balance + cy_unallocated_earnings.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_cy_share_capital" model="account.report.line">
+                                <field name="name">Share Capital</field>
+                                <field name="code">cy_share_capital</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_share_capital_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-30</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_cy_reserves" model="account.report.line">
+                                <field name="name">Reserves</field>
+                                <field name="code">cy_reserves</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_reserves_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-31</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_cy_net_profit_loss_current_period" model="account.report.line">
+                                <field name="name">Net Profit/Loss Current Period</field>
+                                <field name="code">cy_net_profit_loss_current_period</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_net_profit_loss_current_period_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-3201</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_cy_unallocated_earnings" model="account.report.line">
+                                <field name="name">Unallocated Earnings</field>
+                                <field name="code">cy_unallocated_earnings</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_cy_unallocated_earnings_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">cy_current_year_unallocated_earnings.balance + cy_previous_years_earnings.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_cy_current_year_unallocated_earnings" model="account.report.line">
+                                        <field name="name">Current Year Unallocated Earnings</field>
+                                        <field name="code">cy_current_year_unallocated_earnings</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_current_year_unallocated_earnings_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">cy_current_year_earnings.balance + cy_retained_earnings.balance + cy_current_year_allocated_earnings.balance</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_cy_retained_earnings" model="account.report.line">
+                                                <field name="name">Retained Earnings</field>
+                                                <field name="code">cy_retained_earnings</field>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_cy_retained_earnings_expr" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">aggregation</field>
+                                                        <field name="formula">cy_income_statement.balance</field>
+                                                        <field name="subformula">cross_report</field>
+                                                        <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_cy_current_year_earnings" model="account.report.line">
+                                                <field name="name">Current Year Earnings</field>
+                                                <field name="code">cy_current_year_earnings</field>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_cy_current_year_earnings_expr" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">aggregation</field>
+                                                        <field name="formula">cy_income_statement.balance</field>
+                                                        <field name="subformula">cross_report</field>
+                                                        <field name="date_scope">from_fiscalyear</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_cy_current_year_allocated_earnings" model="account.report.line">
+                                                <field name="name">Current Year Allocated Earnings</field>
+                                                <field name="code">cy_current_year_allocated_earnings</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_cy_current_year_allocated_earnings_expr" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">domain</field>
+                                                        <field name="formula">[('account_id.account_type', '=', 'equity_unaffected')]</field>
+                                                        <field name="subformula">-sum</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_cy_previous_years_earnings" model="account.report.line">
+                                        <field name="name">Previous Years Earnings</field>
+                                        <field name="code">cy_previous_years_earnings</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_cy_previous_years_earnings_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula">['|', ('account_id.account_type', '=', 'equity_unaffected'), ('account_id.account_type', 'in', ('income', 'income_other', 'expense_direct_cost', 'expense', 'expense_depreciation'))]</field>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                            <record id="account_financial_report_cy_previous_years_earnings_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">cy_previous_years_earnings.gross - cy_current_year_earnings.balance - cy_retained_earnings.balance - cy_current_year_allocated_earnings.balance</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

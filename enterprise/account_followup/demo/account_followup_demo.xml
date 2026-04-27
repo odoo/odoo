@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="demo_followup_line3" model="account_followup.followup.line">
+            <field name="name">40 Days</field>
+            <field name="delay">40</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field eval="False" name="send_email"/>
+            <field name="create_activity">True</field>
+            <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+            <field name="activity_summary">Call the customer on the phone!</field>
+            <field name="activity_note">
+Urge the customer to pay overdue invoices, still not settled despite several reminders.
+
+Give 8 days for full payment, or legal action for the recovery of the debt will be taken without further notice.
+            </field>
+        </record>
+        <record id="demo_followup_email_template_4" model="mail.template">
+            <field name="name">Fourth reminder followup</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="email_from">{{ object._get_followup_responsible().email_formatted }}</field>
+            <field name="subject">{{ (object.company_id or object._get_followup_responsible().company_id).name }} Payment Reminder - {{ object.commercial_company_name }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p>
+                        <t t-if="object.id != object.commercial_partner_id.id">Dear <t t-out="object.name or ''"/> (<t t-out="object.commercial_partner_id.name or ''"/>),</t>
+                        <t t-else="">Dear <t t-out="object.name or ''"/>,</t>
+                        <br />
+                        Despite several reminders, your account is still not settled.
+                        Unless full payment is made in next 8 days, then legal action for the recovery of the debt will be taken without further notice.
+                        I trust that this action will prove unnecessary and details of due payments is printed below.
+                        In case of any queries concerning this matter, do not hesitate to contact our accounting department.
+                        <br />
+                        Best Regards,
+                        <br />
+                        <t t-if="not is_html_empty(object._get_followup_responsible().signature)">
+                            <br />
+                            <t t-out="object._get_followup_responsible().signature"/>
+                        </t>
+                        <t t-else="">
+                            <br />
+                            --
+                            <br />
+                            <t t-out="object._get_followup_responsible().name"/>
+                        </t>
+                    </p>
+                </div>
+            </field>
+        </record>
+        <record id="demo_followup_line4" model="account_followup.followup.line">
+            <field name="name">50 Days</field>
+            <field name="delay">50</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="send_email">True</field>
+            <field name="mail_template_id" ref="account_followup.demo_followup_email_template_4"/>
+        </record>
+        <record id="demo_followup_line5" model="account_followup.followup.line">
+            <field name="name">60 Days</field>
+            <field name="delay">60</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field eval="False" name="send_email"/>
+        </record>
+    </data>
+</odoo>

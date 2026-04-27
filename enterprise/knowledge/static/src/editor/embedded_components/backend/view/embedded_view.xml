@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="knowledge.EmbeddedView">
+        <WithLazyLoading>
+            <div t-if="state.error" class="o_knowledge_embedded_view_placeholder d-flex flex-column flex-grow-1 position-relative bg-white border">
+                <div class="d-flex border-bottom p-5 pb-0">
+                    <div class="mb-3 p-3 bg-light w-25 me-auto"/>
+                    <div class="mb-3 p-3 bg-light w-50 border-bottom"/>
+                </div>
+                <div class="bg-light flex-grow-1 p-3 w-100"></div>
+                <div class="o_knowledge_embedded_view_placeholder_cover d-flex flex-column align-items-center justify-content-center">
+                    <p class="o_view_nocontent_empty_folder m-0"></p>
+                    <p class="display-6">Something went wrong!</p>
+                    <p>The view does not exist or you are not allowed to access to it.</p>
+                </div>
+            </div>
+            <div t-else="" tabindex="-1">
+                <EmbeddedView t-props="embeddedViewProps"/>
+            </div>
+        </WithLazyLoading>
+    </t>
+</templates>

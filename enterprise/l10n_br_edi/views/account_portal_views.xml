@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="portal_invoice_page" inherit_id="account.portal_invoice_page">
+            <xpath expr="//div[hasclass('o_portal_html_view')]" position="before">
+                <div t-if="invoice.l10n_br_last_edi_status == 'accepted'" class="row mr16">
+                    <div class="col-lg-12 mr16 ml16 alert alert-info">
+                        Click "Download" for legal documents.
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

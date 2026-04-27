@@ -1,0 +1,55 @@
+$font-size-base: 1rem !default;
+$font-size-root: $o-frontdesk-font-size-base !default;
+
+// Prevent heading sizes and margins editing with the web editor
+$h1-font-size: $font-size-base * 2.0 !default;
+$h2-font-size: $font-size-base * 1.5 !default;
+$h3-font-size: $font-size-base * 1.3 !default;
+$h4-font-size: $font-size-base * 1.2 !default;
+$h5-font-size: $font-size-base * 1.1 !default;
+
+$display-font-sizes: (
+  1: 5rem,
+  2: 4.5rem,
+  3: 4rem,
+  4: 3.5rem,
+  5: 3rem,
+  6: 2.5rem
+) !default;
+
+$headings-margin-top: 0 !default;
+$h2-margin-top: 0 !default;
+$h3-margin-top: 0 !default;
+$h4-margin-top: 0 !default;
+$h5-margin-top: 0 !default;
+$h6-margin-top: 0 !default;
+$display-1-margin-top: 0 !default;
+$display-2-margin-top: 0 !default;
+$display-3-margin-top: 0 !default;
+$display-4-margin-top: 0 !default;
+
+// End - Prevent headings editing
+
+$body-bg: $o-white !default;
+
+$spacer: 1rem !default;
+$spacers: (
+    0: 0,
+    1: $spacer * .25,
+    2: $spacer * .5,
+    3: $spacer,
+    4: $spacer * 1.5,
+    5: $spacer * 3,
+) !default;
+
+$btn-padding-y: map-get($spacers, 3) !default;
+$btn-padding-x: map-get($spacers, 4) !default;
+$btn-padding-y-sm: map-get($spacers, 2) !default;
+$btn-padding-x-sm: map-get($spacers, 3) !default;
+$btn-padding-y-lg: map-get($spacers, 4) !default;
+$btn-padding-x-lg: map-get($spacers, 5) !default;
+
+$input-padding-y: map-get($spacers, 2) !default;
+$input-padding-x :map-get($spacers, 3) !default;
+
+$form-label-font-size: $font-size-base * .875 !default;

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<templates>
+    <t t-name="voip.Numpad">
+        <div t-attf-class="o-voip-Numpad {{ props.extraClass }}">
+            <div class="d-flex border-bottom">
+                <input class="o_input form-control-lg ps-3 border-0" type="text" placeholder="Enter the number…" t-model.trim="softphone.numpad.value" t-att-data-value="softphone.numpad.value" t-ref="input" t-on-keydown="onKeydown"/>
+                <button class="btn fa fa-long-arrow-left shadow-none" title="Backspace" t-on-click="onClickBackspace"/>
+            </div>
+            <div class="container justify-content-center">
+                <div class="row row-cols-3">
+                    <button t-foreach="'123456789*0#'" t-as="key" t-key="key" t-esc="key" t-on-click="onClickKey" class="btn btn-light py-3 fw-normal fs-2"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

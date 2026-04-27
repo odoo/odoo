@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="tag_view_form" model="ir.ui.view">
+        <field name="name">documents.tag.form</field>
+        <field name="model">documents.tag</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Tag Name"/>
+                        <h1><field name="name" placeholder="e.g. To Validate"/></h1>
+                    </div>
+                    <group>
+                        <field name="color" required="True" widget="color_picker"/>
+                    </group>
+                    <group string="Tooltip" name="tooltip" invisible="1">
+                        <field name="tooltip"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button class="btn btn-primary" special="save" data-hotkey="q">Save</button>
+                    <button class="btn btn-secondary" special="cancel" data-hotkey="x">Discard</button>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="tag_view_list" model="ir.ui.view">
+        <field name="name">documents.tag.list</field>
+        <field name="model">documents.tag</field>
+        <field name="arch" type="xml">
+            <list default_order="sequence">
+                <field name="name"/>
+                <field name="color" required="True" widget="color_picker"/>
+                <field name="tooltip" invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="tag_view_search" model="ir.ui.view">
+        <field name="name">tag search</field>
+        <field name="model">documents.tag</field>
+        <field name="arch" type="xml">
+        <search>
+            <field name="name" string="Tag"/>
+         </search>
+        </field>
+    </record>
+
+        <record id="tag_action" model="ir.actions.act_window">
+        <field name="name">Tags</field>
+        <field name="res_model">documents.tag</field>
+        <field name="context">{'simple_name': True}</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('documents.tag_view_list')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('documents.tag_view_form')})]"/>
+    </record>
+</odoo>

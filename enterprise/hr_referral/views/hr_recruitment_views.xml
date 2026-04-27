@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="hr_recruitment_stage_tree_inherit_referral">
+        <field name="name">hr.recruitment.stage.list.inherit.referral</field>
+        <field name="model">hr.recruitment.stage</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_recruitment_stage_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='fold']" position="after">
+                <field name="points" invisible="not use_in_referral"/>
+                <field name="use_in_referral"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="hr_recruitment_stage_form_inherit_referral">
+        <field name="name">hr.recruitment.stage.form.inherit.referral</field>
+        <field name="model">hr.recruitment.stage</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_recruitment_stage_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='job_ids']" position="after">
+                <field name="use_in_referral"/>
+                <field name="points" invisible="not use_in_referral"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

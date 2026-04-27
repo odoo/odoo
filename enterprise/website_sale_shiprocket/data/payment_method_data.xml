@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="shiprocket_payment_method_cash_on_delivery" model="payment.method">
+        <field name="name">Shiprocket: Cash on Delivery</field>
+        <field name="code">shiprocket_cash_on_delivery</field>
+        <field name="sequence">1000</field>
+        <field name="image" type="base64" file="website_sale_shiprocket/static/img/cash_on_delivery.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund">none</field>
+    </record>
+</odoo>

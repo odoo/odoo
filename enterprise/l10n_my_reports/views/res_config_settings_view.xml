@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="res_config_settings_view_form">
+        <field name="name">res.config.settings.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//app[@name='account']/block" position="after">
+                <block title="Malaysian Localization" id="malaysia_localization" invisible="country_code != 'MY'">
+                    <setting company_dependent="1" string="Statement of Account" help="Add your terms &amp; conditions which will appear the bottom of the statement of account reports">
+                        <div class="row mt16">
+                            <field name="l10n_my_description" class="oe_account_terms w-100"
+                                placeholder="Insert your terms &amp; conditions here..."/>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

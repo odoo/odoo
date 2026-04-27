@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="expense_sample_receipt_view_form" model="ir.ui.view">
+        <field name="name">expense.sample.receipt.view.form</field>
+        <field name="model">expense.sample.receipt</field>
+        <field name="arch" type="xml">
+            <form string="Try Expense Digitization" js_class="extract_sample_form"/>
+        </field>
+    </record>
+
+    <record id="action_expense_sample_receipt" model="ir.actions.act_window">
+        <field name="name">Try Sample Receipt</field>
+        <field name="res_model">expense.sample.receipt</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

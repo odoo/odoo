@@ -1,0 +1,286 @@
+.o_bank_rec_main_div {
+    display: flex;
+    background-color: $o-view-background-color;
+    width: 100%;
+    height: 100%;
+
+    .o_form_view.o_xxl_form_view.o_view_controller .o_form_view_container {
+        width: 100%; 
+    }
+    
+    .o_kanban_renderer {
+        border-top: 0;
+    }
+
+    .o_bank_rec_kanban_div{
+        width: 30%;
+        height: 100%;
+        position: relative;
+        overflow: auto;
+        padding: 0;
+        margin: 0;
+        --KanbanRecord-padding-h: #{$o-kanban-inside-hgutter * 1.5};
+        --KanbanRecord-padding-v: #{$o-kanban-inside-vgutter};
+        --KanbanRecord-margin-h: #{$o-kanban-record-margin};
+
+        .o_reward {
+            .o_reward_rainbow_man {
+                top: -25% !important;
+            }
+        }
+
+        .journal-balance {
+            margin: 0px var(--KanbanRecord-margin-h) -1px;
+            padding: $o-kanban-inside-vgutter calc(var(--KanbanRecord-padding-h));
+            min-height: $o-statbutton-height;
+        }
+
+        .kanban-statement {
+            margin: 0px var(--KanbanRecord-margin-h) -1px;
+            padding: $o-kanban-inside-vgutter calc(var(--KanbanRecord-padding-h));
+            .kanban-statement-subline {
+                border: none;
+                font-size: 16px;
+                padding: 16px 0 0 0;
+            }
+        }
+
+        .o_bank_rec_st_line{
+            margin: 0px var(--KanbanRecord-margin-h) (-$border-width) !important;
+            align-items: center;
+
+            &:hover {
+                .statement_separator .btn-sm {
+                   opacity: 100;
+               }
+           }
+
+            &.o_bank_rec_selected_st_line {
+                background-color: var(--table-bg);
+            }
+
+            .statement_separator {
+                position: absolute;
+                height: 4px;
+                margin: 0;
+                padding: 2px 0 0 0;
+                border: 0;
+                z-index: 2;
+                background-color: transparent;
+
+                .btn-sm {
+                    position: relative;
+                    padding-top: 0;
+                    padding-bottom: 0;
+                    top: -21px;
+                    opacity: 0; // display: none doesn't work with tour
+                }
+            }
+        }
+    }
+
+    .o_bank_rec_right_div {
+        flex: 1 1 70%;
+        width: 70%;
+        border-left: 1px solid $border-color;
+        height: 100%;
+        position: relative;
+        overflow: auto;
+
+        .o_content{
+            .o_form_nosheet{
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+
+                .row {
+                    margin-left: 0 !important;
+                    margin-right: 0 !important;
+                }
+
+                table tr td:first-child, table th:first-child {
+                  padding-left: 10px;
+                }
+
+                .o_list_table {
+                    --ListRenderer-thead-padding-y: #{$table-cell-padding-y-sm};
+                    th {
+                        border-left: none !important;
+                    }
+                }
+
+                .o_bank_rec_stats_buttons{
+                    display: flex;
+                    flex-flow: row nowrap;
+                    margin-top: -$o-sheet-vpadding;
+                    white-space: nowrap;
+                    border-bottom: 1px solid $border-color;
+                    height: fit-content;
+                    min-height: $o-statbutton-height;
+
+                    .o_bank_rec_stats_buttons_aside_left{
+                        flex-grow: 0;
+                        display: flex !important;
+                        flex-flow: row nowrap;
+                        border-right: 1px solid $border-color;
+
+                        .btn {
+                            margin-right: $o-statbutton-spacing;
+                        }
+                    }
+
+                    .o_bank_rec_stats_buttons_aside_right{
+                        width: 100%;
+                        overflow: auto;
+                        overflow-y: hidden;
+                        justify-content: right;
+                        flex-grow: 1;
+                        margin: 0px !important;
+
+                        .available_reco_model_ids {
+                            margin-bottom: 0;
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            justify-content: flex-end;
+
+                            .o_bank_rec_reco_models_widget_div{
+                                display: flex;
+                                flex-wrap: wrap;
+                                height: 100%;
+                                width: 100%;
+                                flex: 1 0;
+                                justify-content: flex-end;
+
+                                .recon_model_button {
+                                    flex: 0 1 auto;
+                                }
+                            }
+
+                            .bank_rec_reco_model_dropdown {
+                                display: flex;
+                                flex-shrink: 0;
+                            }
+                        }
+                    }
+                }
+
+                .bank_rec_widget_form_discuss_anchor, .bank_rec_widget_form_transaction_details_anchor{
+                    padding: 0 20px;
+                }
+
+                .o_form_label {
+                    text-wrap: nowrap;
+                }
+            }
+
+            .o_notebook {
+                --notebook-margin-x: 0 !important;
+            }
+        }
+    }
+}
+@include media-breakpoint-down(md) {
+    .o_bank_rec_widget_kanban_view {
+        --ControlPanel-border-bottom: initial;
+    }
+
+    .o_bank_rec_main_div {
+        .o_bank_rec_kanban_div {
+            --KanbanRecord-margin-h: #{-$border-width};
+        }
+
+        .o_bank_rec_kanban_div, .o_bank_rec_right_div {
+            flex: 1 0 95vw;
+        }
+    }
+}
+
+@include media-only(print) {
+    .o_bank_rec_widget_kanban_view .o_control_panel {
+        margin-bottom: $border-width;
+    }
+}
+
+.o_bank_rec_liquidity_line{
+    font-weight: bold;
+}
+
+.o_bank_rec_auto_balance_line{
+    color: $text-muted;
+}
+
+.o_bank_rec_lines_widget_table{
+    th{
+        border-top: none;
+    }
+}
+
+.o_bank_rec_model_button{
+    margin: 3px;
+}
+
+.o_bank_rec_selected_line > td {
+    background-color: var(--table-bg) !important;
+}
+
+.o_bank_rec_expanded_line{
+    border-bottom: transparent;
+    td {
+        padding-bottom: 0;
+    }
+}
+
+.o_bank_rec_second_line {
+    td {
+        padding-top: 0;
+        padding-bottom: 1rem;
+    }
+    .o_form_uri {
+        cursor: pointer;
+    }
+}
+
+.o_bank_rec_quick_create {
+    .o_form_renderer.o_form_nosheet.o_form_editable.d-block {
+        padding: 0;
+    }
+
+    &.o_form_view {
+        height: auto;
+    }
+
+    &.o_kanban_record > div:not(.o_dropdown_kanban) {
+        height: auto;
+    }
+
+    .o_inner_group {
+        display: flex;
+
+        .o_cell:first-child {
+            input,span {
+                font-weight: bold;
+            }
+        }
+
+        .o_cell:nth-child(2) {
+            input {
+                font-style: italic;
+            }
+        }
+    }
+
+    .o_wrap_field > :first-child {
+        flex: 0 0 27%;
+    }
+
+    .o_inner_group > .o_wrap_field:first-child > :first-child {
+        flex: 0 0 17%;
+    }
+}
+
+@media (min-width: 768px) {
+    .o_bank_rec_quick_create.o_form_view {
+        height: auto;
+        min-height: auto;
+    }
+}

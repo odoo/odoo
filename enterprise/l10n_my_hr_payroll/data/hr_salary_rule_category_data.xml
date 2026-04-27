@@ -1,0 +1,14 @@
+<odoo>
+    <record id="hr_payroll_socso_employee" model="hr.salary.rule.category">
+        <field name="name">SOCSO Employee Share</field>
+        <field name="code">SOCSO_EMP</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_socso_employer" model="hr.salary.rule.category">
+        <field name="name">SOCSO Employer Share</field>
+        <field name="code">SOCSO_EMPLR</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+</odoo>

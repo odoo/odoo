@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="planning.PlanningGanttRowProgressBar" t-inherit="web_gantt.GanttRowProgressBar">
+        <xpath expr="//t[@t-if='props.progressBar.max_value gt 0']" position="replace">
+            <t t-if="props.progressBar.max_value gt 0">
+                <!--
+                    for fully_flexible_hours, remove the progressBar and show only the total working hours
+                    in the gantt interval, and do not display the hours ratio.
+                -->
+                <t t-if="props.progressBar.is_fully_flexible_hours">
+                    <span
+                        t-if="show"
+                        class="position-absolute top-0 end-0 h-100 d-flex align-items-center px-1 o_gantt_group_hours"
+                        t-esc="props.progressBar.value_formatted"
+                        style="padding: 0 5px;"
+                    />
+                </t>
+                <!-- for standard and flexible contract, show the progressBar, hours ratio and % -->
+                <t t-else="">
+                    <span
+                        class="bg-opacity-25 position-absolute top-0 end-0 h-100"
+                        t-att-class="status and `bg-${status}`"
+                        t-attf-style="width:{{ Math.min(props.progressBar.ratio, 100) }}%;"
+                    />
+                    <span
+                        t-if="show"
+                        class="position-absolute top-0 end-0 h-100 d-flex align-items-center px-1"
+                        t-att-class="status ? `text-bg-${status}` : 'bg-view'"
+                    >
+                        <span
+                            class="o_gantt_group_hours"
+                            t-esc="`${props.progressBar.value_formatted} / ${props.progressBar.max_value_formatted}`"
+                        />
+                        <span class="ms-1">
+                            (<span t-esc="props.progressBar.ratio_formatted"/>)
+                        </span>
+                    </span>
+                </t>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

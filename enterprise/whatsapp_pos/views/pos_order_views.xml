@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_form_whatsapp_pos_inherit" model="ir.ui.view">
+        <field name="name">pos.order.form.inherit.whatsapp.pos</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='mobile']" position="after">
+                <button name="action_send_whatsapp" icon="fa-whatsapp fa-lg" type="object" class="btn-link" title="Whatsapp" invisible="not mobile"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="worksheet_custom_page" inherit_id="industry_fsm.worksheet_custom_page">
+            <div name="worksheet_signature" position="before">
+                <t t-if="doc.worksheet_count and doc.worksheet_template_id.report_view_id and worksheet_map.get(doc.id)">
+                    <div name="worksheet_map" style="page-break-inside: avoid">
+                        <br/>
+                        <h2>Worksheet</h2>
+                        <t t-set="worksheet" t-value="worksheet_map.get(doc.id)"/>
+                        <t t-call="#{doc.worksheet_template_id.report_view_id.id}"/>
+                    </div>
+                </t>
+            </div>
+        </template>
+    </data>
+</odoo>

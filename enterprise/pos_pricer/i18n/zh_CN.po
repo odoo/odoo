@@ -1,0 +1,431 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_pricer
+#
+# Translators:
+# Wil Odoo, 2024
+# Chloe Wang, 2024
+# Odoo哥 <vnsoft.he@gmail.com>, 2024
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:45+0000\n"
+"PO-Revision-Date: 2025-11-17 14:19+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
+"projects/odoo-18/pos_pricer/zh_Hans/>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: pos_pricer
+#: model:ir.model.constraint,message:pos_pricer.constraint_pricer_tag_name_unique
+msgid "A Pricer tag with this barcode id already exists"
+msgstr "具有此条形码 id 的Pricer 标签已经存在"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__pricer_store_id
+msgid "Associated Pricer Store"
+msgstr "关联 Pricer 店"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__product_id
+msgid "Associated Product"
+msgstr "关联产品"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__auth_url
+msgid "Auth Url"
+msgstr "授权网址"
+
+#. module: pos_pricer
+#: model:product.pricelist,name:pos_pricer.pricer_demo_pricelist
+msgid "Christmas"
+msgstr "圣诞节"
+
+#. module: pos_pricer
+#: model:ir.model,name:pos_pricer.model_res_partner
+msgid "Contact"
+msgstr "联系人"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__create_or_update_products_url
+msgid "Create Or Update Products Url"
+msgstr "创建或更新产品网址"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__create_uid
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__create_uid
+msgid "Created by"
+msgstr "创建人"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__create_date
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__create_date
+msgid "Created on"
+msgstr "创建日期"
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_store__last_update_datetime
+msgid "Date and time of the last synchronization with Pricer"
+msgstr "最后一次与 Pricer 同步的日期和时间"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__display_name
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+msgid "Error: %(status_code)s - %(message)s"
+msgstr "错误：%(status_code)s - %(message)s"
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+msgid "Error: check Pricer credentials"
+msgstr "错误:检查 Pricer 凭据"
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+msgid "Failed to unlink Pricer tag %(pricer_tag)s at API url %(api_url)s"
+msgstr ""
+"未能使用以下链接取消与 Pricer 价格牌%(pricer_tag)s的链接：API 地址%(api_url)s"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__id
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_store__pricer_store_identifier
+msgid "Identifier of the store in the Pricer system"
+msgstr "Pricer 系统中店铺的标识符"
+
+#. module: pos_pricer
+#. odoo-javascript
+#: code:addons/pos_pricer/static/src/views/pricer_quick_pairing_form_view.js:0
+msgid ""
+"Invalid tag name. Should be 1 letter followed by 16 digits. Example: "
+"'N4081315789813275'"
+msgstr "标签名称无效。应为 1 个字母后 16 位数字。例如： 'N4081315789813275'"
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_tag__name
+msgid "It is recommended to use a barcode scanner for input"
+msgstr "建议使用条码扫描器进行输入"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__last_update_datetime
+msgid "Last Update"
+msgstr "最后更新"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__last_update_status_message
+msgid "Last Update Status"
+msgstr "最后更新状态"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__write_uid
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__write_date
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__write_date
+msgid "Last Updated on"
+msgstr "上次更新日期"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__link_tags_url
+msgid "Link Tags Url"
+msgstr "链接标签"
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_store__pricer_login
+msgid "Login of your Pricer account"
+msgstr "您的 Pricer 登录账号"
+
+#. module: pos_pricer
+#. odoo-javascript
+#: code:addons/pos_pricer/static/src/views/pricer_quick_pairing_form_view.js:0
+msgid "No product found for barcode '%s'"
+msgstr "找不到条形码 “%s” 的产品"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_product_product__on_sale_price
+msgid "On Sale Price"
+msgstr "以销售价格"
+
+#. module: pos_pricer
+#: model:ir.actions.server,name:pos_pricer.pricer_sync_cron_ir_actions_server
+msgid "POS Pricer: tags update synchronization "
+msgstr "POS Pricer: 标签更新同步"
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_store__pricer_password
+msgid "Password of your Pricer account"
+msgstr "您的 Pricer 账号密码"
+
+#. module: pos_pricer
+#: model:ir.model,name:pos_pricer.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "POS 配置"
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_product_product__on_sale_price
+msgid "Price after setting a Pricer Sales Pricelist"
+msgstr "设置 Pricer 销售价格表后的价格"
+
+#. module: pos_pricer
+#: model:ir.ui.menu,name:pos_pricer.pos_menu_pricer_configuration
+#: model_terms:ir.ui.view,arch_db:pos_pricer.product_product_form_view_pricers
+msgid "Pricer"
+msgstr "价格表"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_product_product__pricer_display_price
+msgid "Pricer Display Price"
+msgstr "Pricer 价格显示"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__pricer_login
+msgid "Pricer Login"
+msgstr "Pricer 登入"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__pricer_password
+msgid "Pricer Password"
+msgstr "Pricer 密码"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_product_product__pricer_product_to_create_or_update
+msgid "Pricer Product To Create Or Update"
+msgstr "Pricer 产品创建或更新"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__pricer_product_to_link
+msgid "Pricer Product To Link"
+msgstr "Pricer 产品链接"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_product_product__pricer_sale_pricelist_id
+msgid "Pricer Sales Pricelist"
+msgstr "Pricer 销售价格表"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_product_product__pricer_store_id
+#: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_store_form_view
+#: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_store_view_list
+msgid "Pricer Store"
+msgstr "Pricer 商店"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__pricer_store_identifier
+msgid "Pricer Store ID"
+msgstr "Pricer 商店 ID"
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+msgid ""
+"Pricer Store ID must only contain lowercase a-z, 0-9 or '-' and not start "
+"with '-'"
+msgstr "Pricer Store ID 只能包含小写字母 a-z, 0-9 或 '-'  且不能以  '-' 开头"
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_store__name
+msgid "Pricer Store name in Odoo database"
+msgstr "ERP 数据库中的 Pricer 商店名称"
+
+#. module: pos_pricer
+#: model:ir.model,name:pos_pricer.model_pricer_store
+msgid "Pricer Store regrouping pricer tags"
+msgstr "Pricer 存储重新分组的价格标签"
+
+#. module: pos_pricer
+#: model:ir.actions.act_window,name:pos_pricer.action_open_pricer_stores
+#: model:ir.ui.menu,name:pos_pricer.menu_pos_pricer_stores
+msgid "Pricer Stores"
+msgstr "Pricer 商店"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__name
+msgid "Pricer Tag Barcode ID"
+msgstr "Pricer 价格牌识别条码"
+
+#. module: pos_pricer
+#: model:ir.actions.act_window,name:pos_pricer.action_open_pricer_tags
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__pricer_tag_ids
+#: model:ir.ui.menu,name:pos_pricer.menu_pos_pricer_tags
+msgid "Pricer Tags"
+msgstr "Pricer 价格牌"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__pricer_tenant_name
+msgid "Pricer Tenant Name"
+msgstr "Pricer 租户名称"
+
+#. module: pos_pricer
+#: model:ir.model,name:pos_pricer.model_pricer_tag
+msgid "Pricer electronic tag"
+msgstr "Pricer 电子价格牌"
+
+#. module: pos_pricer
+#: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_tag_view_list
+msgid "Pricer tag"
+msgstr "Pricer 价格牌"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__dummy_tag_barcode
+msgid "Pricer tag barcode"
+msgstr "Pricer 标签条码"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_product_product__pricer_tag_ids
+msgid "Pricer tags ids"
+msgstr "Pricer 价格牌识别码"
+
+#. module: pos_pricer
+#: model:ir.model,name:pos_pricer.model_product_template
+msgid "Product"
+msgstr "产品"
+
+#. module: pos_pricer
+#. odoo-javascript
+#: code:addons/pos_pricer/static/src/views/pricer_quick_pairing_form_view.js:0
+msgid "Product '%s' found"
+msgstr "找到产品 “%s”"
+
+#. module: pos_pricer
+#: model:ir.model,name:pos_pricer.model_product_product
+msgid "Product Variant"
+msgstr "产品变体"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__dummy_prod_barcode
+msgid "Product barcode"
+msgstr "产品条形码"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__product_ids
+msgid "Products"
+msgstr "产品"
+
+#. module: pos_pricer
+#: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_store_form_view
+msgid "Quick pairing"
+msgstr "快速配对"
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_store__dummy_tag_barcode
+msgid "Scan the Pricer tag barcode here"
+msgstr "在此扫描 Pricer 标签条形码"
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_store__dummy_prod_barcode
+msgid "Scan the product barcode here"
+msgstr "在此扫描产品条形码"
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_store__last_update_status_message
+msgid "Status message of the last synchronization with Pricer"
+msgstr "与 Pricer 最后一次同步的状态消息"
+
+#. module: pos_pricer
+#: model:ir.model,name:pos_pricer.model_stock_move
+msgid "Stock Move"
+msgstr "库存移动"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__name
+msgid "Store Name"
+msgstr "店名"
+
+#. module: pos_pricer
+#: model:ir.model,name:pos_pricer.model_product_supplierinfo
+msgid "Supplier Pricelist"
+msgstr "供应商价格表"
+
+#. module: pos_pricer
+#. odoo-javascript
+#: code:addons/pos_pricer/static/src/views/pricer_quick_pairing_form_view.js:0
+msgid "Tag '%s' found"
+msgstr "标签 '%s' 已找到"
+
+#. module: pos_pricer
+#. odoo-javascript
+#: code:addons/pos_pricer/static/src/views/pricer_quick_pairing_form_view.js:0
+msgid "Tag '%s' not found, creating it"
+msgstr "标签 '%s' 未找到，创建一个"
+
+#. module: pos_pricer
+#. odoo-javascript
+#: code:addons/pos_pricer/static/src/views/pricer_quick_pairing_form_view.js:0
+msgid "Tag '%s' successfully linked with product '%s'"
+msgstr "标签 '%s' 与产品 '%s' 成功连接"
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_tag.py:0
+msgid ""
+"Tag id should be a 17 characters string composed of a letter followed by 16 "
+"digits"
+msgstr "标签 id 应该是一个由字母和16位数字组成的 17 个字符的字符串"
+
+#. module: pos_pricer
+#: model:ir.model,name:pos_pricer.model_account_tax
+msgid "Tax"
+msgstr "税项"
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_product_product__pricer_sale_pricelist_id
+msgid ""
+"This pricelist will be used to set sales on Pricer tags for this product"
+msgstr "此价格表将用于设置该产品的 Pricer 标签上的销售额"
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_tag__pricer_store_id
+#: model:ir.model.fields,help:pos_pricer.field_product_product__pricer_store_id
+msgid ""
+"This product will be linked to and displayed on the Pricer tags of the store "
+"selected here"
+msgstr "此产品将被链接到并显示在这里选择的商店的价格标签上"
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_product_product__pricer_tag_ids
+msgid ""
+"This product will be linked to and displayed on the Pricer tags with ids "
+"listed here. It is recommended to use a barcode scanner"
+msgstr "此产品将链接到并显示在这里列出的价格标签id。建议使用条码扫描器"
+
+#. module: pos_pricer
+#: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_store_view_list
+msgid "Update all tags"
+msgstr "更新所有标签"
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+msgid "Update successfully sent to Pricer"
+msgstr "更新已成功发送给 Pricer"
+
+#. module: pos_pricer
+#: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_store_view_list
+msgid "Update tags"
+msgstr "更新税"
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_store__pricer_tenant_name
+msgid "Your company identifier at Pricer"
+msgstr "你在 Pricer 的公司标识"

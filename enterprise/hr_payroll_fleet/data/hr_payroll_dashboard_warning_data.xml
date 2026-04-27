@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="hr_payroll_dashboard_warning_vehicle_without_running_contract" model="hr.payroll.dashboard.warning">
+            <field name="name">Vehicles With Drivers And Without Running Contract</field>
+            <field name="country_id" eval="False"/>
+            <field name="evaluation_code">
+vehicle_access = self.env['fleet.vehicle'].has_access('read')
+log_contract_access = self.env['fleet.vehicle.log.contract'].has_access('read')
+
+if vehicle_access and log_contract_access:
+    self.env.cr.execute("""
+        SELECT v.id
+          FROM fleet_vehicle v
+         WHERE v.driver_employee_id IS NOT NULL
+           AND NOT EXISTS (SELECT 1
+                             FROM fleet_vehicle_log_contract c
+                            WHERE c.vehicle_id = v.id
+                              AND c.company_id = v.company_id
+                              AND c.active IS TRUE
+                              AND c.state = 'open')
+           AND v.company_id IN %s
+           AND v.active IS TRUE
+      GROUP BY v.id
+    """, (tuple(self.env.companies.ids), ))
+    vehicles_no_contract = [vid[0] for vid in self.env.cr.fetchall()]
+
+    if vehicles_no_contract:
+        warning_count = len(vehicles_no_contract)
+        warning_records = self.env['fleet.vehicle'].browse(vehicles_no_contract)
+            </field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_employee_multiple_cars" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees With Multiple Company Cars</field>
+            <field name="country_id" eval="False"/>
+            <field name="evaluation_code">
+vehicle_access = self.env['fleet.vehicle'].has_access('read')
+log_contract_access = self.env['fleet.vehicle.log.contract'].has_access('read')
+
+if vehicle_access and log_contract_access:
+    self.env.cr.execute("""
+        SELECT driver_employee_id
+          FROM fleet_vehicle
+         WHERE active IS TRUE
+           AND company_id IN %s
+      GROUP BY driver_employee_id
+        HAVING COUNT(driver_employee_id) > 1
+    """, (tuple(self.env.companies.ids), ))
+    employees_multiple_vehicles = [eid[0] for eid in self.env.cr.fetchall()]
+
+    if employees_multiple_vehicles:
+        warning_count = len(employees_multiple_vehicles)
+        warning_records = self.env['hr.employee'].browse(employees_multiple_vehicles)
+            </field>
+        </record>
+    </data>
+</odoo>

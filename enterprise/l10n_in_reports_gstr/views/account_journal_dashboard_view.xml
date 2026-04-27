@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_journal_dashboard_kanban_view_inherit_gstr" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="inside">
+                <field name="country_code" invisible="1"/>
+            </xpath>
+            <xpath expr="//t[@id='account.JournalBodySalePurchase']//div[@name='kanban_primary_left']" position="inside">
+                <div class="row" groups="account.group_account_manager" invisible="l10n_in_gstr_activate_einvoice_fetch == 'do_nothing'">
+                    <div class="col overflow-hidden text-start">
+                        <t t-if="journal_type == 'purchase' and record.country_code.value == 'IN'">
+                            <button type="object" name="l10n_in_action_fetch_irn_data_for_account_journal" class="btn btn-secondary d-block" groups="account.group_account_invoice">
+                                Fetch from GSTN
+                            </button>
+                        </t>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="account_journal_dashboard_kanban_view_inherited" model="ir.ui.view">
+            <field name="name">account.journal.dashboard.kanban.inherited</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//t[@t-name='menu']//div[@name='kanban_manage_new']" position="inside">
+                    <div t-if="journal_type == 'bank'">
+                        <a type="object" name="open_action_batch_payment">Batch Deposit</a>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+</odoo>

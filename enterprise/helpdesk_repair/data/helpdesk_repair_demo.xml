@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="helpdesk.helpdesk_team3" model="helpdesk.team">
+        <field name="use_product_repairs" eval="True"/>
+    </record>
+
+    <record id="helpdesk_repair_ticket_1" model="helpdesk.ticket">
+        <field name="name">Drawer lock isn't working</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="sale_order_id" ref="helpdesk_sale.sale_order_helpdesk_1"/>
+        <field name="stage_id" ref="helpdesk.stage_in_progress"/>
+        <field name="product_id" ref="product.product_product_27"/>
+        <field name="description">
+Hello,
+
+Thank you for sending your product but the lock of the drawer is not working.
+
+Could you please change that drawer or just change the lock of that drawer so that I can start to using it in my office?
+
+Thank you!
+        </field>
+    </record>
+
+    <record id="repair_helpdesk_ticket_1" model="repair.order">
+        <field name="schedule_date" eval="DateTime.today() + relativedelta(days=3)"/>
+        <field name="product_id" ref="product.product_product_27"/>
+        <field name="lot_id" ref="stock.lot_product_27"/>
+        <field name="product_qty">1</field>
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="ticket_id" ref="helpdesk_repair.helpdesk_repair_ticket_1"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="state">done</field>
+        <field name="product_uom" ref="uom.product_uom_unit"/>
+        <field name="picking_type_id" ref="repair.picking_type_warehouse0_repair"/>
+        <field name="move_ids" model="stock.move" eval="[(0, 0, {
+            'repair_line_type': 'add',
+            'product_id': obj().env.ref('product.product_product_27').id,
+            'product_uom_qty': '1.0',
+            'price_unit': 3645.00,
+            'state': 'done',
+            'company_id': obj().env.ref('base.main_company').id,
+            'move_line_ids': [(0, 0, {
+                'company_id': obj().env.ref('base.main_company').id,
+                'product_id': obj().env.ref('product.product_product_27').id,
+                'lot_id': obj().env.ref('stock.lot_product_27').id,
+                'lot_name': obj().env.ref('stock.lot_product_27').name,
+                'quantity': '1.0',
+            })],
+        })]"/>
+    </record>
+
+    <record id="move_repair_helpdesk_ticket_1" model="stock.move">
+        <field name="name" model="stock.move" eval="obj().env.ref('helpdesk_repair.repair_helpdesk_ticket_1').name"/>
+        <field name="repair_id" ref="helpdesk_repair.repair_helpdesk_ticket_1"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_stock"/>
+        <field name="product_id" ref="product.product_product_27"/>
+        <field name="product_uom_qty">1.0</field>
+        <field name="state">done</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="move_line_ids" model="stock.move.line" eval="[(0, 0, {
+                'company_id': obj().env.ref('base.main_company').id,
+                'product_id': obj().env.ref('product.product_product_27').id,
+                'lot_id': obj().env.ref('stock.lot_product_27').id,
+                'lot_name': obj().env.ref('stock.lot_product_27').name,
+                'quantity': 1,
+                'package_id': False,
+                'result_package_id': False,
+                'location_id': obj().env.ref('stock.stock_location_stock').id,
+                'location_dest_id': obj().env.ref('stock.stock_location_stock').id,
+                'consume_line_ids': [(6, 0, obj().env.ref('helpdesk_repair.repair_helpdesk_ticket_1').move_ids.move_line_ids.ids)],
+            })]"/>
+    </record>
+
+    <record id="repair_helpdesk_ticket_1" model="repair.order">
+        <field name="move_id" ref="helpdesk_repair.move_repair_helpdesk_ticket_1"/>
+    </record>
+</odoo>

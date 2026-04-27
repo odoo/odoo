@@ -1,0 +1,1151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_report_bs" model="account.report">
+        <field name="name">Balance Sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="country_id" ref="base.dk"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_report_bs_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_report_bs_a" model="account.report.line">
+                <field name="name">ASSETS</field>
+                <field name="code">DK_BS_Assets</field>
+                <field name="hierarchy_level">0</field>
+                <field name="aggregation_formula">
+                    DK_BS_FixedAssets.balance +
+                    DK_BS_CurrentAssets.balance
+                </field>
+                <field name="children_ids">
+                    <record id="account_report_bs_a_fa" model="account.report.line">
+                        <field name="name">Fixed assets</field>
+                        <field name="code">DK_BS_FixedAssets</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="aggregation_formula">
+                            DK_BS_IntangibleFixedAssets.balance +
+                            DK_BS_TangibleFixedAssets.balance +
+                            DK_BS_FinancialFixedAssets.balance
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_report_bs_a_fa_ifa" model="account.report.line">
+                                <field name="name">Intangible fixed assets</field>
+                                <field name="code">DK_BS_IntangibleFixedAssets</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">
+                                    DK_BS_CompletedDevelopmentProjects.balance +
+                                    DK_BS_AcquiredIntangibleFixedAssets.balance +
+                                    DK_BS_Goodwill.balance +
+                                    DK_BS_DevelopmentProjectsInProgress.balance
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_report_bs_a_fa_ifa_cdpipsradp" model="account.report.line">
+                                        <field name="name">Completed development projects, including patents and similar rights arising from development projects</field>
+                                        <field name="code">DK_BS_CompletedDevelopmentProjects</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_5010) +
+                                            tag(l10n_dk.account_tag_5011) +
+                                            tag(l10n_dk.account_tag_5012) +
+                                            tag(l10n_dk.account_tag_5015) +
+                                            tag(l10n_dk.account_tag_5020) +
+                                            tag(l10n_dk.account_tag_5021) +
+                                            tag(l10n_dk.account_tag_5022) +
+                                            tag(l10n_dk.account_tag_5030) +
+                                            tag(l10n_dk.account_tag_5031) +
+                                            tag(l10n_dk.account_tag_5032)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_fa_ifa_aifa" model="account.report.line">
+                                        <field name="name">Acquired intangible fixed assets</field>
+                                        <field name="code">DK_BS_AcquiredIntangibleFixedAssets</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_5042) +
+                                            tag(l10n_dk.account_tag_5043) +
+                                            tag(l10n_dk.account_tag_5044) +
+                                            tag(l10n_dk.account_tag_5050) +
+                                            tag(l10n_dk.account_tag_5051) +
+                                            tag(l10n_dk.account_tag_5052) +
+                                            tag(l10n_dk.account_tag_5055) +
+                                            tag(l10n_dk.account_tag_5056) +
+                                            tag(l10n_dk.account_tag_5057)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_fa_ifa_g" model="account.report.line">
+                                        <field name="name">Goodwill</field>
+                                        <field name="code">DK_BS_Goodwill</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_5062) +
+                                            tag(l10n_dk.account_tag_5063) +
+                                            tag(l10n_dk.account_tag_5064) +
+                                            tag(l10n_dk.account_tag_5075) +
+                                            tag(l10n_dk.account_tag_5076) +
+                                            tag(l10n_dk.account_tag_5077)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_fa_ifa_dpippifa" model="account.report.line">
+                                        <field name="name">Development projects in progress and prepayments for intangible fixed assets</field>
+                                        <field name="code">DK_BS_DevelopmentProjectsInProgress</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_5085) +
+                                            tag(l10n_dk.account_tag_5090) +
+                                            tag(l10n_dk.account_tag_5095) +
+                                            tag(l10n_dk.account_tag_5100) +
+                                            tag(l10n_dk.account_tag_5110) +
+                                            tag(l10n_dk.account_tag_5111) +
+                                            tag(l10n_dk.account_tag_5112)
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_report_bs_a_fa_tfa" model="account.report.line">
+                                <field name="name">Tangible fixed assets</field>
+                                <field name="code">DK_BS_TangibleFixedAssets</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">
+                                    DK_BS_InvestmentProperties.balance +
+                                    DK_BS_InvestmentPropertiesUnderConstruction.balance +
+                                    DK_BS_LandAndBuildings.balance +
+                                    DK_BS_PlantAndMachinery.balance +
+                                    DK_BS_LeaseholdImprovements.balance +
+                                    DK_BS_OtherFixturesFittingsToolsEquipment.balance +
+                                    DK_BS_TangibleFixedAssetsInProgress.balance +
+                                    DK_BS_OtherFixturesFittingsToolsEquipmentMixedA.balance +
+                                    DK_BS_FinanciallyLeasedAssets.balance
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_report_bs_a_fa_tfa_ip" model="account.report.line">
+                                        <field name="name">Investment properties</field>
+                                        <field name="code">DK_BS_InvestmentProperties</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_5160) +
+                                            tag(l10n_dk.account_tag_5170) +
+                                            tag(l10n_dk.account_tag_5180) +
+                                            tag(l10n_dk.account_tag_5185) +
+                                            tag(l10n_dk.account_tag_5190) +
+                                            tag(l10n_dk.account_tag_5200) +
+                                            tag(l10n_dk.account_tag_5201) +
+                                            tag(l10n_dk.account_tag_5205) +
+                                            tag(l10n_dk.account_tag_5210) +
+                                            tag(l10n_dk.account_tag_5220)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_fa_tfa_ipuc" model="account.report.line">
+                                        <field name="name">Investment properties under construction</field>
+                                        <field name="code">DK_BS_InvestmentPropertiesUnderConstruction</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_5240) +
+                                            tag(l10n_dk.account_tag_5250) +
+                                            tag(l10n_dk.account_tag_5260) +
+                                            tag(l10n_dk.account_tag_5265) +
+                                            tag(l10n_dk.account_tag_5280) +
+                                            tag(l10n_dk.account_tag_5281) +
+                                            tag(l10n_dk.account_tag_5282) +
+                                            tag(l10n_dk.account_tag_5290) +
+                                            tag(l10n_dk.account_tag_5300)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_fa_tfa_lb" model="account.report.line">
+                                        <field name="name">Land and buildings</field>
+                                        <field name="code">DK_BS_LandAndBuildings</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_5320) +
+                                            tag(l10n_dk.account_tag_5330) +
+                                            tag(l10n_dk.account_tag_5340) +
+                                            tag(l10n_dk.account_tag_5350) +
+                                            tag(l10n_dk.account_tag_5370) +
+                                            tag(l10n_dk.account_tag_5371) +
+                                            tag(l10n_dk.account_tag_5372) +
+                                            tag(l10n_dk.account_tag_5390) +
+                                            tag(l10n_dk.account_tag_5400)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_fa_tfa_pm" model="account.report.line">
+                                        <field name="name">Plant and machinery</field>
+                                        <field name="code">DK_BS_PlantAndMachinery</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_5420) +
+                                            tag(l10n_dk.account_tag_5430) +
+                                            tag(l10n_dk.account_tag_5440) +
+                                            tag(l10n_dk.account_tag_5450) +
+                                            tag(l10n_dk.account_tag_5451) +
+                                            tag(l10n_dk.account_tag_5452) +
+                                            tag(l10n_dk.account_tag_5470) +
+                                            tag(l10n_dk.account_tag_5480)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_fa_tfa_li" model="account.report.line">
+                                        <field name="name">Leasehold improvements</field>
+                                        <field name="code">DK_BS_LeaseholdImprovements</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_5500) +
+                                            tag(l10n_dk.account_tag_5510) +
+                                            tag(l10n_dk.account_tag_5520) +
+                                            tag(l10n_dk.account_tag_5530) +
+                                            tag(l10n_dk.account_tag_5531) +
+                                            tag(l10n_dk.account_tag_5532) +
+                                            tag(l10n_dk.account_tag_5540) +
+                                            tag(l10n_dk.account_tag_5550)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_fa_tfa_offte" model="account.report.line">
+                                        <field name="name">Other fixtures and fittings, tools and equipment</field>
+                                        <field name="code">DK_BS_OtherFixturesFittingsToolsEquipment</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_5570) +
+                                            tag(l10n_dk.account_tag_5580) +
+                                            tag(l10n_dk.account_tag_5590) +
+                                            tag(l10n_dk.account_tag_5600) +
+                                            tag(l10n_dk.account_tag_5601) +
+                                            tag(l10n_dk.account_tag_5602) +
+                                            tag(l10n_dk.account_tag_5610) +
+                                            tag(l10n_dk.account_tag_5620)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_fa_tfa_tfaipptfa" model="account.report.line">
+                                        <field name="name">Tangible fixed assets in progress and prepayments for tangible fixed assets</field>
+                                        <field name="code">DK_BS_TangibleFixedAssetsInProgress</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_5640) +
+                                            tag(l10n_dk.account_tag_5650) +
+                                            tag(l10n_dk.account_tag_5660) +
+                                            tag(l10n_dk.account_tag_5670) +
+                                            tag(l10n_dk.account_tag_5671) +
+                                            tag(l10n_dk.account_tag_5675) +
+                                            tag(l10n_dk.account_tag_5676) +
+                                            tag(l10n_dk.account_tag_5677)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_fa_tfa_offtemucao" model="account.report.line">
+                                        <field name="name">Other fixtures and fittings, tools and equipment, mixed use (Class A only)</field>
+                                        <field name="code">DK_BS_OtherFixturesFittingsToolsEquipmentMixedA</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_5682) +
+                                            tag(l10n_dk.account_tag_5683) +
+                                            tag(l10n_dk.account_tag_5684) +
+                                            tag(l10n_dk.account_tag_5685) +
+                                            tag(l10n_dk.account_tag_5686) +
+                                            tag(l10n_dk.account_tag_5687) +
+                                            tag(l10n_dk.account_tag_5688) +
+                                            tag(l10n_dk.account_tag_5689) +
+                                            tag(l10n_dk.account_tag_5690)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_fa_tfa_fla" model="account.report.line">
+                                        <field name="name">Financially leased assets</field>
+                                        <field name="code">DK_BS_FinanciallyLeasedAssets</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_5710) +
+                                            tag(l10n_dk.account_tag_5720) +
+                                            tag(l10n_dk.account_tag_5730) +
+                                            tag(l10n_dk.account_tag_5740) +
+                                            tag(l10n_dk.account_tag_5741) +
+                                            tag(l10n_dk.account_tag_5745) +
+                                            tag(l10n_dk.account_tag_5750) +
+                                            tag(l10n_dk.account_tag_5760)
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_report_bs_a_fa_ffa" model="account.report.line">
+                                <field name="name">Financial fixed assets</field>
+                                <field name="code">DK_BS_FinancialFixedAssets</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">
+                                    DK_BS_InvestmentsInGroupEnterprisesFA.balance +
+                                    DK_BS_ReceivablesFromGroupEnterprisesFA.balance +
+                                    DK_BS_InvestmentsInAssociatesFA.balance +
+                                    DK_BS_ReceivablesFromAssociatesFA.balance +
+                                    DK_BS_ParticipatingInterestsFA.balance +
+                                    DK_BS_ReceivablesFromParticipatingInterestsFA.balance +
+                                    DK_BS_OtherSecuritiesAndInvestmentsFA.balance +
+                                    DK_BS_OtherReceivablesFA.balance +
+                                    DK_BS_ReceivablesOwnersManagementFA.balance
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_report_bs_a_fa_ffa_ige" model="account.report.line">
+                                        <field name="name">Investments in group enterprises</field>
+                                        <field name="code">DK_BS_InvestmentsInGroupEnterprisesFA</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_5800) +
+                                            tag(l10n_dk.account_tag_5810) +
+                                            tag(l10n_dk.account_tag_5820) +
+                                            tag(l10n_dk.account_tag_5825) +
+                                            tag(l10n_dk.account_tag_5829) +
+                                            tag(l10n_dk.account_tag_5830) +
+                                            tag(l10n_dk.account_tag_5831) +
+                                            tag(l10n_dk.account_tag_5835) +
+                                            tag(l10n_dk.account_tag_5836) +
+                                            tag(l10n_dk.account_tag_5837)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_fa_ffa_rgefa" model="account.report.line">
+                                        <field name="name">Receivables from group enterprises (fixed asset)</field>
+                                        <field name="code">DK_BS_ReceivablesFromGroupEnterprisesFA</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_5842) +
+                                            tag(l10n_dk.account_tag_5843) +
+                                            tag(l10n_dk.account_tag_5844) +
+                                            tag(l10n_dk.account_tag_5845)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_fa_ffa_ia" model="account.report.line">
+                                        <field name="name">Investments in associates</field>
+                                        <field name="code">DK_BS_InvestmentsInAssociatesFA</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_5852) +
+                                            tag(l10n_dk.account_tag_5853) +
+                                            tag(l10n_dk.account_tag_5854) +
+                                            tag(l10n_dk.account_tag_5855) +
+                                            tag(l10n_dk.account_tag_5860) +
+                                            tag(l10n_dk.account_tag_5861) +
+                                            tag(l10n_dk.account_tag_5862) +
+                                            tag(l10n_dk.account_tag_5870) +
+                                            tag(l10n_dk.account_tag_5871) +
+                                            tag(l10n_dk.account_tag_5872)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_fa_ffa_rafa" model="account.report.line">
+                                        <field name="name">Receivables from associates (fixed asset)</field>
+                                        <field name="code">DK_BS_ReceivablesFromAssociatesFA</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_5882) +
+                                            tag(l10n_dk.account_tag_5883) +
+                                            tag(l10n_dk.account_tag_5884) +
+                                            tag(l10n_dk.account_tag_5885)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_fa_ffa_pi" model="account.report.line">
+                                        <field name="name">Participating interests</field>
+                                        <field name="code">DK_BS_ParticipatingInterestsFA</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_5900) +
+                                            tag(l10n_dk.account_tag_5910) +
+                                            tag(l10n_dk.account_tag_5920) +
+                                            tag(l10n_dk.account_tag_5925) +
+                                            tag(l10n_dk.account_tag_5929) +
+                                            tag(l10n_dk.account_tag_5930) +
+                                            tag(l10n_dk.account_tag_5931) +
+                                            tag(l10n_dk.account_tag_5935) +
+                                            tag(l10n_dk.account_tag_5940) +
+                                            tag(l10n_dk.account_tag_5950)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_fa_ffa_rpifa" model="account.report.line">
+                                        <field name="name">Receivables from participating interests (fixed asset)</field>
+                                        <field name="code">DK_BS_ReceivablesFromParticipatingInterestsFA</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_5970) +
+                                            tag(l10n_dk.account_tag_5980) +
+                                            tag(l10n_dk.account_tag_5984) +
+                                            tag(l10n_dk.account_tag_5985)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_fa_ffa_osi" model="account.report.line">
+                                        <field name="name">Other securities and investments</field>
+                                        <field name="code">DK_BS_OtherSecuritiesAndInvestmentsFA</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_6000)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_fa_ffa_orfa" model="account.report.line">
+                                        <field name="name">Other receivables (fixed asset)</field>
+                                        <field name="code">DK_BS_OtherReceivablesFA</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_6020) +
+                                            tag(l10n_dk.account_tag_6030) +
+                                            tag(l10n_dk.account_tag_6040)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_fa_ffa_romfa" model="account.report.line">
+                                        <field name="name">Receivables from owners and management (fixed asset)</field>
+                                        <field name="code">DK_BS_ReceivablesOwnersManagementFA</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_6061) +
+                                            tag(l10n_dk.account_tag_6062) +
+                                            tag(l10n_dk.account_tag_6063) +
+                                            tag(l10n_dk.account_tag_6064)
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_report_bs_a_ca" model="account.report.line">
+                        <field name="name">Current assets</field>
+                        <field name="code">DK_BS_CurrentAssets</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="aggregation_formula">
+                            DK_BS_Inventories.balance +
+                            DK_BS_Receivables.balance +
+                            DK_BS_SecuritiesAndInvestments.balance +
+                            DK_BS_CashAndCashEquivalents.balance
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_report_bs_a_ca_i" model="account.report.line">
+                                <field name="name">Inventories</field>
+                                <field name="code">DK_BS_Inventories</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">
+                                    DK_BS_RawMaterialsConsumables.balance +
+                                    DK_BS_WorkInProgress.balance +
+                                    DK_BS_ManufacturedGoodsAndGoodsForResale.balance +
+                                    DK_BS_PrepaymentsForGoods.balance
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_report_bs_a_ca_i_rmc" model="account.report.line">
+                                        <field name="name">Raw materials and consumables</field>
+                                        <field name="code">DK_BS_RawMaterialsConsumables</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_6080) +
+                                            tag(l10n_dk.account_tag_6081) +
+                                            tag(l10n_dk.account_tag_6082) +
+                                            tag(l10n_dk.account_tag_6083) +
+                                            tag(l10n_dk.account_tag_6085) +
+                                            tag(l10n_dk.account_tag_6090) +
+                                            tag(l10n_dk.account_tag_6091)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_ca_i_wip" model="account.report.line">
+                                        <field name="name">Work in progress</field>
+                                        <field name="code">DK_BS_WorkInProgress</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_6110) +
+                                            tag(l10n_dk.account_tag_6111) +
+                                            tag(l10n_dk.account_tag_6112) +
+                                            tag(l10n_dk.account_tag_6113) +
+                                            tag(l10n_dk.account_tag_6115) +
+                                            tag(l10n_dk.account_tag_6120) +
+                                            tag(l10n_dk.account_tag_6121)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_ca_i_mggr" model="account.report.line">
+                                        <field name="name">Manufactured goods and goods for resale</field>
+                                        <field name="code">DK_BS_ManufacturedGoodsAndGoodsForResale</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_6140) +
+                                            tag(l10n_dk.account_tag_6141) +
+                                            tag(l10n_dk.account_tag_6142) +
+                                            tag(l10n_dk.account_tag_6143) +
+                                            tag(l10n_dk.account_tag_6145) +
+                                            tag(l10n_dk.account_tag_6150) +
+                                            tag(l10n_dk.account_tag_6151)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_ca_i_pg" model="account.report.line">
+                                        <field name="name">Prepayments for goods</field>
+                                        <field name="code">DK_BS_PrepaymentsForGoods</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_6170)
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_report_bs_a_ca_r" model="account.report.line">
+                                <field name="name">Receivables</field>
+                                <field name="code">DK_BS_Receivables</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">
+                                    DK_BS_TradeReceivables.balance +
+                                    DK_BS_ContractWorkInProgress.balance +
+                                    DK_BS_ReceivablesFromGroupEnterprisesCA.balance +
+                                    DK_BS_ReceivablesFromAssociatesCA.balance +
+                                    DK_BS_ReceivablesFromParticipatingInterestsCA.balance +
+                                    DK_BS_OtherReceivablesCA.balance +
+                                    DK_BS_ReceivablesCalledUpShareCapital.balance +
+                                    DK_BS_ReceivablesFromOwnersAndManagementCA.balance +
+                                    DK_BS_Prepayments.balance
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_report_bs_a_ca_r_tr" model="account.report.line">
+                                        <field name="name">Trade receivables</field>
+                                        <field name="code">DK_BS_TradeReceivables</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_6190) +
+                                            tag(l10n_dk.account_tag_6200) +
+                                            tag(l10n_dk.account_tag_6201) +
+                                            tag(l10n_dk.account_tag_6202)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_ca_r_cwip" model="account.report.line">
+                                        <field name="name">Contract work in progress</field>
+                                        <field name="code">DK_BS_ContractWorkInProgress</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_6240)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_ca_r_rgeca" model="account.report.line">
+                                        <field name="name">Receivables from group enterprises (current asset)</field>
+                                        <field name="code">DK_BS_ReceivablesFromGroupEnterprisesCA</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_6252) +
+                                            tag(l10n_dk.account_tag_6255) +
+                                            tag(l10n_dk.account_tag_6256) +
+                                            tag(l10n_dk.account_tag_6257)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_ca_r_raca" model="account.report.line">
+                                        <field name="name">Receivables from associates (current asset)</field>
+                                        <field name="code">DK_BS_ReceivablesFromAssociatesCA</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_6262) +
+                                            tag(l10n_dk.account_tag_6265) +
+                                            tag(l10n_dk.account_tag_6266) +
+                                            tag(l10n_dk.account_tag_6267)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_ca_r_rpica" model="account.report.line">
+                                        <field name="name">Receivables from participating interests (current asset)</field>
+                                        <field name="code">DK_BS_ReceivablesFromParticipatingInterestsCA</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_6282) +
+                                            tag(l10n_dk.account_tag_6285) +
+                                            tag(l10n_dk.account_tag_6286) +
+                                            tag(l10n_dk.account_tag_6287)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_ca_r_orca" model="account.report.line">
+                                        <field name="name">Other receivables (current asset)</field>
+                                        <field name="code">DK_BS_OtherReceivablesCA</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_6305) +
+                                            tag(l10n_dk.account_tag_6310) +
+                                            tag(l10n_dk.account_tag_6315) +
+                                            tag(l10n_dk.account_tag_6320) +
+                                            tag(l10n_dk.account_tag_6330)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_ca_r_rcuscsp" model="account.report.line">
+                                        <field name="name">Receivables from called up share capital and share premium</field>
+                                        <field name="code">DK_BS_ReceivablesCalledUpShareCapital</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_6350)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_ca_r_romca" model="account.report.line">
+                                        <field name="name">Receivables from owners and management (current asset)</field>
+                                        <field name="code">DK_BS_ReceivablesFromOwnersAndManagementCA</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_6365) +
+                                            tag(l10n_dk.account_tag_6370) +
+                                            tag(l10n_dk.account_tag_6375) +
+                                            tag(l10n_dk.account_tag_6376)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_ca_r_p" model="account.report.line">
+                                        <field name="name">Prepayments</field>
+                                        <field name="code">DK_BS_Prepayments</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_6390) +
+                                            tag(l10n_dk.account_tag_6400)
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_report_bs_a_ca_si" model="account.report.line">
+                                <field name="name">Securities and investments</field>
+                                <field name="code">DK_BS_SecuritiesAndInvestments</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">
+                                    DK_BS_InvestmentsInGroupEnterprises.balance +
+                                    DK_BS_OtherSecuritiesAndInvestments.balance
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_report_bs_a_ca_si_ige" model="account.report.line">
+                                        <field name="name">Investments in group enterprises</field>
+                                        <field name="code">DK_BS_InvestmentsInGroupEnterprises</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_6420)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_bs_a_ca_si_ose" model="account.report.line">
+                                        <field name="name">Other securities and investments</field>
+                                        <field name="code">DK_BS_OtherSecuritiesAndInvestments</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            tag(l10n_dk.account_tag_6450)
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_report_bs_a_ca_cce" model="account.report.line">
+                                <field name="name">Cash and cash equivalents</field>
+                                <field name="code">DK_BS_CashAndCashEquivalents</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    tag(l10n_dk.account_tag_6470) +
+                                    tag(l10n_dk.account_tag_6480)
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_report_bs_el" model="account.report.line">
+                <field name="name">EQUITY AND LIABILITIES</field>
+                <field name="code">DK_BS_EquityAndLiabilities</field>
+                <field name="hierarchy_level">0</field>
+                <field name="aggregation_formula">
+                    DK_BS_Equity.balance +
+                    DK_BS_Provisions.balance +
+                    DK_BS_LongTermLiabilities.balance +
+                    DK_BS_ShortTermLiabilities.balance
+                </field>
+                <field name="children_ids">
+                    <record id="account_report_bs_el_e" model="account.report.line">
+                        <field name="name">Equity</field>
+                        <field name="code">DK_BS_Equity</field>
+                        <field name="aggregation_formula">
+                            DK_BS_ShareCapital.balance +
+                            DK_BS_SharePremium.balance +
+                            DK_BS_ReserveForRevaluations.balance +
+                            DK_BS_OtherReserves.balance +
+                            DK_BS_RetainedEarnings.balance +
+                            DK_BS_ProfitLossForTheYear.balance +
+                            DK_BS_ProposedDividendRecognizedInEquity.balance
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_report_bs_el_e_sc" model="account.report.line">
+                                <field name="name">Share capital</field>
+                                <field name="code">DK_BS_ShareCapital</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_6510)
+                                    - tag(l10n_dk.account_tag_6520)
+                                    - tag(l10n_dk.account_tag_6525)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_e_sp" model="account.report.line">
+                                <field name="name">Share premium</field>
+                                <field name="code">DK_BS_SharePremium</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_6540)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_e_rr" model="account.report.line">
+                                <field name="name">Reserve for revaluations</field>
+                                <field name="code">DK_BS_ReserveForRevaluations</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_6560)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_e_or" model="account.report.line">
+                                <field name="name">Other reserves</field>
+                                <field name="code">DK_BS_OtherReserves</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_6800)
+                                    - tag(l10n_dk.account_tag_6810)
+                                    - tag(l10n_dk.account_tag_6830)
+                                    - tag(l10n_dk.account_tag_6840)
+                                    - tag(l10n_dk.account_tag_6870)
+                                    - tag(l10n_dk.account_tag_6890)
+                                    - tag(l10n_dk.account_tag_6910)
+                                    - tag(l10n_dk.account_tag_6914)
+                                    - tag(l10n_dk.account_tag_6915)
+                                    - tag(l10n_dk.account_tag_6916)
+                                    - tag(l10n_dk.account_tag_6917)
+                                    - tag(l10n_dk.account_tag_6918)
+                                    - tag(l10n_dk.account_tag_6919)
+                                    - tag(l10n_dk.account_tag_6920)
+                                    - tag(l10n_dk.account_tag_6921)
+                                    - tag(l10n_dk.account_tag_6922)
+                                    - tag(l10n_dk.account_tag_6923)
+                                    - tag(l10n_dk.account_tag_6924)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_e_re" model="account.report.line">
+                                <field name="name">Retained earnings</field>
+                                <field name="code">DK_BS_RetainedEarnings</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_6935)
+                                    - tag(l10n_dk.account_tag_6940)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_e_ply" model="account.report.line">
+                                <field name="name">Profit/loss for the year</field>
+                                <field name="code">DK_BS_ProfitLossForTheYear</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_report_bs_el_e_ply_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">DK_PL_ProfitLossForTheYear.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                        <field name="date_scope">from_fiscalyear</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_e_pdre" model="account.report.line">
+                                <field name="name">Proposed dividend recognized in equity</field>
+                                <field name="code">DK_BS_ProposedDividendRecognizedInEquity</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_6955)
+                                    - tag(l10n_dk.account_tag_6956)
+                                    - tag(l10n_dk.account_tag_6960)
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_report_bs_el_p" model="account.report.line">
+                        <field name="name">Provisions</field>
+                        <field name="code">DK_BS_Provisions</field>
+                        <field name="aggregation_formula">
+                            DK_BS_ProvisionsForPensions.balance +
+                            DK_BS_ProvisionsDeferredTax.balance +
+                            DK_BS_OtherProvisions.balance
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_report_bs_el_p_ppso" model="account.report.line">
+                                <field name="name">Provisions for pensions and similar obligations</field>
+                                <field name="code">DK_BS_ProvisionsForPensions</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_6985)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_p_pdt" model="account.report.line">
+                                <field name="name">Provision for deferred tax</field>
+                                <field name="code">DK_BS_ProvisionsDeferredTax</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7010)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_p_op" model="account.report.line">
+                                <field name="name">Other provisions</field>
+                                <field name="code">DK_BS_OtherProvisions</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7040)
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_report_bs_el_ltl" model="account.report.line">
+                        <field name="name">Long-term liabilities</field>
+                        <field name="code">DK_BS_LongTermLiabilities</field>
+                        <field name="aggregation_formula">
+                            DK_BS_DebtRaisedByIssuanceOfBondsLT.balance +
+                            DK_BS_ConvertibleAndDividendYieldingDebtInstrumentsLT.balance +
+                            DK_BS_PayablesToCreditInstitutionsLT.balance +
+                            DK_BS_PrepaymentsReceivedFromCustomersLT.balance +
+                            DK_BS_TradePayablesLT.balance +
+                            DK_BS_BillsOfExchangePayableLT.balance +
+                            DK_BS_PayablesToGroupEnterprisesLT.balance +
+                            DK_BS_PayablesToParticipatingInterestsLT.balance +
+                            DK_BS_OtherPayablesLT.balance +
+                            DK_BS_DeferredIncomeLT.balance
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_report_bs_el_ltl_driblt" model="account.report.line">
+                                <field name="name">Debt raised by issuance of bonds (long-term)</field>
+                                <field name="code">DK_BS_DebtRaisedByIssuanceOfBondsLT</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7055)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_ltl_cdydilt" model="account.report.line">
+                                <field name="name">Convertible and dividend-yielding debt instruments (long-term)</field>
+                                <field name="code">DK_BS_ConvertibleAndDividendYieldingDebtInstrumentsLT</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7065)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_ltl_pcilt" model="account.report.line">
+                                <field name="name">Payables to credit institutions (long-term)</field>
+                                <field name="code">DK_BS_PayablesToCreditInstitutionsLT</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7110)
+                                    - tag(l10n_dk.account_tag_7120)
+                                    - tag(l10n_dk.account_tag_7125)
+                                    - tag(l10n_dk.account_tag_7126)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_ltl_prclt" model="account.report.line">
+                                <field name="name">Prepayments received from customers (long-term)</field>
+                                <field name="code">DK_BS_PrepaymentsReceivedFromCustomersLT</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7145)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_ltl_tplt" model="account.report.line">
+                                <field name="name">Trade payables (long-term)</field>
+                                <field name="code">DK_BS_TradePayablesLT</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7155)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_ltl_beplt" model="account.report.line">
+                                <field name="name">Bills of exchange payable (long-term)</field>
+                                <field name="code">DK_BS_BillsOfExchangePayableLT</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7165)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_ltl_pgelt" model="account.report.line">
+                                <field name="name">Payables to group enterprises (long-term)</field>
+                                <field name="code">DK_BS_PayablesToGroupEnterprisesLT</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7175)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_ltl_ppilt" model="account.report.line">
+                                <field name="name">Payables to participating interests (long-term)</field>
+                                <field name="code">DK_BS_PayablesToParticipatingInterestsLT</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7185)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_ltl_optpsscplt" model="account.report.line">
+                                <field name="name">Other payables, including taxes payable and social security contributions payable (long-term)</field>
+                                <field name="code">DK_BS_OtherPayablesLT</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7195)
+                                    - tag(l10n_dk.account_tag_7210)
+                                    - tag(l10n_dk.account_tag_7230)
+                                    - tag(l10n_dk.account_tag_7240)
+                                    - tag(l10n_dk.account_tag_7250)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_ltl_dilt" model="account.report.line">
+                                <field name="name">Deferred income (long-term)</field>
+                                <field name="code">DK_BS_DeferredIncomeLT</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7265)
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_report_bs_el_stl" model="account.report.line">
+                        <field name="name">Short-term liabilities</field>
+                        <field name="code">DK_BS_ShortTermLiabilities</field>
+                        <field name="aggregation_formula">
+                            DK_BS_DebtRaisedByIssuanceOfBondsST.balance +
+                            DK_BS_ConvertibleAndDividendYieldingDebtInstrumentsST.balance +
+                            DK_BS_PayablesToCreditInstitutionsST.balance +
+                            DK_BS_PrepaymentsReceivedFromCustomersST.balance +
+                            DK_BS_TradePayablesST.balance +
+                            DK_BS_ContractWorkInProgressST.balance +
+                            DK_BS_BillsOfExchangePayableST.balance +
+                            DK_BS_PayablesToGroupEnterprisesST.balance +
+                            DK_BS_PayablesToParticipatingInterestsST.balance +
+                            DK_BS_OtherPayablesST.balance +
+                            DK_BS_DeferredIncomeST.balance
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_report_bs_el_stl_dribst" model="account.report.line">
+                                <field name="name">Debt raised by issuance of bonds (short-term)</field>
+                                <field name="code">DK_BS_DebtRaisedByIssuanceOfBondsST</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7285)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_stl_cdydist" model="account.report.line">
+                                <field name="name">Convertible and dividend-yielding debt instruments (short-term)</field>
+                                <field name="code">DK_BS_ConvertibleAndDividendYieldingDebtInstrumentsST</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7295)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_stl_pcist" model="account.report.line">
+                                <field name="name">Payables to credit institutions (short-term)</field>
+                                <field name="code">DK_BS_PayablesToCreditInstitutionsST</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7310)
+                                    - tag(l10n_dk.account_tag_7330)
+                                    - tag(l10n_dk.account_tag_7345)
+                                    - tag(l10n_dk.account_tag_7350)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_stl_prcst" model="account.report.line">
+                                <field name="name">Prepayments received from customers (short-term)</field>
+                                <field name="code">DK_BS_PrepaymentsReceivedFromCustomersST</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7410)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_stl_tpst" model="account.report.line">
+                                <field name="name">Trade payables (short-term)</field>
+                                <field name="code">DK_BS_TradePayablesST</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7440)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_stl_cwipst" model="account.report.line">
+                                <field name="name">Contract work in progress (short-term)</field>
+                                <field name="code">DK_BS_ContractWorkInProgressST</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7455)
+                                    - tag(l10n_dk.account_tag_7456)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_stl_bepst" model="account.report.line">
+                                <field name="name">Bills of exchange payable (short-term)</field>
+                                <field name="code">DK_BS_BillsOfExchangePayableST</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7465)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_stl_pgest" model="account.report.line">
+                                <field name="name">Payables to group enterprises (short-term)</field>
+                                <field name="code">DK_BS_PayablesToGroupEnterprisesST</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7510)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_stl_ppist" model="account.report.line">
+                                <field name="name">Payables to participating interests (short-term)</field>
+                                <field name="code">DK_BS_PayablesToParticipatingInterestsST</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7535)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_stl_optpsscpst" model="account.report.line">
+                                <field name="name">Other payables, including taxes payable and social security contributions payable (short-term)</field>
+                                <field name="code">DK_BS_OtherPayablesST</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_7590)
+                                    - tag(l10n_dk.account_tag_7610)
+                                    - tag(l10n_dk.account_tag_7680)
+                                    - tag(l10n_dk.account_tag_7700)
+                                    - tag(l10n_dk.account_tag_7720)
+                                    - tag(l10n_dk.account_tag_7740)
+                                    - tag(l10n_dk.account_tag_7760)
+                                    - tag(l10n_dk.account_tag_7780)
+                                    - tag(l10n_dk.account_tag_7800)
+                                    - tag(l10n_dk.account_tag_7810)
+                                    - tag(l10n_dk.account_tag_7820)
+                                    - tag(l10n_dk.account_tag_7830)
+                                    - tag(l10n_dk.account_tag_7840)
+                                    - tag(l10n_dk.account_tag_7860)
+                                    - tag(l10n_dk.account_tag_7880)
+                                    - tag(l10n_dk.account_tag_7900)
+                                    - tag(l10n_dk.account_tag_7920)
+                                    - tag(l10n_dk.account_tag_7940)
+                                    - tag(l10n_dk.account_tag_7960)
+                                    - tag(l10n_dk.account_tag_7980)
+                                    - tag(l10n_dk.account_tag_8000)
+                                    - tag(l10n_dk.account_tag_8010)
+                                    - tag(l10n_dk.account_tag_8030)
+                                    - tag(l10n_dk.account_tag_8035)
+                                    - tag(l10n_dk.account_tag_8040)
+                                    - tag(l10n_dk.account_tag_8045)
+                                </field>
+                            </record>
+                            <record id="account_report_bs_el_stl_dist" model="account.report.line">
+                                <field name="name">Deferred income (short-term)</field>
+                                <field name="code">DK_BS_DeferredIncomeST</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_8070)
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

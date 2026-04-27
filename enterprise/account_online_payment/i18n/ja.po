@@ -1,0 +1,173 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_online_payment
+#
+# Translators:
+# Wil Odoo, 2024
+# Junko Augias, 2025
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-13 18:46+0000\n"
+"PO-Revision-Date: 2026-04-11 09:03+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/"
+"account_online_payment/ja/>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.16.2\n"
+
+#. module: account_online_payment
+#. odoo-python
+#: code:addons/account_online_payment/models/account_batch_payment.py:0
+msgid ""
+"\n"
+"                This payment requires a KYC flow. As this process can take a "
+"few days, please use SEPA XML export in the meantime.\n"
+"                You will be notified once the KYC flow is completed and you "
+"can proceed with the online payment.\n"
+"            "
+msgstr ""
+"\n"
+"                この支払にはKYCフローが必要です。このプロセスには数日かかる場"
+"合がありますので、それまではSEPA XMLエクスポートをご利用下さい。\n"
+"                KYC手続きが完了すると通知され、オンライン支払に進むことができ"
+"ます。\n"
+"            "
+
+#. module: account_online_payment
+#: model:ir.model.fields.selection,name:account_online_payment.selection__account_batch_payment__payment_online_status__accepted
+msgid "Accepted"
+msgstr "受理済み"
+
+#. module: account_online_payment
+#: model:ir.model.fields,field_description:account_online_payment.field_account_batch_payment__account_online_linked
+msgid "Account Online Linked"
+msgstr "口座オンラインリンク済"
+
+#. module: account_online_payment
+#: model:ir.actions.server,name:account_online_payment.ir_cron_bank_sync_update_payment_status_ir_actions_server
+msgid "Account: Update payment status"
+msgstr "会計: 支払ステータスを更新"
+
+#. module: account_online_payment
+#: model:ir.model,name:account_online_payment.model_account_online_link
+msgid "Bank Connection"
+msgstr "銀行連携"
+
+#. module: account_online_payment
+#: model:ir.model.fields,field_description:account_online_payment.field_account_batch_payment__payment_identifier
+msgid "Batch ID"
+msgstr "バッチID"
+
+#. module: account_online_payment
+#: model:ir.model,name:account_online_payment.model_account_batch_payment
+msgid "Batch Payment"
+msgstr "一括支払"
+
+#. module: account_online_payment
+#: model:ir.model.fields.selection,name:account_online_payment.selection__account_batch_payment__payment_online_status__canceled
+msgid "Canceled"
+msgstr "取消済"
+
+#. module: account_online_payment
+#: model:ir.actions.server,name:account_online_payment.action_account_online_payment_check_status
+msgid "Check Status"
+msgstr "ステータスを確認"
+
+#. module: account_online_payment
+#: model:ir.model.fields,field_description:account_online_payment.field_account_payment__end_to_end_id
+msgid "End to End ID"
+msgstr "E2E ID"
+
+#. module: account_online_payment
+#: model_terms:ir.ui.view,arch_db:account_online_payment.view_batch_payment_form_inherit
+msgid "Initiate Payment"
+msgstr "支払を開始"
+
+#. module: account_online_payment
+#: model:ir.model.fields,field_description:account_online_payment.field_account_batch_payment__payment_online_status
+msgid "PIS Status"
+msgstr "PISステータス"
+
+#. module: account_online_payment
+#. odoo-python
+#: code:addons/account_online_payment/models/account_batch_payment.py:0
+msgid "Payment already been signed"
+msgstr "支払が既に署名されました"
+
+#. module: account_online_payment
+#: model:ir.model,name:account_online_payment.model_account_payment
+msgid "Payments"
+msgstr "支払"
+
+#. module: account_online_payment
+#: model:ir.model.fields.selection,name:account_online_payment.selection__account_batch_payment__payment_online_status__pending
+msgid "Pending"
+msgstr "保留"
+
+#. module: account_online_payment
+#. odoo-python
+#: code:addons/account_online_payment/models/account_batch_payment.py:0
+msgid ""
+"Please be aware that signed payments may have already been processed and "
+"sent to the bank."
+msgstr ""
+"署名された支払はすでに処理され、銀行に送金されている可能性があることをご了承"
+"下さい。"
+
+#. module: account_online_payment
+#: model:ir.model.fields,field_description:account_online_payment.field_account_batch_payment__redirect_url
+msgid "Redirect URL"
+msgstr "リダイレクURL"
+
+#. module: account_online_payment
+#: model:ir.model.fields.selection,name:account_online_payment.selection__account_batch_payment__payment_online_status__rejected
+msgid "Rejected"
+msgstr "拒否済"
+
+#. module: account_online_payment
+#: model_terms:ir.ui.view,arch_db:account_online_payment.view_batch_payment_form_inherit
+msgid "Sign Payment"
+msgstr "支払に署名する"
+
+#. module: account_online_payment
+#. odoo-python
+#: code:addons/account_online_payment/models/account_batch_payment.py:0
+msgid "This journal needs to be connected to a bank to check its status."
+msgstr "この仕訳帳は、ステータスを確認するために銀行に接続する必要があります。"
+
+#. module: account_online_payment
+#. odoo-python
+#: code:addons/account_online_payment/models/account_batch_payment.py:0
+msgid ""
+"This payment might have already been signed. Refreshing the payment status..."
+msgstr ""
+"この支払いはすでに署名されている可能性があります。支払状況を更新しています..."
+
+#. module: account_online_payment
+#: model:ir.model.fields.selection,name:account_online_payment.selection__account_batch_payment__payment_online_status__uninitiated
+msgid "Uninitiated"
+msgstr "未開始"
+
+#. module: account_online_payment
+#: model:ir.model.fields.selection,name:account_online_payment.selection__account_batch_payment__payment_online_status__unsigned
+msgid "Unsigned"
+msgstr "未署名"
+
+#. module: account_online_payment
+#: model_terms:ir.ui.view,arch_db:account_online_payment.view_batch_payment_form_inherit
+msgid "XML"
+msgstr "XML"
+
+#. module: account_online_payment
+#. odoo-python
+#: code:addons/account_online_payment/models/account_payment.py:0
+msgid "You cannot modify a payment that has already been sent to the bank."
+msgstr " 銀行に送金済の支払は変更できません。"

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ca_cpa005_transaction_code_view_tree" model="ir.ui.view">
+        <field name="name">l10n.ca.cpa005.transaction.code.view.list</field>
+        <field name="model">l10n_ca_cpa005.transaction.code</field>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+            <list decoration-muted="(not active)" editable="top">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_l10n_ca_cpa005_transaction_code_tree" model="ir.actions.act_window">
+        <field name="name">CPA/EFT Transaction Codes</field>
+        <field name="res_model">l10n_ca_cpa005.transaction.code</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+
+    <menuitem id="menu_l10n_ca_cpa005_root"
+              name="Canada"
+              sequence="110"
+              groups="account.group_account_manager"
+              parent="account.menu_finance_configuration"/>
+
+    <menuitem id="menu_l10n_ca_cpa005_transaction_code"
+              action="action_l10n_ca_cpa005_transaction_code_tree"
+              name="CPA/EFT Transaction Codes"
+              parent="l10n_ca_payment_cpa005.menu_l10n_ca_cpa005_root"
+              groups="base.group_no_one"/>
+
+</odoo>

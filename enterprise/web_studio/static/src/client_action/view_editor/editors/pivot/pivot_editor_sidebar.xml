@@ -1,0 +1,59 @@
+<templates>
+
+    <t t-name="web_studio.ViewEditor.PivotEditorSidebar">
+        <InteractiveEditorSidebar>
+            <t t-set-slot="view">
+                <!-- Disable linking is presented as a positive sentence for easier understanding (hence inverse) -->
+                <Property
+                    name="'disable_linking'"
+                    type="'boolean'"
+                    value="!archInfo.disableLinking"
+                    onChange="(value, name) => this.onViewAttributeChanged(!value, name)"
+                >
+                    Access records from cell
+                </Property>
+
+                <Property
+                    name="'column_groupby'"
+                    type="'selection'"
+                    value="colGroupBys[0]"
+                    childProps="{ choices: this.columnGroupbyChoices, required: false }"
+                    onChange.bind="(value) => this.onGroupByChanged('col', value, this.colGroupBys[0])"
+                >
+                    Column grouping
+                </Property>
+
+                <Property
+                    name="'first_row_groupby'"
+                    type="'selection'"
+                    value="rowGroupBys[0]"
+                    childProps="{ choices: this.rowGroupbyChoices_first, required: false }"
+                    onChange.bind="(value) => this.onGroupByChanged('row', value, this.rowGroupBys[0])"
+                >
+                    Row grouping - First level
+                </Property>
+
+                <Property
+                    t-if="archInfo.rowGroupBys[0]"
+                    name="'second_row_groupby'"
+                    type="'selection'"
+                    value="rowGroupBys[1]"
+                    childProps="{ choices: this.rowGroupbyChoices_second, required: false }"
+                    onChange.bind="(value) => this.onGroupByChanged('row', value, this.rowGroupBys[1])"
+                >
+                    Row grouping - Second level
+                </Property>
+
+                <div class="o_pivot_measures_fields">
+                    <label for="pivot_measure_fields" class="mb-1">Measures</label>
+                    <div class="o_field_widget o_field_many2many_tags" name="pivot_measure_fields">
+                        <MultiRecordSelector t-props="multiRecordSelectorProps" />
+                    </div>
+                </div>
+
+                <SidebarViewToolbox onMore="props.openViewInForm" canEditXml="!viewEditorModel.isEditingSubview" openDefaultValues="props.openDefaultValues" />
+            </t>
+        </InteractiveEditorSidebar>
+    </t>
+
+</templates>

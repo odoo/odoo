@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <menuitem
+        id="menu_hr_payroll_employees_swissdec_root"
+        name="Employees"
+        parent="hr_work_entry_contract_enterprise.menu_hr_payroll_root"
+        sequence="45"
+        action="hr.open_view_employee_list_my"
+        groups="hr_payroll.group_hr_payroll_user"/>
+
+    <menuitem
+        id="menu_hr_payroll_contracts_swissdec_root"
+        name="Contracts"
+        parent="hr_work_entry_contract_enterprise.menu_hr_payroll_root"
+        sequence="50"
+        action="hr_contract.action_hr_contract"
+        groups="hr_payroll.group_hr_payroll_user"/>
+
+
+    <menuitem
+        id="l10n_ch_menu_swissdec_transmission"
+        name="Transmission"
+        parent="hr_work_entry_contract_enterprise.menu_hr_payroll_root"
+        sequence="70"
+        groups="hr_payroll.group_hr_payroll_user"/>
+
+    <menuitem
+        id="l10n_ch_menu_monthly_transmission"
+        name="Monthly Transmission"
+        sequence="10"
+        parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_swissdec_transmission"
+    />
+
+    <menuitem
+        id="menu_l10n_ch_ema_declaration"
+        name="Entry / Withdrawal / Mutations"
+        parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_monthly_transmission"
+        action="l10n_ch_hr_payroll_elm_transmission.l10n_ch_ema_declaration_action"
+        sequence="5"/>
+
+    <menuitem
+        id="l10n_ch_hr_payroll.menu_l10n_ch_is_report"
+        name="Source-Tax"
+        action="l10n_ch_hr_payroll_elm_transmission.l10n_ch_st_declaration_action"
+        parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_monthly_transmission"
+        groups="hr_payroll.group_hr_payroll_user"
+        sequence="10"
+    />
+
+    <menuitem
+        id="l10n_ch_hr_payroll.menu_l10n_ch_employee_is_line"
+        name="Source-Tax Corrections"
+        parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_monthly_transmission"
+        action="l10n_ch_hr_payroll.action_l10n_ch_is_line"
+        sequence="15"
+        groups="hr_payroll.group_hr_payroll_user"
+    />
+
+
+    <menuitem
+        id="menu_l10n_ch_statistic_report"
+        name="Statistic"
+        action="l10n_ch_hr_payroll_elm_transmission.l10n_ch_statistic_declaration_action"
+        parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_monthly_transmission"
+        groups="hr_payroll.group_hr_payroll_user"
+        sequence="20"
+    />
+
+    <menuitem
+        id="l10n_ch_menu_yearly_transmission"
+        name="Yearly Transmission"
+        sequence="15"
+        parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_swissdec_transmission"
+    />
+
+    <menuitem
+        id="l10n_ch_hr_payroll.menu_l10n_ch_insurance_report"
+        name="Yearly Salaries"
+        sequence="5"
+        action="l10n_ch_hr_payroll_elm_transmission.l10n_ch_yearly_retrospective_action"
+        parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_yearly_transmission"
+        groups="hr_payroll.group_hr_payroll_user"
+    />
+
+    <menuitem
+        id="l10n_ch_hr_payroll.menu_l10n_ch_salary_certificate"
+        name="Salary Certificates Rectification"
+        action="l10n_ch_hr_payroll_elm_transmission.action_l10n_ch_certificate"
+        sequence="15"
+        parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_yearly_transmission"/>
+
+    <menuitem
+        id="l10n_ch_menu_lpp_basis_declaration"
+        name="BVG-LPP Basis Declaration"
+        sequence="15"
+        action="l10n_ch_hr_payroll_elm_transmission.action_l10n_ch_lpp_basis_report"
+        parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_yearly_transmission"
+        groups="hr_payroll.group_hr_payroll_user"
+    />
+
+
+    <menuitem
+        id="l10n_ch_menu_swissdec_company_data"
+        name="Company"
+        sequence="5"
+        parent="hr_work_entry_contract_enterprise.menu_hr_payroll_configuration"
+    />
+
+
+    <menuitem
+        id="l10n_ch_menu_swissdec_institutions_insurance"
+        name="Insurances"
+        sequence="10"
+        parent="hr_work_entry_contract_enterprise.menu_hr_payroll_configuration"
+    />
+
+    <menuitem
+        id="l10n_ch_menu_swissdec_institutions_source_tax"
+        name="Source-Tax"
+        sequence="15"
+        parent="hr_work_entry_contract_enterprise.menu_hr_payroll_configuration"
+    />
+
+        <menuitem
+            id="l10n_ch_hr_payroll.menu_l10n_ch_social_insurance"
+            name="AVS/AC Insurances"
+            parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_swissdec_institutions_insurance"
+            action="l10n_ch_hr_payroll.action_l10n_ch_social_insurance"
+            sequence="5"
+        />
+
+        <menuitem
+            id="l10n_ch_hr_payroll.menu_l10n_ch_compensation_fund"
+            name="Compensation Funds"
+            parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_swissdec_institutions_insurance"
+            action="l10n_ch_hr_payroll.action_l10n_ch_compensation_fund"
+            sequence="6"
+        />
+
+        <menuitem
+            id="l10n_ch_hr_payroll.menu_l10n_ch_accident_insurance"
+            name="LAA Insurances"
+            parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_swissdec_institutions_insurance"
+            action="l10n_ch_hr_payroll.action_l10n_ch_accident_insurance"
+            sequence="7"
+        />
+
+        <menuitem
+            id="l10n_ch_hr_payroll.menu_l10n_ch_lpp_insurance"
+            name="LPP Insurances"
+            parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_swissdec_institutions_insurance"
+            action="l10n_ch_hr_payroll.action_l10n_ch_lpp_insurance"
+            sequence="8"
+        />
+
+        <menuitem
+            id="l10n_ch_hr_payroll.menu_l10n_ch_additional_accident_insurance"
+            name="LAAC Insurances"
+            parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_swissdec_institutions_insurance"
+            action="l10n_ch_hr_payroll_elm_transmission.action_l10n_ch_additional_accident_insurance"
+            sequence="9"
+        />
+
+        <menuitem
+            id="l10n_ch_hr_payroll.menu_l10n_ch_sickness_insurance"
+            name="IJM Insurances"
+            parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_swissdec_institutions_insurance"
+            action="l10n_ch_hr_payroll.action_l10n_ch_sickness_insurance"
+            sequence="10"
+        />
+
+
+        <menuitem id="menu_l10n_ch_source_tax_institution"
+          name="Source Tax Institutions"
+          parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_swissdec_institutions_source_tax"
+          action="action_l10n_ch_source_tax_institution"
+          sequence="10"
+        />
+
+        <menuitem
+            id="l10n_ch_hr_payroll.menu_l10n_ch_tax_rate_import_wizard"
+            name="Import Tax Rates"
+            parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_swissdec_institutions_source_tax"
+            action="l10n_ch_hr_payroll.l10n_ch_tax_rate_import_wizard_action"
+            sequence="15"
+        />
+
+
+        <menuitem
+            id="l10n_ch_hr_payroll.menu_l10n_ch_location_unit"
+            name="Work Locations"
+            parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_swissdec_company_data"
+            action="l10n_ch_hr_payroll.action_l10n_ch_location_unit"
+            sequence="5"
+            groups="hr_payroll.group_hr_payroll_user"
+        />
+
+        <menuitem
+            id="menu_l10n_ch_cs_profiles"
+            name="Wage Statements"
+            parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_swissdec_company_data"
+            action="l10n_ch_hr_payroll_elm_transmission.action_l10n_ch_salary_certificate_profile"
+            sequence="10"
+        />
+
+        <menuitem
+            id="l10n_ch_hr_payroll.menu_l10n_ch_wage_types"
+            name="Wage Types"
+            parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_menu_swissdec_company_data"
+            action="l10n_ch_hr_payroll.action_hr_salary_rule_l10n_ch_wage_types"
+            sequence="15"
+        />
+
+    <menuitem
+        id="menu_l10n_ch_hr_payslip_monthly_wizard"
+        name="New Batch"
+        parent="hr_payroll.menu_hr_payroll_payslips"
+        action="action_l10n_ch_hr_payslip_monthly_wizard"
+        sequence="0"
+    />
+
+    <menuitem
+        id="l10n_ch_hr_payroll.menu_reporting_l10n_ch"
+        name="Company Data"
+        sequence="31"
+        parent="hr_payroll.menu_hr_payroll_report"/>
+
+    <menuitem
+        id="l10n_ch_hr_payroll_elm_payroll_reporting"
+        name="Payroll Data"
+        sequence="35"
+        parent="hr_payroll.menu_hr_payroll_report"/>
+
+    <menuitem id="menu_l10n_ch_employee_yearly_values"
+              name="Employee History"
+              parent="l10n_ch_hr_payroll.menu_reporting_l10n_ch"
+              groups="base.group_no_one"
+              sequence="999"
+              action="action_l10n_ch_employee_yearly_values"
+    />
+
+    <menuitem id="menu_hr_payslip_line_pivot"
+          name="Payslip Lines"
+          sequence="0"
+          parent="l10n_ch_hr_payroll_elm_payroll_reporting"
+          action="action_hr_payslip_line_pivot"/>
+
+    <menuitem
+        id="menu_l10n_ch_avs_split"
+        name="OASI Splitting"
+        parent="l10n_ch_hr_payroll_elm_payroll_reporting"
+        action="action_l10n_ch_avs_splits"
+        sequence="10"
+    />
+
+
+</odoo>

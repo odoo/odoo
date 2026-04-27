@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <record id="l10n_ma_rule_parameter_seniority" model="hr.rule.parameter">
+            <field name="name">Morocco: Seniority</field>
+            <field name="code">l10n_ma_seniority</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_seniority_value" model="hr.rule.parameter.value">
+            <field name="parameter_value">[
+                ( 0,  2, 0   ),
+                ( 2,  5, 0.05),
+                ( 5, 12, 0.10),
+                (12, 20, 0.15),
+                (20, 25, 0.20),
+                (25,100, 0.25),
+            ]</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_seniority"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_cnss" model="hr.rule.parameter">
+            <field name="name">CNSS Value (%)</field>
+            <field name="code">l10n_ma_cnss</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_cnss_value_2017" model="hr.rule.parameter.value">
+            <field name="parameter_value">4.48</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_cnss"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_cnss_max" model="hr.rule.parameter">
+            <field name="name">CNSS Value Max</field>
+            <field name="code">l10n_ma_cnss_max</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_cnss_max_value_2017" model="hr.rule.parameter.value">
+            <field name="parameter_value">6000</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_cnss_max"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_job_loss" model="hr.rule.parameter">
+            <field name="name">Job Loss Allowance (%)</field>
+            <field name="code">l10n_ma_job_loss</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_job_loss_value_2017" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.19</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_job_loss"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_job_loss_max" model="hr.rule.parameter">
+            <field name="name">Job Loss Allowance Max</field>
+            <field name="code">l10n_ma_job_loss_max</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_job_loss_max_value_2017" model="hr.rule.parameter.value">
+            <field name="parameter_value">6000</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_job_loss_max"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_amo" model="hr.rule.parameter">
+            <field name="name">Employee AMO (%)</field>
+            <field name="code">l10n_ma_amo</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_amo_value_2017" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.26</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_amo"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_medical_alw" model="hr.rule.parameter">
+            <field name="name">Medical Allowance (%)</field>
+            <field name="code">l10n_ma_medical_alw</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_medical_alw_value_2017" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.26</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_medical_alw"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_cimr" model="hr.rule.parameter">
+            <field name="name">CIMR (%)</field>
+            <field name="code">l10n_ma_cimr</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_cimr_value_2017" model="hr.rule.parameter.value">
+            <field name="parameter_value">3</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_cimr"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_cimr_max" model="hr.rule.parameter">
+            <field name="name">CIMR Maximum</field>
+            <field name="code">l10n_ma_cimr_max</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_cimr_max_value_2017" model="hr.rule.parameter.value">
+            <field name="parameter_value">2500</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_cimr_max"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_pro_contribution" model="hr.rule.parameter">
+            <field name="name">Professional Contribution (%)</field>
+            <field name="code">l10n_ma_pro_contribution</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_pro_contribution_value_2017" model="hr.rule.parameter.value">
+            <field name="parameter_value">20</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_pro_contribution"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_family_allocation_employer" model="hr.rule.parameter">
+            <field name="name">Family Allocation: Employer Cost (%)</field>
+            <field name="code">l10n_ma_family_allocation_employer</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_family_allocation_employer_value_2017" model="hr.rule.parameter.value">
+            <field name="parameter_value">6.4</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_family_allocation_employer"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_social_benefit_employer" model="hr.rule.parameter">
+            <field name="name">Social Benefit: Employer Cost (%)</field>
+            <field name="code">l10n_ma_social_benefit_employer</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_social_benefit_employer_value_2017" model="hr.rule.parameter.value">
+            <field name="parameter_value">8.98</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_social_benefit_employer"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_social_benefit_employer_max" model="hr.rule.parameter">
+            <field name="name">Social Benefit Maximum: Employer Cost</field>
+            <field name="code">l10n_ma_social_benefit_employer_max</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_social_benefit_employer_max_value_2017" model="hr.rule.parameter.value">
+            <field name="parameter_value">6000</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_social_benefit_employer_max"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_professional_training_employer" model="hr.rule.parameter">
+            <field name="name">Professional Training: Employer Cost (%)</field>
+            <field name="code">l10n_ma_professional_training_employer</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_professional_training_employer_value_2017" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.6</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_professional_training_employer"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_amo_employer" model="hr.rule.parameter">
+            <field name="name">AMO Participation: Employer Cost (%)</field>
+            <field name="code">l10n_ma_amo_employer</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_amo_employer_value_2017" model="hr.rule.parameter.value">
+            <field name="parameter_value">4.11</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_amo_employer"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_mutuality_employer" model="hr.rule.parameter">
+            <field name="name">Mutuality: Employer Cost (%)</field>
+            <field name="code">l10n_ma_mutuality_employer</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_mutuality_employer_value_2017" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.59</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_mutuality_employer"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_cimr_employer" model="hr.rule.parameter">
+            <field name="name">CIMR: Employer Cost (%)</field>
+            <field name="code">l10n_ma_cimr_employer</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_cimr_employer_value_2017" model="hr.rule.parameter.value">
+            <field name="parameter_value">3.9</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_cimr_employer"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_income_tax_breakdown" model="hr.rule.parameter">
+            <field name="name">Morocco: Income Tax Breakdown</field>
+            <field name="code">l10n_ma_income_tax_breakdown</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_income_tax_breakdown_values_2017" model="hr.rule.parameter.value">
+            <field name="parameter_value">[
+                (      2501.00,  0,    0.00),
+                (      4167.00, 10,  250.00),
+                (      5001.00, 20,  666.67),
+                (      6667.00, 30, 1166.67),
+                (     15000.00, 34, 1433.33),
+                (9999999999.99, 38, 2033.00),
+            ]</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_income_tax_breakdown"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_social_contribution_coef" model="hr.rule.parameter">
+            <field name="name">Social Contribution (%)</field>
+            <field name="code">l10n_ma_social_contribution_coef</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_social_contribution_coef_value_2017" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.5</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_social_contribution_coef"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_min_net_for_soc_contr" model="hr.rule.parameter">
+            <field name="name">Social Contribution: Minimum Net Salary</field>
+            <field name="code">l10n_ma_min_net_for_soc_contr</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_min_net_for_soc_contr_value_2017" model="hr.rule.parameter.value">
+            <field name="parameter_value">20000</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_min_net_for_soc_contr"/>
+            <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+        </record>
+
+        <record id="l10n_ma_rule_parameter_social_security_ceil" model="hr.rule.parameter">
+            <field name="name">Social Security Ceiling</field>
+            <field name="code">l10n_ma_social_security_ceil</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+        <record id="l10n_ma_rule_parameter_social_security_ceil_value_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">40000</field>
+            <field name="rule_parameter_id" ref="l10n_ma_rule_parameter_social_security_ceil"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
+    </data>
+</odoo>
+

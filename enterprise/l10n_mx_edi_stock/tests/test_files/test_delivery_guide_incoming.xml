@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:cartaporte31="http://www.sat.gob.mx/CartaPorte31" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Moneda="XXX" Serie="___ignore___" SubTotal="0" TipoDeComprobante="T" Total="0" Version="4.0" xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/CartaPorte31 http://www.sat.gob.mx/sitio_internet/cfd/CartaPorte/CartaPorte31.xsd" Fecha="___ignore___" Folio="___ignore___" NoCertificado="___ignore___" Certificado="___ignore___" LugarExpedicion="20914" Exportacion="01" Sello="___ignore___">
+	<cfdi:Emisor Rfc="EKU9003173C9" Nombre="ESCUELA KEMPER URGATE" RegimenFiscal="601"/>
+	<cfdi:Receptor UsoCFDI="S01" Rfc="EKU9003173C9" Nombre="ESCUELA KEMPER URGATE" DomicilioFiscalReceptor="20914" RegimenFiscalReceptor="601"/>
+	<cfdi:Conceptos>
+		<cfdi:Concepto Importe="0.00" ValorUnitario="0.00" ObjetoImp="01" NoIdentificacion="01" Cantidad="10.000000" ClaveProdServ="56101500" ClaveUnidad="KGM" Descripcion="product_mx" Unidad="kg">
+            </cfdi:Concepto>
+	</cfdi:Conceptos>
+	<cfdi:Complemento>
+		<cartaporte31:CartaPorte Version="3.1" TranspInternac="No" TotalDistRec="120" IdCCP="___ignore___">
+			<cartaporte31:Ubicaciones>
+				<cartaporte31:Ubicacion TipoUbicacion="Origen" IDUbicacion="___ignore___" FechaHoraSalidaLlegada="___ignore___" RFCRemitenteDestinatario="ICV060329BY0">
+					<cartaporte31:Domicilio Calle="Campobasso Sur 3201 - 9001" CodigoPostal="33826" Estado="CHH" Pais="MEX" Municipio="032"/>
+				</cartaporte31:Ubicacion>
+				<cartaporte31:Ubicacion TipoUbicacion="Destino" IDUbicacion="___ignore___" DistanciaRecorrida="120" FechaHoraSalidaLlegada="___ignore___" RFCRemitenteDestinatario="EKU9003173C9">
+					<cartaporte31:Domicilio Calle="Campobasso Norte 3206 - 9000" CodigoPostal="20914" Estado="AGU" Pais="MEX" Municipio="005"/>
+				</cartaporte31:Ubicacion>
+			</cartaporte31:Ubicaciones>
+			<cartaporte31:Mercancias NumTotalMercancias="1" PesoBrutoTotal="10.000" UnidadPeso="KGM">
+				<cartaporte31:Mercancia BienesTransp="56101500" Cantidad="10.000000" ClaveUnidad="KGM" Descripcion="product_mx" PesoEnKg="10.000">
+					<cartaporte31:CantidadTransporta Cantidad="10.000000" IDOrigen="___ignore___" IDDestino="___ignore___"/>
+				</cartaporte31:Mercancia>
+				<cartaporte31:Autotransporte NumPermisoSCT="DEMOPERMIT" PermSCT="TPAF10">
+					<cartaporte31:IdentificacionVehicular AnioModeloVM="2020" ConfigVehicular="T3S1" PlacaVM="ABC123" PesoBrutoVehicular="2.0"/>
+					<cartaporte31:Seguros AseguraRespCivil="DEMO INSURER" PolizaRespCivil="DEMO POLICY"/>
+					<cartaporte31:Remolques>
+						<cartaporte31:Remolque SubTipoRem="CTR003" Placa="trail1"/>
+					</cartaporte31:Remolques>
+				</cartaporte31:Autotransporte>
+			</cartaporte31:Mercancias>
+			<cartaporte31:FiguraTransporte>
+				<cartaporte31:TiposFigura TipoFigura="01" RFCFigura="VAAM130719H60" NumLicencia="a234567890" NombreFigura="Amigo Pedro">
+                            </cartaporte31:TiposFigura>
+				<cartaporte31:TiposFigura TipoFigura="02" RFCFigura="EKU9003173C9" NombreFigura="ESCUELA KEMPER URGATE">
+					<cartaporte31:PartesTransporte ParteTransporte="PT05"/>
+				</cartaporte31:TiposFigura>
+			</cartaporte31:FiguraTransporte>
+		</cartaporte31:CartaPorte>
+		<tfd:TimbreFiscalDigital xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" Version="1.1" UUID="___ignore___" FechaTimbrado="___ignore___" RfcProvCertif="___ignore___" SelloCFD="___ignore___" NoCertificadoSAT="___ignore___" SelloSAT="___ignore___"/>
+	</cfdi:Complemento>
+</cfdi:Comprobante>

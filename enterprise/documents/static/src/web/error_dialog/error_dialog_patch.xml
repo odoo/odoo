@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="web.ErrorDialog" t-inherit-mode="extension">
+        <xpath expr="//t[@t-set-slot='footer']//button" position="after">
+            <button t-if="canUploadTraceback" class="btn btn-secondary ms-auto ms-md-2"
+                t-on-click="shareTraceback" t-att-disabled="state.processed">
+                Share
+            </button>
+            <div t-if="state.tracebackUrl"
+                class="o_field_widget o_readonly_modifier o_field_CopyClipboardChar ms-0 ms-md-2 w-md-auto w-100">
+                <div class="d-grid rounded-2 overflow-hidden">
+                    <span t-out="state.tracebackUrl"/>
+                    <CopyButton className="'o_btn_char_copy btn-sm'" content="state.tracebackUrl" icon="'fa-clone'"
+                        successText.translate="The document URL has been copied to your clipboard."/>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

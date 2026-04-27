@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_ch_hr_payroll</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="45"/>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block id="l10n_ch_hr_payroll" position="inside">
+                <setting id="statistic_payroll" string="Statistic" company_dependent="1" help="If your company transmits data to the Federal Office of Statistic, complete the following information.">
+                    <label for="l10n_ch_statistics_convention" class="col-md-6 p-0 m-0"/>
+                    <field name="l10n_ch_statistics_convention" class="col-md-6 p-0"/>
+                    <label for="l10n_ch_statistics_payroll_unit" class="col-md-6 p-0 m-0"/>
+                    <field name="l10n_ch_statistics_payroll_unit"/>
+                </setting>
+                <setting id="contact_person" string="Contact Person" company_dependent="1" help="Mention here the contact person responsible for Payroll communication with Institutions.">
+                    <label for="l10n_ch_contact_person_name" class="col-md-6 p-0 m-0"/>
+                    <field name="l10n_ch_contact_person_name" string="Name"/>
+                    <label for="l10n_ch_contact_person_email" class="col-md-6 p-0 m-0"/>
+                    <field name="l10n_ch_contact_person_email" string="Email"/>
+                    <label for="l10n_ch_contact_person_phone" class="col-md-6 p-0 m-0"/>
+                    <field name="l10n_ch_contact_person_phone" string="Phone"/>
+                </setting>
+                <setting id="calculations" string="General Settings" company_dependent="1" help="Select here Industry specific calculation methods.">
+                    <label for="l10n_ch_transmission_language" class="col-md-6 p-0 m-0"/>
+                    <field name="l10n_ch_transmission_language" string="Transmission Language" required="1"/>
+                    <label for="l10n_ch_30_day_method" class="col-md-6 p-0 m-0"/>
+                    <field name="l10n_ch_30_day_method" string="30 Day Method"/>
+                </setting>
+                <setting id="delegate_payroll" string="Delegate Payroll" company_dependent="1" help="If your payroll accounting is delegated to a fiduciary for example, mention their information here.">
+                    <field name="l10n_ch_uses_delegate"/>
+                    <label for="l10n_ch_swissdec_delegate_name" invisible="not l10n_ch_uses_delegate" class="col-md-6 p-0 m-0"/>
+                    <field name="l10n_ch_swissdec_delegate_name"
+                           placeholder="HR-RC Name"
+                           class="col-md-6 p-0"
+                           required="l10n_ch_uses_delegate"
+                           invisible="not l10n_ch_uses_delegate"/>
+                    <label for="l10n_ch_swissdec_delegate_ch_uid" invisible="not l10n_ch_uses_delegate" class="col-md-6 p-0 m-0"/>
+                    <field name="l10n_ch_swissdec_delegate_ch_uid"
+                           placeholder="Unknown"
+                           class="col-md-6 p-0"
+                           required="l10n_ch_uses_delegate"
+                           invisible="not l10n_ch_uses_delegate"/>
+                    <label for="l10n_ch_delegate_street" string="Address" class="col-md-6 p-0 m-0" invisible="not l10n_ch_uses_delegate"/>
+                    <div class="o_address_format col-md-6 p-0" invisible="not l10n_ch_uses_delegate">
+                        <field name="l10n_ch_delegate_street" placeholder="Street..." class="o_address_street"/>
+                        <field name="l10n_ch_delegate_street2" placeholder="Street 2..." class="o_address_street"/>
+                        <field name="l10n_ch_delegate_city" placeholder="City" class="o_address_city" required="l10n_ch_uses_delegate"/>
+                        <field name="l10n_ch_delegate_state_id" class="o_address_state" placeholder="State" options="{'no_open': True}"/>
+                        <field name="l10n_ch_delegate_zip" placeholder="ZIP" class="o_address_zip" required="l10n_ch_uses_delegate"/>
+                        <field name="l10n_ch_delegate_country_id" placeholder="Country" class="o_address_country" options="{'no_open': True, 'no_create': True}"/>
+                    </div>
+                    <field name="l10n_ch_delegate_Po_Box" placeholder="P.O. Box" invisible="not l10n_ch_uses_delegate"/>
+                </setting>
+                <setting id="agricole_company_setting" string="Agricole Company" company_dependent="1" help="Check this box if your company is in the agricole sector.">
+                    <label for="l10n_ch_agricole_company" class="col-md-6 p-0 m-0"/>
+                    <field name="l10n_ch_agricole_company" class="col-md-6 p-0"/>
+                </setting>
+            </block>
+        </field>
+    </record>
+</odoo>

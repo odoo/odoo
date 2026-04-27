@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.JournalReportFilterExtraOptions" t-inherit="account_reports.AccountReportFilterExtraOptions">
+        <xpath expr="//Dropdown/t[@t-set-slot='content']" position="inside">
+            <DropdownItem
+                class="{ 'selected': controller.options.show_payment_lines }"
+                onSelected="() => this.filterClicked({ optionKey: 'show_payment_lines', reload: true})"
+                closingMode="'none'"
+            >
+                Include Payments
+            </DropdownItem>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_financial_report_l10n_pt_ddr" model="account.report">
+        <field name="name">Demonstração de Resultados</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="country_id" ref="base.pt"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_l10n_pt_ddr_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_l10n_pt_ddr_rendimentos_e_gastos" model="account.report.line">
+                <field name="name">RENDIMENTOS E GASTOS</field>
+                <field name="code">RENDIMENTOS_E_GASTOS</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_l10n_pt_ddr_reg_vendas_e_servicos_prestados" model="account.report.line">
+                        <field name="name">Vendas e serviços prestados</field>
+                        <field name="code">VENDAS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_vendas_e_servicos_prestados_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-72 - 71</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_subsidios_a_exploracao" model="account.report.line">
+                        <field name="name">Subsídios à exploração</field>
+                        <field name="code">EXPLORACAO</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_subsidios_a_exploracao_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-75</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_ganhos_perdas_imputados_de_subsidiarias_associadas_e_empreend_conjuntos" model="account.report.line">
+                        <field name="name">Ganhos/perdas imputados de subsidiárias, associadas e empreend. conjuntos</field>
+                        <field name="code">SUBSIDIARIAS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_ganhos_perdas_imputados_de_subsidiarias_associadas_e_empreend_conjuntos_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-685 - 785 - 7922 - 7923</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_variacao_nos_inventarios_da_producao" model="account.report.line">
+                        <field name="name">Variação nos inventários da produção</field>
+                        <field name="code">VARIACAO</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_variacao_nos_inventarios_da_producao_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-73</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_trabalhos_para_a_propria_entidade" model="account.report.line">
+                        <field name="name">Trabalhos para a própria entidade</field>
+                        <field name="code">TRABALHOS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_trabalhos_para_a_propria_entidade_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-74</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_custo_das_mercadorias_vendidas_e_das_materias_consumidas" model="account.report.line">
+                        <field name="name">Custo das mercadorias vendidas e das matérias consumidas</field>
+                        <field name="code">CUSTO_MERCADORIAS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_custo_das_mercadorias_vendidas_e_das_materias_consumidas_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">61</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_fornecimentos_e_servicos_externos" model="account.report.line">
+                        <field name="name">Fornecimentos e serviços externos</field>
+                        <field name="code">FORNECIMENTOS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_fornecimentos_e_servicos_externos_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">62</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_gastos_com_o_pessoal" model="account.report.line">
+                        <field name="name">Gastos com o pessoal</field>
+                        <field name="code">GASTOS_PESSOAL</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_gastos_com_o_pessoal_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">63</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_ajustamentos_de_inventarios_perdas_reversoes" model="account.report.line">
+                        <field name="name">Imparidade / ajustamentos de Inventários (perdas/reversões)</field>
+                        <field name="code">AJUSTAMENTOS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_ajustamentos_de_inventarios_perdas_reversoes_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">652 + 7622</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_imparidade_de_dividas_a_receber_perdas_reversoes" model="account.report.line">
+                        <field name="name">Imparidade de dívidas a receber (perdas/reversões)</field>
+                        <field name="code">IMPARIDADE</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_imparidade_de_dividas_a_receber_perdas_reversoes_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">651 + 7621</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_provisoes_aumento_reducoes" model="account.report.line">
+                        <field name="name">Provisões (aumento/reduções)</field>
+                        <field name="code">PROVISOES</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_provisoes_aumento_reducoes_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">67 + 763</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_imparidade_de_activos_nao_depreciaveis_amortizaveis_perdas_reversoes" model="account.report.line">
+                        <field name="name">Imparidade de activos não depreciáveis/amortizáveis (perdas/reversões)</field>
+                        <field name="code">IMPARIDADE_NAO_DEPRECIAVEIS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_imparidade_de_activos_nao_depreciaveis_amortizaveis_perdas_reversoes_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">653 + 657 + 658 + 7623 + 7627 + 7628</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_aumentos_reducoes_de_justo_valor" model="account.report.line">
+                        <field name="name">Aumentos/reduções de justo valor</field>
+                        <field name="code">AUMENTOS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_aumentos_reducoes_de_justo_valor_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-66 - 77</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_outros_rendimentos_e_ganhos" model="account.report.line">
+                        <field name="name">Outros rendimentos e ganhos</field>
+                        <field name="code">OUTROS_RENDIMENTOS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_outros_rendimentos_e_ganhos_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-78\(785) - 79\(7915,7922,7923,793)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_outros_gastos_e_perdas" model="account.report.line">
+                        <field name="name">Outros gastos e perdas</field>
+                        <field name="code">OUTROS_GASTOS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_outros_gastos_e_perdas_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">68\(685)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_resultado_antes_de_depreciacoes_gastos_de_financiamento_e_impostos" model="account.report.line">
+                        <field name="name">Resultado antes de depreciações, gastos de financiamento e impostos</field>
+                        <field name="code">REG_RESULTADO_ANTES_DE_DEPRECIACOES_GASTOS_DE_FINANCIAMENTO_E_IMPOSTOS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_resultado_antes_de_depreciacoes_gastos_de_financiamento_e_impostos_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VENDAS.balance + EXPLORACAO.balance + SUBSIDIARIAS.balance + VARIACAO.balance + TRABALHOS.balance - CUSTO_MERCADORIAS.balance - FORNECIMENTOS.balance - GASTOS_PESSOAL.balance - AJUSTAMENTOS.balance - IMPARIDADE.balance - PROVISOES.balance - IMPARIDADE_NAO_DEPRECIAVEIS.balance + AUMENTOS.balance + OUTROS_RENDIMENTOS.balance - OUTROS_GASTOS.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_gastos_reversoes_de_depreciacao_e_de_amortizacao" model="account.report.line">
+                        <field name="name">Gastos/reversões de depreciação e de amortização</field>
+                        <field name="code">GASTOS_DEPRECIACAO</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_gastos_reversoes_de_depreciacao_e_de_amortizacao_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">64 + 761</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_imparidade_de_activos_depreciaveis_amortizaveis_perdas_reversoes" model="account.report.line">
+                        <field name="name">Imparidade de activos depreciáveis/amortizáveis (perdas/reversões)</field>
+                        <field name="code">IMPARIDADE_DEPRECIAVEIS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_imparidade_de_activos_depreciaveis_amortizaveis_perdas_reversoes_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">654 + 655 + 656 + 7624 + 7625 + 7626</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_resultado_operacional_antes_de_financiamento_e_impostos" model="account.report.line">
+                        <field name="name">Resultado operacional (antes de financiamento e Impostos)</field>
+                        <field name="code">REG_RESULTADO_OPERACIONAL_ANTES_DE_FINANCIAMENTO_E_IMPOSTOS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_resultado_operacional_antes_de_financiamento_e_impostos_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">REG_RESULTADO_ANTES_DE_DEPRECIACOES_GASTOS_DE_FINANCIAMENTO_E_IMPOSTOS.balance - GASTOS_DEPRECIACAO.balance - IMPARIDADE_DEPRECIAVEIS.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_juros_e_rendimentos_similares_obtidos" model="account.report.line">
+                        <field name="name">Juros e rendimentos similares obtidos</field>
+                        <field name="code">JUROS_E_RENDIMENTOS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_juros_e_rendimentos_similares_obtidos_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7915 - 793</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_juros_e_gastos_similares_suportados" model="account.report.line">
+                        <field name="name">Juros e gastos similares suportados</field>
+                        <field name="code">JUROS_E_GASTOS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_juros_e_gastos_similares_suportados_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">69</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_resultado_antes_de_impostos" model="account.report.line">
+                        <field name="name">Resultado antes de Impostos</field>
+                        <field name="code">REG_RESULTADO_ANTES_DE_IMPOSTOS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_resultado_antes_de_impostos_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">REG_RESULTADO_OPERACIONAL_ANTES_DE_FINANCIAMENTO_E_IMPOSTOS.balance + JUROS_E_RENDIMENTOS.balance - JUROS_E_GASTOS.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_imposto_sobre_o_rendimento_do_periodos" model="account.report.line">
+                        <field name="name">Imposto sobre o rendimento do período</field>
+                        <field name="code">IMPOSTO_RENDIMENTO_PERIODO</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_imposto_sobre_o_rendimento_do_periodos_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">812</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_pt_ddr_reg_resultado_liquido_do_periodo" model="account.report.line">
+                        <field name="name">Resultado líquido do período</field>
+                        <field name="code">REG_RESULTADO_LIQUIDO_DO_PERIODO</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_pt_ddr_reg_resultado_liquido_do_periodo_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">REG_RESULTADO_ANTES_DE_IMPOSTOS.balance - IMPOSTO_RENDIMENTO_PERIODO.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+    <record id="action_account_financial_report_pt_pnl" model="ir.actions.client">
+        <field name="name">PT Profit And Loss</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'model': 'account.report', 'report_id': ref('account_financial_report_l10n_pt_ddr')}"/>
+    </record>
+</odoo>

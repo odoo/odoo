@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="planning.PlanningEmployeeAvatar" t-inherit="mail.Avatar">
+        <xpath expr="//span[@t-esc='props.displayName']" position="attributes">
+            <attribute name="t-ref">displayName</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-Avatar')]" position="attributes">
+            <attribute name="t-attf-class" add="{{ props.showPopover ? 'o_field_many2one_avatar' : '' }}" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-Avatar')]/img" position="attributes">
+            <attribute name="t-on-click.stop.prevent">openCard</attribute>
+            <attribute name="t-if">!props.isResourceMaterial</attribute>
+            <attribute name="t-att-data-tooltip">props.displayName</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-Avatar')]/img" position="after">
+            <t t-if="props.isResourceMaterial">
+                <div t-attf-class="o_colorlist_item_color_{{ props.resourceColor }} o_material_resource d-inline-flex flex-shrink-0 align-items-center justify-content-center me-1 rounded bg-200"
+                     t-on-click.stop.prevent="openCard">
+                    <i class="fa fa-wrench"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

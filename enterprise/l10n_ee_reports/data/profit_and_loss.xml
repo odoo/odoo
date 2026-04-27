@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_financial_report_pl_1" model="account.report">
+        <field name="name">Income Statement (Scheme 1)</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.ee"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_pl_1_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_pl_1_operating" model="account.report.line">
+                <field name="name">Operating Profit/Loss</field>
+                <field name="code">EE_PL_1_OP</field>
+                <field name="aggregation_formula">EE_PL_1_SALES.balance + EE_PL_1_OTHER_OP_INCOME.balance + EE_PL_1_INV_AGRI.balance + EE_PL_1_BIO_ASSETS.balance + EE_PL_1_INV_FIN_WIP.balance + EE_PL_1_EXP_MAN_FA.balance + EE_PL_1_GOODS_RAW_SERV.balance + EE_PL_1_MISC_OP_EXP.balance + EE_PL_1_LABOR.balance + EE_PL_1_DEP_FA.balance + EE_PL_1_IMP_CA.balance + EE_PL_1_OTHER_OP_EXP.balance</field>
+                <field name="foldable" eval="True"/>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_pl_1_sales" model="account.report.line">
+                        <field name="name">Sales Revenue</field>
+                        <field name="code">EE_PL_1_SALES</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-40 + 40001 + 40101 + 40201</field>
+                    </record>
+                    <record id="account_financial_report_pl_1_other_op_income" model="account.report.line">
+                        <field name="name">Other Operating Income</field>
+                        <field name="code">EE_PL_1_OTHER_OP_INCOME</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-41 - 43</field>
+                    </record>
+                    <record id="account_financial_report_pl_1_inv_agri" model="account.report.line">
+                        <field name="name">Changes in Inventories of Agricultural Production</field>
+                        <field name="code">EE_PL_1_INV_AGRI</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-6811</field>
+                    </record>
+                    <record id="account_financial_report_pl_1_bio_assets" model="account.report.line">
+                        <field name="name">Profit/Loss from Biological Assets</field>
+                        <field name="code">EE_PL_1_BIO_ASSETS</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-40001 - 40101 - 40201 - 6832</field>
+                    </record>
+                    <record id="account_financial_report_pl_1_inv_fin_wip" model="account.report.line">
+                        <field name="name">Changes in Inventories of Finished Goods and Work in Progress</field>
+                        <field name="code">EE_PL_1_INV_FIN_WIP</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-6810</field>
+                    </record>
+                    <record id="account_financial_report_pl_1_exp_man_fa" model="account.report.line">
+                        <field name="name">Capitalized Expenses in the Manufacturing of Fixed Assets for Own Use</field>
+                        <field name="code">EE_PL_1_EXP_MAN_FA</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-680</field>
+                    </record>
+                    <record id="account_financial_report_pl_1_goods_raw_serv" model="account.report.line">
+                        <field name="name">Goods, Raw Materials and Services</field>
+                        <field name="code">EE_PL_1_GOODS_RAW_SERV</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-5</field>
+                    </record>
+                    <record id="account_financial_report_pl_1_misc_op_exp" model="account.report.line">
+                        <field name="name">Miscellaneous Operating Expenses</field>
+                        <field name="code">EE_PL_1_MISC_OP_EXP</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-60 - 61 - 62 - 63 - 64 - 66 + 662</field>
+                    </record>
+                    <record id="account_financial_report_pl_1_labor" model="account.report.line">
+                        <field name="name">Labor Costs</field>
+                        <field name="code">EE_PL_1_LABOR</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-65</field>
+                    </record>
+                    <record id="account_financial_report_pl_1_dep_fa" model="account.report.line">
+                        <field name="name">Depreciations and Amortizations of Fixed Assets</field>
+                        <field name="code">EE_PL_1_DEP_FA</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-6830 - 6831 - 6833</field>
+                    </record>
+                    <record id="account_financial_report_pl_1_imp_ca" model="account.report.line">
+                        <field name="name">Significant Impairment of Current Assets</field>
+                        <field name="code">EE_PL_1_IMP_CA</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-6834</field>
+                    </record>
+                    <record id="account_financial_report_pl_1_other_op_exp" model="account.report.line">
+                        <field name="name">Other Operating Expenses</field>
+                        <field name="code">EE_PL_1_OTHER_OP_EXP</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-682 - 684 - 685</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pl_1_other" model="account.report.line">
+                <field name="name">Other Profit/Loss</field>
+                <field name="code">EE_PL_1_OTHER</field>
+                <field name="aggregation_formula">EE_PL_1_SUBS.balance + EE_PL_1_AFFL.balance + EE_PL_1_FIN_INV.balance + EE_PL_1_INT_INC.balance + EE_PL_1_INT_EXP.balance + EE_PL_1_OTHER_FIN_INC_EXP.balance</field>
+                <field name="foldable" eval="True"/>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_pl_1_subs" model="account.report.line">
+                        <field name="name">Profit/Loss from Subsidiaries</field>
+                        <field name="code">EE_PL_1_SUBS</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-424 -675</field>
+                    </record>
+                    <record id="account_financial_report_pl_1_affl" model="account.report.line">
+                        <field name="name">Profit/Loss from Affiliates</field>
+                        <field name="code">EE_PL_1_AFFL</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-425 -676</field>
+                    </record>
+                    <record id="account_financial_report_pl_1_fin_inv" model="account.report.line">
+                        <field name="name">Profit/Loss from Financial Investments</field>
+                        <field name="code">EE_PL_1_FIN_INV</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-426 -677</field>
+                    </record>
+                    <record id="account_financial_report_pl_1_int_inc" model="account.report.line">
+                        <field name="name">Interest Income</field>
+                        <field name="code">EE_PL_1_INT_INC</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-423</field>
+                    </record>
+                    <record id="account_financial_report_pl_1_int_exp" model="account.report.line">
+                        <field name="name">Interest Expenses</field>
+                        <field name="code">EE_PL_1_INT_EXP</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-674</field>
+                    </record>
+                    <record id="account_financial_report_pl_1_other_fin_inc_exp" model="account.report.line">
+                        <field name="name">Other Financial Income and Expenses</field>
+                        <field name="code">EE_PL_1_OTHER_FIN_INC_EXP</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-420 - 421 - 422 - 427 - 670 - 671 - 672 - 673 - 678</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pl_1_before_tax" model="account.report.line">
+                <field name="name">Profit/Loss before Tax</field>
+                <field name="code">EE_PL_1_BEFORE_TAX</field>
+                <field name="aggregation_formula">EE_PL_1_OP.balance + EE_PL_1_OTHER.balance</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="account_financial_report_pl_1_tax" model="account.report.line">
+                <field name="name">Income Taxes</field>
+                <field name="code">EE_PL_1_INC_TAX</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-662</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="account_financial_report_pl_1_final" model="account.report.line">
+                <field name="name">Profit/Loss for the Financial Year</field>
+                <field name="code">EE_PL_1_FINAL</field>
+                <field name="aggregation_formula">EE_PL_1_BEFORE_TAX.balance + EE_PL_1_INC_TAX.balance</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+        </field>
+    </record>
+</odoo>

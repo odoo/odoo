@@ -1,0 +1,13 @@
+<templates xml:space="preserve">
+    <t t-name="account_reports.redirectAction">
+        <Dialog size="'md'">
+            <div role="alert">
+                <p class="text-prewrap" t-esc="props.action.params.message"/>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="openClientAction" t-esc="props.action.params.button_text"></button>
+                <button class="btn btn-secondary" t-on-click="close">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

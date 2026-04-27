@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_ar_vat_book_report" model="account.report">
+        <field name="name">Argentinean VAT book</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.ar"/>
+        <field name="filter_unreconciled" eval="False"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_growth_comparison" eval="False"/>
+        <field name="custom_handler_model_id" ref="model_l10n_ar_tax_report_handler"/>
+        <field name="load_more_limit" eval="4000"/>
+        <field name="column_ids">
+            <record id="l10n_ar_vat_book_report_column_invoice_date" model="account.report.column">
+                <field name="name">Date</field>
+                <field name="expression_label">invoice_date</field>
+                <field name="figure_type">date</field>
+            </record>
+            <record id="l10n_ar_vat_book_report_column_partner_name" model="account.report.column">
+                <field name="name">Name</field>
+                <field name="expression_label">partner_name</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="l10n_ar_vat_book_report_column_afip_responsibility_type_name" model="account.report.column">
+                <field name="name">VAT cond.</field>
+                <field name="expression_label">afip_responsibility_type_name</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="l10n_ar_vat_book_report_column_cuit" model="account.report.column">
+                <field name="name">VAT</field>
+                <field name="expression_label">cuit</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="l10n_ar_vat_book_report_column_taxed" model="account.report.column">
+                <field name="name">Taxed</field>
+                <field name="expression_label">taxed</field>
+            </record>
+            <record id="l10n_ar_vat_book_report_column_not_taxed" model="account.report.column">
+                <field name="name">Not Taxed</field>
+                <field name="expression_label">not_taxed</field>
+            </record>
+            <record id="l10n_ar_vat_book_report_column_vat_25" model="account.report.column">
+                <field name="name">VAT 2,5%</field>
+                <field name="expression_label">vat_25</field>
+            </record>
+            <record id="l10n_ar_vat_book_report_column_vat_5" model="account.report.column">
+                <field name="name">VAT 5%</field>
+                <field name="expression_label">vat_5</field>
+            </record>
+            <record id="l10n_ar_vat_book_report_column_vat_10" model="account.report.column">
+                <field name="name">VAT 10,5%</field>
+                <field name="expression_label">vat_10</field>
+            </record>
+            <record id="l10n_ar_vat_book_report_column_vat_21" model="account.report.column">
+                <field name="name">VAT 21%</field>
+                <field name="expression_label">vat_21</field>
+            </record>
+            <record id="l10n_ar_vat_book_report_column_vat_27" model="account.report.column">
+                <field name="name">VAT 27%</field>
+                <field name="expression_label">vat_27</field>
+            </record>
+            <record id="l10n_ar_vat_book_report_column_vat_per" model="account.report.column">
+                <field name="name">VAT Perc</field>
+                <field name="expression_label">vat_per</field>
+            </record>
+            <record id="l10n_ar_vat_book_report_column_perc_iibb" model="account.report.column">
+                <field name="name">Perc. IIBB</field>
+                <field name="expression_label">perc_iibb</field>
+            </record>
+            <record id="l10n_ar_vat_book_report_column_perc_earnings" model="account.report.column">
+                <field name="name">Perc. Earnings</field>
+                <field name="expression_label">perc_earnings</field>
+            </record>
+            <record id="l10n_ar_vat_book_report_column_city_tax" model="account.report.column">
+                <field name="name">City Tax</field>
+                <field name="expression_label">city_tax</field>
+            </record>
+            <record id="l10n_ar_vat_book_report_column_other_taxes" model="account.report.column">
+                <field name="name">Other Taxes</field>
+                <field name="expression_label">other_taxes</field>
+            </record>
+            <record id="l10n_ar_vat_book_report_column_total" model="account.report.column">
+                <field name="name">Total</field>
+                <field name="expression_label">total</field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sdd_account_payment_with_mandates_tree" model="ir.ui.view">
+            <field name="name">sdd.account.payment.mandate.list</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_tree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <list position="inside">
+                    <field name="sdd_mandate_id" string="Originating SEPA mandate"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="sdd_account_payment_form" model="ir.ui.view">
+            <field name="name">sdd.account.payment.form</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='payment_method_line_id']" position="after">
+                    <field name="sdd_mandate_id"
+                           string="Originating SEPA mandate"
+                           domain="[('state', '=', 'active'), ('partner_id', '=', partner_id)]"
+                           groups="account.group_account_invoice"
+                           invisible="payment_method_code not in ('sdd', 'sepa_direct_debit')"/>
+                </xpath>
+                <xpath expr="//header" position="after">
+                    <div class="alert alert-info text-center"
+                         groups="account.group_account_invoice"
+                         invisible="not sdd_mandate_usable or payment_type != 'inbound' or state != 'draft'"
+                         role="status">Good news! A valid SEPA Mandate is available.</div>
+                    <div class="alert alert-warning text-center"
+                         groups="account.group_account_invoice"
+                         invisible="payment_method_code not in ('sdd', 'sepa_direct_debit') or state != 'draft' or sdd_mandate_usable"
+                         role="alert">Oops! No valid SEPA mandate for this customer. <a type="action" name="%(account_sepa_direct_debit.account_sepa_direct_debit_mandate_tree_act)d">Create it.</a></div>
+                    <div class="alert alert-warning text-center"
+                         invisible="currency_id == %(base.EUR)d or payment_method_code not in ('sdd', 'sepa_direct_debit')"
+                         role="status">SEPA Scheme operates in Euro.
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="sdd_view_account_payment_search" model="ir.ui.view">
+            <field name="name">sdd.account.account.payment.search</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='company']" position="after">
+                    <separator/>
+                    <filter name="revoked_mandate" string="Revoked SDD Mandate" domain="[('sdd_mandate_id.state', '=', 'revoked')]"/>
+                    <separator/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_payment_tree" model="ir.ui.view">
+            <field name="name">sdd.account.payment.list</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='payment_method_line_id']" position="after">
+                    <field name="sdd_mandate_scheme" optional="hide" groups="account.group_account_invoice"/>
+                </xpath>
+                <xpath expr="//field[@name='state']" position="before">
+                    <field name="sdd_mandate_id" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_payment_search" model="ir.ui.view">
+            <field name="name">sdd.account.payment.search</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='company']" position="after">
+                    <filter string="SDD CORE" name="sdd_mandate_scheme_f1" domain="[('sdd_mandate_scheme','=','CORE')]"/>
+                    <filter string="SDD B2B" name="sdd_mandate_scheme_f2" domain="[('sdd_mandate_scheme','=','B2B')]"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

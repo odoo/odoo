@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_salary_attachment_view_tree" model="ir.ui.view">
+        <field name="name">hr.salary.attachment.list</field>
+        <field name="model">hr.salary.attachment</field>
+        <field name="arch" type="xml">
+            <list string="Salary Attachments" multi_edit="1">
+                <field name="currency_id" column_invisible="True"/>
+                <field name="employee_ids" widget="many2many_avatar_employee" readonly="has_done_payslip"/>
+                <field name="description" readonly="has_done_payslip"/>
+                <field name="other_input_type_id" options="{'no_open': True, 'no_create_edit': True, 'no_create': True}" readonly="has_done_payslip"/>
+                <field name="monthly_amount" sum="Monthly Amount" widget="monetary"/>
+                <field name="total_amount" optional="hide" widget="monetary"/>
+                <field name="remaining_amount" optional="hide" widget="monetary"/>
+                <field name="paid_amount" optional="hide" widget="monetary" readonly="has_done_payslip"/>
+                <field name="is_refund" optional="hide"/>
+                <field name="occurrences" optional="hide"/>
+                <field name="date_start" readonly="has_done_payslip"/>
+                <field name="employee_count" column_invisible="True"/>
+                <field name="state" widget="badge" decoration-success="state == 'open'" decoration-info="state == 'close'" decoration-danger="state == 'cancel'" invisible="state == 'open' and employee_count &gt; 1"/>
+                <field name="has_done_payslip" column_invisible="1"/>
+                <button string="Related Payslips" type="object" name="action_open_payslips" invisible="payslip_count == 0"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_salary_attachment_view_pivot" model="ir.ui.view">
+        <field name="name">hr.salary.attachment.pivot</field>
+        <field name="model">hr.salary.attachment</field>
+        <field name="arch" type="xml">
+            <pivot string="Salary Attachments">
+                <field name="employee_ids" type="row"/>
+                <field name="other_input_type_id" type="col"/>
+                <field name="paid_amount"/>
+                <field name="remaining_amount"/>
+                <field name="monthly_amount" type="measure"/>
+                <field name="total_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hr_salary_attachment_view_form" model="ir.ui.view">
+        <field name="name">hr.salary.attachment.form</field>
+        <field name="model">hr.salary.attachment</field>
+        <field name="arch" type="xml">
+            <form string="Salary Attachment">
+                <header>
+                    <button name="action_done" type="object" string="Mark as Completed"
+                        invisible="state not in ['open', 'cancel'] or employee_count &gt; 1"/>
+                    <button name="action_done" type="object" string="Create Individual Attachments"
+                        class="oe_highlight" invisible="state != 'open' or employee_count &lt;= 1"/>
+                    <button name="action_open" type="object" string="Running"
+                        invisible="state not in ['close', 'cancel'] or employee_count &gt; 1"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                        invisible="state not in ('open', 'close')"/>
+                    <field name="state" widget="statusbar"
+                        invisible="employee_count &gt; 1"/>
+                </header>
+                <div role="alert" class="alert alert-warning text-center" invisible="not has_similar_attachment">
+                    <field name="has_similar_attachment_warning"/>
+                    <field name="has_similar_attachment" invisible="1"/>
+                </div>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_open_payslips" class="oe_stat_button"
+                            icon="fa-money" id="open_payslips" invisible="payslip_count == 0">
+                            <field name="payslip_count" widget="statinfo" string="Payslips" />
+                        </button>
+                    </div>
+                    <field name="company_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="has_total_amount" invisible="1"/>
+                    <field name="attachment_name" invisible="1"/>
+                    <field name="employee_count" invisible="1"/>
+                    <field name="has_done_payslip" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="employee_ids" widget="many2many_avatar_employee" readonly="has_done_payslip" domain="[('active', '=', True)]"/>
+                            <field name="description" readonly="has_done_payslip"/>
+                            <field name="other_input_type_id" readonly="has_done_payslip" context="{'default_available_in_attachments': True}"/>
+                            <field name="date_start" readonly="has_done_payslip"/>
+                            <field name="date_estimated_end" invisible="not date_estimated_end"/>
+                            <field name="date_end" invisible="not date_end or state == 'open'" readonly="has_done_payslip"/>
+                            <field name="attachment" filename="attachment_name"/>
+                        </group>
+                        <group>
+                            <field name="is_quantity" invisible="1"/>
+                            <field name="no_end_date"/>
+                            <field name="monthly_amount" invisible="not is_quantity" widget="float"/>
+                            <field name="monthly_amount" invisible="is_quantity"/>
+                            <field name="total_amount" invisible="not is_quantity or not has_total_amount" required="has_total_amount" widget="float"/>
+                            <field name="total_amount" invisible="is_quantity or not has_total_amount" required="has_total_amount"/>
+                            <field name="paid_amount" invisible="not is_quantity or paid_amount == 0" widget="float"/>
+                            <field name="paid_amount" invisible="is_quantity or paid_amount == 0"/>
+                            <field name="is_refund" readonly="has_done_payslip"/>
+                            <label for="occurrences" invisible="not occurrences"/>
+                            <div class="o_row" invisible="not occurrences">
+                                <field name="occurrences"/>
+                                <span>Payslips</span>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_salary_attachment_view_search" model="ir.ui.view">
+        <field name="name">hr.salary.attachment.search</field>
+        <field name="model">hr.salary.attachment</field>
+        <field name="arch" type="xml">
+            <search string="Search Salary Attachment">
+                <field name="employee_ids"/>
+                <field name="description"/>
+                <field name="other_input_type_id"/>
+                <field name="state"/>
+                <filter string="Active" name="active_this_year"
+                    domain="[
+                        '&amp;', ('state', '=', 'open'),
+                                 ('date_start', '&lt;=', (context_today().strftime('%Y-%m-%d')))
+                    ]"/>
+                <filter string="Refunds" name="search_is_refund" domain="[('is_refund', '=', True)]"/>
+                <filter string="Employee" name="employee_id_group" context="{'group_by': 'employee_ids'}"/>
+                <filter string="Type" name="other_input_type_id" context="{'group_by': 'other_input_type_id'}"/>
+                <filter string="Status" name="state" context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_salary_attachment_action" model="ir.actions.act_window">
+        <field name="name">Salary Attachment</field>
+        <field name="res_model">hr.salary.attachment</field>
+        <field name="view_mode">list,form,pivot</field>
+    </record>
+
+    <record id="hr_salary_attachment_action_view_employee" model="ir.actions.act_window">
+        <field name="name">Salary Attachment</field>
+        <field name="res_model">hr.salary.attachment</field>
+        <field name="view_mode">list,form,pivot</field>
+        <field name="context">{"search_default_employee_ids": [active_id]}</field>
+    </record>
+</odoo>

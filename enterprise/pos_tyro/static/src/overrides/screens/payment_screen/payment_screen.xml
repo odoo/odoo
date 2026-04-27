@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_tyro.PaymentScreen" t-inherit="point_of_sale.PaymentScreen" t-inherit-mode="extension">
+        <xpath expr="//PaymentScreenPaymentLines" position="attributes">
+            <attribute name="refundLines">refundLines</attribute>
+            <attribute name="selectRefundLine.bind">addPaymentLineFromRefundLine</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('payment-summary')]/PaymentScreenPaymentLines" position="attributes">
+            <attribute name="refundLines">refundLines</attribute>
+            <attribute name="selectRefundLine.bind">addPaymentLineFromRefundLine</attribute>
+        </xpath>
+    </t>
+ </templates>

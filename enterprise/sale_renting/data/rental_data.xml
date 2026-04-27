@@ -1,0 +1,65 @@
+<odoo noupdate="1">
+    <function model="ir.default" name="set" eval="('product.template', 'extra_hourly', obj().env.company.extra_hour)"/>
+    <function model="ir.default" name="set" eval="('product.template', 'extra_daily', obj().env.company.extra_day)"/>
+
+    <record id="recurrence_hourly" model="sale.temporal.recurrence">
+        <field name="name">Hourly</field>
+        <field name="duration">1</field>
+        <field name="unit">hour</field>
+    </record>
+
+    <record id="recurrence_3_hours" model="sale.temporal.recurrence">
+        <field name="name">3 Hours</field>
+        <field name="duration">3</field>
+        <field name="unit">hour</field>
+    </record>
+
+    <record id="recurrence_daily" model="sale.temporal.recurrence">
+        <field name="name">Daily</field>
+        <field name="duration">1</field>
+        <field name="unit">day</field>
+    </record>
+
+    <record id="recurrence_weekly" model="sale.temporal.recurrence">
+        <field name="name">Weekly</field>
+        <field name="duration">1</field>
+        <field name="unit">week</field>
+    </record>
+
+    <record id="recurrence_2_weeks" model="sale.temporal.recurrence">
+        <field name="name">2 Weeks</field>
+        <field name="duration">2</field>
+        <field name="unit">week</field>
+    </record>
+
+    <record id="recurrence_monthly" model="sale.temporal.recurrence">
+        <field name="name">Monthly</field>
+        <field name="duration">1</field>
+        <field name="unit">month</field>
+    </record>
+
+    <record id="recurrence_quarterly" model="sale.temporal.recurrence">
+        <field name="name">Quarterly</field>
+        <field name="duration">3</field>
+        <field name="unit">month</field>
+    </record>
+
+    <record id="recurrence_yearly" model="sale.temporal.recurrence">
+        <field name="name">Yearly</field>
+        <field name="duration">1</field>
+        <field name="unit">year</field>
+    </record>
+
+    <record id="recurrence_3_year" model="sale.temporal.recurrence">
+        <field name="name">3 years</field>
+        <field name="duration">3</field>
+        <field name="unit">year</field>
+    </record>
+
+    <record id="recurrence5_year" model="sale.temporal.recurrence">
+        <field name="name">5 Years</field>
+        <field name="duration">5</field>
+        <field name="unit">year</field>
+    </record>
+
+</odoo>

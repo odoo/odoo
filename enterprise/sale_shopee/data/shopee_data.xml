@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Default products -->
+    <record id="default_sale_product" model="product.product">
+        <field name="name">Shopee Sale</field>
+        <field name="type">consu</field>
+        <field name="list_price">0.0</field>
+        <field name="sale_ok">False</field>
+        <field name="purchase_ok">False</field>
+    </record>
+
+    <record id="default_shipping_product" model="product.product">
+        <field name="name">Shopee Shipping</field>
+        <field name="type">service</field>
+        <field name="list_price">0.0</field>
+        <field name="sale_ok">False</field>
+        <field name="purchase_ok">False</field>
+    </record>
+
+    <record id="default_adjustment_product" model="product.product">
+        <field name="name">Shopee Amount Adjustment</field>
+        <field name="type">service</field>
+        <field name="list_price">0.0</field>
+        <field name="sale_ok">False</field>
+        <field name="purchase_ok">False</field>
+    </record>
+
+    <function model="product.product" name="_configure_for_shopee">
+        <value eval="[ref('sale_shopee.default_sale_product'), ref('sale_shopee.default_shipping_product'), ref('sale_shopee.default_adjustment_product')]"/>
+    </function>
+</odoo>

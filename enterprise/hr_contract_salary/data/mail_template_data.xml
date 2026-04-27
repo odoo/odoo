@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="mail_template_send_offer" model="mail.template">
+        <field name="name">Employee: Contract And Salary Package</field>
+        <field name="model_id" ref="hr_contract_salary.model_hr_contract_salary_offer"/>
+        <field name="subject">{{ object.company_id.name }}: Job Offer - {{ object.employee_contract_id.name }}</field>
+        <field name="partner_to" >{{ ctx.get('partner_to', False) }}</field>
+        <field name="email_to"> {{ ctx.get('email_to', False) }}</field>
+        <field name="description">Sent manually when you generate a simulation link on the employee contract</field>
+        <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <h2>Congratulations!</h2>
+    You can configure your salary package by clicking on the link below.<br/>
+    The link will expire on the <t t-out="ctx.get('validity_end')"/>.
+    <div style="padding: 16px 0px 16px 0px;">
+        <a t-attf-href="/salary_package/simulation/offer/{{ctx.get('offer_id')}}"
+            target="_blank"
+            style="background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;">Configure your package</a>
+    </div>
+</div>
+        </field>
+        <field name="lang">{{ object.employee_contract_id.employee_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+    <record id="mail_template_send_offer_applicant" model="mail.template">
+        <field name="name">Recruitment: Your Salary Package</field>
+        <field name="model_id" ref="hr_contract_salary.model_hr_contract_salary_offer"/>
+        <field name="subject">{{ object.company_id.name }}: Job Offer - {{ object.applicant_id.partner_name }}</field>
+        <field name="partner_to" >{{ ctx.get('partner_to', False) }}</field>
+        <field name="description">Sent automatically when you generate an offer for an application</field>
+        <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <h2>Congratulations!</h2>
+    You can configure your salary package by clicking on the link below.<br/>
+    The link will expire on the <t t-out="ctx.get('validity_end')"/>.
+    <div style="padding: 16px 0px 16px 0px;">
+        <a t-attf-href="/salary_package/simulation/offer/{{ctx.get('offer_id')}}?token={{ctx.get('access_token')}}"
+            target="_blank"
+            style="background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;">Configure your package</a>
+    </div>
+</div>
+        </field>
+        <field name="lang">{{ object.applicant_id.partner_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+</data></odoo>

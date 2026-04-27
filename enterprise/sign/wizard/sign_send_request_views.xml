@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sign_send_request_view_form" model="ir.ui.view">
+        <field name="name">sign.send.request.view.form</field>
+        <field name="model">sign.send.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="template_id" context="{'kanban_view_ref': 'sign.sign_template_view_kanban_mobile'}" invisible="has_default_template" options="{'no_create': True}"/>
+                        <field name="signer_ids" colspan="2" nolabel="1" widget="signer_x2many" invisible="signers_count == 0"></field>
+                        <div class="d-flex flex-row align-items-center" colspan="2" invisible="signers_count &lt; 2 or context.get('sign_directly_without_mail',False)">
+                            <field name="set_sign_order" nolabel="1" widget="boolean_toggle" class="oe_inline" options="{'autosave': false}"/>
+                            <label for="set_sign_order" class="fw-bold"/>
+                        </div>
+                        <field name="signer_id" string="Contacts" class="w-90" invisible="signers_count != 0 or not template_id" required="signers_count == 0" options="{'no_quick_create': True}" context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
+                    </group>
+                    <group invisible="context.get('sign_directly_without_mail', False)">
+                        <field name="filename" placeholder="Name for the file" colspan="2"/>
+                        <field name="validity"/>
+                        <label for="reminder_enabled" string="Reminder"/>
+                        <div class="col">
+                            <field name="reminder_enabled" class="oe_inline mb-0" nolabel="1" widget="boolean_toggle" options="{'autosave': False}"/> Send a reminder
+                            <span invisible="not reminder_enabled">every<field name="reminder" class="text-center mb-0 o_sign_reminder_field"/> days.</span>
+                        </div>
+                    </group>
+                    <group invisible="not context.get('sign_directly_without_mail', False)" string="Options">
+                        <field name="subject" placeholder="Signature Request"/>
+                        <field name="filename" placeholder="Name for the file" colspan="2"/>
+                        <field name="cc_partner_ids" widget="many2many_tags" string="Contacts in copy" placeholder="Write email or search contact..." context="{'show_email': True}"/>
+                        <div invisible="not cc_partner_ids" colspan="2">
+                            <field name="message_cc" placeholder="Optional Message..."/>
+                            <group>
+                                <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" class="o_sign_attachments"/>
+                            </group>
+                        </div>
+                    </group>
+                </group>
+
+                <field name="activity_id" invisible="1"/>
+                <field name="signers_count" invisible="1"/>
+                <field name="has_default_template" invisible="1"/>
+                <field name="is_user_signer" invisible="1"/>
+                <field name="reference_doc" invisible="1"/>
+
+                <notebook invisible="context.get('sign_directly_without_mail',False)">
+                    <page name="signature_request" string="Signature Request">
+                        <group>
+                            <field name="subject" placeholder="Signature Request"/>
+                        </group>
+                        <div>
+                            <field name="message" class="oe-bordered-editor" placeholder="Optional Message..."/>
+                        </div>
+                    </page>
+                    <page name="contacts_in_copy" string="Contacts in copy">
+                        <group>
+                            <field name="cc_partner_ids" string="Contacts" widget="many2many_tags" placeholder="Write email or search contact..." context="{'show_email': True}"/>
+                        </group>
+                        <field name="message_cc" placeholder="Optional Message..."/>
+                    </page>
+                </notebook>
+
+                <group invisible="context.get('sign_directly_without_mail',False)">
+                    <field name="attachment_ids" widget="many2many_binary_sign_request" string="Attach a file" nolabel="1" class="o_sign_attachments"/>
+                </group>
+
+                <footer>
+                    <!-- Opens signing process for current user and emails all signers. -->
+                    <button string="Sign Now" name="sign_directly" type="object" class="btn-primary" invisible="context.get('sign_directly_without_mail',False) or not is_user_signer" data-hotkey="q"/>
+                    <button string="Send" name="send_request" type="object" class="btn-primary" invisible="context.get('sign_directly_without_mail',False)" data-hotkey="w"/>
+                    <!-- Starts signing for current user, then opens sign requests for other roles without emailing signers. -->
+                    <button string="Sign Now" name="sign_directly" context="{'no_sign_mail': True, 'sign_all': True}" type="object" class="btn-primary" invisible="not context.get('sign_directly_without_mail',False)" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sign_send_request" model="ir.actions.act_window">
+        <field name="name">New Signature Request</field>
+        <field name="res_model">sign.send.request</field>
+        <field name="target">new</field>
+        <field name="view_mode">form</field>
+    </record>
+</odoo>

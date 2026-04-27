@@ -1,0 +1,94 @@
+<odoo>
+    <record id="afip_ri_pkey" model="certificate.key">
+        <field name="name">AFIP key</field>
+        <field name="content" type="base64" file="l10n_ar_edi/demo/private_key.pem"/>
+        <field name="company_id" ref="base.company_ri"/>
+    </record>
+
+    <record id="afip_mono_pkey" model="certificate.key">
+        <field name="name">AFIP key</field>
+        <field name="content" type="base64" file="l10n_ar_edi/demo/private_key.pem"/>
+        <field name="company_id" ref="base.company_mono"/>
+    </record>
+
+    <record id="afip_exento_pkey" model="certificate.key">
+        <field name="name">AFIP key</field>
+        <field name="content" type="base64" file="l10n_ar_edi/demo/private_key.pem"/>
+        <field name="company_id" ref="base.company_exento"/>
+    </record>
+
+    <record id="base.company_ri" model="res.company">
+        <field name='l10n_ar_afip_ws_environment'>testing</field>
+        <field name="l10n_ar_afip_ws_key_id" ref="afip_ri_pkey"/>
+    </record>
+
+    <record id="base.company_mono" model="res.company">
+        <field name='l10n_ar_afip_ws_environment'>testing</field>
+        <field name="l10n_ar_afip_ws_key_id" ref="afip_mono_pkey"/>
+    </record>
+
+    <record id="base.company_exento" model="res.company">
+        <field name='l10n_ar_afip_ws_environment'>testing</field>
+        <field name="l10n_ar_afip_ws_key_id" ref="afip_exento_pkey"/>
+    </record>
+
+    <data noupdate="1">
+
+        <record id="bank_account_mono" model="res.partner.bank">
+            <field name="acc_number">2097538411100037551563</field>
+            <field name="partner_id" ref="base.partner_mono"/>
+            <field name="company_id" ref="base.company_mono"/>
+        </record>
+
+        <function name="set_demo_random_cert" model="res.company">
+            <value eval="[ref('base.company_ri'), ref('base.company_mono'), ref('base.company_exento')]"/>
+        </function>
+
+        <record id="ws_fe_journal_ri" model="account.journal">
+            <field name='name'>Electronic Invoice (FE)</field>
+            <field name='company_id' ref="base.company_ri"/>
+            <field name='type'>sale</field>
+            <field name='l10n_latam_use_documents' eval="True"/>
+            <field name='code'>1</field>
+            <field name='l10n_ar_afip_pos_number'>1</field>
+            <field name='l10n_ar_afip_pos_partner_id' ref="base.partner_ri"/>
+            <field name='l10n_ar_afip_pos_system'>RAW_MAW</field>
+        </record>
+
+        <record id="ws_fex_journal_ri" model="account.journal">
+            <field name='name'>Electronic Exportation Invoice (FEX)</field>
+            <field name='company_id' ref="base.company_ri"/>
+            <field name='type'>sale</field>
+            <field name='l10n_latam_use_documents' eval="True"/>
+            <field name='code'>2</field>
+            <field name='l10n_ar_afip_pos_number'>2</field>
+            <field name='l10n_ar_afip_pos_partner_id' ref="base.partner_ri"/>
+            <field name='l10n_ar_afip_pos_system'>FEEWS</field>
+        </record>
+
+        <record id="ws_bfe_journal_ri" model="account.journal">
+            <field name='name'>Electronic Fiscal Bond (BFE)</field>
+            <field name='company_id' ref="base.company_ri"/>
+            <field name='type'>sale</field>
+            <field name='l10n_latam_use_documents' eval="True"/>
+            <field name='code'>3</field>
+            <field name='l10n_ar_afip_pos_number'>3</field>
+            <field name='l10n_ar_afip_pos_partner_id' ref="base.partner_ri"/>
+            <field name='l10n_ar_afip_pos_system'>BFEWS</field>
+        </record>
+
+        <function name="_compute_refund_sequence" model="account.journal">
+            <value eval="[ref('l10n_ar_edi.ws_fe_journal_ri')]"/>
+        </function>
+
+        <function name="_compute_refund_sequence" model="account.journal">
+            <value eval="[ref('l10n_ar_edi.ws_fex_journal_ri')]"/>
+        </function>
+
+        <function name="_compute_refund_sequence" model="account.journal">
+            <value eval="[ref('l10n_ar_edi.ws_bfe_journal_ri')]"/>
+        </function>
+        
+    </data>
+
+</odoo>

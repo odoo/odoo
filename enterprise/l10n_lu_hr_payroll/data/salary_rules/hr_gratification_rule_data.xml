@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_gratification')),
+            ('code', '=', 'BASIC')]"/>
+        <value eval="{
+            'amount_select': &quot;input&quot;,
+            'amount_other_input_id': ref('l10n_lu_hr_payroll.input_gratification')}"/>
+    </function>
+
+    <record id="l10n_lu_employees_gratification_health_fund" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Health Fund</field>
+        <field name="code">HEALTH_FUND</field>
+        <field name="sequence">5</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">BASIC</field>
+        <field name="amount_percentage">-2.8</field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_gratification"/>
+    </record>
+
+    <record id="l10n_lu_employees_gratification_retirement_fund" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Retirement Fund</field>
+        <field name="code">RETIREMENT_FUND</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">BASIC</field>
+        <field name="amount_percentage">-8.0</field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_gratification"/>
+    </record>
+
+    <record id="l10n_lu_employees_gratification_dependency_insurance" model="hr.salary.rule">
+    <field name="category_id" ref="hr_payroll.ALW"/>
+    <field name="name">Dependency Insurance</field>
+    <field name="code">DEPENDENCY_INSURANCE</field>
+    <field name="sequence">15</field>
+    <field name="condition_select">none</field>
+    <field name="amount_select">code</field>
+    <field name="amount_python_compute">
+min_social_pay = payslip._rule_parameter('l10n_lu_min_social_pay')
+hours_per_month = payslip._rule_parameter('l10n_lu_hours_per_month')
+worked_hours = payslip._get_worked_days_line_number_of_hours('WORK100')
+
+prorata = 1 if payslip.l10n_lu_is_monthly else worked_hours / hours_per_month
+result = max(categories['BASIC'] - min_social_pay / 4 * prorata, 0)
+result_rate = -payslip._rule_parameter('l10n_lu_dependency_insurance_tax')
+    </field>
+    <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_gratification"/>
+</record>
+
+    <record id="l10n_lu_employees_gratification_gross_gratification" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_gratification"/>
+        <field name="name">Gross Gratification</field>
+        <field name="code">GROSS_GRATIFICATION</field>
+        <field name="sequence">20</field>
+        <field name="appears_on_payslip">False</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['BASIC']['total'] + categories['ALW']
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_gratification"/>
+    </record>
+
+    <record id="l10n_lu_employees_gratification_gross_gratification_rounding" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Gross Gratification Rounding</field>
+        <field name="code">GROSS_GRATIFICATION_ROUNDING</field>
+        <field name="sequence">25</field>
+        <field name="appears_on_payslip">False</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = - (result_rules['GROSS_GRATIFICATION']['total'] % 5)
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_gratification"/>
+    </record>
+
+    <record id="l10n_lu_employees_gratification_tax_on_non_period_revenue" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Tax On Non Period Revenue</field>
+        <field name="code">TAX_ON_NON_PERIOD_REVENUE</field>
+        <field name="sequence">105</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+# Source: https://impotsdirects.public.lu/fr/baremes.html#Ex
+def get_tax(taxable_amount):
+    def _find_rate(x, rates):
+        for low, high, rate, adjustment in rates:
+            if low &lt;= x &lt;= high:
+                return rate, adjustment
+        return 0, 0
+
+    if payslip.l10n_lu_tax_classification:
+        rates = payslip._rule_parameter(f'l10n_lu_withholding_annual_taxes_{payslip.l10n_lu_tax_classification}')
+        threshold, threshold_adjustment = payslip._rule_parameter(f'l10n_lu_withholding_annual_taxes_threshold_{payslip.l10n_lu_tax_classification}')
+    else:
+        return 0.0
+
+    rate, adjustment = _find_rate(taxable_amount, rates)
+    tax_amount = taxable_amount * rate - adjustment
+    tax_amount -= tax_amount % 1
+    if taxable_amount &lt;= threshold:
+        tax_amount *= 1.07
+    else:
+        tax_amount += tax_amount * 0.09 - threshold_adjustment
+    tax_amount -= tax_amount % 1
+
+    if tax_amount &lt; 12:
+        return 0.0
+    return tax_amount
+
+def get_l10n_lu_grat_tax(annual_salary, gratification):
+    if gratification == 0:
+        return 0
+
+    salary = (annual_salary // 1200) * 1200
+    grat = (gratification // 200) * 200
+    if grat &lt; 200:
+        grat = 50
+
+    tax_rao = get_tax(salary)
+    tax_rao_grat = get_tax(salary + grat)
+
+    diff = tax_rao_grat - tax_rao
+    if diff == 0.0:
+        return 0.0
+
+    if salary > 60000 or grat >= 5600:
+        return -diff
+
+    rate = diff / grat
+    rate -= rate % 0.005
+    rate = rate if rate >= 0.01 else 0.0
+
+    tax = rate * gratification
+    tax -= tax % 0.1
+    return -tax
+
+
+annual_salary = contract.wage * 12
+result = get_l10n_lu_grat_tax(annual_salary, result_rules['GROSS']['total'])
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_gratification"/>
+    </record>
+
+</odoo>

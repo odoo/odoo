@@ -1,0 +1,48 @@
+<templates>
+
+<t t-name="web_studio.KanbanEditorHeader" t-inherit="web.KanbanHeader">
+  <xpath expr="//div" position="attributes">
+    <attribute name="class" add="pe-none" separator=" "/>
+  </xpath>
+  <xpath expr="//t[@t-if='env.isSmall or !group.isFolded']" position="replace" />
+</t>
+
+<t t-name="web_studio.KanbanEditorRenderer" t-inherit="web.KanbanRenderer">
+  <!--   Demo kanban records ungrouped -->
+  <xpath expr="//div[contains(@class, 'o_kanban_ghost')]" position="before">
+    <t t-call="web_studio.KanbanEditorRenderer.KanbanDemoRecords">
+      <t t-set="demoAmount" t-value="6" />
+    </t>
+  </xpath>
+
+  <!--   Demo kanban records grouped -->
+  <xpath expr="//div[contains(@class, 'o_kanban_group')]" position="after" >
+    <t t-set="demoAmount" t-value="7" />
+    <div class="o_kanban_group flex-shrink-0 flex-grow-1 flex-md-grow-0 opacity-50">
+      <div class="o_kanban_header my-3 user-select-none" style="filter: blur(5px)">
+        <h4>Group</h4>
+        <div t-if="props.progressBarState" class="o_kanban_counter d-flex justify-content-between align-items-center">
+          <div class="o_column_progress progress bg-300 w-50" />
+          <b t-out="demoAmount" />
+        </div>
+      </div>
+      <t t-call="web_studio.KanbanEditorRenderer.KanbanDemoRecords">
+        <t t-set="additionalClass" t-value="'border-top-0'" />
+      </t>
+    </div>
+  </xpath>
+  <xpath expr="//t[@t-foreach='group.list.records']" position="inside">
+    <t t-call="web_studio.KanbanEditorRenderer.KanbanDemoRecords">
+      <t t-set="demoAmount" t-value="6" />
+      <t t-set="additionalClass" t-value="'border-top-0'" />
+    </t>
+  </xpath>
+</t>
+
+<t t-name="web_studio.KanbanEditorRenderer.KanbanDemoRecords" >
+  <div t-foreach="new Array(demoAmount)" t-as="d" t-key="d_index" class="o_kanban_record o_kanban_demo opacity-50 d-flex flex-grow-1 flex-md-shrink-1 flex-shrink-0" t-attf-class="{{ additionalClass }}">
+      <div class="flex-grow-1"/>
+  </div>
+</t>
+
+</templates>

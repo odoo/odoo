@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Reset cached printers submenu -->
+    <menuitem id="iot_cached_printers_section" name="Reporting" parent="stock.menu_stock_config_settings" sequence="50"/>
+    <menuitem id="iot_cached_printers_action" name="Reset Linked Printers" sequence="1" parent="iot_cached_printers_section" action="iot.action_iot_delete_linked_devices_menu"/>
+
+    <!-- Grant "Configuration" tab access to every user -->
+    <record id="stock.menu_stock_config_settings" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [])]"/>
+    </record>
+    <!-- Re-restrict access to all sections to 'group_stock_manager': -->
+    <!-- the goal is to grant access only to "Reset Linked Printers" to everyone -->
+    <record id="stock.menu_product_in_config_stock" model="ir.ui.menu">
+        <field name="groups_id" eval="[Command.link(ref('stock.group_stock_manager'))]"/>
+    </record>
+</odoo>

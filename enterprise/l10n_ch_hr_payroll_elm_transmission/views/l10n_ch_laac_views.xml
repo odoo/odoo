@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ch_additional_accident_insurance_view_tree" model="ir.ui.view">
+        <field name="name">l10n.ch.additional.accident.insurance.view.tree</field>
+        <field name="model">l10n.ch.additional.accident.insurance</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll.l10n_ch_additional_accident_insurance_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="insurance_company" position="attributes">
+                <field name="column_invisible">1</field>
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_ch_additional_accident_insurance_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.additional.accident.insurance.view.form</field>
+        <field name="model">l10n.ch.additional.accident.insurance</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll.l10n_ch_additional_accident_insurance_view_form"/>
+        <field name="arch" type="xml">
+                <sheet position="replace">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name" placeholder='e.g. "Accident Insurance Gastrosocial"'/></h1>
+                        </div>
+                        <group>
+                            <group string="Insurer Information">
+                                <field name="company_id" required="1" groups="base.group_multi_company"/>
+                                <field name="insurance_code" string="Insurance Code" required="1"/>
+                                <field name="customer_number"/>
+                                <field name="contract_number"/>
+                            </group>
+                        </group>
+                        <group string="LAAC Solution" colspan="2">
+                            <field name="line_ids" nolabel="1" colspan="2">
+                                <list>
+                                    <field name="solution_name"/>
+                                    <field name="solution_type"/>
+                                    <field name="solution_number"/>
+                                    <field name="rate_ids"/>
+                                </list>
+                            </field>
+                        </group>
+                    </sheet>
+                </sheet>
+        </field>
+    </record>
+
+    <record id="l10n_ch_additional_accident_insurance_line_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.additional.accident.insurance.line.view.form</field>
+        <field name="model">l10n.ch.additional.accident.insurance.line</field>
+        <field name="arch" type="xml">
+            <form string="Additional Accident Insurances Solutions">
+                <group>
+                    <group>
+                        <field name="solution_name"/>
+                        <field name="solution_type"/>
+                        <field name="solution_number"/>
+                    </group>
+                    <field name="rate_ids" nolabel="1" colspan="2">
+                        <list editable="bottom">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="wage_from"/>
+                            <field name="wage_to"/>
+                            <field name="male_rate"/>
+                            <field name="female_rate"/>
+                            <field name="employer_part"/>
+                        </list>
+                    </field>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_ch_additional_accident_insurance" model="ir.actions.act_window">
+        <field name="name">Additional Accident Insurances</field>
+        <field name="res_model">l10n.ch.additional.accident.insurance</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

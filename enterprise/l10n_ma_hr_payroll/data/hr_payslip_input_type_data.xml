@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <record id="AVS" model="hr.payslip.input.type">
+            <field name="code">AVS</field>
+            <field name="name">Avance sur Salaire</field>
+            <field name="country_id" ref="base.ma"/>
+            <field name="struct_ids" eval="[(4, ref('l10n_ma_hr_payroll.hr_payroll_salary_ma_structure_base'))]"/>
+        </record>
+        <record id="input_extra_hours_25" model="hr.payslip.input.type">
+            <field name="code">EXTRA_HOURS_25</field>
+            <field name="name">Extra Hours 25%</field>
+            <field name="country_id" ref="base.ma"/>
+            <field name="struct_ids" eval="[(4, ref('l10n_ma_hr_payroll.hr_payroll_salary_ma_structure_base'))]"/>
+        </record>
+        <record id="input_extra_hours_50" model="hr.payslip.input.type">
+            <field name="code">EXTRA_HOURS_50</field>
+            <field name="name">Extra Hours 50%</field>
+            <field name="country_id" ref="base.ma"/>
+            <field name="struct_ids" eval="[(4, ref('l10n_ma_hr_payroll.hr_payroll_salary_ma_structure_base'))]"/>
+        </record>
+        <record id="input_extra_hours_100" model="hr.payslip.input.type">
+            <field name="code">EXTRA_HOURS_100</field>
+            <field name="name">Extra Hours 100%</field>
+            <field name="country_id" ref="base.ma"/>
+            <field name="struct_ids" eval="[(4, ref('l10n_ma_hr_payroll.hr_payroll_salary_ma_structure_base'))]"/>
+        </record>
+        <record id="input_INDMTD" model="hr.payslip.input.type">
+            <field name="code">INDMTD</field>
+            <field name="name">Miscellaneous taxable indemnity</field>
+            <field name="country_id" ref="base.ma"/>
+            <field name="struct_ids" eval="[(4, ref('l10n_ma_hr_payroll.hr_payroll_salary_ma_structure_base'))]"/>
+        </record>
+        <record id="input_INDMNTD" model="hr.payslip.input.type">
+            <field name="code">INDMNTD</field>
+            <field name="name">Miscellaneous non-taxable indemnity</field>
+            <field name="country_id" ref="base.ma"/>
+            <field name="struct_ids" eval="[(4, ref('l10n_ma_hr_payroll.hr_payroll_salary_ma_structure_base'))]"/>
+        </record>
+    </data>
+</odoo>

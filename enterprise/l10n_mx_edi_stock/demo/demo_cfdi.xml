@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_mx_transporte_operador" model="res.partner">
+        <field name="name">Amigo Pedro</field>
+        <field name="vat">VAAM130719H60</field>
+        <field name="street">JESUS VALDES SANCHEZ</field>
+        <field name="city">Arteaga</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="state_id" ref="base.state_mx_coah"/>
+        <field name="zip">25350</field>
+        <field name="phone">+52 223 123 4567</field>
+        <field name="email">operador@company.mxexample.com</field>
+        <field name="website">www.mxoperador.com</field>
+        <field name="l10n_mx_edi_operator_licence">a234567890</field>
+        <field name="l10n_mx_edi_locality_id" ref="l10n_mx_edi_extended.res_locality_mx_coa_23"/>
+        <field name="city_id" ref="l10n_mx_edi_extended.res_city_mx_coa_004"/>
+        <field name="l10n_mx_edi_colony_code">0347</field>
+    </record>
+
+    <record id="base.partner_demo_company_mx" model="res.partner">
+        <field name="vat">EKU9003173C9</field>
+    </record>
+
+    <record id="product.product_product_25" model="product.product">
+        <field name="l10n_mx_edi_material_type">03</field>
+    </record>
+
+    <record id="product.consu_delivery_02" model="product.product">
+        <field name="l10n_mx_edi_hazardous_material_code_id" ref="hazardous_material_1760"/>
+        <field name="l10n_mx_edi_hazard_package_type">1A1</field>
+        <field name="l10n_mx_edi_material_type">04</field>
+    </record>
+
+    <record id="mx_edi_trailer" model="l10n_mx_edi.trailer">
+        <field name="name">T12314</field>
+        <field name="sub_type">CTR002</field>
+    </record>
+
+    <record id="mx_edi_figure_1" model="l10n_mx_edi.figure">
+        <field name="type">01</field>
+        <field name="operator_id" ref="partner_mx_transporte_operador"/>
+    </record>
+
+    <record id="mx_edi_vehicle" model="l10n_mx_edi.vehicle">
+        <field name="name">DEMOPERMIT</field>
+        <field name="transport_insurer">INSURE CO</field>
+        <field name="transport_insurance_policy">POLICY 77</field>
+        <field name="transport_perm_sct">TPAF01</field>
+        <field name="vehicle_model">2020</field>
+        <field name="vehicle_config">VL</field>
+        <field name="vehicle_licence">ABC123</field>
+        <field name="figure_ids" eval="[(6,0,[ref('mx_edi_figure_1')])]"/>
+        <field name="trailer_ids" eval="[(6,0,[ref('mx_edi_trailer')])]"/>
+        <field name="environment_insurer">INSURE CO</field>
+        <field name="environment_insurance_policy">POLICY 77</field>
+    </record>
+</odoo>

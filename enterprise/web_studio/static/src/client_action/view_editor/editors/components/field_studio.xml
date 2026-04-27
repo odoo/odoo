@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="web_studio.Field" t-inherit="web.Field">
+    <xpath expr="./div" position="attributes">
+        <attribute name="t-ref">rootRef</attribute>
+    </xpath>
+
+    <xpath expr="./div" position="before">
+      <t t-set="isX2ManyEditable" t-value="isX2ManyEditable(props)" />
+      <t t-set="emptyPlaceholder" t-value="getEmptyPlaceholder()" />
+    </xpath>
+
+    <xpath expr="//t[@t-component]" position="attributes">
+      <attribute name="t-if">!isX2ManyEditable and !emptyPlaceholder</attribute>
+    </xpath>
+
+    <xpath expr="//t[@t-component]" position="after">
+      <FieldContentOverlay t-if="isX2ManyEditable" displayOverlay="state.displayOverlay" onEditViewType.bind="onEditViewType">
+        <t t-component="field.component" t-props="fieldComponentProps"/>
+      </FieldContentOverlay>
+      <span t-if="emptyPlaceholder" t-esc="emptyPlaceholder" />
+    </xpath>
+  </t>
+
+</templates>

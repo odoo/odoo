@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="swissdec_interoperability_action" model="ir.actions.client">
+        <field name="name">Check Interoperability</field>
+        <field name="tag">swissdec_interoperability_client</field>
+        <field name="target">main</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_ch_transmission"
+        name="Swissdec Transmission"
+        parent="l10n_ch_hr_payroll.menu_configuration_l10n_ch"
+        action="l10n_ch_hr_payroll_elm_transmission.swissdec_interoperability_action"
+        sequence="35"
+        groups="base.group_system"
+    />
+</odoo>

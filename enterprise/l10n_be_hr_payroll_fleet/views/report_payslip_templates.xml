@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<odoo>
+<template id="report_belgium_payslip" inherit_id="l10n_be_hr_payroll.report_belgium_payslip">
+    <td id="employee_infos" position="inside">
+        <div id="employee_company_car">
+            <strong class="me-2" t-if="o.contract_id.sudo().car_id and not o._is_outside_contract_dates()">Company Car:</strong>
+            <t t-if="o.contract_id.car_id and not o._is_outside_contract_dates()">
+               <span t-field="o.contract_id.sudo().car_id.model_id" class="me-2"/>
+               [<span t-field="o.contract_id.sudo().car_id.license_plate"/>]
+            </t>
+        </div>
+    </td>
+</template>
+</odoo>

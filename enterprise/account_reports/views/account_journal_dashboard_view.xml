@@ -1,0 +1,48 @@
+<odoo>
+    <record model="ir.ui.view" id="account_reports_journal_dashboard_kanban_view">
+        <field name="name">account.journal.dashboard.kanban.reports</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view" />
+        <field name="arch" type="xml">
+
+            <xpath expr="//div[@name='kanban_manage_reports']" position="inside">
+                <div t-if="journal_type == 'sale'">
+                    <a type="action" name="%(action_account_report_ar)d">Aged Receivables</a>
+                </div>
+                <div t-if="journal_type == 'purchase'">
+                    <a type="action" name="%(action_account_report_ap)d">Aged Payables</a>
+                </div>
+            </xpath>
+
+            <!-- Replace the displayed amount by an action opening the General Ledger report -->
+            <xpath expr="//div[@id='dashboard_bank_cash_balance']" position="replace">
+                <div id="dashboard_bank_cash_balance" class="col overflow-hidden text-start">
+                    <a type="object" name="action_open_bank_balance_in_gl" title="Last Statement balance + Transactions since statement">Balance</a>
+                </div>
+            </xpath>
+
+            <xpath expr="//div[@id='bank_and_cash_container']" position="inside">
+                <div class="col-4 o_kanban_card_manage_section o_kanban_manage_reconciliation">
+                    <h5 id="card_action_view_menus" class="o_kanban_card_manage_title">
+                        <span role="separator">Reconciliation</span>
+                    </h5>
+                    <div>
+                        <a type="action" name="%(action_account_report_bank_reconciliation)d">Reconciliation Report</a>
+                    </div>
+                </div>
+            </xpath>
+
+            <!-- Add subtitle & onboarding to account_tax_periodicity_journals -->
+            <xpath expr="//t[@name='empty_journal_helper']" position="inside">
+                <span class="text-muted" t-if="journal_type == 'general' and dashboard['is_account_tax_periodicity_journal']">Never miss a tax deadline.</span>
+            </xpath>
+
+            <xpath expr="//div[@id='dashboard_general_right']" position="after">
+                <widget t-if="!record.has_posted_entries.raw_value and dashboard['onboarding'] and dashboard['is_account_tax_periodicity_journal']"
+                        name="account_onboarding"
+                        groups="account.group_account_manager"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

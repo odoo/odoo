@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Variable Commissions -->
+    <record id="input_fixed_commission" model="hr.payslip.input.type">
+        <field name="name">Commission</field>
+        <field name="code">COMMISSION</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary'))]"/>
+    </record>
+
+    <record id="cp200_input_hiring_bonus" model="hr.payslip.input.type">
+        <field name="name">Hiring Bonus</field>
+        <field name="code">HIRINGBONUS</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary'))]"/>
+    </record>
+
+    <record id="cp200_input_rep_fees_regularization" model="hr.payslip.input.type">
+        <field name="name">Representation Fees Regularization</field>
+        <field name="code">REPFEESREGUL</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary'))]"/>
+    </record>
+
+    <record id="cp200_input_additional_gross" model="hr.payslip.input.type">
+        <field name="name">Additional Gross</field>
+        <field name="code">ADDITIONALGROSS</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary'))]"/>
+    </record>
+
+    <record id="cp200_input_cycle_transportation" model="hr.payslip.input.type">
+        <field name="name">Cycle Transportation</field>
+        <field name="code">CYCLE</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary'))]"/>
+    </record>
+
+    <!-- December Pay -->
+    <record id="input_simple_december_pay" model="hr.payslip.input.type">
+        <field name="name">Simple December Pay</field>
+        <field name="code">SIMPLEDECEMBER</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary'))]"/>
+    </record>
+
+    <record id="input_double_december_pay" model="hr.payslip.input.type">
+        <field name="name">Double December Pay</field>
+        <field name="code">DOUBLEDECEMBER</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary'))]"/>
+    </record>
+
+    <record id="cp200_employee_eco_vouchers" model="hr.payslip.input.type">
+        <field name="name">Eco-Vouchers</field>
+        <field name="code">ECOVOUCHERS</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary'))]"/>
+    </record>
+
+    <record id="input_negative_net" model="hr.payslip.input.type">
+        <field name="name">Negative Net</field>
+        <field name="code">NEGATIVE</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="cp200_input_advance" model="hr.payslip.input.type">
+        <field name="name">Salary Advance</field>
+        <field name="code">ADVANCE</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary'))]"/>
+    </record>
+
+    <record id="cp200_other_input_after_contract_public_holidays" model="hr.payslip.input.type">
+        <field name="name">After Contract Public Holidays</field>
+        <field name="code">AFTERPUB</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary'))]"/>
+    </record>
+
+    <!-- Termination Fees -->
+    <!-- Salary Other Input -->
+    <record id="cp200_other_input_months" model="hr.payslip.input.type">
+        <field name="name">Duration in month</field>
+        <field name="code">MONTHS</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees'))]"/>
+    </record>
+
+    <record id="cp200_other_input_weeks" model="hr.payslip.input.type">
+        <field name="name">Duration in week</field>
+        <field name="code">WEEKS</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees'))]"/>
+    </record>
+
+    <record id="cp200_other_input_days" model="hr.payslip.input.type">
+        <field name="name">Duration in calendar day</field>
+        <field name="code">DAYS</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees'))]"/>
+    </record>
+
+    <record id="cp200_other_input_unreasonable_dismissal" model="hr.payslip.input.type">
+        <field name="name">Unreasonable dismissal</field>
+        <field name="code">UNREASONABLE_DISMISSAL</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees'))]"/>
+    </record>
+
+    <record id="cp200_other_input_non_respect_motivation" model="hr.payslip.input.type">
+        <field name="name">Non respect motivation (= 2 weeks)</field>
+        <field name="code">NON_RESPECT_MOTIVATION</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees'))]"/>
+    </record>
+
+    <record id="cp200_other_input_yearend_bonus" model="hr.payslip.input.type">
+        <field name="name">Year-end bonus</field>
+        <field name="code">YEAREND_BONUS</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees'))]"/>
+    </record>
+
+    <record id="cp200_other_input_residence" model="hr.payslip.input.type">
+        <field name="name">Home/Residence Allowance</field>
+        <field name="code">RESIDENCE</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees'))]"/>
+    </record>
+
+    <record id="cp200_other_input_expatriate" model="hr.payslip.input.type">
+        <field name="name">Expatriate Allowance</field>
+        <field name="code">EXPATRIATE</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees'))]"/>
+    </record>
+
+    <record id="cp200_other_input_variable_salary" model="hr.payslip.input.type">
+        <field name="name">Annual variable salary</field>
+        <field name="code">VARIABLE_SALARY</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees'))]"/>
+    </record>
+
+    <record id="cp200_other_input_benefit_in_kind" model="hr.payslip.input.type">
+        <field name="name">Monthly benefit in kind</field>
+        <field name="code">BENEFIT_IN_KIND</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees'))]"/>
+    </record>
+
+    <record id="cp200_other_input_hospital_insurance" model="hr.payslip.input.type">
+        <field name="name">Monthly hospital insurance (employer's share)</field>
+        <field name="code">HOSPITAL_INSURANCE</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees'))]"/>
+    </record>
+
+    <record id="cp200_other_input_group_insurance" model="hr.payslip.input.type">
+        <field name="name">Monthly group insurance (employer's share)</field>
+        <field name="code">GROUP_INSURANCE</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees'))]"/>
+    </record>
+
+    <record id="cp200_other_input_ambulatory_insurance" model="hr.payslip.input.type">
+        <field name="name">Monthly ambulatory insurance (employer's share)</field>
+        <field name="code">AMBULATORY_INSURANCE</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees'))]"/>
+    </record>
+
+    <record id="cp200_other_input_stock_option" model="hr.payslip.input.type">
+        <field name="name">Stock Option</field>
+        <field name="code">STOCK_OPTION</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees'))]"/>
+    </record>
+
+    <record id="cp200_other_input_specific_rules" model="hr.payslip.input.type">
+        <field name="name">Rules specific to Auxiliary Joint Committee</field>
+        <field name="code">SPECIFIC_RULES</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees'))]"/>
+    </record>
+
+    <record id="cp200_other_input_other" model="hr.payslip.input.type">
+        <field name="name">Other monthly/yearly</field>
+        <field name="code">OTHER</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees'))]"/>
+    </record>
+
+    <!-- Holiday Attests - Holiday Pay -->
+    <record id="cp200_other_input_gross_ref" model="hr.payslip.input.type">
+        <field name="name">Gross reference remuneration</field>
+        <field name="code">GROSS_REF</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n_holidays')), (4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays'))]"/>
+    </record>
+
+    <record id="cp200_other_input_allocation" model="hr.payslip.input.type">
+        <field name="name">Right to time off</field>
+        <field name="code">ALLOCATION</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n_holidays')), (4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays'))]"/>
+    </record>
+
+    <record id="cp200_other_input_time_off_taken" model="hr.payslip.input.type">
+        <field name="name">Time off already taken</field>
+        <field name="code">TIME_OFF_TAKEN</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n_holidays')), (4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays'))]"/>
+    </record>
+
+    <record id="cp200_other_input_annual_taxable_amount" model="hr.payslip.input.type">
+        <field name="name">Annual Taxable Amount</field>
+        <field name="code">ANNUAL_TAXABLE</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n_holidays')), (4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays'))]"/>
+    </record>
+
+    <record id="cp200_other_input_european_leave" model="hr.payslip.input.type">
+        <field name="name">Additional Vacation to Deduct</field>
+        <field name="code">EUROPEAN</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n_holidays')), (4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays'))]"/>
+    </record>
+
+    <record id="cp200_other_input_european_leave_days" model="hr.payslip.input.type">
+        <field name="name">Additional Vacation Taken</field>
+        <field name="code">EUROPEAN_DAYS</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n_holidays')), (4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays'))]"/>
+    </record>
+
+    <record id="cp200_other_input_simple_pay_december" model="hr.payslip.input.type">
+        <field name="name">Simple Holiday Pay (lost due to working time reduction)</field>
+        <field name="code">SIMPLE_PAY_DECEMBER</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays'))]"/>
+    </record>
+
+    <record id="cp200_other_input_double_pay_already_paid" model="hr.payslip.input.type">
+        <field name="name">Double Holiday (Already Paid)</field>
+        <field name="code">DHALREADYPAID</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays'))]"/>
+    </record>
+
+    <record id="cp200_other_input_double_pay_december" model="hr.payslip.input.type">
+        <field name="name">Double Holiday Pay (Lost due to working time reduction)</field>
+        <field name="code">DOUBLE_PAY_DECEMBER</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays'))]"/>
+    </record>
+
+    <record id="cp200_other_input_complementary_double_pay_already_paid" model="hr.payslip.input.type">
+        <field name="name">Complementary Double Holiday (Already Paid)</field>
+        <field name="code">CDHALREADYPAID</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays'))]"/>
+    </record>
+
+    <record id="cp200_other_input_complementary_double_pay_december" model="hr.payslip.input.type">
+        <field name="name">Complementary Double Holiday Pay (Lost due to working time reduction)</field>
+        <field name="code">COMP_DOUBLE_PAY_DECEMBER</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays'))]"/>
+    </record>
+
+    <!-- Warrants -->
+    <record id="cp200_other_input_warrant" model="hr.payslip.input.type">
+        <field name="name">Warrant</field>
+        <field name="code">WARRANT</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <!-- Double Holiday -->
+    <record id="input_double_holiday_recovery" model="hr.payslip.input.type">
+        <field name="name">Double Holiday Pay Recovery</field>
+        <field name="code">DOUBLERECOVERY</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_double_holiday'))]"/>
+    </record>
+
+    <record id="input_double_holiday_nbr_months" model="hr.payslip.input.type">
+        <field name="name">Force number of months</field>
+        <field name="code">MONTHS</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[
+            (4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_double_holiday')),
+            (4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_thirteen_month')),
+            ]"/>
+    </record>
+
+    <record id="input_double_holiday_avg_variable" model="hr.payslip.input.type">
+        <field name="name">Force average variable revenues</field>
+        <field name="code">VARIABLE</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[
+            (4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_double_holiday')),
+            (4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_thirteen_month')),
+            ]"/>
+    </record>
+
+    <record id="input_double_holiday_european_leave_deduction" model="hr.payslip.input.type">
+        <field name="name">European Leaves Deduction</field>
+        <field name="code">EULEAVEDEDUC</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_double_holiday'))]"/>
+    </record>
+
+    <record id="input_be_mobility_budget_payment" model="hr.payslip.input.type">
+        <field name="name">Mobility Budget Payment</field>
+        <field name="code">MOBILITY.PAYMENT</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary'))]"/>
+    </record>
+
+    <record id="input_cct90_bonus_plan" model="hr.payslip.input.type">
+        <field name="name">CCT90 Bonus Plan</field>
+        <field name="code">CCT90BONUSPLAN</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_structure_cct90'))]"/>
+        <field name="available_in_attachments" eval="True"/>
+    </record>
+</odoo>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ca_profit_loss" model="account.report">
+        <field name="name">Profit and loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_ca_pl_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_ca_pnl_gross_profit" model="account.report.line">
+                <field name="name">Gross profit</field>
+                <field name="code">l10n_ca_gross_profit</field>
+                <field name="aggregation_formula">l10n_ca_operating_income.balance - l10n_ca_sales_cost.balance + l10n_ca_other_operating_income.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_ca_pnl_operating_income" model="account.report.line">
+                        <field name="name">Operating Income</field>
+                        <field name="code">l10n_ca_operating_income</field>
+                        <field name="aggregation_formula">l10n_ca_income_ordinary.balance + l10n_ca_sublease.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_ca_pnl_income_ordinary" model="account.report.line">
+                                <field name="name">Income from ordinary activities</field>
+                                <field name="code">l10n_ca_income_ordinary</field>
+                                <field name="account_codes_formula">-411\(411221)</field>
+                            </record>
+                            <record id="l10n_ca_pnl_sublease" model="account.report.line">
+                                <field name="name">Sublease income and other</field>
+                                <field name="code">l10n_ca_sublease</field>
+                                <field name="account_codes_formula">-411221</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ca_pnl_sales_cost" model="account.report.line">
+                        <field name="name">Sales costs</field>
+                        <field name="code">l10n_ca_sales_cost</field>
+                        <field name="account_codes_formula">5111</field>
+                    </record>
+                    <record id="l10n_ca_pnl_other_operating_income" model="account.report.line">
+                        <field name="name">Other operating income</field>
+                        <field name="code">l10n_ca_other_operating_income</field>
+                        <field name="hide_if_zero" eval="1"/>
+                        <field name="account_codes_formula">-413</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_ca_pnl_expenses" model="account.report.line">
+                <field name="name">Operating Expenses</field>
+                <field name="code">l10n_ca_expenses</field>
+                <field name="aggregation_formula">l10n_ca_distribution_expenses.balance + l10n_ca_admin_expenses.balance + l10n_ca_other_expenses.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_ca_pnl_sales_distribution_expenses" model="account.report.line">
+                        <field name="name">Sales and distribution expenses</field>
+                        <field name="code">l10n_ca_distribution_expenses</field>
+                        <field name="account_codes_formula">511\(5111)</field>
+                    </record>
+                    <record id="l10n_ca_pnl_admin_expenses" model="account.report.line">
+                        <field name="name">Administrative expenses</field>
+                        <field name="code">l10n_ca_admin_expenses</field>
+                        <field name="account_codes_formula">5121</field>
+                    </record>
+                    <record id="l10n_ca_pnl_other_expenses" model="account.report.line">
+                        <field name="name">Other operating expenses</field>
+                        <field name="code">l10n_ca_other_expenses</field>
+                        <field name="hide_if_zero" eval="1"/>
+                        <field name="account_codes_formula">5122</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_ca_pnl_or_revenues_expenses" model="account.report.line">
+                <field name="name">Other revenues and expenses</field>
+                <field name="code">l10n_ca_other_revenues</field>
+                <field name="aggregation_formula">l10n_ca_exchange_difference.balance + l10n_ca_financial_income.balance - l10n_ca_financial_expenses.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_ca_pnl_exchange_diff" model="account.report.line">
+                        <field name="name">Exchange difference, net</field>
+                        <field name="code">l10n_ca_exchange_difference</field>
+                        <field name="account_codes_formula">-612</field>
+                    </record>
+                    <record id="l10n_ca_pnl_financial_income" model="account.report.line">
+                        <field name="name">Financial income</field>
+                        <field name="code">l10n_ca_financial_income</field>
+                        <field name="account_codes_formula">-42 -611 -614 -616 - 63 - 711</field>
+                    </record>
+                    <record id="l10n_ca_pnl_financial_expenses" model="account.report.line">
+                        <field name="name">Financial expenses</field>
+                        <field name="code">l10n_ca_financial_expenses</field>
+                        <field name="account_codes_formula">52 + 613 + 615</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_ca_pnl_result_before_taxes" model="account.report.line">
+                <field name="name">Result before taxes</field>
+                <field name="code">l10n_ca_result_before_taxes</field>
+                <field name="aggregation_formula">l10n_ca_gross_profit.balance + l10n_ca_other_revenues.balance - l10n_ca_expenses.balance</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="l10n_ca_pnl_income_tax" model="account.report.line">
+                <field name="name">Income tax expense</field>
+                <field name="code">l10n_ca_income_tax</field>
+                <field name="account_codes_formula">62 + 712</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="l10n_ca_pnl_result_before_discontinued" model="account.report.line">
+                <field name="name">Result discontinued operations</field>
+                <field name="code">l10n_ca_result_before_discontinued</field>
+                <field name="aggregation_formula">l10n_ca_result_before_taxes.balance - l10n_ca_income_tax.balance</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="l10n_ca_pnl_discontinued" model="account.report.line">
+                <field name="name">Discontinued operations</field>
+                <field name="code">l10n_ca_discontinued</field>
+                <field name="account_codes_formula">72 + 73</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="l10n_ca_pnl_net_profit" model="account.report.line">
+                <field name="name">Net Profit</field>
+                <field name="code">l10n_ca_net_profit</field>
+                <field name="aggregation_formula">l10n_ca_result_before_discontinued.balance - l10n_ca_discontinued.balance</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+        </field>
+    </record>
+    <record id="action_account_report_ca_pl" model="ir.actions.client">
+        <field name="name">Profit and loss</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'model': 'account.report', 'report_id': ref('l10n_ca_profit_loss')}"/>
+    </record>
+    <record id="l10n_ca_bs_equity_unallocated_current" model="account.report.line">
+        <field name="action_id" ref="action_account_report_ca_pl"/>
+    </record>
+
+</odoo>

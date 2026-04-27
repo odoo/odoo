@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payslip_view_form_inherit_double_pay" model="ir.ui.view">
+        <field name="name">hr.payslip.view.form.double.pay</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <button string="Compute Double Pay Recovery" name="%(l10n_be_double_pay_recovery_wizard_action)d" type="action"
+                    invisible="state not in ['draft', 'verify'] or not l10n_be_is_double_pay"/>
+                <field name="l10n_be_is_december" invisible="1"/>
+                <button string="Compute December Holiday Pay" name="%(l10n_be_december_slip_wizard_action)d" type="action"
+                    invisible="state not in ['draft', 'verify'] or not l10n_be_is_december"/>
+            </field>
+            <field name="struct_id" position="after">
+                <field name="l10n_be_is_double_pay" invisible="1"/>
+                <field name="l10n_be_max_seizable_amount" invisible="1"/>
+            </field>
+            <header position="after">
+                <div class="alert alert-warning" role="alert" invisible="not l10n_be_max_seizable_warning">
+                    <field name="l10n_be_max_seizable_warning"/>
+                </div>
+            </header>
+        </field>
+    </record>
+
+    <record id="view_hr_payslip_filter" model="ir.ui.view">
+        <field name="name">hr.payslip.select.inherit.ecovouchers</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='credit_note']" position="after">
+                <separator/>
+                <filter string="Payslips with Eco-Vouchers" name="eco_vouchers" domain="[('l10n_be_has_eco_vouchers', '=', True)]" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

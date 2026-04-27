@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_template_form_view_inherit_account_intrastat" model="ir.ui.view">
+            <field name="name">product.template.form.inherit.account.intrastat</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="account.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='invoicing']//group[@name='accounting']" position="inside">
+                    <group name="intrastat" string="Intrastat" invisible="product_variant_count &gt; 1 and not is_product_variant" >
+                        <field name="intrastat_code_id"/>
+                        <label for="intrastat_supplementary_unit_amount" invisible="not intrastat_code_id or not intrastat_supplementary_unit"/>
+                        <div class="o_row" invisible="not intrastat_code_id or not intrastat_supplementary_unit">
+                            <field name="intrastat_supplementary_unit_amount"/>
+                            <span class="oe_inline"></span>
+                            <field name="intrastat_supplementary_unit"/>
+                        </div>
+                        <label for="weight" invisible="not intrastat_code_id or intrastat_supplementary_unit"/>
+                        <div class="o_row" invisible="not intrastat_code_id or intrastat_supplementary_unit">
+                            <field name="weight"/>
+                            <span class="oe_inline"></span>
+                            <field name="weight_uom_name"/>
+                        </div>
+                        <field name="intrastat_origin_country_id" options="{'no_open': True, 'no_create': True}"/>
+                    </group>
+                </xpath>
+                <xpath expr="//page[@name='inventory']" position="attributes">
+                    <attribute name="groups" add="account.group_account_invoice" separator=","/>
+                </xpath>
+                <page name="invoicing" position="attributes">
+                    <attribute name="groups">account.group_account_invoice,account.group_account_readonly</attribute>
+                </page>
+            </field>
+        </record>
+
+        <record id="product_product_form_view_inherit_account_intrastat" model="ir.ui.view">
+            <field name="name">product.product.form.inherit.account.intrastat</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <group>
+                        <group name="intrastat" string="Intrastat">
+                            <field name="intrastat_code_id"/>
+                            <label for="intrastat_supplementary_unit_amount" invisible="not intrastat_code_id or not intrastat_supplementary_unit"/>
+                            <div class="o_row" invisible="not intrastat_code_id or not intrastat_supplementary_unit">
+                                <field name="intrastat_supplementary_unit_amount"/>
+                                <span class="oe_inline"></span>
+                                <field name="intrastat_supplementary_unit"/>
+                            </div>
+                            <label for="weight" invisible="not intrastat_code_id or intrastat_supplementary_unit"/>
+                            <div class="o_row" invisible="not intrastat_code_id or intrastat_supplementary_unit">
+                                <field name="weight"/>
+                                <span class="oe_inline"></span>
+                                <field name="weight_uom_name"/>
+                            </div>
+                            <field name="intrastat_origin_country_id" options="{'no_open': True, 'no_create': True}"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <!--
+            VIEWS FOR REPORT ALERTS
+            These are accessible via actions that appear on the top of the intrastat report when
+            the products are configured incorrectly or incompletely.
+        -->
+        <record id="product_product_tree_view_account_intrastat" model="ir.ui.view">
+            <field name="name">product.product.list.account.intrastat</field>
+            <field name="model">product.product</field>
+            <field name="mode">primary</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <list string="Product" multi_edit="1" duplicate="false" editable="bottom" expand="context.get('expand', False)">
+                    <field name="default_code" readonly="1"/>
+                    <field name="name" readonly="1"/>
+                    <field name="intrastat_code_id"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="product_product_tree_view_account_intrastat_supplementary_unit" model="ir.ui.view">
+            <field name="name">product.product.list.account.intrastat</field>
+            <field name="model">product.product</field>
+            <field name="mode">primary</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <list string="product" multi_edit="1" duplicate="false" editable="bottom" expand="context.get('expand', false)">
+                    <field name="default_code" readonly="1"/>
+                    <field name="name" readonly="1"/>
+                    <field name="intrastat_code_id" string="Commodity Code" readonly="1"/>
+                    <field name="intrastat_supplementary_unit" readonly="1"/>
+                    <field name="intrastat_supplementary_unit_amount" string="Supplementary Units per Product"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="product_product_tree_view_account_intrastat_weight" model="ir.ui.view">
+            <field name="name">product.product.list.account.intrastat</field>
+            <field name="model">product.product</field>
+            <field name="mode">primary</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <list string="Product" multi_edit="1" duplicate="false" editable="bottom" expand="context.get('expand', False)">
+                    <field name="default_code" readonly="1"/>
+                    <field name="name" readonly="1"/>
+                    <field name="intrastat_code_id" string="Commodity Code" readonly="1"/>
+                    <field name="weight"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Product variant list view -->
+        <record id="account_intrastat_product_tree" model="ir.ui.view">
+            <field name="name">product.account.intrastat.list.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_product_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="intrastat_code_id" invisible="type != 'consu'" optional="hide"/>
+                    <field name="intrastat_supplementary_unit_amount" invisible="type != 'consu'" optional="hide"/>
+                    <field name="intrastat_supplementary_unit" invisible="type != 'consu'" optional="hide"/>
+                    <field name="intrastat_origin_country_id" invisible="type != 'consu'" optional="hide"/>
+                </field>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

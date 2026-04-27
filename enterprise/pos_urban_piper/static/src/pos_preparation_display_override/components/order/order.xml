@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_urban_piper.Order" t-inherit="pos_preparation_display.Order" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_pdis_order_card_header_top')]" position="before">
+            <div
+                class="o_pdis_order_card_header_top_delivery d-flex flex-nowrap align-items-center justify-content-between px-2 pb-1 fw-bold"
+                t-att-class="this.cardColor"
+                t-if="this.props.order.delivery_identifier">
+                <div class="o_pdis_staff w-100 text-truncate flex-shrink-1">
+                    <img class="me-1" t-att-src="'/web/image?model=pos.delivery.provider&amp;field=image_128&amp;id=' + this.props.order.delivery_provider_id" style="height: 28px"/>
+                    <span class="me-1" t-esc="this.props.order.delivery_provider_name"/>
+                    <t t-if="this.props.order.order_otp">
+                        #<t t-esc="this.props.order.order_otp"/>
+                    </t>
+                </div>
+                <div>
+                    <t t-esc="this.order_status[this.props.order.delivery_status]"/>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_pdis_order_card_header_top')]" position="attributes">
+            <attribute name="t-if">!this.props.order.delivery_identifier</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_pdis_alert-timer')]/div[hasclass('rounded-pill')]" position="before">
+            <div class="rounded-pill py-1 px-3" t-if="this.props.order.delivery_identifier"
+            t-att-class="{ 
+                'bg-white': this.state.duration >= 5,
+                'o_pdis_is_alert text-bg-danger': this.state.duration lt 5,
+                'o_pdis_archive-order cursor-pointer': this.preparationDisplay.lastStage.id === this.props.order.stageId
+            }">
+                <div t-if="this.preparationDisplay.lastStage.id !== this.props.order.stageId">
+                    <i class="fa fa-clock-o pe-1" aria-hidden="true"/>
+                    <span t-esc="this.state.duration" />'
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_pdis_alert-timer')]/div[2]" position="attributes">
+            <attribute name="t-if">!this.props.order.delivery_identifier</attribute>
+        </xpath>
+    </t>
+</templates>

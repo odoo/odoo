@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<odoo>
+<template id="report_termination_fees">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <div class="oe_structure"></div>
+                    <h2><span t-field="o.name"/></h2>
+
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <td><strong>Company Information</strong></td>
+                            <td>
+                                <div><span t-field="o.company_id.name"/></div>
+                                <div><span t-field="o.company_id.street"/></div>
+                                <div><span t-if="o.company_id.street2" t-field="o.company_id.street2"/></div>
+                                <div>
+                                    <span t-field="o.company_id.city"/>
+                                    <span t-field="o.company_id.state_id"/>
+                                    <span t-field="o.company_id.zip"/>
+                                </div>
+                                <div><span t-field="o.company_id.country_id"/></div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <td><strong>Name</strong></td>
+                            <td><span t-field="o.employee_id"/></td>
+                            <td><strong>Designation</strong></td>
+                            <td><span t-field="o.employee_id.job_id"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Address</strong></td>
+                            <td colspan="3">
+                                <span class="w-100 d-block">
+                                    <div><span t-out="o.employee_id.private_street"/></div>
+                                    <div t-if="o.employee_id.private_street2"><span t-out="o.employee_id.private_street2"/></div>
+                                    <div><span t-out="o.employee_id.private_zip"/> <span t-out="o.employee_id.private_city"/></div>
+                                    <div><span t-out="o.employee_id.private_country_id.name"/></div>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email</strong></td>
+                            <td><span t-field="o.employee_id.work_email"/></td>
+                            <td><strong>Identification No</strong></td>
+                            <td><span t-field="o.employee_id.identification_id"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reference</strong></td>
+                            <td><span t-field="o.number"/></td>
+                            <td><strong>Bank Account</strong></td>
+                            <td><span t-field="o.employee_id.bank_account_id"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Start notice period</strong></td>
+                            <td><span t-field="o.date_from"/></td>
+                            <td><strong>Registration Number</strong></td>
+                            <td><span t-field="o.employee_id.registration_number"/></td>
+                        </tr>
+                    </table>
+
+                    <div class="oe_structure"></div>
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr class="table-secondary">
+                                <th><strong>Employee</strong></th>
+                                <th class="text-end"><strong>Amount</strong></th>
+                                <th class="text-end"><strong>Quantity</strong></th>
+                                <th class="text-end"><strong>Rate</strong></th>
+                                <th class="text-end"><strong>Total</strong></th>
+                            </tr>
+                            <tr t-foreach="o.line_ids.filtered(lambda line: line.category_id.code in ['BASIC', 'DIV. IMPOS'])" t-as="line">
+                                <td width="50%"><span t-field="line.name"/></td>
+                                <td class="text-end"><span t-out="line.amount" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                <td class="text-end">
+                                    <span t-if="line.quantity != 1 and line.quantity.is_integer()" t-out="int(line.quantity)"/>
+                                    <span t-elif="line.quantity != 1" t-field="line.quantity"/>
+                                </td>
+                                <td class="text-end"><span t-if="line.rate != 100" t-out="str(round(line.rate, 2)) + ' %'"/></td>
+                                <td class="text-end"><span t-out="line.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            </tr>
+                            <tr class="table-secondary" t-foreach="o.line_ids.filtered(lambda line: line.code == 'ANNUAL_SALARY_REVALUED')" t-as="line">
+                                <td class="text-center"><span t-field="line.name"/></td>
+                                <td colspan="3"></td>
+                                <td class="text-end"><span t-out="line.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            </tr>
+
+                            <t t-set="line_count" t-value="0" />
+                            <tr t-foreach="o.line_ids.filtered(lambda line: line.category_id.code == 'NOTICE_DURATION')" t-as="line">
+                                <t t-if="line_count == 0">
+                                    <td rowspan="3">Notice duration</td>
+                                </t>
+                                <td class="text-end"><span t-out="line.quantity"/></td>
+                                <td colspan="2"><span t-out="line.name"/></td>
+                                <td class="text-end"><span t-out="line.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                <t t-set="line_count" t-value="line_count+1" />
+                            </tr>
+                            <t t-foreach="o.line_ids.filtered(lambda line: line.category_id.code == 'NOTICE_SALARY' and line.code != 'EMPLOYERCOST')" t-as="line">
+                                <tr class="table-secondary" t-if="line.code in ['NET', 'BASIC']">
+                                    <td class="text-center"><span t-field="line.name"/></td>
+                                    <td colspan="3"></td>
+                                    <td class="text-end"><span t-out="line.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                </tr>
+                                <tr t-else="">
+                                    <td colspan="4"><span t-field="line.name"/></td>
+                                    <td class="text-end"><span t-out="line.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                </tr>
+                            </t>
+                            <t t-foreach="o.line_ids.filtered(lambda line: line.code in ['ONSS', 'GROSS', 'P.P', 'ATTACH_SALARY', 'ASSIG_SALARY', 'CHILD_SUPPORT', 'DEDUCTION', 'REIMBURSEMENT', 'NET'])" t-as="line">
+                                <tr>
+                                    <td colspan="4"><span t-field="line.name"/></td>
+                                    <td class="text-end"><span t-out="line.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <div class="oe_structure"></div>
+                    <p class="text-end"><strong>Established on <span t-field="o.compute_date"/></strong></p>
+                    <p class="text-end"><strong>Authorized signature</strong></p>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+
+<template id="report_termination_fees_lang">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="o" t-value="o.with_context(lang=o.employee_id.lang or o.env.lang)"/>
+            <t t-call="l10n_be_hr_payroll.report_termination_fees" t-lang="o.env.lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

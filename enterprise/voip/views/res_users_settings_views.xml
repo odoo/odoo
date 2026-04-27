@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="voip_res_users_settings_view_form" model="ir.ui.view">
+        <field name="name">VoIP User Settings</field>
+        <field name="model">res.users.settings</field>
+        <field name="inherit_id" ref="mail.res_users_settings_view_form"/>
+        <field name="arch" type="xml">
+            <group name="discuss_user_settings" position="after">
+                <group name="voip_user_settings" string="VoIP Configuration">
+                    <field name="voip_username"/>
+                    <field name="voip_secret" password="True"/>
+                    <field name="should_call_from_another_device"/>
+                    <field name="external_device_number"/>
+                    <field name="should_auto_reject_incoming_calls"/>
+                    <field name="how_to_call_on_mobile" widget="radio"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

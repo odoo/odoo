@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="documents_spreadsheet.share_page" name="Public folder with Spreadsheets" inherit_id="documents.public_folder_page">
+    <xpath expr="//article[@id='documents-binary']" position="before">
+        <t t-set="isSpreadsheet" t-value="document.mimetype == 'application/o-spreadsheet'"/>
+        <t t-if="isSpreadsheet" t-set="document_content_url" t-valuef="/documents/#{quote(document.access_token)}"/>
+    </xpath>
+    <xpath expr="//article[@id='documents-binary']/figure" position="inside">
+        <div t-if="isSpreadsheet" class="o_image_preview" t-attf-style="background-image:url(/documents/display_thumbnail/#{quote(document.access_token)})"/>
+    </xpath>
+    <xpath expr="//a[@t-if='not document_request']" position="attributes">
+        <attribute name="t-if">not document_request and not isSpreadsheet</attribute>
+    </xpath>
+</template>
+
+<template id="documents_spreadsheet.documents_error_live_data">
+    <t t-call="documents.public_page_layout">
+        <div class="alert alert-warning m-4" role="alert">
+            This spreadsheet contains live data, only internal users can view it.
+        </div>
+    </t>
+</template>
+
+</odoo>

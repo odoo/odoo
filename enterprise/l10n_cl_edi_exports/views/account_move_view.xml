@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_exports_invoice_form" model="ir.ui.view">
+            <field name="model">account.move</field>
+            <field name="name">account.move.edi.exports.form</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@id='other_tab']/group/group[@name='accounting_info_group']" position="before">
+                    <group string="Chilean Customs" name="l10n_cl_exports_info_group"
+                           invisible="country_code != 'CL' or l10n_latam_document_type_id_code not in ['110', '111', '112']">
+                        <field name="l10n_cl_destination_country_id" invisible="1"/>
+                        <field name="l10n_cl_customs_service_indicator" readonly="state != 'draft'"/>
+                        <field name="l10n_latam_document_type_id_code" invisible="1"/>
+                        <field name="l10n_cl_customs_transport_type" readonly="state != 'draft'"/>
+                        <field name="l10n_cl_customs_sale_mode" readonly="state != 'draft'"/>
+                        <field name="l10n_cl_port_origin_id" readonly="state != 'draft'"/>
+                        <field name="l10n_cl_port_destination_id" domain="[('country_id', '=', l10n_cl_destination_country_id)]" readonly="state != 'draft'"/>
+                        <field name="l10n_cl_customs_quantity_of_packages" readonly="state != 'draft'"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

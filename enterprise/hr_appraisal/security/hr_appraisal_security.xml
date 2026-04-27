@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_appraisal.group_hr_appraisal_user" model="res.groups">
+        <field name="name">Officer: Access all appraisals</field>
+        <field name="category_id" ref="base.module_category_human_resources_appraisals"/>
+        <field name="implied_ids" eval="[(4, ref('hr.group_hr_user'))]"/>
+    </record>
+
+    <record id="hr_appraisal.group_hr_appraisal_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="base.module_category_human_resources_appraisals"/>
+        <field name="implied_ids" eval="[(4, ref('hr_appraisal.group_hr_appraisal_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <data noupdate="1">
+
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4,ref('hr_appraisal.group_hr_appraisal_manager'))]"/>
+    </record>
+
+    <record id="hr_appraisal_all_rule" model="ir.rule">
+        <field name="name">All Appraisal</field>
+        <field name="model_id" ref="model_hr_appraisal"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4, ref('hr_appraisal.group_hr_appraisal_user'))]"/>
+    </record>
+
+    <record id="hr_appraisal_emp_rule" model="ir.rule">
+        <field name="name">Employee Appraisal</field>
+        <field name="model_id" ref="model_hr_appraisal"/>
+        <field name="domain_force">['|', ('employee_id.user_id', '=', user.id), ('manager_ids', 'in', user.employee_ids.ids)]</field>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="hr_appraisal_emp_rule_delete_new" model="ir.rule">
+        <field name="name">Employee Appraisal: delete new</field>
+        <field name="model_id" ref="model_hr_appraisal"/>
+        <field name="domain_force">[
+            ('state', '=', 'new'),
+            '|',
+            ('employee_id.user_id', '=', user.id),
+            ('manager_ids', 'in', user.employee_ids.ids)
+        ]</field>
+        <field name="perm_unlink" eval="True"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="hr_appraisal_manager_report_rule" model="ir.rule">
+        <field name="name">Manager Appraisal Report </field>
+        <field name="model_id" ref="model_hr_appraisal_report"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hr_appraisal.group_hr_appraisal_manager'))]"/>
+    </record>
+
+    <record id="hr_appraisal_emp_report_rule" model="ir.rule">
+        <field name="name">Employee Appraisal Report </field>
+        <field name="model_id" ref="model_hr_appraisal_report"/>
+        <field name="domain_force">[('has_department_manager_access', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="hr_appraisal_rule_base_user" model="ir.rule">
+        <field name="name">Employee Appraisal: read todo</field>
+        <field name="model_id" ref="model_hr_appraisal"/>
+        <field name="domain_force">[
+            '|',
+            ('employee_id.user_id', '=', user.id),
+            ('manager_ids.user_id', 'in', user.ids),
+        ]</field>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- Multi - Company Rules -->
+    <record model="ir.rule" id="hr_appraisal_comp_rule">
+        <field name="name">Appraisal multi-company</field>
+        <field name="model_id" ref="model_hr_appraisal"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
+    <record model="ir.rule" id="hr_appraisal_note_comp_rule">
+        <field name="name">Appraisal Plan multi-company</field>
+        <field name="model_id" ref="model_hr_appraisal_note"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record model="ir.rule" id="hr_appraisal_template_comp_rule">
+        <field name="name">Appraisal Template multi-company</field>
+        <field name="model_id" ref="model_hr_appraisal_template"/>
+        <field name="domain_force">[('company_id', 'in', company_ids  + [False])]</field>
+    </record>
+
+    <record id="hr_appraisal_goal_company_rule" model="ir.rule">
+        <field name="name">Appraisal Goal multi-company</field>
+        <field name="model_id" ref="model_hr_appraisal_goal"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
+    <record id="hr_appraisal_goal_all" model="ir.rule">
+        <field name="name">Appraisal: An appraisal manager can see all goals</field>
+        <field name="model_id" ref="model_hr_appraisal_goal"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hr_appraisal.group_hr_appraisal_user'))]"/>
+    </record>
+
+    <record id="hr_appraisal_goal_own" model="ir.rule">
+        <field name="name">Appraisal: An employee can see his own goals or his subordinates'</field>
+        <field name="model_id" ref="model_hr_appraisal_goal"/>
+        <field name="domain_force">[
+            '|',
+            '|',
+            '|',
+            '|',
+            ('is_manager', '=', True),
+            ('employee_id.user_id', '=', user.id),
+            ('manager_id.user_id', '=', user.id),
+            '&amp;',
+                ('employee_id.parent_id', '!=', False),
+                ('employee_id.parent_id.user_id', '=', user.id),
+            '&amp;',
+                ('employee_id.last_appraisal_id.manager_ids.user_id', '=', user.id),
+                ('employee_id.last_appraisal_id.state', 'in', ['new', 'pending'])
+        ]</field>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="hr_appraisal_goal_own_delete" model="ir.rule">
+    <field name="name">Appraisal: An employee can delete his own goals,if he created it, or his subordinates'</field>
+        <field name="model_id" ref="model_hr_appraisal_goal"/>
+        <field name="domain_force">[
+            '|',
+            ('employee_id.user_id', '!=', user.id),
+            '&amp;',
+                ('employee_id.user_id', '=', user.id),
+                ('create_uid', '=', user.id)]</field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="True"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+    </data>
+</odoo>

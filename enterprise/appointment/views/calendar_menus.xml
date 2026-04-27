@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- Calendar's appointment menu-->
+    <menuitem
+        id="appointment_menu_calendar"
+        parent="calendar.mail_menu_calendar"
+        name="Appointments"
+        action="appointment_type_action"/>
+
+    <!-- Calendar's reporting menu-->
+    <menuitem
+        id="reporting_menu_calendar"
+        parent="calendar.mail_menu_calendar"
+        name="Reporting"/>
+    <menuitem
+        id="menu_schedule_report_all_events"
+        parent="appointment.reporting_menu_calendar"
+        action="calendar_event_action_report_all"/>
+
+</odoo>

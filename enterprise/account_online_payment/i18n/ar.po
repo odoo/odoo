@@ -1,0 +1,170 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_online_payment
+#
+# Translators:
+# Malaz Abuidris <msea@odoo.com>, 2025
+# Wil Odoo, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-13 18:46+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: account_online_payment
+#. odoo-python
+#: code:addons/account_online_payment/models/account_batch_payment.py:0
+msgid ""
+"\n"
+"                This payment requires a KYC flow. As this process can take a "
+"few days, please use SEPA XML export in the meantime.\n"
+"                You will be notified once the KYC flow is completed and you "
+"can proceed with the online payment.\n"
+"            "
+msgstr ""
+"\n"
+"                This payment requires a KYC flow. As this process can take a "
+"few days, please use SEPA XML export in the meantime.\n"
+"                You will be notified once the KYC flow is completed and you "
+"can proceed with the online payment.\n"
+"            "
+
+#. module: account_online_payment
+#: model:ir.model.fields.selection,name:account_online_payment.selection__account_batch_payment__payment_online_status__accepted
+msgid "Accepted"
+msgstr "تم القبول"
+
+#. module: account_online_payment
+#: model:ir.model.fields,field_description:account_online_payment.field_account_batch_payment__account_online_linked
+msgid "Account Online Linked"
+msgstr "تم ربط الحساب عبر الإنترنت "
+
+#. module: account_online_payment
+#: model:ir.actions.server,name:account_online_payment.ir_cron_bank_sync_update_payment_status_ir_actions_server
+msgid "Account: Update payment status"
+msgstr "الحساب: تحديث حالة الدفع "
+
+#. module: account_online_payment
+#: model:ir.model,name:account_online_payment.model_account_online_link
+msgid "Bank Connection"
+msgstr "اتصال البنك"
+
+#. module: account_online_payment
+#: model:ir.model.fields,field_description:account_online_payment.field_account_batch_payment__payment_identifier
+msgid "Batch ID"
+msgstr "معرّف الدفعة "
+
+#. module: account_online_payment
+#: model:ir.model,name:account_online_payment.model_account_batch_payment
+msgid "Batch Payment"
+msgstr "دفعة مجمعة "
+
+#. module: account_online_payment
+#: model:ir.model.fields.selection,name:account_online_payment.selection__account_batch_payment__payment_online_status__canceled
+msgid "Canceled"
+msgstr "تم الإلغاء "
+
+#. module: account_online_payment
+#: model:ir.actions.server,name:account_online_payment.action_account_online_payment_check_status
+msgid "Check Status"
+msgstr "تحقق من الحالة "
+
+#. module: account_online_payment
+#: model:ir.model.fields,field_description:account_online_payment.field_account_payment__end_to_end_id
+msgid "End to End ID"
+msgstr "معرف طرف إلى طرف "
+
+#. module: account_online_payment
+#: model_terms:ir.ui.view,arch_db:account_online_payment.view_batch_payment_form_inherit
+msgid "Initiate Payment"
+msgstr "بدء عملية الدفع "
+
+#. module: account_online_payment
+#: model:ir.model.fields,field_description:account_online_payment.field_account_batch_payment__payment_online_status
+msgid "PIS Status"
+msgstr "حالة PIS "
+
+#. module: account_online_payment
+#. odoo-python
+#: code:addons/account_online_payment/models/account_batch_payment.py:0
+msgid "Payment already been signed"
+msgstr "لقد تم التوقيع على المدفوعات بالفعل "
+
+#. module: account_online_payment
+#: model:ir.model,name:account_online_payment.model_account_payment
+msgid "Payments"
+msgstr "المدفوعات"
+
+#. module: account_online_payment
+#: model:ir.model.fields.selection,name:account_online_payment.selection__account_batch_payment__payment_online_status__pending
+msgid "Pending"
+msgstr "قيد الانتظار "
+
+#. module: account_online_payment
+#. odoo-python
+#: code:addons/account_online_payment/models/account_batch_payment.py:0
+msgid ""
+"Please be aware that signed payments may have already been processed and "
+"sent to the bank."
+msgstr ""
+"يُرجى العلم بأنه قد تكون المدفوعات الموقعة قد تمت معالجتها بالفعل وإرسالها "
+"إلى البنك. "
+
+#. module: account_online_payment
+#: model:ir.model.fields,field_description:account_online_payment.field_account_batch_payment__redirect_url
+msgid "Redirect URL"
+msgstr "إعادة توجيه رابط URL "
+
+#. module: account_online_payment
+#: model:ir.model.fields.selection,name:account_online_payment.selection__account_batch_payment__payment_online_status__rejected
+msgid "Rejected"
+msgstr "تم الرفض "
+
+#. module: account_online_payment
+#: model_terms:ir.ui.view,arch_db:account_online_payment.view_batch_payment_form_inherit
+msgid "Sign Payment"
+msgstr "التوقيع على الدفع "
+
+#. module: account_online_payment
+#. odoo-python
+#: code:addons/account_online_payment/models/account_batch_payment.py:0
+msgid "This journal needs to be connected to a bank to check its status."
+msgstr ""
+
+#. module: account_online_payment
+#. odoo-python
+#: code:addons/account_online_payment/models/account_batch_payment.py:0
+msgid ""
+"This payment might have already been signed. Refreshing the payment status..."
+msgstr "قد تكون هذه الدفعة قد تم توقيعها بالفعل. جاري تحديث حالة الدفع... "
+
+#. module: account_online_payment
+#: model:ir.model.fields.selection,name:account_online_payment.selection__account_batch_payment__payment_online_status__uninitiated
+msgid "Uninitiated"
+msgstr "لم يتم البدء به "
+
+#. module: account_online_payment
+#: model:ir.model.fields.selection,name:account_online_payment.selection__account_batch_payment__payment_online_status__unsigned
+msgid "Unsigned"
+msgstr "لم يتم توقيعه "
+
+#. module: account_online_payment
+#: model_terms:ir.ui.view,arch_db:account_online_payment.view_batch_payment_form_inherit
+msgid "XML"
+msgstr "XML"
+
+#. module: account_online_payment
+#. odoo-python
+#: code:addons/account_online_payment/models/account_payment.py:0
+msgid "You cannot modify a payment that has already been sent to the bank."
+msgstr "لا يمكنك تعديل دفعة تم إرسالها بالفعل إلى البنك. "

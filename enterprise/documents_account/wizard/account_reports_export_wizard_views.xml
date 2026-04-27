@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_report_export_wizard" model="ir.ui.view">
+            <field name="name">account_reports.export.wizard.form.inherit</field>
+            <field name="model">account_reports.export.wizard</field>
+            <field name="inherit_id" ref="account_reports.view_report_export_wizard"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group/group" position="after">
+                    <group>
+                        <field name="folder_id" widget="documents_folder_many2one"/>
+                        <field name="tag_ids" widget="many2many_tags"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,4587 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sign
+#
+# Translators:
+# Munkhbaatar g <muuguu17@gmail.com>, 2024
+# Bayarkhuu Bataa, 2024
+# Minj P <pminj322@gmail.com>, 2024
+# Гэрэлтцог Цогтбаатар, 2024
+# zolzaya <zolzaya.erdenebaatar@gmail.com>, 2024
+# tumenjargal hadbaatar <tumenjargal7903@gmail.com>, 2024
+# Батболд <batbold.ts@gmail.com>, 2024
+# tserendavaa tsogtoo <tseegii011929@gmail.com>, 2024
+# Otgonbayar.A <gobi.mn@gmail.com>, 2024
+# hish, 2024
+# Munkhbilguun Altankhuyag <munkhbilguunaltankhuyag@gmail.com>, 2024
+# Torbat Jargalsaikhan, 2024
+# Onii Onii <onii0223@yahoo.com>, 2024
+# Batmunkh Ganbat <batmunkh2522@gmail.com>, 2024
+# Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2025
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-10 18:47+0000\n"
+"PO-Revision-Date: 2026-04-03 10:34+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-18/sign/"
+"mn/>\n"
+"Language: mn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.16.2\n"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_res_partner__signature_count
+#: model:ir.model.fields,field_description:sign.field_res_users__signature_count
+msgid "# Signatures"
+msgstr "# Гарын үсэг"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/controllers/main.py:0
+msgid ""
+"%(partner)s validated the signature by SMS with the phone number %"
+"(phone_number)s."
+msgstr "%(partner)s гарын үсэг мессэжээр баталгаажуулсан  %(phone_number)s."
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/controllers/main.py:0
+msgid "%s couldn't sign the document due to an insufficient credit error."
+msgstr ""
+"%s нь кредит хүрэлцэхгүй байсан тул баримтад гарын үсэг зурах боломжгүй "
+"байлаа."
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "%s has been edited and signed"
+msgstr "%s засварлагдсан бөгөөд гарын үсэг зурагдсан"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/wizard/sign_send_request.py:0
+msgid "%s has been linked to this sign request."
+msgstr "Энэ гарын үсгийн хүсэлтэнд %s холбогдлоо."
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "%s has been signed"
+msgstr "%s гарын үсэг зурагдлаа"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "%s: missing credits for extra-authentication"
+msgstr "%s: нэмэлт-танин баталгаажуулалт хийхэд кредит хүрэлцэхгүй байна"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "(UTC)"
+msgstr ""
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_refused
+msgid ""
+")\n"
+"            has refused the document"
+msgstr ""
+")\n"
+"                           гарын үсэг зурахаас татгалзсан"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_request
+msgid ""
+")\n"
+"        has requested your signature on the document"
+msgstr ""
+")\n"
+"                   таны баримтанд гарын зурахаар сонгогдсон"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_request
+msgid ""
+"- <em>\n"
+"                                            Waiting Signature\n"
+"                                        </em>"
+msgstr ""
+"- <em>\n"
+"                                            Гарын үсэг хүлээж буй\n"
+"                                        </em>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_request
+msgid "- <em>Cancelled</em>"
+msgstr "- <em>Цуцлагдсан</em>"
+
+#. module: sign
+#: model_terms:ir.actions.act_window,help:sign.sign_template_action
+msgid "- or -"
+msgstr "- эсвэл -"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "<b>Created by:</b>"
+msgstr "<b>Үүсгэсэн этгээд:</b>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "<b>Created on:</b>"
+msgstr "<b>Үүсгэсэн огноо:</b>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "<b>Creation IP Address:</b>"
+msgstr "<b>Үүсгэсэн IP хаяг:</b>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "<b>Document ID:</b>"
+msgstr "<b>Баримтын ID:</b>"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/js/tours/sign.js:0
+msgid "<b>Drag & drop \"Signature\"</b> into the bottom of the document."
+msgstr ""
+"<b>\"Signature\"</b> ыг баримтын доод хэсэг рүү дарж & чирэх үйлдлээр зөөнө "
+"үү."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid "<b>Gas:</b> 18,700 Pounds of CO² = 18,700*0.4536 = 8482.32 kg"
+msgstr "<b>Шатахуун:</b> 18,700 паунд CO² = 18,700*0.4536 = 8482.32 kg"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "<b>Signature:</b>"
+msgstr "<b>Гарын үсэг:</b>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "<b>Signers:</b>"
+msgstr "<b>Гарын үсэг зурагчид:</b>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid "<b>Solid Waste:</b> 1290 Pounds = 1290*0.4536 = 585.14 kg"
+msgstr "<b>Хатуу хаягдал:</b> 1290 паунд = 1290*0.4536 = 585.14 kg"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid "<b>Total Energy:</b> 27 Millions BTU = 27,000,000*0.0002931 = 7.91 kWh"
+msgstr "<b>Нийт инерги:</b> 27 сая BTU = 27,000,000*0.0002931 = 7.91 kWh"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid "<b>Water:</b> 23,400 Gallons = 23,400*3.78541 = 88578.59 L"
+msgstr "<b>Ус:</b> 23,400 галлон = 23,400*3.78541 = 88578.59 L"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid "<b>Wood Use:</b> 4 US Short Tons = 4*907.18474 = 3628.73 kg"
+msgstr "<b>Модны хэрэглээ:</b> 4 US Short Tons = 4*907.18474 = 3628.73 kg"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_request
+msgid "<br/>(the email access has not been sent)"
+msgstr "<br/>(имэйлийн хандалт илгээгдээгүй)"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_expired
+msgid ""
+"<i class=\"fa fa-check\"/> A fresh link has just been sent to your inbox!"
+msgstr ""
+"<i class=\"fa fa-check\"/> Шинэ холбоос таны inbox руу дөнгөж сая илгээгдлээ!"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "<i class=\"fa fa-check\"/> The document's integrity is valid."
+msgstr "<i class=\"fa fa-check\"/> Баримтын бүрэн бүтэн байдал зөв байна."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid ""
+"<i class=\"fa fa-exclamation-circle\"/> The document's integrity could not "
+"be verified."
+msgstr ""
+"<i class=\"fa fa-exclamation-circle\"/> Баримтын бүрэн бүтэн байдлыг шалгаж "
+"чадсангүй."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "<i class=\"fa fa-globe\"/> View"
+msgstr "<i class=\"fa fa-globe\"/> Харах"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_expired
+msgid ""
+"<i class=\"fa fa-info-circle\"/> Links sent via email expire after a set "
+"delay to increase security."
+msgstr ""
+"<i class=\"fa fa-info-circle\"/> Имэйлээр илгээсэн холбоосууд нь аюулгүй "
+"байдлын үүднээс тодорхой хугацааны дараа хүчингүй болно."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_terms_conditions_setting_banner
+msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to settings"
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Тохиргоо руу буцах"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
+msgid ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                            Preview"
+msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                                                                                   Урьдчилан "
+"харах"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.signer_status_wrapper
+msgid "<small><i> Cancelled </i></small>"
+msgstr "<small><i> Цуцлагдсан </i></small>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.signer_status_wrapper
+msgid "<small><i> Waiting Signature </i></small>"
+msgstr "<small><i> Гарын үсэг хүлээж байна </i></small>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid ""
+"<small>Email Verification: The signatory has confirmed control of their "
+"email inbox by clicking on a unique link</small>"
+msgstr ""
+"<small>Имэйл баталгаажуулалт: Гарын үсэг зурсан хүн өөрийн имэйл хаягийн "
+"эзэн мөн гэдгээ нэг удаагийн холбоос дээр дарж баталгаажуулсан.</small>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid ""
+"<small>SMS: The signatory has confirmed their control of the phone number "
+"using a unique code sent by SMS</small>"
+msgstr ""
+"<small>SMS: Гарын үсэг зурагч нь өөрийн утасны дугаарын эзэмшигч мөн гэдгээ "
+"нэг удаагийн код илгээж баталгаажуулсан</small>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.res_partner_view_form
+msgid "<span class=\"o_stat_text\">Signature Requested</span>"
+msgstr "<span class=\"o_stat_text\">Гарын үсэг зурах хүсэлт илгээгдсэн</span>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_form
+msgid "<span class=\"o_stat_text\">Signed Document</span>"
+msgstr "<span class=\"o_stat_text\">Гарын үсэг зурсан баримт</span>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_share_view_form
+msgid ""
+"<span class=\"text-muted\" invisible=\"not share_link\">Sharing will create "
+"a copy of the file to sign. That file can be reached by the link below. "
+"Every public user using the link will generate a document when the Signature "
+"is complete. The link is private, only those that receive the link will be "
+"able to sign it.</span>"
+msgstr ""
+"<span class=\"text-muted\" invisible=\"not share_link\">Баримтыг бусадтай "
+"хуваалцсан үед хуулбар файл үүсгэгдэнэ. Доорх холбоосоор тус файлд хандана. "
+"Баримт нь гарын үсгээр баталгаажих үед тус холбоосыг ашиглаж буй Нийтийн "
+"хандалттай хэрэглэгч бүрт баталгаажсан хуулбар баримт үүсгэгдэнэ. Холбоос "
+"тус бүр нь зөвхөн тухайн хэрэглэгч хандаж гарын үсэг зурах боломжтойгоор "
+"хамгаалагдсан байна.</span>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "<span class=\"text-muted\">Not available</span>"
+msgstr "<span class=\"text-muted\">Хандах боломжгүй</span>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_item_type_view_form
+msgid "<span>(1.0 = full page size)</span>"
+msgstr "<span>(1.0 = бүрэн хуудсын хэмжээ)</span>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_terms_conditions_setting_banner
+msgid "<span>This is a preview of your Terms &amp; Conditions.</span>"
+msgstr ""
+"<span>Энэ бол таны Үйлчилгээний Нөхцөлүүдийн урьдчилсан танилцуулга юм.</"
+"span>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.cancel_sign_request_item_with_confirmation
+msgid ""
+"<span>You won't receive any notification for this signature request anymore."
+"</span>"
+msgstr ""
+"<span>Та энэхүү гарын үсэг зурах хүсэлтээс дахин ямар ч нэмэгдэл хүлээн "
+"авахгүй.</span>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_request
+msgid "<strong>Creation Date:</strong>"
+msgstr "<strong>Үүсгэсэн огноо:</strong>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_refused
+msgid ""
+"<strong>Warning</strong> do not forward this email to other people!<br/>"
+msgstr ""
+"<strong>Анхаар</strong> энэхүү имэйлийг бусад хэн нэгэн рүү бүү дамжуулаарай!"
+"<br/>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_request
+msgid ""
+"<strong>Warning</strong> do not forward this email to other people!<br/>\n"
+"            They will be able to access this document and sign it as "
+"yourself.<br/>\n"
+"            <span>Your IP address and localization are associated to your "
+"signature to ensure traceability.</span>"
+msgstr ""
+"<strong>Анхаар</strong> энэхүү имэйлийг бусад хэн нэгэн рүү бүү дамжуулаарай!"
+"<br/>\n"
+"                           Учир нь тэд баримт руу нэвтэрч ороод таны өмнөөс "
+"гарын үсэг зурж болзошгүй.<br/>\n"
+"                           <span>Таны IP хаяг болон байршил бүхий мөшгих "
+"мэдээлэл гарын үсэгтэй тань хамт хадгалагдах болно.</span>"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sms_signer_dialog.xml:0
+msgid ""
+"A SMS will be sent to the following phone number. Please update it if it's "
+"not relevant."
+msgstr ""
+"Дараах утасны дугаарт SMS илгээгдэх болно. Хэрэв буруу дугаар байвал "
+"шинэчлээрэй."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.message_signature_link
+msgid "A document has been signed and a copy attached to"
+msgstr "Баримт гарын үсгээр баталгаажлаа. Хуулбар нь хавсаргагдсан"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid ""
+"A non-shared sign request's should not have any signer with an empty partner"
+msgstr ""
+"Харилцагч тодорхойлогдоогүй бөгөөд бусадтай хуваалцаагүй баримтын хувьд "
+"гарын үсэг зурагдахгүй"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "A shared sign request should only have one signer with an empty partner"
+msgstr ""
+"Харилцагч тодорхойлогдоогүй баримтыг бусадтай хуваалцсан тохиолдолд ердөө "
+"ганц л гарын үсэг зурагч тодорхойлогдоно"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid "A shower uses approximately 65 L of water"
+msgstr "Шүршүүр дундажаар 65 л ус хэрэглэдэг"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/wizard/sign_send_request.py:0
+msgid "A signature request has been linked to this document: %s"
+msgstr "Уг баримттай гарын үсэг зураг хүсэлт холбогдсон: %s"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "A valid sign request needs at least one sign request item"
+msgstr ""
+"Гарын үсэг зураг хүсэлт хүчин төгөлдөр болохын тул дор хаяж нэг гарын үсгийн "
+"мөртэй байх хэрэгтэй"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "ABCD1234"
+msgstr ""
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Access Logs"
+msgstr "Хандалтын түүх"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__access_warning
+msgid "Access warning"
+msgstr "Хандалтын анхааруулга"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.portal_my_home_sign
+msgid "Access your signed documents"
+msgstr "Гарын үсэг зурсан баримтууд руугаа хандах"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__access_via_link
+msgid "Accessed Through Token"
+msgstr "Токен ашиглаж хандсан"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_mail_activity_type__category
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_kanban
+msgid "Action"
+msgstr "Үйлдэл"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__message_needaction
+msgid "Action Needed"
+msgstr "Үйлдэл шаардлагатай"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_log__action
+msgid "Action Performed"
+msgstr "Үйлдэл хэрэгжсэн"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
+"Зарим үйлдэл тодорхой автомат ажиллагааг өдөөж болно. Жишээ нь: календарийн "
+"харагдац нээх, эсвэл баримт байршуулахад тухайн ажлыг автоматаар ‘Дууссан’ "
+"гэж тэмдэглэх зэрэг"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__active
+#: model:ir.model.fields,field_description:sign.field_sign_template__active
+msgid "Active"
+msgstr "Идэвхтэй"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__activity_ids
+msgid "Activities"
+msgstr "Ажилбар"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Ажилбарын тайлбар"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+#: model:ir.actions.report,name:sign.action_sign_request_print_logs
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
+msgid "Activity Logs"
+msgstr "Ажилбарын түүх"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__activity_state
+msgid "Activity State"
+msgstr "Ажилбарын төлөв"
+
+#. module: sign
+#: model:ir.model,name:sign.model_mail_activity_type
+msgid "Activity Type"
+msgstr "Ажилбарын төрөл"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ажилбарын төрлийн зураг"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_request__sign_log_ids
+msgid "Activity logs linked to this request"
+msgstr "Уг хүсэлтэнд хавсарагдсан ажилбарын түүхүүд"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/initials_all_pages_dialog.js:0
+msgid "Add Initials"
+msgstr "Нэрийн эхний үсэг оруулах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/initial_all_pages_dialog.xml:0
+msgid "Add Once"
+msgstr "Нэгийг нэмэх"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
+msgid "Add document tags here"
+msgstr "Энд баримтын пайз оруулаарай"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/initial_all_pages_dialog.xml:0
+msgid "Add to all pages"
+msgstr "Бүх хуудсанд нэмэх"
+
+#. module: sign
+#: model:res.groups,name:sign.group_sign_manager
+msgid "Administrator"
+msgstr "Админ"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sign_name_and_signature_dialog.js:0
+msgid "Adopt Your Signature"
+msgstr "Гарын үсгээ баталгаажуулах"
+
+#. module: sign
+#: model:ir.model.fields.selection,name:sign.selection__sign_log__request_state__signed
+msgid "After Signature"
+msgstr "Гарын үсэг зурсны дараа"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_item_custom_popover.xml:0
+#: model:ir.model.fields,field_description:sign.field_sign_item__alignment
+msgid "Alignment"
+msgstr "Эгнээ"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/controllers/portal.py:0
+msgid "All"
+msgstr "Бүх"
+
+#. module: sign
+#: model:ir.actions.act_window,name:sign.sign_all_request_action
+#: model:ir.ui.menu,name:sign.sign_request_documents
+msgid "All Documents"
+msgstr "Бүх баримтууд"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "All signers must have valid email addresses"
+msgstr "Бүх гарын үсэг зурагчид үнэн зөв имэйл хаягтай байх ёстой"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
+msgid ""
+"Allow signatories to provide their identity using itsme® (available in "
+"Belgium and the Netherlands)."
+msgstr ""
+"Бельги болон Нидерландад ашигладаг itsme® үйлчилгээгээр гарын үсэг зурж буй "
+"хүн өөрийгөө таниулан баталгаажуулахыг зөвшөөрөх."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
+msgid ""
+"Allow users to define the users or groups which have access to the template."
+msgstr "Загварт хандах эрхтэй хэрэглэгч эсвэл бүлгийг тохируулах боломжтой."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid "An average computer will consume 750 Wh"
+msgstr "Компьютер дундажаар 750 Wh ашигладаг"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Antwrep"
+msgstr ""
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_kanban
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_kanban
+msgid "Archive"
+msgstr "Архив"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_form
+msgid "Archived"
+msgstr "Архивласан"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.cancel_sign_request_item_with_confirmation
+msgid "Are you sure you want to cancel the sign request?"
+msgstr "Гарын үсэг зурах хүсэлтийг цуцлахдаа итгэлтэй байна уу?"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_request__start_sign
+msgid "At least one signer has signed the document."
+msgstr "Уг баримтанд дор хаяж нэг хүн гарын үсэг зурсан байна."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
+msgid "Attach a file"
+msgstr "Файл хавсаргах"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_template__attachment_id
+msgid "Attachment"
+msgstr "Хавсралт"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__message_attachment_count
+msgid "Attachment Count"
+msgstr "Хавсралтын тоо"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__attachment_ids
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__attachment_ids
+msgid "Attachments"
+msgstr "Хавсралтууд"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
+msgid "Authenticate by SMS"
+msgstr "SMS -р танин баталгаажуулах"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_template__group_ids
+msgid "Authorized Groups"
+msgstr "Зөвшөөрөгдсөн групп"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_top_bar.xml:0
+msgid "Authorized Groups:"
+msgstr "Зөвшөөрөгдсөн групп:"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_template__authorized_ids
+msgid "Authorized Users"
+msgstr "Зөвшөөрөгдсөн хэрэглэгчид"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_top_bar.xml:0
+msgid "Authorized Users:"
+msgstr "Зөвшөөрөгдсөн хэрэглэгч:"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item_type__auto_field
+msgid "Auto-fill Partner Field"
+msgstr "Харилцагчийн талбар автоматаар бөглөгдөх"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item_option__available
+msgid "Available in new templates"
+msgstr "Зөвхөн шинэ загварт харагдана"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "Back to %s"
+msgstr "%s руу буцах"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid "Based on"
+msgstr "Суурилах"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid "Based on various websites, here are our comparisons:"
+msgstr "Янз бүрийн эх сурвалцаас нэгтгэсэн харьцуулалт:"
+
+#. module: sign
+#: model:ir.model.fields.selection,name:sign.selection__sign_log__request_state__sent
+msgid "Before Signature"
+msgstr "Гарын үсэг зурахаас өмнө"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "By"
+msgstr ""
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sign_name_and_signature_dialog.xml:0
+msgid ""
+"By clicking Adopt & Sign, I agree that the chosen signature/initials will be "
+"a valid electronic representation of my hand-written signature/initials for "
+"all purposes when it is used on documents, including legally binding "
+"contracts."
+msgstr ""
+"'Adopt & Sign’ дээр дарснаар миний сонгосон гарын үсэг нь хууль хүчинтэй бүх "
+"баримтад гарын үсгийг минь цахимаар төлөөлөхийг зөвшөөрч байна."
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__message_cc
+msgid "CC Message"
+msgstr "СС Зурвас"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_request/sign_request_control_panel.xml:0
+#: code:addons/sign/static/src/dialogs/public_signer_dialog.xml:0
+#: code:addons/sign/static/src/dialogs/sign_name_and_signature_dialog.xml:0
+#: code:addons/sign/static/src/dialogs/sign_refusal_dialog.xml:0
+#: model:ir.model.fields.selection,name:sign.selection__sign_log__action__cancel
+#: model_terms:ir.ui.view,arch_db:sign.sign_duplicate_template_with_pdf_view_form
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_kanban
+#: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.cancel_sign_request_item_with_confirmation
+msgid "Cancel Sign Request"
+msgstr "Гарын үсэг зурах хүсэлтийг цуцлах"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_kanban
+msgid "Canceled"
+msgstr "Цуцлагдсан"
+
+#. module: sign
+#: model:ir.model.fields.selection,name:sign.selection__sign_log__request_state__canceled
+#: model:ir.model.fields.selection,name:sign.selection__sign_request__state__canceled
+#: model:ir.model.fields.selection,name:sign.selection__sign_request_item__state__canceled
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+#: model_terms:ir.ui.view,arch_db:sign.signer_status_wrapper
+msgid "Cancelled"
+msgstr "Цуцлагдсан"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "Carbon Emissions"
+msgstr "Нүүрстөрөгчийн ялгаруулалт"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_item_custom_popover.js:0
+msgid "Center"
+msgstr "Төвд"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.doc_sign
+msgid "Certificate <i class=\"fa fa-download\"/>"
+msgstr "Гэрчилгээ <i class=\"fa fa-download\"/>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Certificate of Completion<br/>"
+msgstr "Дуусгавар болгосны гэрчилгээ<br/>"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item_role__change_authorized
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__change_authorized
+msgid "Change Authorized"
+msgstr "Өөрчлөлт баталгаажсан"
+
+#. module: sign
+#: model:ir.model.fields.selection,name:sign.selection__sign_item_type__item_type__checkbox
+#: model:sign.item.type,name:sign.sign_item_type_checkbox
+msgid "Checkbox"
+msgstr "Чекбокс"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_template__is_sharing
+msgid "Checked if this template has created a shared document for you"
+msgstr ""
+"Уг загвараас ямар нэг баримт үүсгэгдсэн бөгөөд таньтай хуваалцсан эсэхийг "
+"илтгэнэ"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/components/sign_request/sign_item_navigator.js:0
+msgid "Click to start"
+msgstr "Энд дарж эхэлнэ"
+
+#. module: sign
+#. odoo-javascript
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+#: code:addons/sign/static/src/backend_components/sign_template/sign_item_custom_popover.xml:0
+#: code:addons/sign/static/src/dialogs/thank_you_dialog.js:0
+#: code:addons/sign/static/src/js/tours/sign.js:0
+#: model:sign.template,redirect_url_text:sign.template_sign_1
+#: model:sign.template,redirect_url_text:sign.template_sign_2
+#: model:sign.template,redirect_url_text:sign.template_sign_3
+#: model:sign.template,redirect_url_text:sign.template_sign_4
+#: model:sign.template,redirect_url_text:sign.template_sign_5
+#: model:sign.template,redirect_url_text:sign.template_sign_tour
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+#: model_terms:ir.ui.view,arch_db:sign.sign_terms_conditions_setting_banner
+msgid "Close"
+msgstr "Хаах"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item_role__color
+#: model:ir.model.fields,field_description:sign.field_sign_request__color
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__color
+#: model:ir.model.fields,field_description:sign.field_sign_template__color
+msgid "Color"
+msgstr "Өнгө"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_template_tag__color
+msgid "Color Index"
+msgstr "Өнгөний индекс"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_request
+msgid "Communication history"
+msgstr "Харилцааны түүх"
+
+#. module: sign
+#: model:ir.model,name:sign.model_res_company
+msgid "Companies"
+msgstr "Компаниуд"
+
+#. module: sign
+#: model:sign.item.type,name:sign.sign_item_type_company
+#: model:sign.item.type,placeholder:sign.sign_item_type_company
+msgid "Company"
+msgstr "Компани"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__communication_company_id
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__communication_company_id
+msgid "Company used for communication"
+msgstr "Компаны ашигладаг харилцаа холбоо"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/controllers/portal.py:0
+#: model:ir.model.fields.selection,name:sign.selection__sign_request_item__state__completed
+msgid "Completed"
+msgstr "Дууссан"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__completed_document
+msgid "Completed Document"
+msgstr "Дууссан баримт"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__completed_document_attachment_ids
+msgid "Completed Documents"
+msgstr "Дууссан баримтууд"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__nb_closed
+msgid "Completed Signatures"
+msgstr "Дууссан гарын үсгүүд"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__completion_date
+msgid "Completion Date"
+msgstr "Дууссан огноо"
+
+#. module: sign
+#: model:ir.model,name:sign.model_res_config_settings
+msgid "Config Settings"
+msgstr "Тохиргооны тохируулга"
+
+#. module: sign
+#: model:ir.ui.menu,name:sign.menu_sign_configuration
+msgid "Configuration"
+msgstr "Тохиргоо"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
+msgid ""
+"Configure the field types that can be used to sign documents (placeholder, "
+"auto-completion, ...), as well as the values for selection fields in "
+"signable documents."
+msgstr ""
+"Гарын үсэгт ашиглах талбарын төрлүүд болон сонголтын утгуудыг тохируулна."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_duplicate_template_with_pdf_view_form
+msgid "Confirm"
+msgstr "Батлах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/js/tours/sign.js:0
+msgid "Congrats, your signature is ready to be submitted!"
+msgstr "Баяр хүргэе, таны гарын үсэг илгээгдэхэд бэлэн боллоо!"
+
+#. module: sign
+#: model_terms:web_tour.tour,rainbow_man_message:sign.sign_tour
+msgid "Congratulations, you signed your first document!"
+msgstr "Баяр хүргэе, та анхны баримтаа гарын үсгээр баталгаажууллаа!"
+
+#. module: sign
+#: model:ir.model,name:sign.model_res_partner
+#: model:ir.model.fields,field_description:sign.field_sign_send_request_signer__partner_id
+#: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_request
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
+msgid "Contact"
+msgstr "Харилцах хаяг"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_tree
+#: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
+msgid "Contacts"
+msgstr "Харилцах хаяг"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
+#: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
+msgid "Contacts in copy"
+msgstr "Хуулбар дээрх харилцах хаяг"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_send_request__cc_partner_ids
+msgid ""
+"Contacts in copy will be notified by email once the document is either fully "
+"signed or refused."
+msgstr ""
+"Хуулбарт (CC-д) орсон хүмүүст баримт бүрэн гарын үсэг зуруулж дуусах эсвэл "
+"татгалзагдмагц имэйлаар мэдэгдэл очно."
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__cc_partner_ids
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__cc_partner_ids
+msgid "Copy to"
+msgstr "Хуулах"
+
+#. module: sign
+#: model_terms:ir.actions.act_window,help:sign.sign_template_tag_action
+msgid "Create Sign Tags"
+msgstr "Гарын үсгийн пайз үүсгэх"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_tree
+msgid "Create date"
+msgstr "Үүсгэсэн огноо"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_duplicate_template_pdf__create_uid
+#: model:ir.model.fields,field_description:sign.field_sign_item__create_uid
+#: model:ir.model.fields,field_description:sign.field_sign_item_option__create_uid
+#: model:ir.model.fields,field_description:sign.field_sign_item_radio_set__create_uid
+#: model:ir.model.fields,field_description:sign.field_sign_item_role__create_uid
+#: model:ir.model.fields,field_description:sign.field_sign_item_type__create_uid
+#: model:ir.model.fields,field_description:sign.field_sign_log__create_uid
+#: model:ir.model.fields,field_description:sign.field_sign_request__create_uid
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__create_uid
+#: model:ir.model.fields,field_description:sign.field_sign_request_item_value__create_uid
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__create_uid
+#: model:ir.model.fields,field_description:sign.field_sign_send_request_signer__create_uid
+#: model:ir.model.fields,field_description:sign.field_sign_template__create_uid
+#: model:ir.model.fields,field_description:sign.field_sign_template_tag__create_uid
+msgid "Created by"
+msgstr "Үүсгэсэн этгээд"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_duplicate_template_pdf__create_date
+#: model:ir.model.fields,field_description:sign.field_sign_item__create_date
+#: model:ir.model.fields,field_description:sign.field_sign_item_option__create_date
+#: model:ir.model.fields,field_description:sign.field_sign_item_radio_set__create_date
+#: model:ir.model.fields,field_description:sign.field_sign_item_role__create_date
+#: model:ir.model.fields,field_description:sign.field_sign_item_type__create_date
+#: model:ir.model.fields,field_description:sign.field_sign_log__create_date
+#: model:ir.model.fields,field_description:sign.field_sign_request__create_date
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__create_date
+#: model:ir.model.fields,field_description:sign.field_sign_request_item_value__create_date
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__create_date
+#: model:ir.model.fields,field_description:sign.field_sign_send_request_signer__create_date
+#: model:ir.model.fields,field_description:sign.field_sign_template__create_date
+#: model:ir.model.fields,field_description:sign.field_sign_template_tag__create_date
+msgid "Created on"
+msgstr "Үүсгэсэн огноо"
+
+#. module: sign
+#: model:ir.model.fields.selection,name:sign.selection__sign_log__action__create
+msgid "Creation"
+msgstr "Үүсгэх"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_request
+msgid "Current status of the signature request"
+msgstr "Гарын үсэг зурах хүсэлтийн одоогийн төлөв байдал"
+
+#. module: sign
+#: model:sign.item.role,name:sign.sign_item_role_customer
+msgid "Customer"
+msgstr "Үйлчлүүлэгч"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_request_item__access_url
+msgid "Customer Portal URL"
+msgstr "Захиалагчийн хандах URL"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/components/sign_request/signable_PDF_iframe.js:0
+#: model:sign.item.type,name:sign.sign_item_type_date
+#: model:sign.item.type,placeholder:sign.sign_item_type_date
+msgid "Date"
+msgstr "Огноо"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Date (UTC)"
+msgstr "Огноо (UTC)"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item_role__default
+msgid "Default"
+msgstr "Үндсэн"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item_type__default_height
+msgid "Default Height"
+msgstr "Үндсэн өндөр"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_mail_activity_type__default_sign_template_id
+msgid "Default Signature Template"
+msgstr "Гарын үсгийн үндсэн загвар"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item_type__default_width
+msgid "Default Width"
+msgstr "Үндсэн өргөн"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item_role__sequence
+msgid "Default order"
+msgstr "Үндсэн дараалал"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_kanban
+msgid "Delete"
+msgstr "Устгах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/components/sign_request/sign_items.xml:0
+msgid "Delete sign"
+msgstr "Гарын үсгийг устгах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/components/sign_request/sign_items.xml:0
+msgid "Delete sign item"
+msgstr "Гарын үсгийн мөрийг устгах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/thank_you_dialog.js:0
+msgid "Deleted User"
+msgstr ""
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
+msgid ""
+"Deliver one-time codes by SMS to identify signatories when signing a "
+"document."
+msgstr ""
+"Гарын үсэг зурагч баримт дээр гарын үсэг зурах үед нь нэг удаагийн код бүхий "
+"SMS илгээж танин баталгаажуулна."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Demo Action"
+msgstr "Демо үйлдэл"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Demo IP"
+msgstr "Демо IP"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Demo Latitude"
+msgstr "Демо өргөрөг"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Demo Longitude"
+msgstr "Демо уртраг"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Demo Partner"
+msgstr "Демо харилцагч"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.doc_sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_kanban
+msgid "Details"
+msgstr "Дэлгэрэнгүй"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_res_users__sign_initials
+msgid "Digital Initials"
+msgstr "Товчилсон гарын үсэг (цахим)"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_res_users__sign_initials_frame
+msgid "Digital Initials Frame"
+msgstr "Товчилсон гарын үсгийн хүрээ"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_res_users__sign_signature
+msgid "Digital Signature"
+msgstr "Дижитал гарын үсэг"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_res_users__sign_signature_frame
+msgid "Digital Signature Frame"
+msgstr "Дижитал гарын үсгийн хүрээ"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:sign.view_users_form_simple_modif
+msgid "Digital Signatures"
+msgstr "Дижитал гарын үсгүүд"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_item_view_form
+msgid "Display"
+msgstr "Дэлгэц"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_duplicate_template_pdf__display_name
+#: model:ir.model.fields,field_description:sign.field_sign_item__display_name
+#: model:ir.model.fields,field_description:sign.field_sign_item_option__display_name
+#: model:ir.model.fields,field_description:sign.field_sign_item_radio_set__display_name
+#: model:ir.model.fields,field_description:sign.field_sign_item_role__display_name
+#: model:ir.model.fields,field_description:sign.field_sign_item_type__display_name
+#: model:ir.model.fields,field_description:sign.field_sign_log__display_name
+#: model:ir.model.fields,field_description:sign.field_sign_request__display_name
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__display_name
+#: model:ir.model.fields,field_description:sign.field_sign_request_item_value__display_name
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__display_name
+#: model:ir.model.fields,field_description:sign.field_sign_send_request_signer__display_name
+#: model:ir.model.fields,field_description:sign.field_sign_template__display_name
+#: model:ir.model.fields,field_description:sign.field_sign_template_tag__display_name
+msgid "Display Name"
+msgstr "Дэлгэрэнгүй нэр"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_res_config_settings__sign_preview_ready
+msgid "Display sign preview button"
+msgstr "Гарын үсгийг урьдчилан харах товчыг харуулах"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_requests
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_form
+msgid "Document"
+msgstr "Баримт"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.doc_sign
+msgid "Document <i class=\"fa fa-download\"/>"
+msgstr "Баримт бичиг <i class=\"fa fa-download\"/>"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Document Details"
+msgstr "Баримтын дэлгэрэнгүй"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__reference
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__reference
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_search
+msgid "Document Name"
+msgstr "Баримтын нэр"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item__page
+msgid "Document Page"
+msgstr "Баримтын хуудас"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item__template_id
+msgid "Document Template"
+msgstr "Баримтын загвар"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_top_bar.js:0
+msgid "Document saved as Template."
+msgstr "Баримт загвар болж хадгалагдлаа."
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/views/helper/sign_action_helper.xml:0
+msgid "Document to send for signature or to sign yourself."
+msgstr "Өөрөө болон өөр нэгнээр гарын үсэг зуруулахаар илгээх баримт."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.portal_my_home_sign
+msgid "Document(s) to sign"
+msgstr "Гарын үсэг зурах баримт(ууд)"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+msgid "Document/Signer"
+msgstr "Баримт/Гарын үсэг зурагч"
+
+#. module: sign
+#: model:ir.actions.act_window,name:sign.sign_request_action
+#: model:ir.ui.menu,name:sign.sign_request_menu
+msgid "Documents"
+msgstr "Баримтууд"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/thank_you_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_request
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_tree
+msgid "Download"
+msgstr "Татаж авах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_request/sign_request_control_panel.xml:0
+msgid "Download Certificate"
+msgstr "Гэрчилгээ татаж авах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_request/sign_request_control_panel.xml:0
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
+msgid "Download Document"
+msgstr "Баримтыг татах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_type_buttons.xml:0
+msgid "Drag & Drop a field in the PDF"
+msgstr "PDF дотор талбар чирж тавих"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/views/helper/sign_action_helper.xml:0
+msgid "Drag and drop"
+msgstr "Чирж байршуулах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/js/tours/sign.js:0
+msgid ""
+"Draw your most beautiful signature!<br>You can also create one automatically "
+"or load a signature from your computer."
+msgstr ""
+"Өөрийн хамгийн гоё гарын үсгийг зур!<br>Мөн автоматаар гарын үсэг үүсгэх "
+"эсвэл компьютероосоо файл оруулж болно."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.doc_sign
+msgid "Dropdown menu"
+msgstr "Эвхэгддэг цэс"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "ERROR: Invalid PDF file!"
+msgstr "АЛДАА: PDF файл биш байна!"
+
+#. module: sign
+#: model:ir.actions.report,name:sign.sign_report_green_savings_action
+msgid "Ecological Savings by using Electronic Signatures"
+msgstr "Электрон гарын үсэг ашиглаж эх дэлхийгээ хайрлая"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_request/signable_sign_request_control_panel.xml:0
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_top_bar.xml:0
+msgid "Edit"
+msgstr "Засах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_top_bar.js:0
+msgid "Edit Template"
+msgstr "Загвар засварлах"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
+msgid "Edit field types"
+msgstr "Талбарын төрлүүд засварлах"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
+msgid "Edit selection values"
+msgstr "Сонголтын утгууд засварлах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_top_bar.xml:0
+msgid "Edit template name"
+msgstr "Үлгэрийн нэрийг засах"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__signer_email
+#: model:sign.item.type,name:sign.sign_item_type_email
+#: model:sign.item.type,placeholder:sign.sign_item_type_email
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Email"
+msgstr "Имэйл"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__subject
+msgid "Email Subject"
+msgstr "Имэйлийн гарчиг"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Email Verification"
+msgstr "Имэйл баталгаажуулалт"
+
+#. module: sign
+#: model:sign.item.role,name:sign.sign_item_role_employee
+msgid "Employee"
+msgstr "Ажилтан"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "Energy"
+msgstr "Энерги"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sms_signer_dialog.xml:0
+msgid "Enter the code received through SMS to complete your signature"
+msgstr ""
+"SMS -р хүлээн авсан нэг удаагийн кодыг оруулж гарын үсгээ баталгаажуулаарай"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/components/sign_request/signable_PDF_iframe.js:0
+#: code:addons/sign/static/src/dialogs/sms_signer_dialog.js:0
+msgid "Error"
+msgstr "Алдаа"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.deleted_sign_request
+msgid "Error 404"
+msgstr "Алдаа 404"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "Existing sign items are not allowed to be changed"
+msgstr "Өмнө үүссэн гарын үсгийн мөрүүдийг өөрчлөхийг хориглоно"
+
+#. module: sign
+#: model:ir.model.fields.selection,name:sign.selection__sign_log__request_state__expired
+#: model:ir.model.fields.selection,name:sign.selection__sign_request__state__expired
+msgid "Expired"
+msgstr "Хугацаа дууссан"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+msgid "Expiring Soon"
+msgstr "Хугацаа удахгүй дуусна"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item_role__auth_method
+msgid "Extra Authentication Step"
+msgstr "Танин баталгаажуулах нэмэлт алхам"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__favorited_ids
+msgid "Favorite of"
+msgstr "Тэмдэглэгдсэн"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_template__favorited_ids
+msgid "Favorited Users"
+msgstr "Тэмдэглэгдсэн хэрэглэгчид"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item__name
+#: model:ir.model.fields,field_description:sign.field_sign_item_type__name
+msgid "Field Name"
+msgstr "Талбарын нэр"
+
+#. module: sign
+#: model:ir.ui.menu,name:sign.sign_item_type_menu
+#: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
+msgid "Field Types"
+msgstr "Талбарын төрлүүд"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_type_buttons.xml:0
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_form
+msgid "Fields"
+msgstr "Талбарууд"
+
+#. module: sign
+#: model:ir.model,name:sign.model_sign_item
+msgid "Fields to be sign on Document"
+msgstr "Баримт бичигт гарын үсэг зурах талбарууд"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_template__datas
+msgid "File Content (base64)"
+msgstr "Файлын агуулга (base64)"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/views/hooks.js:0
+msgid "File Error"
+msgstr "Файлын алдаа"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_duplicate_template_pdf__new_pdf
+msgid "File name"
+msgstr "Файлын нэр"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__filename
+msgid "Filename"
+msgstr "Файлын нэр"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_item_custom_popover.xml:0
+msgid "Filled by"
+msgstr "Бөглөсөн этгээд"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/public_signer_dialog.js:0
+#: code:addons/sign/static/src/dialogs/sms_signer_dialog.js:0
+msgid "Final Validation"
+msgstr "Сүүлийн баталгаажуулалт"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/js/tours/sign.js:0
+msgid "Follow the guide to sign the document."
+msgstr "Зааврын дагуу баримтанд гарын үсэг зурна уу."
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__message_follower_ids
+msgid "Followers"
+msgstr "Дагагчид"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Дагагчид (Харилцагчид)"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_request__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome icon ж.ш. fa-tasks"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid ""
+"For 1000kg of paper usage, with 10% of recycled paper, environmental savings "
+"are based on"
+msgstr ""
+"1000 кг цаасны хэрэглээ тутамд, ердөө 10% -ийг дахин боловсруулдаг бөгөөд, "
+"байгаль орчны хэмнэлтийг дараах үзүүлэлтээр тооцно"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_item_role__auth_method
+msgid "Force the signatory to identify using a second authentication method"
+msgstr ""
+"Гарын үсэг зурагч этгээдийг хоёрдогч танин баталгаажуулах арга хэлбэрээс "
+"сонгож хэрэглэгчийг шаардах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/components/sign_request/sign_items.xml:0
+#: code:addons/sign/static/src/dialogs/sign_name_and_signature_dialog.xml:0
+msgid "Frame"
+msgstr "Хүрээ"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request_item_value__frame_has_hash
+msgid "Frame Has Hash"
+msgstr "Hash-тай хүрээ"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__frame_hash
+msgid "Frame Hash"
+msgstr "Hash хүрээ"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request_item_value__frame_value
+msgid "Frame Value"
+msgstr "Хүрээний утга"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/controllers/portal.py:0
+#: model:ir.model.fields.selection,name:sign.selection__sign_request__state__signed
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+msgid "Fully Signed"
+msgstr "Бүх гарын үсэг зурагдсан"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+msgid "Future Activities"
+msgstr "Ирээдүйн ажилбарууд"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/encrypted_dialog.xml:0
+msgid "Generate PDF"
+msgstr "PDF үүсгэх"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Geolocation"
+msgstr "Газарзүйн байршил"
+
+#. module: sign
+#: model:ir.ui.menu,name:sign.sign_report_green_savings
+msgid "Green Savings"
+msgstr "Ногоон хэмнэлт"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "Green Savings Report"
+msgstr "Ногоон хэмнэлтийн тайлан"
+
+#. module: sign
+#: model:ir.model,name:sign.model_report_sign_green_savings_report
+msgid "Green Savings Report model"
+msgstr "Ногоон хэмнэлтийн тайлан модел"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+msgid "Green Savings Summary"
+msgstr "Ногоон хэмнэлтийн тойм"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+msgid "Group By"
+msgstr "Бүлэглэлт"
+
+#. module: sign
+#: model:sign.template.tag,name:sign.sign_template_tag_1
+msgid "HR"
+msgstr "Хүний нөөц"
+
+#. module: sign
+#: model:ir.model,name:sign.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP Routing"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__has_default_template
+msgid "Has Default Template"
+msgstr "Үндсэн загвартай эсэх"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__has_message
+msgid "Has Message"
+msgstr "Мессежтэй"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_template__has_sign_requests
+msgid "Has Sign Requests"
+msgstr "Гарын үсэг зурах хүсэлттэй эсэх"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item__height
+msgid "Height"
+msgstr "Өндөр"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_completed
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_not_enough_credits
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_refused
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_request
+msgid "Hello"
+msgstr "Сайн байна уу?"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_item_type__tip
+msgid "Hint displayed in the signing hint"
+msgstr "Гарын үсэг зурах үед харагдах зөвлөмж"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.doc_sign
+msgid "Home"
+msgstr "Нүүр хуудас"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+msgid "How are these results calculated?"
+msgstr "Үр дүн хэрхэн тооцоологдсон бэ?"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid "How do we calculate?"
+msgstr "Үүнийг хэрхэн тооцолох вэ?"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid "I've got a total weight, and now?"
+msgstr "Надад нийт жин нь олдчихлоо, одоо яах вэ?"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_duplicate_template_pdf__id
+#: model:ir.model.fields,field_description:sign.field_sign_item__id
+#: model:ir.model.fields,field_description:sign.field_sign_item_option__id
+#: model:ir.model.fields,field_description:sign.field_sign_item_radio_set__id
+#: model:ir.model.fields,field_description:sign.field_sign_item_role__id
+#: model:ir.model.fields,field_description:sign.field_sign_item_type__id
+#: model:ir.model.fields,field_description:sign.field_sign_log__id
+#: model:ir.model.fields,field_description:sign.field_sign_request__id
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__id
+#: model:ir.model.fields,field_description:sign.field_sign_request_item_value__id
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__id
+#: model:ir.model.fields,field_description:sign.field_sign_send_request_signer__id
+#: model:ir.model.fields,field_description:sign.field_sign_template__id
+#: model:ir.model.fields,field_description:sign.field_sign_template_tag__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "IP"
+msgstr ""
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
+msgid "IP Address"
+msgstr "IP Хаяг"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_log__ip
+msgid "IP address of the visitor"
+msgstr "Зочины IP хаяг"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item_type__icon
+#: model:ir.model.fields,field_description:sign.field_sign_request__activity_exception_icon
+msgid "Icon"
+msgstr "Дүрс"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_request__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ажилбар дээр сануулга гарсныг илэрхийлэх зураг."
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_res_config_settings__module_sign_itsme
+msgid "Identify with itsme®"
+msgstr "itsme® -р танин баталгаажуулах"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_request__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Хэрэв сонгогдсон бол, шинэ зурвасууд таны анхаарлыг шаардана."
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_item_role__change_authorized
+#: model:ir.model.fields,help:sign.field_sign_request_item__change_authorized
+msgid ""
+"If checked, recipient of a document with this role can be changed after "
+"having sent the request. Useful to replace a signatory who is out of office, "
+"etc."
+msgstr ""
+"Илгээсний дараа гарын үсэг зурагчийг солихыг зөвшөөрнө (ажлаас завсарласан "
+"хүнийг орлуулахад ашигтай)."
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_request__message_has_error
+#: model:ir.model.fields,help:sign.field_sign_request__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Үүнийг сонговол алдаа үүсэх үед зурвасууд ирнэ."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_not_enough_credits
+msgid ""
+"If you do not want to receive these notifications anymore, you can disable "
+"the extra-authentication step in the\n"
+"                        <code>\n"
+"                            Sign &gt; Configuration &gt; Roles\n"
+"                        </code>\n"
+"                        menu."
+msgstr ""
+"Хэрэв та энэ мэдэгдлийг дахин хүлээн авахыг хүсэхгүй байвал, Та дараахаас "
+"нэмэлт танин баталгаажуулалтыг идэвхигүй болгох боломжтой\n"
+"                        <code>\n"
+"                            Гарын үсэг &gt; Тохиргоо &gt; Дүрүүд\n"
+"                        </code>\n"
+"                        цэс."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_request
+msgid "If you do not wish to receive future reminders about this document,"
+msgstr ""
+"Хэрэв та цаашдаа уг баримтнаас сануулга хүлээн авахыг зогсоохыг хүсч байвал,"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_not_enough_credits
+msgid ""
+"If you wish, you can request the document again after buying more credits "
+"for the operation."
+msgstr ""
+"Хэрэв та хүсвэл, та нэмж кредит авсны дараа гарын үсгийн зурах хүсэлтээ "
+"үргэлжлүүлэн илгээх боломжтой болно."
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_template__in_progress_count
+msgid "In Progress Count"
+msgstr "Хүлээгдэж буй баримтын тоо"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_kanban
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_kanban
+msgid "In favorites, remove it"
+msgstr "Тэмдэглэгдсэнээс хасах"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_log__log_hash
+msgid "Inalterability Hash"
+msgstr "Өөрчлөлтаас сэргийлэх Hash"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sign_name_and_signature_dialog.xml:0
+msgid "Include a visual security frame around your signature"
+msgstr "Гарын үсгийн талбарт хамгаалалтын хүрээ нэмэх"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_item_view_form
+msgid "Information"
+msgstr "Мэдээлэл"
+
+#. module: sign
+#: model:ir.model.fields.selection,name:sign.selection__sign_item_type__item_type__initial
+msgid "Initial"
+msgstr "Нэрийн эхний үсэг"
+
+#. module: sign
+#: model:sign.item.type,name:sign.sign_item_type_initial
+#: model:sign.item.type,placeholder:sign.sign_item_type_initial
+msgid "Initials"
+msgstr "Нэрийн эхний үсгүүд"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
+msgid "Insert your terms & conditions here..."
+msgstr "Энд өөрийн худалдааны нөхцөл & тавигдах шаардлагыг бичнэ үү..."
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__integrity
+msgid "Integrity of the Sign request"
+msgstr "Гарын үсэг зурах хүсэлтийн бүрэн бүтэн байдал"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__message_is_follower
+msgid "Is Follower"
+msgstr "Дагагч эсэх"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__is_mail_sent
+msgid "Is Mail Sent"
+msgstr "Шуудан илгээгдсэн эсэх"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_template__is_sharing
+msgid "Is Sharing"
+msgstr "Хуваалцаж буй эсэх"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.signer_status_wrapper
+msgid "Is Signing"
+msgstr "Гарын үсэг зурахыг хүлээж буй эсэх"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__is_user_signer
+msgid "Is User Signer"
+msgstr "Хэрэглэгч нь гарын үсэг зурагч эсэх"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/thank_you_dialog.xml:0
+msgid "It's signed!"
+msgstr "Гарын үсгээр баталгаажлаа!"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "John Doe"
+msgstr ""
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "John Smith"
+msgstr ""
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "L of water saved"
+msgstr "л ус нэмэгдсэн"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__last_action_date
+msgid "Last Action Date"
+msgstr "Сүүлийн үйлдлийн огноо"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_duplicate_template_pdf__write_uid
+#: model:ir.model.fields,field_description:sign.field_sign_item__write_uid
+#: model:ir.model.fields,field_description:sign.field_sign_item_option__write_uid
+#: model:ir.model.fields,field_description:sign.field_sign_item_radio_set__write_uid
+#: model:ir.model.fields,field_description:sign.field_sign_item_role__write_uid
+#: model:ir.model.fields,field_description:sign.field_sign_item_type__write_uid
+#: model:ir.model.fields,field_description:sign.field_sign_log__write_uid
+#: model:ir.model.fields,field_description:sign.field_sign_request__write_uid
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__write_uid
+#: model:ir.model.fields,field_description:sign.field_sign_request_item_value__write_uid
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__write_uid
+#: model:ir.model.fields,field_description:sign.field_sign_send_request_signer__write_uid
+#: model:ir.model.fields,field_description:sign.field_sign_template__write_uid
+#: model:ir.model.fields,field_description:sign.field_sign_template_tag__write_uid
+msgid "Last Updated by"
+msgstr "Сүүлд зассан этгээд"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_duplicate_template_pdf__write_date
+#: model:ir.model.fields,field_description:sign.field_sign_item__write_date
+#: model:ir.model.fields,field_description:sign.field_sign_item_option__write_date
+#: model:ir.model.fields,field_description:sign.field_sign_item_radio_set__write_date
+#: model:ir.model.fields,field_description:sign.field_sign_item_role__write_date
+#: model:ir.model.fields,field_description:sign.field_sign_item_type__write_date
+#: model:ir.model.fields,field_description:sign.field_sign_log__write_date
+#: model:ir.model.fields,field_description:sign.field_sign_request__write_date
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__write_date
+#: model:ir.model.fields,field_description:sign.field_sign_request_item_value__write_date
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__write_date
+#: model:ir.model.fields,field_description:sign.field_sign_send_request_signer__write_date
+#: model:ir.model.fields,field_description:sign.field_sign_template__write_date
+#: model:ir.model.fields,field_description:sign.field_sign_template_tag__write_date
+msgid "Last Updated on"
+msgstr "Сүүлд зассан огноо"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__last_reminder
+msgid "Last reminder"
+msgstr "Сүүлд ирсэн сануулга"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+msgid "Late Activities"
+msgstr "Хоцорсон ажилбар"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_log__latitude
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__latitude
+msgid "Latitude"
+msgstr "Өргөрөг"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_send_request__validity
+msgid "Leave empty for requests without expiration."
+msgstr "Дуусах хугацаагүй хүсэлтийн хувьд хоосон үлдээ."
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_item_custom_popover.js:0
+msgid "Left"
+msgstr "Зүүн"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/js/tours/sign.js:0
+msgid "Let's <b>prepare & sign</b> our first document."
+msgstr "Бидний анхны баримтыг <b>Гарын үсэг зурахад</b> зориулж бэлтгэе."
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/js/tours/sign.js:0
+msgid "Let's send the request by email."
+msgstr "Хүсэлтээ имэйлээр илгээцгээе."
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_template__redirect_url_text
+msgid "Link Label"
+msgstr "Холбоосын шошго"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__activity_id
+msgid "Linked Activity"
+msgstr "Холбоотой ажилбар"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__reference_doc
+msgid "Linked To"
+msgstr "Дараахтай холбогдсон"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__reference_doc
+msgid "Linked to"
+msgstr "Дараахтай холбогдсон"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_log__log_date
+msgid "Log Date"
+msgstr "Түүх хөтлөсөн огноо"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_log.py:0
+msgid "Log history of sign requests cannot be deleted!"
+msgstr "Гарын үсэг зурах хүсэлтийн түүх хөтлөлтийг устгах боломжгүй!"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_log.py:0
+msgid "Log history of sign requests cannot be modified!"
+msgstr "Гарын үсэг зурах хүсэлтийн түүх хөтлөлтийг өөрчлөх боломжгүй!"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.doc_sign
+msgid "Logo"
+msgstr "Лого"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__sign_log_ids
+#: model_terms:ir.ui.view,arch_db:sign.sign_log_view_tree
+msgid "Logs"
+msgstr "Логууд"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_log__longitude
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__longitude
+msgid "Longitude"
+msgstr "Уртраг"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__mail_sent_order
+msgid "Mail Sent Order"
+msgstr "Илгээгдсэн шуудангийн дараалал"
+
+#. module: sign
+#: model:ir.model.fields.selection,name:sign.selection__sign_log__action__update_mail
+msgid "Mail Update"
+msgstr "Шуудан шинэчлэлт"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_template.py:0
+msgid "Malformed expression: %(exp)s"
+msgstr "Өгөгдөл эвдрэлт: %(exp)s"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_res_config_settings__group_manage_template_access
+#: model:res.groups,name:sign.manage_template_access
+msgid "Manage template access"
+msgstr "Загварын хандалтыг удирдах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_item_custom_popover.xml:0
+msgid "Mandatory field"
+msgstr "Шаардлагатай талбар"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Marc Demo"
+msgstr "Marc Demo"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__message
+msgid "Message"
+msgstr "Зурвас"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__message_has_error
+msgid "Message Delivery error"
+msgstr "Зурвас илгээх алдаа"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_send_request__message_cc
+msgid "Message to be sent to contacts in copy of the signed document"
+msgstr "Гарын үсэгтэй баримтын хуулбарт орсон хүмүүст илгээх мессеж"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_send_request__message
+msgid "Message to be sent to signers of the specified document"
+msgstr "Тухайлсан баримт бичигт гарын үсэг зурах этгээдүүдэд илгээх зурвас"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__message_ids
+msgid "Messages"
+msgstr "Зурвасууд"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.encrypted_ask_password
+msgid "Missing Password"
+msgstr "Нууц үг алга"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__sms_number
+msgid "Mobile"
+msgstr "Гар утас"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_kanban
+msgid "Modify Template"
+msgstr "Загварыг засварлах"
+
+#. module: sign
+#: model:ir.model.fields.selection,name:sign.selection__sign_item_type__item_type__textarea
+#: model:sign.item.type,name:sign.sign_item_type_multiline_text
+#: model:sign.item.type,placeholder:sign.sign_item_type_multiline_text
+msgid "Multiline Text"
+msgstr "Олон мөртэй Текст"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_share_view_form
+msgid "Multiple Signature Requests"
+msgstr "Олон гарын үсгийн хүсэлтүүд"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Миний ажилбарын эцсийн огноо"
+
+#. module: sign
+#: model:ir.ui.menu,name:sign.sign_request_my_documents
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+msgid "My Documents"
+msgstr "Миний баримтууд"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_search
+msgid "My Favorites"
+msgstr "Миний эрхэмүүд"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+msgid "My Requests"
+msgstr "Миний чөлөөний хүсэлт"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_search
+msgid "My Templates"
+msgstr "Миний үлгэрүүд"
+
+#. module: sign
+#: model:sign.template.tag,name:sign.sign_template_tag_2
+msgid "NDA"
+msgstr ""
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item_role__name
+#: model:ir.model.fields,field_description:sign.field_sign_template__name
+#: model:sign.item.type,name:sign.sign_item_type_name
+#: model:sign.item.type,placeholder:sign.sign_item_type_name
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_tree
+msgid "Name"
+msgstr "Нэр"
+
+#. module: sign
+#: model:ir.model.constraint,message:sign.constraint_sign_item_role_name_uniq
+msgid "Name already exists!"
+msgstr "Нэр бүртгэлтэй байна!"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
+msgid "Name for the file"
+msgstr "Файлын нэр"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_form
+msgid "Name of the file"
+msgstr "Файлын нэр"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/js/tours/sign.js:0
+msgid "Nearly there, keep going!"
+msgstr "Ойртож байна шүү, үргэлжлүүлээд байгаарай!"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__need_my_signature
+msgid "Need My Signature"
+msgstr "Миний гарын үсгийг шаардсан"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/components/sign_request/PDF_iframe.js:0
+msgid "Need a valid PDF to add signature fields!"
+msgstr ""
+"Гарын үсгийн талбар нэмэхийн тулд PDF файл нь зөв форматтай байх ёстой!"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/thank_you_dialog.xml:0
+msgid "Need to sign documents?"
+msgstr "Баримтанд гарын үсэг зурах шаардлагатай юу?"
+
+#. module: sign
+#: model:ir.actions.act_window,name:sign.action_sign_send_request
+msgid "New Signature Request"
+msgstr "Гарын үсэг зурах шинэ хүсэлт"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_duplicate_template_pdf__new_template
+msgid "New Template Name"
+msgstr "Шинэ загварын нэр"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/controllers/portal.py:0
+msgid "Newest"
+msgstr "Хамгийн шинэ"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Календар дээрх дараагийн Үйл ажиллагаа"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Дараагийн ажилбарын эцсийн огноо"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__activity_summary
+msgid "Next Activity Summary"
+msgstr "Дараагийн ажилбарын гарчиг"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__activity_type_id
+msgid "Next Activity Type"
+msgstr "Дараагийн ажилбарын төрөл"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_request/sign_request_control_panel.xml:0
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_control_panel.xml:0
+msgid "Next Document"
+msgstr "Дараагийн баримт"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/next_direct_sign_dialog.xml:0
+msgid "Next signatory ("
+msgstr "Дараагийн гарын үсэг зурагч ("
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_template.py:0
+msgid "No attachment was provided"
+msgstr "Хавсаргасан файл алга"
+
+#. module: sign
+#: model_terms:ir.actions.act_window,help:sign.sign_all_request_action
+#: model_terms:ir.actions.act_window,help:sign.sign_request_action
+msgid "No document yet"
+msgstr "Одоогоор баримт алга"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "No specified reason"
+msgstr "Ямар нэг шалтгаан алга"
+
+#. module: sign
+#: model_terms:ir.actions.act_window,help:sign.sign_template_action
+msgid "No template yet"
+msgstr "Одоогоор загвар алга"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/controllers/portal.py:0
+msgid "None"
+msgstr "Байхгүй"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_kanban
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_kanban
+msgid "Not in favorites, add it"
+msgstr "Тэмдэглэгдсэнд нэмэгдээгүй байна, нэмэх"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_kanban
+msgid "Not in favorites, set it"
+msgstr "Тэмдэглэгдсэнд нэмэгдээгүй, үүнийг нэмэх"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Үйлдлийн тоо"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item__num_options
+#: model:ir.model.fields,field_description:sign.field_sign_item_radio_set__num_options
+msgid "Number of Radio Button options"
+msgstr "Сонголтын мужын тоо"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_kanban
+msgid "Number of documents in progress for this template."
+msgstr "Уг загвараас үүдэлтэй явагдаж буй баримты тоо."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_kanban
+msgid "Number of documents signed for this template."
+msgstr "Уг загвараас үүдэлтэй баталгаажсан баримтын тоо."
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__message_has_error_counter
+msgid "Number of errors"
+msgstr "Алдааны тоо"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_request__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Үйлдэл шаардсан зурвасын тоо"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_request__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Алдааны мэдэгдэл бүхий зурвасын тоо"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_template__num_pages
+msgid "Number of pages"
+msgstr "Хуудасны тоо"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/thank_you_dialog.xml:0
+msgid "Odoo Sign"
+msgstr "Odoo гарын үсэг"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid "One can weighs 15 g"
+msgstr "Нэг нь 15г жинтэй байх боломжтой"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid "One liter of gas fuel will produce 8.9 kg of CO²"
+msgstr "1л шатахуун 8.9 кг CO² бий болгодог"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_template.py:0
+msgid "One or more selection items have no associated options"
+msgstr ""
+"Нэг эсвэл хэд хэдэн сонголтын талбарт холбоотой утга тохируулагдаагүй байна"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_template.py:0
+msgid "One uploaded file cannot be read. Is it a valid PDF?"
+msgstr "Оруулсан файлын нэгийг уншиж чадахгүй байна. Формат нь яг PDF мөн үү?"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/controllers/main.py:0
+#: code:addons/sign/controllers/terms.py:0
+msgid "Oops"
+msgstr "Өө яанаа"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.canceled_sign_request_item
+msgid "Operation successful"
+msgstr "Үйлдэл амжилттай"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item_option__value
+msgid "Option"
+msgstr "Сонгох зүйл"
+
+#. module: sign
+#: model:ir.model,name:sign.model_sign_item_option
+msgid "Option of a selection Field"
+msgstr "Сонголтын талбарын сонгох утга"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
+msgid "Optional Message..."
+msgstr "Нэмэлт мэдэгдэл..."
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_template__redirect_url
+msgid "Optional link for redirection after signature"
+msgstr "Гарын үсэг зурсны дараа чиглүүлэх холбоос (заавал биш)"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_template__redirect_url_text
+msgid "Optional text to display on the button link"
+msgstr "Холбоо бүхий товчлуур дээр харуулах нэмэлт текст"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_item_custom_popover.xml:0
+#: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
+msgid "Options"
+msgstr "Сонголтууд"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_duplicate_template_pdf__original_template_id
+msgid "Original File"
+msgstr "Эх файл"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/encrypted_dialog.js:0
+#: model_terms:ir.ui.view,arch_db:sign.encrypted_ask_password
+msgid "PDF is encrypted"
+msgstr "PDF эвдэрсэн"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "Paper Savings"
+msgstr "Цаасны хэмнэлт"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Participants"
+msgstr "Оролцогчид"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_log__partner_id
+msgid "Partner"
+msgstr "Харилцагч"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/encrypted_dialog.js:0
+msgid "Password is incorrect."
+msgstr "Нууц үг тохирохгүй байна."
+
+#. module: sign
+#: model:sign.item.type,name:sign.sign_item_type_phone
+#: model:sign.item.type,placeholder:sign.sign_item_type_phone
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Phone"
+msgstr "Утас"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sms_signer_dialog.xml:0
+msgid "Phone Number"
+msgstr "Утасны дугаар"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_item_custom_popover.xml:0
+#: model:ir.model.fields,field_description:sign.field_sign_item_type__placeholder
+msgid "Placeholder"
+msgstr "Орлуулагч"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "Please configure senders'(%s) email addresses"
+msgstr "Илгээгчийн (%s) имэйл хаягыг тохируулна уу"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/wizard/sign_send_request.py:0
+msgid "Please select recipients for the following roles: %(roles)s"
+msgstr "Дараах дүр бүхий хүлээн авагчийг сонгоно уу: %(roles)s"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__access_url
+msgid "Portal Access URL"
+msgstr "Гаднаас хандах URL"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item__posX
+msgid "Position X"
+msgstr "Байрлал Х"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item__posY
+msgid "Position Y"
+msgstr "Байрлал Y"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
+msgid "Preview"
+msgstr "Урьдчилан харах"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Printed on"
+msgstr "Хэвлэсэн огноо"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__progress
+msgid "Progress"
+msgstr "Явц"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "Public User"
+msgstr "Нийтийн хэрэглэгч"
+
+#. module: sign
+#: model:ir.model.fields.selection,name:sign.selection__sign_item_type__item_type__radio
+#: model:sign.item.type,name:sign.sign_item_type_radio
+msgid "Radio Buttons"
+msgstr "Радио Товчнууд"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item_radio_set__radio_items
+msgid "Radio Items"
+msgstr "Радио сонголтууд"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item__radio_set_id
+msgid "Radio button options"
+msgstr "Радиу сонголт бүхий товчлуур"
+
+#. module: sign
+#: model:ir.model,name:sign.model_sign_item_radio_set
+msgid "Radio button set for keeping radio button items together"
+msgstr "Радио сонголтын мөрүүдийг нэг багц болгон хадгалах тохиргоо"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__rating_ids
+msgid "Ratings"
+msgstr "Үнэлгээ"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sms_signer_dialog.xml:0
+msgid "Re-send SMS"
+msgstr "SMS -г дахин илгээх"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_template__redirect_url
+msgid "Redirect Link"
+msgstr "Гарын үсэг зурсны дараа шилжих холбоос"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sign_refusal_dialog.xml:0
+#: code:addons/sign/static/src/dialogs/thank_you_dialog.xml:0
+#: model:ir.model.fields.selection,name:sign.selection__sign_log__action__refuse
+msgid "Refuse"
+msgstr "Түдгэлзүүлэх"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_request/signable_sign_request_control_panel.xml:0
+#: model_terms:ir.ui.view,arch_db:sign.doc_sign
+msgid "Refuse Document"
+msgstr "Баримтыг түтгэлзүүлэх"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sign_refusal_dialog.js:0
+msgid "Refuse to sign"
+msgstr "Гарын үсэг зурахаас татгалзах"
+
+#. module: sign
+#: model:ir.model.fields.selection,name:sign.selection__sign_log__request_state__refused
+msgid "Refused Signature"
+msgstr "Түтгэлзүүлсэн гарын үсэг"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__reminder
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__reminder
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
+#: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
+msgid "Reminder"
+msgstr "Сануулга"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__reminder_enabled
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__reminder_enabled
+msgid "Reminder Enabled"
+msgstr "Сануулга идэвхижсэн"
+
+#. module: sign
+#: model:ir.ui.menu,name:sign.sign_reports
+msgid "Reports"
+msgstr "Тайлан"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__request_item_infos
+msgid "Request Item Infos"
+msgstr "Гарын үсэг зурах хүсэлтийн дэд мэдээллүүд"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/activity/activity_patch.xml:0
+#: code:addons/sign/static/src/backend_components/cog_menu/sign_request_cog_menu.xml:0
+#: model:ir.model.fields.selection,name:sign.selection__mail_activity_type__category__sign_request
+#: model:mail.activity.type,name:sign.mail_activity_data_signature_request
+msgid "Request Signature"
+msgstr "Гарын үсэг зурах хүсэлт"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/wizard/sign_send_request.py:0
+msgid "Request expiration date must be set in the future."
+msgstr ""
+"Гарын үсэг зурах хүсэлтийн дуусах огноо нь ирээдүй цаг дээр байх ёстой."
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__nb_total
+msgid "Requested Signatures"
+msgstr "Илгээгдсэн гарын үсэг зурах хүсэлт"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item__required
+msgid "Required"
+msgstr "Шаардлагатай"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_request/sign_request_control_panel.js:0
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_item_view_tree
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_tree
+msgid "Resend"
+msgstr "Дахин илгээх"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_request/sign_request_control_panel.js:0
+msgid "Resend the invitation"
+msgstr "Урилгыг дахин илгээх"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_request/sign_request_control_panel.js:0
+msgid "Resent!"
+msgstr "Дахин илгээгдсэн!"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/initial_all_pages_dialog.xml:0
+#: model:ir.model.fields,field_description:sign.field_sign_item__responsible_id
+#: model:ir.model.fields,field_description:sign.field_sign_template__user_id
+msgid "Responsible"
+msgstr "Хариуцагч"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_template__responsible_count
+msgid "Responsible Count"
+msgstr "Хариуцагчийн тоо"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__activity_user_id
+msgid "Responsible User"
+msgstr "Эд хариуцагч"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_kanban
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_kanban
+msgid "Restore"
+msgstr "Сэргээх"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_item_custom_popover.js:0
+msgid "Right"
+msgstr "Баруун"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__role_id
+#: model:ir.model.fields,field_description:sign.field_sign_send_request_signer__role_id
+msgid "Role"
+msgstr "Дүр"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_item_role_view_tree
+msgid "Role Name"
+msgstr "Дүрийн нэр"
+
+#. module: sign
+#: model:ir.ui.menu,name:sign.sign_item_role_menu
+msgid "Roles"
+msgstr "Дүрүүд"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_iframe.js:0
+msgid "Rotate Clockwise"
+msgstr "Цагийн зүүний дагуу эргүүлэх"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS илгээлтийн алдаа"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sms_signer_dialog.xml:0
+msgid "SMS Sent"
+msgstr "Илгээгдсэн МСЖ"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__sms_token
+msgid "SMS Token"
+msgstr "SMS Токен"
+
+#. module: sign
+#: model:sign.template.tag,name:sign.sign_template_tag_3
+msgid "Sales"
+msgstr "Борлуулалт"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_control_panel.xml:0
+#: model:ir.model.fields.selection,name:sign.selection__sign_log__action__save
+msgid "Save"
+msgstr "Хадгалах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_top_bar.xml:0
+msgid "Save as Template"
+msgstr "Загвар болгож хадгалах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_body.js:0
+msgid "Saved"
+msgstr "Хадгалсан"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/controllers/portal.py:0
+msgid "Search <span class=\"nolabel\"> (in Document)</span>"
+msgstr "Хайх <span class=\"nolabel\"> (Баримт дотор)</span>"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__access_token
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__access_token
+msgid "Security Token"
+msgstr "Нууцлалын токен"
+
+#. module: sign
+#: model:sign.item.type,tip:sign.sign_item_type_selection
+msgid "Select an option"
+msgstr "Сонголтоос сонгоно уу"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/js/tours/sign.js:0
+msgid ""
+"Select the contact who should sign, according to their role.<br>In this "
+"example, select your own contact to sign the document yourself."
+msgstr ""
+"Үүрэгт тохирох гарын үсэг зурж буй хүнийг сонгоно уу.<br>Өөрөө гарын үсэг "
+"зурах бол өөрийн контактаа сонго."
+
+#. module: sign
+#: model:ir.model.fields.selection,name:sign.selection__sign_item_type__item_type__selection
+#: model:sign.item.type,name:sign.sign_item_type_selection
+#: model:sign.item.type,placeholder:sign.sign_item_type_selection
+msgid "Selection"
+msgstr "Сонголт"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item__option_ids
+msgid "Selection options"
+msgstr "Сонголтын утгууд"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_request/sign_request_control_panel.js:0
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_control_panel.xml:0
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_item_view_tree
+#: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_kanban
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_tree
+msgid "Send"
+msgstr "Илгээх"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sms_signer_dialog.xml:0
+msgid "Send SMS"
+msgstr "SMS илгээх"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__signer_id
+msgid "Send To"
+msgstr "Илгээх"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_expired
+msgid "Send a new link"
+msgstr "Шинэ холбоос илгээх"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
+#: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
+msgid "Send a reminder"
+msgstr "Сануулга илгээх"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_request/sign_request_control_panel.js:0
+msgid "Send the invitation"
+msgstr "Урилга илгээх"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+msgid "Sent"
+msgstr "Илгээгдсэн"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__nb_wait
+msgid "Sent Requests"
+msgstr "Илгээгдсэн хүсэлтүүд"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/thank_you_dialog.xml:0
+msgid "Sent by"
+msgstr "Илгээсэн этгээд"
+
+#. module: sign
+#: model:ir.actions.act_window,name:sign.sign_settings_action
+#: model:ir.ui.menu,name:sign.sign_item_settings_menu
+msgid "Settings"
+msgstr "Тохиргоо"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_control_panel.xml:0
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_kanban
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_tree
+msgid "Share"
+msgstr "Хуваалцах"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_share_view_form
+msgid "Share & Close"
+msgstr "Хуваалцах & хаах"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_template.py:0
+msgid "Share Document by Link"
+msgstr "Баримтыг холбоосоор хуваалцах"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__share_link
+msgid "Share Link"
+msgstr "Хуваалцах холбоос"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_tree
+msgid "Shareable"
+msgstr "Хуваалцаж болох"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/controllers/main.py:0
+#: code:addons/sign/models/sign_template.py:0
+#: model:ir.model.fields.selection,name:sign.selection__sign_log__request_state__shared
+#: model:ir.model.fields.selection,name:sign.selection__sign_request__state__shared
+msgid "Shared"
+msgstr "Хуваалцсан"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Өнөөдрийг хүртэлх хугацаанд дараагийн ажилбарын огноо нь тохируулагдсан бүх "
+"тэмдэглэлүүд"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
+msgid "Show standard terms & conditions on signature requests"
+msgstr "Гарын үсэг зурах хүсэлт дээр стандарт нөхцөл ба журам харуулах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_request/sign_request_control_panel.js:0
+#: code:addons/sign/static/src/dialogs/next_direct_sign_dialog.js:0
+#: code:addons/sign/static/src/dialogs/sign_name_and_signature_dialog.xml:0
+#: model:ir.ui.menu,name:sign.menu_document
+#: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_request
+msgid "Sign"
+msgstr "Гарын үсэг зурах"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_res_config_settings__use_sign_terms
+msgid "Sign Default Terms & Conditions"
+msgstr "Гарын үсгийн үндсэн нөхцөл & журам"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_res_company__sign_terms
+msgid "Sign Default Terms and Conditions"
+msgstr "Гарын үсгийн үндсэн нөхцөл ба журам"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_res_company__sign_terms_html
+msgid "Sign Default Terms and Conditions as a Web page"
+msgstr "Гарын үсгийн хуудас бүрт харагдах нөхцөл ба журам"
+
+#. module: sign
+#: model:ir.model,name:sign.model_sign_duplicate_template_pdf
+msgid "Sign Duplicate Template with new PDF"
+msgstr "Загварыг шинэ PDF-р хуулбарлаж гарын үсэг зурах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/thank_you_dialog.js:0
+msgid "Sign Next Document"
+msgstr "Дараагийн баримт дээр гарын үсэг зурах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_request/sign_request_control_panel.xml:0
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_control_panel.xml:0
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_share_view_form
+#: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_kanban
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_tree
+msgid "Sign Now"
+msgstr "Одоо гарын үсгээ зурах"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_send_request_signer__mail_sent_order
+msgid "Sign Order"
+msgstr "Гарын үсгийн дараалал"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_log__sign_request_id
+msgid "Sign Request"
+msgstr "Гарын үсэг зурах хүсэлт"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_log__sign_request_item_id
+msgid "Sign Request Item"
+msgstr "Гарын үсэг зурах хүсэлтийн мөр"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_send_request_signer__sign_send_request_id
+msgid "Sign Send Request"
+msgstr "Гарын үсгийн хүсэлтийг илгээх"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.res_config_settings_view_form
+msgid "Sign Settings"
+msgstr "Гарын үсгийн тохиргоо"
+
+#. module: sign
+#: model:ir.model,name:sign.model_sign_template_tag
+msgid "Sign Template Tag"
+msgstr "Гарын үсгийн загварын пайз"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_res_config_settings__sign_terms
+msgid "Sign Terms & Conditions"
+msgstr "Гарын үсгийн нөхцөл & журам"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_res_config_settings__sign_terms_html
+msgid "Sign Terms & Conditions as a Web page"
+msgstr "Хуудас бүр дээрх гарын үсгийн нөхцөл & журам"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_res_company__sign_terms_type
+#: model:ir.model.fields,field_description:sign.field_res_config_settings__sign_terms_type
+msgid "Sign Terms & Conditions format"
+msgstr "Гарын үсгийн нөхцөл & журмын формат"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sign_name_and_signature_dialog.xml:0
+msgid "Sign all"
+msgstr "Бүгд дээр гарын үсэг зурах"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_request
+msgid "Sign document"
+msgstr "Баримт дээр гарын үсэг зурах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/thank_you_dialog.xml:0
+msgid "Sign now"
+msgstr "Одоо гарын үсэг зурах"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_template.py:0
+msgid "Sign requests"
+msgstr "Гарын үсэг зурах хүсэлт"
+
+#. module: sign
+#: model:ir.model,name:sign.model_sign_log
+msgid "Sign requests access history"
+msgstr "Гарын үсэг зурах хүсэлтийн хандалтын түүх"
+
+#. module: sign
+#: model:ir.model,name:sign.model_sign_send_request
+msgid "Sign send request"
+msgstr "Гарын үсгийн хүсэлт илгээх"
+
+#. module: sign
+#: model:ir.model,name:sign.model_sign_send_request_signer
+msgid "Sign send request signer"
+msgstr "Гарын үсэг зуруулах хүсэлт илгээх"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.canceled_sign_request_item
+#: model_terms:ir.ui.view,arch_db:sign.deleted_sign_request
+msgid ""
+"Sign up for Odoo Sign to manage your own documents and signature requests!"
+msgstr ""
+"Баримтаа удирдаж, гарын үсгийн хүсэлт илгээхийг хүсвэл Odoo Sign-д бүртгүүл!"
+
+#. module: sign
+#: model:ir.actions.server,name:sign.sign_reminder_cron_ir_actions_server
+msgid "Sign: Send mail reminder"
+msgstr "Гарын үсэг: Имэйл сануулга илгээх"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Signatory"
+msgstr "Гарын үсэг зурагч"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Signatory's hash:"
+msgstr "Гарын үсэг зурагчын hash:"
+
+#. module: sign
+#. odoo-javascript
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+#: code:addons/sign/static/src/components/sign_request/sign_items.xml:0
+#: code:addons/sign/static/src/js/tours/sign.js:0
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__signature
+#: model:ir.model.fields.selection,name:sign.selection__sign_item_type__item_type__signature
+#: model:ir.model.fields.selection,name:sign.selection__sign_log__action__sign
+#: model:sign.item.type,name:sign.sign_item_type_signature
+#: model:sign.item.type,placeholder:sign.sign_item_type_signature
+#: model_terms:ir.ui.view,arch_db:sign._doc_sign
+#: model_terms:ir.ui.view,arch_db:sign.signer_status_wrapper
+msgid "Signature"
+msgstr "Гарын үсэг"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_requests
+msgid "Signature Date"
+msgstr "Гарын үсэгний огноо"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request_item_value__sign_item_id
+msgid "Signature Item"
+msgstr "Гарын үсгийн зүйл"
+
+#. module: sign
+#: model:ir.actions.act_window,name:sign.sign_item_option_action
+msgid "Signature Item Options"
+msgstr "Гарын үсэгний мөрийн сонголт"
+
+#. module: sign
+#: model:ir.model,name:sign.model_sign_item_role
+msgid "Signature Item Party"
+msgstr "Гарын үсгийн зүйлийн тал"
+
+#. module: sign
+#: model:ir.actions.act_window,name:sign.sign_item_role_action
+msgid "Signature Item Role"
+msgstr "Гарын үсгийн зүйлийн дүр"
+
+#. module: sign
+#: model:ir.actions.act_window,name:sign.sign_item_type_action
+#: model:ir.model,name:sign.model_sign_item_type
+msgid "Signature Item Type"
+msgstr "Гарын үсгийн зүйлийн төрөл"
+
+#. module: sign
+#: model:ir.model,name:sign.model_sign_request_item_value
+msgid "Signature Item Value"
+msgstr "Гарын үсэгний мөрийн утга"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_template__sign_item_ids
+msgid "Signature Items"
+msgstr "Гарын үсгийн зүйлс"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/activity/activity_model_patch.js:0
+#: code:addons/sign/static/src/backend_components/cog_menu/sign_request_cog_menu.js:0
+#: model:ir.model,name:sign.model_sign_request
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__sign_request_id
+#: model:ir.model.fields,field_description:sign.field_sign_request_item_value__sign_request_id
+#: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
+msgid "Signature Request"
+msgstr "Гарын үсгийн хүсэлт"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/wizard/sign_send_request.py:0
+msgid "Signature Request - %(file_name)s"
+msgstr "Гарын үсгийн хүсэлт - %(file_name)s"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/wizard/sign_send_request.py:0
+msgid "Signature Request - %s"
+msgstr "Гарын үсгийн хүсэлт - %s"
+
+#. module: sign
+#: model:ir.model,name:sign.model_sign_request_item
+msgid "Signature Request Item"
+msgstr "Гарын үсгийн хүсэлт"
+
+#. module: sign
+#: model:ir.actions.act_window,name:sign.sign_request_item_action
+msgid "Signature Request Items"
+msgstr "Гарын үсгийн хүсэлтүүд"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request_item_value__sign_request_item_id
+msgid "Signature Request item"
+msgstr "Гарын үсэг зурах хүсэлтийн мөр"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_template__sign_request_ids
+msgid "Signature Requests"
+msgstr "Гарын үсгийн хүсэлтүүд"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__start_sign
+msgid "Signature Started"
+msgstr "Гарын үсэг зурах алхам эхэлсэн"
+
+#. module: sign
+#: model:ir.model,name:sign.model_sign_template
+msgid "Signature Template"
+msgstr "Гарын үсэгний загвар"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/components/sign_request/sign_items.xml:0
+msgid "Signature configuration"
+msgstr "Гарын үсгийн тохиргоо"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/wizard/sign_send_request.py:0
+msgid ""
+"Signature requested for template: %(template)s\n"
+"Signatories: %(signatories)s"
+msgstr ""
+"Гарын үсэг зурах хүсэлт илгээгдсэн загвар: %(template)s\n"
+"Гарын үсэг зурагчид: %(signatories)s"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/res_partner.py:0
+msgid "Signature(s)"
+msgstr "Гарын үсэг(үүд)"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Signature:"
+msgstr "Гарын үсэг:"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.portal_my_home_menu_sign
+#: model_terms:ir.ui.view,arch_db:sign.portal_my_home_sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_requests
+msgid "Signatures"
+msgstr "Гарын үсэг"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.doc_sign
+msgid "Signed"
+msgstr "Гарын үсэг зурсан"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_template__signed_count
+msgid "Signed Count"
+msgstr "Гарын үсэг зурсан тоо"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_kanban
+msgid "Signed Documents"
+msgstr "Гарын үсэг зурсан баримтууд"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__signed_without_extra_auth
+msgid "Signed Without Extra Authentication"
+msgstr "Нэмэлт танин баталгаажуулалтгүйгээр гарын үсэг зурсан"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_completed
+msgid "Signed document"
+msgstr "Гарын үсэг зурсан баримт"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid ""
+"Signed documents cannot be deleted for legal reasons. Please archive them "
+"instead."
+msgstr ""
+"Хуулийн үүднээс гарын үсэг зурагдсан баримтыг устгах боломжгүй. Ингэхийн "
+"оронд архивлана уу."
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__signing_date
+#: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_request
+#: model_terms:ir.ui.view,arch_db:sign.signer_status_wrapper
+msgid "Signed on"
+msgstr "Гарын үсэг зурсан огноо"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__partner_id
+msgid "Signer"
+msgstr "Гарын үсэг зурагч"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/fields/signer_x2many.js:0
+msgid "Signer One 2 Many"
+msgstr "Гарын үсэг зурагч One 2 Many"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__request_item_ids
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__signer_ids
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
+msgid "Signers"
+msgstr "Гарын үсэг зурагчид"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__signers_count
+msgid "Signers Count"
+msgstr "Гарын үсэг зурсан хүний тоо"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/controllers/portal.py:0
+msgid "Signing Date"
+msgstr "Гарын үсэг зурсан огноо"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Signing Events"
+msgstr "Гарын үсэг зурсан үйлдэл"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__set_sign_order
+msgid "Signing Order"
+msgstr "Гарын үсэгний дараалал"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/js/tours/sign.js:0
+msgid ""
+"Since you're the one signing this document, you can do it directly within "
+"Odoo.<br>External users can use the link provided by email."
+msgstr ""
+"Энэ баримтад гарын үсэг зурах хүний нэг нь та учраас Odoo дотроос шууд гарын "
+"үсэг зурж болно.<br>Гадаад хэрэглэгчид бол имэйлээр ирсэн холбоосоор гарын "
+"үсэг зурна."
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/components/sign_request/signable_PDF_iframe.js:0
+msgid "Some fields have still to be completed"
+msgstr "Зарим талбаруудыг бөглөх дутуу хэвээр байна"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "Some required items are not filled"
+msgstr "Зарим заавал бөглөх талбарууд хоосон байна"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "Some unauthorised items are filled"
+msgstr "Зөвшөөрөөгүй талбарууд дээр мэдээлэл бөглөгдсөн байна"
+
+#. module: sign
+#. odoo-javascript
+#. odoo-python
+#: code:addons/sign/models/sign_template.py:0
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_body.js:0
+msgid "Somebody is already filling a document which uses this template"
+msgstr "Хэн нэгэн энэ үлгэрийг ашигладаг баримтыг аль хэдийн бөглөж байна"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/components/sign_request/signable_PDF_iframe.js:0
+msgid "Sorry, an error occurred, please try to fill the document again."
+msgstr "Уучлаарай, алдаа илэрсэн тул, баримтын дахин бөглөнө үү."
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sign_refusal_dialog.js:0
+msgid "Sorry, you cannot refuse this document"
+msgstr "Уучлаарай, та энэ баримтаас татгалзах боломжгүй"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_send_request__set_sign_order
+msgid ""
+"Specify the order for each signer. The signature request only gets sent "
+"to                                     the next signers in the sequence when "
+"all signers from the previous level have                                     "
+"signed the document.\n"
+"                                    "
+msgstr ""
+"Гарын үсэг зурагч бүрийн дарааллыг эндээс зааж өгнө. Өмнөх түвшний бүх гарын "
+"үсэг зурагч баримтад гарын үсэг зурсны дараа л дараагийн түвшний зурагчдад "
+"хүсэлт илгээгдэнэ.\n"
+"                                    "
+
+#. module: sign
+#: model:sign.item.role,name:sign.sign_item_role_default
+msgid "Standard"
+msgstr "Стандарт"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__state
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__state
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+msgid "State"
+msgstr "Төлөв"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_log__request_state
+msgid "State of the request on action log"
+msgstr "Хүсэлтийн төлөв (action log дээр)"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/controllers/portal.py:0
+#: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_requests
+msgid "Status"
+msgstr "Төлөв"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_request__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Ажилбаруудын төлөв байдал\n"
+"Хоцорсон: Гүйцэтгэх огноо нь аль хэдий нь өнгөрсөн\n"
+"Өнөөдөр: Өнөөдөр гүйцэтгэх ёстой\n"
+"Төлөвлөгдсөн: Ирээдүйд гүйцэтгэх ажилбарууд"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_kanban
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_tree
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_kanban
+msgid "Stop Sharing"
+msgstr "Хуваалцахыг болих"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__subject
+msgid "Subject"
+msgstr "Гарчиг"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_request
+msgid "Summary"
+msgstr "Хураангуй"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_template_tag__name
+msgid "Tag Name"
+msgstr "Пайзын нэр"
+
+#. module: sign
+#: model:ir.model.constraint,message:sign.constraint_sign_template_tag_name_uniq
+msgid "Tag name already exists!"
+msgstr "Пайзын нэр аль хэдийн үүссэн байна !"
+
+#. module: sign
+#: model:ir.actions.act_window,name:sign.sign_template_tag_action
+#: model:ir.model.fields,field_description:sign.field_sign_request__template_tags
+#: model:ir.model.fields,field_description:sign.field_sign_template__tag_ids
+#: model:ir.ui.menu,name:sign.sign_template_tag_menu
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_tree
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_tag_view_form
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_tag_view_tree
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_form
+msgid "Tags"
+msgstr "Пайз"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_top_bar.xml:0
+msgid "Tags:"
+msgstr "Пайз:"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_item_type__auto_field
+msgid ""
+"Technical name of the field on the partner model to auto-complete this "
+"signature field at the time of signature."
+msgstr ""
+"Гарын үсэг зурах үед энэ талбарыг автоматаар бөглөхөд ашиглах partner модел "
+"дээрх техникийн нэр."
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__template_id
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__template_id
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_kanban
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+msgid "Template"
+msgstr "Загвар"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_request/sign_request_control_panel.js:0
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_control_panel.js:0
+#: code:addons/sign/static/src/views/hooks.js:0
+msgid "Template %s"
+msgstr "Загвар %s"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_top_bar.xml:0
+msgid "Template Properties"
+msgstr "Загварын шинж чанарууд"
+
+#. module: sign
+#: model:ir.actions.server,name:sign.sign_template_tour_trigger_action
+msgid "Template Sample Contract.pdf trigger"
+msgstr "Contract.pdf бүхий жишээ загвар өдөөгч"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+msgid "Template or Tag"
+msgstr "Загвар эсвэл пайз"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+#: model:ir.actions.act_window,name:sign.sign_template_action
+#: model:ir.ui.menu,name:sign.sign_template_menu
+msgid "Templates"
+msgstr "Загвар"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_request
+msgid "Terms &amp; Conditions"
+msgstr "Нөхцөл &amp; журам"
+
+#. module: sign
+#: model:ir.model.fields.selection,name:sign.selection__res_company__sign_terms_type__html
+msgid "Terms as Web Page"
+msgstr "Хуудас бүр дээрх нөхцөл журам"
+
+#. module: sign
+#: model:ir.model.fields.selection,name:sign.selection__res_company__sign_terms_type__plain
+msgid "Terms in Email"
+msgstr "Имэйлийн нөхцөл журам"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_res_company__sign_terms_type
+#: model:ir.model.fields,help:sign.field_res_config_settings__sign_terms_type
+msgid ""
+"Terms in Email - The text will be displayed at the bottom of every signature "
+"request email.\n"
+"\n"
+"        Terms as Web Page - A link will be pasted at the bottom of every "
+"signature request email, leading to your content.\n"
+"        "
+msgstr ""
+"Web хуудсан дээрх нөхцөлүүд – Имэйлийн төгсгөлд холбоос хэлбэрээр орж, таны "
+"контент бүхий хуудсанд хэрэглэгчийг чиглүүлнэ.\n"
+"        "
+
+#. module: sign
+#: model:ir.model.fields.selection,name:sign.selection__sign_item_type__item_type__text
+#: model:sign.item.type,name:sign.sign_item_type_text
+#: model:sign.item.type,placeholder:sign.sign_item_type_text
+msgid "Text"
+msgstr "Текст"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/next_direct_sign_dialog.js:0
+msgid "Thank You!"
+msgstr "Баярлалаа!"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/js/tours/sign.js:0
+msgid ""
+"That's it, all done!<br>The document is signed, and a copy has been sent by "
+"email to all participants, along with a traceability report."
+msgstr ""
+"Ингээд боллоо!<br>Баримт гарын үсэгтэй болж дууссан бөгөөд хуулбар нь мөрдөх "
+"тайлангийн хамт бүх оролцогчдод илгээгдсэн."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.deleted_sign_request
+msgid ""
+"The Odoo Sign document you are trying to reach does not exist. The signature "
+"request might have been deleted or modified."
+msgstr ""
+"Таны нээх гэж буй Odoo Sign баримт олдсонгүй. Гарын үсэг зуруулах хүсэлт "
+"устгагдсан эсвэл өөрчлөгдсөн байх магадлалтай."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.encrypted_ask_password
+msgid "The PDF's password is required to generate the final document."
+msgstr ""
+"Баримтын эцсийн хувилбарыг гаргахын тулд PDF-ийн нууц үгийг оруулах "
+"шаардлагатай."
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid ""
+"The completed document cannot be created because the sign request is not "
+"fully signed"
+msgstr ""
+"Хүсэлт бүрэн гарын үсэгтэй болоогүй тул эцсийн баримтыг гаргаж чадсангүй"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid "The computation is based on the website"
+msgstr "Вебсайтанд үндэслэсэн тооцоолол"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid ""
+"The contact of %(role)s has been changed from %(old_partner)s to %"
+"(new_partner)s."
+msgstr ""
+"%(role)s холбоо барих этгээд нь %(old_partner)s байснаас %(new_partner)s "
+"болж өөрчлөгдсөн."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_completed
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_not_enough_credits
+msgid "The document"
+msgstr "Баримт"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "The document %s has been fully signed."
+msgstr "%s баримтанд бүх гарын үсэг зурагдсан."
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "The document (%s) has been rejected by one of the signers"
+msgstr "Гарын үсэг зурагчдын нэг нь уг баримтнаас (%s) татгалзсан"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sign_refusal_dialog.js:0
+msgid "The document has been refused"
+msgstr "Уг баримтыг түтгэлзүүллээ"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "The document has been signed by a signer and cannot be edited"
+msgstr "Уг баримтанд гарын үсэг зурагдсан тул өөрчлөх боломжгүй"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid ""
+"The final document and this completion history have been sent by email "
+"on&amp;nbsp;"
+msgstr ""
+"“Эцсийн баримт болон энэ гүйцэтгэлийн түүхийг дараах өдөр имэйл рүү "
+"илгээгдсэн&amp;nbsp;"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
+msgid ""
+"The integrity of the document's history cannot be verified. This could mean "
+"that signature values or the underlying PDF document may have been modified "
+"after the fact."
+msgstr ""
+"Баримтын үнэн байдалд баталгаа өгч чадахгүй. Энэ нь тухайн баримтынд гарын "
+"үсэг зурсаны дараа ямар нэг өөрчлөлт оруулсан байж болзошгүй гэсэн үг юм."
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/res_partner.py:0
+msgid ""
+"The mail address of %(partner)s has been updated. The request will be "
+"automatically resent."
+msgstr ""
+"%(partner)s -ын имэйл хаяг шинэчлэгдсэн. Гарын үсгийн хүсэлт автоматаар "
+"дахин илгээгдсэн."
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "The mail has been sent to contacts in copy: %(contacts)s"
+msgstr "Имэйлийн хуулбарт орсон дараах хүмүүст мессеж илгээгдлээ: %(contacts)s"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/controllers/terms.py:0
+msgid "The requested page is invalid, or doesn't exist anymore."
+msgstr "Гарын үсгийн хүсэлт дахь хуудас буруу, эсвэл алга болсон байна."
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_template.py:0
+msgid "The role %s is required by the Sign application and cannot be deleted."
+msgstr "Sign апп-д шаардлагатай %s дүргийг устгах боломжгүй."
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "The sign request has not been fully signed"
+msgstr "Гарын үсгийн хүсэлт бүрэн баталгаажсан"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/controllers/main.py:0
+msgid "The signature has been canceled by %(partner)s(%(role)s)"
+msgstr "%(partner)s(%(role)s) гарын үсгийн хүсэлтийг цуцалсан"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "The signature has been refused by %(partner)s(%(role)s)"
+msgstr "%(partner)s%(role)s гарын үсгийн хүсэлтийг түтгэлзүүлсэн"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "The signature mail has been sent to: "
+msgstr "Гарын үсгийн хүсэлт бүхий имэйл дараах руу илгээгдсэн: "
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_request_item__is_mail_sent
+msgid "The signature mail has been sent."
+msgstr "Гарын үсгийн хүсэлт имэйлээр илгээгдсэн."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.canceled_sign_request_item
+msgid "The signature request has been cancelled"
+msgstr "Гарын үсгийн хүсэлт цуцлагдсан"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "The signature request has been edited by: %s."
+msgstr "Гарын үсгийн хүсэлтийг засварласан: %s."
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_action.js:0
+msgid "The template doesn't exist anymore."
+msgstr "Загвар байхгүй болсон."
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/wizard/sign_duplicate_template_with_pdf.py:0
+msgid "The template has more pages than the current file, it can't be applied."
+msgstr ""
+"Одоогийн файлаас харахад загварын хуудасны тоо илүү байна. Тиймээс энэ "
+"загварыг ашиглах боломжгүй."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid ""
+"The total of sheets you saved is based on: the number of sent sign requests "
+"x number of sheets in the document x (number of contacts who need to sign + "
+"number of contacts in copy if the sign request is signed) = total of pages. "
+"We assume that one page weights 0.005 kilograms."
+msgstr ""
+"Таны хэмнэсэн цаасны хэмжээг дараах томъёогоор тооцсон байна:\n"
+"илгээсэн гарын үсгийн хүсэлтийн тоо × баримт бүрийн хуудсын тоо × (гарын "
+"үсэг зурах ёстой хүмүүсийн тоо + хүсэлт нь гарын үсэгтэй болсон үед хуулбарт "
+"орсон хүмүүсийн тоо) = нийт хуудасны тоо.\n"
+"Нэг хуудас цаасыг 0.005 кг жинтэй гэж тооцсон."
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/wizard/sign_duplicate_template_with_pdf.py:0
+msgid "The uploaded file is not a valid PDF. Please upload a valid PDF file."
+msgstr "Оруулсан файл тань зөв PDF биш байна. Зохих зөв PDF файл оруулна уу."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_requests
+msgid "There are no signatures request."
+msgstr "Гарын үсгийн хүсэлт одоогоор алга."
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/thank_you_dialog.xml:0
+msgid "There are other documents waiting for your signature:"
+msgstr "Таны гарын үсгийг хүлээж буй өөр баримтууд байсаар байна:"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid ""
+"There was an issue downloading your document. Please contact an "
+"administrator."
+msgstr "Таны баримтыг татаж авахад бэрхшээл тулгарлаа. Админд хандана уу."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_expired
+msgid ""
+"There's no reason to panic, <br/>\n"
+"                        you can still sign your document in a few clicks!"
+msgstr ""
+"Сандрах зүйл байхгүй, <br/>\n"
+"                                                       та уг баримтанд "
+"хэдхэн даралтаар гарын үсгээ зурах боломжтой хэвээр байна!"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/template_alert_dialog/template_alert_dialog.xml:0
+msgid "These files cannot be read, they may be corrupted or encrypted."
+msgstr ""
+"Эдгээр файлыг уншиж боломжгүй байна. Тэдгээр нь гэмтсэн эсвэл нууцлагдсан "
+"(encrypted) байж болзошгүй."
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/template_alert_dialog/template_alert_dialog.xml:0
+msgid "They will be removed from the uploaded files"
+msgstr "Дэвшүүлсэн файлуудаас эдгээрийг хасна"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "This function can only be called with sudo."
+msgstr "Энэ үйлдлийг зөвхөн sudo -р гүйцэтгэх боломжтой."
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_request__reference
+#: model:ir.model.fields,help:sign.field_sign_request_item__reference
+msgid "This is how the document will be named in the mail"
+msgstr "Баримтыг имэйл дотор ингэж нэрлэх болно"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_expired
+msgid "This link has expired."
+msgstr "Энэ холбоосын хугацаа дууссан."
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "This sign request cannot be refused"
+msgstr "Энэ гарын үсгийн хүсэлтээс татгалзах боломжгүй"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "This sign request cannot be signed"
+msgstr "Энэ гарын үсгийн хүсэлтийг баталгаажуулах боломжгүй"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "This sign request is not valid anymore"
+msgstr "Гарын үсгийн хүсэлт хүчин болсон байна"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "This sign request item cannot be filled"
+msgstr "Гарын үсгийн хүсэлтийн мөрийг бөглөх боломжгүй"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "This sign request item cannot be refused"
+msgstr "Гарын үсгийн хүсэлтийн мөрөөс татгалзах боломжгүй"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "This sign request item cannot be signed"
+msgstr "Гарын үсгийн хүсэлтийн мөрийг баталгаажуулах боломжгүй"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
+msgid ""
+"This will keep all the already completed signature of this request and "
+"disable every sent access, are you sure?"
+msgstr ""
+"Энэ үйлдлийг хийхэд, өмнө нь хийгдсэн бүх гарын үсгүүд хадгалагдана. Харин "
+"илгээгдсэн бүх хандалтыг идэвхгүй болгоно. Та үүнийг хийхдээ итгэлтэй байна "
+"уу?"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item_type__tip
+msgid "Tip"
+msgstr "Шан харамж"
+
+#. module: sign
+#: model:ir.model.fields.selection,name:sign.selection__sign_request__state__sent
+#: model:ir.model.fields.selection,name:sign.selection__sign_request_item__state__sent
+msgid "To Sign"
+msgstr "Гарын үсэг зурах"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid "To produce 1000 kg of wood, we have to cut 12 trees"
+msgstr "1000 кг мод үйлдвэрэхийн тулд, бид 12 мод тайрах хэрэгтэй болдог"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/controllers/portal.py:0
+msgid "To sign"
+msgstr "Гарын үсэг хүлээж буй"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+msgid "Today Activities"
+msgstr "Өнөөдрийн ажилбар"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item__transaction_id
+msgid "Transaction"
+msgstr "Гүйлгээ"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.canceled_sign_request_item
+#: model_terms:ir.ui.view,arch_db:sign.deleted_sign_request
+msgid "Try Odoo Sign"
+msgstr "Odoo-р орж гарын үсэг зурах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/views/helper/sign_action_helper.xml:0
+msgid "Try a sample contract"
+msgstr "Жишээ гэрээ ашиглах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/views/helper/sign_action_helper.xml:0
+#: model_terms:ir.actions.act_window,help:sign.sign_template_action
+msgid "Try our sample document"
+msgstr "Манай жишээ баримтыг ашиглах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/js/tours/sign.js:0
+msgid "Try out this sample contract."
+msgstr "Манай жишээ гэрээг ашиглаад үз."
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item__type_id
+#: model:ir.model.fields,field_description:sign.field_sign_item_type__item_type
+msgid "Type"
+msgstr "Төрөл"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/fields/signer_x2many.js:0
+msgid "Type a name or email..."
+msgstr "Нэр эсвэл имэйл оруулаарай..."
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_request__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Бичлэг дээрх асуудал бүхий ажилбарын төрөл"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_tag_view_form
+msgid "Type tag name here"
+msgstr "Пайзны нэрийг энд бичнэ"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "UTC"
+msgstr ""
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sms_signer_dialog.js:0
+msgid "Unable to send the SMS, please contact the sender of the document."
+msgstr "SMS илгээх боломжгүй, баримтыг илгээсэн эзэнтэй холбогдоно уу."
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/controllers/main.py:0
+msgid ""
+"Unable to sign the document due to missing required data. Please contact an "
+"administrator."
+msgstr ""
+"Заавал бөглөх өгөгдөл дутуу байгаа тул гарын үсэг зурах боломжгүй. Админтай "
+"холбогдоно уу."
+
+#. module: sign
+#: model:ir.model.fields.selection,name:sign.selection__sign_item_role__auth_method__sms
+msgid "Unique Code via SMS"
+msgstr "SMS бүхий нэг удаагийн код"
+
+#. module: sign
+#: model:ir.model.fields.selection,name:sign.selection__sign_log__action__update
+msgid "Update"
+msgstr "Шинэчлэлт"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/views/helper/sign_action_helper.xml:0
+msgid "Upload"
+msgstr "Оруулах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/views/common.xml:0
+msgid "Upload PDF"
+msgstr "PDF оруулах"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_template.py:0
+msgid "Upload a PDF"
+msgstr "PDF оруулах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/views/common.xml:0
+msgid "Upload a PDF & Sign"
+msgstr "PDF оруулж гарын үсэг зурах"
+
+#. module: sign
+#: model_terms:ir.actions.act_window,help:sign.sign_all_request_action
+#: model_terms:ir.actions.act_window,help:sign.sign_request_action
+msgid "Upload a PDF file or use an existing template to begin."
+msgstr "PDF файл оруулж эсвэл бэлэн загвараас ашиглаж эхэлнэ үү."
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/views/helper/sign_action_helper.xml:0
+msgid "Upload a PDF file to create a reusable template."
+msgstr "PDF файл оруулж дахин ашиглаж болох загвар үүсгэнэ үү."
+
+#. module: sign
+#: model_terms:ir.actions.act_window,help:sign.sign_template_action
+msgid "Upload a PDF file to create your first template"
+msgstr "PDF файл оруул эсвэл өөрийн загвараа үүсгээрэй"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/views/common.xml:0
+msgid "Upload a pdf that you want to sign directly"
+msgstr "Гарын үсэг зурах шаардлагатай PDF файлаа шууд оруулаарай"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_view_kanban
+msgid "Use Layout"
+msgstr "Хэв загвар ашиглах"
+
+#. module: sign
+#: model_terms:ir.actions.act_window,help:sign.sign_template_tag_action
+msgid "Use Tags to manage your Sign Templates and Sign Requests"
+msgstr "Гарын үсгийн загвар болон гарын үсгийн хүсэлтээ ялгах пайз ашиглаарай"
+
+#. module: sign
+#: model:ir.actions.act_window,name:sign.action_sign_duplicate_template_with_pdf
+msgid "Use the layout of fields on a new PDF"
+msgstr "Шинэ PDF дээ хэв загвар бүхий талбарууд ашиглаарай"
+
+#. module: sign
+#: model:ir.model,name:sign.model_res_users
+#: model:ir.model.fields,field_description:sign.field_sign_log__user_id
+#: model:sign.item.role,name:sign.sign_item_role_user
+msgid "User"
+msgstr "Хэрэглэгч"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_log__token
+msgid "User token"
+msgstr "Хэрэглэгчийн тасалбар"
+
+#. module: sign
+#: model:res.groups,name:sign.group_sign_user
+msgid "User: Own Templates"
+msgstr "Хэрэглэгч: Зөвхөн өөрийн загвар"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__validity
+#: model:ir.model.fields,field_description:sign.field_sign_send_request__validity
+msgid "Valid Until"
+msgstr "Хүчинтэй хугацаа"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_item_custom_popover.xml:0
+msgid "Validate"
+msgstr "Зөвшөөрөх"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/public_signer_dialog.xml:0
+msgid "Validate & Send"
+msgstr "Батлаад илгээх"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_request/edit_while_signing_signable_pdf_iframe.js:0
+msgid "Validate & the next signatory is “%s”"
+msgstr "Зөвшөөрөх & дараагийн гарын үсэг зурагч \"%s\""
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign._doc_sign
+msgid "Validate &amp; Send Completed Document"
+msgstr "Дууссан баримтыг батлаад илгээх"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sms_signer_dialog.xml:0
+msgid "Validation Code"
+msgstr "Батлах код"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request_item__sign_item_value_ids
+#: model:ir.model.fields,field_description:sign.field_sign_request_item_value__value
+msgid "Value"
+msgstr "Утга"
+
+#. module: sign
+#: model:ir.model.constraint,message:sign.constraint_sign_item_option_value_uniq
+msgid "Value already exists!"
+msgstr "Энэ утга аль хэдийнээ бүртгэгдсэн!"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sms_signer_dialog.xml:0
+msgid "Verify"
+msgstr "Батлах"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_request
+msgid "View Document"
+msgstr "Баримтыг харах"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_refused
+msgid "View document"
+msgstr "Баримтыг харах"
+
+#. module: sign
+#: model:ir.model.fields.selection,name:sign.selection__sign_log__action__open
+msgid "View/Download"
+msgstr "Харах/Татаж авах"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "Viewed/downloaded by"
+msgstr "Харсан/Татаж авсан"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+msgid "Waiting for me"
+msgstr "Намайг хүлээж буй"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+msgid "Waiting for others"
+msgstr "Бусдыг хүлээж буй"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/sign_template/sign_template_action.js:0
+#: code:addons/sign/static/src/components/sign_request/signable_PDF_iframe.js:0
+msgid "Warning"
+msgstr "Анхааруулга"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "Waste"
+msgstr "Хаягдал"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+msgid "Water"
+msgstr "Ус"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid ""
+"We can only send reminders in the future - as soon as we find a way to send "
+"reminders in the past we'll notify you.\n"
+"In the mean time, please make sure to input a positive number of days for "
+"the reminder interval."
+msgstr ""
+"Сануулагчийг зөвхөн ирээдүйд илгээж болно. Өнгөрсөн өдрүүдэд сануулга илгээх "
+"боломжгүй. Сануулгын өдрийг эерэг тоогоор оруулна уу."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.deleted_sign_request
+msgid "We couldn't find the signature request you're looking for!"
+msgstr "Таны хайж буй гарын үсгийн хүсэлтийг бид олсонгүй!"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid ""
+"We display to you a ratio based on the saved weight versus 1000 kg of paper "
+"usage."
+msgstr ""
+"Бид таньд 1000 кг цаас ашигласантай харьцуулсан, хэмнэсэн жинд суурилсан "
+"харьцааг үзүүлж байна."
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/next_direct_sign_dialog.xml:0
+msgid "We will send you this document by email once everyone has signed."
+msgstr ""
+"Бүгд гарын үсэг зурж дууссаны дараа бид тань руу уг баримтыг имэйлээр илгээх "
+"болно."
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sign_refusal_dialog.js:0
+msgid ""
+"We'll send an email to warn other contacts in copy & signers with the reason "
+"you provided."
+msgstr ""
+"Таны бичсэн шалтгааныг хавсаргаад, гарын үсэг зурах ёстой хүмүүс болон "
+"хуулбарт орсон бусад хүмүүст сануулах имэйл илгээнэ."
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__website_message_ids
+msgid "Website Messages"
+msgstr "Вебсайтын зурвас"
+
+#. module: sign
+#: model:ir.model.fields,help:sign.field_sign_request__website_message_ids
+msgid "Website communication history"
+msgstr "Вебсайтын харилцааны түүх"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/js/tours/sign.js:0
+msgid ""
+"Well done, your document is ready!<br>Let's send it to get our first "
+"signature."
+msgstr ""
+"Маш сайн байна, таны баримт бэлэн боллоо!<br>Одоо үүнийг илгээж гарын үсгээр "
+"баталгаажуулуулья."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid "What about those conversions I see?"
+msgstr "Би юун тухай харилцаа харж байна вэ?"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sign_refusal_dialog.xml:0
+msgid "Why do you refuse to sign this document?"
+msgstr "Та яагаад энэ баримтанд гарын үсэг зурахаас татгалзсан бэ?"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_item__width
+msgid "Width"
+msgstr "Өргөн"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "Wood"
+msgstr "Мод"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
+msgid "Write email or search contact..."
+msgstr "Имэйл хаягийг бичнэ үү эсвэл холбогчийг хайна уу..."
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/controllers/main.py:0
+msgid "Wrong password"
+msgstr "Нууц үг буруу"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "XYZ123456"
+msgstr ""
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.deleted_sign_request
+msgid ""
+"You can contact the person who invited you to sign the document by email for "
+"help."
+msgstr ""
+"Танд баримтад гарын үсэг зурахад тусламж хэрэгтэй бол танаас гарын үсэг "
+"хүсэлт илгээсэн хүнд имэйлаар холбогдож болно."
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "You can only add new items for the current role"
+msgstr "Та тухайн дүрд зөвхөн шинэ гарын үсгийн мөр үүсгэх боломжтой"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_expired
+msgid ""
+"You can request a new link to access your document and sign it, it will  be "
+"delivered in your inbox right away."
+msgstr ""
+"Баримтаа дахин нээж гарын үсэг зурахын тулд та шинэ холбоос хүсэж болно. "
+"Шинэ холбоос таны имэйлд шууд илгээгдэнэ."
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_template.py:0
+msgid ""
+"You can't delete a template for which signature requests exist but you can "
+"archive it instead."
+msgstr ""
+"Та гарын үсэг авах хүсэлттэй байгаа загварыг устгах боломжгүй, харин та "
+"архивлаж болно."
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "You cannot reassign this signatory"
+msgstr "Та энэ гарын үсэг зурагчыг дахин томилох боломжгүй"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_template.py:0
+msgid ""
+"You cannot share this document by link, because it has fields to be filled "
+"by different roles. Use Send button instead."
+msgstr ""
+"Энэ баримтыг линкээр хуваалцах боломжгүй, учир нь өөр өөр үүрэгтэй хүмүүс "
+"бөглөх ёстой талбаруудтай байна. Ийм үед ‘Илгээх’ товчийг ашиглана уу."
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/controllers/main.py:0
+msgid ""
+"You do not have access to these documents, please contact a Sign "
+"Administrator."
+msgstr "Та энэ баримтанд хандах эрхгүй байга, Гарын үсгийн админд хандана уу."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_refused
+msgid "You have refused the document"
+msgstr "Та уг баримтнаас татгалзлаа"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_request
+msgid "You have until"
+msgstr "Та уг баримтыг"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "You must specify one signer for each role of your sign template"
+msgstr ""
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "You need to define a signatory"
+msgstr "Та гарын үсэг зурагчыг тодорхойлох шаардлагатай"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "You should select at least one document to download."
+msgstr "Та татаж авах дор хаяж нэг баримт сонгох хэрэгтэй."
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/thank_you_dialog.js:0
+msgid "You will get the signed document by email."
+msgstr "Та гарын үсгээр баталгаасан баримтыг имэйлээр хүлээн авах болно."
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/thank_you_dialog.js:0
+msgid ""
+"You will get the signed document by email. You may also request a paper copy "
+"from the sender."
+msgstr ""
+"Та гарын үсгээр баталгаажсан баримтыг имэйлээ хүлээн авах болно. Мөн та "
+"гэрээний харилцагч талаас цаасан хувилбарыг хүлээн авах болно."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.canceled_sign_request_item
+msgid "You won't receive any notification for this signature request anymore."
+msgstr "Та энэхүү гарын үсгийн хүсэлтээс дахин ямар ч мэдэгдэл хүлээн авахгүй."
+
+#. module: sign
+#: model_terms:ir.actions.act_window,help:sign.sign_all_request_action
+#: model_terms:ir.actions.act_window,help:sign.sign_request_action
+#: model_terms:ir.actions.act_window,help:sign.sign_template_action
+msgid "You're one click away from automating your signature process!"
+msgstr ""
+"Гарын үсгийн үйл явцыг автоматжуулахад та ердөө нэг алхамын зайтай байна!"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_portal_my_request
+msgid "Your Information"
+msgstr "Таны мэдээлэл"
+
+#. module: sign
+#. odoo-python
+#: code:addons/sign/models/sign_request.py:0
+msgid "Your confirmation code is %s"
+msgstr "Таны баталгаажуулах код %s"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/public_signer_dialog.xml:0
+msgid "Your email"
+msgstr "Таны имэйл"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/encrypted_dialog.xml:0
+msgid ""
+"Your file is encrypted, PDF's password is required to generate final "
+"document. The final document will be encrypted with the same password."
+msgstr ""
+"Таны файл нууцлагдсан (encrypted), бэлэн болсон эцсийн файлыг үүсгэхэд PDF "
+"нууц үг шаардлагатай. Батлагдсан баримт бичиг нь encrypt-дсэн байх бөгөөд "
+"ижил нууц үгээр түгжигдсэн байх болно."
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/public_signer_dialog.xml:0
+msgid "Your name"
+msgstr "Таны нэр"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/next_direct_sign_dialog.xml:0
+msgid "Your signature has been saved. Next signatory is"
+msgstr "Таны гарын үсэг хадгалагдлаа. Дараагийн гарын үсэг зурагч нь"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/components/sign_request/signable_PDF_iframe.js:0
+msgid ""
+"Your signature was not submitted. Ensure the SMS validation code is correct."
+msgstr ""
+"Таны гарын үсэг хадгалагдсангүй. SMS баталгаажуулах код зөв эсэхийг нягтална "
+"уу."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_completed
+msgid "and"
+msgstr "ба"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/backend_components/template_alert_dialog/template_alert_dialog.xml:0
+msgid "and the process will continue"
+msgstr "бөгөөд үйл явц үргэлжлэх болно"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid "and:"
+msgstr "ба:"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_not_enough_credits
+msgid ""
+"because you don't have enough credits for this operation.\n"
+"                    The signatory was able to finish signing, but was not "
+"asked to authenticate fully."
+msgstr ""
+"учир нь энэ үйлдлийг хийхэд таны кредит хүрэлцэхгүй байна\n"
+"                                             Гарын үсэг зурах боломжтой "
+"хэвээрээ байгаа, гэхдээ танин баталгаажуулалт бүрэн хэрэгжихгүй."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "can"
+msgstr ""
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "cans"
+msgstr ""
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_request
+msgid "click here to cancel it."
+msgstr "энд дарж цуцална."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
+#: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
+msgid "days."
+msgstr "хоног."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "demo@email.com"
+msgstr ""
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sms_signer_dialog.xml:0
+msgid "e.g. +1 415 555 0100"
+msgstr ""
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/sms_signer_dialog.xml:0
+msgid "e.g. 314159"
+msgstr ""
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_item_role_view_form
+msgid "e.g. Employee"
+msgstr "ж.ш Ажилтан"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
+msgid "e.g. Non-disclosure agreement"
+msgstr "ж.ш нууц хадгалах гэрээ"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_form
+#: model_terms:ir.ui.view,arch_db:sign.sign_send_request_view_form
+msgid "every"
+msgstr "бүх"
+
+#. module: sign
+#: model:sign.item.type,tip:sign.sign_item_type_checkbox
+#: model:sign.item.type,tip:sign.sign_item_type_company
+#: model:sign.item.type,tip:sign.sign_item_type_date
+#: model:sign.item.type,tip:sign.sign_item_type_email
+#: model:sign.item.type,tip:sign.sign_item_type_multiline_text
+#: model:sign.item.type,tip:sign.sign_item_type_name
+#: model:sign.item.type,tip:sign.sign_item_type_phone
+#: model:sign.item.type,tip:sign.sign_item_type_radio
+#: model:sign.item.type,tip:sign.sign_item_type_text
+msgid "fill in"
+msgstr "бөглөх"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_completed
+msgid "has been completed and signed by"
+msgstr "нь дуусаж, гарын үсэг зурагдсан болно"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_completed
+msgid "has been edited, completed and signed by"
+msgstr "нь засварлагдсан ба, гарын үсэг зурагдсан болно"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_not_enough_credits
+msgid "has been signed by"
+msgstr "гарын үсэг зурагдсан"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "hour of computer use"
+msgstr "цагийн компьютерийн хэрэглээ"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "hours of computer use"
+msgstr "цагийн компьютерийн хэрэглээ"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid "https://c.environmentalpaper.org/"
+msgstr ""
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "ip"
+msgstr ""
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/thank_you_dialog.xml:0
+msgid "is free, forever, with unlimited users - and it's fun to use!"
+msgstr ""
+"үнэгүй, байнга ашиглаж болох, хэрэглэгчийн хязгаарлалтгүй - мөн хэрэглэгэх "
+"зугаатай шүү!"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "john@example.com"
+msgstr ""
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "kWh of energy saved"
+msgstr "kWh инерги хэмнэгдсэн"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "kg of reduced carbon emissions"
+msgstr "кг-р нүүрс төрөгч ялгаруулалт буурсан"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "kg of waste prevented"
+msgstr "кг хог хаягдалаас сэргийлсэн"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "kg of wood saved"
+msgstr "кг мод тасдахаас аварсан"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "liter of car fuel"
+msgstr "литр машины шатахуун"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "liters of car fuel"
+msgstr "литр машины шатахуун"
+
+#. module: sign
+#: model:sign.item.type,tip:sign.sign_item_type_initial
+msgid "mark it"
+msgstr "тэмдэглэ"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/components/sign_request/signable_PDF_iframe.js:0
+msgid "next"
+msgstr "дараах"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/dialogs/thank_you_dialog.xml:0
+msgid "on"
+msgstr "дээр"
+
+#. module: sign
+#. odoo-javascript
+#: code:addons/sign/static/src/views/helper/sign_action_helper.xml:0
+msgid "or"
+msgstr "эсвэл"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "sheets of paper saved"
+msgstr "хуудас цаас хэмнэгдсэн"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "shower"
+msgstr "шүршүүр"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "showers"
+msgstr "шүршүүр"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_tree
+msgid "sign"
+msgstr "гарын үсэг"
+
+#. module: sign
+#: model:sign.item.type,tip:sign.sign_item_type_signature
+msgid "sign it"
+msgstr "гарын үсэг зурах"
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__message
+msgid "sign.message"
+msgstr ""
+
+#. module: sign
+#: model:ir.model.fields,field_description:sign.field_sign_request__message_cc
+msgid "sign.message_cc"
+msgstr ""
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_view_search
+msgid "tags"
+msgstr ""
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_el
+#: model_terms:ir.ui.view,arch_db:sign.green_report_el_pdf
+msgid "that's"
+msgstr ""
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_request
+msgid "to sign the document."
+msgstr "хүртэл хугацаанд амжиж гарын үсгээ зураарай."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_request_logs_user
+msgid "to:"
+msgstr "хүртэл:"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "tree"
+msgstr "мод"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container
+#: model_terms:ir.ui.view,arch_db:sign.green_report_container_pdf
+msgid "trees"
+msgstr "мод"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_savings_report
+msgid "we've got a list of consumption for 1000 kg of paper usage."
+msgstr "бидэн 1000 кг хуудас цаасанд зарцуулагддаг зүйлсийн жагсаалт бий."
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_not_enough_credits
+msgid "without the requested extra-authentification step ("
+msgstr "нэмэлт эрх баталгаажуулалт шаардах алхамгүйгээр ("
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.sign_template_mail_completed
+msgid "you"
+msgstr "та"
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_el
+#: model_terms:ir.ui.view,arch_db:sign.green_report_el_pdf
+msgid "{{green_report_el_title}}"
+msgstr ""
+
+#. module: sign
+#: model_terms:ir.ui.view,arch_db:sign.green_report_el
+#: model_terms:ir.ui.view,arch_db:sign.green_report_el_pdf
+msgid "{{green_report_el_title}} Summary"
+msgstr "{{green_report_el_title}} Товчоо"

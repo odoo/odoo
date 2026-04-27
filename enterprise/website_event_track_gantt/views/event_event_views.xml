@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="event_event_view_form" model="ir.ui.view">
+        <field name="name">event.event.view.form.inherit.enterprise</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='track_count']/.." position='replace'>
+                <field name="track_gantt_initial_date" invisible="1"/>
+                <field name="track_gantt_scale" invisible="1"/>
+                <button
+                    name="%(website_event_track.action_event_track_from_event)d"
+                    type="action"
+                    class="oe_stat_button"
+                    icon="fa-microphone"
+                    context="{'initialDate': track_gantt_initial_date, 'default_scale': track_gantt_scale}">
+                    <field name="track_count" string="Tracks" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

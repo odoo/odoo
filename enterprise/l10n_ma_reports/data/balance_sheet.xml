@@ -1,0 +1,1854 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_financial_report_bs" model="account.report">
+        <field name="name">Balance Sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.ma"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_bs_column_gross" model="account.report.column">
+                <field name="name">Gross</field>
+                <field name="expression_label">gross</field>
+            </record>
+            <record id="account_financial_report_bs_column_depr_prov" model="account.report.column">
+                <field name="name">Depr - Prov</field>
+                <field name="expression_label">depr_prov</field>
+            </record>
+            <record id="account_financial_report_bs_column_net" model="account.report.column">
+                <field name="name">Net</field>
+                <field name="expression_label">net</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_bs_a" model="account.report.line">
+                <field name="name">ACTIVE</field>
+                <field name="code">MA_BS_A</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_bs_a_i" model="account.report.line">
+                        <field name="name">NON-CURRENT ASSETS</field>
+                        <field name="code">MA_BS_A_I</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_bs_a_i_a" model="account.report.line">
+                                <field name="name">Non-Value Non-Current Assets (A)</field>
+                                <field name="code">MA_BS_A_I_A</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_a_i_a_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_I_A_SUC.gross + MA_BS_A_I_A_DESY.gross + MA_BS_A_I_A_BRP.gross</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_a_depr_prov" model="account.report.expression">
+                                        <field name="label">depr_prov</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_I_A_SUC.depr_prov + MA_BS_A_I_A_DESY.depr_prov + MA_BS_A_I_A_BRP.depr_prov</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_a_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_I_A_SUC.net + MA_BS_A_I_A_DESY.net + MA_BS_A_I_A_BRP.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_a_i_a_suc" model="account.report.line">
+                                        <field name="name">Start-Up Costs</field>
+                                        <field name="code">MA_BS_A_I_A_SUC</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_a_suc_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">211</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_a_suc_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2811</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_a_suc_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">211 + 2811</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_a_desy" model="account.report.line">
+                                        <field name="name">Deferred Expenses over Several Years</field>
+                                        <field name="code">MA_BS_A_I_A_DESY</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_a_desy_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">212</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_a_desy_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2812</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_a_desy_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">212 + 2812</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_a_brp" model="account.report.line">
+                                        <field name="name">Bond Redemption Premiums</field>
+                                        <field name="code">MA_BS_A_I_A_BRP</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_a_brp_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">213</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_a_brp_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2813</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_a_brp_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">213 + 2813</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_a_i_b" model="account.report.line">
+                                <field name="name">Intangible Non-Current Assets (B)</field>
+                                <field name="code">MA_BS_A_I_B</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_a_i_b_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_I_B_NCARD.gross + MA_BS_A_I_B_PTRSA.gross + MA_BS_A_I_B_CF.gross + MA_BS_A_I_B_OINCA.gross</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_b_depr_prov" model="account.report.expression">
+                                        <field name="label">depr_prov</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_I_B_NCARD.depr_prov + MA_BS_A_I_B_PTRSA.depr_prov + MA_BS_A_I_B_CF.depr_prov + MA_BS_A_I_B_OINCA.depr_prov</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_b_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_I_B_NCARD.net + MA_BS_A_I_B_PTRSA.net + MA_BS_A_I_B_CF.net + MA_BS_A_I_B_OINCA.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_a_i_b_ncard" model="account.report.line">
+                                        <field name="name">Non-Current Assets in Research and Development</field>
+                                        <field name="code">MA_BS_A_I_B_NCARD</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_b_ncard_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">221</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_b_ncard_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2821</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_b_ncard_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">221 + 2821</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_b_ptrsa" model="account.report.line">
+                                        <field name="name">Patents, Trademarks, Rights and Similar Assets</field>
+                                        <field name="code">MA_BS_A_I_B_PTRSA</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_b_ptrsa_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">222</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_b_ptrsa_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2822</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_b_ptrsa_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">222 + 2822</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_b_cf" model="account.report.line">
+                                        <field name="name">Commercial Funds</field>
+                                        <field name="code">MA_BS_A_I_B_CF</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_b_cf_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">223</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_b_cf_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2823</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_b_cf_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">223 + 2823</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_b_oinca" model="account.report.line">
+                                        <field name="name">Other Intangible Non-Current Assets</field>
+                                        <field name="code">MA_BS_A_I_B_OINCA</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_b_oinca_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">228</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_b_oinca_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2828 - 292</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_b_oinca_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">228 + 2828 + 292</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_a_i_c" model="account.report.line">
+                                <field name="name">Tangible Non-Current Assets (C)</field>
+                                <field name="code">MA_BS_A_I_C</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_a_i_c_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_I_C_L.gross + MA_BS_A_I_C_C.gross + MA_BS_A_I_C_TIET.gross + MA_BS_A_I_C_TE.gross + MA_BS_A_I_C_FOEMA.gross + MA_BS_A_I_C_OTNCA.gross + MA_BS_A_I_C_TNCAP.gross</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_c_depr_prov" model="account.report.expression">
+                                        <field name="label">depr_prov</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_I_C_L.gross + MA_BS_A_I_C_C.depr_prov + MA_BS_A_I_C_TIET.depr_prov + MA_BS_A_I_C_TE.depr_prov + MA_BS_A_I_C_FOEMA.depr_prov + MA_BS_A_I_C_OTNCA.depr_prov</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_c_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_I_C_L.net + MA_BS_A_I_C_C.net + MA_BS_A_I_C_TIET.net + MA_BS_A_I_C_TE.net + MA_BS_A_I_C_FOEMA.net + MA_BS_A_I_C_OTNCA.net + MA_BS_A_I_C_TNCAP.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_a_i_c_l" model="account.report.line">
+                                        <field name="name">Land</field>
+                                        <field name="code">MA_BS_A_I_C_L</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_c_l_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">231</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_c_l_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2831</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_c_l_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">231 + 2831</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_c_c" model="account.report.line">
+                                        <field name="name">Constructions</field>
+                                        <field name="code">MA_BS_A_I_C_C</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_c_c_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">232</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_c_c_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2832</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_c_c_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">232 + 2832</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_c_tiet" model="account.report.line">
+                                        <field name="name">Technical Installations, Equipment and Tools</field>
+                                        <field name="code">MA_BS_A_I_C_TIET</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_c_tiet_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">233</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_c_tiet_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2833</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_c_tiet_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">233 + 2833</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_c_te" model="account.report.line">
+                                        <field name="name">Transport Equipment</field>
+                                        <field name="code">MA_BS_A_I_C_TE</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_c_te_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">234</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_c_te_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2834</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_c_te_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">234 + 2834</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_c_foema" model="account.report.line">
+                                        <field name="name">Furniture, Office Equipment, Miscellaneous Amenities</field>
+                                        <field name="code">MA_BS_A_I_C_FOEMA</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_c_foema_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">235</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_c_foema_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2835</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_c_foema_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">235 + 2835</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_c_otnca" model="account.report.line">
+                                        <field name="name">Other Tangible Non-Current Assets</field>
+                                        <field name="code">MA_BS_A_I_C_OTNCA</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_c_otnca_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">238</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_c_otnca_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2838 - 293</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_c_otnca_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">238 + 2838 + 293</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_c_tncap" model="account.report.line">
+                                        <field name="name">Tangible Non-Current Assets in Progress</field>
+                                        <field name="code">MA_BS_A_I_C_TNCAP</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_c_tncap_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">239</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_c_tncap_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">239</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_a_i_d" model="account.report.line">
+                                <field name="name">Financial Non-Current Assets (D)</field>
+                                <field name="code">MA_BS_A_I_D</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_a_i_d_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_I_D_NCL.gross + MA_BS_A_I_D_OFR.gross + MA_BS_A_I_D_ES.gross + MA_BS_A_I_D_OLTS.gross</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_d_depr_prov" model="account.report.expression">
+                                        <field name="label">depr_prov</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_I_D_NCL.depr_prov + MA_BS_A_I_D_OFR.depr_prov + MA_BS_A_I_D_ES.depr_prov + MA_BS_A_I_D_OLTS.depr_prov</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_d_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_I_D_NCL.net + MA_BS_A_I_D_OFR.net + MA_BS_A_I_D_ES.net + MA_BS_A_I_D_OLTS.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_a_i_d_ncl" model="account.report.line">
+                                        <field name="name">Non-Current Loans</field>
+                                        <field name="code">MA_BS_A_I_D_NCL</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_d_ncl_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">241</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_d_ncl_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2941</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_d_ncl_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">241 + 2941</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_d_ofr" model="account.report.line">
+                                        <field name="name">Other Financial Receivables</field>
+                                        <field name="code">MA_BS_A_I_D_OFR</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_d_ofr_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">248</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_d_ofr_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2948</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_d_ofr_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">248 + 2948</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_d_es" model="account.report.line">
+                                        <field name="name">Equity Securities</field>
+                                        <field name="code">MA_BS_A_I_D_ES</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_d_es_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">251</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_d_es_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2951</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_d_es_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">251 + 2951</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_d_olts" model="account.report.line">
+                                        <field name="name">Other Long-Term Securities</field>
+                                        <field name="code">MA_BS_A_I_D_OLTS</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_d_olts_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">258</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_d_olts_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2958</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_d_olts_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">258 + 2958</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_a_i_e" model="account.report.line">
+                                <field name="name">Foreign Exchange Assets (E)</field>
+                                <field name="code">MA_BS_A_I_E</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_a_i_e_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_I_E_DNCA.gross + MA_BS_A_I_E_IFL.gross</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_e_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_I_E_DNCA.net + MA_BS_A_I_E_IFL.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_a_i_e_dnca" model="account.report.line">
+                                        <field name="name">Decrease in Non-Current Assets</field>
+                                        <field name="code">MA_BS_A_I_E_DNCA</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_e_dnca_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">271</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_e_dnca_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">271</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_e_ifl" model="account.report.line">
+                                        <field name="name">Increase in Financing Liabilities</field>
+                                        <field name="code">MA_BS_A_I_E_IFL</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_i_e_ifl_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">272</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_i_e_ifl_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">272</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_a_i_total" model="account.report.line">
+                                <field name="name">Total I (A+B+C+D+E)</field>
+                                <field name="code">MA_BS_A_I_TOTAL</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_a_i_total_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_I_A.gross + MA_BS_A_I_B.gross + MA_BS_A_I_C.gross + MA_BS_A_I_D.gross + MA_BS_A_I_E.gross</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_total_depr_prov" model="account.report.expression">
+                                        <field name="label">depr_prov</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_I_A.depr_prov + MA_BS_A_I_B.depr_prov + MA_BS_A_I_C.depr_prov + MA_BS_A_I_D.depr_prov</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_i_total_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_I_A.net + MA_BS_A_I_B.net + MA_BS_A_I_C.net + MA_BS_A_I_D.net + MA_BS_A_I_E.net</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_bs_a_ii" model="account.report.line">
+                        <field name="name">CURRENT ASSETS</field>
+                        <field name="code">MA_BS_A_II</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_bs_a_ii_f" model="account.report.line">
+                                <field name="name">Inventories (F)</field>
+                                <field name="code">MA_BS_A_II_F</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_a_ii_f_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_II_F_G.gross + MA_BS_A_II_F_CMS.gross + MA_BS_A_II_F_PP.gross + MA_BS_A_II_F_IRP.gross + MA_BS_A_II_F_FP.gross</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_f_depr_prov" model="account.report.expression">
+                                        <field name="label">depr_prov</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_II_F_G.depr_prov + MA_BS_A_II_F_CMS.depr_prov + MA_BS_A_II_F_PP.depr_prov + MA_BS_A_II_F_IRP.depr_prov + MA_BS_A_II_F_FP.depr_prov</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_f_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_II_F_G.net + MA_BS_A_II_F_CMS.net + MA_BS_A_II_F_PP.net + MA_BS_A_II_F_IRP.net + MA_BS_A_II_F_FP.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_a_ii_f_g" model="account.report.line">
+                                        <field name="name">Goods</field>
+                                        <field name="code">MA_BS_A_II_F_G</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_ii_f_g_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">311</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_f_g_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-3911</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_f_g_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">311 + 3911</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_f_cms" model="account.report.line">
+                                        <field name="name">Consumable Materials and Supplies</field>
+                                        <field name="code">MA_BS_A_II_F_CMS</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_ii_f_cms_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">312</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_f_cms_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-3912</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_f_cms_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">312 + 3912</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_f_pp" model="account.report.line">
+                                        <field name="name">Products in Progress</field>
+                                        <field name="code">MA_BS_A_II_F_PP</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_ii_f_pp_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">313</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_f_pp_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-3913</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_f_pp_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">313 + 3913</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_f_irp" model="account.report.line">
+                                        <field name="name">Intermediary and Residual Products</field>
+                                        <field name="code">MA_BS_A_II_F_IRP</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_ii_f_irp_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">314</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_f_irp_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-3914</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_f_irp_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">314 + 3914</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_f_fp" model="account.report.line">
+                                        <field name="name">Finished Products</field>
+                                        <field name="code">MA_BS_A_II_F_FP</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_ii_f_fp_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">315</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_f_fp_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-3915</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_f_fp_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">315 + 3915</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_a_ii_g" model="account.report.line">
+                                <field name="name">Receivables From Current Assets (G)</field>
+                                <field name="code">MA_BS_A_II_G</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_a_ii_g_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_II_G_SRADP.gross + MA_BS_A_II_G_CRA.gross + MA_BS_A_II_G_P.gross + MA_BS_A_II_G_G.gross + MA_BS_A_II_G_PA.gross + MA_BS_A_II_G_OR.gross + MA_BS_A_II_G_ADA.gross + MA_BS_A_II_G_SLA.gross</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_g_depr_prov" model="account.report.expression">
+                                        <field name="label">depr_prov</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_II_G_SRADP.depr_prov + MA_BS_A_II_G_CRA.depr_prov + MA_BS_A_II_G_P.depr_prov + MA_BS_A_II_G_PA.depr_prov + MA_BS_A_II_G_OR.depr_prov</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_g_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_II_G_SRADP.net + MA_BS_A_II_G_CRA.net + MA_BS_A_II_G_P.net + MA_BS_A_II_G_G.net + MA_BS_A_II_G_PA.net + MA_BS_A_II_G_OR.net + MA_BS_A_II_G_ADA.net + MA_BS_A_II_G_SLA.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_a_ii_g_sradp" model="account.report.line">
+                                        <field name="name">Supplier Receivables, Advances and Down Payments</field>
+                                        <field name="code">MA_BS_A_II_G_SRADP</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_ii_g_sradp_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">341</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_g_sradp_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-3941</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_g_sradp_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">341 + 3941</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_g_cra" model="account.report.line">
+                                        <field name="name">Customers and Related Accounts</field>
+                                        <field name="code">MA_BS_A_II_G_CRA</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_ii_g_cra_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">342</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_g_cra_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-3942</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_g_cra_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">342 + 3942</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_g_p" model="account.report.line">
+                                        <field name="name">Personnel</field>
+                                        <field name="code">MA_BS_A_II_G_P</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_ii_g_p_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">343</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_g_p_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-3943</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_g_p_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">343 + 3943</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_g_g" model="account.report.line">
+                                        <field name="name">Government</field>
+                                        <field name="code">MA_BS_A_II_G_G</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_ii_g_g_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">345</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_g_g_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">345</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_g_pa" model="account.report.line">
+                                        <field name="name">Partner Accounts</field>
+                                        <field name="code">MA_BS_A_II_G_PA</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_ii_g_pa_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">346</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_g_pa_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-3946</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_g_pa_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">346 + 3946</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_g_or" model="account.report.line">
+                                        <field name="name">Other Receivables</field>
+                                        <field name="code">MA_BS_A_II_G_OR</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_ii_g_or_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">348</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_g_or_depr_prov" model="account.report.expression">
+                                                <field name="label">depr_prov</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-3948</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_g_or_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">348 + 3948</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_g_ada" model="account.report.line">
+                                        <field name="name">Accruals and Deferrals - Assets</field>
+                                        <field name="code">MA_BS_A_II_G_ADA</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_ii_g_ada_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">349</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_g_ada_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">349</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_g_sla" model="account.report.line">
+                                        <field name="name">Subsidiaries' Liaison Accounts</field>
+                                        <field name="code">MA_BS_A_II_G_SLA</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_ii_g_sla_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1605</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_ii_g_sla_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1605</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_a_ii_h" model="account.report.line">
+                                <field name="name">Securities and Investment Assets (H)</field>
+                                <field name="code">MA_BS_A_II_H</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_a_ii_h_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">35</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_h_depr_prov" model="account.report.expression">
+                                        <field name="label">depr_prov</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-395</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_h_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">35 + 395</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_a_ii_i" model="account.report.line">
+                                <field name="name">Foreign Exchange Assets (I)</field>
+                                <field name="code">MA_BS_A_II_I</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_a_ii_i_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">37</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_i_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">37</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_a_ii_total" model="account.report.line">
+                                <field name="name">Total II (F+G+H+I)</field>
+                                <field name="code">MA_BS_A_II_TOTAL</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_a_ii_total_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_II_F.gross + MA_BS_A_II_G.gross + MA_BS_A_II_H.gross + MA_BS_A_II_I.gross</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_total_depr_prov" model="account.report.expression">
+                                        <field name="label">depr_prov</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_II_F.depr_prov + MA_BS_A_II_G.depr_prov + MA_BS_A_II_H.depr_prov</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_ii_total_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_II_F.net + MA_BS_A_II_G.net + MA_BS_A_II_H.net + MA_BS_A_II_I.net</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_bs_a_iii" model="account.report.line">
+                        <field name="name">CASH</field>
+                        <field name="code">MA_BS_A_III</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_bs_a_iii_j" model="account.report.line">
+                                <field name="name">Cash - Assets</field>
+                                <field name="code">MA_BS_A_III_J</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_a_iii_j_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_III_J_CSC.gross + MA_BS_A_III_J_BGTPCA.gross + MA_BS_A_III_J_CIALC.gross</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_iii_j_depr_prov" model="account.report.expression">
+                                        <field name="label">depr_prov</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-59</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_iii_j_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_III_J.gross - MA_BS_A_III_J.depr_prov</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_a_iii_j_csc" model="account.report.line">
+                                        <field name="name">Cheques and Securities to be Cashed</field>
+                                        <field name="code">MA_BS_A_III_J_CSC</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_iii_j_csc_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">511</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_iii_j_csc_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">511</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_iii_j_bgtpca" model="account.report.line">
+                                        <field name="name">Bank, General Treasury and Postal Current Account</field>
+                                        <field name="code">MA_BS_A_III_J_BGTPCA</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_iii_j_bgtpca_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">514</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_iii_j_bgtpca_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">514</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_iii_j_cialc" model="account.report.line">
+                                        <field name="name">Cash, Imprest Accounts and Letters of Credit</field>
+                                        <field name="code">MA_BS_A_III_J_CIALC</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_a_iii_j_cialc_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">516</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_a_iii_j_cialc_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">516</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_a_iii_total" model="account.report.line">
+                                <field name="name">Total III</field>
+                                <field name="code">MA_BS_A_III_TOTAL</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_a_iii_total_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_III_J.gross</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_iii_total_depr_prov" model="account.report.expression">
+                                        <field name="label">depr_prov</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_III_J.depr_prov</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_a_iii_total_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_A_III_J.net</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_bs_a_total" model="account.report.line">
+                        <field name="name">TOTAL ACTIVE (I + II + III)</field>
+                        <field name="code">MA_BS_A_TOTAL</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_bs_a_total_gross" model="account.report.expression">
+                                <field name="label">gross</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_BS_A_I_TOTAL.gross + MA_BS_A_II_TOTAL.gross + MA_BS_A_III_TOTAL.gross</field>
+                            </record>
+                            <record id="account_financial_report_bs_a_total_depr_prov" model="account.report.expression">
+                                <field name="label">depr_prov</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_BS_A_I_TOTAL.depr_prov + MA_BS_A_II_TOTAL.depr_prov + MA_BS_A_III_TOTAL.depr_prov</field>
+                            </record>
+                            <record id="account_financial_report_bs_a_total_net" model="account.report.expression">
+                                <field name="label">net</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_BS_A_I_TOTAL.net + MA_BS_A_II_TOTAL.net + MA_BS_A_III_TOTAL.net</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_bs_p" model="account.report.line">
+                <field name="name">PASSIVE</field>
+                <field name="code">MA_BS_P</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_bs_p_i" model="account.report.line">
+                        <field name="name">PERMANENT FUNDING</field>
+                        <field name="code">MA_BS_P_I</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_bs_p_i_a" model="account.report.line">
+                                <field name="name">Shareholders' Equity (A)</field>
+                                <field name="code">MA_BS_P_I_A</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_p_i_a_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_P_I_A_CPC.net + MA_BS_P_I_A_SMCP.net + MA_BS_P_I_A_RD.net + MA_BS_P_I_A_LR.net + MA_BS_P_I_A_OR.net + MA_BS_P_I_A_RR.net + MA_BS_P_I_A_RPA.net + MA_BS_P_I_A_NRFY.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_p_i_a_cpc" model="account.report.line">
+                                        <field name="name">Corporate or Personal Capital</field>
+                                        <field name="code">MA_BS_P_I_A_CPC</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_i_a_cpc_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-111</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_i_a_cpc_lsusc" model="account.report.line">
+                                        <field name="name">Less: Shareholders, Uncalled Subscribed Capital</field>
+                                        <field name="code">MA_BS_P_I_A_CPC_LSUSC</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_i_a_cpc_lsusc_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-1119</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_i_a_cpc_pic" model="account.report.line">
+                                        <field name="name">Paid-In Capital</field>
+                                        <field name="code">MA_BS_P_I_A_CPC_PIC</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_i_a_cpc_pic_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-111 + 1119</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_i_a_smcp" model="account.report.line">
+                                        <field name="name">Share, Merger and Contribution Premiums</field>
+                                        <field name="code">MA_BS_P_I_A_SMCP</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_i_a_smcp_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-112</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_i_a_rd" model="account.report.line">
+                                        <field name="name">Revaluation Differences</field>
+                                        <field name="code">MA_BS_P_I_A_RD</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_i_a_rd_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-113</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_i_a_lr" model="account.report.line">
+                                        <field name="name">Legal Reserve</field>
+                                        <field name="code">MA_BS_P_I_A_LR</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_i_a_lr_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-114</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_i_a_or" model="account.report.line">
+                                        <field name="name">Other Reserves</field>
+                                        <field name="code">MA_BS_P_I_A_OR</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_i_a_or_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-115</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_i_a_rr" model="account.report.line">
+                                        <field name="name">Retained Result</field>
+                                        <field name="code">MA_BS_P_I_A_RR</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_i_a_rr_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-116</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_i_a_rpa" model="account.report.line">
+                                        <field name="name">Result Pending Allocation</field>
+                                        <field name="code">MA_BS_P_I_A_RPA</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_i_a_rpa_net_pend" model="account.report.expression">
+                                                <field name="label">net_pend</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.internal_group', 'in', ('income', 'expense'))]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_p_i_a_rpa_affected" model="account.report.expression">
+                                                <field name="label">affected</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.account_type', '=', 'equity_unaffected')]"/>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_p_i_a_rpa_net_bs" model="account.report.expression">
+                                                <field name="label">net_bs</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-118</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_p_i_a_rpa_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">MA_BS_P_I_A_RPA.net_pend + MA_BS_P_I_A_RPA.net_bs + MA_BS_P_I_A_RPA.affected</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_i_a_nrfy" model="account.report.line">
+                                        <field name="name">Net Result for the Fiscal Year</field>
+                                        <field name="code">MA_BS_P_I_A_NRFY</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_i_a_nrfy_net_pl" model="account.report.expression">
+                                                <field name="label">net_pl</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">MA_PL_XVI.cur_tot</field>
+                                                <field name="subformula">cross_report</field>
+                                                <field name="date_scope">from_fiscalyear</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_p_i_a_nrfy_net_bs" model="account.report.expression">
+                                                <field name="label">net_bs</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-119</field>
+                                            </record>
+                                            <record id="account_financial_report_bs_p_i_a_nrfy_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">MA_BS_P_I_A_NRFY.net_pl + MA_BS_P_I_A_NRFY.net_bs</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_p_i_b" model="account.report.line">
+                                <field name="name">Related Shareholders' Equity (B)</field>
+                                <field name="code">MA_BS_P_I_B</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_p_i_b_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_P_I_B_IG.net + MA_BS_P_I_B_RP.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_p_i_b_ig" model="account.report.line">
+                                        <field name="name">Investment Grants</field>
+                                        <field name="code">MA_BS_P_I_B_IG</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_i_b_ig_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-131</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_i_b_rp" model="account.report.line">
+                                        <field name="name">Regulated Provisions</field>
+                                        <field name="code">MA_BS_P_I_B_RP</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_i_b_rp_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-135</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_p_i_c" model="account.report.line">
+                                <field name="name">Financial Debts (C)</field>
+                                <field name="code">MA_BS_P_I_C</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_p_i_c_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_P_I_C_BL.net + MA_BS_P_I_C_OFL.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_p_i_c_bl" model="account.report.line">
+                                        <field name="name">Bond Loans</field>
+                                        <field name="code">MA_BS_P_I_C_BL</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_i_c_bl_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-141</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_i_c_ofl" model="account.report.line">
+                                        <field name="name">Other Financial Liabilities</field>
+                                        <field name="code">MA_BS_P_I_C_OFL</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_i_c_ofl_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-148</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_p_i_d" model="account.report.line">
+                                <field name="name">Long-Term Provisions for Risks and Expenses (D)</field>
+                                <field name="code">MA_BS_P_I_D</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_p_i_d_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_P_I_D_PR.net + MA_BS_P_I_D_PE.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_p_i_d_pr" model="account.report.line">
+                                        <field name="name">Provisions for Risks</field>
+                                        <field name="code">MA_BS_P_I_D_PR</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_i_d_pr_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-151</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_i_d_pe" model="account.report.line">
+                                        <field name="name">Provisions for Expenses</field>
+                                        <field name="code">MA_BS_P_I_D_PE</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_i_d_pe_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-155</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_p_i_e" model="account.report.line">
+                                <field name="name">Foreign Exchange Liabilities (E)</field>
+                                <field name="code">MA_BS_P_I_E</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_p_i_e_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_P_I_E_INCR.net + MA_BS_P_I_E_DFL.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_p_i_e_incr" model="account.report.line">
+                                        <field name="name">Increase in Non-Current Receivables</field>
+                                        <field name="code">MA_BS_P_I_E_INCR</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_i_e_incr_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-171</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_i_e_dfl" model="account.report.line">
+                                        <field name="name">Decrease in Financing Liabilities</field>
+                                        <field name="code">MA_BS_P_I_E_DFL</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_i_e_dfl_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-172</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_p_i_total" model="account.report.line">
+                                <field name="name">Total I (A+B+C+D+E)</field>
+                                <field name="code">MA_BS_P_I_TOTAL</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_p_i_total_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_P_I_A.net + MA_BS_P_I_B.net + MA_BS_P_I_C.net + MA_BS_P_I_D.net + MA_BS_P_I_E.net</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_bs_p_ii" model="account.report.line">
+                        <field name="name">CURRENT LIABILITIES</field>
+                        <field name="code">MA_BS_P_II</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_bs_p_ii_f" model="account.report.line">
+                                <field name="name">Debts of Currents Liabilities (F)</field>
+                                <field name="code">MA_BS_P_II_F</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_p_ii_f_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_P_II_F_SRA.net + MA_BS_P_II_F_CPADP.net + MA_BS_P_II_F_P.net + MA_BS_P_II_F_SO.net + MA_BS_P_II_F_G.net + MA_BS_P_II_F_PA.net + MA_BS_P_II_F_OC.net + MA_BS_P_II_F_ADL.net + MA_BS_P_II_F_HLA.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_p_ii_f_sra" model="account.report.line">
+                                        <field name="name">Suppliers and Related Accounts</field>
+                                        <field name="code">MA_BS_P_II_F_SRA</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_ii_f_sra_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-441</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_ii_f_cpadp" model="account.report.line">
+                                        <field name="name">Customer Payables, Advances and Down Payments</field>
+                                        <field name="code">MA_BS_P_II_F_CPADP</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_ii_f_cpadp_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-442</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_ii_f_p" model="account.report.line">
+                                        <field name="name">Personnel</field>
+                                        <field name="code">MA_BS_P_II_F_P</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_ii_f_p_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-443</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_ii_f_so" model="account.report.line">
+                                        <field name="name">Social Organizations</field>
+                                        <field name="code">MA_BS_P_II_F_SO</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_ii_f_so_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-444</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_ii_f_g" model="account.report.line">
+                                        <field name="name">Government</field>
+                                        <field name="code">MA_BS_P_II_F_G</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_ii_f_g_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-445</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_ii_f_pa" model="account.report.line">
+                                        <field name="name">Partner Accounts</field>
+                                        <field name="code">MA_BS_P_II_F_PA</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_ii_f_pa_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-446</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_ii_f_oc" model="account.report.line">
+                                        <field name="name">Other Creditors</field>
+                                        <field name="code">MA_BS_P_II_F_OC</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_ii_f_oc_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-448</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_ii_f_adl" model="account.report.line">
+                                        <field name="name">Accruals and Deferrals - Liabilities</field>
+                                        <field name="code">MA_BS_P_II_F_ADL</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_ii_f_adl_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-449</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_ii_f_hla" model="account.report.line">
+                                        <field name="name">Headquarters Liaison Accounts</field>
+                                        <field name="code">MA_BS_P_II_F_HLA</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_ii_f_hla_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-1601</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_p_ii_g" model="account.report.line">
+                                <field name="name">Other Provisions for Risks and Expenses (G)</field>
+                                <field name="code">MA_BS_P_II_G</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_p_ii_g_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-45</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_p_ii_h" model="account.report.line">
+                                <field name="name">Foreign Exchange Liabilities (Current Part) (H)</field>
+                                <field name="code">MA_BS_P_II_H</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_p_ii_h_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-47</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_p_ii_total" model="account.report.line">
+                                <field name="name">Total II (F+G+H)</field>
+                                <field name="code">MA_BS_P_II_TOTAL</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_p_ii_total_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_P_II_F.net + MA_BS_P_II_G.net + MA_BS_P_II_H.net</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_bs_p_iii" model="account.report.line">
+                        <field name="name">CASH</field>
+                        <field name="code">MA_BS_P_III</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_bs_p_iii_i" model="account.report.line">
+                                <field name="name">Cash - Liabilities</field>
+                                <field name="code">MA_BS_P_III_I</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_p_iii_i_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_P_III_I_DC.net + MA_BS_P_III_I_CC.net + MA_BS_P_III_I_BCB.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_p_iii_i_dc" model="account.report.line">
+                                        <field name="name">Discount Credits</field>
+                                        <field name="code">MA_BS_P_III_I_DC</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_iii_i_dc_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-552</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_iii_i_cc" model="account.report.line">
+                                        <field name="name">Cash Credits</field>
+                                        <field name="code">MA_BS_P_III_I_CC</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_iii_i_cc_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-553</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_p_iii_i_bcb" model="account.report.line">
+                                        <field name="name">Banks (Credit Balances)</field>
+                                        <field name="code">MA_BS_P_III_I_BCB</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_p_iii_i_bcb_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-554</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_p_iii_total" model="account.report.line">
+                                <field name="name">Total III</field>
+                                <field name="code">MA_BS_P_III_TOTAL</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_p_iii_total_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MA_BS_P_III_I.net</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_bs_p_total" model="account.report.line">
+                        <field name="name">TOTAL PASSIVE (I + II + III)</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="code">MA_BS_P_TOTAL</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_bs_p_total_net" model="account.report.expression">
+                                <field name="label">net</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_BS_P_I_TOTAL.net + MA_BS_P_II_TOTAL.net + MA_BS_P_III_TOTAL.net</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+    <record id="action_account_report_ma_pl" model="ir.actions.client">
+        <!--Kept as a separate action to force opening of the Moroccan P&L, whatever the previous options.-->
+        <field name="name">Profit and Loss</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('account_financial_report_pl')}"/>
+    </record>
+    <record id="account_financial_report_bs_p_i_a_nrfy" model="account.report.line">
+        <field name="action_id" ref="action_account_report_ma_pl"/>
+    </record>
+</odoo>

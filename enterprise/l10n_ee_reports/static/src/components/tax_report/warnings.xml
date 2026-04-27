@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="l10n_ee_reports.upgrade_l10n_ee_report_warning">
+        A new version of the
+        <a t-on-click="(ev) => controller.reportAction(ev, 'action_open_l10n_ee_modules', warningParams)">
+            'Estonia - Accounting'
+        </a>
+        module is available, offering improved KMD and KMD INF reports. Note: Tax grids are updated.<br/>
+        To adjust existing moves, manually update taxes grids or use the
+        <a t-on-click="(ev) => controller.reportAction(ev, 'action_open_account_update_tax_tags_module')">
+            'Account - Allow updating tax grids'
+        </a>
+        module.
+    </t>
+
+    <t t-name="l10n_ee_reports.install_l10n_ee_rounding_warning">
+        Please install the
+        <a t-on-click="(ev) => controller.reportAction(ev, 'action_open_l10n_ee_modules', warningParams)">
+            'Estonia - Rounding'
+        </a>
+        module to have access to the rounding features for the Estonian tax report.
+    </t>
+</templates>

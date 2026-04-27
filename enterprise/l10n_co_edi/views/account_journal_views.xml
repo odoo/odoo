@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_journal_form_inherit_l10n_co_edi" model="ir.ui.view">
+            <field name="name">account.journal.form.inherit.l10n_co_edi</field>
+            <field name="model">account.journal</field>
+            <field name="priority">10</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <field name="refund_sequence" position="after">
+                    <field name="l10n_co_edi_debit_note" invisible="country_code != 'CO' or type not in ('sale', 'purchase')"/>
+                </field>
+                <xpath expr="//page[@name='advanced_settings']/group" position="inside">
+                    <group string="Resolución DIAN" invisible="country_code != 'CO' or type not in ('sale', 'purchase')">
+                        <field name="l10n_co_edi_dian_authorization_number"/>
+                        <field name="l10n_co_edi_dian_authorization_date"/>
+                        <field name="l10n_co_edi_dian_authorization_end_date"/>
+                        <field name="l10n_co_edi_min_range_number"/>
+                        <field name="l10n_co_edi_max_range_number"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

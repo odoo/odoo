@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="account_online_synchronization.RefreshSpin">
+        <t t-if="this.connectionStatus === 'success'">
+            <div>
+                <t t-if="!!this.state.connectionStateDetails.nb_fetched_transactions" >
+                    <a href="#" t-on-click.prevent.stop="openAction">
+                        <t t-out="this.state.connectionStateDetails.nb_fetched_transactions"/> transactions fetched
+                    </a>
+                </t>
+                <t t-else="">
+                    0 transaction fetched
+                </t>
+            </div>
+        </t>
+        <t t-elif="this.connectionStatus === 'error'">
+            <div>
+                <a t-if="this.state.connectionStateDetails.error_type === 'redirect_warning'" class="text-danger" href="#" t-on-click.prevent.stop="openAction">
+                    <i class="fa fa-warning"/> See error
+                </a>
+                <button t-else="" class="btn btn-danger" t-on-click.prevent.stop="openAction">
+                    Reconnect Bank
+                </button>
+            </div>
+        </t>
+        <t t-elif="this.connectionStatus === 'fetching'">
+            <div t-on-mouseenter="onMouseEnter" t-on-mouseleave="onMouseLeave">
+                <t t-if="this.state.isHovered">
+                    <a class="oe_inline oe_kanban_action" href="#" t-on-click="refresh">Refresh</a>
+                </t>
+                <t t-else="">
+                    <span>Fetching... <i class='fa fa-spinner fa-spin'/></span>
+                </t>
+            </div>
+        </t>
+        <t t-else="">
+            <a href="#" t-on-click.prevent.stop="fetchTransactions" class="oe_inline">
+                Fetch Transactions
+            </a>
+        </t>
+    </t>
+</templates>

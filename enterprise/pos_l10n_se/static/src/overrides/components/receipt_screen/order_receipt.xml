@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="before">
+            <t t-if="props.data.useBlackBoxSweden">
+                <br/>
+                <div>
+                    <span style="font-size: 200%">
+                        <t t-esc="props.data.type"/>
+                    </span>
+                </div>
+                <t t-if="props.data.isReprint">
+                    Original date:
+                    <t t-esc="props.data.originalOrderDate"/>
+                </t>
+                <div>
+                    <span>Sequence: </span>
+                    <t t-esc="props.data.orderSequence"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('after-footer')]" position="after">
+            <t t-if="props.data.useBlackBoxSweden">
+                <div style="font-size: 75%;">
+                    <br/>
+                        <div>
+                        <span>POS id: </span>
+                            <t t-esc="props.data.blackboxSeData.posID"/>
+                    </div>
+                        <div>
+                        <span>Blackbox unit id: </span>
+                            <t t-esc="props.data.blackboxSeData.unitID"/>
+                    </div>
+                        <div style="word-break: break-all;">
+                        <span>Blackbox Signature: </span>
+                            <t t-esc="props.data.blackboxSeData.blackboxSignature"/>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

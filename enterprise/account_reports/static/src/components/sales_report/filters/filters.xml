@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.SalesReportFilters" t-inherit="account_reports.AccountReportFiltersCustomizable">
+        <xpath expr="//t[@t-if='hasExtraOptionsFilter']" position="before">
+            <t t-if='hasCodesFilter' t-call="account_reports.SalesReportFilterCode"/>
+        </xpath>
+    </t>
+</templates>

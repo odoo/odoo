@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="web_studio.Property">
+        <div t-if="props.type === 'selection'" class="o_web_studio_property o_web_studio_sidebar_select mt-2 mb-2" t-att-class="className" t-att-name="props.name">
+            <label t-att-for="props.name">
+                <t t-slot="default" />
+                <sup t-if="props.tooltip" class="text-info p-1" t-att-data-tooltip="props.tooltip" t-esc="'?'"/>
+            </label>
+            <t t-set="choices" t-value="props.childProps.choices" />
+            <SelectMenu t-if="choices"
+                t-props="props.childProps"
+                value="props.value"
+                onSelect="(value) => this.props.onChange(value, this.props.name)"
+                class="'border-0'"
+                togglerClass="'p-2'"
+                searchable="choices.length > 8"
+                required="props.childProps.required !== false"
+                disabled="props.isReadonly"
+            />
+        </div>
+
+        <t t-elif="props.type === 'boolean'">
+            <div class="o_web_studio_property clearfix o_web_studio_sidebar_checkbox d-flex" t-att-class="props.class">
+                <CheckBox
+                    id="props.name"
+                    name="props.name"
+                    value="!!props.value"
+                    onChange="(value) => this.props.onChange(value, this.props.name)"
+                    disabled="props.isReadonly"
+                >
+                    <t t-slot="default" />
+                    <sup t-if="props.tooltip" class="text-info p-1" t-att-data-tooltip="props.tooltip" t-esc="'?'"/>
+                </CheckBox>
+            </div>
+        </t>
+        <div t-elif="props.type === 'domain'" class="o_web_studio_property o_web_studio_sidebar_text my-2 d-flex flex-column" t-att-class="props.class">
+            <label t-att-for="props.name">
+                <t t-slot="default" />
+                <sup t-if="props.tooltip" class="text-info p-1" t-att-data-tooltip="props.tooltip" t-esc="'?'"/>
+            </label>
+            <span t-if="props.isReadonly" t-att-name="props.name" t-esc="props.value" class="ps-2" />
+            <input
+                t-else=""
+                t-att="props.inputAttributes"
+                t-att-name="props.name"
+                t-att-id="props.name"
+                t-att-type="props.type"
+                t-att-value="props.value"
+                t-att-class="`form-${props.type}-input`"
+                t-on-click.prevent.stop="onDomainClicked"
+            />
+        </div>
+
+        <div t-else="" class="o_web_studio_property o_web_studio_sidebar_text my-2 d-flex flex-column" t-att-class="props.class">
+            <label t-att-for="props.name">
+                <t t-slot="default" />
+                <sup t-if="props.tooltip" class="text-info p-1" t-att-data-tooltip="props.tooltip" t-esc="'?'"/>
+            </label>
+            <span t-if="props.isReadonly" t-att-name="props.name" t-esc="props.value" class="ps-2" />
+            <input
+                t-else=""
+                t-att-name="props.name"
+                t-att-id="props.name"
+                t-att="props.inputAttributes"
+                t-att-type="props.type"
+                t-att-value="props.value"
+                t-att-class="`form-${props.type}-input`"
+                t-on-change="(ev) => this.props.onChange(ev.target.value, this.props.name)"
+            />
+        </div>
+    </t>
+
+</templates>

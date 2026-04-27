@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name="spreadsheet_edition.RelationFilterEditorSidePanel" class="o_spreadsheet_filter_editor_side_panel">
+        <div class="o-section">
+            <FilterEditorLabel
+                inputClass="missingLabel ? 'o_field_invalid' : ''"
+                label="genericState.label"
+                setLabel.bind="this.setLabel"
+                placeholder="placeholder"
+            />
+        </div>
+        <t t-if="isValid">
+            <div class="o-section o_side_panel_related_model">
+                <div class="o-section-title">Related model</div>
+                <div t-att-class="missingModel ? 'o_field_invalid' : ''" class="mb-2">
+                    <ModelSelector
+                        value="relationState.relatedModel.label"
+                        onModelSelected.bind="onModelSelected"
+                    />
+                </div>
+                <Checkbox
+                    t-if="relationState.relatedModel.hasParentRelation"
+                    name="'includeChildren'"
+                    label.translate="Include children"
+                    value="relationState.includeChildren"
+                    onChange="(value) => this.relationState.includeChildren = value"
+                />
+            </div>
+            <t t-if="relationState.relatedModel.technical !== relationState.relatedModel.label">
+                <div class="o-section">
+                    <div class="o-section-title">Default value</div>
+                    <div class="pivot_filter_input" t-if="!(relationState.relatedModel.technical === 'res.users' and relationState.defaultValue === 'current_user')">
+                        <MultiRecordSelector
+                            resModel="relationState.relatedModel.technical"
+                            resIds="relationState.defaultValue || []"
+                            t-key="relationState.relatedModel.technical"
+                            placeholder="''"
+                            domain="getEvaluatedDomain()"
+                            update.bind="onValuesSelected"
+                        />
+                    </div>
+                    <div t-if="relationState.relatedModel.technical === 'res.users'" class="o-checkbox mt-2">
+                        <input
+                            type="checkbox"
+                            class="me-2"
+                            id="user_automatic_filter"
+                            t-att-checked="relationState.defaultValue === 'current_user'"
+                            t-on-change="toggleDefaultsToCurrentUser"
+                        />
+                        <label for="user_automatic_filter">Automatically filter on the current user</label>
+                    </div>
+                </div>
+                <Section>
+                    <t t-set-slot="title">Possible values</t>
+                    <Checkbox
+                        className="'mb-1'"
+                        label.translate="Restrict values with a domain"
+                        onChange.bind="toggleDomainRestriction"
+                        value="!!relationState.restrictValuesToDomain"
+                    />
+                    <SidePanelDomain
+                        t-if="this.relationState.restrictValuesToDomain"
+                        resModel="relationState.relatedModel.technical"
+                        domain="relationState.domainOfAllowedValues or '[]'"
+                        onUpdate.bind="onDomainUpdate"
+                    />
+                </Section>
+            </t>
+            <t t-if="shouldDisplayFieldMatching()">
+                <SidePanelCollapsible collapsedAtInit="!isNewFilter">
+                    <t t-set-slot="title">Field matching</t>
+                    <t t-set-slot="content">
+                        <Section class="'pt-0'">
+                            <FilterEditorFieldMatching
+                                fieldMatchings="fieldMatchings"
+                                wrongFieldMatchings="wrongFieldMatchings"
+                                selectField.bind="onSelectedField"
+                                filterModelFieldSelectorField="(field, path) => this.filterModelFieldSelectorField(field, path, relationState.relatedModel.technical)"
+                            />
+                        </Section>
+                    </t>
+                </SidePanelCollapsible>
+            </t>
+        </t>
+        <Section t-else="1">
+            <ValidationMessages messages="[invalidModel]" msgType="'error'"/>
+        </Section>
+        <div class="o-section o-sidePanelButtons">
+            <t t-call="spreadsheet_edition.FilterEditorButtons">
+                <t t-set="onDelete" t-value="this.props.id and onDelete.bind(this)" />
+                <t t-set="onSave" t-value="isValid and onSave.bind(this)" />
+                <t t-set="onCancel" t-value="onCancel.bind(this)" />
+            </t>
+        </div>
+    </div>
+</templates>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+    <!-- Recurring products -->
+    <record id="product_fire_insurance" model="product.product">
+        <field name="name">Fire Insurance (SUB)</field>
+        <field name="recurring_invoice">True</field>
+        <field name="categ_id" ref="product.product_category_3"/>
+        <field name="type">service</field>
+        <field name="list_price">200.0</field>
+        <field name="invoice_policy">order</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
+    </record>
+
+    <record id="product_pricing_insurance1" model="sale.subscription.pricing">
+        <field name="plan_id" ref="sale_subscription.subscription_plan_month"/>
+        <field name="price" eval="30"/>
+        <field name="currency_id" ref="base.USD"/>
+    </record>
+
+    <record id="product_pricing_insurance2" model="sale.subscription.pricing">
+        <field name="plan_id" ref="sale_subscription.subscription_plan_6_month"/>
+        <field name="price" eval="300"/>
+        <field name="currency_id" ref="base.USD"/>
+    </record>
+
+    <record id="product_pricing_insurance3" model="sale.subscription.pricing">
+        <field name="plan_id" ref="sale_subscription.subscription_plan_year"/>
+        <field name="price" eval="750"/>
+        <field name="currency_id" ref="base.USD"/>
+    </record>
+
+    <record id="product_fire_insurance" model="product.product">
+            <field name="product_subscription_pricing_ids"
+                   eval="[(6,0,[ref('product_pricing_insurance1'), ref('product_pricing_insurance2'), ref('product_pricing_insurance3')])]"/>
+    </record>
+
+    <record id="test_subscription_portal_0" model="sale.order">
+        <field name="partner_id" ref="base.partner_demo_portal"/>
+        <field name="sale_order_template_id" ref="sale_subscription.monthly_template"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="client_order_ref">test_subscription_portal_0</field>
+        <field name="plan_id" ref="sale_subscription.subscription_plan_month"/>
+        <field name="require_payment" eval='False'/>
+    </record>
+
+    <function model="sale.order" name="_onchange_sale_order_template_id" eval="[ref('test_subscription_portal_0')]"/>
+
+    <record id="test_subscription_portal_1" model="sale.order">
+        <field name="partner_id" ref="base.partner_demo_portal"/>
+        <field name="sale_order_template_id" ref="sale_subscription.monthly_template"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="team_id" ref="sales_team.team_sales_department"/>
+        <field name="note">Full flow 2</field>
+        <field name="client_order_ref">test_subscription_portal_1</field>
+        <field name="plan_id" ref="sale_subscription.subscription_plan_month"/>
+        <field name="require_payment" eval='False'/>
+    </record>
+
+    <function
+        model="sale.order"
+        name="_onchange_sale_order_template_id"
+        eval="[[ref('test_sale_subscription.test_subscription_portal_1')]]"/>
+
+    <record id="test_subscription_portal_2" model="sale.order">
+        <field name="partner_id" ref="base.partner_demo_portal"/>
+        <field name="sale_order_template_id" ref="sale_subscription.monthly_template"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="team_id" ref="sales_team.team_sales_department"/>
+        <field name="client_order_ref">test_subscription_portal_2</field>
+        <field name="plan_id" ref="sale_subscription.subscription_plan_month"/>
+        <field name="require_payment" eval='False'/>
+    </record>
+
+    <function
+        model="sale.order"
+        name="_onchange_sale_order_template_id"
+        eval="[[ref('test_sale_subscription.test_subscription_portal_2')]]"/>
+
+    <record id="test_subscription_portal_3" model="sale.order">
+        <field name="partner_id" ref="base.partner_demo_portal"/>
+        <field name="sale_order_template_id" ref="sale_subscription.monthly_template"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="client_order_ref">test_subscription_portal_3</field>
+        <field name="plan_id" ref="sale_subscription.subscription_plan_year"/>
+        <field name="require_payment" eval='False'/>
+    </record>
+
+    <function
+        model="sale.order"
+        name="_onchange_sale_order_template_id"
+        eval="[[ref('test_sale_subscription.test_subscription_portal_3')]]"/>
+
+    <record id="test_subscription_portal_4" model="sale.order">
+        <field name="partner_id" ref="base.partner_demo_portal"/>
+        <field name="sale_order_template_id" ref="sale_subscription.monthly_template"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="team_id" ref="sales_team.team_sales_department"/>
+        <field name="state">draft</field>
+        <field name="client_order_ref">test_subscription_portal_4</field>
+        <field name="plan_id" ref="sale_subscription.subscription_plan_6_month"/>
+        <field name="require_payment" eval='False'/>
+    </record>
+
+    <record id="rec_line_1" model="sale.order.line">
+        <field name="name">Office Cleaning Service (SUB)</field>
+        <field name="order_id" ref="test_subscription_portal_4"/>
+        <field name="product_id" ref="product_fire_insurance"/>
+        <field name="product_uom_qty">10</field>
+        <field name="price_unit">200.0</field>
+        <field name="product_uom" ref="uom.product_uom_unit"/>
+    </record>
+
+    <function  model="sale.order" name="_test_demo_generate_subscriptions"/>
+
+</odoo>

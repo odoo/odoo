@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_company_form_inherit" model="ir.ui.view">
+        <field name="name">res.company.form.inherit</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='branches']" position="after">   
+                <page string="HMRC" name="hmrc" invisible="country_code != 'GB'" groups="account.group_account_manager">
+                    <group>
+                        <group string="HMRC Credentials">
+                            <field name="l10n_uk_hmrc_sender_id"/>
+                            <field name="l10n_uk_hmrc_tax_office_number"/>
+                            <field name="l10n_uk_hmrc_tax_office_reference"/>
+                        </group>
+                        <group string="Contractor Details">
+                            <field name="l10n_uk_hmrc_unique_taxpayer_reference"/>
+                            <field name="l10n_uk_hmrc_account_office_reference"/>
+                        </group>
+                    </group>
+                </page> 
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="before">
+            <t t-if="props.data.useBlackBoxBe">
+                <t t-if="props.data.receipt_type != 'NS' and props.data.receipt_type  != 'NR'">
+                    <div class="pos-receipt-header"><bold>THIS IS NOT A VALID TICKET</bold></div>
+                    <div class="pos-receipt-header"><bold>PRO FORMA</bold> <bold t-if="props.data.receipt_type  == 'PR'">REFUND</bold></div>
+                </t>
+                <t t-else="">
+                    <div class="pos-receipt-header"><bold>VAT TICKET</bold></div>
+                    <div class="pos-receipt-header"><bold t-if="props.data.receipt_type == 'NR'">REFUND</bold></div>
+                </t>
+                <br/>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="inside">
+            <t t-if="props.data.useBlackBoxBe">
+                <div>
+                    Date: <t t-esc="props.data.blackbox_date"/>
+                </div>
+                <div>
+                    Till: <t t-esc="props.data.posIdentifier"/>
+                </div>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[hasclass('cashier')]" position="before">
+            <t t-if="props.data.useBlackBoxBe !== false">
+                <t t-esc="props.data['company'].street"/>
+            </t>
+        </xpath>
+    </t>
+    <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('after-footer')]" position="after">
+            <t t-if="props.data.useBlackboxBe">
+                <br/>
+                <div style="font-size: 75%;">
+                    <div t-if="props.data.blackboxBeData.original_order">Original Order: <t t-esc="props.data.blackboxBeData.original_order"/></div>
+                    <div>PLU hash: <t t-esc="props.data.blackboxBeData.pluHash"/></div>
+                    <div>FDM ID: <t t-esc="props.data.blackboxBeData.blackboxFdmNumber"/></div>
+                    <div>Terminal ID: <t t-esc="props.data.blackboxBeData.terminalId"/></div>
+                    <div>D/H Terminal: <span><t t-esc="props.data.blackboxBeData.blackbox_date"/> <t t-esc="props.data.blackboxBeData.blackboxTime"/></span></div>
+                    <div>POS version: <t t-esc="props.data.blackboxBeData.versionId"/></div>
+
+                    <div>Control data</div>
+                    <div>FDM ticket counters:<t t-esc="props.data.blackboxBeData.ticketCounter"/></div>
+                    <div>VSC ID: <t t-esc="props.data.blackboxBeData.vscIdentificationNumber"/></div>
+                    <div>FDM Identifier: <t t-esc="props.data.blackboxBeData.fdmIdentifier"/></div>
+                    <div>Ticket signature: <t t-esc="props.data.blackboxBeData.blackboxSignature"/></div>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//Orderline" position="inside">
+            <t t-if="props.data.useBlackboxBe and line.discount and line.discount !== '0'">
+                <div>
+                    Old unit price:
+                    <span>
+                        <s>
+                            <t t-esc="line.price_without_discount" /> / Units
+                        </s>
+                    </span>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

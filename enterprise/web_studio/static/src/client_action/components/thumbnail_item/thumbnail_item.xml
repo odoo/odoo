@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.ThumbnailItem">
+    <div t-attf-class="o_web_studio_thumbnail_item shadow position-relative d-flex flex-column justify-content-center align-items-center bg-light border rounded-2 {{ this.props.className || '' }}" t-on-click="this.props.onClick">
+        <div class="o_web_studio_thumbnail w-100 cursor-pointer d-flex justify-content-center align-items-center">
+            <img class="m-auto" t-att-src="this.props.icon.src" t-att-alt="this.props.icon.alt"/>
+        </div>
+        <div class="o_web_studio_name d-flex w-100 gap-1 text-capitalize fw-bold text-black" t-att-class="hasDropdown ? 'justify-content-between ps-2' : 'justify-content-center'">
+            <span class="d-block align-self-center fw-bold text-wrap text-break">
+                <t t-slot="default" />
+            </span>
+            <t t-if="hasDropdown">
+                <Dropdown>
+                    <button class="o_web_studio_more cursor-pointer p-0 rounded border-0 bg-light">
+                        <i class="fa fa-ellipsis-v"/>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-slot="dropdown" />
+                    </t>
+                </Dropdown>
+            </t>
+        </div>
+    </div>
+</t>
+
+</templates>

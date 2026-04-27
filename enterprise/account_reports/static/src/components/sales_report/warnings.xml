@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.sales_report_warning_non_ec_country">
+        Intra-community taxes are applied on
+        <a t-on-click="(ev) => controller.reportAction(ev, 'get_warning_act_window', { type: 'non_ec_country', model: 'move' })">invoices</a>
+        addressed to
+        <a t-on-click="(ev) => controller.reportAction(ev, 'get_warning_act_window', { type: 'non_ec_country', model: 'partner' })">partners</a>
+        who are not established in any of the EC countries.
+    </t>
+
+    <t t-name="account_reports.sales_report_warning_missing_vat">
+        Intra-community taxes are applied on
+        <a t-on-click="(ev) => controller.reportAction(ev, 'get_warning_act_window', { type: 'no_vat', model: 'move' })">invoices</a>
+        addressed to
+        <a t-on-click="(ev) => controller.reportAction(ev, 'get_warning_act_window', { type: 'no_vat', model: 'partner' })">partners</a>
+        without a valid intra-community VAT number.
+    </t>
+
+    <t t-name="account_reports.sales_report_warning_same_country">
+        Intra-community taxes are applied on
+        <a t-on-click="(ev) => controller.reportAction(ev, 'get_warning_act_window', { type: 'same_country', model: 'move' })">invoices</a>
+        addressed to
+        <a t-on-click="(ev) => controller.reportAction(ev, 'get_warning_act_window', { type: 'same_country', model: 'partner' })">partners</a>
+        that are not established abroad.
+    </t>
+
+    <t t-name="account_reports.sales_report_warning_duplicated_vat">
+        Some lines in the report involve partners that share the same VAT number.
+
+        Please review the <a t-on-click="(ev) => controller.reportAction(ev, 'get_warning_act_window', { type: 'duplicated_vat', model: 'partner', 'duplicated_partners_vat': warningParams.duplicated_partners_vat})">affected partners</a>
+        to resolve the duplication.
+    </t>
+</templates>

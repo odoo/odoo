@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_au_stp_ffr_view_form" model="ir.ui.view">
+        <field name="name">l10n_au.stp.ffr.form</field>
+        <field name="model">l10n_au.stp.ffr.wizard</field>
+        <field name="arch" type="xml">
+            <form string="STP Full File Replacement">
+                <div class="alert alert-warning mb-2" role="alert">
+                    Warning: This action will reset the selected payslips to draft. Please proceed if that is the intended action.
+                </div>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="stp_id" class="o_form_label"/>
+                        <h2>
+                            <field name="stp_id" readonly="1"/>
+                        </h2>
+                    </div>
+                    <notebook>
+                        <page string="Payslips">
+                            <field name="ffr_payslip_ids" nolabel="1" widget="one2many_list">
+                                <list editable="top" create="0" delete="0">
+                                    <field name="payslip_id" force_save="1"/>
+                                    <field name="to_reset" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_create_ffr" string="Reset Payslips" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

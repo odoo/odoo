@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="knowledge_article_template_category_view_form" model="ir.ui.view">
+        <field name="name">knowledge.article.template.category.view.form</field>
+        <field name="model">knowledge.article.template.category</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="knowledge_article_template_category_view_tree" model="ir.ui.view">
+        <field name="name">knowledge.article.template.category.view.list</field>
+        <field name="model">knowledge.article.template.category</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="knowledge_article_template_category_action" model="ir.actions.act_window">
+        <field name="name">Template Categories</field>
+        <field name="res_model">knowledge.article.template.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

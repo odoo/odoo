@@ -1,0 +1,233 @@
+{
+  "header": {
+    "amountCalcType": "gross",
+    "companyLocation": "49233848000150",
+    "documentCode": "pos.order_249",
+    "goods": {
+      "class": "VENDA DE PRODU\u00c7\u00c3O DO ESTABELECIMENTO",
+      "finNFe": 1,
+      "goal": "Normal",
+      "indPres": "1",
+      "model": "65",
+      "nfceQrCode": "http://www.fazenda.pr.gov.br/nfce/qrcode?p=41250149233848000150650010000002361000002490|2|2|1|22f75066dad70f38d5306126baffc0f0222e9617",
+      "tpImp": "4",
+      "tplmp": "4",
+      "transport": {
+        "modFreight": "FreeShipping"
+      },
+      "urlKey": "http://www.fazenda.pr.gov.br/nfce/consulta"
+    },
+    "invoiceAccessKey": "41250149233848000150650010000002361000002490",
+    "invoiceNumber": "000000236",
+    "invoiceSerial": "1",
+    "locations": {
+      "entity": {
+        "activitySector": {
+          "code": "finalConsumer"
+        },
+        "address": {
+          "state": "PR"
+        },
+        "federalTaxId": "000.000.000-00",
+        "name": "CONSUMIDOR N\u00c3O IDENTIFICADO",
+        "taxRegime": "individual"
+      },
+      "establishment": {
+        "activitySector": {
+          "ActivitySector_CNAE": {
+            "code": "6209100"
+          },
+          "code": "service"
+        },
+        "address": {
+          "cityName": "Curitaba",
+          "countryCode": "1058",
+          "email": "info@company.brexample.com",
+          "neighborhood": "Centro",
+          "number": "2401",
+          "phone": "+55 11 96123-4567",
+          "state": "PR",
+          "street": "Rua Marechal Deodoro 630, Conjunto",
+          "zipcode": "80010-010"
+        },
+        "businessName": "BR Company",
+        "federalTaxId": "49.233.848/0001-50",
+        "name": "BR Company",
+        "suframa": "",
+        "taxRegime": "estimatedProfit",
+        "taxesSettings": {
+          "icmsTaxPayer": true
+        },
+        "type": "individual"
+      }
+    },
+    "messageType": "goods",
+    "operationType": "standardSales",
+    "payment": {
+      "paymentInfo": {
+        "paymentMode": [
+          {
+            "mode": "99",
+            "modeDescription": "Other",
+            "value": 3.0
+          }
+        ]
+      }
+    },
+    "transactionDate": "2025-01-07T13:54:50-08:00"
+  },
+  "lines": [
+    {
+      "cfop": 5101,
+      "goods": {
+        "entityIcmsStSubstitute": "default",
+        "subjectToIPIonInbound": false
+      },
+      "insuranceAmount": 0,
+      "itemCode": "false",
+      "itemDescriptor": {
+        "cean": "",
+        "cest": "",
+        "cnae": "6209100",
+        "description": "aa Regular Consumable Product",
+        "hsCode": "49011000",
+        "productType": "FOR PRODUCT",
+        "source": "0"
+      },
+      "lineAdditionalInfo": "",
+      "lineAmount": 3,
+      "lineCode": 276,
+      "lineNetFigure": 2.42,
+      "lineTaxedDiscount": 0,
+      "lineUnitPrice": 1,
+      "numberOfItems": 3,
+      "operationType": "standardSales",
+      "otherCostAmount": 0,
+      "overwrite": "no",
+      "taxDetails": [
+        {
+          "calcMode": "rate",
+          "cst": "06",
+          "exemptionCode": "",
+          "isCustomCitation": false,
+          "jurisdictionName": "Brazil",
+          "jurisdictionType": "Country",
+          "rate": 0,
+          "subtotalTaxable": 2.42,
+          "tax": 0,
+          "taxImpact": {
+            "accounting": "none",
+            "impactOnFinalPrice": "Included",
+            "impactOnNetAmount": "Included"
+          },
+          "taxType": "cofins"
+        },
+        {
+          "cst": "00",
+          "exemptionCode": "",
+          "isCustomCitation": false,
+          "jurisdictionName": "Paran\u00e1",
+          "jurisdictionType": "State",
+          "modBC": "3",
+          "rate": 19.5,
+          "source": "0",
+          "subtotalTaxable": 3,
+          "tax": 0.58,
+          "taxImpact": {
+            "accounting": "liability",
+            "impactOnFinalPrice": "Included",
+            "impactOnNetAmount": "Included"
+          },
+          "taxType": "icms"
+        },
+        {
+          "calcMode": "rate",
+          "cst": "06",
+          "exemptionCode": "",
+          "isCustomCitation": false,
+          "jurisdictionName": "Brazil",
+          "jurisdictionType": "Country",
+          "rate": 0,
+          "subtotalTaxable": 2.42,
+          "tax": 0,
+          "taxImpact": {
+            "accounting": "none",
+            "impactOnFinalPrice": "Included",
+            "impactOnNetAmount": "Included"
+          },
+          "taxType": "pis"
+        }
+      ],
+      "useType": "resale"
+    }
+  ],
+  "summary": {
+    "numberOfLines": 1,
+    "taxByType": {
+      "cofins": {
+        "jurisdictions": [
+          {
+            "jurisdictionName": "Brazil",
+            "jurisdictionType": "Country",
+            "tax": 0
+          }
+        ],
+        "subtotalTaxable": 2.42,
+        "tax": 0
+      },
+      "icms": {
+        "jurisdictions": [
+          {
+            "jurisdictionName": "Paran\u00e1",
+            "jurisdictionType": "State",
+            "tax": 0.58
+          }
+        ],
+        "subtotalTaxable": 3,
+        "tax": 0.58
+      },
+      "pis": {
+        "jurisdictions": [
+          {
+            "jurisdictionName": "Brazil",
+            "jurisdictionType": "Country",
+            "tax": 0
+          }
+        ],
+        "subtotalTaxable": 2.42,
+        "tax": 0
+      }
+    },
+    "taxImpactHighlights": {
+      "added": [],
+      "included": [
+        {
+          "subtotalTaxable": 2.42,
+          "tax": 0,
+          "taxType": "cofins"
+        },
+        {
+          "subtotalTaxable": 3,
+          "tax": 0.58,
+          "taxType": "icms"
+        },
+        {
+          "subtotalTaxable": 2.42,
+          "tax": 0,
+          "taxType": "pis"
+        }
+      ],
+      "informative": [],
+      "subtracted": [],
+      "withheld": []
+    },
+    "totalFreights": 0,
+    "totalInsurances": 0,
+    "totalInvoice": 3,
+    "totalLineAmounts": 3,
+    "totalOtherCosts": 0,
+    "totalTaxedDiscounts": 0,
+    "totalUnTaxedOtherCosts": 0,
+    "totalUntaxedDiscounts": 0
+  }
+}

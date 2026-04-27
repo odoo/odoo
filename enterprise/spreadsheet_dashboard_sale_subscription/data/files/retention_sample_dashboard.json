@@ -1,0 +1,1220 @@
+{
+    "version": 21,
+    "sheets": [
+        {
+            "id": "sheet1",
+            "name": "Dashboard",
+            "colNumber": 9,
+            "rowNumber": 109,
+            "rows": {
+                "0": {
+                    "size": 40
+                },
+                "7": {
+                    "size": 39
+                },
+                "24": {
+                    "size": 44
+                },
+                "41": {
+                    "size": 40
+                },
+                "58": {
+                    "size": 40
+                },
+                "75": {
+                    "size": 43
+                },
+                "92": {
+                    "size": 43
+                }
+            },
+            "cols": {},
+            "merges": [],
+            "cells": {
+                "A1": {
+                    "content": "=_t(\"Last 30 days\")"
+                },
+                "A8": {
+                    "content": "=_t(\"Customer churn rate\")"
+                },
+                "A25": {
+                    "content": "=_t(\"Revenue churn rate\")"
+                },
+                "A42": {
+                    "content": "=_t(\"Net Retention rate\")"
+                },
+                "A59": {
+                    "content": "=_t(\"Customer Life Time Value\")"
+                },
+                "A76": {
+                    "content": "=_t(\"Monthly Growth\")"
+                },
+                "A93": {
+                    "content": "=_t(\"Average Revenue\")"
+                }
+            },
+            "styles": {
+                "A1": 1,
+                "A8": 1,
+                "A25": 1,
+                "A42": 1,
+                "A59": 1,
+                "A76": 1,
+                "A93": 1
+            },
+            "formats": {},
+            "borders": {
+                "A1:I1": 1,
+                "A8:I8": 1,
+                "A25:I25": 1,
+                "A42:I42": 1,
+                "A59:I59": 1,
+                "A76:I76": 1,
+                "A93:I93": 1,
+                "A2:I2": 2,
+                "A9:I9": 2,
+                "A26:I26": 2,
+                "A43:I43": 2,
+                "A60:I60": 2,
+                "A77:I77": 2,
+                "A94:I94": 2
+            },
+            "conditionalFormats": [],
+            "figures": [
+                {
+                    "id": "c5965b6e-d729-44cc-8e3a-0b605c325d3d",
+                    "x": 0,
+                    "y": 40,
+                    "width": 207,
+                    "height": 107,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "text",
+                        "title": {
+                            "text": "Customer Churn rate",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#ECFDF5",
+                        "baseline": "Data!C3",
+                        "baselineDescr": "Churns",
+                        "keyValue": "Data!C2",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "aa964ffe-ad26-4124-8c0c-6044f124fced",
+                    "x": 219,
+                    "y": 40,
+                    "width": 207,
+                    "height": 107,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "text",
+                        "title": {
+                            "text": "Revenue Churn",
+                            "color": "#434343",
+                            "bold": true
+                        },
+                        "type": "scorecard",
+                        "background": "#ECFDF5",
+                        "baseline": "Data!C5",
+                        "baselineDescr": "MRR",
+                        "keyValue": "Data!C4",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "5034de4a-9be0-410d-97eb-0a7092f48969",
+                    "x": 437,
+                    "y": 40,
+                    "width": 207,
+                    "height": 107,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "text",
+                        "title": {
+                            "text": "Net Retention rate",
+                            "color": "#434343",
+                            "bold": true
+                        },
+                        "type": "scorecard",
+                        "background": "#ECFDF5",
+                        "baselineDescr": "",
+                        "keyValue": "Data!C6",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "d8fb1b9b-bd79-41f8-a0df-982395c26b96",
+                    "x": 656,
+                    "y": 40,
+                    "width": 207,
+                    "height": 107,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "Cust. Life Time Value",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#FFF7ED",
+                        "baselineDescr": "",
+                        "keyValue": "Data!C7",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "012ac9c1-bfd5-4177-96ca-85c5e82b1953",
+                    "x": 0,
+                    "y": 216.140625,
+                    "width": 863,
+                    "height": 370,
+                    "tag": "chart",
+                    "data": {
+                        "type": "bar",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!D12:D36",
+                                "yAxisId": "y"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "labelRange": "Data!A12:A36",
+                        "title": {},
+                        "stacked": false,
+                        "aggregated": false,
+                        "horizontal": false
+                    }
+                },
+                {
+                    "id": "182477d2-ed24-4178-a477-e12395ecd80b",
+                    "x": 0,
+                    "y": 628.69140625,
+                    "width": 863,
+                    "height": 370,
+                    "tag": "chart",
+                    "data": {
+                        "type": "bar",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!E12:E36",
+                                "yAxisId": "y",
+                                "backgroundColor": "#4EA7F2"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "labelRange": "Data!A12:A36",
+                        "title": {},
+                        "stacked": false,
+                        "aggregated": false,
+                        "showValues": false
+                    }
+                },
+                {
+                    "id": "b0886ae7-2614-43d3-b99a-2331c85f45c8",
+                    "x": 0,
+                    "y": 1035.48828125,
+                    "width": 863,
+                    "height": 371,
+                    "tag": "chart",
+                    "data": {
+                        "type": "bar",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!F12:F36",
+                                "yAxisId": "y",
+                                "backgroundColor": "#4EA7F2"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "labelRange": "Data!A12:A36",
+                        "title": {},
+                        "stacked": false,
+                        "aggregated": false,
+                        "horizontal": false
+                    }
+                },
+                {
+                    "id": "15c5e96f-70da-47f6-bf78-7d847751fc18",
+                    "x": 0,
+                    "y": 1444,
+                    "width": 864,
+                    "height": 369,
+                    "tag": "chart",
+                    "data": {
+                        "type": "bar",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!G12:G36",
+                                "yAxisId": "y",
+                                "backgroundColor": "#4EA7F2"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "labelRange": "Data!A12:A36",
+                        "title": {},
+                        "stacked": false,
+                        "aggregated": false
+                    }
+                },
+                {
+                    "id": "4a78439b-21d0-4366-8fda-ebbd501d912e",
+                    "x": 1,
+                    "y": 1890.7578125,
+                    "width": 863,
+                    "height": 335,
+                    "tag": "chart",
+                    "data": {
+                        "type": "bar",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!H12:H36",
+                                "yAxisId": "y"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "labelRange": "Data!A12:A36",
+                        "title": {},
+                        "stacked": false,
+                        "aggregated": false
+                    }
+                },
+                {
+                    "id": "a3937968-c171-4c24-9c30-b7ce80eee860",
+                    "x": 0,
+                    "y": 2267,
+                    "width": 865,
+                    "height": 370,
+                    "tag": "chart",
+                    "data": {
+                        "type": "bar",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!I12:I36",
+                                "yAxisId": "y"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "labelRange": "Data!A12:A36",
+                        "title": {},
+                        "stacked": false,
+                        "aggregated": false
+                    }
+                }
+            ],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        },
+        {
+            "id": "8f4743ea-4299-4b28-9c56-46b7b3b943d9",
+            "name": "Data",
+            "colNumber": 33,
+            "rowNumber": 100,
+            "rows": {},
+            "cols": {},
+            "merges": [],
+            "cells": {
+                "A1": {
+                    "content": "=_t(\"KPI\")"
+                },
+                "A2": {
+                    "content": "=_t(\"Customer churn rate\")"
+                },
+                "A3": {
+                    "content": "=_t(\"Churns\")"
+                },
+                "A4": {
+                    "content": "=_t(\"Revenue Churn\")"
+                },
+                "A5": {
+                    "content": "=_t(\"MRR delta\")"
+                },
+                "A6": {
+                    "content": "=_t(\"Net Retention\")"
+                },
+                "A7": {
+                    "content": "=_t(\"CLTV\")"
+                },
+                "A11": {
+                    "content": "=_t(\"Customer Churn Rate\")"
+                },
+                "A12": {
+                    "content": "=C12"
+                },
+                "A13": {
+                    "content": "=C13"
+                },
+                "A14": {
+                    "content": "=C14"
+                },
+                "A15": {
+                    "content": "=C15"
+                },
+                "A16": {
+                    "content": "=C16"
+                },
+                "A17": {
+                    "content": "=C17"
+                },
+                "A18": {
+                    "content": "=C18"
+                },
+                "A19": {
+                    "content": "=C19"
+                },
+                "A20": {
+                    "content": "=C20"
+                },
+                "A21": {
+                    "content": "=C21"
+                },
+                "A22": {
+                    "content": "=C22"
+                },
+                "A23": {
+                    "content": "=C23"
+                },
+                "A24": {
+                    "content": "=C24"
+                },
+                "A25": {
+                    "content": "=C25"
+                },
+                "A26": {
+                    "content": "=C26"
+                },
+                "A27": {
+                    "content": "=C27"
+                },
+                "A28": {
+                    "content": "=C28"
+                },
+                "A29": {
+                    "content": "=C29"
+                },
+                "A30": {
+                    "content": "=C30"
+                },
+                "A31": {
+                    "content": "=C31"
+                },
+                "A32": {
+                    "content": "=C32"
+                },
+                "A33": {
+                    "content": "=C33"
+                },
+                "A34": {
+                    "content": "=C34"
+                },
+                "A35": {
+                    "content": "=C35"
+                },
+                "A36": {
+                    "content": "=C36"
+                },
+                "B1": {
+                    "content": "=_t(\"Current\")"
+                },
+                "B2": {
+                    "content": "0.1389"
+                },
+                "B3": {
+                    "content": "11"
+                },
+                "B4": {
+                    "content": "0.2356"
+                },
+                "B5": {
+                    "content": "2396"
+                },
+                "B6": {
+                    "content": "0.8611"
+                },
+                "B7": {
+                    "content": "311.987041036717"
+                },
+                "B12": {
+                    "content": "-24"
+                },
+                "B13": {
+                    "content": "-23"
+                },
+                "B14": {
+                    "content": "-22"
+                },
+                "B15": {
+                    "content": "-21"
+                },
+                "B16": {
+                    "content": "-20"
+                },
+                "B17": {
+                    "content": "-19"
+                },
+                "B18": {
+                    "content": "-18"
+                },
+                "B19": {
+                    "content": "-17"
+                },
+                "B20": {
+                    "content": "-16"
+                },
+                "B21": {
+                    "content": "-15"
+                },
+                "B22": {
+                    "content": "-14"
+                },
+                "B23": {
+                    "content": "-13"
+                },
+                "B24": {
+                    "content": "-12"
+                },
+                "B25": {
+                    "content": "-11"
+                },
+                "B26": {
+                    "content": "-10"
+                },
+                "B27": {
+                    "content": "-9"
+                },
+                "B28": {
+                    "content": "-8"
+                },
+                "B29": {
+                    "content": "-7"
+                },
+                "B30": {
+                    "content": "-6"
+                },
+                "B31": {
+                    "content": "-5"
+                },
+                "B32": {
+                    "content": "-4"
+                },
+                "B33": {
+                    "content": "-3"
+                },
+                "B34": {
+                    "content": "-2"
+                },
+                "B35": {
+                    "content": "-1"
+                },
+                "C1": {
+                    "content": "=_t(\"Current\")"
+                },
+                "C2": {
+                    "content": "0.1389"
+                },
+                "C3": {
+                    "content": "11"
+                },
+                "C4": {
+                    "content": "0.2356"
+                },
+                "C5": {
+                    "content": "2396"
+                },
+                "C6": {
+                    "content": "0.8611"
+                },
+                "C7": {
+                    "content": "31451.98704103672"
+                },
+                "C12": {
+                    "content": "=EDATE($C$36,B12)"
+                },
+                "C13": {
+                    "content": "=EDATE($C$36,B13)"
+                },
+                "C14": {
+                    "content": "=EDATE($C$36,B14)"
+                },
+                "C15": {
+                    "content": "=EDATE($C$36,B15)"
+                },
+                "C16": {
+                    "content": "=EDATE($C$36,B16)"
+                },
+                "C17": {
+                    "content": "=EDATE($C$36,B17)"
+                },
+                "C18": {
+                    "content": "=EDATE($C$36,B18)"
+                },
+                "C19": {
+                    "content": "=EDATE($C$36,B19)"
+                },
+                "C20": {
+                    "content": "=EDATE($C$36,B20)"
+                },
+                "C21": {
+                    "content": "=EDATE($C$36,B21)"
+                },
+                "C22": {
+                    "content": "=EDATE($C$36,B22)"
+                },
+                "C23": {
+                    "content": "=EDATE($C$36,B23)"
+                },
+                "C24": {
+                    "content": "=EDATE($C$36,B24)"
+                },
+                "C25": {
+                    "content": "=EDATE($C$36,B25)"
+                },
+                "C26": {
+                    "content": "=EDATE($C$36,B26)"
+                },
+                "C27": {
+                    "content": "=EDATE($C$36,B27)"
+                },
+                "C28": {
+                    "content": "=EDATE($C$36,B28)"
+                },
+                "C29": {
+                    "content": "=EDATE($C$36,B29)"
+                },
+                "C30": {
+                    "content": "=EDATE($C$36,B30)"
+                },
+                "C31": {
+                    "content": "=EDATE($C$36,B31)"
+                },
+                "C32": {
+                    "content": "=EDATE($C$36,B32)"
+                },
+                "C33": {
+                    "content": "=EDATE($C$36,B33)"
+                },
+                "C34": {
+                    "content": "=EDATE($C$36,B34)"
+                },
+                "C35": {
+                    "content": "=EDATE($C$36,B35)"
+                },
+                "C36": {
+                    "content": "=DATE(YEAR(C37), MONTH(C37), 1)"
+                },
+                "C37": {
+                    "content": "=TODAY()"
+                },
+                "D12": {
+                    "content": "0.32085465777568056"
+                },
+                "D13": {
+                    "content": "0.3400044443315724"
+                },
+                "D14": {
+                    "content": "0.2818636060714821"
+                },
+                "D15": {
+                    "content": "0.04541779519457512"
+                },
+                "D16": {
+                    "content": "0.15636544467821256"
+                },
+                "D17": {
+                    "content": "0.02924420165718833"
+                },
+                "D18": {
+                    "content": "0.2603545700505092"
+                },
+                "D19": {
+                    "content": "0.265031817374779"
+                },
+                "D20": {
+                    "content": "0.8843312128960841"
+                },
+                "D21": {
+                    "content": "0.37146985467247484"
+                },
+                "D22": {
+                    "content": "0.7853633496430441"
+                },
+                "D23": {
+                    "content": "0.4598960574367248"
+                },
+                "D24": {
+                    "content": "0.8306423910299356"
+                },
+                "D25": {
+                    "content": "0.5309565248677568"
+                },
+                "D26": {
+                    "content": "0.5092707653957882"
+                },
+                "D27": {
+                    "content": "0.7340998343981966"
+                },
+                "D28": {
+                    "content": "0.09566356325935321"
+                },
+                "D29": {
+                    "content": "0.4538219979683855"
+                },
+                "D30": {
+                    "content": "0.9485626958884472"
+                },
+                "D31": {
+                    "content": "0.966292076580467"
+                },
+                "D32": {
+                    "content": "0.11969817950628014"
+                },
+                "D33": {
+                    "content": "0.7328324701538558"
+                },
+                "D34": {
+                    "content": "0.6223980460404896"
+                },
+                "D35": {
+                    "content": "0.6472051746109"
+                },
+                "D36": {
+                    "content": "0.32572572380121967"
+                },
+                "E12": {
+                    "content": "0.21487083580582023"
+                },
+                "E13": {
+                    "content": "0.8464771432184524"
+                },
+                "E14": {
+                    "content": "0.36262651691162673"
+                },
+                "E15": {
+                    "content": "0.6160631300039985"
+                },
+                "E16": {
+                    "content": "0.607433242206024"
+                },
+                "E17": {
+                    "content": "0.6340094378549348"
+                },
+                "E18": {
+                    "content": "0.18378950225092505"
+                },
+                "E19": {
+                    "content": "0.15087993996521187"
+                },
+                "E20": {
+                    "content": "0.7366733202841174"
+                },
+                "E21": {
+                    "content": "0.9891928914248478"
+                },
+                "E22": {
+                    "content": "0.23273128002125332"
+                },
+                "E23": {
+                    "content": "0.30976778729275933"
+                },
+                "E24": {
+                    "content": "0.28679039967316466"
+                },
+                "E25": {
+                    "content": "0.36412696310531234"
+                },
+                "E26": {
+                    "content": "0.7402380303761023"
+                },
+                "E27": {
+                    "content": "0.42285198577001304"
+                },
+                "E28": {
+                    "content": "0.26023263641179684"
+                },
+                "E29": {
+                    "content": "0.646425669843071"
+                },
+                "E30": {
+                    "content": "0.7280743557527907"
+                },
+                "E31": {
+                    "content": "0.4709650760307138"
+                },
+                "E32": {
+                    "content": "0.3019630386246208"
+                },
+                "E33": {
+                    "content": "0.3425157528606626"
+                },
+                "E34": {
+                    "content": "0.5763681574876476"
+                },
+                "E35": {
+                    "content": "0.6547642218593177"
+                },
+                "E36": {
+                    "content": "0.15745843777646784"
+                },
+                "F12": {
+                    "content": "0.8579142770590391"
+                },
+                "F13": {
+                    "content": "0.35115292755912253"
+                },
+                "F14": {
+                    "content": "0.28933319837336313"
+                },
+                "F15": {
+                    "content": "0.9250135418136765"
+                },
+                "F16": {
+                    "content": "0.7411551603001458"
+                },
+                "F17": {
+                    "content": "0.6238504418969821"
+                },
+                "F18": {
+                    "content": "0.010100856709135408"
+                },
+                "F19": {
+                    "content": "0.16244300673999224"
+                },
+                "F20": {
+                    "content": "0.6225086098357464"
+                },
+                "F21": {
+                    "content": "0.14745635700555493"
+                },
+                "F22": {
+                    "content": "0.08879717269200005"
+                },
+                "F23": {
+                    "content": "0.42633263679614153"
+                },
+                "F24": {
+                    "content": "0.86655624503663"
+                },
+                "F25": {
+                    "content": "0.7450612850053462"
+                },
+                "F26": {
+                    "content": "0.3163054229583129"
+                },
+                "F27": {
+                    "content": "0.17836126867826452"
+                },
+                "F28": {
+                    "content": "0.7547769231773616"
+                },
+                "F29": {
+                    "content": "0.8054082555451085"
+                },
+                "F30": {
+                    "content": "0.32367913322120656"
+                },
+                "F31": {
+                    "content": "0.9623932143089622"
+                },
+                "F32": {
+                    "content": "0.6823557662669941"
+                },
+                "F33": {
+                    "content": "0.6126492936873624"
+                },
+                "F34": {
+                    "content": "0.27351623237605627"
+                },
+                "F35": {
+                    "content": "0.9743008779916547"
+                },
+                "F36": {
+                    "content": "0.3809422100527129"
+                },
+                "G12": {
+                    "content": "68390"
+                },
+                "G13": {
+                    "content": "50527"
+                },
+                "G14": {
+                    "content": "94291"
+                },
+                "G15": {
+                    "content": "59980"
+                },
+                "G16": {
+                    "content": "99160"
+                },
+                "G17": {
+                    "content": "95284"
+                },
+                "G18": {
+                    "content": "59647"
+                },
+                "G19": {
+                    "content": "94248"
+                },
+                "G20": {
+                    "content": "76378"
+                },
+                "G21": {
+                    "content": "55861"
+                },
+                "G22": {
+                    "content": "51862"
+                },
+                "G23": {
+                    "content": "68137"
+                },
+                "G24": {
+                    "content": "53450"
+                },
+                "G25": {
+                    "content": "65716"
+                },
+                "G26": {
+                    "content": "58045"
+                },
+                "G27": {
+                    "content": "82242"
+                },
+                "G28": {
+                    "content": "82112"
+                },
+                "G29": {
+                    "content": "81754"
+                },
+                "G30": {
+                    "content": "70677"
+                },
+                "G31": {
+                    "content": "74532"
+                },
+                "G32": {
+                    "content": "97535"
+                },
+                "G33": {
+                    "content": "52936"
+                },
+                "G34": {
+                    "content": "76658"
+                },
+                "G35": {
+                    "content": "69589"
+                },
+                "G36": {
+                    "content": "86221"
+                },
+                "H12": {
+                    "content": "0.28382823796782297"
+                },
+                "H13": {
+                    "content": "0.8816245477034934"
+                },
+                "H14": {
+                    "content": "0.3445111444078144"
+                },
+                "H15": {
+                    "content": "0.8671653738657918"
+                },
+                "H16": {
+                    "content": "0.47704243651307365"
+                },
+                "H17": {
+                    "content": "0.5717809449444125"
+                },
+                "H18": {
+                    "content": "0.27392693533176393"
+                },
+                "H19": {
+                    "content": "0.5662650189896932"
+                },
+                "H20": {
+                    "content": "0.5493033352720584"
+                },
+                "H21": {
+                    "content": "0.8160230873899628"
+                },
+                "H22": {
+                    "content": "0.5693651203619134"
+                },
+                "H23": {
+                    "content": "0.7097557729969661"
+                },
+                "H24": {
+                    "content": "0.911927795516817"
+                },
+                "H25": {
+                    "content": "0.768886279349325"
+                },
+                "H26": {
+                    "content": "0.6911963957018901"
+                },
+                "H27": {
+                    "content": "0.01900094048051537"
+                },
+                "H28": {
+                    "content": "0.8406985267490585"
+                },
+                "H29": {
+                    "content": "0.5933945495888182"
+                },
+                "H30": {
+                    "content": "0.2845763005487787"
+                },
+                "H31": {
+                    "content": "0.3721212746794582"
+                },
+                "H32": {
+                    "content": "0.2995666690017378"
+                },
+                "H33": {
+                    "content": "0.8809827503194876"
+                },
+                "H34": {
+                    "content": "0.18777389692302493"
+                },
+                "H35": {
+                    "content": "0.6089561332428455"
+                },
+                "H36": {
+                    "content": "0.12646788898036743"
+                },
+                "I12": {
+                    "content": "195599"
+                },
+                "I13": {
+                    "content": "295195"
+                },
+                "I14": {
+                    "content": "141735"
+                },
+                "I15": {
+                    "content": "250073"
+                },
+                "I16": {
+                    "content": "95239"
+                },
+                "I17": {
+                    "content": "54303"
+                },
+                "I18": {
+                    "content": "52613"
+                },
+                "I19": {
+                    "content": "123480"
+                },
+                "I20": {
+                    "content": "337482"
+                },
+                "I21": {
+                    "content": "314701"
+                },
+                "I22": {
+                    "content": "355131"
+                },
+                "I23": {
+                    "content": "242761"
+                },
+                "I24": {
+                    "content": "101113"
+                },
+                "I25": {
+                    "content": "319207"
+                },
+                "I26": {
+                    "content": "287093"
+                },
+                "I27": {
+                    "content": "194149"
+                },
+                "I28": {
+                    "content": "238941"
+                },
+                "I29": {
+                    "content": "154554"
+                },
+                "I30": {
+                    "content": "351046"
+                },
+                "I31": {
+                    "content": "84064"
+                },
+                "I32": {
+                    "content": "375088"
+                },
+                "I33": {
+                    "content": "125448"
+                },
+                "I34": {
+                    "content": "240638"
+                },
+                "I35": {
+                    "content": "350393"
+                },
+                "I36": {
+                    "content": "104106"
+                },
+                "AA11": {
+                    "content": "=IFERROR((E10+I10+M10-Q10)/D9)"
+                },
+                "AA12": {
+                    "content": "=IFERROR((E11+I11+M11-Q11)/D12)"
+                },
+                "AA13": {
+                    "content": "=IFERROR((E12+I12+M12-Q12)/D13)"
+                },
+                "AA14": {
+                    "content": "=IFERROR((E13+I13+M13-Q13)/D14)"
+                },
+                "AA15": {
+                    "content": "=IFERROR((E14+I14+M14-Q14)/D15)"
+                },
+                "AA16": {
+                    "content": "=IFERROR((E15+I15+M15-Q15)/D16)"
+                },
+                "AA17": {
+                    "content": "=IFERROR((E16+I16+M16-Q16)/D17)"
+                },
+                "AA18": {
+                    "content": "=IFERROR((E17+I17+M17-Q17)/D18)"
+                },
+                "AA19": {
+                    "content": "=IFERROR((E18+I18+M18-Q18)/D19)"
+                },
+                "AA20": {
+                    "content": "=IFERROR((E19+I19+M19-Q19)/D20)"
+                },
+                "AA21": {
+                    "content": "=IFERROR((E20+I20+M20-Q20)/D21)"
+                },
+                "AA22": {
+                    "content": "=IFERROR((E21+I21+M21-Q21)/D22)"
+                }
+            },
+            "styles": {
+                "A1:B1": 2,
+                "C1": 3,
+                "C2:C7": 4
+            },
+            "formats": {
+                "A12:A36": 1,
+                "C2": 2,
+                "B4:C4": 2,
+                "B6:C6": 2,
+                "D12:F36": 2,
+                "H12:H36": 2,
+                "B5:C5": 3,
+                "B7:C7": 3,
+                "G12:G36": 3,
+                "I12:I36": 3
+            },
+            "borders": {},
+            "conditionalFormats": [],
+            "figures": [],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [
+                    {
+                        "start": 10,
+                        "end": 36,
+                        "isFolded": false
+                    },
+                    {
+                        "start": 39,
+                        "end": 69,
+                        "isFolded": false
+                    }
+                ],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        }
+    ],
+    "styles": {
+        "1": {
+            "fontSize": 16,
+            "textColor": "#2D7E84",
+            "bold": true
+        },
+        "2": {
+            "bold": true
+        },
+        "3": {
+            "bold": true,
+            "fillColor": "#F3F3F3"
+        },
+        "4": {
+            "fillColor": "#F3F3F3"
+        }
+    },
+    "formats": {
+        "1": "mmmm yyyy",
+        "2": "0.00%",
+        "3": "[$$]#,##0"
+    },
+    "borders": {
+        "1": {
+            "bottom": {
+                "style": "thin",
+                "color": "#CCCCCC"
+            }
+        },
+        "2": {
+            "top": {
+                "style": "thin",
+                "color": "#CCCCCC"
+            }
+        }
+    },
+    "revisionId": "START_REVISION",
+    "uniqueFigureIds": true,
+    "settings": {
+        "locale": {
+            "name": "English (US)",
+            "code": "en_US",
+            "thousandsSeparator": ",",
+            "decimalSeparator": ".",
+            "dateFormat": "mm/dd/yyyy",
+            "timeFormat": "hh:mm:ss",
+            "formulaArgSeparator": ",",
+            "weekStart": 7
+        }
+    },
+    "pivots": {},
+    "pivotNextId": 4,
+    "customTableStyles": {},
+    "odooVersion": 12,
+    "globalFilters": [],
+    "lists": {},
+    "listNextId": 1
+}

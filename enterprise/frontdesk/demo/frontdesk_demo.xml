@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[
+                (3, ref('frontdesk.frontdesk_group_user')),
+                (3, ref('frontdesk.frontdesk_group_administrator')),
+            ]"/>
+        </record>
+    </data>
+    <data noupdate="0">
+        <!-- Stations -->
+        <record model="frontdesk.frontdesk" id="frontdesk_frontdesk_1">
+            <field name="name">Frontdesk</field>
+            <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="self_check_in">True</field>
+            <field name="drink_offer">True</field>
+            <field name="host_selection">True</field>
+            <field name="drink_ids" eval="[(4, ref('frontdesk.frontdesk_drink_1')), (4, ref('frontdesk.frontdesk_drink_2'))]"/>
+            <field name="description" type="html">
+                <p>Enjoy our Wi-fi!</p>
+                <p>
+                    <span>Connect with:- my company</span>
+                    <br/>
+                    <span>Password:- My@1234</span>
+                </p>
+            </field>
+        </record>
+
+        <!-- Visitors  -->
+        <record model="frontdesk.visitor" id="frontdesk_visitor_1">
+            <field name="name">John Smith</field>
+            <field name="phone">(644)-169-1353</field>
+            <field name="drink_ids" eval="[(4, ref('frontdesk.frontdesk_drink_1'))]"/>
+            <field name="email">johnsmith@example.com</field>
+            <field name="check_in" eval="datetime.now()"/>
+            <field name="host_ids" eval="[(4, ref('hr.employee_qdp'))]"/>
+            <field name="company">Smith LLP</field>
+            <field name="state">planned</field>
+            <field name="station_id" ref="frontdesk.frontdesk_frontdesk_1"/>
+        </record>
+    </data>
+</odoo>

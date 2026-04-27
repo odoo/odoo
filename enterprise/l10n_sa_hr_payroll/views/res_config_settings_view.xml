@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="res_config_settings_view_form">
+        <field name="name">res.config.settings.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_payroll.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='hr_payroll_settings']" position="after">
+                <field name="company_country_code" invisible="True"/>
+                <block title="Saudi Arabia Payroll" id="saudi_payroll_wps_settings" invisible="company_country_code != 'SA'">
+                    <setting string="Establishment Bank Account" help="Company bank account to be used in the WPS report" id="l10n_sa_bank_account_id">
+                        <field name="l10n_sa_bank_account_id" class="w-100" domain="[('partner_id', '=', company_partner_id)]" context="{'default_partner_id': company_partner_id}"/>
+                        <div class="alert alert-warning text-start" role="alert" invisible="l10n_sa_bank_account_id and l10n_sa_bank_establishment_code and l10n_sa_sarie_code">
+                            <strong>Warning:</strong> One of the following fields are not set:
+                            <ul>
+                                <li invisible="l10n_sa_bank_account_id">Establishment Bank</li>
+                                <li invisible="l10n_sa_bank_establishment_code">Bank Establishment ID</li>
+                                <li invisible="l10n_sa_sarie_code">Bank SARIE Code</li>
+                            </ul>
+                        </div>
+                    </setting>
+                    <setting string="MoL Establishment ID" help="Ministry of Labor Establishment ID" id="l10n_sa_mol_establishment_code">
+                        <field name="l10n_sa_mol_establishment_code"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

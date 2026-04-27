@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_lead_rental_view_form" model="ir.ui.view">
+        <field name="name">crm.lead.rental.view.form</field>
+        <field name="model">crm.lead.rental</field>
+        <field name="arch" type="xml">
+            <form string="New Rental">
+                <group>
+                    <group>
+                        <field name="action" widget="radio"/>
+                        <field name="lead_id" invisible="1"/>
+                    </group>
+                </group>
+                <group invisible="action != 'exist'" required="action == 'exist'">
+                    <group>
+                        <field name="partner_id" invisible="action != 'exist'" required="action == 'exist'"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_new_rental" string="Confirm" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="crm_lead_to_rental_action" model="ir.actions.act_window">
+        <field name="name">New Rental</field>
+        <field name="res_model">crm.lead.rental</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm_lead_rental_view_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

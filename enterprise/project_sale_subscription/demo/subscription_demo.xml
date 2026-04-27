@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Subscription Product -->
+        <record id="product_product_camera_services" model="product.product">
+            <field name="name">Camera Services</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="list_price">50.00</field>
+            <field name="standard_price">70.00</field>
+            <field name="type">service</field>
+            <field name="recurring_invoice">True</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+            <field name="service_tracking">task_global_project</field>
+            <field name="project_id" ref="project.project_home_construction"/>
+        </record>
+
+        <record id="product_product_motion_sensors" model="product.product">
+            <field name="name">Motion Sensors</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="list_price">40.00</field>
+            <field name="standard_price">55.00</field>
+            <field name="type">service</field>
+            <field name="recurring_invoice">True</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+            <field name="service_tracking">task_global_project</field>
+            <field name="project_id" ref="project.project_home_construction"/>
+        </record>
+
+        <!-- Subscription SO -->
+        <record id="subscription_project_1" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="plan_id" ref="sale_subscription.subscription_plan_month"/>
+            <field name="sale_order_template_id" ref="sale_subscription.monthly_template"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="state">draft</field>
+        </record>
+
+        <!-- Subscription SOL -->
+        <record id="subscription_project_line_1" model="sale.order.line">
+            <field name="name">Motion Sensors</field>
+            <field name="order_id" ref="subscription_project_1"/>
+            <field name="product_id" ref="product_product_motion_sensors"/>
+            <field name="analytic_distribution" eval="{ref('project.project_home_construction'): 100}"/>
+            <field name="product_uom_qty">3</field>
+            <field name="qty_delivered">3</field>
+            <field name="price_unit">65.00</field>
+        </record>
+        <record id="subscription_project_line_2" model="sale.order.line">
+            <field name="name">Security Services</field>
+            <field name="order_id" ref="subscription_project_1"/>
+            <field name="product_id" ref="product_product_camera_services"/>
+            <field name="analytic_distribution" eval="{ref('project.project_home_construction'): 100}"/>
+            <field name="product_uom_qty">10</field>
+            <field name="qty_delivered">7</field>
+            <field name="price_unit">75.00</field>
+        </record>
+
+        <function model="sale.order" name="action_confirm" eval="[[ref('subscription_project_1')]]" context="{'action_no_send_mail': True}"/>
+
+        <!-- Stage, User and State for subscription task -->
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('sale_line_id', '=', ref('project_sale_subscription.subscription_project_line_1'))]"/>
+            <value eval="{
+                'milestone_id': ref('project.project_home_construction_milestone_3'),
+                'stage_id': ref('project.project_stage_1'),
+                'user_ids': [Command.link(ref('base.user_demo'))],
+            }"/>
+        </function>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('sale_line_id', '=', ref('project_sale_subscription.subscription_project_line_2'))]"/>
+            <value eval="{
+                'milestone_id': ref('project.project_home_construction_milestone_3'),
+                'stage_id': ref('project.project_stage_1'),
+                'user_ids': [Command.link(ref('base.user_demo'))],
+            }"/>
+        </function>
+    </data>
+</odoo>

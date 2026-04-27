@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="swissdec_wage_types_tree" model="ir.ui.view">
+        <field name="name">hr.salary.rule.view.tree.l10n.ch.wage.types</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="arch" type="xml">
+            <list default_order="l10n_ch_code asc" create="0" edit="0" delete="0">
+                <field name="l10n_ch_code" string="CH Code"/>
+                <field name="code" string="Code" optional="hide"/>
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="l10n_ch_gross_included" string="Gross"/>
+                <field name="l10n_ch_ac_included" string="AVS/AC"/>
+                <field name="l10n_ch_aanp_included" string="LAA"/>
+                <field name="l10n_ch_laac_included" string="LAAC"/>
+                <field name="l10n_ch_ijm_included" string="IJM"/>
+                <field name="l10n_ch_source_tax_included" string="IS"/>
+                <field name="l10n_ch_salary_certificate" string="Certificat de salaire"/>
+                <field name="l10n_ch_wage_statement" string="Statistique mois"/>
+                <field name="l10n_ch_yearly_statement" string="Statistique année"/>
+                <field name="l10n_ch_13th_month_included" string="13e Mois"/>
+                <field name="l10n_ch_13th_month_hourly_included" string="13th Hourly"/>
+                <field name="l10n_ch_vacation_pay_included" string="Vacation"/>
+                <field name="l10n_ch_lpp_forecast" string="LPP prévisionnel" optional="hide"/>
+                <field name="l10n_ch_lpp_factor" string="LPP Facteur" optional="hide"/>
+                <field name="l10n_ch_lpp_retroactive" string="LPP rétroactif" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_ch_hr_payroll_salary_rule" model="ir.ui.view">
+        <field name="name">hr.salary.rule.view.form.l10n.ch.wage.types</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="inherit_id" ref="hr_payroll.hr_salary_rule_form"/>
+        <field name="arch" type="xml">
+            <field name="code" position="before">
+                <field name="l10n_ch_code" string="Swiss Wage Type Code"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_ch_hr_payroll_salary_rule_tree" model="ir.ui.view">
+        <field name="name">hr.salary.rule.view.tree.l10n.ch.wage.types</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="inherit_id" ref="hr_payroll.hr_salary_rule_list"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="l10n_ch_code" string="Swiss Wage Type Code"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_ch_wage_type_search_view" model="ir.ui.view">
+        <field name="name">wage.type.search.view</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="l10n_ch_code" string="CH Code"/>
+                <field name="code" string="Code"/>
+                <field name="name" string="Name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="swissdec_wage_types_form" model="ir.ui.view">
+        <field name="name">hr.salary.rule.view.form.l10n.ch.wage.types</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll_salary_rule"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="999"/>
+        <field name="arch" type="xml">
+            <page name="general" position="before">
+                <page name="wage_type_settings" string="Settings" invisible="not l10n_ch_code">
+                    <group colspan="2">
+                        <group string="Insurance Domain">
+                            <field name="l10n_ch_ac_included" string="AVS/AC"/>
+                            <field name="l10n_ch_aanp_included" string="LAA"/>
+                            <field name="l10n_ch_laac_included" string="LAAC"/>
+                            <field name="l10n_ch_ijm_included" string="IJM"/>
+                        </group>
+                        <group string="LPP Domain">
+                            <field name="l10n_ch_lpp_forecast" string="LPP prévisionnel"/>
+                            <field name="l10n_ch_lpp_factor" string="LPP Facteur"/>
+                            <field name="l10n_ch_lpp_retroactive" string="LPP rétroactif"/>
+                        </group>
+                        <group string="General Domain">
+                            <field name="l10n_ch_gross_included" string="Gross"/>
+                            <field name="l10n_ch_13th_month_included"/>
+                            <field name="l10n_ch_13th_month_hourly_included"/>
+                            <field name="l10n_ch_vacation_pay_included"/>
+                            <field name="l10n_ch_source_tax_included" string="IS"/>
+                            <field name="l10n_ch_is_periodic"/>
+                            <field name="l10n_ch_salary_certificate" string="Certificat de salaire"/>
+                            <field name="l10n_ch_caf_statement" string="Décompte CAF"/>
+                            <field name="l10n_ch_wage_statement" string="Statistique mois"/>
+                            <field name="l10n_ch_yearly_statement" string="Statistique année"/>
+                        </group>
+                    </group>
+                </page>
+            </page>
+            <form position="inside">
+                <chatter reload_on_attachment="True"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_ch_hr_payroll.action_hr_salary_rule_l10n_ch_wage_types" model="ir.actions.act_window">
+        <field name="name">Wage Types</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.salary.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="l10n_ch_wage_type_search_view"/>
+        <field name="domain" model="hr.salary.rule" eval="[('l10n_ch_code', '!=', False), ('struct_id.code','=','CHMONTHLYELM')]"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('l10n_ch_hr_payroll_elm_transmission.swissdec_wage_types_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('l10n_ch_hr_payroll_elm_transmission.swissdec_wage_types_form')})]"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,53 @@
+<odoo>
+    <data>
+        <record model="ir.actions.server" id="action_account_reports_customer_statements_do_followup">
+            <field name="name">Process Follow-ups</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="binding_model_id" ref="model_res_partner" />
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.action_manually_process_automatic_followups()
+            </field>
+        </record>
+        <record id="customer_statements_tree_view" model="ir.ui.view">
+            <field name="name">customer.statements.list</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <list position="inside">
+                    <field name="followup_responsible_id" widget="many2one_avatar_user" optional="hide"/>
+                    <field name="followup_reminder_type" optional="hide"/>
+                    <field name="followup_status" widget="badge"
+                           optional="hide"
+                           decoration-danger="followup_status == 'in_need_of_action'"
+                           decoration-warning="followup_status == 'with_overdue_invoices'"
+                           decoration-info="followup_status == 'no_action_needed'"/>
+                    <field name="followup_next_action_date" optional="hide" widget="remaining_days"/>
+                    <field name="followup_line_id" optional="hide"/>
+                    <field name="total_due" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total" optional="hide"/>
+                    <field name="total_overdue" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total" optional="hide"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="customer_statements_search_view" model="ir.ui.view">
+            <field name="name">customer.statements.search</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='inactive']" position="before">
+                    <filter string="Overdue Customer Invoices"
+                            name="filter_with_overdue_invoices"
+                            domain="[('followup_status', 'in', ('in_need_of_action', 'with_overdue_invoices'))]"/>
+                    <filter string="Requires Follow-up"
+                            name="filter_in_need_of_action"
+                            domain="[('followup_status', '=', 'in_need_of_action')]"/>
+                    <separator/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

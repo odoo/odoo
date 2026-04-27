@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_lead_view_pivot" model="ir.ui.view">
+        <field name="name">crm.lead.view.pivot.inherit.lead.website</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm_enterprise.crm_lead_view_pivot"/>
+        <field name="arch" type="xml">
+            <xpath expr="//pivot" position="inside">
+                <field name="reveal_iap_credits" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_lead_view_cohort" model="ir.ui.view">
+        <field name="name">crm.lead.view.cohort.inherit.lead.website</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm_enterprise.crm_lead_view_cohort"/>
+        <field name="arch" type="xml">
+            <xpath expr="//cohort" position="inside">
+                <field name="reveal_iap_credits" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_lead_view_graph_opportunity" model="ir.ui.view">
+        <field name="name">crm.lead.view.graph.opportunity.inherit.partner.assign</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm_enterprise.crm_opportunity_view_graph"/>
+        <field name="arch" type="xml">
+            <xpath expr="//graph" position="inside">
+                <field name="reveal_iap_credits" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_lead_view_graph" model="ir.ui.view">
+        <field name="name">crm.lead.view.graph.inherit.partner.assign</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm_enterprise.crm_lead_view_graph"/>
+        <field name="arch" type="xml">
+            <xpath expr="//graph" position="inside">
+                <field name="reveal_iap_credits" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+    
+</odoo>

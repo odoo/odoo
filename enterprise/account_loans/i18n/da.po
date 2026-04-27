@@ -1,0 +1,987 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_loans
+#
+# Translators:
+# Mads Søndergaard, 2024
+# lhmflexerp <lhm@flexerp.dk>, 2024
+# Mads Søndergaard, 2024
+# Martin Trigaux, 2024
+# Sammi Iversen <sammi@vkdata.dk>, 2025
+# Wil Odoo, 2025
+# Sanne Kristensen <sanne@vkdata.dk>, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:45+0000\n"
+"PO-Revision-Date: 2025-12-09 17:35+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/"
+"account_loans/da/>\n"
+"Language: da\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "1st amortization schedule"
+msgstr "1. afdragsplan"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__compounding_method__30a/360
+msgid "30A/360"
+msgstr "30A/360"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__compounding_method__30e/360
+msgid "30E/360"
+msgstr "30E/360"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__compounding_method__30e/360_isda
+msgid "30E/360 ISDA"
+msgstr "30E/360 ISDA"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__compounding_method__30u/360
+msgid "30U/360"
+msgstr "30U/360"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid ""
+"<span class=\"oe_inline\" invisible=\"duration == 1\">months</span>\n"
+"                                        <span class=\"oe_inline\" "
+"invisible=\"duration != 1\">month</span>"
+msgstr ""
+"<span class=\"oe_inline\" invisible=\"duration == 1\">måneder</span>\n"
+"                                        <span class=\"oe_inline\" "
+"invisible=\"duration != 1\">måned</span>"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
+msgid ""
+"<span class=\"oe_inline\" invisible=\"loan_term == 1\">years</span>\n"
+"                                    <span class=\"oe_inline\" "
+"invisible=\"loan_term != 1\">year</span>"
+msgstr ""
+"<span class=\"oe_inline\" invisible=\"loan_term == 1\">år</span>\n"
+"                                    <span class=\"oe_inline\" "
+"invisible=\"loan_term != 1\">år</span>"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
+msgid "<span class=\"oe_inline\">%</span>"
+msgstr "<span class=\"oe_inline\">%</span>"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__compounding_method__a/360
+msgid "A/360"
+msgstr "A/360"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__compounding_method__a/365f
+msgid "A/365F"
+msgstr "A/365F"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__compounding_method__a/a_afb
+msgid "A/A AFB"
+msgstr "A/A AFB"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__compounding_method__a/a_isda
+msgid "A/A ISDA"
+msgstr "A/A ISDA"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_needaction
+msgid "Action Needed"
+msgstr "Handling påkrævet"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__active
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__active
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_close_wizard
+msgid "All draft entries after the"
+msgstr "Alle kladdeposteringer efter den"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Amortization schedule"
+msgstr "Afdragsplan"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__amount_borrowed
+msgid "Amount Borrowed"
+msgstr "Lånt beløb"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__amount_borrowed_difference
+msgid "Amount Borrowed Difference"
+msgstr "Lånebeløbsdifference"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_close_wizard
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
+msgid "Apply"
+msgstr "Anvend"
+
+#. module: account_loans
+#: model:ir.model,name:account_loans.model_account_asset_group
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__asset_group_id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__loan_asset_group_id
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_search_view
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Asset Group"
+msgstr "Aktivgruppe"
+
+#. module: account_loans
+#: model:ir.model,name:account_loans.model_account_asset
+msgid "Asset/Revenue Recognition"
+msgstr "Aktiv/omsætning anerkendelse"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__payment_end_of_month__at_anniversary
+msgid "At Anniversary"
+msgstr "Ved årsdagen"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_attachment_count
+msgid "Attachment Count"
+msgstr "Antal vedhæftninger"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/wizard/account_loan_compute_wizard.py:0
+msgid "Balance"
+msgstr "Balance"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Cancel"
+msgstr "Annullér"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan__state__cancelled
+msgid "Cancelled"
+msgstr "Annulleret"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Close"
+msgstr "Luk"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_close_wizard__date
+msgid "Close Date"
+msgstr "Lukkedato"
+
+#. module: account_loans
+#: model:ir.actions.act_window,name:account_loans.action_view_account_loan_close_wizard
+#: model:ir.model,name:account_loans.model_account_loan_close_wizard
+msgid "Close Loan Wizard"
+msgstr "Luk låneassistenten"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan__state__closed
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_search_view
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Closed"
+msgstr "Lukket"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_search_view
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Closed Loans"
+msgstr "Lukkede lån"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/wizard/account_loan_close_wizard.py:0
+msgid "Closed on the %(date)s"
+msgstr "Lukket den %(date)s"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__company_id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__company_id
+msgid "Company"
+msgstr "Virksomhed"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__compounding_method
+msgid "Compounding Method"
+msgstr "Sammensætning"
+
+#. module: account_loans
+#. odoo-javascript
+#: code:addons/account_loans/static/src/components/loans/file_upload.xml:0
+msgid "Compute"
+msgstr "Beregn"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "Compute New Loan"
+msgstr "Beregn nyt lån"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Confirm"
+msgstr "Bekræft"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__count_linked_assets
+msgid "Count Linked Assets"
+msgstr "Antal tilknyttede aktiver"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_asset__count_linked_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_asset_group__count_linked_loans
+msgid "Count Linked Loans"
+msgstr "Antal tilknyttede lån"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__create_uid
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_close_wizard__create_uid
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__create_uid
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__create_uid
+msgid "Created by"
+msgstr "Oprettet af"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__create_date
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_close_wizard__create_date
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__create_date
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__create_date
+msgid "Created on"
+msgstr "Oprettet den"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__currency_id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__currency_id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__currency_id
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_search_view
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Current"
+msgstr "Aktuel"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/wizard/account_loan_compute_wizard.py:0
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__date
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Date"
+msgstr "Dato"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_close_wizard
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
+msgid "Discard"
+msgstr "Kassér"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_close_wizard__display_name
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__display_name
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__display_name
+msgid "Display Name"
+msgstr "Vis navn"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan__state__draft
+msgid "Draft"
+msgstr "Udkast"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_search_view
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Draft & Running Loans"
+msgstr "Kladde og løbende lån"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "Due"
+msgstr "Forfalder"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__duration
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Duration"
+msgstr "Varighed"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__duration_difference
+msgid "Duration Difference"
+msgstr "Varighedsforskel"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__end_date
+msgid "End Date"
+msgstr "Slut dato"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__payment_end_of_month__end_of_month
+msgid "End of Month"
+msgstr "Månedens afslutning"
+
+#. module: account_loans
+#: model:ir.model.fields,help:account_loans.field_account_loan_line__generated_move_ids
+msgid "Entries that we generated from this loan line"
+msgstr "Posteringer, som vi har genereret fra denne lånelinje"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__expense_account_id
+msgid "Expense Account"
+msgstr "Vareforbrugskonto"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__first_payment_date
+msgid "First Payment"
+msgstr "Første betaling"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_follower_ids
+msgid "Followers"
+msgstr "Følgere"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Følgere (partnere)"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__generated_move_ids
+msgid "Generated Entries"
+msgstr "Genererede posteringer"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_bank_statement_line__generating_loan_line_id
+#: model:ir.model.fields,field_description:account_loans.field_account_move__generating_loan_line_id
+msgid "Generating Loan Line"
+msgstr "Genereret lånelinje"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_search_view
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Group By"
+msgstr "Sortér efter"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__has_message
+msgid "Has Message"
+msgstr "Har besked"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_close_wizard__id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_loans
+#: model:ir.model.fields,help:account_loans.field_account_loan__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Hvis afkrydset, kræver nye beskeder din opmærksomhed "
+
+#. module: account_loans
+#: model:ir.model.fields,help:account_loans.field_account_loan__message_has_error
+#: model:ir.model.fields,help:account_loans.field_account_loan__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Hvis afkrydset har nogle beskeder en leveringsfejl"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+#: code:addons/account_loans/wizard/account_loan_compute_wizard.py:0
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__interest
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__interest
+msgid "Interest"
+msgstr "Rente"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__interest_difference
+msgid "Interest Difference"
+msgstr "Rentedifference"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__interest_rate
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
+msgid "Interest Rate"
+msgstr "Rentesats"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/wizard/account_loan_compute_wizard.py:0
+msgid "Interest Rate must be between 0 and 100"
+msgstr "Rentesats skal være mellem 0 og 100"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_list_view
+msgid "Interests"
+msgstr "Renter"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_is_follower
+msgid "Is Follower"
+msgstr "Er følger"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_bank_statement_line__is_loan_payment_move
+#: model:ir.model.fields,field_description:account_loans.field_account_move__is_loan_payment_move
+msgid "Is Loan Payment Move"
+msgstr "Er bogføring af en lånebetaling"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__is_payment_move_posted
+msgid "Is Payment Move Posted"
+msgstr "Er betaling bogført"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__is_wrong_date
+msgid "Is Wrong Date"
+msgstr "Er forkert dato"
+
+#. module: account_loans
+#: model:ir.model,name:account_loans.model_account_journal
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__journal_id
+msgid "Journal"
+msgstr "Journal"
+
+#. module: account_loans
+#: model:ir.model,name:account_loans.model_account_move
+msgid "Journal Entry"
+msgstr "Journalbilag"
+
+#. module: account_loans
+#: model:account.journal,name:account_loans.account_loans_journal_loan
+msgid "Journal Loan Demo"
+msgstr "Demo for lån med journal"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__write_uid
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_close_wizard__write_uid
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__write_uid
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__write_uid
+msgid "Last Updated by"
+msgstr "Sidst opdateret af"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__write_date
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_close_wizard__write_date
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__write_date
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__write_date
+msgid "Last Updated on"
+msgstr "Sidst opdateret den"
+
+#. module: account_loans
+#: model:ir.model.fields,help:account_loans.field_account_bank_statement_line__generating_loan_line_id
+#: model:ir.model.fields,help:account_loans.field_account_move__generating_loan_line_id
+msgid "Line of the loan that generated this entry"
+msgstr "Lånelinje, der har genereret denne postering"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__linked_assets_ids
+msgid "Linked Assets"
+msgstr "Tilknyttede aktiver"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_asset.py:0
+msgid "Linked loans"
+msgstr "Tilknyttede lån"
+
+#. module: account_loans
+#: model:ir.model,name:account_loans.model_account_loan
+#: model:ir.model.fields,field_description:account_loans.field_account_bank_statement_line__loan_id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_close_wizard__loan_id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__loan_id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__loan_id
+#: model:ir.model.fields,field_description:account_loans.field_account_move__loan_id
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_search_view
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Loan"
+msgstr "Lån"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__loan_amount
+msgid "Loan Amount"
+msgstr "Lånebeløb"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/wizard/account_loan_compute_wizard.py:0
+msgid "Loan Amount must be positive"
+msgstr "Lånebeløbet skal være positivt"
+
+#. module: account_loans
+#: model:ir.actions.act_window,name:account_loans.action_view_account_loan_compute_wizard
+#: model:ir.model,name:account_loans.model_account_loan_compute_wizard
+msgid "Loan Compute Wizard"
+msgstr "Assistent til beregning af lån"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__date
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__loan_date
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_search_view
+msgid "Loan Date"
+msgstr "Lånedatum"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "Loan Entries"
+msgstr "Låneposteringer"
+
+#. module: account_loans
+#: model:ir.model,name:account_loans.model_account_loan_line
+msgid "Loan Line"
+msgstr "Lånelinje"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__line_ids
+msgid "Loan Lines"
+msgstr "Lånelinjer"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Loan Settings"
+msgstr "Låneindstillinger"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__loan_term
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
+msgid "Loan Term"
+msgstr "Låneperiode"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/wizard/account_loan_compute_wizard.py:0
+msgid "Loan Term must be positive"
+msgstr "Låneperiode skal være positiv"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_list_view
+msgid "Loan lines"
+msgstr "Lånelinjer"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__display_name
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Loan name"
+msgstr "Navn på lån"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.asset_group_form_view_inherit_loan
+msgid "Loan(s)"
+msgstr "Lån"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+#: model:ir.actions.act_window,name:account_loans.action_view_account_loans
+#: model:ir.ui.menu,name:account_loans.menu_action_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_list_view
+msgid "Loans"
+msgstr "Lån"
+
+#. module: account_loans
+#: model:ir.actions.act_window,name:account_loans.action_view_account_loans_analysis
+#: model:ir.ui.menu,name:account_loans.menu_action_loans_analysis
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_pivot_view
+msgid "Loans Analysis"
+msgstr "Lånanalyse"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__long_term_account_id
+msgid "Long Term Account"
+msgstr "Konto til langfristede lån"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__long_term_theoretical_balance
+msgid "Long-Term"
+msgstr "Langfristet"
+
+#. module: account_loans
+#: model_terms:ir.actions.act_window,help:account_loans.action_view_account_loans
+msgid "Manage Your Acquired Loans with Automated Adjustments."
+msgstr "Administrér dine modtagne lån med automatiserede justeringer."
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_has_error
+msgid "Message Delivery error"
+msgstr "Besked ved leveringsfejl"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_ids
+msgid "Messages"
+msgstr "Beskeder"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_journal__loan_properties_definition
+msgid "Model Properties"
+msgstr "Modelegenskaber"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__name
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__loan_name
+msgid "Name"
+msgstr "Navn"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__nb_posted_entries
+msgid "Nb Posted Entries"
+msgstr "Antal bogførte poster"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Antal handlinger"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_has_error_counter
+msgid "Number of errors"
+msgstr "Antal fejl"
+
+#. module: account_loans
+#: model:ir.model.fields,help:account_loans.field_account_loan__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Antal meddelelser der kræver handling"
+
+#. module: account_loans
+#: model:ir.model.fields,help:account_loans.field_account_loan__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Antal beskeder med leveringsfejl"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_move.py:0
+msgid "Original Loan"
+msgstr "Oprindelige lån"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__outstanding_balance
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__outstanding_balance
+msgid "Outstanding Balance"
+msgstr "Udestående saldo"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/wizard/account_loan_compute_wizard.py:0
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__payment_end_of_month
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__payment
+msgid "Payment"
+msgstr "Betaling"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_list_view
+msgid "Payments"
+msgstr "Betalinger"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "Please add a name before computing the loan"
+msgstr "Tilføj venligst et navn, før lånet beregnes"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Posted Entries"
+msgstr "Posteret posteringer"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__preview
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
+msgid "Preview"
+msgstr "Eksempel"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+#: code:addons/account_loans/wizard/account_loan_compute_wizard.py:0
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__principal
+msgid "Principal"
+msgstr "Hovedstol"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "Principal & Interest"
+msgstr "Hovedstol og renter"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_list_view
+msgid "Principals"
+msgstr "Hovedstole"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__loan_properties
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Properties"
+msgstr "Egenskaber"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__rating_ids
+msgid "Ratings"
+msgstr "Bedømmelser"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "Reclassification LT - ST"
+msgstr "Omklassificering LT - ST"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Related Asset(s)"
+msgstr "Tilknyttet/tilknyttede aktiv(er)"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.view_move_form_inherit_loan
+msgid "Related Loan"
+msgstr "Tilknyttet lån"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_asset_form_inherit_loan
+msgid "Related Loan(s)"
+msgstr "Tilknyttede lån"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_asset__linked_loans_ids
+#: model:ir.model.fields,field_description:account_loans.field_account_asset_group__linked_loan_ids
+msgid "Related Loans"
+msgstr "Tilknyttede lån"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Reset"
+msgstr "Nulstil"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "Reversal reclassification LT - ST"
+msgstr "Omklassificering af tilbagebetaling LT - ST"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan__state__running
+msgid "Running"
+msgstr "Kører"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS leveringsfejl"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_search_view
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Search Loan"
+msgstr "Søg lån"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Set to Draft"
+msgstr "Sæt til kladde"
+
+#. module: account_loans
+#: model_terms:ir.actions.act_window,help:account_loans.action_view_account_loans
+msgid ""
+"Set up your amortization schedule, or import it, and let Odoo handle the "
+"monthly interest and principal adjustments automatically."
+msgstr ""
+"Opret din afdragsplan eller importér den, og lad Odoo automatisk håndtere de "
+"månedlige rente- og afdragsjusteringer."
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__short_term_account_id
+msgid "Short Term Account"
+msgstr "Konto til kortfristede lån"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__short_term_theoretical_balance
+msgid "Short-Term"
+msgstr "Kortfristet"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__skip_until_date
+msgid "Skip until"
+msgstr "Spring over til"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__start_date
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__start_date
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_list_view
+msgid "Start Date"
+msgstr "Start dato"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__state
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__loan_state
+msgid "Status"
+msgstr "Status"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/wizard/account_loan_compute_wizard.py:0
+msgid "The First Payment Date must be before the end of the loan."
+msgstr "Den første betalingsfrist skal ligge inden lånets udløbsdato."
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "The amount borrowed must be positive"
+msgstr "Det optagne lånebeløb skal være positivt"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "The duration must be positive"
+msgstr "Varigheden skal være positiv"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "The interest must be positive"
+msgstr "Rentesatsen skal være positiv"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "The loan accounts should be set."
+msgstr "Lånekontiene skal være defineret."
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid ""
+"The loan amount %(loan_amount)s should be equal to the sum of the "
+"principals: %(principal_sum)s (difference %(principal_difference)s)"
+msgstr ""
+"Lånebeløbet %(loan_amount)s skal svare til hovedstolen: %(principal_sum)s "
+"(difference: %(principal_difference)s)"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "The loan date should be earlier than the loan lines date."
+msgstr "Lånets dato skal være tidligere end datoen for lånelinjerne."
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "The loan duration should be equal to the number of loan lines."
+msgstr "Lånets løbetid skal svare til antallet af lånelinjer."
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid ""
+"The loan interest should be equal to the sum of the loan lines interest."
+msgstr "Lånerenterne skal svare til summen af renterne på lånelinjerne."
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "The loan journal should be set."
+msgstr "Lånejournalen skal være konfigureret."
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "The loan name should be set."
+msgstr "Lånets navn skal være konfigureret."
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "This entry has been %s"
+msgstr "Denne post har været %s"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "This entry has been reversed from %s"
+msgstr "Denne post er blevet tilbageført fra %s"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_list_view
+msgid "Total Amounts Borrowed"
+msgstr "Samlet lånebeløb"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_list_view
+msgid "Total Outstanding Balance"
+msgstr "Samlet udestående saldo"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_list_view
+msgid "Total interests"
+msgstr "Samlede renter"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_list_view
+msgid "Total payments"
+msgstr "Samlede betalinger"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_list_view
+msgid "Total principals"
+msgstr "Samlede hovedstole"
+
+#. module: account_loans
+#. odoo-javascript
+#: code:addons/account_loans/static/src/components/loans/file_upload.xml:0
+msgid "Upload"
+msgstr "Upload"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "Uploaded file"
+msgstr "Uploadet fil"
+
+#. module: account_loans
+#: model:ir.model.fields,help:account_loans.field_account_loan__skip_until_date
+msgid ""
+"Upon confirmation of the loan, Odoo will ignore the loan lines that are up "
+"to this date (included) and not create entries for them. This is useful if "
+"you have already manually created entries prior to the creation of this loan."
+msgstr ""
+"Når lånet bekræftes, ignorerer Odoo lånelinjerne frem til og med denne dato "
+"og opretter ingen posteringer for dem. Dette er nyttigt, hvis du allerede "
+"har oprettet manuelle posteringer, før lånet blev registreret."
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__website_message_ids
+msgid "Website Messages"
+msgstr "Beskeder fra hjemmesiden"
+
+#. module: account_loans
+#: model:ir.model.fields,help:account_loans.field_account_loan__website_message_ids
+msgid "Website communication history"
+msgstr "Hjemmesidens kommunikations historik"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_close_wizard
+msgid "will be deleted and the loan will be marked as closed."
+msgstr "slettes, og lånet markeres som afsluttet."

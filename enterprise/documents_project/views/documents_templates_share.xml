@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="documents_project.public_page_layout" inherit_id="documents.public_page_layout" primary="True">
+    </template>
+    <template id="documents_project.public_project_page" inherit_id="documents.public_folder_page" primary="True">
+        <xpath expr="//t[@t-call='documents.public_page_layout']" position="attributes">
+            <attribute name="t-call">documents_project.public_page_layout</attribute>
+        </xpath>
+
+        <xpath expr="//t[@t-set='folder_downloadzip_url']" position="attributes">
+            <attribute name="t-valuef">/my/projects/#{project_id}/documents/download?access_token=#{quote(access_token)}</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='folder_upload_url']" position="attributes">
+            <attribute name="t-valuef">/my/projects/#{project_id}/documents/upload?access_token=#{quote(access_token)}</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='subfolder_open_url']" position="attributes">
+            <attribute name="t-valuef">#</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='subfolder_downloadzip_url']" position="attributes">
+            <attribute name="t-valuef">#</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='subfolder_upload_url']" position="attributes">
+            <attribute name="t-valuef">#</attribute>
+        </xpath>
+    </template>
+    <template id="documents_project.public_task_page" inherit_id="documents.public_folder_page" primary="True">
+        <xpath expr="//t[@t-call='documents.public_page_layout']" position="attributes">
+            <attribute name="t-call">documents_project.public_page_layout</attribute>
+        </xpath>
+
+        <xpath expr="//t[@t-set='folder_downloadzip_url']" position="attributes">
+            <attribute name="t-valuef">/my/projects/#{project_id}/task/#{task_id}/documents/download?access_token=#{quote(access_token)}</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='folder_upload_url']" position="attributes">
+            <attribute name="t-valuef">/my/projects/#{project_id}/task/#{task_id}/documents/upload?access_token=#{quote(access_token)}</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='subfolder_open_url']" position="attributes">
+            <attribute name="t-valuef">#</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='subfolder_downloadzip_url']" position="attributes">
+            <attribute name="t-valuef">#</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='subfolder_upload_url']" position="attributes">
+            <attribute name="t-valuef">#</attribute>
+        </xpath>
+    </template>
+    <!-- TODO: Remove me in master -->
+    <!-- Because we add documents link from _task_get_page_view_values -->
+    <template id="documents_project.portal_my_task" inherit_id="project.portal_my_task">
+        <xpath expr="//div[@id='task-links']/ul" position="inside">
+            <li class="nav-item" id="nav-chat" t-if="1==0 and task.project_use_documents and task.document_ids">
+                <a class="nav-link p-0" target="_blank" t-attf-href="/{{ 'my/projects/' + str(project_id) + '/task' if project_id else 'my/tasks' }}/{{ task.id }}/documents?{{ keep_query() }}">
+                    Documents
+                </a>
+            </li>
+        </xpath>
+    </template>
+</odoo>

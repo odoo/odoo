@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="appointment_slot_view_form" model="ir.ui.view">
+        <field name="name">appointment.slot.view.form</field>
+        <field name="model">appointment.slot</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="slot_type" invisible="1"/>
+                    <field name="schedule_based_on" invisible="1"/>
+                    <div class="oe_title mb-3">
+                        <label for="appointment_type_id"/>
+                        <field name="appointment_type_id"/>
+                    </div>
+                    <group invisible="slot_type == 'unique'">
+                        <group>
+                            <field name="restrict_to_user_ids"
+                                widget="many2many_avatar_user"
+                                options="{'no_create': True}"
+                                domain="[('id', 'in', 'appointment_type_id.staff_user_ids')]"
+                                invisible="schedule_based_on != 'users'"/>
+                            <field name="restrict_to_resource_ids"
+                                widget="many2many_tags_avatar"
+                                options="{'no_create': True}"
+                                domain="[('id', 'in', 'appointment_type_id.resource_ids')]"
+                                invisible="schedule_based_on != 'resources'"/>
+                            <field name="weekday"/>
+                        </group>
+                        <group>
+                            <field name="start_hour" widget="float_time"/>
+                            <field name="end_hour" widget="float_time"/>
+                        </group>
+                    </group>
+                    <group invisible="slot_type == 'recurring'">
+                        <group>
+                            <field name="start_datetime"/>
+                            <field name="end_datetime"/>
+                        </group>
+                        <group>
+                            <field name="allday"/>
+                            <field name="duration" widget="float_time"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

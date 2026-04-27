@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="helpdesk.HelpdeskTeamTarget">
+        <td t-attf-class="{{props.demoClass}} p-0" t-att-data-hotkey="props.hotkey">
+            <input t-if="state.isFocused" t-att-value="state.value"
+                   class="form-control p-0 h-100 text-center rounded" type="text"
+                   t-ref="inputRef" t-on-blur="_toggleFocus" t-on-change="_onValueChange"
+                   t-on-keydown="_onInputKeydown"
+            />
+            <span t-else="" class="btn btn-light justify-content-center align-items-center d-flex h-100 p-0 border-0 bg-100 fw-normal"
+                  t-att-title="this.helpdeskTeamTargetTitle"
+                  t-att-class="{'o_target_to_set': !props.showDemo}" t-on-click.stop="_toggleFocus"
+            >
+                <div t-if="state.value" class="position-relative p-2">
+                    <t t-esc="this.valueString"/>
+                    <i class="fa fa-pencil position-absolute ms-2 mt-1 opacity-0"/>
+                </div>
+                <div t-else="">
+                    Click to set
+                </div>
+            </span>
+        </td>
+    </t>
+</templates>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="social_post_view_form" model="ir.ui.view">
+        <field name="name">social.post.view.form.inherit.social.crm</field>
+        <field name="model">social.post</field>
+        <field name="inherit_id" ref="social.social_post_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_redirect_to_clicks']" position="after">
+                <button name="action_redirect_to_leads_opportunities" type="object" icon="fa-star"
+                        class="oe_stat_button" groups="sales_team.group_sale_salesman">
+                    <div class="o_field_widget o_stat_info">
+                        <field name="use_leads" invisible="1"/>
+                        <span class="o_stat_value"><field nolabel="1" name="leads_opportunities_count"/></span>
+                        <span class="o_stat_text" invisible="not use_leads">Leads</span>
+                        <span class="o_stat_text" invisible="use_leads">Opportunities</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="social_post_view_kanban" model="ir.ui.view">
+        <field name="name">social.post.view.kanban.inherit.social.crm</field>
+        <field name="model">social.post</field>
+        <field name="inherit_id" ref="social.social_post_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='live_posts_by_media']" position="after">
+                <field name="use_leads"/>
+            </xpath>
+            <xpath expr="//div[@id='post-stats']" position="inside">
+                <div class="d-flex justify-content-between py-1 border-top" groups="sales_team.group_sale_salesman">
+                    <small t-if="record.use_leads.raw_value" class="pe-1">Leads:</small>
+                    <small t-else="" class="pe-1">Opportunities:</small> <field name="leads_opportunities_count" class="fw-bold small"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</data>
+</odoo>

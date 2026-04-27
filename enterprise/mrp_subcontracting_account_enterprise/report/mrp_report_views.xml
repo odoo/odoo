@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mrp_report_pivot_view_inherit_subcontracting" model="ir.ui.view">
+        <field name="name">mrp.report.view.pivot.inherit.subcontracting</field>
+        <field name="model">mrp.report</field>
+        <field name="inherit_id" ref="mrp_account_enterprise.mrp_report_pivot_view"/>
+        <field name="arch" type="xml">
+            <field name="unit_operation_cost" position="after">
+                <field name="unit_subcontracting_cost" type="measure" string="Average Subcontracting Cost / Unit"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="mrp_report_form_view_inherit_subcontracting" model="ir.ui.view">
+        <field name="name">mrp.report.view.form.inherit.subcontracting</field>
+        <field name="model">mrp.report</field>
+        <field name="inherit_id" ref="mrp_account_enterprise.mrp_report_form_view"/>
+        <field name="arch" type="xml">
+            <field name="unit_operation_cost" position="after">
+                <field name="unit_subcontracting_cost"/>
+            </field>
+             <field name="operation_cost" position="after">
+                <field name="subcontracting_cost"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

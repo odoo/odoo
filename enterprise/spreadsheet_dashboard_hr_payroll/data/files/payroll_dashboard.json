@@ -1,0 +1,617 @@
+{
+  "version": 21,
+  "sheets": [
+    {
+      "id": "sheet1",
+      "name": "Dashboard",
+      "colNumber": 6,
+      "rowNumber": 41,
+      "rows": {
+        "11": { "size": 39 },
+        "28": { "size": 41 },
+        "29": { "size": 40 },
+        "30": { "size": 30 },
+        "31": { "size": 30 },
+        "32": { "size": 30 },
+        "33": { "size": 30 },
+        "34": { "size": 30 },
+        "35": { "size": 30 },
+        "36": { "size": 30 },
+        "37": { "size": 30 },
+        "38": { "size": 30 },
+        "39": { "size": 30 }
+      },
+      "cols": {
+        "0": { "size": 381 },
+        "2": { "size": 27 },
+        "3": { "size": 285 }
+      },
+      "merges": [],
+      "cells": {
+        "A12": {
+          "content": "[Payroll Analysis](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[],\"graph_measure\":\"net_wage\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"date_from:month\"],\"graph_order\":null,\"graph_stacked\":true,\"graph_cumulated\":false},\"modelName\":\"hr.payroll.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Payroll Analysis\"})"
+        },
+        "A29": {
+          "content": "[Work Entries Analysis](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[],\"pivot_measures\":[\"number_of_days\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"work_entry_type_id\"]},\"modelName\":\"hr.work.entry.report\",\"views\":[[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Work Entries Analysis\"})"
+        },
+        "A30": { "content": "=_t(\"Work type\")" },
+        "A31": { "content": "=PIVOT.HEADER(2,\"#work_entry_type_id\",1)" },
+        "A32": { "content": "=PIVOT.HEADER(2,\"#work_entry_type_id\",2)" },
+        "A33": { "content": "=PIVOT.HEADER(2,\"#work_entry_type_id\",3)" },
+        "A34": { "content": "=PIVOT.HEADER(2,\"#work_entry_type_id\",4)" },
+        "A35": { "content": "=PIVOT.HEADER(2,\"#work_entry_type_id\",5)" },
+        "A36": { "content": "=PIVOT.HEADER(2,\"#work_entry_type_id\",6)" },
+        "A37": { "content": "=PIVOT.HEADER(2,\"#work_entry_type_id\",7)" },
+        "A38": { "content": "=PIVOT.HEADER(2,\"#work_entry_type_id\",8)" },
+        "A39": { "content": "=PIVOT.HEADER(2,\"#work_entry_type_id\",9)" },
+        "A40": { "content": "=PIVOT.HEADER(2,\"#work_entry_type_id\",10)" },
+        "B30": { "content": "=PIVOT.HEADER(2,\"measure\",\"number_of_days\")" },
+        "B31": {
+          "content": "=PIVOT.VALUE(2,\"number_of_days\",\"#work_entry_type_id\",1)"
+        },
+        "B32": {
+          "content": "=PIVOT.VALUE(2,\"number_of_days\",\"#work_entry_type_id\",2)"
+        },
+        "B33": {
+          "content": "=PIVOT.VALUE(2,\"number_of_days\",\"#work_entry_type_id\",3)"
+        },
+        "B34": {
+          "content": "=PIVOT.VALUE(2,\"number_of_days\",\"#work_entry_type_id\",4)"
+        },
+        "B35": {
+          "content": "=PIVOT.VALUE(2,\"number_of_days\",\"#work_entry_type_id\",5)"
+        },
+        "B36": {
+          "content": "=PIVOT.VALUE(2,\"number_of_days\",\"#work_entry_type_id\",6)"
+        },
+        "B37": {
+          "content": "=PIVOT.VALUE(2,\"number_of_days\",\"#work_entry_type_id\",7)"
+        },
+        "B38": {
+          "content": "=PIVOT.VALUE(2,\"number_of_days\",\"#work_entry_type_id\",8)"
+        },
+        "B39": {
+          "content": "=PIVOT.VALUE(2,\"number_of_days\",\"#work_entry_type_id\",9)"
+        },
+        "B40": {
+          "content": "=PIVOT.VALUE(2,\"number_of_days\",\"#work_entry_type_id\",10)"
+        }
+      },
+      "styles": { "A12": 1, "A29": 1, "A30:B30": 2, "A31:B40": 3 },
+      "formats": {},
+      "borders": {
+        "A29:B29": 1,
+        "A12:F12": 1,
+        "A30:B30": 2,
+        "A13:F13": 2,
+        "A31": 3,
+        "A32:A40": 4,
+        "A41:B41": 5,
+        "B31": 6,
+        "B32:B40": 7
+      },
+      "conditionalFormats": [
+        {
+          "rule": {
+            "type": "DataBarRule",
+            "color": 15531509,
+            "rangeValues": "B31:B40"
+          },
+          "id": "8963783c-50ff-408d-afdc-a04da79e4079",
+          "ranges": ["A31:A40"]
+        }
+      ],
+      "figures": [
+        {
+          "id": "2e014bc2-e684-4373-adf6-6407a99af32c",
+          "x": 0,
+          "y": 13,
+          "width": 192,
+          "height": 102,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": {
+              "text": "Average Net Wage",
+              "bold": true,
+              "color": "#434343"
+            },
+            "type": "scorecard",
+            "background": "#FFF7ED",
+            "baseline": "Data!E3",
+            "keyValue": "Data!D3",
+            "humanize": false
+          }
+        },
+        {
+          "id": "6432db5b-d0ee-446c-8fdc-571a58e107da",
+          "x": 200,
+          "y": 13,
+          "width": 192,
+          "height": 102,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": {
+              "text": "Average Basic Wage",
+              "bold": true,
+              "color": "#434343"
+            },
+            "type": "scorecard",
+            "background": "#FFF7ED",
+            "baseline": "Data!E4",
+            "keyValue": "Data!D4",
+            "humanize": false
+          }
+        },
+        {
+          "id": "d6526401-f138-4435-9147-df08e80b3303",
+          "x": 0,
+          "y": 125,
+          "width": 192,
+          "height": 102,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": {
+              "text": "Avg Hours/Days",
+              "bold": true,
+              "color": "#434343"
+            },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!E15",
+            "keyValue": "Data!D15",
+            "humanize": false
+          }
+        },
+        {
+          "id": "ad4f9864-da2a-46c3-9738-7b5120eb3712",
+          "x": 400,
+          "y": 13,
+          "width": 192,
+          "height": 102,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": {
+              "text": "Total Net Wage",
+              "bold": true,
+              "color": "#434343"
+            },
+            "type": "scorecard",
+            "background": "#FFF7ED",
+            "baseline": "Data!E6",
+            "keyValue": "Data!D6",
+            "humanize": false
+          }
+        },
+        {
+          "id": "784c171b-55e1-47f9-88c5-80ff33c0d58a",
+          "x": 601,
+          "y": 13,
+          "width": 192,
+          "height": 102,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": {
+              "text": "Total Basic Wage",
+              "bold": true,
+              "color": "#434343"
+            },
+            "type": "scorecard",
+            "background": "#FFF7ED",
+            "baseline": "Data!E7",
+            "keyValue": "Data!D7",
+            "humanize": false
+          }
+        },
+        {
+          "id": "cdb5d177-1c7b-4e89-9fb2-6f12ba98807c",
+          "x": 0,
+          "y": 292,
+          "width": 983,
+          "height": 343,
+          "tag": "chart",
+          "data": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "none",
+            "metaData": {
+              "groupBy": ["date_from:month"],
+              "measure": "net_wage",
+              "order": null,
+              "resModel": "hr.payroll.report",
+              "mode": "line"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": { "country_code": "be" },
+              "domain": [],
+              "groupBy": [],
+              "orderBy": []
+            },
+            "type": "odoo_line",
+            "verticalAxisPosition": "left",
+            "stacked": false,
+            "fillArea": true,
+            "fieldMatching": {
+              "856ca699-dd18-47ea-a8c7-bb48a37e0f9f": {
+                "chain": "date_from",
+                "type": "date",
+                "offset": -1
+              },
+              "74f6a928-ecb5-4350-9a5e-39a6edc250d4": {
+                "chain": "job_id",
+                "type": "many2one"
+              },
+              "cc3ddb0d-417c-441f-95bb-dc16ab4f11fe": {
+                "chain": "company_id",
+                "type": "many2one"
+              }
+            }
+          }
+        },
+        {
+          "id": "1020f2c2-4cb2-4713-8a4d-2d22a3e30008",
+          "x": 200,
+          "y": 125,
+          "width": 192,
+          "height": 102,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": { "text": "FTE", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!B16",
+            "baselineDescr": "Employees",
+            "keyValue": "Data!B17",
+            "humanize": false
+          }
+        }
+      ],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": { "ROW": [], "COL": [] },
+      "dataValidationRules": [],
+      "comments": {}
+    },
+    {
+      "id": "1e571810-7579-4ae9-82c1-a7c0ab6d5d94",
+      "name": "Data",
+      "colNumber": 26,
+      "rowNumber": 102,
+      "rows": {},
+      "cols": { "0": { "size": 210 } },
+      "merges": [],
+      "cells": {
+        "A2": { "content": "=_t(\"#Payslips\")" },
+        "A3": { "content": "=_t(\"Average Net Wage\")" },
+        "A4": { "content": "=_t(\"Average Basic Wage\")" },
+        "A5": { "content": "=_t(\"Average Gross Wage\")" },
+        "A6": { "content": "=_t(\"Total Net Wage\")" },
+        "A7": { "content": "=_t(\"Total Basic Wage\")" },
+        "A8": { "content": "=_t(\"Total Gross Wage\")" },
+        "A9": { "content": "=_t(\"Work Days\")" },
+        "A10": { "content": "=_t(\"Work Hours\")" },
+        "A11": { "content": "=_t(\"Paid Time Off\")" },
+        "A12": { "content": "=_t(\"Unpaid TIme Off\")" },
+        "A13": { "content": "=_t(\"Attendance Rate\")" },
+        "A14": { "content": "=_t(\"Absenteeism Rate\")" },
+        "A15": { "content": "=_t(\"Average Hours per Days of Work\")" },
+        "A16": { "content": "=_t(\"Employees\")" },
+        "A17": { "content": "=_t(\"FTE\")" },
+        "A18": { "content": "=_t(\"Employees (%)\")" },
+        "A19": { "content": "=_t(\"FTE (%)\")" },
+        "B1": { "content": "=_t(\"Current\")" },
+        "B2": { "content": "=PIVOT.VALUE(3,\"count\")" },
+        "B3": { "content": "=iferror(B6/B2)" },
+        "B4": { "content": "=iferror(B7/B2)" },
+        "B5": { "content": "=iferror(B8/B2)" },
+        "B6": { "content": "=PIVOT.VALUE(3,\"net_wage\")" },
+        "B7": { "content": "=PIVOT.VALUE(3,\"basic_wage\")" },
+        "B8": { "content": "=PIVOT.VALUE(3,\"gross_wage\")" },
+        "B9": { "content": "=PIVOT.VALUE(3,\"count_work\")" },
+        "B10": { "content": "=PIVOT.VALUE(3,\"count_work_hours\")" },
+        "B11": { "content": "=PIVOT.VALUE(3,\"count_leave\")" },
+        "B12": { "content": "=PIVOT.VALUE(3,\"count_leave_unpaid\")" },
+        "B15": { "content": "=iferror(B10/B9)" },
+        "B16": { "content": "=PIVOT.VALUE(5,\"__count\")" },
+        "B17": { "content": "=(PIVOT.VALUE(7,\"work_time_rate\"))" },
+        "B18": { "content": "=iferror(B16/B16)" },
+        "B19": { "content": "=iferror(B17/B16)" },
+        "C1": { "content": "=_t(\"Previous\")" },
+        "C2": { "content": "=PIVOT.VALUE(4,\"count\")" },
+        "C3": { "content": "=iferror(C6/C2)" },
+        "C4": { "content": "=iferror(C7/C2)" },
+        "C5": { "content": "=iferror(C8/C2)" },
+        "C6": { "content": "=PIVOT.VALUE(4,\"net_wage\")" },
+        "C7": { "content": "=PIVOT.VALUE(4,\"basic_wage\")" },
+        "C8": { "content": "=PIVOT.VALUE(4,\"gross_wage\")" },
+        "C9": { "content": "=PIVOT.VALUE(4,\"count_work\")" },
+        "C10": { "content": "=PIVOT.VALUE(4,\"count_work_hours\")" },
+        "C11": { "content": "=PIVOT.VALUE(4,\"count_leave\")" },
+        "C12": { "content": "=PIVOT.VALUE(4,\"count_leave_unpaid\")" },
+        "C15": { "content": "=iferror(C10/C9)" },
+        "D1": { "content": "=_t(\"Current\")" },
+        "D2": { "content": "=FORMAT.LARGE.NUMBER(B2)" },
+        "D3": { "content": "=FORMAT.LARGE.NUMBER(B3)" },
+        "D4": { "content": "=FORMAT.LARGE.NUMBER(B4)" },
+        "D5": { "content": "=FORMAT.LARGE.NUMBER(B5)" },
+        "D6": { "content": "=FORMAT.LARGE.NUMBER(B6)" },
+        "D7": { "content": "=FORMAT.LARGE.NUMBER(B7)" },
+        "D8": { "content": "=FORMAT.LARGE.NUMBER(B8)" },
+        "D9": { "content": "=FORMAT.LARGE.NUMBER(B9)" },
+        "D10": { "content": "=FORMAT.LARGE.NUMBER(B10)" },
+        "D11": { "content": "=FORMAT.LARGE.NUMBER(B11)" },
+        "D12": { "content": "=FORMAT.LARGE.NUMBER(B12)" },
+        "D13": { "content": "=FORMAT.LARGE.NUMBER(B13)" },
+        "D14": { "content": "=FORMAT.LARGE.NUMBER(B14)" },
+        "D15": { "content": "=FORMAT.LARGE.NUMBER(B15)" },
+        "E1": { "content": "=_t(\"Previous\")" },
+        "E2": { "content": "=FORMAT.LARGE.NUMBER(C2)" },
+        "E3": { "content": "=FORMAT.LARGE.NUMBER(C3)" },
+        "E4": { "content": "=FORMAT.LARGE.NUMBER(C4)" },
+        "E5": { "content": "=FORMAT.LARGE.NUMBER(C5)" },
+        "E6": { "content": "=FORMAT.LARGE.NUMBER(C6)" },
+        "E7": { "content": "=FORMAT.LARGE.NUMBER(C7)" },
+        "E8": { "content": "=FORMAT.LARGE.NUMBER(C8)" },
+        "E9": { "content": "=FORMAT.LARGE.NUMBER(C9)" },
+        "E10": { "content": "=FORMAT.LARGE.NUMBER(C10)" },
+        "E11": { "content": "=FORMAT.LARGE.NUMBER(C11)" },
+        "E12": { "content": "=FORMAT.LARGE.NUMBER(C12)" },
+        "E13": { "content": "=FORMAT.LARGE.NUMBER(C13)" },
+        "E14": { "content": "=FORMAT.LARGE.NUMBER(C14)" },
+        "E15": { "content": "=FORMAT.LARGE.NUMBER(C15)" }
+      },
+      "styles": { "A2:A19": 4, "B1:E1": 4, "B2:E19": 5 },
+      "formats": { "B16": 1, "B18:B19": 2 },
+      "borders": {},
+      "conditionalFormats": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": { "ROW": [], "COL": [] },
+      "dataValidationRules": [],
+      "comments": {}
+    }
+  ],
+  "styles": {
+    "1": { "fontSize": 16, "bold": true },
+    "2": { "textColor": "#434343", "fontSize": 11, "bold": true },
+    "3": { "textColor": "#434343", "verticalAlign": "middle" },
+    "4": { "bold": true },
+    "5": { "fillColor": "#F3F3F3" }
+  },
+  "formats": { "1": "0", "2": "0%" },
+  "borders": {
+    "1": { "bottom": { "style": "thin", "color": "#CCCCCC" } },
+    "2": { "top": { "style": "thin", "color": "#CCCCCC" } },
+    "3": {
+      "bottom": { "style": "thick", "color": "#FFFFFF" },
+      "right": { "style": "thick", "color": "#FFFFFF" }
+    },
+    "4": {
+      "top": { "style": "thick", "color": "#FFFFFF" },
+      "bottom": { "style": "thick", "color": "#FFFFFF" },
+      "right": { "style": "thick", "color": "#FFFFFF" }
+    },
+    "5": { "top": { "style": "thick", "color": "#FFFFFF" } },
+    "6": {
+      "bottom": { "style": "thick", "color": "#FFFFFF" },
+      "left": { "style": "thick", "color": "#FFFFFF" }
+    },
+    "7": {
+      "top": { "style": "thick", "color": "#FFFFFF" },
+      "bottom": { "style": "thick", "color": "#FFFFFF" },
+      "left": { "style": "thick", "color": "#FFFFFF" }
+    }
+  },
+  "revisionId": "START_REVISION",
+  "uniqueFigureIds": true,
+  "settings": {
+    "locale": {
+      "name": "English (US)",
+      "code": "en_US",
+      "thousandsSeparator": ",",
+      "decimalSeparator": ".",
+      "dateFormat": "mm/dd/yyyy",
+      "timeFormat": "hh:mm:ss",
+      "formulaArgSeparator": ",",
+      "weekStart": 7
+    }
+  },
+  "pivots": {
+    "2": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "856ca699-dd18-47ea-a8c7-bb48a37e0f9f": {
+          "chain": "date_start",
+          "type": "datetime",
+          "offset": 0
+        },
+        "74f6a928-ecb5-4350-9a5e-39a6edc250d4": {},
+        "cc3ddb0d-417c-441f-95bb-dc16ab4f11fe": {
+          "chain": "company_id",
+          "type": "many2one"
+        }
+      },
+      "context": {
+        "params": { "model": "hr.work.entry.report", "view_type": "pivot" },
+        "group_default_work_entry_type_id": true
+      },
+      "domain": [],
+      "id": "2",
+      "measures": [
+        { "id": "number_of_days", "fieldName": "number_of_days" },
+        { "id": "__count", "fieldName": "__count" }
+      ],
+      "model": "hr.work.entry.report",
+      "name": "Work Entries Analysis by Work Entry Type",
+      "sortedColumn": {
+        "groupId": [[], []],
+        "measure": "__count",
+        "order": "desc"
+      },
+      "formulaId": "2",
+      "columns": [],
+      "rows": [{ "fieldName": "work_entry_type_id" }]
+    },
+    "3": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "856ca699-dd18-47ea-a8c7-bb48a37e0f9f": {
+          "chain": "date_from",
+          "type": "date",
+          "offset": 0
+        },
+        "74f6a928-ecb5-4350-9a5e-39a6edc250d4": {
+          "chain": "job_id",
+          "type": "many2one"
+        },
+        "cc3ddb0d-417c-441f-95bb-dc16ab4f11fe": {
+          "chain": "company_id",
+          "type": "many2one"
+        }
+      },
+      "context": { "search_default_year": true, "country_code": "be" },
+      "domain": [],
+      "id": "3",
+      "measures": [
+        { "id": "count", "fieldName": "count" },
+        { "id": "net_wage", "fieldName": "net_wage" },
+        { "id": "gross_wage", "fieldName": "gross_wage" },
+        { "id": "count_leave", "fieldName": "count_leave" },
+        { "id": "count_leave_unpaid", "fieldName": "count_leave_unpaid" },
+        { "id": "basic_wage", "fieldName": "basic_wage" },
+        { "id": "number_of_days", "fieldName": "number_of_days" },
+        { "id": "count_work", "fieldName": "count_work" },
+        { "id": "count_work_hours", "fieldName": "count_work_hours" }
+      ],
+      "model": "hr.payroll.report",
+      "name": "Payroll Analysis",
+      "sortedColumn": null,
+      "formulaId": "3",
+      "columns": [],
+      "rows": []
+    },
+    "4": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "856ca699-dd18-47ea-a8c7-bb48a37e0f9f": {
+          "chain": "date_from",
+          "type": "date",
+          "offset": -1
+        },
+        "74f6a928-ecb5-4350-9a5e-39a6edc250d4": {
+          "chain": "job_id",
+          "type": "many2one"
+        },
+        "cc3ddb0d-417c-441f-95bb-dc16ab4f11fe": {
+          "chain": "company_id",
+          "type": "many2one"
+        }
+      },
+      "context": {
+        "params": { "model": "hr.payroll.report", "view_type": "pivot" }
+      },
+      "domain": [],
+      "id": "4",
+      "measures": [
+        { "id": "count", "fieldName": "count" },
+        { "id": "net_wage", "fieldName": "net_wage" },
+        { "id": "gross_wage", "fieldName": "gross_wage" },
+        { "id": "count_leave", "fieldName": "count_leave" },
+        { "id": "count_leave_unpaid", "fieldName": "count_leave_unpaid" },
+        { "id": "basic_wage", "fieldName": "basic_wage" },
+        { "id": "number_of_days", "fieldName": "number_of_days" },
+        { "id": "count_work", "fieldName": "count_work" },
+        { "id": "count_work_hours", "fieldName": "count_work_hours" }
+      ],
+      "model": "hr.payroll.report",
+      "name": "Payroll Analysis",
+      "sortedColumn": null,
+      "formulaId": "4",
+      "columns": [],
+      "rows": []
+    },
+    "5": {
+      "type": "ODOO",
+      "fieldMatching": {},
+      "context": { "search_default_group_by_state": 1 },
+      "domain": ["&", ["employee_id", "!=", false], ["state", "=", "open"]],
+      "id": "5",
+      "measures": [{ "id": "__count", "fieldName": "__count" }],
+      "model": "hr.contract",
+      "name": "Employee Contract",
+      "sortedColumn": null,
+      "formulaId": "5",
+      "columns": [],
+      "rows": []
+    },
+    "7": {
+      "type": "ODOO",
+      "fieldMatching": {},
+      "context": { "search_default_group_by_state": 1 },
+      "domain": ["&", ["employee_id", "!=", false], ["state", "=", "open"]],
+      "id": "7",
+      "measures": [{ "id": "work_time_rate", "fieldName": "work_time_rate" }],
+      "model": "hr.contract",
+      "name": "Employee Contract",
+      "sortedColumn": null,
+      "formulaId": "7",
+      "columns": [],
+      "rows": []
+    }
+  },
+  "pivotNextId": 8,
+  "customTableStyles": {},
+  "odooVersion": 12,
+  "globalFilters": [
+    {
+      "id": "856ca699-dd18-47ea-a8c7-bb48a37e0f9f",
+      "type": "date",
+      "label": "Period",
+      "defaultValue": "last_year",
+      "rangeType": "relative"
+    },
+    {
+      "id": "74f6a928-ecb5-4350-9a5e-39a6edc250d4",
+      "type": "relation",
+      "label": "Job position",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "modelName": "hr.job"
+    },
+    {
+      "id": "cc3ddb0d-417c-441f-95bb-dc16ab4f11fe",
+      "type": "relation",
+      "label": "Companies",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "modelName": "res.company"
+    }
+  ],
+  "lists": {},
+  "listNextId": 1,
+  "chartOdooMenusReferences": {
+    "cdb5d177-1c7b-4e89-9fb2-6f12ba98807c": "hr_work_entry_contract_enterprise.menu_hr_payroll_root",
+    "1020f2c2-4cb2-4713-8a4d-2d22a3e30008": "hr_payroll.hr_menu_all_contracts"
+  }
+}

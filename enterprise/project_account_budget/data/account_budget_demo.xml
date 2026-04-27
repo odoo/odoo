@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Add budget -->
+        <record id="budget_analytic_construction" model="budget.analytic">
+            <field eval="f'Budget {datetime.now().year}: Home Construction'" name="name"/>
+            <field eval="'draft'" name="state"/>
+            <field eval="f'{datetime.now().year}-01-01'" name="date_from"/>
+            <field eval="f'{datetime.now().year + 1}-01-01'" name="date_to"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="budget_line_ids">
+                <record id="budget_line_analytic_1" model="budget.line">
+                    <field name="budget_amount">2000</field>
+                    <field name="account_id" ref="project.analytic_construction"/>
+                </record>
+                <record id="budget_line_analytic_2" model="budget.line">
+                    <field name="budget_amount">9000</field>
+                    <field name="account_id" ref="project.analytic_renovations"/>
+                </record>
+            </field>
+        </record>
+
+        <!-- Confirm Budget -->
+        <function model="budget.analytic" name="action_budget_confirm" eval="[ref('budget_analytic_construction')]"/>
+
+        <function model="purchase.order" name="button_confirm" eval="[ref('project_purchase.purchase_order_for_home_construction')]"/>
+    </data>
+</odoo>

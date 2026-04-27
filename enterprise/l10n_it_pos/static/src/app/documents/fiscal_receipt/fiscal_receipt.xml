@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="l10n_it_pos.FiscalReceipt">
+        <t t-if="props.isFiscal">
+            <printerFiscalReceipt>
+                <Header order="props.order" />
+                <beginFiscalReceipt operator="1" />
+                <Body order="props.order" />
+                <Footer order="props.order" />
+                <endFiscalReceipt operator="1" />
+            </printerFiscalReceipt>
+        </t>
+        <t t-else="">
+            <printerNonFiscal>
+                <Header order="props.order" />
+                <beginNonFiscal operator="1" />
+                <printNormal operator="1" font="3" data="Scontrino di Cortesia" />
+                <printNormal operator="1" font="1" data="" />
+                <Body order="props.order" isBasicPrint="props.isBasicPrint" isEarlyPrint="props.isEarlyPrint"/>
+                <printNormal operator="1" font="1" data="" />
+                <Footer order="props.order" isFiscal="false"/>
+                <endNonFiscal operator="1" />
+            </printerNonFiscal>
+        </t>
+    </t>
+</templates>

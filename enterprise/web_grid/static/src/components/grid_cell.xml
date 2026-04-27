@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates>
+    <t t-name="web_grid.Cell">
+        <div t-if="props.reactive.cell"
+            t-attf-class="{{ props.classNames }} o_grid_cell o_grid_highlightable position-relative d-flex justify-content-center align-items-center w-100 h-100 text-800"
+            t-on-click.synthetic="onCellClick"
+            t-ref="root"
+        >
+            <button class="o_grid_search_btn btn btn-sm position-absolute start-0 px-1 opacity-50 opacity-100-hover"
+                    t-on-click.synthetic="() => this.magnifierGlassHook.onMagnifierGlassClick()"
+            >
+                <i class="fa fa-search"/>
+            </button>
+            <div t-if="state.cell" class="d-flex w-100 h-100 justify-content-center align-items-center">
+                <input t-if="state.edit"
+                       t-att-inputmode="inputMode"
+                       type="text"
+                       class="o_input h-100"
+                       t-ref="numpadDecimal"
+                />
+                <span t-else="" class="z-1" t-out="formattedValue"/>
+            </div>
+        </div>
+    </t>
+</templates>

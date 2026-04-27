@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payslip_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.payslip.view.form.inherit.l10n.ch.hr.payroll</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll.hr_payslip_view_form_inherit"/>
+        <field name="arch" type="xml">
+            <button name="action_open_work_entries" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </button>
+            <div name="button_box" position="inside">
+                <field name="structure_code" invisible="1"/>
+                <field name="l10n_ch_is_correction" invisible="1"/>
+                <button type="object" invisible="not l10n_ch_is_correction" class="oe_stat_button" id="open_source_tax_correction"
+                    icon="fa-pencil" name="action_open_source_tax_corrections">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">
+                            Source-Tax Correction
+                        </span>
+                        <span class="o_stat_value">
+                            1
+                        </span>
+                    </div>
+                </button>
+                <button name="action_absence_swiss_employee_from_payslip"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-calendar"
+                    context="{'search_default_employee_ids': id}"
+                    groups="base.group_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">
+                            Absences
+                        </span>
+                    </div>
+                </button>
+            </div>
+            <field name="struct_id" position="after">
+                <field name="l10n_ch_pay_13th_month"/>
+                <field name="l10n_ch_after_departure_payment" string="After Departure Payment"/>
+                <field name="l10n_ch_is_code" invisible="not l10n_ch_is_code"/>
+            </field>
+            <notebook position="before">
+                <field name="l10n_ch_validation_errors" class="w-100" widget="actionable_warnings"/>
+            </notebook>
+            <page name="worked_days_input" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </page>
+            <page name="worked_days_input" position="before">
+                <page string="Wage Types">
+                <separator string="Monthly Wages"/>
+                <field name="l10n_ch_swiss_wage_ids" readonly="state in ['cancel', 'done', 'paid']">
+                    <list string="Base Wage Components" editable="bottom" create="1" delete="1" decoration-danger="amount==0">
+                        <field name="work_entry_type_id" options="{'no_open': True, 'no_create': True}"/>
+                        <field name="name" string="Description"/>
+                        <field name="salary_base"/>
+                        <field name="rate"/>
+                        <field name="amount" sum="Total Amount"/>
+                        <field name="sequence" readonly="1" column_invisible="True" force_save="1"/>
+                        <field name="currency_id" column_invisible="True"/>
+                    </list>
+                </field>
+                <separator string="Additional Wage Types"/>
+                <field name="input_line_ids" colspan="4" nolabel="1" readonly="state in ['cancel', 'done', 'paid']">
+                    <list string="Input Data" editable="bottom">
+                        <!--
+                            Required 0 to force client to send on change request even when not defined
+                            Salary Attachments would otherwise not properly be computed and payslip_id is
+                            required for _allowed_input_type_ids to work..
+                        -->
+                        <field name="payslip_id" required="0" column_invisible="True"/>
+                        <field name="_allowed_input_type_ids" column_invisible="True"/>
+                        <field name="input_type_id"/>
+                        <field name="name"/>
+                        <field name="amount" widget="float_without_trailing_zeros"/>
+                        <field name="contract_id" column_invisible="True"/>
+                        <field name="sequence" column_invisible="True"/>
+                    </list>
+                    <form string="Payslip Line">
+                        <group col="4">
+                            <field name="payslip_id" invisible="1"/>
+                            <field name="_allowed_input_type_ids" invisible="1"/>
+                            <field name="input_type_id"/>
+                            <field name="name"/>
+                            <field name="sequence"/>
+                            <field name="amount"/>
+                            <field name="contract_id"/>
+                        </group>
+                    </form>
+                </field>
+                </page>
+            </page>
+            <page name="is_log_lines" position="replace">
+                <page string="Technical Lines" groups="base.group_no_one">
+                    <field name="l10n_ch_is_log_line_ids" colspan="2" nolabel="1">
+                        <list create="0" edit="0" delete="0">
+                            <field name="source_tax_canton" string="Canton"/>
+                            <field name="source_tax_municipality" string="Municipality"/>
+                            <field name="is_code" string="ST-Code"/>
+                            <field name="code"/>
+                            <field name="amount"/>
+                            <field name="is_correction"/>
+                            <field name="corrected_slip_id"/>
+                        </list>
+                    </field>
+                </page>
+            </page>
+
+        </field>
+    </record>
+</odoo>

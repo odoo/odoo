@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="hr_payroll_index_form_view" model="ir.ui.view">
+            <field name="name">hr.payroll.index.form.view</field>
+            <field name="model">hr.payroll.index</field>
+            <field name="arch" type="xml">
+                <form string="Contract indexing">
+                    <field name="display_warning" invisible="1"/>
+                    <span role="status" class="alert alert-warning d-block" invisible="not display_warning">You have selected contracts that are not running, this wizard can only index running contracts.</span>
+                    <group colspan="4">
+                        <field name="contract_ids" widget="many2many_tags"/>
+                        <field name="percentage" widget="percentage"/>
+                        <field name="description"/>
+                    </group>
+                    <footer>
+                        <button string="Confirm" name="action_confirm" invisible="display_warning" type="object" class="oe_highlight" data-hotkey="q"/>
+                        <button string="Confirm" name="action_confirm" invisible="not display_warning" type="object" class="btn btn-primary disabled"/>
+                        <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_hr_payroll_index" model="ir.actions.act_window">
+            <field name="name">Index contract(s)</field>
+            <field name="res_model">hr.payroll.index</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="hr_payroll_index_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.actions.server" id="action_index_contracts">
+            <field name="name">Index contract(s)</field>
+            <field name="model_id" ref="hr_contract.model_hr_contract"/>
+            <field name="binding_model_id" ref="hr_contract.model_hr_contract"/>
+            <field name="state">code</field>
+            <field name="code">
+if records:
+    action = records._index_contracts()
+            </field>
+        </record>
+
+</odoo>

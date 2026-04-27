@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="resource_planning_project_forecast" inherit_id="planning.resource_planning">
+        <xpath expr="//t[@t-set='show_name']" position="after">
+            <t t-set="show_project" t-value="any(s.project_id for s in slots)" />
+        </xpath>
+        <xpath expr="//th[@name='role_header']" position="after">
+            <th t-if="show_project" class="align-middle">Project</th>
+        </xpath>
+        <xpath expr="//td[@name='role_record']" position="after">
+            <td t-if="show_project" class="align-middle"><t t-if="slot.project_id" t-esc="slot.project_id.sudo().name" /></td>
+        </xpath>
+    </template>
+</odoo>

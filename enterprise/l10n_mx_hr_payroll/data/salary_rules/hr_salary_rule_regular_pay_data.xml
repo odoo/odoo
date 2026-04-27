@@ -1,0 +1,1368 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="l10n_mx_regular_pay_holidays_on_time_sub" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_holidays_on_time"/>
+        <field name="name">Holidays On Time to Substruct</field>
+        <field name="code">HOLIDAY_TO_SUB</field>
+        <field name="sequence">2</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+# if monthly: accrued_days_month / days_of_the_month
+# if in period: accrued_days_period / days_of_the_month
+# unpaid work entries LEAVE90 LEAVE1000 LEAVE1100 LEAVE1200
+
+days_in_period = (payslip.date_to - payslip.date_from).days+1
+# Calculate the number of days in the current month
+first_day = payslip.date_from.replace(day=1)
+last_day = payslip.date_from + relativedelta(day=31)
+total_days_in_month = (last_day - first_day).days + 1
+
+unpaid_work_entry_type_ids = payslip.struct_id.unpaid_work_entry_type_ids
+unpaid_days_in_period = 0
+for code in unpaid_work_entry_type_ids.mapped('code'):
+    unpaid_days_in_period += worked_days[code].number_of_days if code in worked_days else 0
+accrued_days_in_period = days_in_period - unpaid_days_in_period
+
+hours = contract.get_work_hours(first_day, last_day)
+unpaid_hours = 0
+for work_entry_type, work_hours in hours.items():
+    if work_entry_type in unpaid_work_entry_type_ids.ids:
+        unpaid_hours += work_hours
+average_hours_per_work_day = contract.resource_calendar_id.hours_per_day
+work_time_rate = contract.resource_calendar_id.work_time_rate
+
+unpaid_days_in_month = unpaid_hours / (average_hours_per_work_day * work_time_rate / 100)
+accrued_days_in_month = total_days_in_month - unpaid_days_in_month
+
+
+accrued_ratio_month = accrued_days_in_month / total_days_in_month
+accrued_ratio_in_period = accrued_days_in_period / total_days_in_month
+days_in_month_ratio = days_in_period / total_days_in_month
+
+
+number_of_days = 'LEAVE120' in worked_days and worked_days['LEAVE120'].number_of_days
+result = payslip.l10n_mx_daily_salary * number_of_days
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_bruto" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_holidays_on_time"/>
+        <field name="name">Gross without Holidays</field>
+        <field name="code">GROSS_WITHOUT_HOLIDAY</field>
+        <field name="sequence">3</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = payslip.paid_amount - result_rules['HOLIDAY_TO_SUB']['total']
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <!--Holidays on Time should appear separately on Payslip-->
+    <record id="l10n_mx_regular_pay_holidays_on_time" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_holidays_on_time"/>
+        <field name="name">Holidays On Time</field>
+        <field name="code">HOLIDAYS_ON_TIME</field>
+        <field name="sequence">4</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = number_of_days
+result = payslip.l10n_mx_daily_salary
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_annual_social_provision" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_intermediary_computation"/>
+        <field name="name">Annual Social Provision</field>
+        <field name="code">ANNUAL_SOCIAL_PROVISION</field>
+        <field name="sequence">5</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+result = contract.l10n_mx_gasoline_amount or contract.l10n_mx_transport_amount or contract.l10n_mx_meal_voucher_amount
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = payslip._rule_parameter('l10n_mx_uma') * 7 * 30.4 * 12
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_exemption_social_security" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_intermediary_computation"/>
+        <field name="name">Exemption Social Security</field>
+        <field name="code">EXEMPTION_SOCIAL_SECURITY</field>
+        <field name="sequence">6</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+result = contract.l10n_mx_gasoline_amount or contract.l10n_mx_transport_amount or contract.l10n_mx_meal_voucher_amount
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+schedule_number_days = payslip._rule_parameter('l10n_mx_schedule_table')[contract.l10n_mx_schedule_pay_temp]
+
+if contract.wage * 12 >= result_rules['ANNUAL_SOCIAL_PROVISION']['total']:
+    monthly_amount = payslip._rule_parameter('l10n_mx_uma') * 30.4
+else:
+    monthly_amount = max(result_rules['ANNUAL_SOCIAL_PROVISION']['total'] - contract.wage * 12, payslip._rule_parameter('l10n_mx_uma') * 30.4 * 12) / 12
+
+if contract.l10n_mx_payment_period_vouchers == 'in_period':
+    schedule_factor = schedule_number_days / payslip._rule_parameter('l10n_mx_days_per_month')
+else:
+    schedule_factor = 1
+
+result = monthly_amount * schedule_factor
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_gasoline_period" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_voucher"/>
+        <field name="name">Gasoline Amount Period</field>
+        <field name="code">GAS_PERIOD</field>
+        <field name="sequence">7</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+last_day = payslip.date_from + relativedelta(day=31)
+last_payslip_for_the_month = contract.l10n_mx_payment_period_vouchers == 'last_day_of_month' and \
+                             payslip.date_from &lt;= last_day &lt;= payslip.date_to
+result = contract.l10n_mx_gasoline_amount and \
+         (last_payslip_for_the_month or contract.l10n_mx_payment_period_vouchers == 'in_period')
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = contract.l10n_mx_gasoline_amount
+if contract.l10n_mx_payment_period_vouchers == 'in_period':
+    result *= days_in_month_ratio
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_transport_period" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_voucher"/>
+        <field name="name">Transport Amount Period</field>
+        <field name="code">TRANSPORT_PERIOD</field>
+        <field name="sequence">8</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+last_day = payslip.date_from + relativedelta(day=31)
+last_payslip_for_the_month = contract.l10n_mx_payment_period_vouchers == 'last_day_of_month' and \
+                             payslip.date_from &lt;= last_day &lt;= payslip.date_to
+result = contract.l10n_mx_transport_amount and \
+         (last_payslip_for_the_month or contract.l10n_mx_payment_period_vouchers == 'in_period')
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = contract.l10n_mx_transport_amount
+if contract.l10n_mx_payment_period_vouchers == 'in_period':
+    result *= days_in_month_ratio
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_meal_voucher_period" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_voucher"/>
+        <field name="name">Meal Voucher Amount Period</field>
+        <field name="code">MEAL_VOUCHER_PERIOD</field>
+        <field name="sequence">9</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+last_day = payslip.date_from + relativedelta(day=31)
+last_payslip_for_the_month = contract.l10n_mx_payment_period_vouchers == 'last_day_of_month' and \
+                             payslip.date_from &lt;= last_day &lt;= payslip.date_to
+result = contract.l10n_mx_meal_voucher_amount and \
+         (last_payslip_for_the_month or contract.l10n_mx_payment_period_vouchers == 'in_period')
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = contract.l10n_mx_meal_voucher_amount
+if contract.l10n_mx_payment_period_vouchers == 'in_period':
+    result *= days_in_month_ratio
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_gasoline" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Non Taxable Gasoline</field>
+        <field name="code">NO_TAX_GAS</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+last_day = payslip.date_from + relativedelta(day=31)
+last_payslip_for_the_month = contract.l10n_mx_payment_period_vouchers == 'last_day_of_month' and \
+                             payslip.date_from &lt;= last_day &lt;= payslip.date_to
+result = contract.l10n_mx_gasoline_amount and \
+         (last_payslip_for_the_month or contract.l10n_mx_payment_period_vouchers == 'in_period')
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+gasoline_period_amount = result_rules['GAS_PERIOD']['total']
+result = min(gasoline_period_amount, gasoline_period_amount / categories['MX_VOUCHER'] * result_rules['EXEMPTION_SOCIAL_SECURITY']['total'])
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_transport" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Non Taxable Transport Support</field>
+        <field name="code">NO_TAX_TRANSPORT</field>
+        <field name="sequence">11</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+last_day = payslip.date_from + relativedelta(day=31)
+last_payslip_for_the_month = contract.l10n_mx_payment_period_vouchers == 'last_day_of_month' and \
+                             payslip.date_from &lt;= last_day &lt;= payslip.date_to
+result = contract.l10n_mx_transport_amount and \
+         (last_payslip_for_the_month or contract.l10n_mx_payment_period_vouchers == 'in_period')
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+transport_period_amount = result_rules['TRANSPORT_PERIOD']['total']
+result = min(transport_period_amount, transport_period_amount / categories['MX_VOUCHER'] * result_rules['EXEMPTION_SOCIAL_SECURITY']['total'])
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_meal_voucher" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Non Taxable Meal Voucher</field>
+        <field name="code">NO_TAX_MEAL_VOUCHER</field>
+        <field name="sequence">12</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+last_day = payslip.date_from + relativedelta(day=31)
+last_payslip_for_the_month = contract.l10n_mx_payment_period_vouchers == 'last_day_of_month' and \
+                             payslip.date_from &lt;= last_day &lt;= payslip.date_to
+result = contract.l10n_mx_meal_voucher_amount and \
+         (last_payslip_for_the_month or contract.l10n_mx_payment_period_vouchers == 'in_period')
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+meal_voucher_period_amount = result_rules['MEAL_VOUCHER_PERIOD']['total']
+result = min(meal_voucher_period_amount, meal_voucher_period_amount / categories['MX_VOUCHER'] * result_rules['EXEMPTION_SOCIAL_SECURITY']['total'])
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+     <record id="l10n_mx_regular_pay_gasoline_alw" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_taxable_alw"/>
+        <field name="name">Taxable Gasoline Voucher</field>
+        <field name="code">TAX_GAS</field>
+        <field name="sequence">15</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+last_day = payslip.date_from + relativedelta(day=31)
+last_payslip_for_the_month = contract.l10n_mx_payment_period_vouchers == 'last_day_of_month' and \
+                             payslip.date_from &lt;= last_day &lt;= payslip.date_to
+result = contract.l10n_mx_gasoline_amount and \
+         (last_payslip_for_the_month or contract.l10n_mx_payment_period_vouchers == 'in_period')
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['GAS_PERIOD']['total'] - result_rules['NO_TAX_GAS']['total']
+accrued_days_gasoline = accrued_days_in_month if contract.l10n_mx_payment_period_vouchers == 'last_day_of_month' else accrued_days_in_period
+taxable_daily_amount_gasoline = result / accrued_days_gasoline
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_transport_alw" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_taxable_alw"/>
+        <field name="name">Taxable Transport Support</field>
+        <field name="code">TAX_TRANSPORT</field>
+        <field name="sequence">16</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+last_day = payslip.date_from + relativedelta(day=31)
+last_payslip_for_the_month = contract.l10n_mx_payment_period_vouchers == 'last_day_of_month' and \
+                             payslip.date_from &lt;= last_day &lt;= payslip.date_to
+result = contract.l10n_mx_transport_amount and \
+         (last_payslip_for_the_month or contract.l10n_mx_payment_period_vouchers == 'in_period')
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['TRANSPORT_PERIOD']['total'] - result_rules['NO_TAX_TRANSPORT']['total']
+accrued_days_transport = accrued_days_in_month if contract.l10n_mx_payment_period_vouchers == 'last_day_of_month' else accrued_days_in_period
+taxable_daily_amount_transport = result / accrued_days_transport
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_meal_voucher_alw" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_taxable_alw"/>
+        <field name="name">Taxable Meal Voucher</field>
+        <field name="code">TAX_MEAL_VOUCH</field>
+        <field name="sequence">17</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+last_day = payslip.date_from + relativedelta(day=31)
+last_payslip_for_the_month = contract.l10n_mx_payment_period_vouchers == 'last_day_of_month' and \
+                             payslip.date_from &lt;= last_day &lt;= payslip.date_to
+result = contract.l10n_mx_meal_voucher_amount and \
+         (last_payslip_for_the_month or contract.l10n_mx_payment_period_vouchers == 'in_period')
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['MEAL_VOUCHER_PERIOD']['total'] - result_rules['NO_TAX_MEAL_VOUCHER']['total']
+accrued_days_meal = accrued_days_in_month if contract.l10n_mx_payment_period_vouchers == 'last_day_of_month' else accrued_days_in_period
+taxable_daily_amount_meal = result / accrued_days_meal
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_holiday_bonus" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Holiday Bonus</field>
+        <field name="code">HOLIDAY_BONUS</field>
+        <field name="sequence">25</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+if not employee.first_contract_date:
+    result = False
+else:
+    this_year_anniversary = employee.first_contract_date + relativedelta(year=payslip.date_from.year)
+    result = payslip.date_from &lt;= this_year_anniversary &lt;= payslip.date_to and this_year_anniversary != employee.first_contract_date
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+holidays_count = payslip._rule_parameter('l10n_mx_holiday_tables')[payslip.l10n_mx_years_worked - 1]
+result = payslip.l10n_mx_daily_salary * holidays_count * contract.l10n_mx_holiday_bonus_rate / 100
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_discount_for_absence" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_taxable_alw"/>
+        <field name="name">Discount for absence without pay</field>
+        <field name="code">DIS_ABSENCE</field>
+        <field name="sequence">75</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'LEAVE90' in worked_days</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+unpaid_days = worked_days['LEAVE90'].number_of_days if 'LEAVE90' in worked_days else 0
+result = - payslip.l10n_mx_daily_salary * unpaid_days
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_imss_disabilities" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_taxable_alw"/>
+        <field name="name">IMSS disabilities</field>
+        <field name="code">IMSS_DISABLE</field>
+        <field name="sequence">76</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+result = 'LEAVE1200' in worked_days or 'LEAVE1000' in worked_days or 'LEAVE1100' in worked_days
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+disabilities_imss = worked_days['LEAVE1200'].number_of_days if 'LEAVE1200' in worked_days else 0
+days = disabilities_imss - 3 if disabilities_imss &gt; 3 else 0
+if 'LEAVE1000' in worked_days:
+    days += worked_days['LEAVE1000'].number_of_days
+if 'LEAVE1100' in worked_days:
+    days += worked_days['LEAVE1100'].number_of_days
+
+result = - days * payslip.l10n_mx_daily_salary
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_savings_fund_salary_limit" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_intermediary_computation"/>
+        <field name="name">Savings Fund - Salary Limit</field>
+        <field name="code">SAVINGS_FUND_SALARY_LIMIT</field>
+        <field name="sequence">80</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+result = contract.l10n_mx_savings_fund
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+month_to_period_ratio = payslip._rule_parameter('l10n_mx_schedule_table')[contract.l10n_mx_schedule_pay_temp] / payslip._rule_parameter('l10n_mx_days_per_month')
+result = contract.wage * payslip._rule_parameter('l10n_mx_exemption_saving_fund_salary') * month_to_period_ratio
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_savings_fund_limit_per_uma" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_intermediary_computation"/>
+        <field name="name">Savings Fund - Limit Per UMA</field>
+        <field name="code">SAVINGS_FUND_LIMIT_UMA</field>
+        <field name="sequence">81</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+result = contract.l10n_mx_savings_fund
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+month_to_period_ratio = payslip._rule_parameter('l10n_mx_schedule_table')[contract.l10n_mx_schedule_pay_temp] / payslip._rule_parameter('l10n_mx_days_per_month')
+result = payslip._rule_parameter('l10n_mx_uma') * 30.4 * payslip._rule_parameter('l10n_mx_exemption_saving_fund_monthly_uma') * month_to_period_ratio
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_employer_savings_fund_alw" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_savings_fund_employer_alw"/>
+        <field name="name">Savings Fund (Employer) - Allowance</field>
+        <field name="code">SAVINGS_FUND_EMPLOYER_ALW</field>
+        <field name="sequence">83</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+result = contract.l10n_mx_savings_fund
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+month_to_period_ratio = payslip._rule_parameter('l10n_mx_schedule_table')[contract.l10n_mx_schedule_pay_temp] / payslip._rule_parameter('l10n_mx_days_per_month')
+result = min(contract.l10n_mx_savings_fund * month_to_period_ratio, result_rules['SAVINGS_FUND_SALARY_LIMIT']['total'], result_rules['SAVINGS_FUND_LIMIT_UMA']['total'])
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('hr_payroll_structure_mx_employee_salary')),
+            ('code', '=', 'REIMBURSEMENT')]"/>
+        <value eval="{'sequence': 90}"/>
+    </function>
+
+    <record id="l10n_mx_regular_pay_expenses" model="hr.salary.rule">
+        <field name="name">Expenses</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="code">EXPENSES</field>
+        <field name="sequence">91</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+result = inputs['EXPENSES'].amount > 0.0 if 'EXPENSES' in inputs else False
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['EXPENSES'].amount if 'EXPENSES' in inputs else 0
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_commissions" model="hr.salary.rule">
+        <field name="name">Commissions</field>
+        <field name="category_id" ref="hr_payroll_taxable_alw"/>
+        <field name="code">COMMISSIONS</field>
+        <field name="sequence">92</field>
+        <field name="condition_select">input</field>
+        <field name="condition_other_input_id" ref="l10n_mx_input_commissions"/>
+        <field name="amount_select">input</field>
+        <field name="amount_other_input_id" ref="l10n_mx_input_commissions"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_bonus" model="hr.salary.rule">
+        <field name="name">Bonus</field>
+        <field name="category_id" ref="hr_payroll_taxable_alw"/>
+        <field name="code">BONUS</field>
+        <field name="sequence">93</field>
+        <field name="condition_select">input</field>
+        <field name="condition_other_input_id" ref="l10n_mx_input_bonus"/>
+        <field name="amount_select">input</field>
+        <field name="amount_other_input_id" ref="l10n_mx_input_bonus"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('hr_payroll_structure_mx_employee_salary')),
+            ('code', '=', 'GROSS')]"/>
+        <value eval="{'amount_python_compute': 'result = categories[\'BASIC\'] + categories[\'TAXABLE_ALW\']'}"/>
+    </function>
+
+    <record id="l10n_mx_employees_salary_isr" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">ISR (Income Tax)</field>
+        <field name="code">ISR</field>
+        <field name="sequence">110</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+def find_rates(x, rates):
+    for low, high, fix, rate in rates:
+        if low &lt;= x &lt;= high:
+            return low, high, fix, rate
+
+gross = categories['GROSS']
+if gross:
+    isr_tables = payslip._rule_parameter('l10n_mx_isr_tables')
+
+    # Check if we need to do monthly or yearly adjustment
+    last_day_of_month = payslip.date_from + relativedelta(day=31)
+    end_of_month = payslip.date_from &lt;= last_day_of_month &lt;= payslip.date_to
+
+    first_day_of_year = payslip.date_from + relativedelta(day=1, month=1)
+    last_day_of_year = payslip.date_from + relativedelta(day=31, month=12)
+    end_of_year = (not contract.l10n_mx_external_annual_declaration and
+                   payslip.date_from &lt;= last_day_of_year &lt;= payslip.date_to and
+                   (contract.wage * 12) &lt;= payslip._rule_parameter('l10n_mx_salary_limit_annual_declaration') and
+                   employee.first_contract_date &lt;= first_day_of_year)
+
+    if end_of_year or end_of_month:
+        if end_of_year:
+            payslips = contract.env['hr.payslip'].search([
+                ('employee_id', '=', contract.employee_id.id),
+                ('state', 'in', ['done', 'paid']),
+                ('date_from', '&gt;=', payslip.date_from + relativedelta(day=1, month=1)),
+                ('date_to', '&lt;=', payslip.date_from + relativedelta(days=-1)),
+                ('company_id', '=', contract.company_id.id),
+            ])
+            period = 'yearly'
+        else:
+            payslips = contract.env['hr.payslip'].search([
+                ('employee_id', '=', contract.employee_id.id),
+                ('state', 'in', ['done', 'paid']),
+                ('date_from', '&gt;=', payslip.date_from + relativedelta(day=1)),
+                ('date_to', '&lt;=', payslip.date_from + relativedelta(days=-1)),
+                ('company_id', '=', contract.company_id.id),
+            ])
+            period = 'monthly'
+        previous_gross = payslips._get_line_values(['GROSS'], vals_list=['amount'], compute_sum=True)['GROSS']['sum']['amount']
+        previous_ISR = payslips._get_line_values(['ISR'], vals_list=['amount'], compute_sum=True)['ISR']['sum']['amount']
+
+        overall_gross = previous_gross + gross
+        isr_table = isr_tables[period]
+
+        low, high, fix, rate = find_rates(overall_gross, isr_table)
+        amount = (overall_gross - low) * rate + fix
+        result = - (amount + previous_ISR)
+    else:
+        # without adjustment
+        isr_table = isr_tables[contract.l10n_mx_schedule_pay_temp]
+        low, high, fix, rate = find_rates(gross, isr_table)
+        result = -((categories['GROSS'] - low) * rate + fix)
+else:
+    result = 0
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+        <field name="note">
+Income Tax Law
+https://www.diputados.gob.mx/LeyesBiblio/pdf/LISR.pdf
+
+ISR tables
+https://www.dof.gob.mx/nota_detalle.php?codigo=5640505&amp;fecha=12/01/2022#gsc.tab=0
+
+[(Gross monthly salary - Lower limit) x Percentage to be applied over the excess of the lower limit] + Fixed rate
+        </field>
+    </record>
+
+    <!--   ISR Holiday Bonus (Income Tax)  -->
+    <record id="l10n_mx_regular_pay_isr_holiday_bonus_tax" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">ISR Holiday Bonus (Income Tax)</field>
+        <field name="code">ISR_HOLIDAY_TAX</field>
+        <field name="sequence">115</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+if not employee.first_contract_date:
+    result = False
+else:
+    this_year_anniversary = employee.first_contract_date + relativedelta(year=payslip.date_from.year)
+    result = payslip.date_from &lt;= this_year_anniversary &lt;= payslip.date_to and this_year_anniversary != employee.first_contract_date
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+def find_rates(x, rates):
+    for low, high, fix, rate in rates:
+        if low &lt;= x &lt;= high:
+            return low, high, fix, rate
+
+wage = contract._get_contract_wage()
+isr_table_monthly = payslip._rule_parameter('l10n_mx_isr_tables')['monthly']
+
+holiday_bonus_exemption = 15 * payslip._rule_parameter('l10n_mx_uma')
+taxed_amount = result_rules['HOLIDAY_BONUS']['total'] - holiday_bonus_exemption
+if taxed_amount &lt;= 0:
+    result = 0
+else:
+    fraction_1 = 30.4 * taxed_amount  / payslip.l10n_mx_days_of_year
+    fraction_2_1 = fraction_1 + wage
+    low, high, fix, rate = find_rates(fraction_2_1, isr_table_monthly)
+    fraction_2_2 = ((fraction_2_1 - low) * rate + fix)
+    low, high, fix, rate = find_rates(wage, isr_table_monthly)
+    fraction_3_1 = ((wage - low) * rate + fix)
+    fraction_3_2 = fraction_2_2 - fraction_3_1
+    fraction_5 = fraction_3_2 / fraction_1
+
+    result = taxed_amount
+    result_rate = - fraction_5 * 100
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_savings_fund" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_savings_fund_employee"/>
+        <field name="name">Savings Fund (Employee) - Deduction</field>
+        <field name="code">SAVINGS_FUND_EMPLOYEE</field>
+        <field name="sequence">117</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+result = contract.l10n_mx_savings_fund
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = - result_rules['SAVINGS_FUND_EMPLOYER_ALW']['total']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_employer_savings_fund" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_savings_fund_employer_ded"/>
+        <field name="name">Savings Fund (Employer) - Deduction</field>
+        <field name="code">SAVINGS_FUND_EMPLOYER_DED</field>
+        <field name="sequence">117</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+result = contract.l10n_mx_savings_fund
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = - result_rules['SAVINGS_FUND_EMPLOYER_ALW']['total']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_subsidy_current_month" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_intermediary_computation"/>
+        <field name="name">Used Subsidy (Current Month)</field>
+        <field name="code">SUBSIDY_CURRENT_MONTH</field>
+        <field name="sequence">118</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+limit_salary_subsidy = payslip._rule_parameter('l10n_mx_daily_min_wage') * 30.4 * 1.2
+result = 0 &lt; categories['GROSS'] &lt;= limit_salary_subsidy
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+daily_uma = payslip._rule_parameter('l10n_mx_uma')
+uma_percentage_for_subsidy = payslip._rule_parameter('l10n_mx_uma_percentage_for_subsidy')
+daily_subsidy = uma_percentage_for_subsidy * daily_uma
+
+if contract.l10n_mx_schedule_pay_temp == 'monthly':
+    result = round(daily_subsidy * 30.4)
+elif contract.l10n_mx_schedule_pay_temp == 'bi_monthly':
+    result = round(daily_subsidy * 30.4) * 2
+else:
+    last_day_of_month = payslip.date_from + relativedelta(day=31)
+    date_to_current_month = min(payslip.date_to, last_day_of_month)
+    days_current_month = (date_to_current_month - payslip.date_from).days + 1
+    result = daily_subsidy * days_current_month
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_subsidy_next_month" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_intermediary_computation"/>
+        <field name="name">Used Subsidy (Next Month)</field>
+        <field name="code">SUBSIDY_NEXT_MONTH</field>
+        <field name="sequence">118</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+limit_salary_subsidy = payslip._rule_parameter('l10n_mx_daily_min_wage') * 30.4 * 1.2
+last_day_of_month = payslip.date_from + relativedelta(day=31)
+split_two_months = payslip.date_from &lt;= last_day_of_month &lt; payslip.date_to
+result = 0 &lt; categories['GROSS'] &lt;= limit_salary_subsidy and split_two_months
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+daily_uma = payslip._rule_parameter('l10n_mx_uma')
+uma_percentage_for_subsidy = payslip._rule_parameter('l10n_mx_uma_percentage_for_subsidy')
+daily_subsidy = uma_percentage_for_subsidy * daily_uma
+
+if contract.l10n_mx_schedule_pay_temp in ['monthly', 'bi_monthly']:
+    result = 0
+else:
+    first_day_of_month = payslip.date_to + relativedelta(day=1)
+    days_next_month = (payslip.date_to - first_day_of_month).days + 1
+    result = daily_subsidy * days_next_month
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_subsidy_adjustment" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_intermediary_computation"/>
+        <field name="name">Used Subsidy (Adjustment)</field>
+        <field name="code">SUBSIDY_ADJUSTMENT</field>
+        <field name="sequence">119</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+limit_salary_subsidy = payslip._rule_parameter('l10n_mx_daily_min_wage') * 30.4 * 1.2
+last_day_of_month = payslip.date_from + relativedelta(day=31)
+end_of_month = payslip.date_from &lt;= last_day_of_month &lt;= payslip.date_to
+result = 0 &lt; categories['GROSS'] &lt;= limit_salary_subsidy and end_of_month
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+daily_uma = payslip._rule_parameter('l10n_mx_uma')
+uma_percentage_for_subsidy = payslip._rule_parameter('l10n_mx_uma_percentage_for_subsidy')
+monthly_subsidy = round(uma_percentage_for_subsidy * daily_uma * 30.4)
+
+if contract.l10n_mx_schedule_pay_temp in ['monthly', 'bi_monthly']:
+    result = 0
+else:
+    payslips = contract.env['hr.payslip'].search([
+        ('employee_id', '=', contract.employee_id.id),
+        ('state', 'in', ['done', 'paid']),
+        ('date_from', '&gt;=', payslip.date_from + relativedelta(day=1)),
+        ('date_to', '&lt;=', payslip.date_from + relativedelta(days=-1)),
+        ('company_id', '=', contract.company_id.id),
+    ], order='date_from')
+    if payslips:
+        current_subsidy = result_rules['SUBSIDY_CURRENT_MONTH']['total']
+        for past_payslip in payslips:
+            lines = {line.code: line.total for line in past_payslip.line_ids}
+            if 'SUBSIDY_NEXT_MONTH' in lines:
+                current_subsidy += lines['SUBSIDY_NEXT_MONTH']
+            else:
+                current_subsidy += lines['SUBSIDY_CURRENT_MONTH']
+        result = monthly_subsidy - current_subsidy
+    else:
+        result = 0
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_subsidy" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Used Subsidy</field>
+        <field name="code">SUBSIDY</field>
+        <field name="sequence">120</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+limit_salary_subsidy = payslip._rule_parameter('l10n_mx_daily_min_wage') * 30.4 * 1.2
+result = 0 &lt; categories['GROSS'] &lt;= limit_salary_subsidy
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['SUBSIDY_CURRENT_MONTH']['total'] + result_rules['SUBSIDY_NEXT_MONTH']['total'] + result_rules['SUBSIDY_ADJUSTMENT']['total']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_integrated_daily_wage" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_integrated_daily_wage"/>
+        <field name="name">Integrated Daily Wage (Base)</field>
+        <field name="code">INT_DAY_WAGE_BASE</field>
+        <field name="sequence">121</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = round(payslip.l10n_mx_integration_factor * payslip.l10n_mx_daily_salary, 4)
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_integrated_daily_wage_other_incomes" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_integrated_daily_wage"/>
+        <field name="name">Integrated Daily Wage (Other Incomes)</field>
+        <field name="code">INT_DAY_WAGE_OTHER</field>
+        <field name="sequence">122</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['BONUS']['total'] / days_in_period
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_integrated_daily_wage_commissions" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_integrated_daily_wage"/>
+        <field name="name">Integrated Daily Wage (Commissions)</field>
+        <field name="code">INT_DAY_WAGE_COMMISSIONS</field>
+        <field name="sequence">122</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+start_date = payslip.date_from + relativedelta(months=-2, day=1)
+end_date = payslip.date_from + relativedelta(day=1, days=-1)
+if payslip.date_from.month % 2 == 0:
+    start_date += relativedelta(months=-1)
+    end_date += relativedelta(months=-1)
+number_of_days = (end_date - start_date).days + 1
+
+previous_2_months_commissions = payslip.env['hr.payslip'].search([
+    ('employee_id', '=', employee.id),
+    ('structure_code', '=', 'MX_REGULAR'),
+    ('state', 'in', ['paid', 'done']),
+    ('date_from', '>=', start_date),
+    ('date_to', '&lt;=', end_date),
+])._get_line_values(['COMMISSIONS'], compute_sum=True)['COMMISSIONS']['sum']['total']
+result = previous_2_months_commissions / number_of_days
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_integrated_daily_wage" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_integrated_daily_wage"/>
+        <field name="name">Integrated Daily Wage</field>
+        <field name="code">INT_DAY_WAGE</field>
+        <field name="sequence">124</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+imss_contribution_limit = 25 * payslip._rule_parameter('l10n_mx_uma')
+result = min(imss_contribution_limit, categories['INT_DAY_WAGE'])
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_infonavit" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Infonavit</field>
+        <field name="code">INFONAVIT</field>
+        <field name="sequence">125</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+result = contract.l10n_mx_infonavit.filtered(lambda f: f.status == 'in_progress')
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+infonavit_line_ids = contract.l10n_mx_infonavit.filtered(lambda f: f.status == 'in_progress')
+fixed_line_ids = infonavit_line_ids.filtered(lambda f: f.infonavit_type == 'fixed_monetary_fee')
+percentage_line_ids = infonavit_line_ids.filtered(lambda f: f.infonavit_type == 'percentage')
+discount_line_ids = infonavit_line_ids.filtered(lambda f: f.infonavit_type == 'discount_factor')
+
+amount = 0
+for fixed in fixed_line_ids:
+    amount += fixed.fixed_monetary_fee + fixed.monthly_insurance + fixed.extra_fixed_monthly_contribution
+fixed_amount = amount * accrued_days_in_period / total_days_in_month
+
+integrated_daily_wage = result_rules['INT_DAY_WAGE']['total']
+percentage_amount = 0
+for perc in percentage_line_ids:
+    percentage_amount += accrued_days_in_period * integrated_daily_wage * perc.percentage / 100 + \
+        (perc.monthly_insurance + perc.extra_fixed_monthly_contribution) * accrued_days_in_period / total_days_in_month
+
+umi = payslip._rule_parameter('l10n_mx_umi')
+discount_amount = 0
+for disc in discount_line_ids:
+    discount_amount += (disc.monthly_insurance + disc.extra_fixed_monthly_contribution) * accrued_days_in_period / total_days_in_month + \
+        disc.discount_factor * umi * accrued_days_in_period
+
+result = - (fixed_amount + percentage_amount + discount_amount)
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_fonacot" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Fonacot</field>
+        <field name="code">FONACOT</field>
+        <field name="sequence">126</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+result = contract.l10n_mx_fonacot.filtered(lambda f: f.status == 'in_progress')
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+fonacot_line_ids = contract.l10n_mx_fonacot.filtered(lambda f: f.status == 'in_progress')
+amount = 0
+for line in fonacot_line_ids:
+    amount += line.extra_fixed_monthly_contribution + line.monthly_import
+result = - (amount * days_in_period / total_days_in_month)
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_work_risk" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_social_security_employer"/>
+        <field name="name">Work Risks IMSS (Employer)</field>
+        <field name="code">RISK_IMSS_EMPLOYER</field>
+        <field name="sequence">126</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+risk_bonus_rate = payslip._rule_parameter('l10n_mx_risk_bonus_rate')
+integrated_daily_wage = result_rules['INT_DAY_WAGE']['total']
+days = days_in_period
+if unpaid_days_in_period &lt; 8:
+    days -= unpaid_days_in_period
+result = integrated_daily_wage * days * risk_bonus_rate
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_disease_maternity_fixed" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_social_security_employer"/>
+        <field name="name">Disease and Maternity IMSS - Fixed Quota (Employer)</field>
+        <field name="code">DIS_FIX_IMSS_EMPLOYER</field>
+        <field name="sequence">130</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = payslip._rule_parameter('l10n_mx_uma') * days_in_period
+result_rate = 20.4
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+        <field name="note">Fixed quota for each collaborator for up to three UMA</field>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_disease_maternity_additional" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_social_security_employer"/>
+        <field name="name">Disease and Maternity IMSS - Additional Quota (Employer)</field>
+        <field name="code">DIS_ADD_IMSS_EMPLOYER</field>
+        <field name="sequence">135</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INT_DAY_WAGE']['total']
+daily_uma = payslip._rule_parameter('l10n_mx_uma')
+result = max(0, (integrated_daily_wage - 3 * daily_uma) * days_in_period)
+result_rate = 1.10
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+        <field name="note">Additional quota due to the difference of the SBC and three times UMA</field>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_disease_maternity_additional_employee" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_social_security_employee"/>
+        <field name="name">Disease and Maternity IMSS - Additional Quota (Employee)</field>
+        <field name="code">DIS_ADD_IMSS_EMPLOYEE</field>
+        <field name="sequence">136</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INT_DAY_WAGE']['total']
+daily_uma = payslip._rule_parameter('l10n_mx_uma')
+result = max(0, (integrated_daily_wage - 3 * daily_uma) * days_in_period)
+result_rate = -0.4
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+        <field name="note">Additional quota due to the difference of the SBC and three times UMA</field>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_disease_maternity_medical" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_social_security_employer"/>
+        <field name="name">Disease and Maternity IMSS - Medical Expenses (Employer)</field>
+        <field name="code">DIS_MED_IMSS_EMPLOYER</field>
+        <field name="sequence">140</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INT_DAY_WAGE']['total']
+result = integrated_daily_wage * days_in_period
+result_rate = 1.05
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+        <field name="note">Medical expenses for pensioners and beneficiaries</field>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_disease_maternity_medical_employee" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_social_security_employee"/>
+        <field name="name">Disease and Maternity IMSS - Medical Expenses (Employee)</field>
+        <field name="code">DIS_MED_IMSS_EMPLOYEE</field>
+        <field name="sequence">141</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INT_DAY_WAGE']['total']
+result = integrated_daily_wage * days_in_period
+result_rate = -0.375
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+        <field name="note">Medical expenses for pensioners and beneficiaries</field>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_disease_maternity_money" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_social_security_employer"/>
+        <field name="name">Disease and Maternity IMSS - In Money (Employer)</field>
+        <field name="code">DIS_MON_IMSS_EMPLOYER</field>
+        <field name="sequence">145</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INT_DAY_WAGE']['total']
+result = integrated_daily_wage * days_in_period
+result_rate = 0.7
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_disease_maternity_money_employee" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_social_security_employee"/>
+        <field name="name">Disease and Maternity IMSS - In Money (Employee)</field>
+        <field name="code">DIS_MON_IMSS_EMPLOYEE</field>
+        <field name="sequence">146</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INT_DAY_WAGE']['total']
+result = integrated_daily_wage * days_in_period
+result_rate = -0.25
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_disability_life" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_social_security_employer"/>
+        <field name="name">Disability and Life IMSS (Employer)</field>
+        <field name="code">DIS_LIF_IMSS_EMPLOYER</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INT_DAY_WAGE']['total']
+days = days_in_period
+if unpaid_days_in_period &lt; 8:
+    days -= unpaid_days_in_period
+
+result = integrated_daily_wage * days
+result_rate = 1.75
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_disability_life_employee" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_social_security_employee"/>
+        <field name="name">Disability and Life IMSS (Employee)</field>
+        <field name="code">DIS_LIF_IMSS_EMPLOYEE</field>
+        <field name="sequence">151</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INT_DAY_WAGE']['total']
+days = days_in_period
+if unpaid_days_in_period &lt; 8:
+    days -= unpaid_days_in_period
+
+result = integrated_daily_wage * days
+result_rate = -0.625
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_retirement" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_social_security_employer"/>
+        <field name="name">Retirement, assault in elderly and old age IMSS (Employer)</field>
+        <field name="code">RETIRE_IMSS_EMPLOYER</field>
+        <field name="sequence">155</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INT_DAY_WAGE']['total']
+days = days_in_period
+if unpaid_days_in_period &lt; 8:
+    days -= worked_days['LEAVE90'].number_of_days if 'LEAVE90' in worked_days else 0
+
+result = integrated_daily_wage * days
+result_rate = 2
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_ceav" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_social_security_employer"/>
+        <field name="name">Retirement, assault in elderly and old age (CEAV) IMSS (Employer)</field>
+        <field name="code">CEAV_IMSS_EMPLOYER</field>
+        <field name="sequence">160</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+def find_index(x, rates):
+    measures = {
+        'uma': payslip._rule_parameter('l10n_mx_uma'),
+        'mdw': payslip._rule_parameter('l10n_mx_daily_min_wage'),
+        'inf': float('inf'),
+    }
+
+    for ind, (low_num, low_measure, high_num, high_measure) in enumerate(rates):
+        if low_num * measures[low_measure] &lt;= x &lt;= high_num * measures[high_measure]:
+            return ind
+    return 0
+
+ceav_table = payslip._rule_parameter('l10n_mx_ceav_lower_upper')
+integrated_daily_wage = result_rules['INT_DAY_WAGE']['total']
+
+index = find_index(integrated_daily_wage, ceav_table)
+percentage_table = payslip._rule_parameter('l10n_mx_ceav_percentage')
+percent = percentage_table[index]
+
+days = days_in_period
+if unpaid_days_in_period &lt; 8:
+    days -= unpaid_days_in_period
+
+result = integrated_daily_wage * days
+result_rate = percent * 100
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_ceav_employee" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_social_security_employee"/>
+        <field name="name">Retirement, assault in elderly and old age (CEAV) IMSS (Employee)</field>
+        <field name="code">CEAV_IMSS_EMPLOYEE</field>
+        <field name="sequence">161</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INT_DAY_WAGE']['total']
+days = days_in_period
+if unpaid_days_in_period &lt; 8:
+    days -= unpaid_days_in_period
+
+result = integrated_daily_wage * days
+result_rate = -1.125
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_nursery" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_social_security_employer"/>
+        <field name="name">Nursery and Social Benefits IMSS (Employer)</field>
+        <field name="code">NURSERY_IMSS_EMPLOYER</field>
+        <field name="sequence">165</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INT_DAY_WAGE']['total']
+days = days_in_period
+if unpaid_days_in_period &lt; 8:
+    days -= unpaid_days_in_period
+
+result = integrated_daily_wage * days
+result_rate = 1
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_infonavit" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_social_security_employer"/>
+        <field name="name">Infonavit IMSS (Employer)</field>
+        <field name="code">INFONAVIT_IMSS_EMPLOYER</field>
+        <field name="sequence">170</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INT_DAY_WAGE']['total']
+days = days_in_period
+if unpaid_days_in_period &lt; 8:
+    days -= unpaid_days_in_period
+
+result = integrated_daily_wage * days
+result_rate = 5
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_social_security_total_employee" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_social_security_employee_total"/>
+        <field name="name">IMSS Total (Employee)</field>
+        <field name="code">IMSS_EMPLOYEE_TOTAL</field>
+        <field name="sequence">199</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -categories['IMSS_EMPLOYEE']
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_social_security_total_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_social_security_employer_total"/>
+        <field name="name">IMSS Total (Employer)</field>
+        <field name="code">IMSS_EMPLOYER_TOTAL</field>
+        <field name="sequence">199</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['IMSS_EMPLOYER']
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_provisions_christmas_bonus" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_provisions"/>
+        <field name="name">Provisions Christmas Bonus</field>
+        <field name="code">PROVISIONS_CHRISTMAS_BONUS</field>
+        <field name="sequence">205</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+days_of_year_until_payslip = (payslip.date_to - date(payslip.date_to.year, 1, 1)).days + 1
+unpaid_worked_days = payslip.env['hr.payslip'].search([
+    ('employee_id', '=', employee.id),
+    ('structure_code', '=', 'MX_REGULAR'),
+    ('state', 'in', ['paid', 'done']),
+    ('date_from', '>=', date(payslip.date_to.year, 1, 1)),
+    ('date_to', '&lt;=', payslip.date_from + relativedelta(days=-1)),
+])._get_worked_days_line_values(['LEAVE90', 'LEAVE1000', 'LEAVE1100', 'LEAVE1200'], ['number_of_days'], True)
+unpaid_days = sum(worked_day_line['sum']['number_of_days'] for worked_day_line in unpaid_worked_days.values())
+
+work_ratio = (days_of_year_until_payslip - unpaid_days) / payslip.l10n_mx_days_of_year
+result = payslip.l10n_mx_daily_salary * payslip._rule_parameter('l10n_mx_christmas_bonus') * work_ratio
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_period_provisions_christmas_bonus" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_provisions"/>
+        <field name="name">Period Provisions Christmas Bonus</field>
+        <field name="code">PERIOD_PROVISIONS_CHRISTMAS_BONUS</field>
+        <field name="sequence">206</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+christmas_bonus_provision = result_rules['PROVISIONS_CHRISTMAS_BONUS']['total']
+
+provisioned_to_date = payslip.env['hr.payslip'].search([
+    ('employee_id', '=', employee.id),
+    ('structure_code', '=', 'MX_REGULAR'),
+    ('state', 'in', ['paid', 'done']),
+    ('date_from', '>=', date(payslip.date_to.year, 1, 1)),
+    ('date_to', '&lt;=', payslip.date_from + relativedelta(days=-1)),
+])._get_line_values(['PERIOD_PROVISIONS_CHRISTMAS_BONUS'], compute_sum=True)['PERIOD_PROVISIONS_CHRISTMAS_BONUS']['sum']['total']
+result = christmas_bonus_provision - provisioned_to_date
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_provisions_holiday_bonus" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_provisions"/>
+        <field name="name">Provisions Holiday Bonus</field>
+        <field name="code">PROVISIONS_HOLIDAY_BONUS</field>
+        <field name="sequence">207</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(employee.first_contract_date)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+last_anniversary = employee.first_contract_date + relativedelta(year=payslip.date_to.year)
+if last_anniversary >= payslip.date_to:
+    last_anniversary += relativedelta(years=-1)
+days_since_last_anniversary = (payslip.date_to - last_anniversary).days
+holidays_count = payslip._rule_parameter('l10n_mx_holiday_tables')[payslip.l10n_mx_years_worked]
+result = payslip.l10n_mx_daily_salary * holidays_count * contract.l10n_mx_holiday_bonus_rate / 100 * days_since_last_anniversary / payslip.l10n_mx_days_of_year
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_period_provisions_holiday_bonus" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_provisions"/>
+        <field name="name">Period Provisions Holiday Bonus</field>
+        <field name="code">PERIOD_PROVISIONS_HOLIDAY_BONUS</field>
+        <field name="sequence">208</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+holiday_bonus_provision = result_rules['PROVISIONS_HOLIDAY_BONUS']['total']
+
+provisioned_to_date = payslip.env['hr.payslip'].search([
+    ('employee_id', '=', employee.id),
+    ('structure_code', '=', 'MX_REGULAR'),
+    ('state', 'in', ['paid', 'done']),
+    ('date_from', '>=', date(payslip.date_to.year, 1, 1)),
+    ('date_to', '&lt;=', payslip.date_from + relativedelta(days=-1)),
+])._get_line_values(['PERIOD_PROVISIONS_HOLIDAY_BONUS'], compute_sum=True)['PERIOD_PROVISIONS_HOLIDAY_BONUS']['sum']['total']
+result = holiday_bonus_provision - provisioned_to_date
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_provisions_vacations_bonus" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_provisions"/>
+        <field name="name">Provisions Vacations Bonus</field>
+        <field name="code">PROVISIONS_VACATIONS_BONUS</field>
+        <field name="sequence">209</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(employee.first_contract_date)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+last_anniversary = employee.first_contract_date + relativedelta(year=payslip.date_to.year)
+if last_anniversary >= payslip.date_to:
+    last_anniversary += relativedelta(years=-1)
+days_since_last_anniversary = (payslip.date_to - last_anniversary).days
+vacations_count = payslip._rule_parameter('l10n_mx_holiday_tables')[payslip.l10n_mx_years_worked]
+result = payslip.l10n_mx_daily_salary * vacations_count * days_since_last_anniversary / payslip.l10n_mx_days_of_year
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_regular_pay_period_provisions_vacations_bonus" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_provisions"/>
+        <field name="name">Period Provisions Vacations Bonus</field>
+        <field name="code">PERIOD_PROVISIONS_VACATIONS_BONUS</field>
+        <field name="sequence">210</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+vacations_bonus_provision = result_rules['PROVISIONS_VACATIONS_BONUS']['total']
+
+provisioned_to_date = payslip.env['hr.payslip'].search([
+    ('employee_id', '=', employee.id),
+    ('structure_code', '=', 'MX_REGULAR'),
+    ('state', 'in', ['paid', 'done']),
+    ('date_from', '>=', date(payslip.date_to.year, 1, 1)),
+    ('date_to', '&lt;=', payslip.date_from + relativedelta(days=-1)),
+])._get_line_values(['PERIOD_PROVISIONS_VACATIONS_BONUS'], compute_sum=True)['PERIOD_PROVISIONS_VACATIONS_BONUS']['sum']['total']
+result = vacations_bonus_provision - provisioned_to_date
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+</odoo>

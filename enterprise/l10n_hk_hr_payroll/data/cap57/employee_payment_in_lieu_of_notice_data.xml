@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cap57_employees_salary_payment_in_lieu_of_notice" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Payment in Lieu of Notice</field>
+        <field name="code">PAYMENT_IN_LIEU_OF_NOTICE</field>
+        <field name="sequence">1</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+# Calculate the number of days for past 12 months
+first_day = payslip.date_from + relativedelta(months=-12, day=1)
+last_day = payslip.date_to + relativedelta(day=1)
+total_days = (last_day - first_day).days
+
+# Find past 12-month payslips
+domain = payslip._get_last_year_payslips_domain(payslip.date_from, payslip.date_to, [employee.id])
+last_year_payslips = payslip.env['hr.payslip'].search(domain, order='date_from desc')
+
+# Calculate the work rate
+number_of_days = last_year_payslips._get_number_of_worked_days(only_full_pay=True)
+number_of_months = number_of_days / total_days * 12
+
+# Calculate the average monthly salary
+gross = last_year_payslips._get_line_values(['713_GROSS'], compute_sum=True)['713_GROSS']['sum']['total']
+gross -= last_year_payslips._get_total_non_full_pay()
+average_monthly_salary = inputs['CUST_AVG_MONTHLY_SALARY'].amount if inputs.get('CUST_AVG_MONTHLY_SALARY') else gross / number_of_months
+
+# Calculate the payment in lieu of notice
+lieu_of_notice_months = inputs['LIEU_OF_NOTICE_PERIOD'].amount if inputs.get('LIEU_OF_NOTICE_PERIOD') else 1.0
+result = average_monthly_salary * lieu_of_notice_months
+        </field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_payment_in_lieu_of_notice"/>
+    </record>
+
+    <record id="cap57_employees_payment_in_lieu_of_notice_net" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="name">Net</field>
+        <field name="code">NET</field>
+        <field name="sequence">200</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories['ALW']</field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_payment_in_lieu_of_notice"/>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+    </record>
+</odoo>

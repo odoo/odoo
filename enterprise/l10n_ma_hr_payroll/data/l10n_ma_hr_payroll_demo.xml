@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.demo_company_ma" model="res.company" forcecreate="1">
+        <field name="name">My Mar Company</field>
+        <field name="currency_id" ref="base.MAD"/>
+        <field name="street">14000 Avenue Mokhtar Gazoulit</field>
+        <field name="zip">10000</field>
+        <field name="city">Rabat</field>
+        <field name="country_id" ref="base.ma"/>
+    </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_ma'))]"/>
+    </record>
+
+    <record id="base.user_demo" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_ma'))]"/>
+    </record>
+
+    <record id="hr_department_rdma" model="hr.department">
+        <field name="name">RD MA</field>
+        <field name="company_id" ref="base.demo_company_ma"/>
+    </record>
+
+    <record id="job_developer_morocco" model="hr.job">
+        <field name="name">Experienced Developer MA</field>
+        <field name="department_id" ref="hr_department_rdma"/>
+        <field name="no_of_recruitment">5</field>
+        <field name="company_id" ref="base.demo_company_ma"/>
+    </record>
+
+    <record id="hr_employee_auban" model="hr.employee">
+        <field name="name">Auban Marble</field>
+        <field name="job_id" ref="job_developer_morocco"/>
+        <field name="country_id" ref="base.ma"/>
+        <field name="company_id" ref="base.demo_company_ma"/>
+        <field name="image_1920" type="base64" file="l10n_ma_hr_payroll/static/img/hr_employee_auban_marble.jpg"/>
+        <field name="gender">male</field>
+    </record>
+
+    <record id="res_partner_camelia_foster" model="res.partner">
+        <field name="name">Camelia Foster</field>
+        <field name="street">14000 Avenue Mokhtar Gazoulit</field>
+        <field name="city">Rabat</field>
+        <field name="zip">10000</field>
+        <field name="country_id" ref="base.ma"/>
+        <field name="phone">+0032476543210</field>
+        <field name="email">camelia.foster@example.com</field>
+        <field name="company_id" ref="base.demo_company_ma"/>
+    </record>
+
+    <record id="user_camelia_foster" model="res.users">
+        <field name="partner_id" ref="l10n_ma_hr_payroll.res_partner_camelia_foster"/>
+        <field name="login">cameliafoster@example.com</field>
+        <field name="password">cameliafoster</field>
+        <field name="signature" type="html"><span>--<br/>+C. Foster</span></field>
+        <field name="company_ids" eval="[(4, ref('base.demo_company_ma'))]"/>
+        <field name="company_id" ref="base.demo_company_ma"/>
+        <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
+        <field name="image_1920" type="base64" file="l10n_ma_hr_payroll/static/img/hr_employe_camelia_foster.jpg"/>
+    </record>
+
+    <record id="res_partner_camelia_foster_work_address" model="res.partner">
+        <field name="name">Mar Offices</field>
+        <field name="street">14000 Avenue Mokhtar Gazoulit</field>
+        <field name="city">Rabat</field>
+        <field name="zip">10000</field>
+        <field name="country_id" ref="base.ma"/>
+        <field name="company_id" ref="base.demo_company_ma"/>
+    </record>
+
+    <record id="res_partner_camelia_foster_private_address" model="res.partner">
+        <field name="name">Camelia Foster</field>
+        <field name="company_id" ref="base.demo_company_ma"/>
+    </record>
+
+    <record id="res_partner_bank_account_camelia_foster" model="res.partner.bank">
+        <field name="acc_number">MA030103599935698356</field>
+        <field name="bank_id" ref="base.bank_ing"/>
+        <field name="partner_id" ref="l10n_ma_hr_payroll.res_partner_camelia_foster_private_address"/>
+        <field name="company_id" ref="base.demo_company_ma"/>
+    </record>
+
+    <record id="hr_employee_camelia_foster" model="hr.employee">
+        <field name="name">Camelia Foster (cfo)</field>
+        <field name="gender">female</field>
+        <field name="marital">single</field>
+        <field name="job_title">Software Developer</field>
+        <field name="private_street">14000 Avenue Mokhtar Gazoulit</field>
+        <field name="private_city">Rabat</field>
+        <field name="private_zip">10000</field>
+        <field name="private_country_id" ref="base.ma"/>
+        <field name="private_phone">+0032476543210</field>
+        <field name="private_email">camelia.foster@example.com</field>
+        <field name="address_id" ref="l10n_ma_hr_payroll.res_partner_camelia_foster_work_address"/>
+        <field name="emergency_contact">Knutt Foster</field>
+        <field name="emergency_phone">+212-520-123123</field>
+        <field name="birthday">1931-07-28</field>
+        <field name="distance_home_work">3</field>
+        <field name="place_of_birth">Morocco</field>
+        <field name="country_of_birth" ref="base.ma"/>
+        <field name="certificate">master</field>
+        <field name="study_field">Civil Engineering</field>
+        <field name="study_school">Université Mundiapolis Casablanca</field>
+        <field name="parent_id" ref="l10n_ma_hr_payroll.hr_employee_auban"/>
+        <field name="country_id" ref="base.ma"/>
+        <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+        <field name="identification_id">8752027365496</field>
+        <field name="bank_account_id" ref="l10n_ma_hr_payroll.res_partner_bank_account_camelia_foster"/>
+        <field name="image_1920" type="base64" file="l10n_ma_hr_payroll/static/img/hr_employe_camelia_foster.jpg"/>
+        <field name="company_id" ref="base.demo_company_ma"/>
+        <field name="user_id" ref="l10n_ma_hr_payroll.user_camelia_foster"/>
+        <field name="l10n_ma_cin_number">1000-123</field>
+        <field name="l10n_ma_cnss_number">1000-123</field>
+        <field name="l10n_ma_cimr_number">1000-123</field>
+        <field name="l10n_ma_mut_number">1000-123</field>
+    </record>
+
+    <record id="hr_contract_cdi_camelia_foster_previous" model="hr.contract">
+        <field name="name">CDI - Camelia Foster - Experienced Developer</field>
+        <field name="department_id" ref="hr_department_rdma"/>
+        <field name="employee_id" ref="hr_employee_camelia_foster"/>
+        <field name="job_id" ref="l10n_ma_hr_payroll.job_developer_morocco"/>
+        <field name="structure_type_id" ref="l10n_ma_hr_payroll.structure_type_employee_mar"/>
+        <field name="wage">5000</field>
+        <field name="state">close</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="company_id" ref="base.demo_company_ma"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-2, month=1, day=1))"/>
+        <field name="date_end" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1, days=-2))"/>
+        <field name="resource_calendar_id" model="resource.calendar" eval="obj().search([('company_id', '=', obj().env.ref('base.demo_company_ma').id)], limit=1)"/>
+    </record>
+
+    <record id="hr_contract_cdi_camelia_foster" model="hr.contract">
+        <field name="name">CDI - Camelia Foster - Experienced Developer</field>
+        <field name="department_id" ref="hr_department_rdma"/>
+        <field name="employee_id" ref="hr_employee_camelia_foster"/>
+        <field name="job_id" ref="l10n_ma_hr_payroll.job_developer_morocco"/>
+        <field name="structure_type_id" ref="l10n_ma_hr_payroll.structure_type_employee_mar"/>
+        <field name="wage">5600</field>
+        <field name="state">open</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="company_id" ref="base.demo_company_ma"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1, days=-1))"/>
+        <field name="resource_calendar_id" model="resource.calendar" eval="obj().search([('company_id', '=', obj().env.ref('base.demo_company_ma').id)], limit=1)"/>
+    </record>
+
+    <record id="base.partner_demo" model="res.partner">
+        <field name="phone">+212-520-123123</field>
+    </record>
+
+    <record id="hr_payslip_batch_morocco" model="hr.payslip.run">
+        <field name="name" eval="'Batch salary ' + (DateTime.today() + relativedelta(months=-1)).strftime('%B %Y')"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(months=-1, day=1)).strftime('%Y-%m-%d')"/>
+        <field name="date_end" eval="(DateTime.today() + relativedelta(day=1, days=-1)).strftime('%Y-%m-%d')"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="hr_payslip_camelia_foster" model="hr.payslip">
+        <field name="name">Camelia Foster Payslip</field>
+        <field name="contract_id" ref="hr_contract_cdi_camelia_foster"/>
+        <field name="date_from" eval="(DateTime.today() + relativedelta(months=-1, day=1)).strftime('%Y-%m-%d')"/>
+        <field name="date_to" eval="(DateTime.today() + relativedelta(day=1, days=-1)).strftime('%Y-%m-%d')"/>
+        <field name="employee_id" ref="hr_employee_camelia_foster"/>
+        <field name="struct_id" ref="l10n_ma_hr_payroll.hr_payroll_salary_ma_structure_base"/>
+        <field name="number">SLIP12</field>
+        <field name="payslip_run_id" ref="hr_payslip_batch_morocco"/>
+        <field name="company_id" ref="base.demo_company_ma"/>
+    </record>
+    <function model="hr.payslip" name="compute_sheet">
+        <value model="hr.payslip" eval="[
+            ref('hr_payslip_camelia_foster'),
+            ]"/>
+    </function>
+</odoo>

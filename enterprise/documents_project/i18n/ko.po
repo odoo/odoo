@@ -1,0 +1,364 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* documents_project
+#
+# Translators:
+# Wil Odoo, 2024
+# Daye Jeong, 2025
+# Sarah Park, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:47+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Sarah Park, 2025\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_add_draft
+msgid "Add Tag Draft"
+msgstr "태그 초안 추가"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_add_to_validate
+msgid "Add Tag To Validate"
+msgstr "승인할 태그 추가"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_add_validated
+msgid "Add Tag Validated"
+msgstr "승인 태그 추가"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_ask_for_validation_code
+msgid "Ask For Validation - Check conditions"
+msgstr "승인 요청 - 조건 확인"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_ask_for_validation
+msgid "Ask for validation"
+msgstr "승인 요청"
+
+#. module: documents_project
+#: model:ir.model,name:documents_project.model_ir_attachment
+msgid "Attachment"
+msgstr "첨부 파일"
+
+#. module: documents_project
+#: model_terms:ir.ui.view,arch_db:documents_project.edit_project_document_form_inherit
+msgid "Categorize and share your documents with your customers"
+msgstr "문서를 분류하여 고객과 공유합니다."
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_create_a_task_code
+#: model:ir.actions.server,name:documents_project.ir_actions_server_create_project_task
+msgid "Create a Task"
+msgstr "작업 만들기"
+
+#. module: documents_project
+#: model:ir.model.fields,field_description:documents_project.field_project_project__documents_tag_ids
+msgid "Default Tags"
+msgstr "기본 태그"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_create_project_deprecate
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_add_deprecated
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_remove_deprecated
+msgid "Deprecate"
+msgstr "더 이상 사용하지 않음"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_deprecate_code
+msgid "Deprecate - Check conditions"
+msgstr "사용 중지 - 조건 확인"
+
+#. module: documents_project
+#: model:ir.model,name:documents_project.model_documents_document
+msgid "Document"
+msgstr "문서"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/controllers/portal.py:0
+#: code:addons/documents_project/models/project_project.py:0
+#: model:ir.actions.act_window,name:documents_project.action_view_documents_project_project
+#: model:ir.actions.act_window,name:documents_project.action_view_documents_project_task
+#: model:ir.embedded.actions,name:documents_project.project_embedded_action_documents
+#: model:ir.embedded.actions,name:documents_project.project_embedded_action_documents_dashboard
+#: model:ir.model.fields,field_description:documents_project.field_project_project__use_documents
+#: model:ir.model.fields,field_description:documents_project.field_project_task__document_ids
+#: model_terms:ir.ui.view,arch_db:documents_project.portal_my_task
+#: model_terms:ir.ui.view,arch_db:documents_project.portal_tasks_list
+#: model_terms:ir.ui.view,arch_db:documents_project.project_sharing_project_task_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:documents_project.project_view_kanban_inherit_documents
+#: model_terms:ir.ui.view,arch_db:documents_project.view_task_form2_document_inherit
+msgid "Documents"
+msgstr "문서"
+
+#. module: documents_project
+#: model_terms:ir.ui.view,arch_db:documents_project.edit_project_document_form_inherit
+msgid "Documents &amp; Analytics"
+msgstr "문서 및 분석"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "Documents already linked to a task."
+msgstr "문서가 이미 작업에 연결되어 있습니다."
+
+#. module: documents_project
+#: model:ir.model.fields,field_description:documents_project.field_project_project__documents_folder_id
+msgid "Folder"
+msgstr "폴더"
+
+#. module: documents_project
+#: model:ir.model.fields,help:documents_project.field_project_project__documents_folder_id
+#: model:ir.model.fields,help:documents_project.field_project_task__documents_folder_id
+msgid ""
+"Folder in which all of the documents of this project will be categorized. "
+"All of the attachments of your tasks will be automatically added as "
+"documents in this workspace as well."
+msgstr ""
+"이 프로젝트의 모든 문서가 정리되는 폴더입니다. 작업의 첨부 파일은 자동으로 "
+"이 작업 공간에 문서로 추가됩니다."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "Impossible to create a task on a deprecated document"
+msgstr "사용 중단된 문서에서 작업을 만들 수 없음"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid ""
+"Impossible to update write `res_id` without `access_internal` for records "
+"with different `res_models` when some are linked to projects or tasks."
+msgstr ""
+"다른 `res_models`에 연결된 레코드에 대해 `access_internal` 없이 `res_id`를 업"
+"데이트할 수 없습니다. 일부 레코드는 프로젝트 또는 작업과 연결되어 있습니다."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "Invalid project search"
+msgstr "잘못된 프로젝트 검색"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "Invalid task search"
+msgstr "잘못된 작업 검색"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_mark_as_draft_code
+msgid "Mark As Draft - Check conditions"
+msgstr "초안으로 표시 - 조건 확인"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_mark_as_draft
+msgid "Mark as draft"
+msgstr "초안으로 표시"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "New task from Documents"
+msgstr "문서에서의 새 작업"
+
+#. module: documents_project
+#: model:ir.model,name:documents_project.model_project_project
+#: model_terms:ir.ui.view,arch_db:documents_project.document_view_search_inherit
+msgid "Project"
+msgstr "프로젝트"
+
+#. module: documents_project
+#: model:ir.model.fields,field_description:documents_project.field_documents_document__project_ids
+msgid "Projects"
+msgstr "프로젝트"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_remove_draft
+msgid "Remove Tag Draft"
+msgstr "태그 초안 제거"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_remove_to_validate
+msgid "Remove Tag To Validate"
+msgstr "승인할 태그 제거"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_remove_validated
+msgid "Remove Tag Validated"
+msgstr "승인된 태그 제거"
+
+#. module: documents_project
+#: model:ir.model,name:documents_project.model_documents_tag
+msgid "Tag"
+msgstr "태그"
+
+#. module: documents_project
+#: model:ir.model,name:documents_project.model_project_task
+#: model_terms:ir.ui.view,arch_db:documents_project.document_view_search_inherit
+msgid "Task"
+msgstr "작업"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "Task created from document %s"
+msgstr "%s 문서에서 생성된 작업"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "Task created from documents"
+msgstr "문서에서 생성된 작업"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/project_task.py:0
+msgid "Task's Documents"
+msgstr "작업 문서"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/project_project.py:0
+msgid ""
+"The \"%(folder)s\" folder should either be in the \"%(company)s\" company "
+"like this project or be open to all companies."
+msgstr ""
+"\"%(folder)s\" 폴더는 이 프로젝트처럼 \"%(company)s\" 회사에 있거나 모든 회사"
+"에서 사용할 수 있어야 합니다."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid ""
+"The \"%s\" workspace is required by the Project application and cannot be "
+"archived."
+msgstr ""
+"\"%s\" 작업 공간은 프로젝트 앱의 필수 항목이며 보관 처리할 수 없습니다."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid ""
+"The \"%s\" workspace is required by the Project application and cannot be "
+"deleted."
+msgstr "\"%s\" 작업 공간은 프로젝트 앱에서 필수 항목이며 삭제할 수 없습니다."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid ""
+"This action can't be performed, as it would remove the workspaces used by "
+"the following projects:\n"
+"%(projects)s\n"
+"To continue, choose different workspaces or turn off the Documents feature "
+"for these projects."
+msgstr ""
+"해당 활동을 수행할 수 없습니다. 수행할 경우 다음 프로젝트에서 사용하는 작업 "
+"공간이 삭제됩니다:\n"
+"%(projects)s\n"
+"계속하려면 다른 작업 공간을 선택하거나 해당 프로젝트에 대한 문서 기능을 해제"
+"하세요."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid ""
+"This folder should remain in the same company as the \"%(project)s\" project "
+"to which it is linked. Please update the company of the \"%(project)s\" "
+"project, or leave the company of this workspace empty."
+msgstr ""
+"이 폴더는 연결된 \"%(project)s\" 프로젝트와 동일한 회사와 연결된 상태로 유지"
+"되어야 합니다. \"%(project)s\" 프로젝트의 회사를 업데이트하거나 이 작업 공간"
+"의 회사를 비워 두세요."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid ""
+"This folder should remain in the same company as the following projects to "
+"which it is linked:\n"
+"%s\n"
+"\n"
+"Please update the company of those projects, or leave the company of this "
+"workspace empty."
+msgstr ""
+"이 폴더는 연결되어 있는 다음의 프로젝트와 동일한 회사와 연결된 상태로 유지되"
+"어야 합니다\"\n"
+"%s\n"
+"\n"
+"프로젝트의 회사를 업데이트하거나 이 작업 공간의 회사를 비워 두세요."
+
+#. module: documents_project
+#: model_terms:ir.actions.act_window,help:documents_project.action_view_documents_project_project
+#: model_terms:ir.actions.act_window,help:documents_project.action_view_documents_project_task
+msgid ""
+"Upload <span class=\"fw-normal\">a file or </span>drag <span class=\"fw-"
+"normal\">it here.</span>"
+msgstr ""
+"파일을 <span class=\"fw-normal\">업로드하시거나 </span>여기로 <span "
+"class=\"fw-normal\">끌어 오세요.</span>"
+
+#. module: documents_project
+#: model:ir.model.fields,field_description:documents_project.field_project_task__folder_user_permission
+msgid "User permission"
+msgstr "사용자 승인"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_ask_validate
+msgid "Validate"
+msgstr "승인"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_validate_code
+msgid "Validate - Check conditions"
+msgstr "승인 - 조건 확인"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/project_project.py:0
+msgid ""
+"You cannot change the company of this project, because its workspace is "
+"linked to the other following projects that are still in the \"%"
+"(other_company)s\" company:\n"
+"%(other_workspaces)s\n"
+"\n"
+"Please update the company of all projects so that they remain in the same "
+"company as their workspace, or leave the company of the \"%(workspace)s\" "
+"workspace blank."
+msgstr ""
+"작업 공간이 \"%(other_company)s\" 회사에 있는 다음의 다른 프로젝트와 연결되"
+"어 있기 때문에 해당 프로젝트의 회사를 변경할 수 없습니다:\n"
+"%(other_workspaces)s\n"
+"\n"
+"작업 공간이 동일한 회사에 속하도록 모든 프로젝트를 변경하거나 \"%"
+"(workspace)s\" 작업 공간의 회사 항목을 비워두세요."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "You cannot create a task from a folder."
+msgstr "작업을 폴더에서 만들 수 없습니다."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "You cannot set a company on the %s folder."
+msgstr "회사를 %s 폴더에 설정할 수 없습니다."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "new %(model)s from %(new_record)s"
+msgstr "새로운 %(model)s의 %(new_record)s에서"

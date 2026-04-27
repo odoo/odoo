@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_co_reports_libro_inv_blc" model="account.report">
+        <field name="name">Inventory and Balance Report</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="country_id" ref="base.co" />
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_co_reports_libro_inv_blc_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+
+            <record id="l10n_co_reports_libro_inv_blc_activo" model="account.report.line">
+                <field name="code">L10N_CO_LIB_ACT</field>
+                <field name="name">1 ASSETS</field>
+                <field name="aggregation_formula">L10N_CO_LIB_ACT_11.balance + L10N_CO_LIB_ACT_12.balance + L10N_CO_LIB_ACT_13.balance + L10N_CO_LIB_ACT_14.balance + L10N_CO_LIB_ACT_15.balance + L10N_CO_LIB_ACT_16.balance + L10N_CO_LIB_ACT_17.balance + L10N_CO_LIB_ACT_18.balance + L10N_CO_LIB_ACT_19.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_co_reports_libro_inv_blc_activo_11" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_ACT_11</field>
+                        <field name="name">11 CASH AND CASH EQUIVALENTS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">11</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_activo_12" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_ACT_12</field>
+                        <field name="name">12 INVESTMENTS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">12</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_activo_13" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_ACT_13</field>
+                        <field name="name">13 ACCOUNTS RECEIVABLE</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">13</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_activo_14" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_ACT_14</field>
+                        <field name="name">14 INVENTORIES</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">14</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_activo_15" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_ACT_15</field>
+                        <field name="name">15 PROPERTY, PLANT AND EQUIPMENT</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">15</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_activo_16" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_ACT_16</field>
+                        <field name="name">16 INTANGIBLE ASSETS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">16</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_activo_17" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_ACT_17</field>
+                        <field name="name">17 DEFERRED ASSETS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">17</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_activo_18" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_ACT_18</field>
+                        <field name="name">18 OTHER ASSETS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">18</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_activo_19" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_ACT_19</field>
+                        <field name="name">19 REVALUATIONS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">19</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_co_reports_libro_inv_blc_pasivo" model="account.report.line">
+                <field name="code">L10N_CO_LIB_PSV</field>
+                <field name="name">2 LIABILITIES</field>
+                <field name="aggregation_formula">L10N_CO_LIB_PSV_21.balance + L10N_CO_LIB_PSV_22.balance + L10N_CO_LIB_PSV_23.balance + L10N_CO_LIB_PSV_24.balance + L10N_CO_LIB_PSV_25.balance + L10N_CO_LIB_PSV_26.balance + L10N_CO_LIB_PSV_27.balance + L10N_CO_LIB_PSV_28.balance + L10N_CO_LIB_PSV_29.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_co_reports_libro_inv_blc_pasivo_21" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_PSV_21</field>
+                        <field name="name">21 FINANCIAL OBLIGATIONS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">21</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_pasivo_22" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_PSV_22</field>
+                        <field name="name">22 TRADE PAYABLES</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">22</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_pasivo_23" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_PSV_23</field>
+                        <field name="name">23 ACCOUNTS PAYABLE</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">23</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_pasivo_24" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_PSV_24</field>
+                        <field name="name">24 TAXES, LEVIES AND FEES</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">24</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_pasivo_25" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_PSV_25</field>
+                        <field name="name">25 LABOR OBLIGATIONS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">25</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_pasivo_26" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_PSV_26</field>
+                        <field name="name">26 ESTIMATED LIABILITIES AND PROVISIONS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">26</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_pasivo_27" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_PSV_27</field>
+                        <field name="name">27 DEFERRED LIABILITIES</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">27</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_pasivo_28" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_PSV_28</field>
+                        <field name="name">28 OTHER LIABILITIES</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">28</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_pasivo_29" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_PSV_29</field>
+                        <field name="name">29 BONDS AND COMMERCIAL PAPER</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">29</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_co_reports_libro_inv_blc_patrimonio" model="account.report.line">
+                <field name="code">L10N_CO_LIB_PTR</field>
+                <field name="name">3 EQUITY</field>
+                <field name="aggregation_formula">L10N_CO_LIB_PTR_31.balance + L10N_CO_LIB_PTR_32.balance + L10N_CO_LIB_PTR_33.balance + L10N_CO_LIB_PTR_34.balance + L10N_CO_LIB_PTR_35.balance + L10N_CO_LIB_PTR_36.balance + L10N_CO_LIB_PTR_37.balance + L10N_CO_LIB_PTR_38.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_co_reports_libro_inv_blc_patrimonio_31" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_PTR_31</field>
+                        <field name="name">31 SHARE CAPITAL</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">31</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_patrimonio_32" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_PTR_32</field>
+                        <field name="name">32 CAPITAL SURPLUS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">32</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_patrimonio_33" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_PTR_33</field>
+                        <field name="name">33 RESERVES</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">33</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_patrimonio_34" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_PTR_34</field>
+                        <field name="name">34 EQUITY REVALUATION</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">34</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_patrimonio_35" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_PTR_35</field>
+                        <field name="name">35 DIVIDENDS OR PARTICIPATIONS DECREED IN SHARES, QUOTAS OR PARTIES OF SOCIAL INTEREST</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">35</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_patrimonio_36" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_PTR_36</field>
+                        <field name="name">36 NET INCOME FOR THE YEAR</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">36</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_patrimonio_37" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_PTR_37</field>
+                        <field name="name">37 RETAINED EARNINGS FROM PRIOR YEARS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">37</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_patrimonio_38" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_PTR_38</field>
+                        <field name="name">38 REVALUATION SURPLUS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">38</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_co_reports_libro_inv_blc_ingresos" model="account.report.line">
+                <field name="code">L10N_CO_LIB_ING</field>
+                <field name="name">4 INCOME</field>
+                <field name="aggregation_formula">L10N_CO_LIB_ING_41.balance + L10N_CO_LIB_ING_42.balance + L10N_CO_LIB_ING_47.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_co_reports_libro_inv_blc_ingresos_41" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_ING_41</field>
+                        <field name="name">41 OPERATING REVENUE</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">41</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_ingresos_42" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_ING_42</field>
+                        <field name="name">42 NON-OPERATING REVENUE</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">42</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_ingresos_47" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_ING_47</field>
+                        <field name="name">47 INFLATION ADJUSTMENTS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">47</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_co_reports_libro_inv_blc_gastos" model="account.report.line">
+                <field name="code">L10N_CO_LIB_GST</field>
+                <field name="name">5 EXPENSES</field>
+                <field name="aggregation_formula">L10N_CO_LIB_GST_51.balance + L10N_CO_LIB_GST_52.balance + L10N_CO_LIB_GST_53.balance + L10N_CO_LIB_GST_54.balance + L10N_CO_LIB_GST_59.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_co_reports_libro_inv_blc_gastos_51" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_GST_51</field>
+                        <field name="name">51 ADMINISTRATIVE EXPENSES</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">51</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_gastos_52" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_GST_52</field>
+                        <field name="name">52 SELLING EXPENSES</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">52</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_gastos_53" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_GST_53</field>
+                        <field name="name">53 NON-OPERATING EXPENSES</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">53</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_gastos_54" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_GST_54</field>
+                        <field name="name">54 INCOME TAX AND SUPPLEMENTARY TAXES</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">54</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_gastos_59" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_GST_59</field>
+                        <field name="name">59 GAINS AND LOSSES</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">59</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_co_reports_libro_inv_blc_c_ventas" model="account.report.line">
+                <field name="code">L10N_CO_LIB_CVT</field>
+                <field name="name">6 COST OF SALES</field>
+                <field name="aggregation_formula">L10N_CO_LIB_CVT_61.balance + L10N_CO_LIB_CVT_62.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_co_reports_libro_inv_blc_c_ventas_61" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_CVT_61</field>
+                        <field name="name">61 COST OF GOODS SOLD AND SERVICES RENDERED</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">61</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_c_ventas_62" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_CVT_62</field>
+                        <field name="name">62 PURCHASES</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">62</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_co_reports_libro_inv_blc_c_prod" model="account.report.line">
+                <field name="code">L10N_CO_LIB_CPO</field>
+                <field name="name">7 PRODUCTION OR OPERATION COSTS</field>
+                <field name="aggregation_formula">L10N_CO_LIB_CPO_71.balance + L10N_CO_LIB_CPO_72.balance + L10N_CO_LIB_CPO_73.balance + L10N_CO_LIB_CPO_74.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_co_reports_libro_inv_blc_c_prod_71" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_CPO_71</field>
+                        <field name="name">71 RAW MATERIALS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">71</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                     <record id="l10n_co_reports_libro_inv_blc_c_prod_72" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_CPO_72</field>
+                        <field name="name">72 DIRECT LABOR</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">72</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_c_prod_73" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_CPO_73</field>
+                        <field name="name">73 INDIRECT COSTS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">73</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_c_prod_74" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_CPO_74</field>
+                        <field name="name">74 SERVICE CONTRACTS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">74</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                </field>
+            </record>
+           <record id="l10n_co_reports_libro_inv_blc_cu_deud" model="account.report.line">
+                <field name="code">L10N_CO_LIB_CUD</field>
+                <field name="name">8 MEMORANDUM ACCOUNTS – DEBIT BALANCES</field>
+                <field name="aggregation_formula">L10N_CO_LIB_CUD_81.balance + L10N_CO_LIB_CUD_82.balance + L10N_CO_LIB_CUD_83.balance + L10N_CO_LIB_CUD_84.balance + L10N_CO_LIB_CUD_85.balance + L10N_CO_LIB_CUD_86.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_co_reports_libro_inv_blc_cu_deud_81" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_CUD_81</field>
+                        <field name="name">81 CONTINGENT RIGHTS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">81</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                     <record id="l10n_co_reports_libro_inv_blc_cu_deud_82" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_CUD_82</field>
+                        <field name="name">82 TAX DEBTORS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">82</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_cu_deud_83" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_CUD_83</field>
+                        <field name="name">83 CONTROL DEBTORS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">83</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_cu_deud_84" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_CUD_84</field>
+                        <field name="name">84 OFFSET CONTINGENT RIGHTS (CR)</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">84</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_cu_deud_85" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_CUD_85</field>
+                        <field name="name">85 OFFSET TAX DEBTORS (CR)</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">85</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_cu_deud_86" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_CUD_86</field>
+                        <field name="name">86 OFFSET CONTROL DEBTORS (CR)</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">86</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_co_reports_libro_inv_blc_cu_acre" model="account.report.line">
+                <field name="code">L10N_CO_LIB_CUA</field>
+                <field name="name">9 MEMORANDUM ACCOUNTS – CREDIT BALANCES</field>
+                <field name="aggregation_formula">L10N_CO_LIB_CUA_91.balance + L10N_CO_LIB_CUA_92.balance + L10N_CO_LIB_CUA_93.balance + L10N_CO_LIB_CUA_94.balance + L10N_CO_LIB_CUA_95.balance + L10N_CO_LIB_CUA_96.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_co_reports_libro_inv_blc_cu_acre_91" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_CUA_91</field>
+                        <field name="name">91 CONTINGENT LIABILITIES</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">91</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_cu_acre_92" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_CUA_92</field>
+                        <field name="name">92 TAX CREDITORS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">92</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_cu_acre_93" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_CUA_93</field>
+                        <field name="name">93 CONTROL CREDITORS</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">93</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_cu_acre_94" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_CUA_94</field>
+                        <field name="name">94 OFFSET CONTINGENT LIABILITIES (DB)</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">94</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_cu_acre_95" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_CUA_95</field>
+                        <field name="name">95 OFFSET TAX CREDITORS (DB)</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">95</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_reports_libro_inv_blc_cu_acre_96" model="account.report.line">
+                        <field name="code">L10N_CO_LIB_CUA_96</field>
+                        <field name="name">96 OFFSET CONTROL CREDITORS (DB)</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">96</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_co_inv_blc_assets_expenses" model="account.report.line">
+                <field name="name">Assets + Expenses</field>
+                <field name="code">L10N_CO_ASSETS_EXPENSES</field>
+                <field name="aggregation_formula">L10N_CO_LIB_ACT.balance + L10N_CO_LIB_GST.balance + L10N_CO_LIB_CVT.balance + L10N_CO_LIB_CPO.balance</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="l10n_co_inv_blc_equity_liability" model="account.report.line">
+                <field name="name">Liabilities + Equity + Income</field>
+                <field name="code">L10N_CO_EQUITY_LIABILITY</field>
+                <field name="aggregation_formula">L10N_CO_LIB_PTR.balance + L10N_CO_LIB_PSV.balance + L10N_CO_LIB_ING.balance</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+        </field>
+    </record>
+</odoo>

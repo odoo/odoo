@@ -1,0 +1,2261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="urn:iso:std:iso:20022:tech:xsd:pain.008.001.02"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="urn:iso:std:iso:20022:tech:xsd:pain.008.001.02"
+    elementFormDefault="qualified">
+  <xs:element name="Document" type="Document_EPC131-08_SDD_B2B_C2B_2019_V1.0"/>
+  <xs:complexType name="AccountIdentification4Choice">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Account Identification 4Choice</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Specifies the unique identification of an account as assigned by the account servicer.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="IBAN" type="IBAN2007Identifier">
+          <xs:annotation>
+            <xs:documentation xml:lang="EN" source="Name">IBAN</xs:documentation>
+            <xs:documentation xml:lang="EN" source="Definition">International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 "Banking and related financial services - International Bank Account Number (IBAN)" version 1997-10-01, or later revisions.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Othr" type="GenericAccountIdentification1">
+          <xs:annotation>
+            <xs:documentation xml:lang="EN" source="Name">Other</xs:documentation>
+            <xs:documentation xml:lang="EN" source="Definition">Unique identification of an account, as assigned by the account servicer, using an identification scheme.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AccountIdentification4Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="AccountIdentification4Choice">
+        <xs:sequence>
+          <xs:choice>
+            <xs:element name="IBAN" type="IBAN2007Identifier"/>
+          </xs:choice>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ActiveOrHistoricCurrencyAndAmount">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Active Or Historic Currency And Amount</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">A number of monetary units specified in an active or a historic currency where the unit of currency is explicit and compliant with ISO 4217.</xs:documentation>
+    </xs:annotation>
+    <xs:simpleContent>
+      <xs:extension base="ActiveOrHistoricCurrencyAndAmount_SimpleType">
+        <xs:attribute name="Ccy" type="ActiveOrHistoricCurrencyCode" use="required">
+          <xs:annotation>
+            <xs:documentation xml:lang="EN" source="Name">Currency</xs:documentation>
+            <xs:documentation xml:lang="EN" source="Definition">A code allocated to a currency by a Maintenance Agency under an international identification scheme, as described in the latest edition of the international standard ISO 4217 "Codes for the representation of currencies and funds".</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ActiveOrHistoricCurrencyAndAmount_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:simpleContent>
+      <xs:restriction base="ActiveOrHistoricCurrencyAndAmount">
+        <xs:maxInclusive value="999999999.99"/>
+        <xs:minInclusive value="0.01"/>
+        <xs:fractionDigits value="2"/>
+        <xs:attribute name="Ccy" type="ActiveOrHistoricCurrencyCode_EPC131-08_SDD_B2B_C2B_2019_V1.0" use="required"/>
+      </xs:restriction>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="ActiveOrHistoricCurrencyAndAmount_SimpleType">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Active Or Historic Currency And Amount _Simple Type</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">A number of monetary units specified in an active or a historic currency where the unit of currency is explicit and compliant with ISO 4217.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="0"/>
+      <xs:totalDigits value="18"/>
+      <xs:fractionDigits value="5"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ActiveOrHistoricCurrencyCode">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Active Or Historic Currency Code</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">A code allocated to a currency by a Maintenance Agency under an international identification scheme, as described in the latest edition of the international standard ISO 4217 "Codes for the representation of currencies and funds".</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[A-Z]{3,3}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ActiveOrHistoricCurrencyCode_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:restriction base="ActiveOrHistoricCurrencyCode">
+      <xs:enumeration value="EUR">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Euro</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Numeric code: 978</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:pattern value="[A-Z]{3,3}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="AmendmentInformationDetails6">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Amendment Information Details 6</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Set of elements used to provide the list of direct debit mandate elements that have been modified when the amendment indicator has been set.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="OrgnlMndtId" type="Max35Text" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Original Mandate Identification</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Unique identification, as assigned by the creditor, to unambiguously identify the original mandate.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OrgnlCdtrSchmeId" type="PartyIdentification32" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Original Creditor Scheme Identification</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Original creditor scheme identification that has been modified.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OrgnlDbtrAcct" type="CashAccount16" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Original Debtor Account</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Original debtor account that has been modified.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OrgnlDbtrAgt" type="BranchAndFinancialInstitutionIdentification4" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Original Debtor Agent</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Original debtor agent that has been modified.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AmendmentInformationDetails6_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="AmendmentInformationDetails6">
+        <xs:sequence>
+          <xs:element name="OrgnlMndtId" type="Max35Text" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-19 Unique Mandate Reference as given by the Original Creditor who issued the Mandate.</xs:documentation>
+              <xs:documentation source="Usage Rule">Mandatory if changes occur in ‘Mandate Identification’, otherwise not to be used.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="OrgnlCdtrSchmeId" type="PartyIdentification32_EPC131-08_SDD_B2B_C2B_2019_V1.0_5" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Mandatory if changes occur in ‘Creditor Scheme Identification’ (‘Name’ and/or 'Identification'), otherwise not to be used.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="OrgnlDbtrAcct" type="CashAccount16_EPC131-08_SDD_B2B_C2B_2019_V1.0_2" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">To use ‘Identification’ under ‘Other’ under ‘Identification’ with code ‘SMNDA’ (Same Mandate with a New Debtor Account) to indicate same mandate with new Debtor Account. Or</xs:documentation>
+              <xs:documentation source="Usage Rule">In case of an account change within the same bank, IBAN is allowed.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="OrgnlDbtrAgt" type="BranchAndFinancialInstitutionIdentification4" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Not to be used if element 'Original Debtor Account' is populated with 'SMNDA' (Same Mandate with a New Debtor Account).</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="AnyBICIdentifier">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Any BICIdentifier</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Code allocated to a financial or non-financial institution by the ISO 9362 Registration Authority, as described in ISO 9362 "Banking - Banking telecommunication messages - Business identifier code (BIC)".</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BatchBookingIndicator">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Batch Booking Indicator</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Identifies whether the sending party requests a single debit or credit entry per individual transaction or a batch entry for the sum of the amounts of all transactions.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:boolean"/>
+  </xs:simpleType>
+  <xs:simpleType name="BICIdentifier">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">BICIdentifier</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Code allocated to a financial institution by the ISO 9362 Registration Authority as described in ISO 9362 "Banking - Banking telecommunication messages - Business identifier code (BIC)".</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="BranchAndFinancialInstitutionIdentification4">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Branch And Financial Institution Identification 4</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Set of elements used to uniquely and unambiguously identify a financial institution or a branch of a financial institution.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="FinInstnId" type="FinancialInstitutionIdentification7">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Financial Institution Identification</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Unique and unambiguous identification of a financial institution, as assigned under an internationally recognised or proprietary identification scheme.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BranchAndFinancialInstitutionIdentification4_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="BranchAndFinancialInstitutionIdentification4">
+        <xs:sequence>
+          <xs:element name="FinInstnId" type="FinancialInstitutionIdentification7_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Either BIC or ‘Other/Identification’ must be used.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="BranchAndFinancialInstitutionIdentification4_EPC131-08_SDD_B2B_C2B_2019_V1.0_2">
+    <xs:complexContent>
+      <xs:restriction base="BranchAndFinancialInstitutionIdentification4">
+        <xs:sequence>
+          <xs:element name="FinInstnId" type="FinancialInstitutionIdentification7_EPC131-08_SDD_B2B_C2B_2019_V1.0_2">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Either BIC or ‘Other/Identification’ must be used.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CashAccount16">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Cash Account 16</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Set of elements used to identify an account.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Id" type="AccountIdentification4Choice">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Identification</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Unique and unambiguous identification for the account between the account owner and the account servicer.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Ccy" type="ActiveOrHistoricCurrencyCode" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Currency</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">
+Identification of the currency in which the account is held. 
+
+Usage: Currency should only be used in case one and the same account number covers several currencies
+and the initiating party needs to identify which currency needs to be used for settlement on the account.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CashAccount16_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="CashAccount16">
+        <xs:sequence>
+          <xs:element name="Id" type="AccountIdentification4Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Only IBAN is allowed.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Ccy" type="ActiveOrHistoricCurrencyCode" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CashAccount16_EPC131-08_SDD_B2B_C2B_2019_V1.0_2">
+    <xs:complexContent>
+      <xs:restriction base="CashAccount16">
+        <xs:sequence>
+          <xs:element name="Id" type="AccountIdentification4Choice"/>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CashAccount16_EPC131-08_SDD_B2B_C2B_2019_V1.0_3">
+    <xs:complexContent>
+      <xs:restriction base="CashAccount16">
+        <xs:sequence>
+          <xs:element name="Id" type="AccountIdentification4Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0"/>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CategoryPurpose1Choice">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Category Purpose 1Choice</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">
+Specifies the high level purpose of the instruction based on a set of pre-defined categories.
+Usage: This is used by the initiating party to provide information concerning the processing of the payment. It is likely to trigger special processing by any of the agents involved in the payment chain.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="Cd" type="ExternalCategoryPurpose1Code">
+          <xs:annotation>
+            <xs:documentation xml:lang="EN" source="Name">Code</xs:documentation>
+            <xs:documentation xml:lang="EN" source="Definition">Category purpose, as published in an external category purpose code list.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Prtry" type="Max35Text">
+          <xs:annotation>
+            <xs:documentation xml:lang="EN" source="Name">Proprietary</xs:documentation>
+            <xs:documentation xml:lang="EN" source="Definition">Category purpose, in a proprietary form.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="ChargeBearerType1Code">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Charge Bearer Type 1Code</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Specifies which party(ies) will pay charges due for processing of the instruction.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SLEV">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">FollowingServiceLevel</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Charges are to be applied following the rules agreed in the service level and/or scheme.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="CountryCode">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Country Code</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Code to identify a country, a dependency, or another area of particular geopolitical interest, on the basis of country names obtained from the United Nations (ISO 3166, Alpha-2 code).</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[A-Z]{2,2}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="CreditorReferenceInformation2">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Creditor Reference Information 2</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Reference information provided by the creditor to allow the identification of the underlying documents.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Tp" type="CreditorReferenceType2" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Type</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Specifies the type of creditor reference.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Ref" type="Max35Text" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Reference</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">
+Unique reference, as assigned by the creditor, to unambiguously refer to the payment transaction.
+
+Usage: If available, the initiating party should provide this reference in the structured remittance information, to enable reconciliation by the creditor upon receipt of the amount of money.
+
+If the business context requires the use of a creditor reference or a payment remit identification, and only one identifier can be passed through the end-to-end chain, the creditor's reference or payment remittance identification should be quoted in the end-to-end transaction identification.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CreditorReferenceInformation2_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="CreditorReferenceInformation2">
+        <xs:sequence>
+          <xs:element name="Tp" type="CreditorReferenceType2_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Mandatory if 'Creditor Reference Information' is used.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Ref" type="Max35Text">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Mandatory if 'Creditor Reference Information' is used.</xs:documentation>
+              <xs:documentation source="Usage Rule">If ‘Creditor’ Reference contains a check digit, the receiving bank is not required to validate this.</xs:documentation>
+              <xs:documentation source="Usage Rule">If the receiving bank validates the check digit and if this validation fails, the bank may continue its processing and send the transaction to the next party in the chain.</xs:documentation>
+              <xs:documentation source="Usage Rule">RF Creditor Reference may be used (ISO 11649).</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CreditorReferenceType1Choice">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Creditor Reference Type 1Choice</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Specifies the type of document referred by the creditor.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="Cd" type="DocumentType3Code">
+          <xs:annotation>
+            <xs:documentation xml:lang="EN" source="Name">Code</xs:documentation>
+            <xs:documentation xml:lang="EN" source="Definition">Type of creditor reference, in a coded form.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CreditorReferenceType1Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="CreditorReferenceType1Choice">
+        <xs:sequence>
+          <xs:choice>
+            <xs:element name="Cd" type="DocumentType3Code">
+              <xs:annotation>
+                <xs:documentation source="Yellow Field"/>
+                <xs:documentation source="Usage Rule">Only ‘SCOR’ is allowed.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:choice>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CreditorReferenceType2">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Creditor Reference Type 2</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Specifies the type of creditor reference.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="CdOrPrtry" type="CreditorReferenceType1Choice">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Code Or Proprietary</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Coded or proprietary format creditor reference type.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Issr" type="Max35Text" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Issuer</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Entity that assigns the credit reference type.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CreditorReferenceType2_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="CreditorReferenceType2">
+        <xs:sequence>
+          <xs:element name="CdOrPrtry" type="CreditorReferenceType1Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Issr" type="Max35Text" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CustomerDirectDebitInitiationV02">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Customer Direct Debit Initiation V02</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">The CustomerDirectDebitInitiation message is sent by the initiating party to the forwarding agent or creditor's agent. It is used to request single or bulk collection(s) of funds from one or various debtor's account(s) to a creditor.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="GrpHdr" type="GroupHeader39">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Group Header</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Set of characteristics shared by all individual transactions included in the message.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PmtInf" type="PaymentInstructionInformation4" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Payment Information</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Set of characteristics that apply to the credit side of the payment transactions included in the direct debit transaction initiation.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CustomerDirectDebitInitiationV02_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="CustomerDirectDebitInitiationV02">
+        <xs:sequence>
+          <xs:element name="GrpHdr" type="GroupHeader39_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="PmtInf" type="PaymentInstructionInformation4_EPC131-08_SDD_B2B_C2B_2019_V1.0" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DateAndPlaceOfBirth">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Date And Place Of Birth</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Date and place of birth of a person.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="BirthDt" type="ISODate">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Birth Date</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Date on which a person is born.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PrvcOfBirth" type="Max35Text" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Province Of Birth</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Province where a person was born.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CityOfBirth" type="Max35Text">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">City Of Birth</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">City where a person was born.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CtryOfBirth" type="CountryCode">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Country Of Birth</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Country where a person was born.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="DecimalNumber">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Decimal Number</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Number of objects represented as a decimal number, eg, 0.75 or 45.6.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:decimal">
+      <xs:totalDigits value="18"/>
+      <xs:fractionDigits value="17"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="DecimalNumber_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:restriction base="DecimalNumber">
+      <xs:totalDigits value="18"/>
+      <xs:fractionDigits value="2"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DirectDebitTransaction6">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Direct Debit Transaction 6</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Set of elements used to provide specific information on the direct debit transaction and the related mandate.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="MndtRltdInf" type="MandateRelatedInformation6" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Mandate Related Information</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Set of elements used to provide further details of the direct debit mandate signed between the creditor and the debtor.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CdtrSchmeId" type="PartyIdentification32" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Creditor Scheme Identification</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Credit party that signs the mandate.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DirectDebitTransaction6_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="DirectDebitTransaction6">
+        <xs:sequence>
+          <xs:element name="MndtRltdInf" type="MandateRelatedInformation6_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Mandatory</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CdtrSchmeId" type="PartyIdentification32_EPC131-08_SDD_B2B_C2B_2019_V1.0_4" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">It is recommended that all transactions within the same ‘Payment Information’ block have the same ‘Creditor Scheme Identification’.</xs:documentation>
+              <xs:documentation source="Usage Rule">This data element must be present at either ‘Payment Information’ or ‘Direct Debit Transaction’ level.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DirectDebitTransactionInformation9">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Direct Debit Transaction Information 9</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Set of elements used to provide information specific to the individual direct debit transaction(s) included in the message.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="PmtId" type="PaymentIdentification1">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Payment Identification</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Set of elements used to reference a payment instruction.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PmtTpInf" type="PaymentTypeInformation20" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Payment Type Information</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Set of elements used to further specify the type of transaction.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InstdAmt" type="ActiveOrHistoricCurrencyAndAmount">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Instructed Amount</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency as ordered by the initiating party.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ChrgBr" type="ChargeBearerType1Code" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Charge Bearer</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Specifies which party/parties will bear the charges associated with the processing of the payment transaction.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DrctDbtTx" type="DirectDebitTransaction6" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Direct Debit Transaction</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Set of elements providing information specific to the direct debit mandate.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="UltmtCdtr" type="PartyIdentification32" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Ultimate Creditor</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Ultimate party to which an amount of money is due.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DbtrAgt" type="BranchAndFinancialInstitutionIdentification4">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Debtor Agent</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Financial institution servicing an account for the debtor.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Dbtr" type="PartyIdentification32">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Debtor</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Party that owes an amount of money to the (ultimate) creditor.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DbtrAcct" type="CashAccount16">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Debtor Account</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Unambiguous identification of the account of the debtor to which a debit entry will be made as a result of the transaction.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="UltmtDbtr" type="PartyIdentification32" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Ultimate Debtor</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Ultimate party that owes an amount of money to the (ultimate) creditor.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Purp" type="Purpose2Choice" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Purpose</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">
+Underlying reason for the payment transaction.
+Usage: Purpose is used by the end-customers, that is initiating party, (ultimate) debtor, (ultimate) creditor to provide information concerning the nature of the payment. Purpose is a content element, which is not used for processing by any of the agents involved in the payment chain.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RmtInf" type="RemittanceInformation5" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Remittance Information</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DirectDebitTransactionInformation9_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="DirectDebitTransactionInformation9">
+        <xs:sequence>
+          <xs:element name="PmtId" type="PaymentIdentification1_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="PmtTpInf" type="PaymentTypeInformation20_EPC131-08_SDD_B2B_C2B_2019_V1.0_2" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">‘Payment Type Information’ must be present either here or directly under ‘Payment Information'.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="InstdAmt" type="ActiveOrHistoricCurrencyAndAmount_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-06 Amount of the Collection in Euro.</xs:documentation>
+              <xs:documentation source="Usage Rule">Only ‘EUR’ is allowed.</xs:documentation>
+              <xs:documentation source="Usage Rule">Amount must be 0.01 or more and 999999999.99 or less.</xs:documentation>
+              <xs:documentation source="Format Rule">The fractional part has a maximum of two digits.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="ChrgBr" type="ChargeBearerType1Code" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Only ‘SLEV’ is allowed.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="DrctDbtTx" type="DirectDebitTransaction6_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Mandatory</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="UltmtCdtr" type="PartyIdentification32_EPC131-08_SDD_B2B_C2B_2019_V1.0_3" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">This data element may be present either at ‘Payment Information’ or at ‘Direct Debit Transaction Information’ level.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="DbtrAgt" type="BranchAndFinancialInstitutionIdentification4_EPC131-08_SDD_B2B_C2B_2019_V1.0_2">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Dbtr" type="PartyIdentification32_EPC131-08_SDD_B2B_C2B_2019_V1.0_6">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="DbtrAcct" type="CashAccount16_EPC131-08_SDD_B2B_C2B_2019_V1.0_3">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-07 The account number (IBAN) of the Debtor.</xs:documentation>
+              <xs:documentation source="Usage Rule">Only IBAN is allowed.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="UltmtDbtr" type="PartyIdentification32_EPC131-08_SDD_B2B_C2B_2019_V1.0_7" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Mandatory, if provided by the Debtor in the Mandate.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Purp" type="Purpose2Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-58 Purpose of the Collection.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="RmtInf" type="RemittanceInformation5_EPC131-08_SDD_B2B_C2B_2019_V1.0" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-22 Remittance information from the Creditor.</xs:documentation>
+              <xs:documentation source="Usage Rule">Either ‘Structured’ or ‘Unstructured’, may be present.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Document">
+    <xs:sequence>
+      <xs:element name="CstmrDrctDbtInitn" type="CustomerDirectDebitInitiationV02">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Customer Direct Debit Initiation V02</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="DocumentType3Code">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Document Type 3Code</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Specifies a type of financial or commercial document.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SCOR">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">StructuredCommunicationReference</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Document is a structured communication reference provided by the creditor to identify the referred transaction.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Document_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="Document">
+        <xs:sequence>
+          <xs:element name="CstmrDrctDbtInitn" type="CustomerDirectDebitInitiationV02_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="ExternalCategoryPurpose1Code">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">External Category Purpose 1Code</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Specifies the category purpose, as published in an external category purpose code list.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="4"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ExternalLocalInstrument1Code">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">External Local Instrument 1Code</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">
+Specifies the external local instrument code in the format of character string with a maximum length of 35 characters.
+The list of valid codes is an external code list published separately.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="35"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ExternalLocalInstrument1Code_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:restriction base="ExternalLocalInstrument1Code">
+      <xs:enumeration value="B2B">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Definition">Transaction is related to SEPA business to business direct debit.</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Name">SEPA Business to Business Direct Debit</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:minLength value="1"/>
+      <xs:maxLength value="35"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ExternalOrganisationIdentification1Code">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">External Organisation Identification 1Code</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">
+Specifies the external organisation identification scheme name code in the format of character string with a maximum length of 4 characters.
+The list of valid codes is an external code list published separately.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="4"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ExternalPersonIdentification1Code">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">External Person Identification 1Code</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">
+Specifies the external person identification scheme name code in the format of character string with a maximum length of 4 characters.
+The list of valid codes is an external code list published separately.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="4"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ExternalPurpose1Code">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">External Purpose 1Code</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">
+Specifies the external purpose code in the format of character string with a maximum length of 4 characters.
+The list of valid codes is an external code list published separately.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="4"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ExternalServiceLevel1Code">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">External Service Level 1Code</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">
+Specifies the external service level code in the format of character string with a maximum length of 4 characters.
+The list of valid codes is an external code list published separately.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="4"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ExternalServiceLevel1Code_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:restriction base="ExternalServiceLevel1Code">
+      <xs:enumeration value="SEPA">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Definition">Payment must be executed following the Single Euro Payments Area scheme.</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Name">SingleEuroPaymentsArea</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:minLength value="1"/>
+      <xs:maxLength value="4"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="FinancialInstitutionIdentification7">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Financial Institution Identification 7</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Set of elements used to identify a financial institution.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="BIC" type="BICIdentifier" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">BIC</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Code allocated to a financial institution by the ISO 9362 Registration Authority as described in ISO 9362 "Banking - Banking telecommunication messages - Business identifier code (BIC)".</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Othr" type="GenericFinancialIdentification1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Other</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Unique identification of an agent, as assigned by an institution, using an identification scheme.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FinancialInstitutionIdentification7_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="FinancialInstitutionIdentification7">
+        <xs:sequence>
+          <xs:element name="BIC" type="BICIdentifier" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-12 BIC of the Creditor bank.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Othr" type="GenericFinancialIdentification1_EPC131-08_SDD_B2B_C2B_2019_V1.0" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="FinancialInstitutionIdentification7_EPC131-08_SDD_B2B_C2B_2019_V1.0_2">
+    <xs:complexContent>
+      <xs:restriction base="FinancialInstitutionIdentification7">
+        <xs:sequence>
+          <xs:element name="BIC" type="BICIdentifier" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-13 BIC of the Debtor Bank.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Othr" type="GenericFinancialIdentification1_EPC131-08_SDD_B2B_C2B_2019_V1.0" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GenericAccountIdentification1">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Generic Account Identification 1</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Information related to a generic account identification.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Id" type="Max34Text">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Identification</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Identification assigned by an institution.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GenericFinancialIdentification1">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Generic Financial Identification 1</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Information related to an identification, eg, party identification or account identification.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Id" type="Max35Text">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Identification</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Unique and unambiguous identification of a person.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GenericFinancialIdentification1_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="GenericFinancialIdentification1">
+        <xs:sequence>
+          <xs:element name="Id" type="Max35Text">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Only ‘NOTPROVIDED’ is allowed.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GenericOrganisationIdentification1">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Generic Organisation Identification 1</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Information related to an identification, eg, party identification or account identification.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Id" type="Max35Text">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Identification</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Identification assigned by an institution.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SchmeNm" type="OrganisationIdentificationSchemeName1Choice" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Scheme Name</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Name of the identification scheme.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Issr" type="Max35Text" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Issuer</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Entity that assigns the identification.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GenericPersonIdentification1">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Generic Person Identification 1</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Information related to an identification, eg, party identification or account identification.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Id" type="Max35Text">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Identification</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Unique and unambiguous identification of a person.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SchmeNm" type="PersonIdentificationSchemeName1Choice" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Scheme Name</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Name of the identification scheme.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Issr" type="Max35Text" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Issuer</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Entity that assigns the identification.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GenericPersonIdentification1_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="GenericPersonIdentification1">
+        <xs:sequence>
+          <xs:element name="Id" type="Max35Text"/>
+          <xs:element name="SchmeNm" type="PersonIdentificationSchemeName1Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0"/>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GroupHeader39">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Group Header 39</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Set of characteristics shared by all individual transactions included in the message.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="MsgId" type="Max35Text">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Message Identification</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">
+Point to point reference, assigned by the instructing party and sent to the next party in the chain, to unambiguously identify the message.
+
+Usage: The instructing party has to make sure that MessageIdentification is unique per instructed party for a pre-agreed period.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CreDtTm" type="ISODateTime">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Creation Date Time</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Date and time at which a (group of) payment instruction(s) was created by the instructing party.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NbOfTxs" type="Max15NumericText">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Number Of Transactions</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Number of individual transactions contained in the message.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CtrlSum" type="DecimalNumber" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Control Sum</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Total of all individual amounts included in the message, irrespective of currencies.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InitgPty" type="PartyIdentification32">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Initiating Party</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">
+Party that initiates the payment.
+
+Usage: This can either be the creditor or a party that initiates the direct debit on behalf of the creditor.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GroupHeader39_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="GroupHeader39">
+        <xs:sequence>
+          <xs:element name="MsgId" type="Max35Text">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CreDtTm" type="ISODateTime">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="NbOfTxs" type="Max15NumericText">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">The validation of this data element depends on pre-agreed customer-to-bank conditions.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CtrlSum" type="DecimalNumber_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Mandatory</xs:documentation>
+              <xs:documentation source="Usage Rule">The validation of this data element depends on pre-agreed customer-to-bank conditions.</xs:documentation>
+              <xs:documentation source="Format Rule">The fractional part has a maximum of two digits.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="InitgPty" type="PartyIdentification32_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="IBAN2007Identifier">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">IBAN2007Identifier</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">An identifier used internationally by financial institutions to uniquely identify the account of a customer at a financial institution, as described in the latest edition of the international standard ISO 13616:2007 - "Banking and related financial services - International Bank Account Number (IBAN)".</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ISODate">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">ISODate</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">A particular point in the progression of time in a calendar year expressed in the YYYY-MM-DD format. This representation is defined in "XML Schema Part 2: Datatypes Second Edition - W3C Recommendation 28 October 2004" which is aligned with ISO 8601.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:date"/>
+  </xs:simpleType>
+  <xs:simpleType name="ISODateTime">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">ISODate Time</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">
+A particular point in the progression of time defined by a mandatory date and a mandatory time component, expressed in either UTC time format (YYYY-MM-DDThh:mm:ss.sssZ), local time with UTC offset format (YYYY-MM-DDThh:mm:ss.sss+/-hh:mm), or local time format (YYYY-MM-DDThh:mm:ss.sss). These representations are defined in "XML Schema Part 2: Datatypes Second Edition - W3C Recommendation 28 October 2004" which is aligned with ISO 8601.
+Note on the time format:
+1) beginning / end of calendar day
+00:00:00 = the beginning of a calendar day
+24:00:00 = the end of a calendar day
+2) fractions of second in time format
+Decimal fractions of seconds may be included. In this case, the involved parties shall agree on the maximum number of digits that are allowed.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:dateTime"/>
+  </xs:simpleType>
+  <xs:complexType name="LocalInstrument2Choice">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Local Instrument 2Choice</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Set of elements that further identifies the type of local instruments being requested by the initiating party.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="Cd" type="ExternalLocalInstrument1Code">
+          <xs:annotation>
+            <xs:documentation xml:lang="EN" source="Name">Code</xs:documentation>
+            <xs:documentation xml:lang="EN" source="Definition">Specifies the local instrument, as published in an external local instrument code list.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="LocalInstrument2Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="LocalInstrument2Choice">
+        <xs:sequence>
+          <xs:choice>
+            <xs:element name="Cd" type="ExternalLocalInstrument1Code_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+              <xs:annotation>
+                <xs:documentation source="Yellow Field"/>
+                <xs:documentation source="Rulebook">AT-20 The identification code of the B2B Scheme.</xs:documentation>
+                <xs:documentation source="Usage Rule">Only ‘B2B’ is allowed. ‘B2B’ is used to indicate a B2B direct debit.</xs:documentation>
+                <xs:documentation source="Usage Rule">The mixing of different Local Instrument values is not allowed in the same message.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:choice>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="MandateRelatedInformation6">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Mandate Related Information 6</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Set of elements used to provide further details related to a direct debit mandate signed between the creditor and the debtor.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="MndtId" type="Max35Text" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Mandate Identification</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Unique identification, as assigned by the creditor, to unambiguously identify the mandate.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DtOfSgntr" type="ISODate" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Date Of Signature</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Date on which the direct debit mandate has been signed by the debtor.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AmdmntInd" type="TrueFalseIndicator" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Amendment Indicator</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Indicator notifying whether the underlying mandate is amended or not.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AmdmntInfDtls" type="AmendmentInformationDetails6" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Amendment Information Details</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">List of mandate elements that have been modified.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ElctrncSgntr" type="Max1025Text" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Electronic Signature</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Additional security provisions, such as a digital signature, as provided by the debtor.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MandateRelatedInformation6_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="MandateRelatedInformation6">
+        <xs:sequence>
+          <xs:element name="MndtId" type="Max35Text">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Mandatory</xs:documentation>
+              <xs:documentation source="Rulebook">AT-01 Unique Mandate Reference.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="DtOfSgntr" type="ISODate">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Mandatory</xs:documentation>
+              <xs:documentation source="Rulebook">AT-25 Date of Signing of the Mandate.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="AmdmntInd" type="TrueFalseIndicator" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="AmdmntInfDtls" type="AmendmentInformationDetails6_EPC131-08_SDD_B2B_C2B_2019_V1.0" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-24 Reason for Amendment of the Mandate.</xs:documentation>
+              <xs:documentation source="Usage Rule">Mandatory if ‘Amendment Indicator’ is ‘true’.</xs:documentation>
+              <xs:documentation source="Rulebook">The reason from the Rulebook is indicated by using the following message sub-elements.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="ElctrncSgntr" type="Max1025Text" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-16 Placeholder for the Electronic Signature Data, if applicable.</xs:documentation>
+              <xs:documentation source="Rulebook">AT-17 Type of Mandate (paper, e-Mandate).</xs:documentation>
+              <xs:documentation source="Rulebook">AT-60 Reference of the validation made by the Debtor Bank (if present in DS-03).</xs:documentation>
+              <xs:documentation source="Usage Rule">If the direct debit is based on an EPC electronic mandate, this data element must contain AT-60 which is the reference to the Mandate Acceptance Report made by the Debtor Bank.</xs:documentation>
+              <xs:documentation source="Usage Rule">This data element is not to be used if the mandate is a paper mandate.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="Max1025Text">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Max 1025Text</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Specifies a character string with a maximum length of 1025 characters.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="1025"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Max140Text">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Max 140Text</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Specifies a character string with a maximum length of 140 characters.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="140"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Max140Text_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:restriction base="Max140Text">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="70"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Max15NumericText">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Max 15Numeric Text</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Specifies a numeric string with a maximum length of 15 digits.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9]{1,15}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Max34Text">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Max 34Text</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Specifies a character string with a maximum length of 34 characters.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="34"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Max35Text">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Max 35Text</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Specifies a character string with a maximum length of 35 characters.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="35"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Max70Text">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Max 70Text</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Specifies a character string with a maximum length of 70characters.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="70"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="OrganisationIdentification4">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Organisation Identification 4</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Unique and unambiguous way to identify an organisation.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="BICOrBEI" type="AnyBICIdentifier" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">BICOr BEI</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Code allocated to a financial institution or non financial institution by the ISO 9362 Registration Authority as described in ISO 9362 "Banking - Banking telecommunication messages - Business identifier code (BIC)".</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Othr" type="GenericOrganisationIdentification1" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Other</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Unique identification of an organisation, as assigned by an institution, using an identification scheme.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OrganisationIdentification4_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="OrganisationIdentification4">
+        <xs:sequence>
+          <xs:element name="BICOrBEI" type="AnyBICIdentifier" minOccurs="0"/>
+          <xs:element name="Othr" type="GenericOrganisationIdentification1" minOccurs="0"/>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="OrganisationIdentificationSchemeName1Choice">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Organisation Identification Scheme Name 1Choice</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Sets of elements to identify a name of the organisation identification scheme.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="Cd" type="ExternalOrganisationIdentification1Code">
+          <xs:annotation>
+            <xs:documentation xml:lang="EN" source="Name">Code</xs:documentation>
+            <xs:documentation xml:lang="EN" source="Definition">Name of the identification scheme, in a coded form as published in an external list.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Prtry" type="Max35Text">
+          <xs:annotation>
+            <xs:documentation xml:lang="EN" source="Name">Proprietary</xs:documentation>
+            <xs:documentation xml:lang="EN" source="Definition">Name of the identification scheme, in a free text form.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Party6Choice">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Party 6Choice</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Nature or use of the account.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="OrgId" type="OrganisationIdentification4">
+          <xs:annotation>
+            <xs:documentation xml:lang="EN" source="Name">Organisation Identification</xs:documentation>
+            <xs:documentation xml:lang="EN" source="Definition">Unique and unambiguous way to identify an organisation.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="PrvtId" type="PersonIdentification5">
+          <xs:annotation>
+            <xs:documentation xml:lang="EN" source="Name">Private Identification</xs:documentation>
+            <xs:documentation xml:lang="EN" source="Definition">Unique and unambiguous identification of a person, eg, passport.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Party6Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="Party6Choice">
+        <xs:sequence>
+          <xs:choice>
+            <xs:element name="OrgId" type="OrganisationIdentification4_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+              <xs:annotation>
+                <xs:documentation source="Yellow Field"/>
+                <xs:documentation source="Usage Rule">Either ‘BIC or BEI’ or one occurrence of ‘Other’ is allowed.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="PrvtId" type="PersonIdentification5_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+              <xs:annotation>
+                <xs:documentation source="Yellow Field"/>
+                <xs:documentation source="Usage Rule">Either ‘Date and Place of Birth’ or one occurrence of ‘Other’ is allowed.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:choice>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Party6Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0_2">
+    <xs:complexContent>
+      <xs:restriction base="Party6Choice">
+        <xs:sequence>
+          <xs:choice>
+            <xs:element name="PrvtId" type="PersonIdentification5_EPC131-08_SDD_B2B_C2B_2019_V1.0_2">
+              <xs:annotation>
+                <xs:documentation source="Yellow Field"/>
+                <xs:documentation source="Usage Rule">Private Identification is used to identify either an organisation or a private person.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:choice>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PartyIdentification32">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Party Identification 32</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Set of elements used to identify a person or an organisation.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Nm" type="Max140Text" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Name</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Name by which a party is known and which is usually used to identify that party.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PstlAdr" type="PostalAddress6" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Postal Address</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Information that locates and identifies a specific address, as defined by postal services.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Id" type="Party6Choice" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Identification</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Unique and unambiguous identification of a party.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PartyIdentification32_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="PartyIdentification32">
+        <xs:sequence>
+          <xs:element name="Nm" type="Max140Text_EPC131-08_SDD_B2B_C2B_2019_V1.0" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">‘Name’ is limited to 70 characters in length.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Id" type="Party6Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PartyIdentification32_EPC131-08_SDD_B2B_C2B_2019_V1.0_2">
+    <xs:complexContent>
+      <xs:restriction base="PartyIdentification32">
+        <xs:sequence>
+          <xs:element name="Nm" type="Max140Text_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Mandatory</xs:documentation>
+              <xs:documentation source="Rulebook">AT-03 Name of the Creditor.</xs:documentation>
+              <xs:documentation source="Usage Rule">‘Name’ is limited to 70 characters in length.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="PstlAdr" type="PostalAddress6_EPC131-08_SDD_B2B_C2B_2019_V1.0" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-05 Address of the Creditor.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PartyIdentification32_EPC131-08_SDD_B2B_C2B_2019_V1.0_3">
+    <xs:complexContent>
+      <xs:restriction base="PartyIdentification32">
+        <xs:sequence>
+          <xs:element name="Nm" type="Max140Text_EPC131-08_SDD_B2B_C2B_2019_V1.0" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-38 Name of the Creditor Reference Party.</xs:documentation>
+              <xs:documentation source="Usage Rule">‘Name’ is limited to 70 characters in length.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Id" type="Party6Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-39 Identification code of the Creditor Reference Party.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PartyIdentification32_EPC131-08_SDD_B2B_C2B_2019_V1.0_4">
+    <xs:complexContent>
+      <xs:restriction base="PartyIdentification32">
+        <xs:sequence>
+          <xs:element name="Id" type="Party6Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0_2">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Mandatory</xs:documentation>
+              <xs:documentation source="Rulebook">AT-02 Identifier of the Creditor.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PartyIdentification32_EPC131-08_SDD_B2B_C2B_2019_V1.0_5">
+    <xs:complexContent>
+      <xs:restriction base="PartyIdentification32">
+        <xs:sequence>
+          <xs:element name="Nm" type="Max140Text_EPC131-08_SDD_B2B_C2B_2019_V1.0" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">Original AT-03 Name of the Creditor.</xs:documentation>
+              <xs:documentation source="Usage Rule">If present the new’ Name’ must be specified under ‘Creditor’.</xs:documentation>
+              <xs:documentation source="Usage Rule">‘Name’ is limited to 70 characters in length.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Id" type="Party6Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0_2" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-18 Identifier of the original Creditor who issued the Mandate.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PartyIdentification32_EPC131-08_SDD_B2B_C2B_2019_V1.0_6">
+    <xs:complexContent>
+      <xs:restriction base="PartyIdentification32">
+        <xs:sequence>
+          <xs:element name="Nm" type="Max140Text_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Mandatory</xs:documentation>
+              <xs:documentation source="Rulebook">AT-14 Name of the Debtor.</xs:documentation>
+              <xs:documentation source="Usage Rule">‘Name’ is limited to 70 characters in length.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="PstlAdr" type="PostalAddress6_EPC131-08_SDD_B2B_C2B_2019_V1.0" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-09 Address of the Debtor (only mandatory when the Creditor Bank or the Debtor Bank is located a non-EEA SEPA country or territory).</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Id" type="Party6Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-27 Debtor identification code.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PartyIdentification32_EPC131-08_SDD_B2B_C2B_2019_V1.0_7">
+    <xs:complexContent>
+      <xs:restriction base="PartyIdentification32">
+        <xs:sequence>
+          <xs:element name="Nm" type="Max140Text_EPC131-08_SDD_B2B_C2B_2019_V1.0" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-15 Name of the Debtor Reference Party.</xs:documentation>
+              <xs:documentation source="Usage Rule">‘Name’ is limited to 70 characters in length.</xs:documentation>
+              <xs:documentation source="Usage Rule">Mandatory, if provided by the Debtor in the mandate.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Id" type="Party6Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-37 Identification code of the Debtor Reference Party.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PaymentIdentification1">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Payment Identification 1</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Set of elements used to provide further means of referencing a payment transaction.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="InstrId" type="Max35Text" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Instruction Identification</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">
+Unique identification as assigned by an instructing party for an instructed party to unambiguously identify the instruction.
+
+Usage: the  instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EndToEndId" type="Max35Text">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">End To End Identification</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">
+Unique identification assigned by the initiating party to unumbiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.
+
+Usage: The end-to-end identification can be used for reconciliation or to link tasks relating to the transaction. It can be included in several messages related to the transaction.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PaymentIdentification1_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="PaymentIdentification1">
+        <xs:sequence>
+          <xs:element name="InstrId" type="Max35Text" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="EndToEndId" type="Max35Text">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-10 Creditor’s reference of the direct debit Collection.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PaymentInstructionInformation4">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Payment Instruction Information 4</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Set of characteristics that apply to the credit side of the payment transactions included in the direct debit initiation.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="PmtInfId" type="Max35Text">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Payment Information Identification</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Unique identification, as assigned by a sending party, to unambiguously identify the payment information group within the message.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PmtMtd" type="PaymentMethod2Code">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Payment Method</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Specifies the means of payment that will be used to move the amount of money.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="BtchBookg" type="BatchBookingIndicator" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Batch Booking</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">
+Identifies whether a single entry per individual transaction or a batch entry for the sum of the amounts of all transactions within the group of a message is requested.
+Usage: Batch booking is used to request and not order a possible batch booking.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NbOfTxs" type="Max15NumericText" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Number Of Transactions</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Number of individual transactions contained in the payment information group.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CtrlSum" type="DecimalNumber" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Control Sum</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Total of all individual amounts included in the group, irrespective of currencies.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PmtTpInf" type="PaymentTypeInformation20" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Payment Type Information</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Set of elements used to further specify the type of transaction.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ReqdColltnDt" type="ISODate">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Requested Collection Date</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Date and time at which the creditor requests that the amount of money is to be collected from the debtor.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Cdtr" type="PartyIdentification32">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Creditor</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Party to which an amount of money is due.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CdtrAcct" type="CashAccount16">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Creditor Account</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Unambiguous identification of the account of the creditor to which a credit entry will be posted as a result of the payment transaction.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CdtrAgt" type="BranchAndFinancialInstitutionIdentification4">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Creditor Agent</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Financial institution servicing an account for the creditor.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="UltmtCdtr" type="PartyIdentification32" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Ultimate Creditor</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Ultimate party to which an amount of money is due.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ChrgBr" type="ChargeBearerType1Code" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Charge Bearer</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Specifies which party/parties will bear the charges associated with the processing of the payment transaction.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CdtrSchmeId" type="PartyIdentification32" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Creditor Scheme Identification</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Credit party that signs the mandate.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DrctDbtTxInf" type="DirectDebitTransactionInformation9" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Direct Debit Transaction Information</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Set of elements used to provide information on the individual transaction(s) included in the message.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PaymentInstructionInformation4_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="PaymentInstructionInformation4">
+        <xs:sequence>
+          <xs:element name="PmtInfId" type="Max35Text">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="PmtMtd" type="PaymentMethod2Code">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="BtchBookg" type="BatchBookingIndicator" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">If present and contains ‘true’, batch booking is requested. If present and contains ‘false’, booking per transaction is requested.</xs:documentation>
+              <xs:documentation source="Usage Rule">If element is not present, pre-agreed customer-to-bank conditions apply.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="NbOfTxs" type="Max15NumericText">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Mandatory</xs:documentation>
+              <xs:documentation source="Usage Rule">The validation of this data element depends on pre-agreed customer-to-bank conditions.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CtrlSum" type="DecimalNumber_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Mandatory</xs:documentation>
+              <xs:documentation source="Usage Rule">The validation of this data element depends on pre-agreed customer-to-bank conditions.</xs:documentation>
+              <xs:documentation source="Format Rule">The fractional part has a maximum of two digits.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="PmtTpInf" type="PaymentTypeInformation20_EPC131-08_SDD_B2B_C2B_2019_V1.0" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">‘Payment Type Information’ must be present either here or under ‘Direct Debit Transaction Information’.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="ReqdColltnDt" type="ISODate">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-11 Due Date of the Collection.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Cdtr" type="PartyIdentification32_EPC131-08_SDD_B2B_C2B_2019_V1.0_2">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CdtrAcct" type="CashAccount16_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-04 The account number (IBAN) of the Creditor.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CdtrAgt" type="BranchAndFinancialInstitutionIdentification4_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="UltmtCdtr" type="PartyIdentification32_EPC131-08_SDD_B2B_C2B_2019_V1.0_3" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">This data element may be present either at 'Payment Information' or at 'Direct Debit Transaction Information' level.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="ChrgBr" type="ChargeBearerType1Code" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Only ‘SLEV’ is allowed.</xs:documentation>
+              <xs:documentation source="Usage Rule">It is recommended that this element be specified at ‘Payment Information’ level.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CdtrSchmeId" type="PartyIdentification32_EPC131-08_SDD_B2B_C2B_2019_V1.0_4" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">It is recommended that all transactions within the same ‘Payment Information’ block have the same ‘Creditor Scheme Identification’.</xs:documentation>
+              <xs:documentation source="Usage Rule">This data element must be present at either ‘Payment Information’ or ‘Direct Debit Transaction’ level.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="DrctDbtTxInf" type="DirectDebitTransactionInformation9_EPC131-08_SDD_B2B_C2B_2019_V1.0" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="PaymentMethod2Code">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Payment Method 2Code</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Specifies the transfer method that will be used  to transfer the cash.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DD">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">DirectDebit</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Collection of an amount of money from the debtor's bank account by the creditor.  The amount of money and dates of collections may vary.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="PaymentTypeInformation20">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Payment Type Information 20</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Set of elements used to provide further details of the type of payment.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="SvcLvl" type="ServiceLevel8Choice" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Service Level</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Agreement under which or rules under which the transaction should be processed.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LclInstrm" type="LocalInstrument2Choice" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Local Instrument</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">
+User community specific instrument.
+
+Usage: This element is used to specify a local instrument, local clearing option and/or further qualify the service or service level.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SeqTp" type="SequenceType1Code" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Sequence Type</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Identifies the direct debit sequence, such as first, recurrent, final or one-off.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CtgyPurp" type="CategoryPurpose1Choice" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Category Purpose</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">
+Specifies the high level purpose of the instruction based on a set of pre-defined categories.
+Usage: This is used by the initiating party to provide information concerning the processing of the payment. It is likely to trigger special processing by any of the agents involved in the payment chain.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PaymentTypeInformation20_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="PaymentTypeInformation20">
+        <xs:sequence>
+          <xs:element name="SvcLvl" type="ServiceLevel8Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Mandatory</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="LclInstrm" type="LocalInstrument2Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Mandatory</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="SeqTp" type="SequenceType1Code">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Mandatory</xs:documentation>
+              <xs:documentation source="Rulebook">AT-21 Transaction / Sequence Type.</xs:documentation>
+              <xs:documentation source="Usage Rule">If ‘Amendment Indicator’ is ‘true’, and ‘Original Debtor Account’ is set to ‘SMNDA’ (Same Mandate with a New Debtor Account), this message element indicates either ‘FRST’ (First), ‘RCUR’ (Recurring), ‘FNAL’ (Final) or ‘OOFF’ (One-off) (all four codes allowed, no restrictions).</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CtgyPurp" type="CategoryPurpose1Choice" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Rulebook">AT-59 Category purpose of the Collection.</xs:documentation>
+              <xs:documentation source="Usage Rule">Depending on the agreement between the Creditor and the Creditor Bank, ‘Category Purpose’ may be forwarded to the Debtor Bank.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PaymentTypeInformation20_EPC131-08_SDD_B2B_C2B_2019_V1.0_2">
+    <xs:complexContent>
+      <xs:restriction base="PaymentTypeInformation20">
+        <xs:sequence>
+          <xs:element name="SvcLvl" type="ServiceLevel8Choice"/>
+          <xs:element name="LclInstrm" type="LocalInstrument2Choice"/>
+          <xs:element name="SeqTp" type="SequenceType1Code"/>
+          <xs:element name="CtgyPurp" type="CategoryPurpose1Choice" minOccurs="0"/>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PersonIdentification5">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Person Identification 5</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Unique and unambiguous way to identify a person.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="DtAndPlcOfBirth" type="DateAndPlaceOfBirth" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Date And Place Of Birth</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Date and place of birth of a person.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Othr" type="GenericPersonIdentification1" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Other</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Unique identification of a person, as assigned by an institution, using an identification scheme.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PersonIdentification5_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="PersonIdentification5">
+        <xs:sequence>
+          <xs:element name="DtAndPlcOfBirth" type="DateAndPlaceOfBirth" minOccurs="0"/>
+          <xs:element name="Othr" type="GenericPersonIdentification1" minOccurs="0"/>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PersonIdentification5_EPC131-08_SDD_B2B_C2B_2019_V1.0_2">
+    <xs:complexContent>
+      <xs:restriction base="PersonIdentification5">
+        <xs:sequence>
+          <xs:element name="Othr" type="GenericPersonIdentification1_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Only one occurrence of ‘Other’ is allowed, and no other sub-elements are allowed.</xs:documentation>
+              <xs:documentation source="Usage Rule">'Identification' must be used with an identifier described in General Message Element Specifications, Chapter 1.5.2.</xs:documentation>
+              <xs:documentation source="Usage Rule">‘Proprietary’ under ‘Scheme Name’ must specify ‘SEPA’.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PersonIdentificationSchemeName1Choice">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Person Identification Scheme Name 1Choice</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Sets of elements to identify a name of the identification scheme.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="Cd" type="ExternalPersonIdentification1Code">
+          <xs:annotation>
+            <xs:documentation xml:lang="EN" source="Name">Code</xs:documentation>
+            <xs:documentation xml:lang="EN" source="Definition">Name of the identification scheme, in a coded form as published in an external list.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Prtry" type="Max35Text">
+          <xs:annotation>
+            <xs:documentation xml:lang="EN" source="Name">Proprietary</xs:documentation>
+            <xs:documentation xml:lang="EN" source="Definition">Name of the identification scheme, in a free text form.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PersonIdentificationSchemeName1Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="PersonIdentificationSchemeName1Choice">
+        <xs:sequence>
+          <xs:choice>
+            <xs:element name="Prtry" type="Max35Text"/>
+          </xs:choice>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PostalAddress6">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Postal Address 6</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Information that locates and identifies a specific address, as defined by postal services.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Ctry" type="CountryCode" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Country</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Nation with its own government.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AdrLine" type="Max70Text" minOccurs="0" maxOccurs="7">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Address Line</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Information that locates and identifies a specific address, as defined by postal services, presented in free format text.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PostalAddress6_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="PostalAddress6">
+        <xs:sequence>
+          <xs:element name="Ctry" type="CountryCode" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="AdrLine" type="Max70Text" minOccurs="0" maxOccurs="2">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">Only two occurrences are allowed.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Purpose2Choice">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Purpose 2Choice</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">
+Specifies the underlying reason for the payment transaction.
+Usage: Purpose is used by the end-customers, that is initiating party, (ultimate) debtor, (ultimate) creditor to provide information concerning the nature of the payment. Purpose is a content element, which is not used for processing by any of the agents involved in the payment chain.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="Cd" type="ExternalPurpose1Code">
+          <xs:annotation>
+            <xs:documentation xml:lang="EN" source="Name">Code</xs:documentation>
+            <xs:documentation xml:lang="EN" source="Definition">Underlying reason for the payment transaction, as published in an external purpose code list.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Purpose2Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="Purpose2Choice">
+        <xs:sequence>
+          <xs:choice>
+            <xs:element name="Cd" type="ExternalPurpose1Code">
+              <xs:annotation>
+                <xs:documentation source="Yellow Field"/>
+              </xs:annotation>
+            </xs:element>
+          </xs:choice>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="RemittanceInformation5">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Remittance Information 5</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Ustrd" type="Max140Text" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Unstructured</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in an unstructured form.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Strd" type="StructuredRemittanceInformation7" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Structured</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in a structured form.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RemittanceInformation5_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="RemittanceInformation5">
+        <xs:sequence>
+          <xs:element name="Ustrd" type="Max140Text" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">‘Unstructured’ may carry structured remittance information, as agreed between the Creditor and the Debtor.</xs:documentation>
+              <xs:documentation source="Usage Rule">Only one occurrence of ‘Unstructured’ is allowed.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Strd" type="StructuredRemittanceInformation7_EPC131-08_SDD_B2B_C2B_2019_V1.0" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">‘Structured’ can be used, provided the tags and the data within the ‘Structured’ element do not exceed 140 characters in length.</xs:documentation>
+              <xs:documentation source="Usage Rule">Only one occurrence of ‘Structured’ is allowed.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="SequenceType1Code">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Sequence Type 1Code</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Specifies the type of the current transaction that belongs to a sequence of transactions. Specific attributes are required for the first, the recurring and the last instructions of a series, as well as the specification of a unique transaction (one-off direct debit transaction).</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="FNAL">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Final</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Final collection of a series of direct debit instructions.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="FRST">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">First</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">First collection of a series of direct debit instructions.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="OOFF">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">OneOff</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Direct debit instruction where the debtor's authorisation is used to initiate one single direct debit transaction.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="RCUR">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Recurring</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Direct debit instruction where the debtor's authorisation is used for regular direct debit transactions initiated by the creditor.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ServiceLevel8Choice">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Service Level 8Choice</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Specifies the service level of the transaction.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="Cd" type="ExternalServiceLevel1Code">
+          <xs:annotation>
+            <xs:documentation xml:lang="EN" source="Name">Code</xs:documentation>
+            <xs:documentation xml:lang="EN" source="Definition">Specifies a pre-agreed service or level of service between the parties, as published in an external service level code list.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ServiceLevel8Choice_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="ServiceLevel8Choice">
+        <xs:sequence>
+          <xs:choice>
+            <xs:element name="Cd" type="ExternalServiceLevel1Code_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+              <xs:annotation>
+                <xs:documentation source="Yellow Field"/>
+                <xs:documentation source="Rulebook">AT-20 The identification code of the B2B Scheme.</xs:documentation>
+                <xs:documentation source="Usage Rule">Only ‘SEPA’ is allowed.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:choice>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="StructuredRemittanceInformation7">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">Structured Remittance Information 7</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in a structured form.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="CdtrRefInf" type="CreditorReferenceInformation2" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="EN" source="Name">Creditor Reference Information</xs:documentation>
+          <xs:documentation xml:lang="EN" source="Definition">Reference information provided by the creditor to allow the identification of the underlying documents.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="StructuredRemittanceInformation7_EPC131-08_SDD_B2B_C2B_2019_V1.0">
+    <xs:complexContent>
+      <xs:restriction base="StructuredRemittanceInformation7">
+        <xs:sequence>
+          <xs:element name="CdtrRefInf" type="CreditorReferenceInformation2_EPC131-08_SDD_B2B_C2B_2019_V1.0" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation source="Yellow Field"/>
+              <xs:documentation source="Usage Rule">When present, the Creditor Bank is not obliged to validate the reference information.</xs:documentation>
+              <xs:documentation source="Usage Rule">When used, both ‘Type’ and ‘Reference’ must be present.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="TrueFalseIndicator">
+    <xs:annotation>
+      <xs:documentation xml:lang="EN" source="Name">True False Indicator</xs:documentation>
+      <xs:documentation xml:lang="EN" source="Definition">A flag indicating a True or False value.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:boolean"/>
+  </xs:simpleType>
+</xs:schema>

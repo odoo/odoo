@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="account_online_synchronization.AccountDuplicateTransactionsListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <xpath expr="//th[1]" position="replace"><th><i class="fa fa-trash"/></th></xpath>
+        <xpath expr="//tfoot" position="replace"></xpath>
+    </t>
+    <t t-name="account_online_synchronization.AccountDuplicateTransactionsRecordRow" t-inherit="web.ListRenderer.RecordRow" t-inherit-mode="primary">
+        <xpath expr="//td[1]" position="replace">
+            <td class="o_list_record_selector user-select-none" tabindex="-1">
+                <CheckBox className="'d-flex m-0'" onChange.bind="(selected) => this.toggleRecordSelection(selected, record)"/>
+            </td>
+        </xpath>
+    </t>
+</templates>

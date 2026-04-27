@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<odoo noupdate="1">
+    <record id="voip_call_rule_user" model="ir.rule">
+        <field name="name">voip.call: users can access their own entries</field>
+        <field name="model_id" ref="model_voip_call"/>
+        <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+        <field name="domain_force">[("user_id", "=", user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="voip_provider_rule_user" model="ir.rule">
+        <field name="name">voip.provider: users can see providers within the same company</field>
+        <field name="model_id" ref="model_voip_provider"/>
+        <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+        <field name="domain_force">[("company_id", "in", company_ids + [False])]</field>
+    </record>
+</odoo>

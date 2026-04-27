@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_shopee_shop_list" model="ir.actions.act_window">
+        <field name="name">Shopee Shops</field>
+        <field name="res_model">shopee.shop</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'active_test': False, 'search_default_filter_active': 1}</field>
+    </record>
+
+    <record id="shopee_shop_view_list" model="ir.ui.view">
+        <field name="name">shopee.shop.list</field>
+        <field name="model">shopee.shop</field>
+        <field name="arch" type="xml">
+            <list string="Shopee Shops" create="false">
+                <field name="name"/>
+                <field name="shop_identifier" options="{'enable_formatting': false}"/>
+                <field name="account_id"/>
+                <field name="user_id"/>
+                <field name="company_id"/>
+                <field name="last_orders_sync_date"/>
+                <field name="status"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="shopee_shop_view_form" model="ir.ui.view">
+        <field name="name">shopee.shop.form</field>
+        <field name="model">shopee.shop</field>
+        <field name="arch" type="xml">
+            <form string="Shopee Shop" create="false">
+                <div class="alert alert-warning text-center" role="alert" invisible="authorization_remaining_days >= 0">
+                    <strong>Warning:</strong>
+                    Shop authorization is expired. Please re-authorize the shop in the Shopee Account page.
+                </div>
+                <div
+                    class="alert alert-warning text-center"
+                    role="alert"
+                    invisible="authorization_remaining_days >= 7 or authorization_remaining_days &lt; 0"
+                >
+                    <strong>Warning:</strong>
+                    Shop authorization will expire soon. Re-authorize the shop in the Shopee Account page.
+                </div>
+                <header>
+                    <button
+                        name="action_sync_orders"
+                        string="Sync Orders"
+                        type="object"
+                        class="btn-secondary"
+                        groups="base.group_no_one"
+                    />
+                    <button
+                        name="action_sync_pickings"
+                        string="Fetch Shipping Labels"
+                        type="object"
+                        class="btn-secondary"
+                        groups="base.group_no_one"
+                    />
+                    <button
+                        name="action_sync_inventory"
+                        string="Sync Inventory"
+                        type="object"
+                        class="btn-secondary"
+                        groups="base.group_no_one"
+                        invisible="not synchronize_inventory"
+                    />
+                    <button
+                        name="action_force_update_shop"
+                        string="Update Shop"
+                        type="object"
+                        class="btn-secondary"
+                        groups="base.group_no_one"
+                    />
+                </header>
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="text-bg-danger"
+                        invisible="active"
+                    />
+                    <div
+                        class="badge rounded-pill text-bg-warning fs-6 float-end"
+                        invisible="status != 'inactive'"
+                    >
+                        Shop Status: Inactive
+                    </div>
+                    <div
+                        class="badge rounded-pill text-bg-success fs-6 float-end"
+                        invisible="status != 'active'"
+                    >
+                        Shop Status: Active
+                    </div>
+                    <div
+                        class="badge rounded-pill text-bg-danger fs-6 float-end"
+                        invisible="status != 'error'"
+                    >
+                        Shop Status: Error
+                    </div>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_view_orders"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-dollar"
+                            invisible="not id"
+                        >
+                            <field name="order_count" widget="statinfo" string="Orders"/>
+                        </button>
+                        <button
+                            name="action_view_shopee_items"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-dollar"
+                            invisible="not id"
+                        >
+                            <field name="shopee_item_count" widget="statinfo" string="Shopee Items"/>
+                        </button>
+                    </div>
+                    <div class="oe_title" id="title">
+                        <label for="name" string="Shop Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Indonesian Shop"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Shop Information">
+                            <field name="shop_identifier" options="{'enable_formatting': false}"/>
+                            <field name="account_id"/>
+                            <field
+                                name="company_id"
+                                options="{'no_open': True}"
+                                groups="base.group_multi_company"
+                            />
+                        </group>
+                        <group string="Synchronization Information">
+                            <field name="last_orders_sync_date" groups="base.group_no_one"/>
+                            <field
+                                name="last_shop_status_sync_date"
+                                readonly="1"
+                                groups="base.group_no_one"
+                            />
+                            <label for="authorization_remaining_days"/>
+                            <div class="oe-inline">
+                                <field class="w-25" name="authorization_remaining_days"/> Days
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Shop Settings">
+                            <group>
+                                <field name="synchronize_inventory"/>
+                                <field name="user_id"/>
+                                <field name="team_id"/>
+                                <field
+                                    name="fbs_location_id"
+                                    groups="stock.group_stock_multi_locations"
+                                />
+                            </group>
+                        </page>
+                        <page string="Tokens" groups="base.group_no_one">
+                            <group>
+                                <field name="access_token"/>
+                                <field name="access_token_expiration_date"/>
+                                <field name="refresh_token"/>
+                                <field name="authorization_expiration_date"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="shopee_shop_view_search" model="ir.ui.view">
+        <field name="name">shopee.shop.search</field>
+        <field name="model">shopee.shop</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Shop"/>
+                <filter name="filter_active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="filter_inactive" string="Inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+</odoo>

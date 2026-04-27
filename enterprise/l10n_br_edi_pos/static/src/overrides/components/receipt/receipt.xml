@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="L10nBRSandboxWarning">
+        <div class="text-center m-2" t-if="props.data.l10n_br_avalara_environment === 'sandbox'">ISSUED IN SANDBOX ENVIRONMENT - WITHOUT FISCAL VALUE</div>
+    </t>
+
+    <t t-name="L10nBRAddressLine">
+        <span t-esc="[address['street'], address['number'], address['neighborhood'], address['cityName'], address['state']].filter(s => s).join(', ')"/>
+    </t>
+
+    <t t-name="ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <div t-if="props.data.header" position="after">
+            <t t-if="props.data.l10n_br_is_nfce">
+                <t t-if="props.data.l10n_br_edi_avatax_data">
+                    <t t-set="establishment" t-value="props.data.l10n_br_edi_avatax_data['header']['locations']['establishment']"/>
+                    <t t-set="address" t-value="establishment['address']"/>
+                    <div t-if="establishment['stateTaxId']">IE: <span t-esc="establishment['stateTaxId']"/></div>
+                    <div><t t-call="L10nBRAddressLine"/></div>
+                    <t t-call="L10nBRSandboxWarning"/>
+                    <div>Auxiliary Document of Consumer Invoice</div>
+                </t>
+                <div class="text-center" t-else="">RECEIPT WITHOUT FISCAL VALUE</div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[contains(@class, 'pos-receipt-taxes')]" position="attributes">  <!-- keep original to not break other inherits -->
+            <attribute name="t-attf-class" add="{{ props.data.l10n_br_is_nfce &amp;&amp; props.data.l10n_br_edi_avatax_data ? 'd-none' : ''}}"/>
+        </xpath>
+        <xpath expr="//div[contains(@class, 'pos-receipt-taxes')]" position="after">
+            <div t-if="props.data.l10n_br_is_nfce &amp;&amp; props.data.l10n_br_edi_avatax_data">
+                <div>Total number of items: <span class="pos-receipt-right-align" t-esc="props.data.l10n_br_edi_nr_unique_items"/></div>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[contains(@class, 'after-footer')]" position="after">
+            <t t-if="props.data.l10n_br_is_nfce &amp;&amp; props.data.l10n_br_edi_avatax_data">
+                <div class="text-center">--------------------------------</div>
+                <t t-set="avatax_header" t-value="props.data.l10n_br_edi_avatax_data['header']"/>
+
+                <div class="m-2">
+                    <div class="text-center">Check using the access key on:</div>
+                    <div class="text-center" t-esc="avatax_header['goods']['urlKey']"/>
+                </div>
+
+                <div class="text-center m-2" t-esc="props.data.l10n_br_access_key"/>
+
+                <div class="text-center m-2" t-if="props.data.l10n_br_edi_partner">
+                    <span t-esc="props.data.l10n_br_edi_partner.name"/> -
+                    <span t-esc="props.data.l10n_br_edi_partner.l10n_latam_identification_type_id.name"/> <span t-esc="avatax_header['locations']['entity']['federalTaxId']"/> -
+
+                    <t t-set="entity" t-value="props.data.l10n_br_edi_avatax_data['header']['locations']['entity']"/>
+                    <t t-set="address" t-value="entity['address']"/>
+                    <t t-call="L10nBRAddressLine"/>
+                </div>
+                <div class="text-center m-2" t-else="">
+                    Unidentified customer - CPF 000.000.000-00
+                </div>
+                <t t-call="L10nBRSandboxWarning"/>
+
+                <div class="text-center m-2">
+                    <div>
+                        NFC-e nº <span t-esc="avatax_header['invoiceNumber']"/> Series <span t-esc="avatax_header['invoiceSerial']"/> <span t-esc="avatax_header['transactionDate']"/>
+                    </div>
+                    <div>
+                        Authorization Protocol Number: <span t-esc="props.data.l10n_br_edi_protocol_authorization_number"/>
+                    </div>
+                    <div>
+                        Authorization Date: <span t-esc="props.data.l10n_br_edi_authorization_date"/>
+                    </div>
+                </div>
+
+                <t t-call="L10nBRSandboxWarning"/>
+
+                <div class="text-center">--------------------------------</div>
+                <div class="mt-3">
+                    <img t-att-src="props.data.l10n_br_edi_qr" class="pos-receipt-qrcode"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_pos_pos_form">
+        <field name="name">pos.order</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='extra']" position="inside">
+                <group string="Sweden Fiscal Data Module information">
+                    <field name="sweden_blackbox_signature" readonly="1"/>
+                    <field name="sweden_blackbox_unit_id" readonly="1"/>
+                    <field name="sweden_blackbox_tax_category_a" readonly="1"/>
+                    <field name="sweden_blackbox_tax_category_b" readonly="1"/>
+                    <field name="sweden_blackbox_tax_category_c" readonly="1"/>
+                    <field name="sweden_blackbox_tax_category_d" readonly="1"/>
+                    <field name="sweden_blackbox_device"/>
+                </group>
+            </xpath>
+            <xpath expr="//button[@name='refund']" position="attributes">
+                <attribute name="invisible">country_code == 'SE' or state == 'draft' or not has_refundable_lines</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_bank_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.bank.form.inherit</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="base.view_partner_bank_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="l10n_jp_zengin_bank_country_code" invisible="1" />
+                <field name="l10n_jp_zengin_acc_holder_name_kana" invisible="l10n_jp_zengin_bank_country_code != 'JP'" />
+                <field name="l10n_jp_zengin_account_type" invisible="l10n_jp_zengin_bank_country_code != 'JP'" />
+                <field name="l10n_jp_zengin_client_code" invisible="l10n_jp_zengin_bank_country_code != 'JP'" />
+            </field>
+        </field>
+    </record>
+</odoo>

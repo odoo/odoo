@@ -1,0 +1,36 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web_gantt.GanttRowProgressBar">
+        <span
+            class="o_gantt_progress_bar position-relative h-100 pe-none"
+            t-att-class="`o_gantt_group_${status || 'none'}`"
+        >
+            <t t-if="props.progressBar.max_value gt 0">
+                <span
+                    class="bg-opacity-25 position-absolute top-0 end-0 h-100"
+                    t-att-class="status and `bg-${status}`"
+                    t-attf-style="width:{{ Math.min(props.progressBar.ratio, 100) }}%;"
+                />
+                <span
+                    t-if="show"
+                    class="position-absolute top-0 end-0 h-100 d-flex align-items-center px-1"
+                    t-att-class="status ? `text-bg-${status}` : 'bg-view'"
+                >
+                    <span
+                        class="o_gantt_group_hours"
+                        t-esc="`${props.progressBar.value_formatted} / ${props.progressBar.max_value_formatted}`"
+                    />
+                </span>
+            </t>
+            <t t-elif="show and props.progressBar.warning">
+                <span
+                    class="o_gantt_group_hours position-absolute top-0 end-0 h-100 d-flex align-items-center px-1 pe-auto bg-view"
+                    t-attf-title="{{ props.progressBar.warning }}"
+                >
+                    <t t-esc="props.progressBar.value_formatted"/>
+                    <i class="fa fa-exclamation-triangle" />
+                </span>
+            </t>
+        </span>
+    </t>
+</templates>

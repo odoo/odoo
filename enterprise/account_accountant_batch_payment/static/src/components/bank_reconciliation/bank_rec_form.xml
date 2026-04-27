@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- Notebook - batch_payments_tab -->
+    <t t-name="account_accountant_batch_payment.BankRecRecordNotebookBatchPayments">
+        <div class="bank_rec_widget_form_batch_payments_list_anchor" t-if="this.state.bankRecEmbeddedViewsData">
+            <BankRecViewEmbedder viewProps="this.notebookBatchPaymentsListViewProps()" t-key="data.st_line_id[0]"/>
+        </div>
+    </t>
+
+    <t t-name="account_accountant_batch_payment.BankRecRecordForm"
+       t-inherit="account_accountant.BankRecRecordForm"
+       t-inherit-mode="extension"
+      >
+        <xpath expr="//t[@t-set-slot='amls_tab']" position="after">
+            <t t-set-slot="batch_payments_tab"
+               name="'batch_payments_tab'"
+               title.translate="Batch Payments"
+               isVisible="['valid', 'invalid'].includes(data.state)">
+                <t t-call="account_accountant_batch_payment.BankRecRecordNotebookBatchPayments"/>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="account_accountant_batch_payment.BankRecRecordFormLineIds"
+       t-inherit="account_accountant.BankRecRecordFormLineIds"
+       t-inherit-mode="extension"
+      >
+        <xpath expr="//td[@field='account_id']" position="replace">
+            <t t-if="line.data.flag === 'new_batch'">
+                <td field="source_batch_payment_name">
+                    <span t-out="line.data.source_batch_payment_name"/>
+                </td>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//td[@field='name']" position="replace">
+            <t t-if="line.data.flag === 'new_batch'">
+                <td field="name" t-att-colspan="line_ids_columns.length - (display_currency_columns ? 5 : 3) + (hasGroupReadOnly ? 0 : 1)">
+                    <span class="o_form_uri fst-italic"
+                          t-out="line.data.name"
+                          t-on-click="() => this.actionRedirectToSourceMove(line)"/>
+                </td>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>

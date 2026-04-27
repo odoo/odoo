@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="payment_method_form" model="ir.ui.view">
+        <field name="name">payment.method.form.inherit.l10n_br_edi</field>
+        <field name="model">payment.method</field>
+        <field name="inherit_id" ref="payment.payment_method_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='code']/.." position="inside">
+                <field name="l10n_br_edi_payment_method"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

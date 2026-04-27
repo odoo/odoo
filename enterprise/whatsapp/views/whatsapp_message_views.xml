@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="whatsapp_message_view_tree" model="ir.ui.view">
+        <field name="name">whatsapp.message.view.list</field>
+        <field name="model">whatsapp.message</field>
+        <field name="arch" type="xml">
+            <list create="0">
+                <field name="create_date"/>
+                <field name="create_uid" widget="many2one_avatar"/>
+                <field name="mobile_number" string="Sent to"/>
+                <field name="wa_template_id" optional="hidden"/>
+                <field name="body" optional="hidden"/>
+                <field name="state"
+                       decoration-info="state == 'sent'"
+                       decoration-success="state in ['delivered', 'read']"
+                       decoration-danger="state in ['error', 'cancel']"
+                       widget="badge"/>
+                <field name="failure_type" optional="hidden"/>
+                <field name="failure_reason" optional="hidden"/>
+                <button name="button_resend" string="Retry" type="object" icon="fa-repeat" invisible="state not in ['error', 'cancel']"/>
+                <button name="button_cancel_send" string="Cancel WhatsApp" type="object" icon="fa-times-circle" invisible="state != 'draft'"/>
+            </list>
+        </field>
+     </record>
+     <record id="whatsapp_message_view_graph" model="ir.ui.view">
+        <field name="name">whatsapp.message.view.graph</field>
+        <field name="model">whatsapp.message</field>
+        <field name="arch" type="xml">
+            <graph string="WhatsApp Messages" type="line" sample="1">
+                <field name="create_date" interval="day"/>
+                <field name="state"/>
+            </graph>
+        </field>
+    </record>
+    <record id="whatsapp_message_view_form" model="ir.ui.view">
+        <field name="name">whatsapp.message.view.form</field>
+        <field name="model">whatsapp.message</field>
+        <field name="arch" type="xml">
+            <form string="WhatsApp Messages">
+                <header>
+                    <field name="state" widget="statusbar" readonly="1"/>
+                    <button name="button_cancel_send" type="object" string="Cancel" invisible="state != 'outgoing'"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="mobile_number" readonly="1"/>
+                            <field name="body" readonly="1"/>
+                            <field name="mail_message_id" readonly="1"/>
+                            <field name="free_text_json" readonly="1"/>
+                            <field name="failure_type" readonly="1"/>
+                            <field name="failure_reason" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="create_date" readonly="1"/>
+                            <field name="wa_template_id" readonly="1"/>
+                            <field name="msg_uid" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="whatsapp_message_view_search" model="ir.ui.view">
+        <field name="name">whatsapp.message.view.search</field>
+        <field name="model">whatsapp.message</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="create_date"/>
+                <field name="mobile_number"/>
+                <field name="body"/>
+                <field name="state"/>
+                <filter string="Sent Messages" name="filter_state_sent"
+                    domain="[('state', '=', 'sent')]"/>
+                <filter string="Delivered Messages" name="filter_state_delivered"
+                    domain="[('state', '=', 'delivered')]"/>
+                <filter string="Read Messages" name="filter_state_read"
+                    domain="[('state', '=', 'read')]"/>
+                <filter string="Failed Messages" name="filter_state_error"
+                    domain="[('state', '=', 'error')]"/>
+                <separator/>
+                <filter string="Last Week" name="last_week" domain="[(
+                    'create_date','&gt;=', (
+                        context_today() - datetime.timedelta(days=7)
+                        ).strftime('%Y-%m-%d')
+                    )]"/>
+                <filter string="Last Month" name="last_month" domain="[(
+                    'create_date','&gt;=', (
+                        context_today() - datetime.timedelta(days=30)
+                        ).strftime('%Y-%m-%d')
+                    )]"/>
+                <filter string="Last Year" name="Last Year" domain="[(
+                    'create_date','&gt;=', (
+                        context_today() - datetime.timedelta(days=365)
+                        ).strftime('%Y-%m-%d')
+                    )]"/>
+                <separator/>
+                <filter string="Create Date" name="filter_create_date" date="create_date"/>
+                <group string="Group By">
+                    <filter string="Sent To" name="groupby_mobile_number"
+                        context="{'group_by': 'mobile_number'}"/>
+                    <filter string="State" name="groupby_state"
+                        context="{'group_by': 'state'}"/>
+                    <filter string="Template" name="groupby_wa_template_id"
+                        context="{'group_by': 'wa_template_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="whatsapp_message_action" model="ir.actions.act_window">
+        <field name="name">WhatsApp Messages</field>
+        <field name="res_model">whatsapp.message</field>
+        <field name="view_mode">list,graph</field>
+        <field name="context">
+            {'search_default_last_week':1}
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No WhatsApp Messages found
+            </p>
+            <p>
+                Monitor all recent outgoing and incoming messages
+            </p>
+        </field>
+    </record>
+</odoo>

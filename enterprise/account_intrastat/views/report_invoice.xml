@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document_intrastat_2019" inherit_id="account.report_invoice_document">
+        <!-- if no lines has an intrastat_product_origin_country_id, we need to store it so that we can hide the column. -->
+        <xpath expr="//t[@t-set='display_discount']" position="after">
+            <t t-set="display_origin" t-value="any(l.intrastat_product_origin_country_id for l in o.invoice_line_ids)"/>
+        </xpath>
+        <xpath expr="//th[@name='th_priceunit']" position="before">
+            <th class="text-end" t-if="display_origin">Origin</th>
+        </xpath>
+        <xpath expr="//td//span[@t-field='line.price_unit']/.." position="before">
+            <td class="text-end" t-if="display_origin">
+                <span t-field="line.intrastat_product_origin_country_id"/>
+            </td>
+        </xpath>
+    </template>
+</odoo>

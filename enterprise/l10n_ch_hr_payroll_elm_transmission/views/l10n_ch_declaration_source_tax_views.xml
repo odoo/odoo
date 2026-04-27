@@ -1,0 +1,48 @@
+<odoo>
+    <record id="l10n_ch_is_report_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.is.report.form</field>
+        <field name="model">l10n.ch.is.report</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll_elm_transmission.l10n_ch_swissdec_transmitter_form"/>
+        <field name="arch" type="xml">
+            <field name="actionable_warnings" position="after">
+                <div invisible="not replacement_declaration" role="alert" class="alert alert-danger">
+                    A replacement declaration can only be sent after consultation with all the concerned Tax Authorities.
+                    <br/>
+                    Only the last declaration can be substituted
+                </div>
+            </field>
+            <group name="institution_group" position="inside">
+                <separator string="Institutions"/>
+                <group colspan="2">
+                    <label for="source_tax_institution_ids" string="Source-Tax Canton"/>
+                    <div class="d-flex align-items-center gap-3 mt-2">
+                        <field name="source_tax_institution_ids"
+                               nolabel="1"
+                               widget="many2many_checkboxes"
+                               options="{'no_open': True, 'no_create': True}"/>
+                        <button name="generate_st_report"
+                                type="object"
+                                string="Source-Tax Report"
+                                class="btn btn-secondary me-2"
+                                icon="fa-file-pdf-o"/>
+                    </div>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="l10n_ch_st_declaration_action" model="ir.actions.act_window">
+        <field name="name">Source-Tax Declaration</field>
+        <field name="res_model">l10n.ch.is.report</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('l10n_ch_hr_payroll_elm_transmission.l10n_ch_swissdec_transmitter_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('l10n_ch_is_report_view_form')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
+    </record>
+
+</odoo>

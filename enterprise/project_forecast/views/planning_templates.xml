@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="period_report_template" inherit_id="planning.period_report_template">
+        <xpath expr="//div[hasclass('o_calendar_widget')]" position="before">
+            <span class="open_slot_has_project" t-att-value="open_slot_has_project"/>
+            <span class="unwanted_slot_has_project" t-att-value="unwanted_slot_has_project"/>
+        </xpath>
+        <xpath expr="//dd[@id='role']" position="after">
+            <dt>Project</dt>
+            <dd id="project"/>
+        </xpath>
+    </template>
+
+    <template id="open_slots_list_template" inherit_id="planning.open_slots_list_template">
+        <xpath expr="//th[@name='role_column']" position="after">
+            <th id='o_project' t-if="open_slot_has_project" class="text-start" name="project_column">Project</th>
+        </xpath>
+        <xpath expr="//td[@name='role_id']" position="after">
+            <td name='project_id' t-if="open_slot_has_project" class="align-middle"><t t-esc="shift.project_id.name"/></td>
+        </xpath>
+    </template>
+
+    <template id="unwanted_slots_list_template" inherit_id="planning.unwanted_slots_list_template">
+        <xpath expr="//th[@name='project_column']" position="attributes">
+            <attribute name="t-if">unwanted_slot_has_project</attribute>
+        </xpath>
+        <xpath expr="//td[@name='project_id']" position="attributes">
+            <attribute name="t-if">unwanted_slot_has_project</attribute>
+        </xpath>
+    </template>
+
+    <template id="planning_shift_ics_description_inherit" inherit_id="planning.planning_shift_ics_description">
+        <xpath expr="//t[@name='role']" position="after">
+<t t-if="shift['project']"><t t-if="is_google_url"><b>Project:</b></t><t t-else="">Project:</t> <t t-out="shift['project']"/></t>
+        </xpath>
+    </template>
+</odoo>

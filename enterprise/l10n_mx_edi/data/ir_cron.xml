@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+
+        <record id="ir_cron_update_pac_status_invoice" model="ir.cron">
+            <field name="name">Automatic update of state on the SAT (for invoices)</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="state">code</field>
+            <field name="code">
+    env['l10n_mx_edi.document']._fetch_and_update_sat_status()
+            </field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 22:00:00')"/>
+        </record>
+     </data>
+</odoo>

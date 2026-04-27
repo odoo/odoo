@@ -1,0 +1,15 @@
+<templates>
+    <t t-name="web_studio.ViewEditor.InteractiveEditorSidebar">
+        <Notebook className="'o_web_studio_sidebar overflow-x-hidden'" defaultPage="defaultTab" icons="icons" onPageUpdate.bind="onTabClicked">
+            <t t-set-slot="new" title="tabsDisplay.new.title" isVisible="true" isDisabled="!props.slots.new" className="tabsDisplay.new.class">
+                <t t-slot="new" />
+            </t>
+            <t t-set-slot="view" title="tabsDisplay.view.title" isVisible="true" className="tabsDisplay.view.class">
+                <t t-slot="view" />
+            </t>
+            <t t-set-slot="properties" title="tabsDisplay.properties.title" isVisible="true" isDisabled="!props.slots.properties || !env.viewEditorModel.activeNodeXpath" className="tabsDisplay.properties.class">
+                <t t-slot="properties" />
+            </t>
+        </Notebook>
+    </t>
+</templates>

@@ -1,0 +1,18 @@
+.o_web_studio_model_configurator {
+  &:not(.embed) {
+    /* width is already handled when embedded in Dialog with in the EditMenu */
+    width: map-get($container-max-widths, lg);
+  }
+  .o_web_studio_model_configurator_next {
+    &:hover,
+    &:focus {
+      background-color: lighten($o-brand-primary, 2%);
+    }
+  }
+}
+
+.o_web_studio_new_model_modal {
+  label.o_studio_error {
+    color: $o-web-studio-color-danger;
+  }
+}

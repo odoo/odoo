@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="timesheets_analysis_report_pivot_invoice_type" model="ir.ui.view">
+        <field name="name">timesheets.analysis.report.pivot</field>
+        <field name="model">timesheets.analysis.report</field>
+        <field name="inherit_id" ref="sale_timesheet.timesheets_analysis_report_pivot_invoice_type"/>
+        <field name="arch" type="xml">
+            <pivot position="attributes">
+                <attribute name="js_class">timesheet_analysis_pivot_view</attribute>
+            </pivot>
+        </field>
+    </record>
+
+</odoo>

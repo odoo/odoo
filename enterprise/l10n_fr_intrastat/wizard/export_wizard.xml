@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_fr_intrastat_export_wizard" model="ir.ui.view">
+            <field name="name">l10n_fr_intrastat.export.wizard.form</field>
+            <field name="model">l10n_fr_intrastat.export.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Export Options">
+                    <field name="warning_incompatible_options" invisible="1"/>
+                    <field name="emebi_flow_visible" invisible="1"/>
+                    <div class="mb-3">
+                        Please choose options before exporting the XML
+                    </div>
+                    <group>
+                         <group>
+                             <field name="export_type" widget="radio"/>
+                         </group>
+                         <group>
+                             <field name="emebi_flow"
+                                    string="EMEBI export type"
+                                    invisible="not emebi_flow_visible"
+                                    widget="radio"/>
+                         </group>
+                    </group>
+                    <div class="alert alert-warning mb8 text-center" role="alert" invisible="not warning_incompatible_options">
+                        You have selected filters that are incompatible with the selected options, please include both arrivals and dispatches for this export type
+                    </div>
+                    <footer>
+                        <button string='Download XML' name="export_xml_file" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+    </data>
+</odoo>

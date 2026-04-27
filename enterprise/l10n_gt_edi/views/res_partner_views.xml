@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_property_form_inherit_l10n_gt_edi" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.l10n_gt_edi</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='fiscal_information']" position="inside">
+                <field name="l10n_gt_edi_phrase_ids" widget="many2many_tags" invisible="'GT' not in fiscal_country_codes"/>
+                <field name="l10n_gt_edi_consignatory_code" invisible="'GT' not in fiscal_country_codes"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

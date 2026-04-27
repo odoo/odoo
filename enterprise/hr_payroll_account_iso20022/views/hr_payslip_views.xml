@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="hr_payslip_view_form">
+        <field name="name">hr.payslip.inherit.form</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_payslip_payment_report']" position="replace">
+                <button string="Mark as paid" name="action_payslip_paid" type="object" invisible="state != 'done'"/>
+            </xpath>
+            <xpath expr="//button[@name='action_payslip_paid']" position="replace">
+                <button string="Create Payment Report" name="action_payslip_payment_report" type="object" class="oe_highlight" invisible="state != 'done'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="helpdesk_team_view_form_inherit_website_helpdesk" model="ir.ui.view">
+        <field name="name">helpdesk.team.form.inherit.website.slides.helpdesk</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form"/>
+        <field name="model">helpdesk.team</field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_sla_policy']" position="after">
+                <field name="is_published" widget="website_redirect_button" invisible="not use_website_helpdesk_form or not website_id"/>
+            </xpath>
+            <xpath expr="//div[@id='website_form_channel']//setting" position="inside">
+                <label for="website_id" class="me-2" invisible="not use_website_helpdesk_form"/>
+                <field name="website_id" options="{'no_create': True}"
+                        context="{'default_company_id': company_id}"
+                        invisible="not use_website_helpdesk_form"
+                        required="use_website_helpdesk_form"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

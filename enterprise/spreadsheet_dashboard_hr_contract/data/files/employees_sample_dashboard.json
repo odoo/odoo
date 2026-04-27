@@ -1,0 +1,1099 @@
+{
+    "version": 21,
+    "sheets": [
+        {
+            "id": "sheet1",
+            "name": "Dashboard",
+            "colNumber": 7,
+            "rowNumber": 66,
+            "rows": {
+                "6": {
+                    "size": 45
+                },
+                "22": {
+                    "size": 46
+                },
+                "38": {
+                    "size": 46
+                },
+                "39": {
+                    "size": 40
+                },
+                "40": {
+                    "size": 30
+                },
+                "41": {
+                    "size": 30
+                },
+                "42": {
+                    "size": 30
+                },
+                "43": {
+                    "size": 30
+                },
+                "44": {
+                    "size": 30
+                },
+                "45": {
+                    "size": 30
+                },
+                "46": {
+                    "size": 30
+                },
+                "47": {
+                    "size": 30
+                },
+                "48": {
+                    "size": 30
+                },
+                "49": {
+                    "size": 30
+                },
+                "51": {
+                    "size": 42
+                },
+                "52": {
+                    "size": 41
+                },
+                "53": {
+                    "size": 30
+                },
+                "54": {
+                    "size": 30
+                },
+                "55": {
+                    "size": 30
+                },
+                "56": {
+                    "size": 30
+                },
+                "57": {
+                    "size": 30
+                },
+                "58": {
+                    "size": 30
+                },
+                "59": {
+                    "size": 30
+                },
+                "60": {
+                    "size": 30
+                },
+                "61": {
+                    "size": 30
+                },
+                "62": {
+                    "size": 30
+                }
+            },
+            "cols": {
+                "0": {
+                    "size": 305
+                },
+                "1": {
+                    "size": 100
+                },
+                "2": {
+                    "size": 100
+                },
+                "3": {
+                    "size": 50
+                },
+                "4": {
+                    "size": 287
+                },
+                "5": {
+                    "size": 100
+                },
+                "6": {
+                    "size": 100
+                }
+            },
+            "merges": [],
+            "cells": {
+                "A7": {
+                    "content": "[Variation on Employees by Month](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"date:month\"],\"graph_measure\":\"count_new_employee\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"date:month\"]},\"modelName\":\"hr.contract.employee.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Employees Analysis\"})"
+                },
+                "A23": {
+                    "content": "[Turnover by Month](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"date:month\"],\"graph_measure\":\"count_new_employee\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"date:month\"]},\"modelName\":\"hr.contract.employee.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Employees Analysis\"})"
+                },
+                "A39": {
+                    "content": "[Top Departments](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"department_id\",\"!=\",false]],\"context\":{\"group_by\":[\"department_id\"],\"pivot_measures\":[\"count_new_employee\",\"employee_id\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"department_id\"]},\"modelName\":\"hr.contract.employee.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Employees Analysis\"})"
+                },
+                "A40": {
+                    "content": "=_t(\"Department\")"
+                },
+                "A52": {
+                    "content": "[Departure Reason](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"departure_reason_id\",\"!=\",false]],\"context\":{\"group_by\":[],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"departure_reason_id\"]},\"modelName\":\"hr.employee\",\"views\":[[false,\"kanban\"],[false,\"list\"],[false,\"form\"],[false,\"activity\"],[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Employees\"})"
+                },
+                "A53": {
+                    "content": "=_t(\"Reason\")"
+                },
+                "B40": {
+                    "content": "=_t(\"Hires\")"
+                },
+                "B53": {
+                    "content": "=_t(\"Departed\")"
+                },
+                "C40": {
+                    "content": "=_t(\"Employees\")"
+                },
+                "C53": {
+                    "content": "%"
+                },
+                "E39": {
+                    "content": "[Top Paid Job Positions](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"active_employee\",\"=\",true],[\"job_id\",\"!=\",false]],\"context\":{\"group_by\":[\"job_id\"],\"pivot_measures\":[\"__count\",\"wage\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"job_id\"]},\"modelName\":\"hr.contract.history\",\"views\":[[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Employees\"})"
+                },
+                "E40": {
+                    "content": "=_t(\"Job Position\")"
+                },
+                "F40": {
+                    "content": "=_t(\"Contracts\")"
+                },
+                "G40": {
+                    "content": "=_t(\"Avg. Salary\")"
+                }
+            },
+            "styles": {
+                "A7": 1,
+                "A23": 1,
+                "A39": 1,
+                "A52": 1,
+                "E39": 1,
+                "A40": 2,
+                "A53:B53": 2,
+                "E40": 2,
+                "B40:C40": 3,
+                "C53": 3,
+                "F40:G40": 3
+            },
+            "formats": {},
+            "borders": {
+                "A39:C39": 1,
+                "A52:C52": 1,
+                "A7:G7": 1,
+                "A23:G23": 1,
+                "E39:G39": 1,
+                "A40:C40": 2,
+                "A53:C53": 2,
+                "A8:G8": 2,
+                "A24:G24": 2,
+                "E40:G40": 2,
+                "A41": 3,
+                "A54": 3,
+                "E41": 3,
+                "A42:A50": 4,
+                "A55:A63": 4,
+                "E42:E50": 4,
+                "A51:C51": 5,
+                "A64:C64": 5,
+                "E51:G51": 5,
+                "B41": 6,
+                "B54": 6,
+                "F41": 6,
+                "B42:B50": 7,
+                "B55:B63": 7,
+                "F42:F50": 7,
+                "C41": 8,
+                "C54": 8,
+                "G41": 8,
+                "C42:C50": 9,
+                "C55:C63": 9,
+                "G42:G50": 9
+            },
+            "conditionalFormats": [],
+            "figures": [
+                {
+                    "id": "e58ddf24-719e-44c2-9042-cd327e0fb7e0",
+                    "x": 0,
+                    "y": 10,
+                    "width": 167,
+                    "height": 104,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "Employees",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#EFF6FF",
+                        "baseline": "Data!E2",
+                        "keyValue": "Data!B2",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "f3e010de-9bd4-4988-954a-3f49a991118e",
+                    "x": 175,
+                    "y": 10,
+                    "width": 167,
+                    "height": 104,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "New employees",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#EFF6FF",
+                        "baseline": "Data!E3",
+                        "keyValue": "Data!D3",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "f7581632-58da-48bc-8496-90f246798c2c",
+                    "x": 350,
+                    "y": 10,
+                    "width": 167,
+                    "height": 104,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "Departure employees",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#EFF6FF",
+                        "baseline": "Data!E4",
+                        "keyValue": "Data!D4",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "56e6d534-9e29-46e2-af98-2e5fe94b6f8c",
+                    "x": 525,
+                    "y": 10,
+                    "width": 167,
+                    "height": 104,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "Turnover Rate",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#ECFDF5",
+                        "baseline": "Data!E5",
+                        "keyValue": "Data!D5",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "dc313975-cb78-4356-93af-0ad64f1ad756",
+                    "x": 699,
+                    "y": 10,
+                    "width": 167,
+                    "height": 104,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "Avg contract duration",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#EFF6FF",
+                        "baseline": "Data!C13",
+                        "keyValue": "Data!B13",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "d387d347-cba4-4bf6-9cde-3cb91c1e95f2",
+                    "x": 875,
+                    "y": 10,
+                    "width": 167,
+                    "height": 104,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "Contracts",
+                            "color": "#434343",
+                            "bold": true
+                        },
+                        "type": "scorecard",
+                        "background": "#EFF6FF",
+                        "baseline": "Data!E9",
+                        "keyValue": "Data!D3",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "bc346640-4ff3-4022-8ec1-f849f6c58069",
+                    "x": 0,
+                    "y": 183,
+                    "width": 1042,
+                    "height": 347,
+                    "tag": "chart",
+                    "data": {
+                        "type": "bar",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!C17:C41",
+                                "yAxisId": "y"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "labelRange": "Data!A17:A41",
+                        "title": {},
+                        "stacked": false,
+                        "aggregated": false
+                    }
+                },
+                {
+                    "id": "d40315f9-ef3d-4be9-9224-a6e3dcff8c18",
+                    "x": 0,
+                    "y": 572,
+                    "width": 1042,
+                    "height": 351,
+                    "tag": "chart",
+                    "data": {
+                        "type": "line",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!D17:D41",
+                                "yAxisId": "y"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "title": {},
+                        "labelsAsText": false,
+                        "stacked": false,
+                        "aggregated": false,
+                        "cumulative": false,
+                        "fillArea": true
+                    }
+                }
+            ],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        },
+        {
+            "id": "0467c29d-1d03-4f8e-a8f0-d90c86e0bb6b",
+            "name": "Data",
+            "colNumber": 38,
+            "rowNumber": 1113,
+            "rows": {},
+            "cols": {},
+            "merges": [],
+            "cells": {
+                "A2": {
+                    "content": "=_t(\"Employees\")"
+                },
+                "A3": {
+                    "content": "=_t(\"New employees\")"
+                },
+                "A4": {
+                    "content": "=_t(\"Departed employees\")"
+                },
+                "A5": {
+                    "content": "=_t(\"Turnover rate\")"
+                },
+                "A6": {
+                    "content": "=_t(\"Contracts\")"
+                },
+                "A7": {
+                    "content": "=_t(\"New contracts\")"
+                },
+                "A8": {
+                    "content": "=_t(\"Running contracts\")"
+                },
+                "A9": {
+                    "content": "=_t(\"New + Running\")"
+                },
+                "A10": {
+                    "content": "=_t(\"Expired contracts\")"
+                },
+                "A11": {
+                    "content": "=_t(\"Cancelled contracts\")"
+                },
+                "A12": {
+                    "content": "=_t(\"Total Duration\")"
+                },
+                "A13": {
+                    "content": "=_t(\"Avg Duration\")"
+                },
+                "A17": {
+                    "content": "=EDATE(TODAY(),B17)"
+                },
+                "A18": {
+                    "content": "=EDATE(TODAY(),B18)"
+                },
+                "A19": {
+                    "content": "=EDATE(TODAY(),B19)"
+                },
+                "A20": {
+                    "content": "=EDATE(TODAY(),B20)"
+                },
+                "A21": {
+                    "content": "=EDATE(TODAY(),B21)"
+                },
+                "A22": {
+                    "content": "=EDATE(TODAY(),B22)"
+                },
+                "A23": {
+                    "content": "=EDATE(TODAY(),B23)"
+                },
+                "A24": {
+                    "content": "=EDATE(TODAY(),B24)"
+                },
+                "A25": {
+                    "content": "=EDATE(TODAY(),B25)"
+                },
+                "A26": {
+                    "content": "=EDATE(TODAY(),B26)"
+                },
+                "A27": {
+                    "content": "=EDATE(TODAY(),B27)"
+                },
+                "A28": {
+                    "content": "=EDATE(TODAY(),B28)"
+                },
+                "A29": {
+                    "content": "=EDATE(TODAY(),B29)"
+                },
+                "A30": {
+                    "content": "=EDATE(TODAY(),B30)"
+                },
+                "A31": {
+                    "content": "=EDATE(TODAY(),B31)"
+                },
+                "A32": {
+                    "content": "=EDATE(TODAY(),B32)"
+                },
+                "A33": {
+                    "content": "=EDATE(TODAY(),B33)"
+                },
+                "A34": {
+                    "content": "=EDATE(TODAY(),B34)"
+                },
+                "A35": {
+                    "content": "=EDATE(TODAY(),B35)"
+                },
+                "A36": {
+                    "content": "=EDATE(TODAY(),B36)"
+                },
+                "A37": {
+                    "content": "=EDATE(TODAY(),B37)"
+                },
+                "A38": {
+                    "content": "=EDATE(TODAY(),B38)"
+                },
+                "A39": {
+                    "content": "=EDATE(TODAY(),B39)"
+                },
+                "A40": {
+                    "content": "=EDATE(TODAY(),B40)"
+                },
+                "A41": {
+                    "content": "=EDATE(TODAY(),B41)"
+                },
+                "B1": {
+                    "content": "=_t(\"Current period\")"
+                },
+                "B2": {
+                    "content": "2876"
+                },
+                "B3": {
+                    "content": "1849"
+                },
+                "B4": {
+                    "content": "176"
+                },
+                "B5": {
+                    "content": "0.054"
+                },
+                "B6": {
+                    "content": "19"
+                },
+                "B7": {
+                    "content": "1"
+                },
+                "B8": {
+                    "content": "23"
+                },
+                "B9": {
+                    "content": "24"
+                },
+                "B10": {
+                    "content": "0"
+                },
+                "B11": {
+                    "content": "0"
+                },
+                "B12": {
+                    "content": "605.1666666666666"
+                },
+                "B13": {
+                    "content": "=_t(\"3 years\")"
+                },
+                "B17": {
+                    "content": "-24"
+                },
+                "B18": {
+                    "content": "-23"
+                },
+                "B19": {
+                    "content": "-22"
+                },
+                "B20": {
+                    "content": "-21"
+                },
+                "B21": {
+                    "content": "-20"
+                },
+                "B22": {
+                    "content": "-19"
+                },
+                "B23": {
+                    "content": "-18"
+                },
+                "B24": {
+                    "content": "-17"
+                },
+                "B25": {
+                    "content": "-16"
+                },
+                "B26": {
+                    "content": "-15"
+                },
+                "B27": {
+                    "content": "-14"
+                },
+                "B28": {
+                    "content": "-13"
+                },
+                "B29": {
+                    "content": "-12"
+                },
+                "B30": {
+                    "content": "-11"
+                },
+                "B31": {
+                    "content": "-10"
+                },
+                "B32": {
+                    "content": "-9"
+                },
+                "B33": {
+                    "content": "-8"
+                },
+                "B34": {
+                    "content": "-7"
+                },
+                "B35": {
+                    "content": "-6"
+                },
+                "B36": {
+                    "content": "-5"
+                },
+                "B37": {
+                    "content": "-4"
+                },
+                "B38": {
+                    "content": "-3"
+                },
+                "B39": {
+                    "content": "-2"
+                },
+                "B40": {
+                    "content": "-1"
+                },
+                "B41": {
+                    "content": "0"
+                },
+                "C1": {
+                    "content": "=_t(\"Previous period\")"
+                },
+                "C2": {
+                    "content": "1638"
+                },
+                "C3": {
+                    "content": "1543"
+                },
+                "C4": {
+                    "content": "123"
+                },
+                "C5": {
+                    "content": "-0.2724002616088947"
+                },
+                "C6": {
+                    "content": "35"
+                },
+                "C7": {
+                    "content": "0"
+                },
+                "C8": {
+                    "content": "19"
+                },
+                "C9": {
+                    "content": "19"
+                },
+                "C10": {
+                    "content": "0"
+                },
+                "C11": {
+                    "content": "0"
+                },
+                "C16": {
+                    "content": "=_t(\"New Employees\")"
+                },
+                "C17": {
+                    "content": "300"
+                },
+                "C18": {
+                    "content": "266"
+                },
+                "C19": {
+                    "content": "426"
+                },
+                "C20": {
+                    "content": "414"
+                },
+                "C21": {
+                    "content": "35"
+                },
+                "C22": {
+                    "content": "215"
+                },
+                "C23": {
+                    "content": "603"
+                },
+                "C24": {
+                    "content": "66"
+                },
+                "C25": {
+                    "content": "640"
+                },
+                "C26": {
+                    "content": "128"
+                },
+                "C27": {
+                    "content": "912"
+                },
+                "C28": {
+                    "content": "755"
+                },
+                "C29": {
+                    "content": "221"
+                },
+                "C30": {
+                    "content": "505"
+                },
+                "C31": {
+                    "content": "292"
+                },
+                "C32": {
+                    "content": "490"
+                },
+                "C33": {
+                    "content": "696"
+                },
+                "C34": {
+                    "content": "395"
+                },
+                "C35": {
+                    "content": "300"
+                },
+                "C36": {
+                    "content": "578"
+                },
+                "C37": {
+                    "content": "170"
+                },
+                "C38": {
+                    "content": "358"
+                },
+                "C39": {
+                    "content": "544"
+                },
+                "C40": {
+                    "content": "1543"
+                },
+                "C41": {
+                    "content": "1345"
+                },
+                "D1": {
+                    "content": "=_t(\"Current period\")"
+                },
+                "D2": {
+                    "content": "2876"
+                },
+                "D3": {
+                    "content": "1849"
+                },
+                "D4": {
+                    "content": "176"
+                },
+                "D5": {
+                    "content": "0.054"
+                },
+                "D6": {
+                    "content": "19"
+                },
+                "D7": {
+                    "content": "1"
+                },
+                "D8": {
+                    "content": "23"
+                },
+                "D9": {
+                    "content": "24"
+                },
+                "D10": {
+                    "content": "0"
+                },
+                "D11": {
+                    "content": "0"
+                },
+                "D12": {
+                    "content": "605.1666666666666"
+                },
+                "D16": {
+                    "content": "=_t(\"Turnover\")"
+                },
+                "D17": {
+                    "content": "0.07037533512064344"
+                },
+                "D18": {
+                    "content": "0.05105989232839839"
+                },
+                "D19": {
+                    "content": "0.06653929224123609"
+                },
+                "D20": {
+                    "content": "0.07037533512064344"
+                },
+                "D21": {
+                    "content": "0.01488294314381271"
+                },
+                "D22": {
+                    "content": "0.056340341655716164"
+                },
+                "D23": {
+                    "content": "0.06265762925598992"
+                },
+                "D24": {
+                    "content": "0.007247598179673015"
+                },
+                "D25": {
+                    "content": "0.06752165789026669"
+                },
+                "D26": {
+                    "content": "0.04887078859681599"
+                },
+                "D27": {
+                    "content": "0.11279520620373634"
+                },
+                "D28": {
+                    "content": "0.10789473684210527"
+                },
+                "D29": {
+                    "content": "0.06134969325153374"
+                },
+                "D30": {
+                    "content": "0.06855087358684481"
+                },
+                "D31": {
+                    "content": "0.03726227333038479"
+                },
+                "D32": {
+                    "content": "0.09660818713450292"
+                },
+                "D33": {
+                    "content": "0.11841785974278088"
+                },
+                "D34": {
+                    "content": "0.11956815114709851"
+                },
+                "D35": {
+                    "content": "0.058142594054196264"
+                },
+                "D36": {
+                    "content": "0.09332967334614328"
+                },
+                "D37": {
+                    "content": "0.08556994000631513"
+                },
+                "D38": {
+                    "content": "0.0865241911546453"
+                },
+                "D39": {
+                    "content": "0.14060568603213844"
+                },
+                "D40": {
+                    "content": "0.2724002616088947"
+                },
+                "D41": {
+                    "content": "0.6181318681318682"
+                },
+                "E1": {
+                    "content": "=_t(\"Previous period\")"
+                },
+                "E2": {
+                    "content": "1638"
+                },
+                "E3": {
+                    "content": "1543"
+                },
+                "E4": {
+                    "content": "123"
+                },
+                "E5": {
+                    "content": "-0.2724002616088947"
+                },
+                "E6": {
+                    "content": "35"
+                },
+                "E7": {
+                    "content": "0"
+                },
+                "E8": {
+                    "content": "19"
+                },
+                "E9": {
+                    "content": "19"
+                },
+                "E10": {
+                    "content": "0"
+                },
+                "E11": {
+                    "content": "0"
+                },
+                "E12": {
+                    "content": "0"
+                },
+                "E13": {
+                    "content": "0"
+                }
+            },
+            "styles": {
+                "A2:A13": 4,
+                "B1:E1": 4
+            },
+            "formats": {
+                "A17:A41": 1,
+                "B3:B4": 2,
+                "B6:B9": 2,
+                "B12": 2,
+                "C2:C4": 2,
+                "C6": 2,
+                "C8:C9": 2,
+                "C17:C40": 2,
+                "D17:D41": 3,
+                "B5:E5": 3,
+                "D2": 4,
+                "D10:D11": 4,
+                "E7": 4,
+                "E10:E13": 4,
+                "D3:D4": 5,
+                "D6:D9": 5,
+                "D12": 5,
+                "E2:E4": 5,
+                "E6": 5,
+                "E8:E9": 5
+            },
+            "borders": {
+                "A9": 10
+            },
+            "conditionalFormats": [],
+            "figures": [],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        }
+    ],
+    "styles": {
+        "1": {
+            "textColor": "#01666b",
+            "bold": true,
+            "fontSize": 16
+        },
+        "2": {
+            "textColor": "#434343",
+            "bold": true,
+            "fontSize": 11
+        },
+        "3": {
+            "textColor": "#434343",
+            "bold": true,
+            "fontSize": 11,
+            "align": "center"
+        },
+        "4": {
+            "bold": true
+        }
+    },
+    "formats": {
+        "1": "mmmm yyyy",
+        "2": "0",
+        "3": "0.00%",
+        "4": "#,##0[$]",
+        "5": "0[$]"
+    },
+    "borders": {
+        "1": {
+            "bottom": {
+                "style": "thin",
+                "color": "#CCCCCC"
+            }
+        },
+        "2": {
+            "top": {
+                "style": "thin",
+                "color": "#CCCCCC"
+            }
+        },
+        "3": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "4": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "5": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "6": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "7": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "8": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "9": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "10": {
+            "left": {
+                "style": "thin",
+                "color": "#2D7E84"
+            }
+        }
+    },
+    "revisionId": "START_REVISION",
+    "uniqueFigureIds": true,
+    "settings": {
+        "locale": {
+            "name": "English (US)",
+            "code": "en_US",
+            "thousandsSeparator": ",",
+            "decimalSeparator": ".",
+            "dateFormat": "mm/dd/yyyy",
+            "timeFormat": "hh:mm:ss",
+            "formulaArgSeparator": ",",
+            "weekStart": 7
+        }
+    },
+    "pivots": {},
+    "pivotNextId": 25,
+    "customTableStyles": {},
+    "odooVersion": 12,
+    "globalFilters": [],
+    "lists": {},
+    "listNextId": 1
+}

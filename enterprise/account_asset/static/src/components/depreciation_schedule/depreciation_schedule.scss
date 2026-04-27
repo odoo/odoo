@@ -1,0 +1,37 @@
+.account_report.depreciation_schedule {
+    table.striped {
+        > thead > tr:not(:first-child) {
+            > th:nth-child(2n+3) { background: inherit }
+            > th[data-expression_label='assets_date_from'],
+            > th[data-expression_label='assets_plus'],
+            > th[data-expression_label='assets_minus'],
+            > th[data-expression_label='assets_date_to'],
+            > th[data-expression_label='balance'] {
+                background: $o-gray-100
+            }
+        }
+        > tbody {
+            > tr:not(.line_level_0):not(.empty) {
+                > td:nth-child(2n+3) { background: inherit }
+                > td[data-expression_label='assets_date_from'],
+                > td[data-expression_label='assets_plus'],
+                > td[data-expression_label='assets_minus'],
+                > td[data-expression_label='assets_date_to'],
+                > td[data-expression_label='balance'] {
+                    background: $o-gray-100
+                }
+            }
+            > tr.line_level_0
+            {
+                > td:nth-child(2n+3) { background: inherit }
+                > td[data-expression_label='assets_date_from'],
+                > td[data-expression_label='assets_plus'],
+                > td[data-expression_label='assets_minus'],
+                > td[data-expression_label='assets_date_to'],
+                > td[data-expression_label='balance'] {
+                    background: $o-gray-300
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_intrastat_code_search" model="ir.ui.view">
+        <field name="name">account.intrastat.code.search</field>
+        <field name="model">account.intrastat.code</field>
+        <field name="inherit_id" ref="account_intrastat.view_intrastat_code_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search//filter[@name='type_commodity']" position='after'>
+                <filter string="Service" domain="[('type','=','service')]" name="type_service"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_intrastat_code_restricted_type_search" model="ir.ui.view">
+        <field name="name">account.intrastat.transport.code.search</field>
+        <field name="model">account.intrastat.code</field>
+        <field name="inherit_id" ref="account_intrastat.view_intrastat_code_restricted_type_search" />
+        <field name="arch" type="xml">
+            <filter name="type_service" position="replace"/>
+        </field>
+    </record>
+</odoo>

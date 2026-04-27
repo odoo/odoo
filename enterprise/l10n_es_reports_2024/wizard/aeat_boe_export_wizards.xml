@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <record id="mod303_boe_wizard" model="ir.ui.view">
+            <field name="name">l10n_es_reports.aeat.boe.mod303.export.wizard.form</field>
+            <field name="model">l10n_es_reports.aeat.boe.mod303.export.wizard</field>
+            <field name="inherit_id" ref="l10n_es_reports.mod303_boe_wizard"/>
+            <field name="arch" type="xml">
+                <field name="previous_report_number" position="after">
+                    <field name="rectification_direct_debit" invisible="not complementary_declaration"/>
+                    <field name="rectification_motive_rectifications" invisible="not complementary_declaration"/>
+                    <field name="rectification_motive_discrepancy_adm_crit" invisible="not complementary_declaration"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

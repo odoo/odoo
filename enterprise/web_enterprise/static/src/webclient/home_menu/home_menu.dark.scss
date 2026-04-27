@@ -1,0 +1,16 @@
+// = Home Menu
+// ============================================================================
+// No CSS hacks, variables overrides only
+
+.o_home_menu_background {
+
+    .o_app_icon {
+        --AppSwitcherIcon-background: #{rgba(#fff, .05)};
+        --AppSwitcherIcon-inset-shadow: #{inset 0 0 0 1px rgba(#fff, .1)};
+        --AppSwitcherIcon-border-color: transparent;
+    }
+
+    .o_app:hover .o_app_icon {
+        --AppSwitcherIcon-inset-shadow: #{inset 0 0 0 1px rgba(#fff, .2)}; 
+    }
+}

@@ -1,0 +1,118 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_inter_company_rules
+#
+# Translators:
+# Wil Odoo, 2024
+# Rasareeyar Lappiam, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2025\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_inter_company_rules
+#. odoo-python
+#: code:addons/account_inter_company_rules/models/account_move.py:0
+msgid "%(company)s Invoice: %(entry)s"
+msgstr "%(company)s ใบแจ้งหนี้: %(entry)s"
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_account_move_send
+msgid "Account Move Send"
+msgstr "ส่งย้ายบัญชี"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_bank_statement_line__auto_generated
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_move__auto_generated
+msgid "Auto Generated Document"
+msgstr "เอกสารที่สร้างอัตโนมัติ"
+
+#. module: account_inter_company_rules
+#. odoo-python
+#: code:addons/account_inter_company_rules/models/account_move.py:0
+msgid "Automatically generated from %(origin)s of company %(company)s."
+msgstr "สร้างโดยอัตโนมัติจาก %(origin)s ของบริษัท %(company)s"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_company__intercompany_document_state
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_config_settings__intercompany_document_state
+msgid "Automation"
+msgstr "การทำงานอัตโนมัติ"
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_res_company
+msgid "Companies"
+msgstr "บริษัท"
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_res_config_settings
+msgid "Config Settings"
+msgstr "ตั้งค่าการกำหนดค่า"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields.selection,name:account_inter_company_rules.selection__res_company__intercompany_document_state__posted
+msgid "Create and validate"
+msgstr "สร้างและตรวจสอบ"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_company__intercompany_user_id
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_config_settings__intercompany_user_id
+msgid "Create as"
+msgstr "สร้างเป็น"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields.selection,name:account_inter_company_rules.selection__res_company__intercompany_document_state__draft
+msgid "Create in draft"
+msgstr "สร้างในแบบร่าง"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_company__intercompany_generate_bills_refund
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_config_settings__intercompany_generate_bills_refund
+#: model_terms:ir.ui.view,arch_db:account_inter_company_rules.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account_inter_company_rules.view_company_inter_change_inherit_form
+msgid "Generate Bills and Refunds"
+msgstr "สร้างใบเรียกเก็บเงินและการคืนเงิน"
+
+#. module: account_inter_company_rules
+#: model_terms:ir.ui.view,arch_db:account_inter_company_rules.view_company_inter_change_inherit_form
+msgid "Inter-Company Transactions"
+msgstr "ธุรกรรมระหว่าง บริษัท"
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_account_move
+msgid "Journal Entry"
+msgstr "รายการสมุดรายวัน"
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_account_move_line
+msgid "Journal Item"
+msgstr "รายการสมุดรายวัน"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_company__intercompany_purchase_journal_id
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_config_settings__intercompany_purchase_journal_id
+msgid "Purchase Journal"
+msgstr "สมุดรายวันการซื้อ"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,help:account_inter_company_rules.field_res_company__intercompany_user_id
+#: model:ir.model.fields,help:account_inter_company_rules.field_res_config_settings__intercompany_user_id
+msgid ""
+"Responsible user for creation of documents triggered by intercompany rules."
+msgstr "ผู้ใช้ที่รับผิดชอบในการสร้างเอกสารที่ถูกเรียกใช้ตามกฎระหว่างบริษัท"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_bank_statement_line__auto_invoice_id
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_move__auto_invoice_id
+msgid "Source Invoice"
+msgstr "ที่มาใบแจ้งหนี้"

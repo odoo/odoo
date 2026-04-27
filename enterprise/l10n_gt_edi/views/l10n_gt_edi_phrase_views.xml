@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="l10n_gt_edi_phrase_list_view" model="ir.ui.view">
+        <field name="name">l10n_gt_edi.phrase.list</field>
+        <field name="model">l10n_gt_edi.phrase</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="phrase_type"/>
+                <field name="phrase_description"/>
+                <field name="scenario_code"/>
+                <field name="scenario_description"/>
+                <field name="pdf_message"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_l10n_gt_edi_phrase_tree_view" model="ir.actions.act_window">
+        <field name="name">Guatemala Phrases</field>
+        <field name="res_model">l10n_gt_edi.phrase</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="l10n_gt_edi_phrase_menu"
+              action="action_l10n_gt_edi_phrase_tree_view"
+              parent="account.account_invoicing_menu"
+              groups="account.group_account_manager"
+              sequence="5"/>
+
+</odoo>

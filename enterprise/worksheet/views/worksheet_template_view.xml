@@ -1,0 +1,69 @@
+<odoo>
+    <record id="worksheet_template_view_form" model="ir.ui.view">
+        <field name="name">worksheet.template.view.form</field>
+        <field name="model">worksheet.template</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form create="0" duplicate="0">
+                <header>
+                    <field name="model_id" invisible="True"/>
+                    <widget name="open_studio_button" invisible="not model_id" groups="base.group_system"/>
+                    <button name="action_analysis_report" type="object" string="Analysis" data-hotkey="r"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_worksheets" type="object" class="oe_stat_button" icon="fa-pencil" invisible="worksheet_count &lt;= 0">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="worksheet_count"/></span>
+                                <span class="o_stat_text">Worksheets</span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="name" placeholder="e.g Device Installation"/>
+                            <field name="active" invisible="1"/>
+                            <field name="company_id" options="{'no_create': 1, 'no_edit': 1, 'no_open': 1}"/>
+                        </group>
+                        <group>
+                            <field name="model_id" invisible="1"/>
+                            <field name="res_model" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="worksheet_template_view_list" model="ir.ui.view">
+        <field name="name">worksheet.template.view.list</field>
+        <field name="model">worksheet.template</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" multi_edit="1" sample="1" duplicate="0">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="company_id" options="{'no_create': 1, 'no_edit': 1, 'no_open': 1}" optional="hide"/>
+                <field name="worksheet_count" string="Worksheets" optional="show"/>
+                <widget name="open_studio_button"/>
+                <button name="action_analysis_report" class="btn btn-secondary p-1 px-2" type="object" string="Analysis"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="worksheet_template_view_search" model="ir.ui.view">
+        <field name="name">worksheet.template.view.search</field>
+        <field name="model">worksheet.template</field>
+        <field name="arch" type="xml">
+            <search string="Worksheet Template Search">
+                <field name="name"/>
+                <field name="company_id"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <group string="Group By">
+                    <filter string="Company" name="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

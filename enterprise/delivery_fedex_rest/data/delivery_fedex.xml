@@ -1,0 +1,156 @@
+<odoo>
+<data noupdate="1">
+
+    <!-- Fedex Product Packagings -->
+    <record id="fedex_packaging_FEDEX_BOX" model="stock.package.type">
+        <field name="name">FedEx® Box</field>
+        <field name="shipper_package_code">FEDEX_BOX</field>
+        <field name="package_carrier_type">fedex_rest</field>
+        <field name="max_weight">9.07</field>
+    </record>
+    <record id="fedex_packaging_FEDEX_10KG_BOX" model="stock.package.type">
+        <field name="name">FedEx® 10kg Box</field>
+        <field name="shipper_package_code">FEDEX_10KG_BOX</field>
+        <field name="package_carrier_type">fedex_rest</field>
+        <field name="max_weight">10</field>
+    </record>
+    <record id="fedex_packaging_FEDEX_25KG_BOX" model="stock.package.type">
+        <field name="name">FedEx® 25kg Box</field>
+        <field name="shipper_package_code">FEDEX_25KG_BOX</field>
+        <field name="package_carrier_type">fedex_rest</field>
+        <field name="max_weight">25</field>
+    </record>
+    <record id="fedex_packaging_FEDEX_ENVELOPE" model="stock.package.type">
+        <field name="name">FedEx® Letters</field>
+        <field name="shipper_package_code">FEDEX_ENVELOPE</field>
+        <field name="package_carrier_type">fedex_rest</field>
+        <field name="max_weight">0.5</field>
+    </record>
+    <record id="fedex_packaging_FEDEX_PAK" model="stock.package.type">
+        <field name="name">FedEx® Pak</field>
+        <field name="shipper_package_code">FEDEX_PAK</field>
+        <field name="package_carrier_type">fedex_rest</field>
+        <field name="max_weight">9.07</field>
+    </record>
+    <record id="fedex_packaging_FEDEX_TUBE" model="stock.package.type">
+        <field name="name">FedEx® Tube</field>
+        <field name="shipper_package_code">FEDEX_TUBE</field>
+        <field name="package_carrier_type">fedex_rest</field>
+        <field name="max_weight">9.07</field>
+    </record>
+    <record id="fedex_packaging_YOUR_PACKAGING" model="stock.package.type">
+        <field name="name">FEDEX_YOUR_PACKAGING</field>
+        <field name="shipper_package_code">YOUR_PACKAGING</field>
+        <field name="package_carrier_type">fedex_rest</field>
+    </record>
+
+    <!-- Fedex Delivery Carriers -->
+    <record id="product_product_delivery_fedex_inter" model="product.product">
+      <field name="name">Fedex International</field>
+      <field name="default_code">Delivery_005</field>
+      <field name="type">service</field>
+      <field name="categ_id" ref="delivery.product_category_deliveries"/>
+      <field name="sale_ok" eval="False"/>
+      <field name="purchase_ok" eval="False"/>
+      <field name="list_price">0.0</field>
+      <field name="invoice_policy">order</field>
+    </record>
+    <record id="delivery_carrier_fedex_inter" model="delivery.carrier">
+        <field name="name">Fedex International</field>
+        <field name="product_id" ref="delivery_fedex_rest.product_product_delivery_fedex_inter"/>
+        <field name="delivery_type">fedex_rest</field>
+        <field name="fedex_rest_weight_unit">KG</field>
+        <field name="fedex_rest_developer_key">JA2mr1yA7NTT8L4i</field>
+        <field name="fedex_rest_developer_password">ZLMVRmbxHE0UnRmjRtQuPnkOM</field>
+        <field name="fedex_rest_account_number">601356805</field>
+        <field name="fedex_rest_default_package_type_id" ref="fedex_packaging_FEDEX_BOX"/>
+    </record>
+
+    <record id="product_product_delivery_fedex_us" model="product.product">
+      <field name="name">Fedex US</field>
+      <field name="default_code">Delivery_006</field>
+      <field name="type">service</field>
+      <field name="categ_id" ref="delivery.product_category_deliveries"/>
+      <field name="sale_ok" eval="False"/>
+      <field name="purchase_ok" eval="False"/>
+      <field name="list_price">0.0</field>
+      <field name="invoice_policy">order</field>
+    </record>
+    <record id="delivery_carrier_fedex_us" model="delivery.carrier">
+        <field name="name">Fedex US</field>
+        <field name="product_id" ref="delivery_fedex_rest.product_product_delivery_fedex_us"/>
+        <field name="delivery_type">fedex_rest</field>
+        <field name="fedex_rest_weight_unit">LB</field>
+        <field name="fedex_rest_service_type">PRIORITY_OVERNIGHT</field>
+        <field name="fedex_rest_developer_key">JA2mr1yA7NTT8L4i</field>
+        <field name="fedex_rest_developer_password">ZLMVRmbxHE0UnRmjRtQuPnkOM</field>
+        <field name="fedex_rest_account_number">601356805</field>
+        <field name="fedex_rest_default_package_type_id" ref="fedex_packaging_FEDEX_BOX"/>
+    </record>
+
+    <record id="uom.product_uom_unit" model="uom.uom">
+        <field name="fedex_code">PCS</field>
+    </record>
+    <record id="uom.product_uom_dozen" model="uom.uom">
+        <field name="fedex_code">DOZ</field>
+    </record>
+    <record id="uom.product_uom_meter" model="uom.uom">
+        <field name="fedex_code">M</field>
+    </record>
+    <record id="uom.product_uom_millimeter" model="uom.uom">
+        <field name="fedex_code">MILLIMETER</field>
+    </record>
+    <record id="uom.product_uom_km" model="uom.uom">
+        <field name="fedex_code">KILOMETER</field>
+    </record>
+    <record id="uom.product_uom_cm" model="uom.uom">
+        <field name="fedex_code">CM</field>
+    </record>
+    <record id="uom.uom_square_meter" model="uom.uom">
+        <field name="fedex_code">M2</field>
+    </record>
+    <record id="uom.product_uom_litre" model="uom.uom">
+        <field name="fedex_code">LTR</field>
+    </record>
+    <record id="uom.product_uom_cubic_meter" model="uom.uom">
+        <field name="fedex_code">M3</field>
+    </record>
+    <record id="uom.product_uom_kgm" model="uom.uom">
+        <field name="fedex_code">KG</field>
+    </record>
+    <record id="uom.product_uom_gram" model="uom.uom">
+        <field name="fedex_code">G</field>
+    </record>
+    <record id="uom.product_uom_ton" model="uom.uom">
+        <field name="fedex_code">TON</field>
+    </record>
+    <record id="uom.product_uom_lb" model="uom.uom">
+        <field name="fedex_code">LB</field>
+    </record>
+    <record id="uom.product_uom_oz" model="uom.uom">
+        <field name="fedex_code">OZ</field>
+    </record>
+    <record id="uom.product_uom_inch" model="uom.uom">
+        <field name="fedex_code">INCH</field>
+    </record>
+    <record id="uom.product_uom_foot" model="uom.uom">
+        <field name="fedex_code">LFT</field>
+    </record>
+    <record id="uom.product_uom_yard" model="uom.uom">
+        <field name="fedex_code">YD</field>
+    </record>
+    <record id="uom.uom_square_foot" model="uom.uom">
+        <field name="fedex_code">SFT</field>
+    </record>
+    <record id="uom.product_uom_qt" model="uom.uom">
+        <field name="fedex_code">QUART</field>
+    </record>
+    <record id="uom.product_uom_gal" model="uom.uom">
+        <field name="fedex_code">GAL</field>
+    </record>
+    <record id="uom.product_uom_cubic_foot" model="uom.uom">
+        <field name="fedex_code">CFT</field>
+    </record>
+
+</data>
+</odoo>

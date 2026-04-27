@@ -1,0 +1,834 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * delivery_envia
+#
+# Translators:
+# Wil Odoo, 2025
+# Rasareeyar Lappiam, 2025
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:45+0000\n"
+"PO-Revision-Date: 2025-11-15 18:34+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-18/"
+"delivery_envia/th/>\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/envia_request.py:0
+msgid "%(field_name)s must be set on Partner: %(partner_name)s."
+msgstr "%(field_name)s จะต้องตั้งค่าเป็นพาร์ทเนอร์:%(partner_name)s"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid ". This link will give you personalized attention plus lower prices."
+msgstr "ลิงค์นี้จะช่วยดูแลคุณเป็นพิเศษพร้อมทั้งมีราคาที่ถูกกว่า"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_shipping_method_envia
+msgid ""
+"<i class=\"fa fa-info-circle\"/> Available shipping services depend on "
+"enabled carriers in your Envia account."
+msgstr ""
+"<i class=\"fa fa-info-circle\"/> บริการจัดส่งที่มีขึ้นอยู่กับผู้ให้บริการที่เปิดใช้งานในบัญชี "
+"Envia ของคุณ"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid ""
+"A note, some countries support unique additional services for pallet "
+"shipments or boxes. For example, Canada has the option to handle missed "
+"deliveries by returning them back to your warehouse or abandoning on the "
+"doorstep. To enable this feature, enable Returned at Shippers Expense "
+"otherwise it will be abandoned at the customer's door."
+msgstr ""
+"หมายเหตุ บางประเทศรองรับบริการเสริมพิเศษสำหรับการจัดส่งพาเลทหรือกล่อง ตัวอย่างเช่น "
+"ประเทศแคนาดามีตัวเลือกในการจัดการการจัดส่งที่พลาดไปโดยการส่งคืนสินค้ากลับไปยังคลังสินค้าของคุณหรือทิ้งไว้ที่หน้าประตูบ้าน "
+"หากต้องการเปิดใช้งานฟีเจอร์นี้ โปรดเปิดใช้งาน \"ส่งคืนที่ค่าใช้จ่ายของผู้จัดส่ง\" ไม่เช่นนั้น "
+"สินค้าจะถูกทิ้งไว้ที่ประตูบ้านของลูกค้า"
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/envia_request.py:0
+msgid "A phone number must be set on Partner: %(partner_name)s"
+msgstr "ต้องตั้งค่าหมายเลขโทรศัพท์บนพาร์ทเนอร์: %(partner_name)s"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid "Add New Carriers in Envia"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__stock_package_type__envia_mail_type__box
+msgid "Box"
+msgstr "กล่อง"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_shipping_method_envia
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_stock_package_type__package_carrier_type
+msgid "Carrier"
+msgstr "ผู้ให้บริการ"
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_stock_package_type__shipper_package_code
+msgid "Carrier Code"
+msgstr "โค้ดผู้ให้บริการ"
+
+#. module: delivery_envia
+#. odoo-javascript
+#: code:addons/delivery_envia/static/src/components/envia_service_selection_widget.xml:0
+msgid "Carrier:"
+msgstr ""
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/wizard/envia_shipping_wizard.py:0
+msgid ""
+"Carriers and Services must be selected from the list of available shipping "
+"methods."
+msgstr "จะต้องเลือกผู้ให้บริการและบริการจากรายการวิธีการจัดส่งที่มีให้เลือก"
+
+#. module: delivery_envia
+#: model:ir.model.fields,help:delivery_envia.field_delivery_carrier__envia_residential_delivery
+msgid ""
+"Certain carriers like UPS will charge an extra fee to deliver to a "
+"residential zone (United States Only)"
+msgstr ""
+"ผู้ให้บริการบางราย เช่น UPS จะเรียกเก็บค่าธรรมเนียมเพิ่มเติมสำหรับการจัดส่งไปยังเขตที่อยู่อาศัย "
+"(เฉพาะสหรัฐอเมริกา)"
+
+#. module: delivery_envia
+#: model:ir.model.fields,help:delivery_envia.field_delivery_carrier__envia_residential_pickup
+msgid ""
+"Certain carriers like UPS will charge an extra fee to pickup from "
+"residential zones (United States Only)"
+msgstr ""
+"ผู้ให้บริการบางราย เช่น UPS จะเรียกเก็บค่าธรรมเนียมเพิ่มเติมสำหรับการรับสินค้าจากเขตที่อยู่อาศัย "
+"(เฉพาะสหรัฐอเมริกา)"
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/delivery_carrier.py:0
+msgid "Choose an Envia.com Shipping Service"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model,name:delivery_envia.model_envia_shipping_wizard
+msgid "Choose from the available Envia.com shipping methods"
+msgstr "เลือกจากวิธีจัดส่ง Envia.com ที่มีให้บริการ"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_shipping_method_envia
+msgid "Confirm"
+msgstr "ยืนยัน"
+
+#. module: delivery_envia
+#: model:ir.model.fields,help:delivery_envia.field_envia_shipping_wizard__available_services
+msgid ""
+"Contains the list of available services for the Envia.com account to select "
+"from."
+msgstr "ประกอบด้วยรายการบริการที่มีให้สำหรับบัญชี Envia.com ให้เลือก"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid ""
+"Copy over the API Key from Envia into either the sandbox or production field "
+"in Delivery Methods."
+msgstr "คัดลอกรหัส API จาก Envia ลงในแซนด์บ็อกซ์หรือฟิลด์การผลิตในวิธีการจัดส่ง"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid "Create an Account"
+msgstr ""
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid ""
+"Create and edit a package for this delivery method to be used as reference "
+"for quotations and labels. This package can be of type <b>box</b>, "
+"<b>envelope</b>, or <b>pallet</b>, which determines the carriers that can be "
+"used."
+msgstr ""
+"สร้างและแก้ไขแพ็คเกจสำหรับวิธีการจัดส่งนี้เพื่อใช้เป็นข้อมูลอ้างอิงสำหรับใบเสนอราคาและฉลาก "
+"แพ็คเกจนี้สามารถเป็น<b>กล่อง</b> <b>ซอง</b> หรือ<b>พาเลท</b> "
+"ซึ่งจะกำหนดผู้ให้บริการขนส่งที่สามารถใช้ได้"
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_envia_shipping_wizard__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_envia_shipping_wizard__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: delivery_envia
+#: model:ir.model.fields,help:delivery_envia.field_delivery_carrier__envia_currency_id
+msgid "Currency set in Envia"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_envia_shipping_wizard__carrier_id
+msgid "Delivery"
+msgstr "การจัดส่ง"
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_delivery_carrier__envia_residential_delivery
+msgid "Delivery Residential Zone"
+msgstr ""
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_shipping_method_envia
+msgid "Delivery Service"
+msgstr "บริการจัดส่ง"
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_envia_shipping_wizard__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid ""
+"Don't worry about the printing options, just note which ones exist for your "
+"favorite carrier as we will select them in Odoo."
+msgstr ""
+"ไม่ต้องกังวลเกี่ยวกับตัวเลือกการพิมพ์ เพียงจดบันทึกว่ามีตัวเลือกใดบ้างสำหรับผู้ให้บริการที่คุณชื่นชอบ "
+"เนื่องจากเราจะเลือกตัวเลือกเหล่านั้นใน Odoo"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_file_type__epl
+msgid "EPL"
+msgstr "EPL"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__stock_package_type__envia_mail_type__envelope
+msgid "Envelope"
+msgstr "ซองจดหมาย"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__delivery_type__envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__stock_package_type__package_carrier_type__envia
+msgid "Envia"
+msgstr "Envia"
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_delivery_carrier__envia_currency_id
+msgid "Envia Account Main Currency"
+msgstr ""
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid "Envia Configuration"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_delivery_carrier__envia_default_package_type_id
+msgid "Envia Default Package"
+msgstr ""
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/envia_request.py:0
+msgid "Envia Documents:"
+msgstr ""
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/envia_request.py:0
+msgid "Envia Error: %(description)s - %(message)s"
+msgstr ""
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/envia_request.py:0
+msgid ""
+"Envia Error: %(message)s - %(description)s %(location)s (Reference code: %"
+"(reference)s)"
+msgstr ""
+"เกิดข้อผิดพลาด Envia: %(message)s - %(description)s %(location)s (รหัสอ้างอิง: %"
+"(reference)s)"
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/envia_request.py:0
+msgid ""
+"Envia Error: The API key you entered for %(carrier_name)s seems to be invalid"
+msgstr "ข้อผิดพลาด Envia: รหัส API ที่คุณป้อนสำหรับ %(carrier_name)s ดูเหมือนจะไม่ถูกต้อง"
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/envia_request.py:0
+msgid ""
+"Envia Error: The Envia Mail Type (%(package_types)s) set on the package(s) "
+"does not match the type set on the carrier (%(carrier_package_type)s). Use a "
+"different package or different carrier that matches the mail type."
+msgstr ""
+"ข้อผิดพลาด Envia: ประเภทอีเมล Envia (%(package_types)s) "
+"ที่ตั้งไว้บนแพ็คเกจไม่ตรงกับประเภทที่ตั้งไว้บนผู้ให้บริการ (%(carrier_package_type)s) "
+"โปรดใช้แพ็คเกจอื่นหรือผู้ให้บริการอื่นที่ตรงกับประเภทอีเมล"
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/envia_request.py:0
+msgid ""
+"Envia Error: The following products don't have weights set: %(product_names)s"
+msgstr "Envia Error: ผลิตภัณฑ์ต่อไปนี้ไม่มีการตั้งค่าน้ำหนัก: %(product_names)s"
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_delivery_carrier__envia_label_file_type
+msgid "Envia Label File Type"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_delivery_carrier__envia_label_stock_type
+msgid "Envia Label Type"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_delivery_carrier__envia_mail_type
+#: model:ir.model.fields,field_description:delivery_envia.field_stock_package_type__envia_mail_type
+msgid "Envia Package Type"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_delivery_carrier__envia_production_api_key
+msgid "Envia Production Access Token"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_delivery_carrier__envia_sandbox_api_key
+msgid "Envia Sandbox Access Token"
+msgstr ""
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid "Envia Setup"
+msgstr ""
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/delivery_carrier.py:0
+msgid "Envia order(s) not found to cancel shipment!"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields,help:delivery_envia.field_delivery_carrier__envia_default_package_type_id
+msgid ""
+"Envia requires package dimensions for getting accurate rate, you can define "
+"these in a package type that you set as default"
+msgstr ""
+"Envia ต้องการขนาดแพ็คเกจเพื่อรับอัตราที่แม่นยำ "
+"คุณสามารถกำหนดค่าเหล่านี้ได้ในประเภทแพ็คเกจที่คุณตั้งเป็นค่าเริ่มต้น"
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/envia_request.py:0
+msgid ""
+"Envia was unable to locate a postal code for the partner: %(partner_name)s. "
+"Make sure city/commune and state/region are set otherwise enter a postal "
+"code directly"
+msgstr ""
+"Envia ไม่สามารถระบุตำแหน่งรหัสไปรษณีย์ของพาร์ทเนอร์ได้: %(partner_name)s "
+"โปรดตรวจสอบให้แน่ใจว่าได้ตั้งค่าเมือง/ตำบลและรัฐ/ภูมิภาคแล้ว ไม่เช่นนั้น ให้ป้อนรหัสไปรษณีย์โดยตรง"
+
+#. module: delivery_envia
+#: model:delivery.carrier,name:delivery_envia.delivery_carrier_envia
+#: model:product.template,name:delivery_envia.product_product_delivery_envia_product_template
+msgid "Envia.com"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_delivery_carrier__envia_carrier_code
+msgid "Envia.com Carrier Code"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_delivery_carrier__envia_service_code
+msgid "Envia.com Service Code"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_delivery_carrier__envia_service_name
+msgid "Envia.com Service Name"
+msgstr ""
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/delivery_carrier.py:0
+msgid "Failed to fetch Envia Carriers, Please try again later."
+msgstr "ไม่สามารถดึงข้อมูล Envia Carriers ได้ โปรดลองอีกครั้งในภายหลัง"
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/envia_request.py:0
+msgid ""
+"For LTL shipments in Mexico, a Bill of Landing (Carta Porte) is required, in "
+"order to send the required information you need to set the UNSPSC code in "
+"the following product: %(product_name)s"
+msgstr ""
+"สำหรับการขนส่งแบบ LTL ในประเทศเม็กซิโก จำเป็นต้องมีใบตราส่งสินค้า (Carta Porte) "
+"เพื่อส่งข้อมูลที่จำเป็น คุณต้องตั้งค่ารหัส UNSPSC ในผลิตภัณฑ์ต่อไปนี้: %(product_name)s"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid ""
+"For any carriers you'd like to use that are not activated, be sure to "
+"activate it here."
+msgstr "สำหรับผู้ให้บริการใดๆ ที่คุณต้องการใช้แต่ยังไม่ได้เปิดใช้งาน โปรดเปิดใช้งานที่นี่"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid ""
+"For your available carriers you'll need to make sure that they are available "
+"through Envia (make sure to select all available countries):<br/>"
+msgstr ""
+"สำหรับผู้ให้บริการขนส่งที่คุณมีอยู่ กรุณาตรวจสอบให้แน่ใจว่าพวกเขาสามารถใช้งานได้ผ่าน Envia "
+"(อย่าลืมเลือกทุกประเทศที่รองรับ):<br/>"
+
+#. module: delivery_envia
+#: model:ir.model.fields,help:delivery_envia.field_delivery_carrier__envia_production_api_key
+msgid "Generate an Access Token from within the Production Portal of Envia"
+msgstr "สร้างโทเค็นการเข้าถึงจากภายในพอร์ทัลการผลิตของ Envia"
+
+#. module: delivery_envia
+#: model:ir.model.fields,help:delivery_envia.field_delivery_carrier__envia_sandbox_api_key
+msgid "Generate an Access Token from within the Sandbox Portal of Envia"
+msgstr "สร้างโทเค็นการเข้าถึงจากภายใน Sandbox Portal ของ Envia"
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_envia_shipping_wizard__id
+msgid "ID"
+msgstr "ไอดี"
+
+#. module: delivery_envia
+#: model:ir.model.fields,help:delivery_envia.field_delivery_carrier__envia_return_at_senders_expense
+msgid ""
+"If the carrier is unable to deliver the package, the package can be returned "
+"to the shipper or abandoned at the door. (Canada only)"
+msgstr ""
+"หากผู้ให้บริการขนส่งไม่สามารถส่งมอบพัสดุได้ พัสดุอาจถูกส่งคืนไปยังผู้ส่งหรือทิ้งไว้ที่ประตู "
+"(เฉพาะในประเทศแคนาดาเท่านั้น)"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid "If you don't have an account"
+msgstr ""
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid "If you don't have an account, we recommend heading to"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_envia_shipping_wizard__write_uid
+msgid "Last Updated by"
+msgstr "อัปเดตครั้งล่าสุดโดย"
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_envia_shipping_wizard__write_date
+msgid "Last Updated on"
+msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid ""
+"Lastly, head to the Developers / API Keys section and generate a new API "
+"Key. This will be used by Odoo to communicate with Envia so note it down for "
+"later."
+msgstr ""
+"ขั้นตอนสุดท้าย ให้ไปที่ส่วนนักพัฒนา/คีย์ API และสร้างคีย์ API ใหม่ ซึ่ง Odoo "
+"จะใช้คีย์นี้ในการสื่อสารกับ Envia ดังนั้นจดไว้สำหรับใช้ในภายหลัง"
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/stock_package_type.py:0
+msgid "Length, Width, and Height is necessary for a Envia Package."
+msgstr "ความยาว ความกว้าง และความสูงเป็นสิ่งจำเป็นสำหรับแพ็คเกจ Envia"
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_delivery_carrier__envia_lift_delivery
+msgid "Lift Assistance on Delivery"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_delivery_carrier__envia_lift_pickup
+msgid "Lift Assistance on Pickup"
+msgstr ""
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid ""
+"Make sure to select the appropriate country for your main billing, if you "
+"have multi country operations you can also create two separate accounts, "
+"keep in mind that your billing will be done in your main currency. <br/>"
+msgstr ""
+"ตรวจสอบให้แน่ใจว่าคุณได้เลือกประเทศที่เหมาะสมสำหรับการเรียกเก็บเงินหลักของคุณ "
+"หากคุณมีการดำเนินงานหลายประเทศ คุณยังสามารถสร้างบัญชีแยกกันสองบัญชีได้ "
+"โปรดทราบว่าการเรียกเก็บเงินของคุณจะดำเนินการในสกุลเงินหลักของคุณ <br/>"
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/envia_request.py:0
+msgid ""
+"Missing Fields:\n"
+"%s"
+msgstr ""
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/delivery_carrier.py:0
+msgid ""
+"No carrier is set on \"%(delivery_method)s\". To use Envia.com, you'll need "
+"to sync your carriers with your account."
+msgstr ""
+"ไม่มีการตั้งค่าผู้ให้บริการขนส่งใน \"%(delivery_method)s\" หากต้องการใช้ Envia.com "
+"คุณจะต้องซิงค์ผู้ให้บริการขนส่งกับบัญชีของคุณ"
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/envia_request.py:0
+msgid "No rate found"
+msgstr ""
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid ""
+"Once your delivery method is properly configured, you can sync the carriers "
+"Envia provides for your country of origin: <br/>"
+msgstr ""
+"เมื่อวิธีการจัดส่งของคุณได้รับการกำหนดค่าอย่างถูกต้องแล้ว คุณสามารถซิงค์ผู้ให้บริการที่ Envia "
+"มอบให้สำหรับประเทศต้นทางของคุณได้: <br/>"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid "Options"
+msgstr "ตัวเลือก"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_stock_type__paper_4x6
+msgid "PAPER_4X6"
+msgstr "PAPER_4X6"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_stock_type__paper_4x8
+msgid "PAPER_4X8"
+msgstr "PAPER_4X8"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_stock_type__paper_7x4_75
+msgid "PAPER_7X4.75"
+msgstr "PAPER_7X4.75"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_stock_type__paper_8_27x11_67
+msgid "PAPER_8.27X11.67"
+msgstr "PAPER_8.27X11.67"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_stock_type__paper_8_5x11
+msgid "PAPER_8.5X11"
+msgstr "PAPER_8.5X11"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_stock_type__paper_8_5x11_bottom_half_label
+msgid "PAPER_8.5X11_BOTTOM_HALF_LABEL"
+msgstr "PAPER_8.5X11_BOTTOM_HALF_LABEL"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_file_type__pdf
+msgid "PDF"
+msgstr "PDF"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_file_type__png
+msgid "PNG"
+msgstr "PNG"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__stock_package_type__envia_mail_type__pallet
+msgid "Pallet"
+msgstr "พาเลท"
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_delivery_carrier__envia_residential_pickup
+msgid "Pickup Residential Zone"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields,help:delivery_envia.field_delivery_carrier__envia_lift_delivery
+msgid ""
+"Provide liftgate assistance if the recipient doesn't have a dock or forklift "
+"to unload the shipment. (United States and Mexico Only)"
+msgstr ""
+"ให้ความช่วยเหลือด้านประตูท้ายรถหากผู้รับสินค้าไม่มีท่าเทียบเรือหรือรถยกเพื่อขนถ่ายสินค้า "
+"(เฉพาะสหรัฐอเมริกาและเม็กซิโก)"
+
+#. module: delivery_envia
+#: model:ir.model.fields,help:delivery_envia.field_delivery_carrier__envia_lift_pickup
+msgid ""
+"Provide liftgate assitance if the supplier doesn't have a dock or forklift "
+"to load the shipment. (United States and Mexico Only)"
+msgstr ""
+"ให้ความช่วยเหลือด้านประตูท้ายรถในกรณีที่ซัพพลายเออร์ไม่มีท่าเทียบเรือหรือรถยกเพื่อบรรทุกสินค้า "
+"(เฉพาะสหรัฐอเมริกาและเม็กซิโก)"
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "ผู้ให้บริการ"
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_delivery_carrier__envia_return_at_senders_expense
+msgid "Returned at Shippers Expense"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_stock_type__stock_2_4x6
+msgid "STOCK_2.4X6"
+msgstr "STOCK_2.4X6"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_stock_type__stock_2_9x5
+msgid "STOCK_2.9X5"
+msgstr "STOCK_2.9X5"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_stock_type__stock_3_8x4_2
+msgid "STOCK_3.8X4.2"
+msgstr "STOCK_3.8X4.2"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_stock_type__stock_3_9x7
+msgid "STOCK_3.9X7"
+msgstr "STOCK_3.9X7"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_stock_type__stock_4x4
+msgid "STOCK_4X4"
+msgstr "STOCK_4X4"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_stock_type__stock_4x6
+msgid "STOCK_4X6"
+msgstr "STOCK_4X6"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_stock_type__stock_4x6_5
+msgid "STOCK_4X6.5"
+msgstr "STOCK_4X6.5"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_stock_type__stock_4x6_75_leading_doc_tab
+msgid "STOCK_4X6.75_LEADING_DOC_TAB"
+msgstr "STOCK_4X6.75_LEADING_DOC_TAB"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_stock_type__stock_4x7_5
+msgid "STOCK_4X7.5"
+msgstr "STOCK_4X7.5"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_stock_type__stock_4x8
+msgid "STOCK_4X8"
+msgstr "STOCK_4X8"
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/envia_request.py:0
+msgid "Sale Order is required to get rate."
+msgstr ""
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/envia_request.py:0
+msgid "Sale Order or Picking is required to convert currency."
+msgstr "ต้องมีคำสั่งขายหรือการเลือกสินค้าเพื่อแปลงสกุลเงิน"
+
+#. module: delivery_envia
+#: model:ir.model.fields,help:delivery_envia.field_delivery_carrier__country_id
+msgid "Select the country to be used by this delivery method"
+msgstr "เลือกประเทศที่จะใช้ในการจัดส่งวิธีนี้"
+
+#. module: delivery_envia
+#: model:ir.model.fields,help:delivery_envia.field_delivery_carrier__envia_mail_type
+#: model:ir.model.fields,help:delivery_envia.field_stock_package_type__envia_mail_type
+msgid "Select the package type for the shipment"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields,help:delivery_envia.field_delivery_carrier__envia_label_stock_type
+msgid "Select the size of the label"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields,help:delivery_envia.field_delivery_carrier__envia_label_file_type
+msgid "Select the printing format of the label"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_envia_shipping_wizard__selected_carrier_code
+msgid "Selected Carrier"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_envia_shipping_wizard__selected_service_code
+msgid "Selected Service"
+msgstr "บริการที่เลือก"
+
+#. module: delivery_envia
+#. odoo-javascript
+#: code:addons/delivery_envia/static/src/components/envia_service_selection_widget.xml:0
+msgid "Service:"
+msgstr ""
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid "Setup In Odoo"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields,field_description:delivery_envia.field_delivery_carrier__country_id
+msgid "Ship From"
+msgstr "จัดส่งจาก"
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/envia_request.py:0
+msgid "Shipment created into Envia"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model,name:delivery_envia.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "วิธีการการจัดส่ง"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_shipping_method_envia
+msgid "Shipping Product"
+msgstr "สินค้าจัดส่ง"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid ""
+"Specify the Origin country that this connector will ship from. By default "
+"this is the company's country."
+msgstr "ระบุประเทศต้นทางที่ตัวเชื่อมต่อนี้จะจัดส่งมา โดยค่าเริ่มต้นจะเป็นประเทศของบริษัท"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid ""
+"Specify the currency your Envia account is configured in. By default this is "
+"the company's currency."
+msgstr "ระบุสกุลเงินที่ใช้ในบัญชี Envia ของคุณ โดยค่าเริ่มต้นคือสกุลเงินของบริษัท"
+
+#. module: delivery_envia
+#: model:ir.model,name:delivery_envia.model_stock_package_type
+msgid "Stock package type"
+msgstr "ประเภทบรรจุภัณฑ์ของสต็อก"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid "Sync Carriers/Services from Envia"
+msgstr ""
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid "Sync Envia Carriers"
+msgstr ""
+
+#. module: delivery_envia
+#: model:ir.model.fields,help:delivery_envia.field_delivery_carrier__envia_carrier_code
+msgid ""
+"The carrier on Envia.com used by this carrier. The service code belongs to "
+"it."
+msgstr "ผู้ให้บริการบน Envia.com ที่ผู้ให้บริการรายนี้ใช้ รหัสบริการเป็นของผู้ให้บริการรายนี้"
+
+#. module: delivery_envia
+#: model:ir.model.fields,help:delivery_envia.field_delivery_carrier__envia_service_code
+#: model:ir.model.fields,help:delivery_envia.field_delivery_carrier__envia_service_name
+msgid ""
+"The service that will be used for this carrier. This is set when you select "
+"a carrier from the wizard."
+msgstr "บริการที่จะใช้สำหรับผู้ให้บริการรายนี้ สิ่งนี้จะถูกตั้งค่าเมื่อคุณเลือกผู้ให้บริการจากวิซาร์ด"
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/delivery_carrier.py:0
+msgid "This action requires an Envia.com carrier."
+msgstr ""
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/envia_request.py:0
+msgid "Tracking Numbers:"
+msgstr "หมายเลขติดตาม:"
+
+#. module: delivery_envia
+#. odoo-python
+#: code:addons/delivery_envia/models/delivery_carrier.py:0
+msgid "Unable to cancel order: %(order_number)s"
+msgstr ""
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid ""
+"You can also preselect which services will be used, our recommendation is to "
+"not limit this as we will pick them in Odoo anyway."
+msgstr ""
+"คุณสามารถเลือกบริการที่จะใช้งานได้ล่วงหน้า "
+"เราขอแนะนำให้ไม่จำกัดสิ่งนี้เนื่องจากเราจะเลือกบริการเหล่านี้ใน Odoo อยู่แล้ว"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid ""
+"You should also make sure that if you export to other countries, you have to "
+"select who will pay for customs duties."
+msgstr ""
+"คุณควรตรวจสอบให้แน่ใจว่าหากคุณส่งออกไปยังประเทศอื่น คุณจะต้องเลือกผู้ที่จะชำระภาษีศุลกากร"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid ""
+"You will be able to specify a specific Envia carrier and service that you "
+"intend to use in this region. Note that each service can have different "
+"pricing and availability."
+msgstr ""
+"คุณสามารถระบุผู้ให้บริการและบริการ Envia ที่คุณต้องการใช้ในภูมิภาคนี้ได้ "
+"โปรดทราบว่าบริการแต่ละอย่างอาจมีราคาและความพร้อมใช้งานที่แตกต่างกัน"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid ""
+"You will be asked to confirm your email address and phone number via SMS."
+msgstr "คุณจะถูกขอให้ยืนยันที่อยู่อีเมลและหมายเลขโทรศัพท์ของคุณผ่าน SMS"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_file_type__zpl
+msgid "ZPL"
+msgstr "ZPL"
+
+#. module: delivery_envia
+#: model:ir.model.fields.selection,name:delivery_envia.selection__delivery_carrier__envia_label_file_type__zplii
+msgid "ZPLII"
+msgstr "ZPLII"
+
+#. module: delivery_envia
+#: model_terms:ir.ui.view,arch_db:delivery_envia.view_delivery_carrier_form_inherit_delivery_envia
+msgid "our personalized link"
+msgstr ""

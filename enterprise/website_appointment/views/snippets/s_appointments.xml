@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="remove_external_snippets" inherit_id="website_enterprise.external_snippets">
+    <xpath expr="//t[@id='appointments_snippet']" position="replace"/>
+</template>
+
+<template id="snippets" inherit_id="website.snippets">
+    <xpath expr="//t[@id='appointments_hook']" position="replace">
+        <t t-snippet="website_appointment.s_appointments"
+           string="Appointments" group="appointments"/>
+    </xpath>
+    <xpath expr="//t[@id='installed_snippets_hook']" position="after">
+        <t snippet-group="appointments" t-snippet="website.s_snippet_group" string="Appointments"
+            t-thumbnail="/website_enterprise/static/src/img/snippets_thumbs/s_appointments.svg"/>
+    </xpath>
+</template>
+
+<template id="s_appointments" name="Appointments">
+    <t t-call="website.s_dynamic_snippet_template">
+        <t t-set="snippet_name" t-value="'s_appointments'"/>
+        <t t-call="website_appointment.s_appointments_preview_data"/>
+    </t>
+</template>
+
+<!-- Template -->
+<template id="dynamic_filter_template_appointment_type_card" name="Card layout">
+    <div t-foreach="records" t-as="data" class="pb32 w-100">
+        <t t-set="appointment" t-value="data['_record']"/>
+        <div class="card shadow-sm h-100">
+            <a t-attf-href="/appointment/#{appointment.id}" t-attf-class="text-decoration-none">
+                <t t-if="is_sample">
+                    <div class="card-img-top position-relative">
+                        <img class="d-block h-100 w-100 overflow-hidden ratio ratio-4x3 object-fit-cover"
+                            src="/appointment/static/src/img/appointment_cover_0.jpg"/>
+                        <div class="h5 o_ribbon_right text-bg-primary text-uppercase opacity-75">Sample</div>
+                    </div>
+                </t>
+                <t t-else="" t-call="website_appointment.appointment_card_top"/>
+                <t t-call="website_appointment.appointment_card_body"/>
+            </a>
+        </div>
+    </div>
+</template>
+
+<!-- Options -->
+<template id="s_appointments_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <t t-call="website_appointment.s_dynamic_snippet_options_template">
+            <t t-set="snippet_name" t-value="'appointments'"/>
+            <t t-set="snippet_selector" t-value="'.s_appointments'"/>
+        </t>
+    </xpath>
+</template>
+
+<template id="s_dynamic_snippet_options_template" inherit_id="website.s_dynamic_snippet_options_template">
+    <xpath expr="//we-select[@data-name='filter_opt']" position="after">
+        <t t-if="snippet_name == 'appointments'">
+            <we-select string="Filter On" data-attribute-name="filterType" data-no-preview="true" data-attribute-default-value="none">
+                <we-button data-select-data-attribute="none" title="No Filter">No Filter</we-button>
+                <we-button data-select-data-attribute="users" title="Specific Users">Users</we-button>
+                <we-button data-select-data-attribute="resources" title="Specific Resources">Resources</we-button>
+            </we-select>
+            <we-many2many string=" ⌙ Resources"
+                data-name="filter_resource"
+                data-model="appointment.type"
+                data-limit="10"
+                data-attribute-name="filterResources"
+                data-m2o-field="resource_ids"
+                data-no-preview="true"
+                data-select-data-attribute=""
+                data-default-message="Choose a resource..."/>
+            <we-many2many string=" ⌙ Users"
+                data-name="filter_user"
+                data-model="appointment.type"
+                data-limit="10"
+                data-attribute-name="filterUsers"
+                data-m2o-field="staff_user_ids"
+                data-no-preview="true"
+                data-select-data-attribute=""
+                data-domain='[["share", "=", false]]'
+                data-default-message="Choose a user..."/>
+            <we-input string="Names"
+                class="o_we_large"
+                data-name="filter_appointment_name"
+                data-attribute-name="appointmentNames"
+                data-no-preview="true"
+                data-select-data-attribute=""
+                placeholder="e.g. Dental Care, ..."
+                title="Comma-separated list of parts of appointment names"/>
+        </t>
+    </xpath>
+</template>
+
+<!-- Assets -->
+<asset id="website_appointment.s_appointments_000_js" name="Appointments 000 JS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website_appointment/static/src/snippets/s_appointments/000.js</path>
+</asset>
+
+</odoo>

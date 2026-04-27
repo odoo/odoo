@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_referral_campaign_wizard_view_form" model="ir.ui.view">
+        <field name="name">hr.referral.campaign.wizard.view.form</field>
+        <field name="model">hr.referral.campaign.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="job_id"/>
+                    <field name="target" widget="radio" options="{'horizontal': true}"/>
+                    <field name="employee_ids"
+                        nolabel="1"
+                        widget="many2many_avatar_employee"
+                        placeholder="Select employees"
+                        invisible="target == 'all'"/>
+                    <field name="sending_method" widget="radio" options="{'horizontal': true}"/>
+                </group>
+                <group string="Mail" name="email" invisible="sending_method!='work_email'">
+                    <field name="mail_subject"/>
+                    <field name="mail_body"/>
+                </group>
+                <group string="SMS" name="sms" invisible="sending_method!='work_phone'">
+                    <field name="sms_body"/>
+                </group>
+                <div class="alert alert-warning" role="alert" invisible="is_published">
+                    This job position is not published. 
+                    The referral campaign will automatically publish it.
+                </div>
+                <footer>
+                    <button name="action_send" string="Send"
+                            type="object" class="btn btn-primary"
+                            data-hotkey="q" invisible="not is_published"/>
+                    <button name="action_send" string="Publish &amp; Send"
+                            type="object" class="btn btn-primary"
+                            data-hotkey="q" invisible="is_published"/>
+                    <button string="Cancel" class="btn btn-secondary"
+                            special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

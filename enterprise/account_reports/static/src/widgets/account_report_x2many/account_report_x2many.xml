@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="account_reports.AccountReportList">
+        <div class="account_report_lines_list_x2many">
+            <ul class="p-0" t-ref="root">
+                <!-- Header -->
+                <li class="d-flex justify-content-between">
+                    <!-- Columns -->
+                    <t t-foreach="columns" t-as="column" t-key="column.id">
+                        <t t-set="isNameColumn" t-value="column.name === 'name'"/>
+
+                        <span
+                            class="column fw-bold"
+                            t-att-class="{
+                                'fluid': isNameColumn,
+                                'fixed': !isNameColumn,
+                            }"
+                            t-out="column.label || column.name"
+                        />
+                    </t>
+
+                    <!-- Filter -->
+                    <t t-call="account_reports.AccountReportOptionalColumnSelector"/>
+                </li>
+
+                <!-- Lines -->
+                <t t-call="account_reports.AccountReportListTree">
+                    <t t-set="lines" t-value="this.formatData()"/>
+                </t>
+
+                <!-- Add new line -->
+                <t t-if="props.activeActions.create">
+                    <li>
+                        <a
+                            class="column overlined"
+                            href="#"
+                            role="button"
+                            t-on-click.stop.prevent="() => this.add({})"
+                        >
+                            Add a line
+                        </a>
+                    </li>
+                </t>
+
+                <!-- For the last border-bottom -->
+                <span class="overlined"/>
+            </ul>
+        </div>
+    </t>
+
+    <t t-name="account_reports.AccountReportListTree">
+        <t t-foreach="lines" t-as="line" t-key="line.id">
+            <li
+                class="draggable"
+                t-att-data-record_index="line.index"
+                t-att-data-record_id="line.id"
+                t-att-data-descendants_count="line.descendants_count"
+            >
+                <div class="d-flex justify-content-between overlined">
+                    <t t-set="record" t-value="this.props.list.records[line.index]"/>
+
+                    <!-- Handle -->
+                    <span class="oi oi-draggable o_row_handle"/>
+
+                    <!-- Columns -->
+                    <t t-foreach="columns" t-as="column" t-key="column.id">
+                        <t t-set="isNameColumn" t-value="column.name === 'name'"/>
+
+                        <span
+                            class="column"
+                            t-att-class="{
+                                'fluid': isNameColumn,
+                                'fixed': !isNameColumn,
+                            }"
+                            t-on-click="(ev) => this.onCellClicked(record, column, ev)"
+                        >
+                            <t t-out="isNameColumn ? line[column.name] : getFormattedValue(column, record)"/>
+
+                            <t t-if="line.out_of_sequence_error">
+                                <span
+                                    class="text-danger"
+                                    data-tooltip="This line is placed before its parent, which is not allowed. You can fix it by dragging it to the proper position."
+                                >
+                                    <i class="fa fa-exclamation-circle text-danger ms-2 me-1"/>
+                                    This line is out of sequence.
+                                </span>
+                            </t>
+                        </span>
+                    </t>
+
+                    <!-- Trash -->
+                    <t t-if="props.activeActions.delete">
+                        <button class="trash" t-on-click="() => this.onDeleteRecord(line.index)">
+                            <i class="fa fa-trash-o"/>
+                        </button>
+                    </t>
+                </div>
+
+                <t t-if="line.children?.length">
+                    <ul>
+                        <t t-call="account_reports.AccountReportListTree">
+                            <t t-set="lines" t-value="line.children"/>
+                        </t>
+                    </ul>
+                </t>
+            </li>
+        </t>
+    </t>
+
+    <t t-name="account_reports.AccountReportOptionalColumnSelector">
+        <Dropdown position="'bottom-end'">
+            <button>
+                <i class="filter"/>
+            </button>
+
+            <t t-set-slot="content">
+                <t t-foreach="optionalFieldGroups" t-as="group" t-key="group_index">
+                    <t t-foreach="group.optionalFields" t-as="field" t-key="field_index">
+                        <DropdownItem
+                            closingMode="'none'"
+                            onSelected="() => this.toggleOptionalField(field.name)"
+                        >
+                            <CheckBox
+                                name="field.name"
+                                value="field.value"
+                                onChange="() => this.toggleOptionalField(field.name)"
+                            >
+                                <span class="d-flex align-items-center">
+                                    <span class="text-truncate" t-out="field.label"/>
+
+                                    <t t-if="env.debug">
+                                        <span class="ps-1" t-out="' (' + field.name + ')'"/>
+                                    </t>
+                                </span>
+                            </CheckBox>
+                        </DropdownItem>
+                    </t>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

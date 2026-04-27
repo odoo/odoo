@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_form_inherit_l10n_pe_reports" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n.pe.reports</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_pe_edi.res_config_settings_form_inherit_l10n_pe_edi"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='invoicing_peruvian_settings']" position="inside">
+                <setting help="Type of chart of accounts required for the generation of PLE reports, this will not add or remove any accounts from your current chart of accounts." string="PLE Reports" company_dependent="1">
+                    <div class="content-group">
+                        <div class="row mt8">
+                            <label for="l10n_pe_chart_of_accounts" class="col-lg-5 o_light_label" string="PLE Type of CoA" />
+                            <field name="l10n_pe_chart_of_accounts" />
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

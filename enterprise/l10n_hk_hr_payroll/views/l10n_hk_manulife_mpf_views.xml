@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_hk_manulife_mpf_view_form" model="ir.ui.view">
+        <field name="name">l10n_hk.manulife.mpf.view.form</field>
+        <field name="model">l10n_hk.manulife.mpf</field>
+        <field name="arch" type="xml">
+            <form string="Manulife MPF Sheet">
+                <header>
+                    <button string="Create XLSX" name="action_generat_xlsx" type="object" class="btn-primary" />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name" nolabel="1" /></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="year" options="{'type': 'number'}" />
+                            <field name="month" />
+                            <field name="sequence_no" />
+                        </group>
+                    </group>
+                    <group string="Optional">
+                        <field name="cheque_no" />
+                        <field name="second_cheque_no" />
+                    </group>
+                    <div class="mt-3" invisible="not xlsx_file">
+                        <h2>Generation Complete</h2>
+                        <p class="oe_inline">
+                            <field name="xlsx_filename" invisible="1" />
+                            Download the Manulife MPF XLSX file: <field name="xlsx_file" readonly="1" filename="xlsx_filename"/>
+                        </p>
+                    </div>
+                    <field name="line_ids">
+                        <list no_open="1" editable="bottom">
+                            <field name="employee_id" widget="many2one_avatar_user"/>
+                            <field name="surcharge_percentage" widget="percentage" />
+                            <field name="amount_surcharge" />
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_hk_manulife_mpf_view_tree" model="ir.ui.view">
+        <field name="name">l10n_hk.manulife.mpf.view.list</field>
+        <field name="model">l10n_hk.manulife.mpf</field>
+        <field name="arch" type="xml">
+            <list string="Manulife MPF Sheets">
+                <field name="display_name" string="Name" />
+                <field name="month" />
+                <field name="year" />
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_hk_manulife_mpf_action" model="ir.actions.act_window">
+        <field name="name">Manulife MPF Sheet</field>
+        <field name="res_model">l10n_hk.manulife.mpf</field>
+        <field name="view_mode">list,form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

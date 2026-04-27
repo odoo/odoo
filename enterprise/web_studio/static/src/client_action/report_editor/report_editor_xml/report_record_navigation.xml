@@ -1,0 +1,15 @@
+<templates>
+
+<t t-name="web_studio.ReportEditor.ReportRecordNavigation">
+    <div class="d-flex flex-row gap-3" style="height: 35px;">
+        <div class="position-relative rounded o-web-studio-report-search-record p-1 px-2 bg-white" style="max-width: 150px;" >
+            <i class="fa fa-search position-absolute end-0 me-3 mt-1"/>
+            <RecordSelector t-props="multiRecordSelectorProps"/>
+        </div>
+        <div class="d-flex rounded px-3 o-web-studio-report-pager bg-white" >
+            <Pager t-props="pagerProps" onUpdate.bind="updatePager"/>
+        </div>
+    </div>
+</t>
+
+</templates>

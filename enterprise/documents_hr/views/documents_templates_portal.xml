@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="documents_hr_portal_view" name="Document HR Portal View">
+        <t t-call="documents.public_page_layout">
+            <t t-set="head_document_portal_view">
+                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+                <base target="_parent"/>
+            </t>
+            <t t-set="head" t-value="head_document_portal_view + (head or '')"/>
+            <div>
+                <h1>My documents</h1>
+                <div class="d-flex flex-row flex-wrap">
+                    <div class="shadow-lg text-center bg-white p-3 rounded-3 m-2"
+                        t-foreach="documents" t-as="document" t-att-href="document.access_url">
+                        <span class="fa-stack text-black-25 fa-3x">
+                          <i class="fa fa-circle-thin fa-stack-2x"/>
+                          <i class="fa fa-arrow-down fa-stack-1x"/>
+                        </span>
+                        <div class="fs-4 text-truncate">
+                            <b t-esc="document.name"/>
+                        </div>
+                        <div>
+                            Size: <t t-call="documents.format_file_size"/>
+                        </div>
+                        <div class="mt16 mb8 d-flex flex-column gap-2">
+                            <a t-attf-href="{{base_url_download}}/{{document.id}}"
+                               title="Download file"
+                               class="btn btn-primary rounded-pill">
+                                <i class="fa fa-download fa-fw"/> Download file
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

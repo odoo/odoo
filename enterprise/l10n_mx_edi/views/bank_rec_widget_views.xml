@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id='account_accountant_view_bank_statement_line_form_bank_rec_widget_inherit_l10n_mx_edi' model='ir.ui.view'>
+        <field name="name">account.accountant.view.bank.statement.line.form.bank.rec.widget.inherit.l10n.mx.edi</field>
+        <field name="model">account.bank.statement.line</field>
+        <field name="inherit_id" ref="account_accountant.view_bank_statement_line_form_bank_rec_widget"/>
+        <field name="arch" type="xml">
+            <field name="journal_id" position="after">
+                <field name="country_code" invisible="True"/>
+                <field name="l10n_mx_edi_payment_method_id" invisible="country_code != 'MX'"/>
+            </field>
+        </field>
+    </record>
+</odoo>

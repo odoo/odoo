@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_salary_offer_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.salary.offer.view.form.inherit</field>
+        <field name="model">hr.contract.salary.offer</field>
+        <field name="inherit_id" ref="hr_contract_salary.hr_contract_salary_offer_view_form"/>
+        <field name="arch" type="xml">
+            <field name="final_yearly_costs" position="after">
+                <field name="contract_type_id" groups="hr.group_hr_user"/>
+                <field name="contract_type_id" readonly="1" options="{'no_open': True}" groups="!hr.group_hr_user"/>
+            </field>
+            <group name="group_offer_to" position="after">
+                <group name="group_car" string="Car" invisible="country_code != 'BE'">
+                    <field name="country_code" invisible="1"/>
+                    <field name="new_car"/>
+                    <field name="wishlist_car_warning" class="alert text-center alert-warning"
+                       role="alert" colspan="2" nolabel="1"
+                       invisible="not wishlist_car_warning or not new_car"/>
+                    <field name="show_new_car" invisible="1"/>
+                    <field name="car_id" widget="many2one_avatar_user"/>
+                    <field name="assigned_car_warning" class="alert alert-warning center"
+                        role="alert" colspan="2" nolabel="1"
+                        invisible="not assigned_car_warning or country_code != 'BE'"/>
+                    <field name="additional_car_ids" widget="many2many_avatar_user"/>
+                    <field name="l10n_be_canteen_cost" invisible="1"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="hr_contract_salary_offer_view_tree" model="ir.ui.view">
+        <field name="name">hr.contract.salary.offer.view.list.inherit</field>
+        <field name="model">hr.contract.salary.offer</field>
+        <field name="inherit_id" ref="hr_contract_salary.hr_contract_salary_offer_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="contract_template_id" position="after">
+                <field name="car_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_contract_salary_offer_view_search" model="ir.ui.view">
+        <field name="name">hr.contract.salary.offer.view.search.inherit</field>
+        <field name="model">hr.contract.salary.offer</field>
+        <field name="inherit_id" ref="hr_contract_salary.hr_contract_salary_offer_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="applicants" position="after">
+                <separator/>
+                <filter name="with_car_id" domain="[('car_id', '!=', False)]" string="With a Vehicle"/>
+            </filter>
+            <filter name="group_by_contract_template_id" position="after">
+                <filter string="Contract Type" name="group_by_contract_type_id" domain="[]" context="{'group_by': 'contract_type_id'}"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,21 @@
+.o-dropdown-item-unstyled-button .o_widget_new_loan {
+    display: flex;
+    flex-direction: column;
+
+    & > span > span {
+        padding: 0;
+        padding-bottom: var(--#{$prefix}dropdown-item-padding-y);
+    }
+
+    & > span:last-child {
+        padding: 0;
+        padding-top: var(--#{$prefix}dropdown-item-padding-y);
+        margin-left: 0;
+    }
+}
+
+.o_widget_new_loan {
+    & > span:last-child {
+        margin-left: map-get($spacers, 1);
+    }
+}

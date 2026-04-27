@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_financial_report_libro_giornale" model="account.report">
+
+        <field name="name">Libro Giornale</field>
+        <field name="country_id" ref="base.it"/>
+        <field name="filter_hierarchy">never</field>
+        <field name="filter_journals" eval="False"/>
+        <field name="filter_hide_0_lines">never</field>
+        <field name="default_opening_date_filter">this_year</field>
+        <field name="custom_handler_model_id" ref="model_l10n_it_libro_giornale_report_handler"/>
+        <field name="root_report_id" ref="account_reports.journal_report"/>
+
+        <!-- Report Columns -->
+        <field name="column_ids">
+            <record id="libro_giornale_report_code" model="account.report.column">
+                <field name="name">Code</field>
+                <field name="expression_label">code</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="libro_giornale_report_debit" model="account.report.column">
+                <field name="name">Debit</field>
+                <field name="expression_label">debit</field>
+            </record>
+            <record id="libro_giornale_report_credit" model="account.report.column">
+                <field name="name">Credit</field>
+                <field name="expression_label">credit</field>
+            </record>
+            <record id="libro_giornale_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+
+        <!-- Report Lines -->
+        <field name="line_ids">
+            <record id="libro_giornale_report_line" model="account.report.line">
+                <field name="name">Libro Giornale</field>
+                <field name="groupby">journal_id, account_id</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="libro_giornale_report_line_code" model="account.report.expression">
+                        <field name="label">code</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_journal_report</field>
+                        <field name="subformula">code</field>
+                    </record>
+                    <record id="libro_giornale_report_line_debit" model="account.report.expression">
+                        <field name="label">debit</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_journal_report</field>
+                        <field name="subformula">debit</field>
+                    </record>
+                    <record id="libro_giornale_report_line_credit" model="account.report.expression">
+                        <field name="label">credit</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_journal_report</field>
+                        <field name="subformula">credit</field>
+                    </record>
+                    <record id="libro_giornale_report_line_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_journal_report</field>
+                        <field name="subformula">balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

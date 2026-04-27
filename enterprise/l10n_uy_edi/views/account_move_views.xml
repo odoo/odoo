@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="view_move_form_inherit_l10n_uy_edi" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_move_form"/>
+        <field name="arch" type="xml">
+
+            <header>
+                <button name="l10n_uy_edi_action_update_dgi_state" type="object" string="Update DGI Status" invisible="not l10n_uy_edi_document_id"/>
+            </header>
+
+            <xpath expr="//header" position="after">
+                <div class="alert alert-danger mb-0" role="alert" invisible="not l10n_uy_edi_error">
+                    <div class="p-0 m-0"><i class="fa fa-warning" role="img" title="EDI (Uruguay)"/>
+                        <span class="mx-1">E-invoicing (Uruguay)</span>
+                    </div>
+                    <div class="o_row">
+                        <field name="l10n_uy_edi_error"/>
+                        <button name="l10n_uy_edi_action_download_preview_xml" type="object" string="Download" class="oe_inline oe_link" invisible="l10n_uy_edi_cfe_state != 'error'"/>
+                    </div>
+                </div>
+            </xpath>
+
+            <field name="l10n_latam_document_number" position="after">
+                <field name="l10n_uy_edi_journal_type" invisible="1"/>
+                <label for="l10n_uy_edi_cfe_state" invisible="(l10n_uy_edi_journal_type != 'electronic' and move_type in ['out_invoice', 'out_refund']) or not l10n_uy_edi_cfe_state"/>
+                <div invisible="(l10n_uy_edi_journal_type != 'electronic' and move_type in ['out_invoice', 'out_refund']) or not l10n_uy_edi_cfe_state">
+                    <field name="l10n_uy_edi_cfe_state" class="oe_inline"/>
+                    <field name="l10n_uy_edi_document_id" readonly="1"/>
+                </div>
+                <field name="l10n_uy_edi_cfe_uuid"
+                    invisible="(l10n_uy_edi_journal_type != 'electronic' and move_type in ['out_invoice', 'out_refund']) or not l10n_uy_edi_cfe_uuid"
+                    readonly="l10n_uy_edi_cfe_state in ['accepted', 'rejected', 'received']" groups="base.group_no_one"/>
+            </field>
+
+            <field name="invoice_incoterm_id" position="after">
+                <field name="l10n_uy_edi_cfe_sale_mode" readonly="state != 'draft'" invisible="country_code != 'UY'"/>
+                <field name="l10n_uy_edi_cfe_transport_route" readonly="state != 'draft'" invisible="country_code != 'UY'"/>
+            </field>
+
+            <field name="invoice_incoterm_id" position="before">
+                <field name="l10n_uy_edi_addenda_ids" widget="many2many_tags" invisible="country_code != 'UY'"/>
+            </field>
+
+            <xpath expr="//field[@name='invoice_line_ids']/list//field[@name='name']" position="after">
+                <field name="l10n_uy_edi_addenda_ids" widget="many2many_tags" optional="hide"
+                       column_invisible="parent.country_code != 'UY'"
+                       context="{
+                        'default_type': 'item',
+                        'form_view_ref': 'l10n_uy_edi.l10n_uy_edi_addenda_view_form_only_item'}"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_invoice_tree" model="ir.ui.view">
+        <field name="name">account.move.view.tree</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <list>
+                <field name="l10n_uy_edi_cfe_state" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.move.view.search</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <search>
+                <field name="l10n_uy_edi_cfe_state"/>
+                <field name="l10n_uy_edi_cfe_uuid"/>
+            </search>
+            <group>
+                <filter string="CFE State" name="cfe_state" context="{'group_by':'l10n_uy_edi_cfe_state'}"/>
+            </group>
+
+        </field>
+    </record>
+
+</odoo>

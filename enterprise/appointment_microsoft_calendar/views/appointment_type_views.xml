@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="appointment_type_view_form" model="ir.ui.view">
+        <field name="name">appointment.type.view.form.inherit.appointment.microsoft.calendar</field>
+        <field name="model">appointment.type</field>
+        <field name="inherit_id" ref="appointment.appointment_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_appointment_cal_sync_alert')]" position="inside">
+                <widget name="appointment_sync_button" calendarName="Outlook"
+                    iconSrc="/appointment/static/src/img/outlook-calendar.svg"
+                    invisible="not connector_microsoft"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

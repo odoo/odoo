@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_archived_tag_move_tree" model="ir.ui.view">
+        <field name="name">account.archived.tax.tag.list</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tax_ids']" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
+            <xpath expr="//field[@name='tax_tag_ids']" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
+            <xpath expr="//field[@name='matching_number']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_journal_report_audit_move_line_tree" model="ir.ui.view">
+        <field name="name">account.journal.report.audit.move.line.list</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <list name="move_line_tree" position="attributes">
+                <attribute name="js_class">account_move_line_journal_report_list</attribute>
+            </list>
+            <button name="edit" position="replace">
+                <button name="open_partner" type="object" string="View" title="View Partner"/>
+            </button>
+            <groupby name="partner_id" position="after">
+                <groupby name="move_id">
+                    <button name="button_set_checked" type="object" string="Set as Checked" invisible="checked or state == 'draft'"/>
+                </groupby>
+            </groupby>
+            <field name="invoice_date" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="account_id" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="tax_ids" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="date" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field name="matching_number" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field name="partner_id" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+
+        </field>
+    </record>
+
+    <record id="view_journal_report_audit_bank_move_line_tree" model="ir.ui.view">
+        <field name="name">account.journal.report.audit.bank.move.line.tree</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account_reports.view_journal_report_audit_move_line_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="invoice_date" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field name="date" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="matching_number" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="partner_id" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_journal_report_audit_move_line_search" model="ir.ui.view">
+        <field name="name">account.journal.report.audit.move.line.search</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_account_move_line_filter" />
+        <field name="arch" type="xml">
+            <field name="journal_id" position="after">
+                <field name="exclude_bank_lines"/>
+            </field>
+             <filter name="group_by_move" position="attributes">
+                <attribute name="context">{'group_by': 'move_id'}</attribute>
+            </filter>
+            <filter name="sales" position="before">
+                <filter string="Invoice lines" name="invoices_lines" domain="[('display_type','=','product')]" invisible="1"/>
+                <filter string="Exclude Bank lines" name="search_default_exclude_bank_lines" domain="[('exclude_bank_lines','=', True)]" invisible="1"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_analytic_move_line_tree" model="ir.ui.view">
+        <field name="name">account.analytic.coverage.move.line.tree</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="analytic_distribution" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <xpath expr="//field[@name='analytic_distribution']" position="after">
+                <field name="analytic_coverage"
+                       widget="percentage"
+                       optional="show"
+                       groups="analytic.group_analytic_accounting"
+                       invisible="not analytic_coverage"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_analytic_line_tree" model="ir.ui.view">
+        <field name="name">account.analytic.coverage.analytic.line.tree</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="move_line_id" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="analytic_distribution" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <xpath expr="//field[@name='analytic_distribution']" position="after">
+                <field name="analytic_coverage"
+                       widget="percentage"
+                       optional="show"
+                       groups="analytic.group_analytic_accounting"
+                       invisible="not analytic_coverage"
+                />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

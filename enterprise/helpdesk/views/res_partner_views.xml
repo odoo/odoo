@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_partner_form_inherit_helpdesk" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.helpdesk</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" type="object"
+                    groups="helpdesk.group_helpdesk_user"
+                    name="action_open_helpdesk_ticket" context="{'default_partner_id': id}" icon="fa-life-ring">
+                    <div class="o_stat_info">
+                        <field name="ticket_count" class="o_stat_value"/>
+                        <span class="o_stat_text"> Tickets</span>
+                    </div>
+                </button>
+            </div>
+            <field name="industry_id" position="after">
+                <t groups="helpdesk.group_helpdesk_user">
+                    <field name="sla_ids" widget="many2many_tags" groups="helpdesk.group_use_sla" context="{'with_team_name': True}"/>
+                </t>
+            </field>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="leave_type_form_view" model="ir.ui.view">
+        <field name="name">hr.leave.type.form</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='payroll']" position="inside">
+                <field name="l10n_us_show_on_payslip" invisible="country_code != 'US'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="res_partner_view_form">
+            <field name="name">res.partner.view.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority" eval="5"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button groups="account.group_account_basic,account.group_account_readonly" type="object" class="oe_stat_button" name="open_customer_statement" icon="fa-list" invisible="not has_moves or total_due == 0">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="total_all_due" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="total_all_due == 0 or total_all_overdue == 0" class="text-danger"/>
+                                <field name="total_all_due" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="total_all_due == 0 or total_all_overdue != 0"/>
+                            </span>
+                            <span class="o_stat_text">Customer Statement</span>
+                        </div>
+                    </button>
+                </div>
+                <xpath expr="//field[@name='child_ids']//div[hasclass('oe_edit_only')]" position="inside">
+                    <p class="mb-0" invisible="type != 'followup'">
+                        <span>Preferred address for follow-up reports. Selected by default when you send reminders about overdue invoices.</span>
+                    </p>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_partner_property_form_followup">
+            <field name="name">res.partner.property.form.followup</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <group name="banks" position="after">
+                    <group string="Invoice Follow-ups" name="invoice_followups" groups="account.group_account_invoice">
+                        <field name="company_id" invisible="1"/>
+                        <div colspan="2" invisible="not followup_line_id">
+                            <field name="followup_line_id" widget="statusbar" invisible="not unreconciled_aml_ids" options="{'clickable': '1'}" domain="[('company_id','=', current_company_id)]"/>
+                        </div>
+                        <label for="followup_status"/>
+                        <div class="o_row">
+                            <field name="followup_status"
+                                   widget="badge"
+                                   decoration-danger="followup_status == 'in_need_of_action'"
+                                   decoration-warning="followup_status == 'with_overdue_invoices'"
+                                   style="width: 50% !important"
+                                   class="fb-mincontent"
+                            />
+                            <a name="action_open_overdue_entries"
+                               invisible="followup_status not in ('in_need_of_action', 'with_overdue_invoices')"
+                               style="width: 50% !important"
+                               class="fw-bold"
+                               type="object"
+                            >
+                                Overdue Invoices
+                            </a>
+                        </div>
+                        <label for="followup_reminder_type"/>
+                        <div class="o_row">
+                            <field name="followup_reminder_type" widget="radio" style="width: 50% !important" options="{'horizontal': true}" class="fb-mincontent"/>
+                            <a class="fw-bold" name="%(manual_reminder_action)d" style="width: 50% !important" type="action">Send</a>
+                        </div>
+                        <field name="followup_next_action_date"/>
+                        <field name="followup_responsible_id"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+    </data>
+</odoo>

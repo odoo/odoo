@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_eco_action_product_tmpl" model="ir.actions.act_window">
+        <field name="name">Engineering Change Orders</field>
+        <field name="res_model">mrp.eco</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'default_product_tmpl_id': active_id}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              No engineering change order found
+            </p><p>
+              Manage your products and bills of materials changes with the ECO's.
+              Gather the related documentation and receive the necessary approvals
+              before applying your changes.
+            </p>
+        </field>
+    </record>
+
+    <record id="product_template_view_form_inherit_plm" model="ir.ui.view">
+        <field name="name">product.template.view.form.inherit.plm</field>
+        <field name="inherit_id" ref="mrp.product_template_form_view_bom_button"/>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <button name="action_view_mos" position="before">
+                <button class="oe_stat_button" name="mrp_eco_action_product_tmpl" type="object" icon="fa-wrench" groups="mrp_plm.group_plm_user" invisible="type == 'service'">
+                    <field string="ECOs" name="eco_count" widget="statinfo"/>
+                </button>
+            </button>
+        </field>
+    </record>
+
+    <record id="product_product_view_form_inherit_plm" model="ir.ui.view">
+        <field name="name">product.product.view.form.inherit.plm</field>
+        <field name="inherit_id" ref="mrp.product_product_form_view_bom_button"/>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <button name="action_view_mos" position="before">
+                <button class="oe_stat_button" name="mrp_eco_action_product_tmpl" type="object" icon="fa-wrench" groups="mrp_plm.group_plm_user" invisible="type == 'service'">
+                    <field string="ECOs" name="eco_count" widget="statinfo"/>
+                </button>
+            </button>
+        </field>
+    </record>
+
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.view.form.inherit.version.plm</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <group name="group_lots_and_weight" position="inside">
+                <label for="version" class="oe_inline fw-bold" style="width: 20% !important; margin: 0;"/>
+                <field name="version" nolabel="1" class="oe_inline" style="width: 20% !important;"/>
+            </group>
+        </field>
+    </record>
+
+</odoo>

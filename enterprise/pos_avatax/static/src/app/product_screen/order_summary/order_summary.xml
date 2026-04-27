@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.OrderSummary" t-inherit="point_of_sale.OrderSummary" t-inherit-mode="extension">
+        <xpath expr="//OrderWidget" position="attributes">
+            <attribute name="refreshAvatax">() => this.pos.getAvataxTaxesRpc()</attribute>
+        </xpath>
+    </t>
+</templates>

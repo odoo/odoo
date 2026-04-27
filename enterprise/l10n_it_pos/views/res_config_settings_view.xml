@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n.it.pos</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='pos_connected_devices_section']" position="inside">
+                <setting string="Italian Fiscal Printer IP address" help="Print receipts through the Italian Fiscal Printer">
+                    <div>
+                        <field name="pos_it_fiscal_printer_ip" placeholder="e.g. 10.100.71.64" />
+                        <div class="mt-1 d-flex">
+                            <field name="pos_it_fiscal_printer_https" />
+                            <label for="pos_it_fiscal_printer_https" />
+                        </div>
+                    </div>
+                </setting>
+                <setting string="Italian Fiscal Printer Cash Drawer" help="Connect cash drawer to the Italian Fiscal Printer">
+                    <field name="pos_it_fiscal_cash_drawer" />
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

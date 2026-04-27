@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_report_pl" model="account.report">
+        <field name="name">Profit and Loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.dk"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_report_pl_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_report_pl_pla" model="account.report.line">
+                <field name="name">PROFIT AND LOSS ACCOUNT</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_report_pl_pla_gpl" model="account.report.line">
+                        <field name="name">Gross profit/loss</field>
+                        <field name="code">DK_PL_GrossProfitLoss</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="aggregation_formula">
+                            DK_PL_NetRevenue.balance +
+                            DK_PL_ChangeInInventories.balance +
+                            DK_PL_OwnWorkCapitalized.balance +
+                            DK_PL_OtherOperatingIncome.balance +
+                            DK_PL_ExternalExpenses.balance
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_report_pl_pla_gpl_nr" model="account.report.line">
+                                <field name="name">Net revenue</field>
+                                <field name="code">DK_PL_NetRevenue</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_1010)
+                                    - tag(l10n_dk.account_tag_1050)
+                                    - tag(l10n_dk.account_tag_1100)
+                                    - tag(l10n_dk.account_tag_1150)
+                                    - tag(l10n_dk.account_tag_1200)
+                                    - tag(l10n_dk.account_tag_1210)
+                                    - tag(l10n_dk.account_tag_1250)
+                                    - tag(l10n_dk.account_tag_1300)
+                                </field>
+                            </record>
+                            <record id="account_report_pl_pla_gpl_cifgwip" model="account.report.line">
+                                <field name="name">Change in inventories of finished goods and work in progress</field>
+                                <field name="code">DK_PL_ChangeInInventories</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_1410)
+                                    - tag(l10n_dk.account_tag_1430)
+                                    - tag(l10n_dk.account_tag_1450)
+                                    - tag(l10n_dk.account_tag_1460)
+                                </field>
+                            </record>
+                            <record id="account_report_pl_pla_gpl_owc" model="account.report.line">
+                                <field name="name">Own work capitalized</field>
+                                <field name="code">DK_PL_OwnWorkCapitalized</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_1496)
+                                </field>
+                            </record>
+                            <record id="account_report_pl_pla_gpl_ooi" model="account.report.line">
+                                <field name="name">Other operating income</field>
+                                <field name="code">DK_PL_OtherOperatingIncome</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_1510)
+                                    - tag(l10n_dk.account_tag_1530)
+                                    - tag(l10n_dk.account_tag_1545)
+                                    - tag(l10n_dk.account_tag_1550)
+                                </field>
+                            </record>
+                            <record id="account_report_pl_pla_gpl_ee" model="account.report.line">
+                                <field name="name">External expenses</field>
+                                <field name="code">DK_PL_ExternalExpenses</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">
+                                    DK_PL_CostOfRawMaterialsAndConsumables.balance +
+                                    DK_PL_OtherExternalExpenses.balance
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_report_pl_pla_gpl_ee_crmc" model="account.report.line">
+                                        <field name="name">Costs of raw materials and consumables</field>
+                                        <field name="code">DK_PL_CostOfRawMaterialsAndConsumables</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            - tag(l10n_dk.account_tag_1610)
+                                            - tag(l10n_dk.account_tag_1630)
+                                            - tag(l10n_dk.account_tag_1650)
+                                            - tag(l10n_dk.account_tag_1660)
+                                            - tag(l10n_dk.account_tag_1710)
+                                            - tag(l10n_dk.account_tag_1740)
+                                            - tag(l10n_dk.account_tag_1745)
+                                            - tag(l10n_dk.account_tag_1760)
+                                            - tag(l10n_dk.account_tag_1770)
+                                            - tag(l10n_dk.account_tag_1800)
+                                            - tag(l10n_dk.account_tag_1801)
+                                            - tag(l10n_dk.account_tag_1805)
+                                            - tag(l10n_dk.account_tag_1807)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_pl_pla_gpl_ee_oee" model="account.report.line">
+                                        <field name="name">Other external expenses</field>
+                                        <field name="code">DK_PL_OtherExternalExpenses</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="aggregation_formula">
+                                            DK_PL_SalesCosts.balance +
+                                            DK_PL_PremisesCosts.balance +
+                                            DK_PL_AdministrativeExpenses.balance
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="account_report_pl_pla_gpl_ee_oee_sc" model="account.report.line">
+                                                <field name="name">Sales costs</field>
+                                                <field name="code">DK_PL_SalesCosts</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">
+                                                    - tag(l10n_dk.account_tag_1850)
+                                                    - tag(l10n_dk.account_tag_1870)
+                                                    - tag(l10n_dk.account_tag_1910)
+                                                    - tag(l10n_dk.account_tag_1930)
+                                                    - tag(l10n_dk.account_tag_1950)
+                                                    - tag(l10n_dk.account_tag_1990)
+                                                    - tag(l10n_dk.account_tag_2000)
+                                                </field>
+                                            </record>
+                                            <record id="account_report_pl_pla_gpl_ee_oee_pc" model="account.report.line">
+                                                <field name="name">Premises costs</field>
+                                                <field name="code">DK_PL_PremisesCosts</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">
+                                                    - tag(l10n_dk.account_tag_2030)
+                                                    - tag(l10n_dk.account_tag_2050)
+                                                    - tag(l10n_dk.account_tag_2060)
+                                                    - tag(l10n_dk.account_tag_2070)
+                                                    - tag(l10n_dk.account_tag_2080)
+                                                    - tag(l10n_dk.account_tag_2085)
+                                                    - tag(l10n_dk.account_tag_2090)
+                                                    - tag(l10n_dk.account_tag_2100)
+                                                    - tag(l10n_dk.account_tag_2110)
+                                                    - tag(l10n_dk.account_tag_2120)
+                                                    - tag(l10n_dk.account_tag_2130)
+                                                    - tag(l10n_dk.account_tag_2140)
+                                                    - tag(l10n_dk.account_tag_2150)
+                                                    - tag(l10n_dk.account_tag_2160)
+                                                    - tag(l10n_dk.account_tag_2170)
+                                                    - tag(l10n_dk.account_tag_2180)
+                                                    - tag(l10n_dk.account_tag_2190)
+                                                    - tag(l10n_dk.account_tag_2200)
+                                                </field>
+                                            </record>
+                                            <record id="account_report_pl_pla_gpl_ee_oee_ae" model="account.report.line">
+                                                <field name="name">Administrative expenses</field>
+                                                <field name="code">DK_PL_AdministrativeExpenses</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">
+                                                    - tag(l10n_dk.account_tag_2230)
+                                                    - tag(l10n_dk.account_tag_2240)
+                                                    - tag(l10n_dk.account_tag_2255)
+                                                    - tag(l10n_dk.account_tag_2260)
+                                                    - tag(l10n_dk.account_tag_2265)
+                                                    - tag(l10n_dk.account_tag_2266)
+                                                    - tag(l10n_dk.account_tag_2280)
+                                                    - tag(l10n_dk.account_tag_2290)
+                                                    - tag(l10n_dk.account_tag_2295)
+                                                    - tag(l10n_dk.account_tag_2310)
+                                                    - tag(l10n_dk.account_tag_2350)
+                                                    - tag(l10n_dk.account_tag_2370)
+                                                    - tag(l10n_dk.account_tag_2375)
+                                                    - tag(l10n_dk.account_tag_2380)
+                                                    - tag(l10n_dk.account_tag_2390)
+                                                    - tag(l10n_dk.account_tag_2410)
+                                                    - tag(l10n_dk.account_tag_2430)
+                                                    - tag(l10n_dk.account_tag_2450)
+                                                    - tag(l10n_dk.account_tag_2460)
+                                                    - tag(l10n_dk.account_tag_2470)
+                                                    - tag(l10n_dk.account_tag_2480)
+                                                    - tag(l10n_dk.account_tag_2510)
+                                                    - tag(l10n_dk.account_tag_2530)
+                                                    - tag(l10n_dk.account_tag_2540)
+                                                    - tag(l10n_dk.account_tag_2548)
+                                                    - tag(l10n_dk.account_tag_2550)
+                                                    - tag(l10n_dk.account_tag_2560)
+                                                    - tag(l10n_dk.account_tag_2567)
+                                                    - tag(l10n_dk.account_tag_2569)
+                                                    - tag(l10n_dk.account_tag_2580)
+                                                    - tag(l10n_dk.account_tag_2620)
+                                                    - tag(l10n_dk.account_tag_2650)
+                                                    - tag(l10n_dk.account_tag_2660)
+                                                    - tag(l10n_dk.account_tag_2670)
+                                                    - tag(l10n_dk.account_tag_2680)
+                                                    - tag(l10n_dk.account_tag_2690)
+                                                    - tag(l10n_dk.account_tag_2700)
+                                                    - tag(l10n_dk.account_tag_2710)
+                                                    - tag(l10n_dk.account_tag_2720)
+                                                    - tag(l10n_dk.account_tag_2810)
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_report_pl_pla_opl" model="account.report.line">
+                        <field name="name">Operating profit/loss</field>
+                        <field name="code">DK_PL_OperatingProfitLoss</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="aggregation_formula">
+                            DK_PL_GrossProfitLoss.balance +
+                            DK_PL_StaffCosts.balance +
+                            DK_PL_AmortizationDepreciationImpairment.balance +
+                            DK_PL_WriteDownCurrentAssets.balance +
+                            DK_PL_OtherOperatingExpenses.balance +
+                            DK_PL_FairValueAdjustmentInvestmentProperties.balance
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_report_pl_pla_opl_sc" model="account.report.line">
+                                <field name="name">Staff costs</field>
+                                <field name="code">DK_PL_StaffCosts</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">
+                                    DK_PL_WagesAndSalaries.balance +
+                                    DK_PL_Pensions.balance +
+                                    DK_PL_OtherSocialSecurityCosts.balance
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_report_pl_pla_opl_sc_ws" model="account.report.line">
+                                        <field name="name">Wages and salaries</field>
+                                        <field name="code">DK_PL_WagesAndSalaries</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            - tag(l10n_dk.account_tag_2845)
+                                            - tag(l10n_dk.account_tag_2846)
+                                            - tag(l10n_dk.account_tag_2847)
+                                            - tag(l10n_dk.account_tag_2860)
+                                            - tag(l10n_dk.account_tag_2865)
+                                            - tag(l10n_dk.account_tag_2866)
+                                            - tag(l10n_dk.account_tag_2870)
+                                            - tag(l10n_dk.account_tag_2880)
+                                            - tag(l10n_dk.account_tag_2885)
+                                            - tag(l10n_dk.account_tag_2887)
+                                            - tag(l10n_dk.account_tag_2888)
+                                            - tag(l10n_dk.account_tag_2895)
+                                            - tag(l10n_dk.account_tag_2896)
+                                            - tag(l10n_dk.account_tag_2897)
+                                            - tag(l10n_dk.account_tag_2898)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_pl_pla_sc_p" model="account.report.line">
+                                        <field name="name">Pensions</field>
+                                        <field name="code">DK_PL_Pensions</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            - tag(l10n_dk.account_tag_2910)
+                                            - tag(l10n_dk.account_tag_2920)
+                                            - tag(l10n_dk.account_tag_2925)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_pl_pla_sc_ossc" model="account.report.line">
+                                        <field name="name">Other social security costs</field>
+                                        <field name="code">DK_PL_OtherSocialSecurityCosts</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            - tag(l10n_dk.account_tag_2930)
+                                            - tag(l10n_dk.account_tag_2946)
+                                            - tag(l10n_dk.account_tag_2947)
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_report_pl_pla_opl_aditifa" model="account.report.line">
+                                <field name="name">Amortization, depreciation and impairment of tangible and intangible fixed assets</field>
+                                <field name="code">DK_PL_AmortizationDepreciationImpairment</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_3000)
+                                    - tag(l10n_dk.account_tag_3010)
+                                    - tag(l10n_dk.account_tag_3020)
+                                    - tag(l10n_dk.account_tag_3030)
+                                    - tag(l10n_dk.account_tag_3040)
+                                    - tag(l10n_dk.account_tag_3050)
+                                    - tag(l10n_dk.account_tag_3060)
+                                    - tag(l10n_dk.account_tag_3070)
+                                    - tag(l10n_dk.account_tag_3080)
+                                    - tag(l10n_dk.account_tag_3090)
+                                    - tag(l10n_dk.account_tag_3095)
+                                    - tag(l10n_dk.account_tag_3097)
+                                    - tag(l10n_dk.account_tag_3099)
+                                </field>
+                            </record>
+                            <record id="account_report_pl_pla_opl_wcaenw" model="account.report.line">
+                                <field name="name">Write-down of current assets exceeding normal write-downs</field>
+                                <field name="code">DK_PL_WriteDownCurrentAssets</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_3130)
+                                </field>
+                            </record>
+                            <record id="account_report_pl_pla_opl_ooe" model="account.report.line">
+                                <field name="name">Other operating expenses</field>
+                                <field name="code">DK_PL_OtherOperatingExpenses</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_3160)
+                                    - tag(l10n_dk.account_tag_3165)
+                                    - tag(l10n_dk.account_tag_3170)
+                                </field>
+                            </record>
+                            <record id="account_report_pl_pla_opl_fvaip" model="account.report.line">
+                                <field name="name">Fair value adjustment of investment properties</field>
+                                <field name="code">DK_PL_FairValueAdjustmentInvestmentProperties</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_3185)
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_report_pl_pla_plbt" model="account.report.line">
+                        <field name="name">Profit/loss before tax</field>
+                        <field name="code">DK_PL_ProfitLossBeforeTax</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="aggregation_formula">
+                            DK_PL_OperatingProfitLoss.balance +
+                            DK_PL_IncomeFromInvestmentsInGroupEnterprisesAndAssociates.balance +
+                            DK_PL_ShareOfProfitLossFromGroupEnterprisesAndAssociates.balance +
+                            DK_PL_IncomeFromOtherInvestments.balance +
+                            DK_PL_OtherFinancialIncomeFromGroupEnterprises.balance +
+                            DK_PL_OtherFinancialIncome.balance +
+                            DK_PL_ImpairmentOfFinancialAssets.balance +
+                            DK_PL_MiscellaneousFinancialExpenses.balance
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_report_pl_pla_plbt_iigea" model="account.report.line">
+                                <field name="name">Income from investments in group enterprises and associates</field>
+                                <field name="code">DK_PL_IncomeFromInvestmentsInGroupEnterprisesAndAssociates</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">
+                                    DK_PL_IncomeFromInvestmentsInGroupEnterprises.balance +
+                                    DK_PL_IncomeFromInvestmentsInAssociates.balance +
+                                    DK_PL_IncomeFromParticipatingInterests.balance
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_report_pl_pla_plbt_iigea_iige" model="account.report.line">
+                                        <field name="name">Income from investments in group enterprises</field>
+                                        <field name="code">DK_PL_IncomeFromInvestmentsInGroupEnterprises</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            - tag(l10n_dk.account_tag_3193)
+                                            - tag(l10n_dk.account_tag_3194)
+                                            - tag(l10n_dk.account_tag_3196)
+                                            - tag(l10n_dk.account_tag_3197)
+                                            - tag(l10n_dk.account_tag_3198)
+                                            - tag(l10n_dk.account_tag_3200)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_pl_pla_plbt_iigea_iia" model="account.report.line">
+                                        <field name="name">Income from investments in associates</field>
+                                        <field name="code">DK_PL_IncomeFromInvestmentsInAssociates</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            - tag(l10n_dk.account_tag_3211)
+                                            - tag(l10n_dk.account_tag_3212)
+                                            - tag(l10n_dk.account_tag_3214)
+                                            - tag(l10n_dk.account_tag_3215)
+                                            - tag(l10n_dk.account_tag_3216)
+                                            - tag(l10n_dk.account_tag_3217)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_pl_pla_plbt_iigea_ipi" model="account.report.line">
+                                        <field name="name">Income from participating interests</field>
+                                        <field name="code">DK_PL_IncomeFromParticipatingInterests</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            - tag(l10n_dk.account_tag_3221)
+                                            - tag(l10n_dk.account_tag_3222)
+                                            - tag(l10n_dk.account_tag_3224)
+                                            - tag(l10n_dk.account_tag_3225)
+                                            - tag(l10n_dk.account_tag_3226)
+                                            - tag(l10n_dk.account_tag_3230)
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_report_pl_pla_plbt_splgea" model="account.report.line">
+                                <field name="name">Share of profit/loss from group enterprises and associates</field>
+                                <field name="code">DK_PL_ShareOfProfitLossFromGroupEnterprisesAndAssociates</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">
+                                    DK_PL_ShareOfProfitLossFromGroupEnterprises.balance +
+                                    DK_PL_ShareOfProfitLossFromAssociates.balance +
+                                    DK_PL_ShareOfProfitLossFromParticipatingInterests.balance
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_report_pl_pla_plbt_splgea_splge" model="account.report.line">
+                                        <field name="name">Share of profit/loss from group enterprises</field>
+                                        <field name="code">DK_PL_ShareOfProfitLossFromGroupEnterprises</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            - tag(l10n_dk.account_tag_3252)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_pl_pla_plbt_splgea_spla" model="account.report.line">
+                                        <field name="name">Share of profit/loss from associates</field>
+                                        <field name="code">DK_PL_ShareOfProfitLossFromAssociates</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            - tag(l10n_dk.account_tag_3262)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_pl_pla_plbt_splgea_splpi" model="account.report.line">
+                                        <field name="name">Share of profit/loss from participating interests</field>
+                                        <field name="code">DK_PL_ShareOfProfitLossFromParticipatingInterests</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            - tag(l10n_dk.account_tag_3272)
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_report_pl_pla_plbt_ioisrfa" model="account.report.line">
+                                <field name="name">Income from other investments, securities and receivables that are fixed assets</field>
+                                <field name="code">DK_PL_IncomeFromOtherInvestments</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_3380)
+                                    - tag(l10n_dk.account_tag_3385)
+                                    - tag(l10n_dk.account_tag_3390)
+                                    - tag(l10n_dk.account_tag_3395)
+                                    - tag(l10n_dk.account_tag_3400)
+                                </field>
+                            </record>
+                            <record id="account_report_pl_pla_plbt_ofige" model="account.report.line">
+                                <field name="name">Other financial income from group enterprises</field>
+                                <field name="code">DK_PL_OtherFinancialIncomeFromGroupEnterprises</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_3440)
+                                    - tag(l10n_dk.account_tag_3445)
+                                </field>
+                            </record>
+                            <record id="account_report_pl_pla_plbt_ofi" model="account.report.line">
+                                <field name="name">Other financial income</field>
+                                <field name="code">DK_PL_OtherFinancialIncome</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_3470)
+                                    - tag(l10n_dk.account_tag_3490)
+                                    - tag(l10n_dk.account_tag_3510)
+                                    - tag(l10n_dk.account_tag_3530)
+                                    - tag(l10n_dk.account_tag_3535)
+                                    - tag(l10n_dk.account_tag_3536)
+                                    - tag(l10n_dk.account_tag_3537)
+                                </field>
+                            </record>
+                            <record id="account_report_pl_pla_plbt_ifa" model="account.report.line">
+                                <field name="name">Impairment of financial assets</field>
+                                <field name="code">DK_PL_ImpairmentOfFinancialAssets</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_3560)
+                                </field>
+                            </record>
+                            <record id="account_report_pl_pla_plbt_mfe" model="account.report.line">
+                                <field name="name">Miscellaneous financial expenses</field>
+                                <field name="code">DK_PL_MiscellaneousFinancialExpenses</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">
+                                    DK_PL_FinancialExpensesFromGroupEnterprises.balance +
+                                    DK_PL_OtherFinancialExpenses.balance
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_report_pl_pla_plbt_mfe_fege" model="account.report.line">
+                                        <field name="name">Financial expenses from group enterprises</field>
+                                        <field name="code">DK_PL_FinancialExpensesFromGroupEnterprises</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            - tag(l10n_dk.account_tag_3590)
+                                            - tag(l10n_dk.account_tag_3596)
+                                        </field>
+                                    </record>
+                                    <record id="account_report_pl_pla_plbt_mfe_ofe" model="account.report.line">
+                                        <field name="name">Other financial expenses</field>
+                                        <field name="code">DK_PL_OtherFinancialExpenses</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">
+                                            - tag(l10n_dk.account_tag_3610)
+                                            - tag(l10n_dk.account_tag_3630)
+                                            - tag(l10n_dk.account_tag_3640)
+                                            - tag(l10n_dk.account_tag_3650)
+                                            - tag(l10n_dk.account_tag_3670)
+                                            - tag(l10n_dk.account_tag_3675)
+                                            - tag(l10n_dk.account_tag_3690)
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_report_pl_pla_ply" model="account.report.line">
+                        <field name="name">Profit/loss for the year</field>
+                        <field name="code">DK_PL_ProfitLossForTheYear</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="aggregation_formula">
+                            DK_PL_ProfitLossBeforeTax.balance +
+                            DK_PL_TaxOnProfitLossForTheYear.balance +
+                            DK_PL_OtherTaxes.balance
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_report_pl_pla_ply_tply" model="account.report.line">
+                                <field name="name">Tax on profit/loss for the year</field>
+                                <field name="code">DK_PL_TaxOnProfitLossForTheYear</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_3740)
+                                    - tag(l10n_dk.account_tag_3760)
+                                    - tag(l10n_dk.account_tag_3780)
+                                </field>
+                            </record>
+                            <record id="account_report_pl_pla_ply_ot" model="account.report.line">
+                                <field name="name">Other taxes</field>
+                                <field name="code">DK_PL_OtherTaxes</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">
+                                    - tag(l10n_dk.account_tag_3810)
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+    <record id="action_account_report_pl" model="ir.actions.client">
+        <field name="name">Profit and Loss</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('account_report_pl')}"/>
+    </record>
+
+    <record id="account_report_bs_el_e_ply" model="account.report.line">
+        <field name="action_id" ref="action_account_report_pl"/>
+    </record>
+</odoo>

@@ -1,0 +1,205 @@
+<odoo>
+
+    <record id="mrp_barcode_kanban" model="ir.ui.view">
+        <field name="name">mrp.barcode.kanban</field>
+        <field name="model">mrp.production</field>
+        <!--High priority to not be the standard view of MO in mrp app-->
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" js_class="stock_barcode_list_kanban" import="false">
+                <field name="product_id"/>
+                <field name="product_uom_id"/>
+                <field name="product_qty"/>
+                <field name="date_start"/>
+                <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex mb8 align-items-center">
+                            <field name="priority" widget="priority" class="mt-1"/>
+                            <field name="name" class="fw-bold fs-5 ms-1"/>
+                            <field name="state" widget="badge"
+                                    decoration-success="state in ['confirmed', 'progress', 'to_close']"
+                                    decoration-info="state == 'draft'" class="fw-bolder ms-auto"/>
+                        </div>
+                        <footer class="pt-0 align-items-end">
+                            <div class="d-flex flex-column">
+                                <field name="product_id" class="me-1"/>
+                                <span><field name="product_qty" class="me-1 text-nowrap"/><field name="product_uom_id" class="text-nowrap"/></span>
+                            </div>
+                            <div class="d-flex ms-auto align-items-center">
+                                <field name="date_start" options="{'show_time': false}" class="text-nowrap"/>
+                                <field name="user_id" widget="many2one_avatar_user" invisible="not user_id" readonly="state in ['cancel', 'done']" class="ms-1"/>
+                            </div>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="mrp_barcode_form" model="ir.ui.view">
+        <field name="name">mrp.form.view.barcode</field>
+        <field name="model">mrp.production</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="company_id" invisible="1" />
+                <group>
+                    <field name="bom_id" readonly="1" invisible="not bom_id" />
+                    <field name="product_id" readonly="1" invisible="bom_id" />
+                    <field name="date_start" readonly="1" />
+                    <field name="origin" readonly="1" invisible="not origin" />
+                    <field name="state" readonly="1" />
+                    <field name="priority" readonly="1" invisible="not priority"/>
+                    <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                    <field name="components_availability" readonly="1" />
+                    <field name="move_raw_ids" readonly="1" invisible="not move_raw_ids">
+                        <kanban>
+                            <templates>
+                                <t t-name="card" class="row g-0">
+                                    <field name="product_id" class="col-6 fs-5 fw-bolder" readonly="state == 'done'"/>
+                                    <field name="product_uom_qty" readonly="state == 'done'" class="col-6 text-end"/>
+                                    <field name="description_picking" class="col-6"/>
+                                    <field name="state" class="col-6 text-end"/>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </group>
+                <div class="o_barcode_control d-flex justify-content-between p-2 gap-2 fixed-bottom">
+                    <button string="Discard" class="btn btn-secondary o_discard" special="cancel"/>
+                    <button string="Confirm" class="btn btn-primary o_save" special="save"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="mrp_product_selector" model="ir.ui.view">
+        <field name="name">mrp.product.selector</field>
+        <field name="model">mrp.production</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form class="o_barcode_line_form flex-column">
+                <!-- This part saves the `qty_done` calculated in `qty_producing` onchange,
+                    any move lines deleted where not saved when fields are invisible, so d-none was used -->
+                <field name="move_raw_ids" class="d-none" readonly="state in ['cancel', 'done']">
+                    <list>
+                        <field name="state" />
+                        <field name="bom_line_id"  />
+                        <!-- Warehouse has to be passed from XML so that `_adjust_procure_method` can find the right rule. -->
+                        <field name="warehouse_id" invisible="1" />
+                        <field name="product_id" readonly="state == 'done'" domain="[('id', '!=', parent.product_id)]"/>
+                        <field name="product_uom_qty"  readonly="state == 'done'"/>
+                        <field name="move_line_ids" >
+                            <list>
+                                <field name="product_id" />
+                                <field name="qty_done" />
+                            </list>
+                        </field>
+                    </list>
+                </field>
+                <field name="move_byproduct_ids" invisible="1">
+                    <list>
+                        <field name="state" />
+                        <!-- Warehouse has to be passed from XML so that `_adjust_procure_method` can find the right rule. -->
+                        <field name="warehouse_id" invisible="1" />
+                        <field name="product_id" readonly="state == 'done'" domain="[('id', '!=', parent.product_id)]"/>
+                        <field name="product_uom_qty"  readonly="state == 'done'"/>
+                        <field name="move_line_ids" >
+                            <list>
+                                <field name="product_id" />
+                                <field name="qty_done" />
+                            </list>
+                        </field>
+                    </list>
+                </field>
+                <field name="state" invisible="1" />
+                <field name="picking_type_id" invisible="1"/>
+                <field name="company_id" force_save="1" invisible="1"/>
+                <field name="is_completed" invisible="1"/>
+                <field name="product_tracking" invisible="1"/>
+                <div name="product" class="row my-2">
+                    <div class="col d-flex align-items-baseline">
+                        <div class="flex-column lh-1 w-100">
+                            <div class="fs-5">
+                                <field name="product_id" placeholder="Product"
+                                    context="{'default_is_storable': True}"
+                                    domain="[('type', '=', 'consu'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]"
+                                    required="1"
+                                    readonly="id" nolabel="1"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div name="quantity" class="row my-2">
+                    <div class="col pe-0 no-radius-right" invisible="not id">
+                        <field name="qty_producing" class="text-end"
+                            options="{'type': 'number'}" placeholder="Quantity"/>
+                    </div>
+                    <div class="col" invisible="id">
+                        <field name="product_qty" class="text-end" required="1"/>
+                    </div>
+                    <div class="col-3 ps-0 no-radius-left" invisible="not id">
+                        <field name="product_qty" widget="change_production_qty"/>
+                    </div>
+                    <div class="col-3 ps-0 no-radius-left" groups="uom.group_uom">
+                        <field name="product_uom_id" options="{'no_open': True}"
+                               readonly="not product_id"
+                               placeholder="Unit of Measure"/>
+                    </div>
+                </div>
+                <div name="digipad" class="row">
+                    <widget name="digipad" field_to_edit="qty_producing" fulfilled_at="product_qty"
+                            invisible="product_tracking == 'serial' or not id"/>
+                    <widget name="digipad" field_to_edit="product_qty"
+                            invisible="product_tracking == 'serial' or id"/>
+                </div>
+                <div name="location_dest" class="row" groups="stock.group_stock_multi_locations">
+                    <div class="text-black-50 mt-2 fs-5">
+                        <span class="fa fa-map-marker me-1"/>
+                        <label for="location_dest_id" string="Destination Location" class="p-0"/>
+                    </div>
+                    <field name="location_dest_id" placeholder="Destination Location" readonly="1"
+                        options="{'no_create': True, 'no_open': True}"/>
+                </div>
+                <div name="tracking_number" class="row" groups="stock.group_production_lot"
+                    invisible="product_tracking == 'none'">
+                    <div class="text-black-50 mt-2 fs-5">
+                        <span class="fa fa-barcode me-1"/>
+                        <label for="lot_producing_id" string="Serial/Lot Number" class="p-0"/>
+                    </div>
+                    <field name="lot_producing_id" placeholder="Serial/Lot Number"
+                        options="{'no_open': True}"
+                        context="{'default_product_id': product_id, 'default_company_id': company_id}"/>
+                </div>
+                <div class="fixed-bottom">
+                    <div class="o_barcode_control d-flex justify-content-between p-2 gap-2">
+                        <button string="Discard" class="btn btn-secondary o_discard" special="cancel"/>
+                        <button string="Confirm" class="btn btn-primary o_save" special="save"/>
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="mrp_action_kanban" model="ir.actions.act_window">
+        <field name="name">Operations</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="stock_barcode_mrp.mrp_barcode_kanban"/>
+        <field name="target">fullscreen</field>
+        <field name="path">barcode-mo</field>
+        <field name="context">{
+            'search_default_filter_ready': 1,
+            'search_default_todo': 1,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Manufacturing Order
+            </p><p>
+                Transfers allow you to move products from one location to another.
+            </p>
+        </field>
+    </record>
+</odoo>

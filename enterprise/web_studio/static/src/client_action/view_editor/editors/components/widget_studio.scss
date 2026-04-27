@@ -1,0 +1,18 @@
+.o_web_studio_editor .o_web_studio_editor_manager .o_web_studio_view_renderer div.o_widget_web_ribbon {
+    &.o-web-studio-editor--element-clickable {
+        outline: none !important;
+        span {
+            pointer-events: all;
+            &:hover {
+                cursor: pointer;
+                outline: 1px dashed $o-brand-primary;
+            }
+        }
+    }
+    &.o-web-studio-editor--element-clicked {
+        outline: none !important;
+        span {
+            outline: 2px solid $o-brand-primary !important;
+        }
+    }
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_bom_view_form_inherit_l10n_ke" model="ir.ui.view">
+        <field name="name">mrp.bom.view.form.inherit.l10n_ke</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <sheet position="before">
+                <header>
+                    <field name="fiscal_country_codes" invisible="1"/>
+                    <button name="action_l10n_ke_send_bom"
+                        type="object"
+                        string="Send to eTIMS"
+                        invisible="'KE' not in fiscal_country_codes"/>
+                </header>
+            </sheet>
+            <xpath expr="//header" position="after">
+                <div class="m-0" name="warnings" invisible="not l10n_ke_validation_message">
+                    <field name="l10n_ke_validation_message" class="o_field_html" widget="actionable_errors"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

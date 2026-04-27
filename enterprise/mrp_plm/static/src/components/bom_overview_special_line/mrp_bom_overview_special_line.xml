@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp_plm.BomOverviewSpecialLine" t-inherit="mrp.BomOverviewSpecialLine" t-inherit-mode="extension">
+        <xpath expr="//td[@name='td_mrp_bom']" position="after">
+            <td t-if="props.showOptions.ecos"/>
+            <td t-if="props.showOptions.ecos"/>
+        </xpath>
+    </t>
+
+</templates>

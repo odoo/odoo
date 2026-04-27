@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="knowledge.ReadonlyEmbeddedArticleIndex">
+        <div class="o_embedded_articles_index_content">
+            <p t-if="(props.articles || []).length === 0" class="fst-italic">No article to display</p>
+            <ArticleIndexList t-else="" articles="props.articles"/>
+        </div>
+    </t>
+</templates>

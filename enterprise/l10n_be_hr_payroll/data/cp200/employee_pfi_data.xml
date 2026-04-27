@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cp200_pfi_atn_internet" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">Benefit in Kind (Internet)</field>
+        <field name="code">ATN.INT</field>
+        <field name="sequence">16</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.internet)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = 5.0</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_pfi"/>
+    </record>
+
+    <record id="cp200_pfi_atn_mobile" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">Benefit in Kind (Phone Subscription)</field>
+        <field name="code">ATN.MOB</field>
+        <field name="sequence">17</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.mobile)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if contract.mobile and not contract.internet:
+    result = 4.0 + 5.0
+if contract.mobile and contract.internet:
+    result = 4.0
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_pfi"/>
+    </record>
+
+    <record id="cp200_pfi_atn_laptop" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">Benefit in Kind (Laptop)</field>
+        <field name="code">ATN.LAP</field>
+        <field name="sequence">18</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.has_laptop)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = payslip._rule_parameter('cp200_bik_laptop')</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_pfi"/>
+    </record>
+
+    <record id="cp200_pfi_company_car" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">Benefit in Kind (Company Car)</field>
+        <field name="code">ATN.CAR</field>
+        <field name="sequence">18</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.transport_mode_car and contract.car_atn)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = contract.car_atn</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_pfi"/>
+    </record>
+
+    <record id="cp200_pfi_gross_salary" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_salary"/>
+        <field name="name">Gross Salary</field>
+        <field name="code">SALARY</field>
+        <field name="sequence">20</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['BASIC']
+if contract.internet:
+    result += result_rules['ATN.INT']['total']
+if contract.mobile:
+    result += result_rules['ATN.MOB']['total']
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_pfi"/>
+    </record>
+
+    <record id="cp200_pfi_salary_withholding_taxes" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_pp"/>
+        <field name="name">Withholding Tax</field>
+        <field name="code">P.P</field>
+        <field name="sequence">120</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = contract.wage
+
+# The car atn is included for withholding taxes in pfi contracts, not the other advantages
+if bool(contract.transport_mode_car and contract.car_atn):
+    result += contract.car_atn
+
+result *= -0.2
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_pfi"/>
+    </record>
+
+    <record id="cp200_pfi_company_car_2" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Benefit in Kind (Company Car)</field>
+        <field name="code">ATN.CAR.2</field>
+        <field name="sequence">160</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.transport_mode_car and contract.car_atn)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = result_rules['ATN.CAR']['quantity']
+result = -result_rules['ATN.CAR']['amount']
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_pfi"/>
+    </record>
+
+    <record id="cp200_pfi_atn_internet_2" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Benefit in Kind (Internet)</field>
+        <field name="code">ATN.INT.2</field>
+        <field name="sequence">161</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.internet</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = result_rules['ATN.INT']['quantity']
+result = -result_rules['ATN.INT']['amount']
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_pfi"/>
+    </record>
+
+    <record id="cp200_pfi_atn_mobile_2" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Benefit in Kind (Phone Subscription)</field>
+        <field name="code">ATN.MOB.2</field>
+        <field name="sequence">162</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.mobile</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if contract.mobile:
+    result_qty = result_rules['ATN.MOB']['quantity']
+    result = -result_rules['ATN.MOB']['amount']
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_pfi"/>
+    </record>
+
+    <record id="cp200_pfi_atn_laptop_2" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Benefit in Kind (Laptop)</field>
+        <field name="code">ATN.LAP.2</field>
+        <field name="sequence">163</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.has_laptop</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = result_rules['ATN.LAP']['quantity']
+result = -result_rules['ATN.LAP']['amount']
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_pfi"/>
+    </record>
+
+    <record id="cp200_pfi_ch_worker" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Retain on Meal Voucher</field>
+        <field name="code">MEAL_V_EMP</field>
+        <field name="sequence">165</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.meal_voucher_amount)</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">-100.0</field>
+        <field name="amount_percentage_base">contract.meal_voucher_amount - contract.meal_voucher_paid_by_employer</field>
+        <field name="quantity">payslip.meal_voucher_count</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="res_partner_meal_vouchers"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_pfi"/>
+    </record>
+</odoo>

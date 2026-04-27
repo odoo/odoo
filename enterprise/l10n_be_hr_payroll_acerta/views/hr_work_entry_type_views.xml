@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_work_entry_type_view_form" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.be.inherit.form</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="inherit_id" ref="l10n_be_hr_payroll.hr_work_entry_type_view_form"/>
+        <field name="priority">40</field>
+        <field name="arch" type="xml">
+            <field name="external_code" position="after">
+                <field name="acerta_code" invisible="country_code and country_code != 'BE'"/>
+            </field>
+        </field>
+    </record>
+</odoo>

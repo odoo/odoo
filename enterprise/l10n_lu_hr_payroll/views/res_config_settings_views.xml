@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_lu_hr_payroll</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="45"/>
+        <field name="inherit_id" ref="hr_payroll.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='hr_payroll_accountant']" position="after">
+                <field name="company_country_code" invisible="1"/>
+                <block title="Luxembourg Localization" id="l10n_lu_hr_payroll" invisible="company_country_code != 'LU'">
+                    <setting string="Company Information" help="Official Company Information" company_dependent="1" id="company_information">
+                        <group>
+                            <field name="l10n_lu_official_social_security"/>
+                            <field name="l10n_lu_seculine"/>
+                        </group>
+                    </setting>
+
+                    <setting string="Accident Insurance" company_dependent="1" id="company_accident_insurance">
+                        <group>
+                            <field name="l10n_lu_accident_insurance_factor" string="Bonus-Malus Factor"/>
+                            <label for="l10n_lu_accident_insurance_rate"/>
+                            <div class="o_row mw-50">
+                                <field name="l10n_lu_accident_insurance_rate" string="Rate"/>
+                                <div>%</div>
+                            </div>
+                        </group>
+                    </setting>
+
+                    <setting string="Mutuality Employer" company_dependent="1" id="company_mutuality">
+                        <group>
+                            <field name="l10n_lu_mutuality_class" string="Class"/>
+                            <label for="l10n_lu_mutuality_rate"/>
+                            <div class="o_row mw-50">
+                                <field name="l10n_lu_mutuality_rate" string="Rate"/>
+                                <div>%</div>
+                            </div>
+                        </group>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

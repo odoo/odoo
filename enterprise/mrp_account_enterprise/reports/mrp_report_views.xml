@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="mrp_report_search_view" model="ir.ui.view">
+            <field name="name">mrp.report.view.search</field>
+            <field name="model">mrp.report</field>
+            <field name="arch" type="xml">
+                <search>
+                    <filter name="filter_date_finished" date="date_finished" default_period="year"/>
+                    <field name="product_id" string="Product"/>
+                    <field name="production_id" string="Manufacturing Order"/>
+                    <group string="Group by">
+                        <filter string="Product" name="product" context="{'group_by': 'product_id'}"/>
+                        <filter string="End Date" name="date_finished" context="{'group_by': 'date_finished'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="mrp_report_graph_view" model="ir.ui.view">
+            <field name="name">mrp.report.view.graph</field>
+            <field name="model">mrp.report</field>
+            <field name="arch" type="xml">
+                <graph type="line" sample="1">
+                    <field name="date_finished" interval="week"/>
+                    <field name="product_id"/>
+                    <field name="unit_cost" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="mrp_report_pivot_view" model="ir.ui.view">
+            <field name="name">mrp.report.view.pivot</field>
+            <field name="model">mrp.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Order Overview" sample="1">
+                    <field name="product_id" type="row"/>
+                    <field name="unit_cost" type="measure" string="Average Total Cost / Unit"/>
+                    <field name="unit_component_cost" type="measure" string="Average Component Cost / Unit"/>
+                    <field name="unit_operation_cost" type="measure" string="Average Operation Cost / Unit" groups="mrp.group_mrp_routings"/>
+                    <field name="qty_produced" type="measure" string="Quantity Produced"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="mrp_report_tree_view" model="ir.ui.view">
+            <field name="name">mrp.report.view.list</field>
+            <field name="model">mrp.report</field>
+            <field name="arch" type="xml">
+                <list create="false" edit="false" delete="false">
+                    <field name="production_id"/>
+                    <field name="product_id"/>
+                    <field name="date_finished"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="mrp_report_form_view" model="ir.ui.view">
+            <field name="name">mrp.report.view.form</field>
+            <field name="model">mrp.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="production_id"/>
+                                <field name="product_id"/>
+                                <field name="unit_cost"/>
+                                <field name="unit_component_cost"/>
+                                <field name="unit_operation_cost" groups="mrp.group_mrp_routings"/>
+                            </group>
+                            <group>
+                                <field name="qty_produced"/>
+                                <field name="total_cost"/>
+                                <field name="component_cost"/>
+                                <field name="operation_cost" groups="mrp.group_mrp_routings"/>
+                                <field name="byproduct_cost" groups="mrp.group_mrp_byproducts"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="mrp_report_dashboard_action" model="ir.actions.act_window">
+            <field name="name">Production Analysis</field>
+            <field name="res_model">mrp.report</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="search_view_id" ref="mrp_account_enterprise.mrp_report_search_view"/>
+            <field name="context">{
+                'search_default_filter_date_finished': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data yet!
+                </p>
+            </field>
+        </record>
+
+        <menuitem
+            id="mrp_dashboard_menuitem"
+            name="Production Analysis"
+            parent="mrp.menu_mrp_reporting"
+            action="mrp_report_dashboard_action"
+            groups="mrp.group_mrp_manager"
+            sequence="20"/>
+    </data>
+</odoo>

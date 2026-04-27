@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-inherit="web.ListRenderer" t-inherit-mode="extension">
+    <xpath expr="//Dropdown/t[@t-set-slot='content']" position="inside">
+        <t t-if="this.isStudioEditable ? this.isStudioEditable() : false">
+            <div t-if="hasOptionalFields" class="dropdown-divider"/>
+            <DropdownItem closingMode="'none'" onSelected="() => this.onSelectedAddCustomField()" class="'dropdown-item-studio'">
+                <i class="fa fa-plus fa-fw me-2"/>
+                <span>Add Custom Field</span>
+            </DropdownItem>
+        </t>
+    </xpath>
+</t>
+
+</templates>

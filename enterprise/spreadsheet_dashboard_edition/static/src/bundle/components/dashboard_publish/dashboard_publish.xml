@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <div t-name="spreadsheet_edition.DashboardPublish" class="o_sp_publish_dashboard">
+        <CheckBox
+            onChange.bind="toggleDashboardPublished"
+            disabled="isReadonly"
+            value="state.isPublished"
+            className="'boolean_toggle form-switch d-flex align-items-center gap-2 mb-0'">
+            <t t-if="state.isPublished">Published</t>
+            <t t-else="">Unpublished</t>
+        </CheckBox>
+    </div>
+</templates>

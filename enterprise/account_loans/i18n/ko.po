@@ -1,0 +1,984 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_loans
+#
+# Translators:
+# Daye Jeong, 2024
+# Sarah Park, 2025
+# Wil Odoo, 2025
+#
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:45+0000\n"
+"PO-Revision-Date: 2026-02-14 09:05+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-18/"
+"account_loans/ko/>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "1st amortization schedule"
+msgstr "1차 상각 일정"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__compounding_method__30a/360
+msgid "30A/360"
+msgstr "30A/360"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__compounding_method__30e/360
+msgid "30E/360"
+msgstr "30E/360"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__compounding_method__30e/360_isda
+msgid "30E/360 ISDA"
+msgstr "30E/360 ISDA"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__compounding_method__30u/360
+msgid "30U/360"
+msgstr "30U/360"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid ""
+"<span class=\"oe_inline\" invisible=\"duration == 1\">months</span>\n"
+"                                        <span class=\"oe_inline\" "
+"invisible=\"duration != 1\">month</span>"
+msgstr ""
+"<span class=\"oe_inline\" invisible=\"duration == 1\">월</span>\n"
+"                                        <span class=\"oe_inline\" "
+"invisible=\"duration != 1\">월</span>"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
+msgid ""
+"<span class=\"oe_inline\" invisible=\"loan_term == 1\">years</span>\n"
+"                                    <span class=\"oe_inline\" "
+"invisible=\"loan_term != 1\">year</span>"
+msgstr ""
+"<span class=\"oe_inline\" invisible=\"loan_term == 1\">연도</span>\n"
+"                                    <span class=\"oe_inline\" "
+"invisible=\"loan_term != 1\">연도</span>"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
+msgid "<span class=\"oe_inline\">%</span>"
+msgstr "<span class=\"oe_inline\">%</span>"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__compounding_method__a/360
+msgid "A/360"
+msgstr "A/360"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__compounding_method__a/365f
+msgid "A/365F"
+msgstr "A/365F"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__compounding_method__a/a_afb
+msgid "A/A AFB"
+msgstr "A/A AFB"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__compounding_method__a/a_isda
+msgid "A/A ISDA"
+msgstr "A/A ISDA"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_needaction
+msgid "Action Needed"
+msgstr "조치 필요"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__active
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__active
+msgid "Active"
+msgstr "활성화"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_close_wizard
+msgid "All draft entries after the"
+msgstr "다음 이후 모든 초안 항목"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Amortization schedule"
+msgstr "상각 일정"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__amount_borrowed
+msgid "Amount Borrowed"
+msgstr "차입 금액"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__amount_borrowed_difference
+msgid "Amount Borrowed Difference"
+msgstr "대출 금액 차이"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_close_wizard
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
+msgid "Apply"
+msgstr "적용"
+
+#. module: account_loans
+#: model:ir.model,name:account_loans.model_account_asset_group
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__asset_group_id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__loan_asset_group_id
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_search_view
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Asset Group"
+msgstr "자산 그룹"
+
+#. module: account_loans
+#: model:ir.model,name:account_loans.model_account_asset
+msgid "Asset/Revenue Recognition"
+msgstr "자산/수익 인식"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__payment_end_of_month__at_anniversary
+msgid "At Anniversary"
+msgstr "기념일"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_attachment_count
+msgid "Attachment Count"
+msgstr "첨부 파일 수"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/wizard/account_loan_compute_wizard.py:0
+msgid "Balance"
+msgstr "잔액"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Cancel"
+msgstr "취소"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan__state__cancelled
+msgid "Cancelled"
+msgstr "취소됨"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Close"
+msgstr "닫기"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_close_wizard__date
+msgid "Close Date"
+msgstr "마감일"
+
+#. module: account_loans
+#: model:ir.actions.act_window,name:account_loans.action_view_account_loan_close_wizard
+#: model:ir.model,name:account_loans.model_account_loan_close_wizard
+msgid "Close Loan Wizard"
+msgstr "대출 마법사 닫기"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan__state__closed
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_search_view
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Closed"
+msgstr "마감됨"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_search_view
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Closed Loans"
+msgstr "마감 대출"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/wizard/account_loan_close_wizard.py:0
+msgid "Closed on the %(date)s"
+msgstr "마감일 %(date)s"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__company_id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__company_id
+msgid "Company"
+msgstr "회사"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__compounding_method
+msgid "Compounding Method"
+msgstr "복리 방법"
+
+#. module: account_loans
+#. odoo-javascript
+#: code:addons/account_loans/static/src/components/loans/file_upload.xml:0
+msgid "Compute"
+msgstr "계산"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "Compute New Loan"
+msgstr "신규 대출 계산"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Confirm"
+msgstr "승인"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__count_linked_assets
+msgid "Count Linked Assets"
+msgstr "연결된 자산 계산"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_asset__count_linked_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_asset_group__count_linked_loans
+msgid "Count Linked Loans"
+msgstr "연결된 대출 계산"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__create_uid
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_close_wizard__create_uid
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__create_uid
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__create_date
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_close_wizard__create_date
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__create_date
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__currency_id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__currency_id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__currency_id
+msgid "Currency"
+msgstr "통화"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_search_view
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Current"
+msgstr "현재"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/wizard/account_loan_compute_wizard.py:0
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__date
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Date"
+msgstr "날짜"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_close_wizard
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
+msgid "Discard"
+msgstr "취소"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_close_wizard__display_name
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__display_name
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan__state__draft
+msgid "Draft"
+msgstr "초안"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_search_view
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Draft & Running Loans"
+msgstr "초안 및 진행 중인 대출"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "Due"
+msgstr "결제 금액"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__duration
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Duration"
+msgstr "소요시간"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__duration_difference
+msgid "Duration Difference"
+msgstr "기간 차이"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__end_date
+msgid "End Date"
+msgstr "종료일"
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan_compute_wizard__payment_end_of_month__end_of_month
+msgid "End of Month"
+msgstr "월 말일"
+
+#. module: account_loans
+#: model:ir.model.fields,help:account_loans.field_account_loan_line__generated_move_ids
+msgid "Entries that we generated from this loan line"
+msgstr "이 대출 내역에서 생성된 항목"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__expense_account_id
+msgid "Expense Account"
+msgstr "비용 계정"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__first_payment_date
+msgid "First Payment"
+msgstr "첫 번째 결제"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_follower_ids
+msgid "Followers"
+msgstr "팔로워"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "팔로워 (협력사)"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__generated_move_ids
+msgid "Generated Entries"
+msgstr "생성된 항목"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_bank_statement_line__generating_loan_line_id
+#: model:ir.model.fields,field_description:account_loans.field_account_move__generating_loan_line_id
+msgid "Generating Loan Line"
+msgstr "대출 내역 생성"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_search_view
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Group By"
+msgstr "그룹별"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__has_message
+msgid "Has Message"
+msgstr "메시지가 있습니다."
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_close_wizard__id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_loans
+#: model:ir.model.fields,help:account_loans.field_account_loan__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "선택할 경우, 새로운 메시지에 주의를 기울여야 합니다."
+
+#. module: account_loans
+#: model:ir.model.fields,help:account_loans.field_account_loan__message_has_error
+#: model:ir.model.fields,help:account_loans.field_account_loan__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "이 옵션을 선택하면 일부 메시지가 잘못 전달될 수 있습니다."
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+#: code:addons/account_loans/wizard/account_loan_compute_wizard.py:0
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__interest
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__interest
+msgid "Interest"
+msgstr "관심"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__interest_difference
+msgid "Interest Difference"
+msgstr "이자 차액"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__interest_rate
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
+msgid "Interest Rate"
+msgstr "이자율"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/wizard/account_loan_compute_wizard.py:0
+msgid "Interest Rate must be between 0 and 100"
+msgstr "이자율은 0과 100 사이여야 합니다"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_list_view
+msgid "Interests"
+msgstr "관심 분야"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_is_follower
+msgid "Is Follower"
+msgstr "팔로워입니다."
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_bank_statement_line__is_loan_payment_move
+#: model:ir.model.fields,field_description:account_loans.field_account_move__is_loan_payment_move
+msgid "Is Loan Payment Move"
+msgstr "대출 납부 이동입니다"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__is_payment_move_posted
+msgid "Is Payment Move Posted"
+msgstr "게시된 결제 이동입니다"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__is_wrong_date
+msgid "Is Wrong Date"
+msgstr "잘못된 날짜입니다"
+
+#. module: account_loans
+#: model:ir.model,name:account_loans.model_account_journal
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__journal_id
+msgid "Journal"
+msgstr "전표"
+
+#. module: account_loans
+#: model:ir.model,name:account_loans.model_account_move
+msgid "Journal Entry"
+msgstr "전표 입력"
+
+#. module: account_loans
+#: model:account.journal,name:account_loans.account_loans_journal_loan
+msgid "Journal Loan Demo"
+msgstr "전표 대출 데모"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__write_uid
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_close_wizard__write_uid
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__write_uid
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__write_date
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_close_wizard__write_date
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__write_date
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: account_loans
+#: model:ir.model.fields,help:account_loans.field_account_bank_statement_line__generating_loan_line_id
+#: model:ir.model.fields,help:account_loans.field_account_move__generating_loan_line_id
+msgid "Line of the loan that generated this entry"
+msgstr "이 항목을 생성한 대출 내역"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__linked_assets_ids
+msgid "Linked Assets"
+msgstr "연결된 자산"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_asset.py:0
+msgid "Linked loans"
+msgstr "연결된 대출"
+
+#. module: account_loans
+#: model:ir.model,name:account_loans.model_account_loan
+#: model:ir.model.fields,field_description:account_loans.field_account_bank_statement_line__loan_id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_close_wizard__loan_id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__loan_id
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__loan_id
+#: model:ir.model.fields,field_description:account_loans.field_account_move__loan_id
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_search_view
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Loan"
+msgstr "대출"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__loan_amount
+msgid "Loan Amount"
+msgstr "대출 금액"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/wizard/account_loan_compute_wizard.py:0
+msgid "Loan Amount must be positive"
+msgstr "대출 금액은 양수여야 합니다"
+
+#. module: account_loans
+#: model:ir.actions.act_window,name:account_loans.action_view_account_loan_compute_wizard
+#: model:ir.model,name:account_loans.model_account_loan_compute_wizard
+msgid "Loan Compute Wizard"
+msgstr "대출 계산 마법사"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__date
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__loan_date
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_search_view
+msgid "Loan Date"
+msgstr "대출 날짜"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "Loan Entries"
+msgstr "대출 항목"
+
+#. module: account_loans
+#: model:ir.model,name:account_loans.model_account_loan_line
+msgid "Loan Line"
+msgstr "대출 한도"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__line_ids
+msgid "Loan Lines"
+msgstr "대출 항목"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Loan Settings"
+msgstr "대출 설정"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__loan_term
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
+msgid "Loan Term"
+msgstr "대출 기간"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/wizard/account_loan_compute_wizard.py:0
+msgid "Loan Term must be positive"
+msgstr "대출 기간은 양수여야 합니다"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_list_view
+msgid "Loan lines"
+msgstr "대출 항목"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__display_name
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Loan name"
+msgstr "대출 이름"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.asset_group_form_view_inherit_loan
+msgid "Loan(s)"
+msgstr "대출"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+#: model:ir.actions.act_window,name:account_loans.action_view_account_loans
+#: model:ir.ui.menu,name:account_loans.menu_action_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_list_view
+msgid "Loans"
+msgstr "대출"
+
+#. module: account_loans
+#: model:ir.actions.act_window,name:account_loans.action_view_account_loans_analysis
+#: model:ir.ui.menu,name:account_loans.menu_action_loans_analysis
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_pivot_view
+msgid "Loans Analysis"
+msgstr "대출 분석"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__long_term_account_id
+msgid "Long Term Account"
+msgstr "장기 계좌"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__long_term_theoretical_balance
+msgid "Long-Term"
+msgstr "장기"
+
+#. module: account_loans
+#: model_terms:ir.actions.act_window,help:account_loans.action_view_account_loans
+msgid "Manage Your Acquired Loans with Automated Adjustments."
+msgstr "자동 조정으로 취득한 대출을 관리하세요"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_has_error
+msgid "Message Delivery error"
+msgstr "메시지 전송 오류"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_ids
+msgid "Messages"
+msgstr "메시지"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_journal__loan_properties_definition
+msgid "Model Properties"
+msgstr "모델 속성"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__name
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__loan_name
+msgid "Name"
+msgstr "이름"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__nb_posted_entries
+msgid "Nb Posted Entries"
+msgstr "발행 항목 수"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_needaction_counter
+msgid "Number of Actions"
+msgstr "작업 수"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_has_error_counter
+msgid "Number of errors"
+msgstr "오류 수"
+
+#. module: account_loans
+#: model:ir.model.fields,help:account_loans.field_account_loan__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "조치가 필요한 메시지 수입니다."
+
+#. module: account_loans
+#: model:ir.model.fields,help:account_loans.field_account_loan__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "전송 오류가 발생한 메시지 수입니다."
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_move.py:0
+msgid "Original Loan"
+msgstr "최초 대출"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__outstanding_balance
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__outstanding_balance
+msgid "Outstanding Balance"
+msgstr "미결제 잔액"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/wizard/account_loan_compute_wizard.py:0
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__payment_end_of_month
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__payment
+msgid "Payment"
+msgstr "결제"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_list_view
+msgid "Payments"
+msgstr "결제"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "Please add a name before computing the loan"
+msgstr "대출을 계산하기 전에 제목을 추가하세요"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Posted Entries"
+msgstr "게시된 항목"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__preview
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_compute_wizard
+msgid "Preview"
+msgstr "미리보기"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+#: code:addons/account_loans/wizard/account_loan_compute_wizard.py:0
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__principal
+msgid "Principal"
+msgstr "원금"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "Principal & Interest"
+msgstr "원금 및 이자"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_list_view
+msgid "Principals"
+msgstr "원금"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__loan_properties
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Properties"
+msgstr "속성"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__rating_ids
+msgid "Ratings"
+msgstr "평가"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "Reclassification LT - ST"
+msgstr "LT - ST 재분류"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Related Asset(s)"
+msgstr "관련 자산"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.view_move_form_inherit_loan
+msgid "Related Loan"
+msgstr "관련 대출"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_asset_form_inherit_loan
+msgid "Related Loan(s)"
+msgstr "관련 대출"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_asset__linked_loans_ids
+#: model:ir.model.fields,field_description:account_loans.field_account_asset_group__linked_loan_ids
+msgid "Related Loans"
+msgstr "관련 대출"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Reset"
+msgstr "초기화"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "Reversal reclassification LT - ST"
+msgstr "LT - ST 반전 분류 "
+
+#. module: account_loans
+#: model:ir.model.fields.selection,name:account_loans.selection__account_loan__state__running
+msgid "Running"
+msgstr "진행 중"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS 전송 오류"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_search_view
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_search_view
+msgid "Search Loan"
+msgstr "검색 대출"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_form_view
+msgid "Set to Draft"
+msgstr "미결로 설정"
+
+#. module: account_loans
+#: model_terms:ir.actions.act_window,help:account_loans.action_view_account_loans
+msgid ""
+"Set up your amortization schedule, or import it, and let Odoo handle the "
+"monthly interest and principal adjustments automatically."
+msgstr ""
+"상환 일정을 설정하거나 가져올 경우 Odoo에서 매월 이자 및 원금을 자동으로 조정"
+"하여 처리합니다."
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__short_term_account_id
+msgid "Short Term Account"
+msgstr "단기 계좌"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__short_term_theoretical_balance
+msgid "Short-Term"
+msgstr "단기"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__skip_until_date
+msgid "Skip until"
+msgstr "건너뛰기"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__start_date
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_compute_wizard__start_date
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_list_view
+msgid "Start Date"
+msgstr "시작일"
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__state
+#: model:ir.model.fields,field_description:account_loans.field_account_loan_line__loan_state
+msgid "Status"
+msgstr "상태"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/wizard/account_loan_compute_wizard.py:0
+msgid "The First Payment Date must be before the end of the loan."
+msgstr "첫 번째 상환일은 대출 종료일 이전이어야 합니다."
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "The amount borrowed must be positive"
+msgstr "대출 금액은 양수여야 합니다"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "The duration must be positive"
+msgstr "기간은 양수여야 합니다"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "The interest must be positive"
+msgstr "이자는 양수여야 합니다"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "The loan accounts should be set."
+msgstr "대출 계좌를 설정해야 합니다."
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid ""
+"The loan amount %(loan_amount)s should be equal to the sum of the "
+"principals: %(principal_sum)s (difference %(principal_difference)s)"
+msgstr ""
+"대출 금액 %(loan_amount)s은 원금 합계와 같아야 합니다: %(principal_sum)s (차"
+"이 %(principal_difference)s)"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "The loan date should be earlier than the loan lines date."
+msgstr "대출 날짜는 대출 한도 날짜보다 이전이어야 합니다."
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "The loan duration should be equal to the number of loan lines."
+msgstr "대출 기간은 대출 한도 수와 같아야 합니다."
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid ""
+"The loan interest should be equal to the sum of the loan lines interest."
+msgstr "대출 이자는 대출 한도 이자 합계와 같아야 합니다."
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "The loan journal should be set."
+msgstr "대출 전표를 설정해야 합니다."
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "The loan name should be set."
+msgstr "대출 이름을 설정해야 합니다."
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "This entry has been %s"
+msgstr "이 항목은 %s 처리되었습니다."
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "This entry has been reversed from %s"
+msgstr "이 항목은 %s에서 변경되었습니다."
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_list_view
+msgid "Total Amounts Borrowed"
+msgstr "총 대출 금액"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_list_view
+msgid "Total Outstanding Balance"
+msgstr "총 미상환 잔액"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_list_view
+msgid "Total interests"
+msgstr "총 이자"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_list_view
+msgid "Total payments"
+msgstr "총 지불액"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.account_loan_line_list_view
+msgid "Total principals"
+msgstr "총 원금"
+
+#. module: account_loans
+#. odoo-javascript
+#: code:addons/account_loans/static/src/components/loans/file_upload.xml:0
+msgid "Upload"
+msgstr "업로드"
+
+#. module: account_loans
+#. odoo-python
+#: code:addons/account_loans/models/account_loan.py:0
+msgid "Uploaded file"
+msgstr "업로드된 파일"
+
+#. module: account_loans
+#: model:ir.model.fields,help:account_loans.field_account_loan__skip_until_date
+msgid ""
+"Upon confirmation of the loan, Odoo will ignore the loan lines that are up "
+"to this date (included) and not create entries for them. This is useful if "
+"you have already manually created entries prior to the creation of this loan."
+msgstr ""
+"대출이 확정되면 Odoo는 이 날짜까지 날짜가 포함된 모든 대출 한도를 무시하여 해"
+"당 항목이 생성되지 않도록 합니다. 이 기능은 대출을 설정하기 전에 이미 수동으"
+"로 기록을 입력한 경우에 유용합니다."
+
+#. module: account_loans
+#: model:ir.model.fields,field_description:account_loans.field_account_loan__website_message_ids
+msgid "Website Messages"
+msgstr "웹사이트 메시지"
+
+#. module: account_loans
+#: model:ir.model.fields,help:account_loans.field_account_loan__website_message_ids
+msgid "Website communication history"
+msgstr "웹사이트 대화 이력"
+
+#. module: account_loans
+#: model_terms:ir.ui.view,arch_db:account_loans.view_account_loan_close_wizard
+msgid "will be deleted and the loan will be marked as closed."
+msgstr "해당 내용은 삭제되고 대출은 마감으로 표시됩니다."

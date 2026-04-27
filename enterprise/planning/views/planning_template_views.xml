@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="planning_slot_template_view_form" model="ir.ui.view">
+            <field name="name">planning.slot.template.form</field>
+            <field name="model">planning.slot.template</field>
+            <field name="arch" type="xml">
+                <form string="Shift Template Form">
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <group>
+                            <group>
+                                <label for="start_time" string="Start &amp; End Hours" widget="float_time"/>
+                                <div class="d-flex flex-column flex-shrink-1">
+                                    <div class="d-flex">
+                                        <field name="start_time" widget="float_time" class="oe_inline"/>
+                                        <i class="fa fa-long-arrow-right my-1 mx-1" aria-label="Arrow icon" title="Arrow"/>
+                                        <field name="end_time" widget="float_time" class="flex-shrink-1 oe_inline"/>
+                                    </div>
+                                </div>
+                               <label for="duration_days" string="Span" widget="integer"/>
+                                <div class="d-flex flex-column flex-shrink-1">
+                                    <div class="d-flex">
+                                        <field name="duration_days" widget="integer" class="oe_inline" required="1"/>
+                                        <p class="ms-2 flex-shrink-1">
+                                            Working Days
+                                        </p>
+                                    </div>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="active" invisible="1" />
+                                <field name="role_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="planning_slot_template_view_tree" model="ir.ui.view">
+            <field name="name">planning.slot.template.list</field>
+            <field name="model">planning.slot.template</field>
+            <field name="arch" type="xml">
+                <list string="Shift Template List" sample="1">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name" />
+                    <field name="role_id" optional="show"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="planning_slot_template_view_kanban" model="ir.ui.view">
+            <field name="name">planning.slot.template.view.kanban</field>
+            <field name="model">planning.slot.template</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <templates>
+                        <t t-name="card">
+                            <div class="fw-bolder">
+                                <i class="fa fa-clock-o" role="img" aria-label="Hours" title="Hours"/>
+                                <field name="name" class="ms-2"/>
+                            </div>
+                            <field name="role_id" class="fw-bolder"/>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="planning_slot_template_view_search" model="ir.ui.view">
+            <field name="name">planning.slot.template.search</field>
+            <field name="model">planning.slot.template</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="role_id"/>
+                    <separator/>
+                    <filter name="my_role" string="My Roles" domain="[('role_id.resource_ids.user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Role" name="group_by_role" context="{'group_by':'role_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+    </data>
+</odoo>

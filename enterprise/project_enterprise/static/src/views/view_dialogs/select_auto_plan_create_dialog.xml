@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="project_enterprise.SelectCreateAutoPlanDialog" t-inherit="web.SelectCreateDialog" t-inherit-mode="primary">
+        <xpath expr="//button[hasclass('o_create_button')]" position="after">
+            <button class="btn btn-secondary o_auto_plan_button"
+                t-att-disabled="state.resIds.length === 0"
+                data-hotkey="k"
+                t-on-click="() => this.selectWithSmartSchedule(state.resIds)"
+            >
+                Auto Plan
+            </button>
+        </xpath>
+        <xpath expr="//button[hasclass('o_select_button')]" position="attributes">
+            <attribute name="t-on-click">() => this.select(state.resIds)</attribute>
+            <attribute name="data-hotkey">s</attribute>
+        </xpath>
+    </t>
+
+</templates>

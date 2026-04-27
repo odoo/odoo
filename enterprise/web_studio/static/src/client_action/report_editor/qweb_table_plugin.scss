@@ -1,0 +1,35 @@
+.odoo-editor-editable q-table {
+    display: flex;
+    flex-direction: column;
+    --q-table-col-count: 1;
+    --q-row-gap: 5px;
+    --q-cell-col-size: 1;
+
+    t:not(q-td > t):not(q-th > t):not([t-set]) {
+        display: contents;
+    }
+    q-thead {
+        display: flex;
+        flex-direction: column;
+    }
+    q-tbody {
+        display: flex;
+        flex-direction: column;
+    }
+    q-tfoot {
+        display: flex;
+        flex-direction: column;
+    }
+    q-th, q-td {
+        flex-shrink: 0;
+        --q-cell-max-col-size: min(var(--q-cell-col-size), var(--q-table-col-count));
+        --q-cell-width: calc(100% * var(--q-cell-max-col-size) / var(--q-table-col-count));
+        width: calc(var(--q-cell-width) - var(--q-row-gap));
+        outline: 1px dashed rgba(0, 0, 102, 0.4);
+    }
+    q-tr {
+        display: flex;
+        flex-direction: row;
+        gap: var(--q-row-gap);
+    }
+}

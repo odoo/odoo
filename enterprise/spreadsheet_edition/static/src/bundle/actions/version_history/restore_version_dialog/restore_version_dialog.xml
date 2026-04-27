@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="spreadsheet_edition.RestoreVersionConfirmationDialog">
+        <Dialog size="'md'" title="props.title" modalRef="modalRef">
+            <t t-esc="props.body" />
+            <t t-set-slot="footer">
+                <button class="btn btn-primary btn-danger" t-on-click="_confirm">
+                    Yes, restore
+                </button>
+                <button class="btn btn-secondary" t-on-click="_makeACopy">
+                    Make a copy instead
+                </button>
+                <button class="btn btn-secondary" t-on-click="_cancel">
+                    Cancel
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

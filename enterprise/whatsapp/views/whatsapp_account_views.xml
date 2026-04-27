@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="whatsapp_account_view_tree" model="ir.ui.view">
+        <field name="name">whatsapp.account.view.list</field>
+        <field name="model">whatsapp.account</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="phone_uid"/>
+                <field name="account_uid"/>
+                <field name="app_uid"/>
+                <field name="allowed_company_ids" widget="many2many_tags" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+    <record id="whatsapp_account_view_form" model="ir.ui.view">
+        <field name="name">whatsapp.account.view.form</field>
+        <field name="model">whatsapp.account</field>
+        <field name="arch" type="xml">
+            <form string="WhatsApp Business Account">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_open_templates" class="oe_stat_button" icon="fa-whatsapp">
+                            <field name="templates_count" string="Templates" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title" id='title'>
+                        <label for="name" string="Name"/>
+                        <h1 id="name"><field name="name" required="1" placeholder='e.g. "Acme Inc. Business Account"'/></h1>
+                    </div>
+                    <div class="o_horizontal_separator mt-4 mb-3 text-uppercase fw-bolder small">
+                        Sending Messages
+                        <widget name="documentation_link" path="/applications/productivity/whatsapp.html" icon="fa-question-circle"/>
+                    </div>
+                    <field name="active" invisible="1"/>
+                    <div class="row mt16 o_settings_container" id="app_setup">
+                        <setting documentation="https://developers.facebook.com/docs/development/create-an-app">
+                            <field name="app_uid" placeholder="e.g. 123456789012345"/>
+                        </setting>
+                        <setting>
+                            <field name="app_secret" password="True" placeholder="e.g. 00112233445566778899aabbccddeeff"/>
+                        </setting>
+                    </div>
+                    <div class="row mt16 o_settings_container" id="api_setup">
+                        <setting documentation="https://developers.facebook.com/docs/whatsapp/cloud-api/get-started#phone-number">
+                            <field name="phone_uid" required="1" placeholder="e.g. 123456789012345"/>
+                        </setting>
+                        <setting>
+                            <field name="account_uid" placeholder="e.g. 123456789012345" string="WhatsApp Business Account ID"/>
+                        </setting>
+                        <setting documentation="https://developers.facebook.com/docs/whatsapp/business-management-api/get-started#system-user-access-tokens">
+                            <field name="token" password="True" placeholder="e.g. EGTRWHRTHETHWRBTEJETHGQEGWRHWR"/>
+                        </setting>
+                        <div class="content-group">
+                            <button name="button_test_connection" type="object" string="Test Credentials" icon="fa-key" class="btn-link p-1"/><br/>
+                            <button name="button_sync_whatsapp_account_templates" type="object" string="Synchronize Templates" class="btn-link p-1" icon="fa-refresh"/>
+                        </div>
+                    </div>
+                    <div class="o_horizontal_separator mt-4 mb-3 text-uppercase fw-bolder small">
+                        Receiving Messages
+                        <widget name="documentation_link" path="/applications/productivity/whatsapp.html" icon="fa-question-circle"/>
+                    </div>
+                    <div class="row mt16 o_settings_container" id="toreceive_msg">
+                        <setting documentation="https://developers.facebook.com/docs/whatsapp/cloud-api/guides/set-up-webhooks">
+                            <field name="callback_url" widget="CopyClipboardURL"/>
+                        </setting>
+                        <setting>
+                            <field name="webhook_verify_token" widget="CopyClipboardChar"/>
+                        </setting>
+                    </div>
+                    <div class="o_horizontal_separator mt-4 mb-3 text-uppercase fw-bolder small">Notifications</div>
+                    <div class="row mt16 o_settings_container" id="tocontrol">
+                        <setting>
+                            <field name="notify_user_ids" string="Default Users" widget="many2many_tags" placeholder="Pick users to notify..."/>
+                        </setting>
+                        <setting>
+                            <field name="allowed_company_ids" string="Allowed companies" widget="many2many_tags" groups="base.group_multi_company" required="1"/>
+                        </setting>
+                    </div>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="whatsapp_account_view_search" model="ir.ui.view">
+        <field name="name">whatsapp.account.view.search</field>
+        <field name="model">whatsapp.account</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="phone_uid"/>
+                <field name="account_uid"/>
+                <field name="app_uid"/>
+                <separator/>
+                <filter string="Archived" name="filter_archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+    <record id="whatsapp_account_action" model="ir.actions.act_window">
+        <field name="name">WhatsApp Business Account</field>
+        <field name="res_model">whatsapp.account</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Account Configured yet!
+            </p>
+            <p>
+                Create an Account on the <a href="https://developers.facebook.com/docs/whatsapp/cloud-api/reference/registration" target="_blank">Meta for Developers</a> platform then connect it to your Odoo database
+            </p>
+        </field>
+    </record>
+</odoo>

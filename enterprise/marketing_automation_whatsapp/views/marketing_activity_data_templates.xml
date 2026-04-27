@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <template id="marketing_activity_summary_template_whatsapp" inherit_id="marketing_automation.marketing_activity_summary_template">
+            <xpath expr="//t[@t-set='action_or_template_id']" position="replace">
+                <t t-set="action_or_template_id" t-value="activity.server_action_id or activity.mass_mailing_id or activity.whatsapp_template_id"/>
+            </xpath>
+            <xpath expr="//t[@name='activity_action_or_template']" position="before">
+                <t t-elif="activity.trigger_type == 'whatsapp_click'">
+                    after the Participant <strong>clicks</strong><br/>on any link included in the <strong>Whatsapp message</strong> sent by the Activity "<strong t-out="parent_activity_name"/>,"
+                </t>
+                <t t-elif="activity.trigger_type == 'whatsapp_not_click'">
+                    if no link included in the <strong>Whatsapp message</strong> sent by the Activity "<strong t-out="parent_activity_name"/> doesn't get clicked,
+                </t>
+                <t t-elif="activity.trigger_type == 'whatsapp_read'">
+                   after the Participant <strong>opens the Whatsapp message</strong> sent by the Activity "<strong t-out="parent_activity_name"/>" 
+                </t>
+                <t t-elif="activity.trigger_type == 'whatsapp_not_read'">
+                    if <strong>Whatsapp message</strong> sent by the Activity "<strong t-out="parent_activity_name"/>" <strong>doesn't get opened</strong>,
+                </t>
+                <t t-elif="activity.trigger_type == 'whatsapp_replied'">
+                   after the Participant <strong>replies to the Whatsapp message</strong> sent by the Activity "<strong t-out="parent_activity_name"/>"
+                </t>
+                <t t-elif="activity.trigger_type == 'whatsapp_not_replied'">
+                    if <strong>Whatsapp message</strong> sent by the Activity "<strong t-out="parent_activity_name"/>" <strong>doesn't get replied</strong>,
+                </t>
+                <t t-elif="activity.trigger_type == 'whatsapp_bounced'">
+                    after the <strong>Whatsapp message</strong> sent by the Activity "<strong t-out="parent_activity_name"/>" <strong>gets bounced</strong>,
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="approval_purchase_product_line_view_tree_inherit" model="ir.ui.view">
+        <field name="name">approval.purchase.product.line.view.list.inherit</field>
+        <field name="model">approval.product.line</field>
+        <field name="inherit_id" ref="approvals.approval_product_line_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="decoration-danger">has_no_seller</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <attribute name="required">parent.approval_type != 'purchase' and parent.has_product == 'required'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_uom_id']" position="after">
+                <field name="seller_id" column_invisible="parent.approval_type != 'purchase'"
+                    domain="[('product_tmpl_id', '=', product_template_id)]"
+                    options="{'no_quick_create': True}"
+                    context="{
+                        'default_product_tmpl_id': product_template_id,
+                        'default_product_id': product_id,
+                        'unset_res_partner_category_id': True,
+                    }"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

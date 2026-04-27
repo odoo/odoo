@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_cl_form" model="ir.ui.view">
+        <field name="name">res_config_settings_view_cl_form.electronic.inv</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_cl.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//block[@id='l10n_cl_section']" position="inside">
+                <setting string="Tax payer information" company_dependent="1" help="Define the tax payer type and SII regional office for your company. This is mandatory for electronic invoicing.">
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <label string="Taxpayer" for="l10n_cl_sii_taxpayer_type" class="col-lg-3 o_light_label"/>
+                            <field name="l10n_cl_sii_taxpayer_type"/>
+                        </div>
+                        <div class="row">
+                            <label string="SII Office" for="l10n_cl_sii_regional_office" class="col-lg-3 o_light_label"/>
+                            <field name="l10n_cl_sii_regional_office"/>
+                        </div>
+                    </div>
+                </setting>
+                <setting string="Economical Activities Information" company_dependent="1" help="Register up to four economical activity codes and description for your company. This is mandatory for electronic invoicing.">
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <label string="Activity Codes" for="l10n_cl_company_activity_ids" class="col-lg-4 o_light_label"/>
+                            <field name="l10n_cl_company_activity_ids" context="{'search_by_code': True}" widget="many2many_tags"/>
+                        </div>
+                        <div class="row">
+                            <label for="l10n_cl_activity_description" class="col-lg-4 o_light_label"/>
+                            <field name="l10n_cl_activity_description"/>
+                        </div>
+                    </div>
+                </setting>
+                <setting string="SII Web Services" company_dependent="1" help="Please choose your DTE service provider. If possible, avoid selecting SII Demo mode in a production database.">
+                    <field name="l10n_cl_dte_service_provider" class="col-lg-8 o_light_label" widget="radio"/>
+                </setting>
+                <setting string="Legal Electronic Invoicing Data" company_dependent="1" help="Hint: &quot;Factura Electrónica/Sistema de Certificación de Mercado/Actualizar datos de la empresa autorizada&quot;.">
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <label string="SII Resolution Nº" for="l10n_cl_dte_resolution_number" class="col-lg-4 o_light_label"/>
+                            <field name="l10n_cl_dte_resolution_number"/>
+                        </div>
+                        <div class="row">
+                            <label string="SII Resolution Date"  for="l10n_cl_dte_resolution_date" class="col-lg-4 o_light_label"/>
+                            <field name="l10n_cl_dte_resolution_date"/>
+                        </div>
+                    </div>
+                </setting>
+                <setting string="Email Box Electronic Invoicing" company_dependent="1" help="This email account should match both emails declared on the SII site in the section: &quot;ACTUALIZACION DE DATOS DEL CONTRIBUYENTE&quot;, &quot;Mail Contacto SII&quot; and &quot;Mail Contacto Empresas&quot;.">
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <br/>
+                            <button name="%(mail.action_email_server_tree)d" icon="oi-arrow-right" type="action"
+                                string="Configure DTE Incoming Email" class="btn-link"/>
+                        </div>
+                    </div>
+                </setting>
+                <setting string="Email Alias Electronic Invoicing" company_dependent="1" help="This alias will be used as sender in the outgoing emails when you send invoices attached to your customers and with invoice acknowledge / acceptation or claim sent to your vendors.">
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <label string="Email Alias"  for="l10n_cl_dte_email" class="col-lg-4 o_light_label"/>
+                            <field name="l10n_cl_dte_email"/>
+                        </div>
+                    </div>
+                </setting>
+                <setting string="Signature Certificates" help="Configure your signature certificates to sign SII DTEs" company_dependent="1" title="The parameters to configure the signature certificate.">
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <div class="col-6">
+                                <div class="alert alert-warning text-start" invisible="l10n_cl_is_there_shared_certificate" role="alert">
+                                    <strong>Warning:</strong> there is no shared digital signature for this company. You need to define at least one certificate without a user.
+                                    Otherwise, you will need to send electronic invoices to the SII manually, and Odoo won't be able to send automatic receipt acknowledgements for vendor bills.
+                                </div>
+                                <button name="%(certificate.certificate_certificate_action_view_list)d" icon="oi-arrow-right" type="action"
+                                        string="Configure Signature Certificates" class="btn-link"/>
+                            </div>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

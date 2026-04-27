@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="helpdesk_team_view_form" model="ir.ui.view">
+        <field name="name">helpdesk.team.form</field>
+        <field name="model">helpdesk.team</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='member_ids']" position="after">
+                <div class="text-muted o_row ps-1">
+                    <i class="fa fa-lightbulb-o"/><span class="ms-2">Team members on time off are not assigned any tickets</span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

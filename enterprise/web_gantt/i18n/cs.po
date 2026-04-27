@@ -1,0 +1,378 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* web_gantt
+#
+# Translators:
+# Wil Odoo, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2025
+# Marta Wacławek, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:49+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Marta Wacławek, 2025\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_model.js:0
+msgid "%(hour)sh%(minute)s"
+msgstr "%(hour)sh%(minute)s"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/models.py:0
+msgid "%s cannot be scheduled in the past"
+msgstr ""
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_model.js:0
+msgid "%sh"
+msgstr "%sh"
+
+#. module: web_gantt
+#: model:ir.model,name:web_gantt.model_ir_actions_act_window_view
+msgid "Action Window View"
+msgstr "Akce okna zobrazení"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.xml:0
+msgid "Activate dense mode"
+msgstr ""
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.xml:0
+msgid "Activate sparse mode"
+msgstr ""
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.xml:0
+msgid "Apply"
+msgstr "Použít"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_controller.js:0
+msgid "Are you sure to delete this record?"
+msgstr "Opravdu chcete tento záznam smazat?"
+
+#. module: web_gantt
+#: model:ir.model,name:web_gantt.model_base
+msgid "Base"
+msgstr "Jádro"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.xml:0
+msgid "Collapse rows"
+msgstr "Sbalit řádky"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_controller.js:0
+msgid "Create"
+msgstr "Vytvořit"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer.js:0
+msgid "Edit"
+msgstr "Upravit"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer.js:0
+msgid "Ending date cannot be before the starting date"
+msgstr ""
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.xml:0
+msgid "Expand rows"
+msgstr "Rozbalte řádky"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.xml:0
+msgid "Focus Today"
+msgstr ""
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.xml:0
+msgid "From"
+msgstr "Od"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.js:0
+msgid "From: %(from_date)s to: %(to_date)s"
+msgstr ""
+
+#. module: web_gantt
+#: model:ir.model.fields.selection,name:web_gantt.selection__ir_actions_act_window_view__view_mode__gantt
+#: model:ir.model.fields.selection,name:web_gantt.selection__ir_ui_view__type__gantt
+msgid "Gantt"
+msgstr "Gantt"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_arch_parser.js:0
+msgid "Gantt View"
+msgstr "Gantův diagram"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/ir_ui_view.py:0
+msgid "Gantt child can only be field or template, got %s"
+msgstr "Ganttův potomek může být pouze pole nebo šablona, dostal %s"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/ir_ui_view.py:0
+msgid "Gantt must have a 'date_start' attribute"
+msgstr "Gantt musí mít atribut 'date_start'"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/ir_ui_view.py:0
+msgid "Gantt must have a 'date_stop' attribute"
+msgstr "Gantt musí mít atribut 'date_stop'"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/ir_ui_view.py:0
+msgid ""
+"Gantt must have a 'dependency_inverted_field' attribute once the "
+"'dependency_field' is specified"
+msgstr ""
+"Gantt musí mít atribut 'dependency_inverted_field', jakmile je specifikováno "
+"'dependency_field'"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.js:0
+msgid "Gantt start date"
+msgstr ""
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.js:0
+msgid "Gantt stop date"
+msgstr ""
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/ir_ui_view.py:0
+msgid "Gantt view can contain only one templates tag"
+msgstr "Zobrazení Gantt může obsahovat pouze jeden štítek šablony"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/models.py:0
+msgid "Impossible to schedule in the past."
+msgstr ""
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/models.py:0
+msgid "Insufficient fields for Gantt View!"
+msgstr "Nedostatečná pole pro zobrazení Gantt!"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/ir_ui_view.py:0
+msgid ""
+"Invalid attributes (%(invalid_attributes)s) in gantt view. Attributes must "
+"be in (%(valid_attributes)s)"
+msgstr ""
+"Neplatné atributy (%(invalid_attributes)s) v zobrazení gantt. Atributy musí "
+"být v (%(valid_attributes)s)"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/ir_ui_view.py:0
+msgid "Invalid default_range '%s' in gantt"
+msgstr ""
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/ir_ui_view.py:0
+msgid "Invalid default_scale '%s' in gantt"
+msgstr "Neplatný default_scale '%s' v gantt"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/ir_ui_view.py:0
+msgid "Invalid display_mode '%s' in gantt"
+msgstr ""
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_popover.xml:0
+msgid "Name"
+msgstr "Název"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_controller.xml:0
+msgid "New"
+msgstr "Nové"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_controller.js:0
+msgid "Open"
+msgstr "Volný"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer.js:0
+msgid "Plan"
+msgstr "Plán"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/models.py:0
+msgid "Reschedule done successfully."
+msgstr ""
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_popover.xml:0
+msgid "Start"
+msgstr "Začít"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer.js:0
+msgid "Starting date cannot be after the ending date"
+msgstr ""
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_popover.xml:0
+msgid "Stop"
+msgstr "Zastavit"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/models.py:0
+msgid "The dependencies are not valid, there is a cycle."
+msgstr ""
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/models.py:0
+msgid "There are no valid candidates to re-plan"
+msgstr ""
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_arch_parser.js:0
+msgid "This month"
+msgstr "Tento měsíc"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_arch_parser.js:0
+msgid "This quarter"
+msgstr ""
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_arch_parser.js:0
+msgid "This week"
+msgstr "Tento týden"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_arch_parser.js:0
+msgid "This year"
+msgstr "Tento rok"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_arch_parser.js:0
+msgid "Today"
+msgstr "Dnes"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.xml:0
+msgid "Toolbar menu"
+msgstr ""
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer.js:0
+msgid "Total"
+msgstr "Celkem"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_model.js:0
+msgid "Undefined %s"
+msgstr "Nedefinováno %s"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer.js:0
+#: model:ir.model,name:web_gantt.model_ir_ui_view
+msgid "View"
+msgstr "Zobrazení"
+
+#. module: web_gantt
+#: model:ir.model.fields,field_description:web_gantt.field_ir_actions_act_window_view__view_mode
+#: model:ir.model.fields,field_description:web_gantt.field_ir_ui_view__type
+msgid "View Type"
+msgstr "Typ zobrazení"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/models.py:0
+msgid "You cannot move %(record)s towards %(related_record)s."
+msgstr ""
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/models.py:0
+msgid "You cannot reschedule %(main_record)s towards %(other_record)s."
+msgstr "Nelze přeplánovat %(main_record)s směrem k %(other_record)s."
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_arch_parser.js:0
+msgid "hours"
+msgstr "hodin"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_arch_parser.js:0
+msgid "minutes"
+msgstr "minut"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_arch_parser.js:0
+msgid "months"
+msgstr "měsíce"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.xml:0
+msgid "to"
+msgstr "k"

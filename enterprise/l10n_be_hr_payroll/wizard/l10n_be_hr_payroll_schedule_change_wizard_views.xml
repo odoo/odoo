@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_hr_payroll_schedule_change_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n_be.hr.payroll.schedule.change.wizard.view.form</field>
+        <field name="model">l10n_be.hr.payroll.schedule.change.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Working Schedule Change">
+                <h1><field name="employee_id" options="{'no_open' : True}"/></h1>
+                <field name="contract_id" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="leave_allocation_id" invisible="1"/>
+                <field name="found_leave_allocation" invisible="1"/>
+                <field name="requires_new_contract" invisible="1"/>
+                <field name="initial_time_off_allocation" invisible="1"/>
+                <group>
+                    <group>
+                        <field name="date_start"/>
+                        <field name="date_end" required="part_time"/>
+                        <label for="work_time_rate"/>
+                        <div class="o_row">
+                            <field name="work_time_rate"/>
+                            <span>%</span>
+                        </div>
+                        <field name="full_wage"/>
+                        <field name="current_wage"/>
+                        <field name="wage"/>
+                        <field name="previous_contract_creation"/>
+                    </group>
+                    <group>
+                        <field name="full_resource_calendar_id" options="{'no_create' : True}"/>
+                        <field name="current_resource_calendar_id" options="{'no_create' : True}"/>
+                        <field name="resource_calendar_id" options="{'no_create' : True}"/>
+                        <field name="part_time"/>
+                        <field name="presence_work_entry_type_id" options="{'no_create' : True}"
+                            invisible="not part_time"/>
+                        <field name="absence_work_entry_type_id" options="{'no_create' : True}"
+                            invisible="not part_time"
+                            required="part_time"/>
+                    </group>
+                </group>
+                <separator string="Time Off Allocation"/>
+                <group>
+                    <group>
+                        <field name="leave_type_id" options="{'no_create' : True}" context="{'employee_id': employee_id}"/>
+                    </group>
+                    <group invisible="leave_type_id or not found_leave_allocation">
+                        <label for="full_time_off_allocation"/>
+                        <div class="o_row">
+                            <field name="full_time_off_allocation"/>
+                            <span>days</span>
+                        </div>
+                        <label for="time_off_allocation"/>
+                        <div class="o_row">
+                            <field name="time_off_allocation"/>
+                            <span>days</span>
+                        </div>
+                    </group>
+                    <div class="alert alert-warning" role="alert" invisible="not leave_type_id or found_leave_allocation">
+                        No time off allocation has been found for this time off type, no changes will occur to time off for this employee.
+                    </div>
+                </group>
+                <footer>
+                    <button name="action_validate" string="Create new contract and adapt time off allocation" type="object" class="oe_highlight"
+                        readonly="not part_time"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="schedule_change_wizard_action" model="ir.actions.act_window">
+        <field name="name">Working Schedule Change</field>
+        <field name="res_model">l10n_be.hr.payroll.schedule.change.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

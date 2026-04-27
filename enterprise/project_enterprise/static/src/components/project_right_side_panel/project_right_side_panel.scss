@@ -1,0 +1,32 @@
+@include media-breakpoint-down(lg) {
+    .o_controller_with_rightpanel .o_content {
+        display: flex;
+        flex-direction: column;
+        overflow: initial;
+
+        .o_kanban_renderer {
+            width: 100%;
+            overflow: inherit;
+
+            &.o_kanban_ungrouped {
+                min-height: auto;
+            }
+        }
+    }
+
+    .o_rightpanel {
+        border: 1px solid lightgray;
+        flex-basis: auto;
+        height: auto;
+        border: 0;
+        padding: 0 $o-rightpanel-p;
+        width: 100%;
+        min-width: auto;
+        max-width: none;
+
+        .o_rightpanel_section {
+            padding-top: $o-rightpanel-p-tiny;
+            padding-bottom: $o-rightpanel-p-tiny;
+        }
+    }
+}

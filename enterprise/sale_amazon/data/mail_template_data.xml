@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="order_sync_failure" model="mail.template">
+        <field name="name">Amazon: Order Synchronization Failure</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="subject">Synchronization of Amazon order {{ ctx.get('amazon_order_ref') }} has failed</field>
+        <field name="email_from">{{ (object.company_id.email or object.user_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ ctx.get('email_to') }}</field>
+        <field name="lang">{{ object.lang }}</field>
+        <field name="body_html" type="html">
+        <div>
+            <p>The synchronization of the Amazon order with reference <t t-out="ctx.get('amazon_order_ref') or ''">REF</t> encountered an error and was not completed.</p>
+            <p>Unless the order is canceled in SellerCentral, no other synchronization will be attempted.</p>
+            <p>To schedule a new synchronization attempt, proceed as follows:
+                <ol>
+                    <li>Enter the Developer Tools.</li>
+                    <li>Open the form of the Amazon Account on which the order was placed.</li>
+                    <li>Navigate to the Order Follow-up tab.</li>
+                    <li>Set a date for <em>Last Orders Sync</em> that is anterior to the last status update of the order.</li>
+                    <li>Save the changes and click on the <em>SYNC ORDERS</em> button.</li>
+                </ol>
+            </p>
+            <p>If the problem persists, contact <a href="https://www.odoo.com/help/">Odoo support</a>.</p>
+        </div>
+        </field>
+    </record>
+
+    <record id="picking_sync_failure" model="mail.template">
+        <field name="name">Amazon: Delivery Order Synchronization Failure</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="subject">Synchronization of delivery orders has failed</field>
+        <field name="email_from">{{ (object.company_id.email or object.user_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ ctx.get('email_to') }}</field>
+        <field name="lang">{{ object.lang }}</field>
+        <field name="body_html" type="html">
+            <style>
+                .amz_table {
+                    width: 100%;
+                    max-width: 900px;
+                    border-collapse: collapse;
+                }
+
+                .amz_table th,
+                .amz_table td {
+                    border: 1px solid #888;
+                }
+
+                .amz_table th {
+                    white-space: nowrap;
+                }
+
+                .amz_table thead th {
+                    padding: 0.5em 0.5em;
+                    text-align: center;
+                    border-bottom: 1px solid #888;
+                }
+
+                .amz_table tbody th,
+                .amz_table tbody td {
+                    padding: 0.5em 0.5em 1em;
+                    vertical-align: top;
+                }
+            </style>
+            <div>
+                <p>The synchronization of the delivery orders encountered some errors and was not completed.</p>
+                <p>Please correct the problem before manually synchronizing the delivery orders again, as no other synchronization will be attempted.</p>
+                <p>Here are the errors sent by Amazon: </p>
+                <table class="amz_table">
+                    <thead>
+                        <tr>
+                            <th>Order Reference</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="ctx.get('error_messages')" t-as="error">
+                            <th><t t-out="error['order_ref']"/></th>
+                            <td>
+                                <t t-if="error['message']" t-out="error['message']"/>
+                                <t t-else="">An unknown error occurred during the synchronisation with Amazon.
+                                    Unfortunately you need to manually check if the state of the order is correct or not.
+                                    You can find all information about this
+                                    <a href="https://www.odoo.com/documentation/latest/applications/sales/sales/amazon_connector/manage.html#manage_deliveries_errors">
+                                        in the documentation
+                                    </a>.</t>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </field>
+    </record>
+
+    <record id="inventory_sync_failure" model="mail.template">
+        <field name="name">Amazon: Available Inventory for Offers Synchronization Failure</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="subject">Synchronization of Amazon Stock has failed</field>
+        <field name="email_from">{{ (object.company_id.email or object.user_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ ctx.get('email_to') }}</field>
+        <field name="lang">{{ object.lang }}</field>
+        <field name="body_html" type="html">
+            <style>
+                .amz_table {
+                    width: 100%;
+                    max-width: 900px;
+                    border-collapse: collapse;
+                }
+
+                .amz_table th,
+                .amz_table td {
+                    border: 1px solid #888;
+                }
+
+                .amz_table th {
+                    white-space: nowrap;
+                }
+
+                .amz_table thead th {
+                    padding: 0.5em 0.5em;
+                    text-align: center;
+                    border-bottom: 1px solid #888;
+                }
+
+                .amz_table tbody th,
+                .amz_table tbody td {
+                    padding: 0.5em 0.5em 1em;
+                    vertical-align: top;
+                }
+            </style>
+            <div>
+                <p>The synchronization of the products availability for Amazon Account
+                    <b><t t-out="ctx.get('amazon_account') or ''">REF</t></b>
+                    encountered some errors and was not completed.</p>
+                <p>Here are the errors sent by Amazon: </p>
+                <table class="amz_table">
+                    <thead>
+                        <tr>
+                            <th>SKU</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="ctx.get('error_messages')" t-as="error">
+                            <th><t t-out="error['sku']"/></th>
+                            <td>
+                                <t t-if="error['message']" t-out="error['message']"/>
+                                <t t-else="">An unknown error occurred during the synchronisation with Amazon.
+                                    Unfortunately you need to manually check if the available quantity for the product is correct or not.
+                                </t>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </field>
+    </record>
+
+</odoo>

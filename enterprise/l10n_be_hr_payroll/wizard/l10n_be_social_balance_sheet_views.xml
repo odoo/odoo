@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_social_balance_sheet_view_form" model="ir.ui.view">
+        <field name="name">l10n.be.social.balance.sheet.view.form</field>
+        <field name="model">l10n.be.social.balance.sheet</field>
+        <field name="arch" type="xml">
+            <form string="Social Balance Sheet">
+                <group class="w-50">
+                    <label for="date_from" string="Period"/>
+                    <div>
+                        <field name="date_from" class="oe_inline o_hr_narrow_field"/> - <field name="date_to" class="oe_inline o_hr_narrow_field"/>
+                    </div>
+                    <field name="company_id"/>
+                    <field name="state" invisible="1"/>
+                    <field name="state_xlsx" invisible="1"/>
+                </group>
+                <div class="mt-4">
+                    <field name="social_balance_filename" invisible="1"/>
+                    <field name="social_balance_filename_xlsx" invisible="1"/>
+                    <h2 invisible="not social_balance_sheet and not social_balance_xlsx" class="oe_inline w-100 mb-2">Generation Complete</h2>
+                    <span invisible="not social_balance_sheet or state != 'done'" class="w-100">
+                        Download the Social Balance Sheet PDF file: <field name="social_balance_sheet" readonly="1" filename="social_balance_filename"/>
+                    </span>
+                    <br/>
+                    <span invisible="not social_balance_xlsx or state_xlsx != 'done'" class="w-100">
+                        Download the Social Balance Sheet XLSX file: <field name="social_balance_xlsx" readonly="1" filename="social_balance_filename_xlsx"/>
+                    </span>
+                </div>
+                <footer>
+                    <button name="print_report" string="Export to PDF" type="object" class="btn-primary" invisible="state != 'draft'" data-hotkey="q"/>
+                    <button name="export_report_xlsx" string="Export to XLSX" type="object" class="btn-primary" invisible="state_xlsx != 'draft'" data-hotkey="e"/>
+                    <button name="print_report" string="Export to PDF" type="object" invisible="state != 'done'" data-hotkey="w"/>
+                    <button name="export_report_xlsx" string="Export to XLSX" type="object" invisible="state_xlsx != 'done'" data-hotkey="r"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_be_social_balance_sheet_action" model="ir.actions.act_window">
+        <field name="name">Social Balance Sheet</field>
+        <field name="res_model">l10n.be.social.balance.sheet</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_type">report</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_be_social_balance_sheet"
+        name="Social Balance Sheet"
+        action="l10n_be_social_balance_sheet_action"
+        parent="l10n_be_hr_payroll.menu_reporting_l10n_be"
+        sequence="500"
+    />
+
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_import_summary_form" model="ir.ui.view">
+        <field name="name">account.import.summary.form</field>
+        <field name="model">account.import.summary</field>
+        <field name="inherit_id" ref="account_base_import.account_import_summary_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//ul[hasclass('o_import_summary')]" position="inside">
+                <field name="import_summary_analytic_ids" invisible="1"/>
+                <field name="import_summary_analytic_line_ids" invisible="1"/>
+                <li invisible="not import_summary_analytic_ids">
+                    <a name="action_open_analytic_view" type="object">
+                        <field name="import_summary_len_analytic" readonly="1"/> account analytics imported
+                    </a>
+                </li>
+                <li invisible="not import_summary_analytic_line_ids">
+                    <a name="action_open_analytic_line_view" type="object">
+                        <field name="import_summary_len_analytic_line" readonly="1"/> account analytic lines imported
+                    </a>
+                </li>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

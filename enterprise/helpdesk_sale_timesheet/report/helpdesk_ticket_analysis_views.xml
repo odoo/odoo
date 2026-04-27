@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_helpdesk_ticket_pivot_analysis_2" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.report.analysis.pivot.inherited</field>
+        <field name="model">helpdesk.ticket.report.analysis</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_pivot_analysis"/>
+        <field name="arch" type="xml">
+            <field name="ticket_close_hours" position="before">
+                <field name="remaining_hours_so" widget="float_time" type="measure"/>
+            </field>
+        </field>
+    </record>
+</odoo>

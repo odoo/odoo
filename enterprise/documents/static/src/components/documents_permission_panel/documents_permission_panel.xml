@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.PermissionPanel">
+        <Dialog size="'md'" title="panelTitle">
+            <t t-set-slot="footer">
+                <button t-if="state.mainPage" type="button" class="btn btn-primary"
+                    t-on-click="onShare" t-att-disabled="state.loading">
+                        <span t-if="pendingSave">Save</span>
+                        <t t-elif="state.loading"><span class="spinner-border spinner-border-sm"/> Saving...</t>
+                        <span t-elif="state.access.user_permission === 'edit'">Done</span>
+                        <span t-else="">Close</span>
+                </button>
+                <div t-if="!state.mainPage" id="o_document_member_invite_share_btn"/>
+                <CopyButton
+                    className="'btn-secondary text-truncate'"
+                    copyText="copyText"
+                    content="state.access.access_url"
+                    disabled="pendingSave || !state.access.active"
+                    icon="'d-none'"
+                    successText.translate="Link copied to the clipboard."/>
+                <button t-if="state.mainPage" type="button" t-attf-class="btn {{pendingSave ? '' : 'invisible'}}"
+                    t-on-click="onDiscard" t-att-disabled="state.loading" title="Revert changes">
+                    <i class="fa fa-undo"/>
+                </button>
+                <div t-if="!state.mainPage" id="o_document_member_invite_discard_btn"/>
+            </t>
+            <div t-if="state.mainPage and warningMessage"
+                class="alert alert-warning py-1 mb-1"
+                role="alert"
+                t-out="warningMessage"/>
+            <section t-if="state.access.user_permission ==='edit' and state.access.active" t-att-class="{ 'mb-3' : state.mainPage }" class="o_documents_permission_panel_member_invite">
+                <DocumentsMemberInvite
+                    access="state.access"
+                    accessPartners="state.access.access_ids"
+                    autoSave.bind="save"
+                    close.bind="close"
+                    disabled="state.loading"
+                    invitePage="!state.mainPage"
+                    pendingSave="pendingSave"
+                    roles="state.selections.doc_access_roles"
+                    selectedPartnersRole="selectedPartnersRole"
+                    showMainPage.bind="showMainPage"
+                    updateAccessRights.bind="updateAccessRights"/>
+            </section>
+            <t t-if="state.mainPage">
+                <section class="o_documents_permission_panel_access_partners mb-3">
+                    <DocumentsPartnerAccess
+                        access="state.access"
+                        accessPartners="state.access.access_ids"
+                        basePartnersRole="basePartnersRole"
+                        basePartnersAccessExpDate="basePartnersAccessExpDate"
+                        isAdmin="isAdmin"
+                        isCurrentUser="isCurrentUser"
+                        isInternalUser="isInternalUser"
+                        disabled="state.loading || state.access.user_permission !=='edit' || !state.access.active"
+                        ownerUser="state.access.owner_id"
+                        onChangePartnerRole.bind="onChangePartnerRole"
+                        removeDocumentAccess.bind="removeDocumentAccess"
+                        selections="state.selections.doc_access_roles"
+                        setExpirationDate.bind="setExpirationDate"/>
+                </section>
+                <section>
+                    <div class="pb-2">
+                        <DocumentsAccessSettings
+                            access="state.access"
+                            baseAccess="baseAccess"
+                            disabled="state.loading || state.access.user_permission !=='edit' || !state.access.active"
+                            onChangeAccessInternal.bind="onChangeDocumentAccessInternal"
+                            onChangeAccessLink.bind="onChangeDocumentAccessLink"
+                            onChangeIsAccessLinkHidden.bind="onChangeDocumentIsAccessLinkHidden"
+                            selections="state.selections"/>
+                    </div>
+                </section>
+            </t>
+        </Dialog>
+    </t>
+</templates>

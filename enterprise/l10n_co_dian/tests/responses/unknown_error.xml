@@ -1,0 +1,16 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope"
+    xmlns:a="http://www.w3.org/2005/08/addressing">
+    <s:Header>
+        <a:Action s:mustUnderstand="1">http://www.w3.org/2005/08/addressing/soap/fault</a:Action>
+    </s:Header>
+    <s:Body>
+        <s:Fault>
+            <s:Code>
+                <s:Value>s:Client</s:Value>
+            </s:Code>
+            <s:Reason>
+                <s:Text xml:lang="en-US">The creator of this fault did not specify a Reason.</s:Text>
+            </s:Reason>
+        </s:Fault>
+    </s:Body>
+</s:Envelope>

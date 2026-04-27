@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Enable automatic accounting for the admin user, required for stock SAF-T XML export -->
+        <record id="base.group_system" model="res.groups">
+            <field name="implied_ids" eval="[
+                Command.link(ref('stock_account.group_stock_accounting_automatic')),
+            ]"/>
+        </record>
+        <!-- create xml ids for demo data that are widely used in tests or in other codes, for more convenience -->
+        <record id="l10n_ro_saft_stock.warehouse0" model="stock.warehouse" context="{'allowed_company_ids': [ref('base.demo_company_ro')]}">
+            <field name="partner_id" ref="base.main_partner"/>
+            <field name="name">Romanian Warehouse</field>
+            <field name="code">RO-WH</field>
+        </record>
+
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                'xml_id': 'l10n_ro_saft_stock.stock_location_stock',
+                'record': obj().env.ref('l10n_ro_saft_stock.warehouse0').lot_stock_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'l10n_ro_saft_stock.picking_type_internal',
+                'record': obj().env.ref('l10n_ro_saft_stock.warehouse0').int_type_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'l10n_ro_saft_stock.picking_type_in',
+                'record': obj().env.ref('l10n_ro_saft_stock.warehouse0').in_type_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'l10n_ro_saft_stock.picking_type_out',
+                'record': obj().env.ref('l10n_ro_saft_stock.warehouse0').out_type_id,
+                'noupdate': True,
+            }]"/>
+        </function>
+
+        <!-- product.category -->
+        <record id="stock_account.product_category_fifo" model="product.category" context="{'allowed_company_ids': [ref('base.demo_company_ro')]}">
+            <field name="property_cost_method">fifo</field>
+        </record>
+
+        <!-- product.product -->
+        <record id="ro_product_1" model="product.product" context="{'allowed_company_ids': [ref('base.demo_company_ro')]}">
+            <field name="name">RO Product 1</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">800.0</field>
+            <field name="list_price">320.0</field>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="uom_id" ref="uom.product_uom_kgm"/>
+            <field name="default_code">RO-1</field>
+        </record>
+
+        <record id="ro_product_2" model="product.product" context="{'allowed_company_ids': [ref('base.demo_company_ro')]}">
+            <field name="name">RO Product 2</field>
+            <field name="categ_id" ref="stock_account.product_category_fifo"/>
+            <field name="standard_price">100.0</field>
+            <field name="list_price">1.0</field>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="uom_id" ref="uom.product_uom_gram"/>
+            <field name="default_code">RO-2</field>
+        </record>
+
+        <!-- stock.location -->
+        <record id="stock_location_a" model="stock.location">
+            <field name="name">Location A</field>
+            <field name="usage">internal</field>
+            <field name="company_id" ref="base.demo_company_ro"/>
+            <field name="location_id" ref="stock_location_stock"/>
+        </record>
+        <record id="stock_location_b" model="stock.location">
+            <field name="name">Location B</field>
+            <field name="usage">internal</field>
+            <field name="company_id" ref="base.demo_company_ro"/>
+            <field name="location_id" ref="stock_location_stock"/>
+        </record>
+        <record id="stock_location_c" model="stock.location">
+            <field name="name">Location C</field>
+            <field name="usage">internal</field>
+            <field name="company_id" ref="base.demo_company_ro"/>
+            <field name="location_id" ref="stock_location_stock"/>
+        </record>
+
+        <!-- product.product -->
+        <record id="product.product_product_6" model="product.product" context="{'allowed_company_ids': [ref('base.demo_company_ro')]}">
+            <field name="standard_price">20</field>
+        </record>
+        <record id="product.product_product_7" model="product.product" context="{'allowed_company_ids': [ref('base.demo_company_ro')]}">
+            <field name="standard_price">15</field>
+        </record>
+        <record id="product.product_product_8" model="product.product" context="{'allowed_company_ids': [ref('base.demo_company_ro')]}">
+            <field name="standard_price">135</field>
+        </record>
+
+        <!-- stock.quant -->
+        <record id="stock_quant_1" model="stock.quant">
+            <field name="product_id" ref="ro_product_1"/>
+            <field name="location_id" ref="stock_location_a"/>
+            <field name="inventory_quantity">100</field>
+        </record>
+        <record id="stock_quant_2" model="stock.quant">
+            <field name="product_id" ref="product.product_product_6"/>
+            <field name="location_id" ref="stock_location_a"/>
+            <field name="inventory_quantity">100</field>
+        </record>
+        <record id="stock_quant_3" model="stock.quant">
+            <field name="product_id" ref="product.product_product_6"/>
+            <field name="location_id" ref="stock_location_b"/>
+            <field name="inventory_quantity">150</field>
+        </record>
+        <record id="stock_quant_4" model="stock.quant">
+            <field name="product_id" ref="product.product_product_7"/>
+            <field name="location_id" ref="stock_location_a"/>
+            <field name="inventory_quantity">60</field>
+        </record>
+        <record id="stock_quant_5" model="stock.quant">
+            <field name="product_id" ref="ro_product_2"/>
+            <field name="location_id" ref="stock_location_a"/>
+            <field name="inventory_quantity">10</field>
+        </record>
+        <function
+                model="stock.quant"
+                name="action_apply_inventory"
+                eval="[[
+                    ref('l10n_ro_saft_stock.stock_quant_1'),
+                    ref('l10n_ro_saft_stock.stock_quant_2'),
+                    ref('l10n_ro_saft_stock.stock_quant_3'),
+                    ref('l10n_ro_saft_stock.stock_quant_4'),
+                    ref('l10n_ro_saft_stock.stock_quant_5'),
+                ]]"/>
+
+        <!-- change value of FIFO product -->
+        <record id="ro_product_2" model="product.product" context="{'allowed_company_ids': [ref('base.demo_company_ro')]}">
+            <field name="standard_price">10.0</field>
+        </record>
+
+        <!-- more stock.quant -->
+        <record id="stock_quant_6" model="stock.quant">
+            <field name="product_id" ref="ro_product_1"/>
+            <field name="location_id" ref="stock_location_a"/>
+            <field name="inventory_quantity">90</field>
+        </record>
+        <record id="stock_quant_7" model="stock.quant">
+            <field name="product_id" ref="ro_product_2"/>
+            <field name="location_id" ref="stock_location_a"/>
+            <field name="inventory_quantity">20</field>
+        </record>
+        <function
+                model="stock.quant"
+                name="action_apply_inventory"
+                eval="[[
+                    ref('l10n_ro_saft_stock.stock_quant_6'),
+                    ref('l10n_ro_saft_stock.stock_quant_7'),
+                ]]"/>
+
+        <!-- stock.picking -->
+        <record id="stock_picking_1" model="stock.picking">
+            <field name="name">Picking 1</field>
+            <field name="company_id" ref="base.demo_company_ro"/>
+            <field name="location_id" ref="stock_location_a"/>
+            <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="picking_type_id" ref="picking_type_out"/>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="move_ids" model="stock.move" eval="[
+                Command.create({
+                    'name': 'Stock move 1.1',
+                    'product_id': ref('product.product_product_6'),
+                    'company_id': ref('base.demo_company_ro'),
+                    'product_uom_qty': 50,
+                }),
+                Command.create({
+                    'name': 'Stock move 1.2',
+                    'product_id': ref('product.product_product_7'),
+                    'company_id': ref('base.demo_company_ro'),
+                    'product_uom_qty': 20,
+                }),
+            ]"/>
+        </record>
+        <record id="stock_picking_2" model="stock.picking">
+            <field name="name">Picking 2</field>
+            <field name="company_id" ref="base.demo_company_ro"/>
+            <field name="location_id" ref="stock.stock_location_suppliers"/>
+            <field name="location_dest_id" ref="stock_location_b"/>
+            <field name="picking_type_id" ref="picking_type_in"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="move_ids" model="stock.move" eval="[
+                Command.create({
+                    'name': 'Stock move 2.1',
+                    'product_id': ref('product.product_product_8'),
+                    'company_id': ref('base.demo_company_ro'),
+                    'product_uom_qty': 50,
+                }),
+            ]"/>
+        </record>
+        <record id="stock_picking_3" model="stock.picking">
+            <field name="name">Picking 3</field>
+            <field name="company_id" ref="base.demo_company_ro"/>
+            <field name="location_id" ref="stock.stock_location_suppliers"/>
+            <field name="location_dest_id" ref="stock_location_c"/>
+            <field name="picking_type_id" ref="picking_type_in"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="move_ids" model="stock.move" eval="[
+                Command.create({
+                    'name': 'Stock move 3.1',
+                    'product_id': ref('product.product_product_7'),
+                    'company_id': ref('base.demo_company_ro'),
+                    'product_uom_qty': 20,
+                }),
+            ]"/>
+        </record>
+        <record id="stock_picking_4" model="stock.picking">
+            <field name="name">Picking 4</field>
+            <field name="company_id" ref="base.demo_company_ro"/>
+            <field name="location_id" ref="stock_location_a"/>
+            <field name="location_dest_id" ref="stock_location_b"/>
+            <field name="picking_type_id" ref="picking_type_internal"/>
+            <field name="move_ids" model="stock.move" eval="[
+                Command.create({
+                    'name': 'Stock move 4.1',
+                    'product_id': ref('product.product_product_7'),
+                    'company_id': ref('base.demo_company_ro'),
+                    'product_uom_qty': 10,
+                }),
+            ]"/>
+        </record>
+        <record id="stock_picking_5" model="stock.picking">
+            <field name="name">Picking 5</field>
+            <field name="company_id" ref="base.demo_company_ro"/>
+            <field name="location_id" ref="stock_location_a"/>
+            <field name="location_dest_id" ref="stock_location_c"/>
+            <field name="picking_type_id" ref="picking_type_internal"/>
+            <field name="move_ids" model="stock.move" eval="[
+                Command.create({
+                    'name': 'Stock move 5.1',
+                    'product_id': ref('product.product_product_7'),
+                    'company_id': ref('base.demo_company_ro'),
+                    'product_uom_qty': 10,
+                }),
+            ]"/>
+        </record>
+        
+        <function
+                model="stock.picking"
+                name="button_validate"
+                context="{'demo_mode': True}"
+                eval="[[
+                    ref('l10n_ro_saft_stock.stock_picking_1'),
+                    ref('l10n_ro_saft_stock.stock_picking_2'),
+                    ref('l10n_ro_saft_stock.stock_picking_3'),
+                    ref('l10n_ro_saft_stock.stock_picking_4'),
+                    ref('l10n_ro_saft_stock.stock_picking_5'),
+                ]]"/>
+    </data>
+</odoo>

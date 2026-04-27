@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AgedPartnerBalanceLineName" t-inherit="account_reports.AccountReportLineNameCustomizable">
+        <xpath expr="//td[@data-id='line_name']" position="attributes">
+            <t t-if="props.line.unfoldable">
+                <attribute name="class" add="more" separator=" "/>
+            </t>
+        </xpath>
+
+        <xpath expr="//t[@data-id='line_buttons']" position="inside">
+            <t t-if="props.line.unfoldable">
+                <button
+                    class="btn btn_action"
+                    t-on-click="(ev) => controller.reportAction(ev, 'caret_option_open_record_form', { line_id: props.line.id })"
+                >
+                    Partner
+                </button>
+
+                <button
+                    class="btn btn_action"
+                    t-on-click="(ev) => controller.reportAction(ev, 'open_customer_statement', { line_id: props.line.id })"
+                >
+                    Statement
+                </button>
+            </t>
+        </xpath>
+
+        <xpath expr="//button[@data-id='btn_foldable']" position="after">
+            <t t-if="props.line.trust === 'good'">
+                <i class="fa fa-circle text-success partner_trust" title="Partner is good"/>
+            </t>
+            <t t-elif="props.line.trust === 'bad'">
+                <i class="fa fa-circle text-danger partner_trust" title="Partner is bad"/>
+            </t>
+        </xpath>
+
+    </t>
+</templates>

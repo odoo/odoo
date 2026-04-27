@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="voip_provider_tree_view" model="ir.ui.view">
+        <field name="name">VoIP Provider List View</field>
+        <field name="model">voip.provider</field>
+        <field name="arch" type="xml">
+            <list string="VoIP Providers" editable="bottom">
+                <field name="name"/>
+                <field name="ws_server" required="mode == 'prod'"/>
+                <field name="pbx_ip" required="mode == 'prod'"/>
+                <field name="mode"/>
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_voip_provider_view" model="ir.actions.act_window">
+        <field name="name">VoIP Providers</field>
+        <field name="res_model">voip.provider</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="voip_provider_tree_view"/>
+    </record>
+
+    <menuitem id="voip_provider_view_menu"
+        name="VoIP Providers"
+        parent="phone_validation.phone_menu_main"
+        sequence="4"
+        action="action_voip_provider_view"/>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.form.inherit.l10n_au_hr_payroll_account</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="l10n_au_hr_payroll.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='l10n_au']//group[@name='l10n_au_general']" position="inside">
+                <field name="l10n_au_report_to_w3"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

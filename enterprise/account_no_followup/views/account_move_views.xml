@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_followup_invoice_list" model="ir.ui.view">
+            <field name="name">account.followup.invoice.list</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="invoice_date_due" position="after">
+                    <field name="no_followup" widget="boolean_toggle"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

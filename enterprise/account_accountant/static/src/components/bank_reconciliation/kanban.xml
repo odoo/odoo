@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- Kanban controller -->
+    <t t-name="account.BankRecoKanbanController" t-inherit="web.KanbanView" t-inherit-mode="primary">
+        <xpath expr="//Layout" position="attributes">
+            <attribute name="className">'o_bank_rec_main_div overflow-auto'</attribute>
+        </xpath>
+        <xpath expr="//t[@t-component='props.Renderer']" position="after">
+            <div class="o_bank_rec_right_div">
+                <t t-if="state.bankRecStLineId and this.bankRecModel">
+                    <t t-call="account_accountant.BankRecRecordForm"/>
+                </t>
+            </div>
+        </xpath>
+    </t>
+
+    <!-- Kanban record -->
+    <t t-name="account.BankRecKanbanRecord" t-inherit="web.KanbanRecord" t-inherit-mode="primary">
+        <xpath expr="//article" position="attributes">
+            <attribute name="t-att-tabindex"/>
+        </xpath>
+    </t>
+
+    <!-- Kanban renderer -->
+    <t t-name="account.BankRecKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[@t-ref='root']" position="attributes">
+            <attribute name="class" add="o_bank_rec_kanban_div" separator=" "/>
+        </xpath>
+        <xpath expr="//t[@t-as='groupOrRecord']" position="before">
+            <t t-set="statementGroups" t-value="groups()"/>
+            <BankRecGlobalInfo t-if="globalState.bankRecStLineId and globalState.journalId"
+                                journalId="globalState.journalId"
+                                journalBalanceAmount="globalState.journalBalanceAmount"/>
+            <t t-if="globalState.quickCreateState.isVisible">
+                <BankRecQuickCreate globalState="globalState"
+                    onValidate="(record, mode) => this.validateQuickCreate(record, mode)"
+                    onCancel="() => this.cancelQuickCreate()"
+                    quickCreateView="props.quickCreateState.view"/>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-else='']/KanbanRecord" position="before">
+            <t t-set="recData" t-value="groupOrRecord.record.data"/>
+            <t t-if="recData.statement_id
+                     and statementGroups.length
+                     and recData.statement_id[0] === statementGroups[0].id">
+                <!-- remove the first statement from the list of statements -->
+                <t t-set="stGroup" t-value="statementGroups.shift()"/>
+                <t t-set="stClass" t-value="!(recData.statement_complete and recData.statement_valid) and 'text-danger' or ''"/>
+                <span t-if="stGroup" class="kanban-statement d-flex text-truncate align-self-center fw-bold w-100">
+                    <span t-attf-class="{{stClass}} kanban-statement-subline text-truncate flex-fill text-start"
+                          t-att-title="stGroup.name"
+                          t-out="stGroup.name"
+                        />
+                    <span t-on-click.stop.prevent="() => this.openStatementDialog(recData.statement_id[0])"
+                          t-attf-class="kanban-statement-subline btn btn-link"
+                          name="kanban-subline-clickable-amount"
+                          t-esc="stGroup.balance"/>
+                </span>
+            </t>
+        </xpath>
+        <t t-call="web.ActionHelper" position="replace">
+            <div t-if="props.noContentHelp" class="o_view_nocontent">
+                <div class="o_nocontent_help">
+                    <RainbowMan t-if="this.env.methods.showRainbowMan()" t-props="this.env.methods.getRainbowManContentProps()"/>
+                    <t t-else="">
+                        <t t-out="props.noContentHelp"/>
+                        <BankRecFinishButtons/>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

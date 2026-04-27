@@ -1,0 +1,580 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_sale_renting
+#
+# Translators:
+# Wil Odoo, 2024
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:50+0000\n"
+"PO-Revision-Date: 2026-03-21 18:31+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Slovak <https://translate.odoo.com/projects/odoo-18/"
+"website_sale_renting/sk/>\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
+"n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.16.2\n"
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+msgid ""
+"\n"
+"                The new period is not valid for some products of your cart.\n"
+"                Your changes on the rental period are not taken into "
+"account.\n"
+"            "
+msgstr ""
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+msgid ""
+"\n"
+"                Your rental duration was too short. Unfortunately, we do not "
+"process\n"
+"                rentals that last less than %(duration)s %(unit)s.\n"
+"            "
+msgstr ""
+"\n"
+"                Doba prenájmu bola príliš krátka. Bohužiaľ, neakceptujeme\n"
+"                prenájmy, ktoré trvajú menej ako %(duration)s %(unit)s.\n"
+"            "
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+msgid ""
+"\n"
+"                Your rental product had invalid date of pickup (%"
+"(start_date)s).\n"
+"                Unfortunately, we do not process pickups on that weekday.\n"
+"            "
+msgstr ""
+"\n"
+"                Váš prenajatý produkt mal neplatný dátum vyzdvihnutia (%"
+"(start_date)s).\n"
+"                Bohužiaľ, v tento deň v týždni vyzdvihnutia neprebiehajú.\n"
+"            "
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+msgid ""
+"\n"
+"                Your rental product had invalid date of return (%"
+"(end_date)s).\n"
+"                Unfortunately, we do not process returns on that weekday.\n"
+"            "
+msgstr ""
+"\n"
+"                Váš prenajatý produkt mal neplatný dátum vrátenia (%"
+"(end_date)s).\n"
+"                Bohužiaľ, v tento deň v týždni vrátenia neprijímame.\n"
+"            "
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+msgid ""
+"\n"
+"                Your rental product had invalid dates of pickup (%"
+"(start_date)s) and\n"
+"                return (%(end_date)s). Unfortunately, we do not process "
+"pickups nor\n"
+"                returns on those weekdays.\n"
+"            "
+msgstr ""
+"\n"
+"                Váš prenajatý produkt mal neplatné dátumy vyzdvihnutia (%"
+"(start_date)s) a\n"
+"                vrátenia (%(end_date)s). Bohužiaľ, v týchto dňoch "
+"neprevádzame vyzdvihnutia \n"
+"                ani vrátenia.\n"
+"            "
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+msgid ""
+"\n"
+"            Some of your rental products (%(product)s) cannot be rented "
+"during the\n"
+"            selected period and your cart must be updated. We're sorry for "
+"the\n"
+"            inconvenience.\n"
+"        "
+msgstr ""
+"\n"
+"            Niektoré z vašich produktov určených na prenájom (%(product)s) "
+"nie je možné prenajať počas\n"
+"            vybraného obdobia a je potrebné aktualizovať váš košík. "
+"Ospravedlňujeme sa za\n"
+"            nepríjemnosti.\n"
+"        "
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "(%s days)."
+msgstr "(%s dni)."
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "(%s hours)."
+msgstr "(%s hodiny)."
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "(%s months)."
+msgstr "(%s mesiace)."
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "(%s weeks)."
+msgstr "(%s týždne)."
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search_options
+msgid ", .s_rental_search"
+msgstr ""
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.o_wsale_offcanvas
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.products
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.products_collapsible
+msgid "<b>Rental Period</b>"
+msgstr "<b>Obdobie prenájmu</b>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_product
+msgid ""
+"<i class=\"fa fa-warning\" role=\"img\" aria-label=\"Warning\"/>\n"
+"                            <span name=\"renting_warning_message\"/>"
+msgstr ""
+"<i class=\"fa fa-warning\" role=\"img\" aria-label=\"Varovanie\"/>\n"
+"                            <span name=\"renting_warning_message\"/>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.cart
+msgid ""
+"<i class=\"fa fa-warning\" role=\"img\" aria-label=\"Warning\"/>\n"
+"                        <span name=\"renting_warning_message\"/>"
+msgstr ""
+"<i class=\"fa fa-warning\" role=\"img\" aria-label=\"Varovanie\"/>\n"
+"                        <span name=\"renting_warning_message\"/>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search
+msgid ""
+"<i class=\"fa fa-warning\" role=\"img\" aria-label=\"Warning\"/>\n"
+"                    <span name=\"renting_warning_message\"/>"
+msgstr ""
+"<i class=\"fa fa-warning\" role=\"img\" aria-label=\"Varovanie\"/>\n"
+"                    <span name=\"renting_warning_message\"/>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.datepicker
+msgid ""
+"<i class=\"fa fa-warning\" role=\"img\" aria-label=\"Warning\"/>\n"
+"                <span name=\"renting_warning_message\"/>"
+msgstr ""
+"<i class=\"fa fa-warning\" role=\"img\" aria-label=\"Varovanie\"/>\n"
+"                <span name=\"renting_warning_message\"/>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.o_wsale_offcanvas
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.products
+msgid ""
+"<small class=\"mx-auto\"><b>Clear Rental Period</b></small>\n"
+"                                <i class=\"oi oi-close\" role=\"img\"/>"
+msgstr ""
+"<small class=\"mx-auto\"><b>Zmazať obdobie prenájmu</b></small>\n"
+"                                <i class=\"oi oi-close\" role=\"img\"/>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_search_result_price
+msgid "<small>from</small>"
+msgstr "<small>od</small>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_search_result_price
+msgid "<small>per</small>"
+msgstr "<small>za</small>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search
+msgid ""
+"<span class=\"d-md-none me-2\">Search period</span>\n"
+"                                <i class=\"fa fa-search\" role=\"img\"/>"
+msgstr ""
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.suggested_products_list
+msgid "<span class=\"ps-1\">per</span>"
+msgstr "<span class=\"ps-1\">za</span>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.price_dynamic_filter_template_product_product
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_products_price
+msgid "<span>/</span>"
+msgstr "<span>/</span>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_product
+msgid "<span>Rental Period</span>"
+msgstr ""
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.products_item
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_products_price
+msgid "<span>per</span>"
+msgstr "<span>za</span>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_product
+msgid "<strong class=\"attribute_name\">Pricing</strong>"
+msgstr "<strong class=\"attribute_name\">Cena</strong>"
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/snippets/s_rental_search/options.js:0
+msgid "All"
+msgstr "Všetko"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.cart
+msgid "Applies to all rented items"
+msgstr ""
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search_options
+msgid "Attribute Filter"
+msgstr "Filter atribútov"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_res_company
+msgid "Companies"
+msgstr "Spoločnosti"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_res_config_settings
+msgid "Config Settings"
+msgstr "Nastavenia konfigurácie"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.snippet_options
+msgid "Datepicker"
+msgstr ""
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search_options
+msgid "Day"
+msgstr "Deň"
+
+#. module: website_sale_renting
+#: model:ir.model.fields.selection,name:website_sale_renting.selection__res_company__renting_minimal_time_unit__day
+msgid "Days"
+msgstr "Dni"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.res_config_settings_view_form
+msgid "Days during which pickup and return are not possible."
+msgstr "Dni, počas ktorých nie je možné vyzdvihnúť ani vrátiť tovar."
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.cart
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.datepicker
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_product
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search
+msgid "End date"
+msgstr "Dátum ukončenia"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_fri
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_fri
+msgid "Friday"
+msgstr "Piatok"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.price_dynamic_filter_template_product_product
+msgid "From"
+msgstr "Od"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.o_wsale_offcanvas
+msgid "Go to your cart"
+msgstr "Prejsť do košíka"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search_options
+msgid "Hour"
+msgstr "Hodina"
+
+#. module: website_sale_renting
+#: model:ir.model.fields.selection,name:website_sale_renting.selection__res_company__renting_minimal_time_unit__hour
+msgid "Hours"
+msgstr "Hodiny"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_minimal_time_duration
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_minimal_time_duration
+msgid "Minimal Rental Duration"
+msgstr "Minimálna dĺžka prenájmu"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_minimal_time_unit
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_minimal_time_unit
+msgid "Minimal Rental Duration Unit"
+msgstr "Minimálna dĺžka prenájmu - jednotka"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.res_config_settings_view_form
+msgid "Minimal duration between pickup and return."
+msgstr "Minimálna doba medzi vyzdvihnutím a vrátením."
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.res_config_settings_view_form
+msgid "Minimal time of rental"
+msgstr "Minimálna dĺžka prenájmu"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_mon
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_mon
+msgid "Monday"
+msgstr "Pondelok"
+
+#. module: website_sale_renting
+#: model:ir.model.fields.selection,name:website_sale_renting.selection__res_company__renting_minimal_time_unit__month
+msgid "Months"
+msgstr "Mesiace"
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+msgid "No dates were specified on your rental order."
+msgstr "Vo vašej objednávke prenájmu neboli uvedené žiadne termíny."
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/product_template.py:0
+msgid "Please choose a return date that is after the pickup date."
+msgstr ""
+"Vyberte si prosím dátum vrátenia, ktorý je neskorší ako dátum vyzdvihnutia."
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "Please select a rental period."
+msgstr "Vyberte si prosím dobu prenájmu."
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_product_pricelist
+msgid "Pricelist"
+msgstr "Cenník"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_product_pricing
+msgid "Pricing rule of rental products"
+msgstr "Cenové pravidlá pre produkty na prenájom"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_product_template
+msgid "Product"
+msgstr "Produkt"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_product_product
+msgid "Product Variant"
+msgstr "Varianta produktu"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.res_config_settings_view_form_inherit_website
+msgid "Rent Online"
+msgstr "Prenajímať online"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.cart_summary
+msgid "Rental Period"
+msgstr "Obdobie prenájmu"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.accordion_rental_item
+msgid "Rental Pricing"
+msgstr "Cena prenájmu"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.snippets
+msgid "Rental Search"
+msgstr "Vyhľadanie prenájmu"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.cart
+msgid "Rental period"
+msgstr "Obdobie prenájmu"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_sale_order
+msgid "Sales Order"
+msgstr "Objednávka "
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Položka objednávok"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_sat
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_sat
+msgid "Saturday"
+msgstr "Sobota"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,help:website_sale_renting.field_res_config_settings__tz
+#: model:ir.model.fields,help:website_sale_renting.field_website__tz
+msgid "Select your website timezone here."
+msgstr "Tu vyberte časové pásmo vašej webovej stránky."
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+msgid ""
+"Some of your rental products cannot be rented during the selected period and "
+"your cart must be updated. We're sorry for the inconvenience."
+msgstr ""
+"Niektoré z vašich vybraných produktov nie je možné prenajať v zvolenom "
+"období, preto je potrebné aktualizovať obsah vášho košíka. Ospravedlňujeme "
+"sa za spôsobené nepríjemnosti."
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.cart
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.datepicker
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_product
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search
+msgid "Start date"
+msgstr "Dátum začiatku"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_sun
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_sun
+msgid "Sunday"
+msgstr "Nedeľa"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.o_wsale_offcanvas
+msgid "The period must be the same for all the products in your cart."
+msgstr "Obdobie musí byť rovnaké pre všetky produkty vo vašom košíku."
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.products
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_product
+msgid ""
+"The period must be the same for all the products in your cart. Go to your "
+"cart to change it or create different orders."
+msgstr ""
+"Obdobie musí byť rovnaké pre všetky produkty vo vašom košíku. Prejdite do "
+"košíka, aby ste ho zmenili, alebo vytvorte samostatné objednávky."
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "The pickup date cannot be in the past."
+msgstr "Dátum vyzdvihnutia nemôže byť v minulosti."
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "The rental lasts less than the minimal rental duration %s"
+msgstr "Doba prenájmu je kratšia ako minimálna doba prenájmu %s"
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "The return date should be after the pickup date."
+msgstr "Dátum vrátenia by mal byť neskôr ako dátum vyzdvihnutia."
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_thu
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_thu
+msgid "Thursday"
+msgstr "Štvrtok"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__tz
+#: model:ir.model.fields,field_description:website_sale_renting.field_website__tz
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.res_config_settings_view_form_inherit_website
+msgid "Timezone"
+msgstr "Časová zóna"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search_options
+msgid "Timing"
+msgstr "Časovanie"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_tue
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_tue
+msgid "Tuesday"
+msgstr "Utorok"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.res_config_settings_view_form
+msgid "Unavailability days"
+msgstr "Nedostupné dni"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_website
+msgid "Website"
+msgstr "Webstránka"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_wed
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_wed
+msgid "Wednesday"
+msgstr "Streda"
+
+#. module: website_sale_renting
+#: model:ir.model.fields.selection,name:website_sale_renting.selection__res_company__renting_minimal_time_unit__week
+msgid "Weeks"
+msgstr "Týždne"
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "You cannot pick up your rental on that day of the week."
+msgstr "V tento deň v týždni si nemôžete vyzdvihnúť prenajaté produkty."
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "You cannot return your rental on that day of the week."
+msgstr "V tento deň v týždni nemôžete vrátiť prenajaté produkty."
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+msgid "Your rental product cannot be pickedup in the past."
+msgstr "Váš prenajatý produkt nie je možné vyzdvihnúť spätne."
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.products_item
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.suggested_products_list
+msgid "from"
+msgstr "od"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.o_wsale_offcanvas
+msgid "to change it or create different orders."
+msgstr "pre zmenu alebo vytvorenie iných objednávok."

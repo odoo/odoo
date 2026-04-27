@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- ARTICLE -->
+    <record id="rule_knowledge_article_system" model="ir.rule">
+        <field name="name">Articles: System = CRUD on all articles</field>
+        <field name="model_id" ref="model_knowledge_article"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+
+    <record id="rule_knowledge_article_users_read" model="ir.rule">
+        <field name="name">Articles: users/portal: read based on access</field>
+        <field name="model_id" ref="model_knowledge_article"/>
+        <field name="domain_force">[('user_has_access', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal'))]"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="rule_knowledge_article_users_write" model="ir.rule">
+        <field name="name">Articles: users/portal: write based on flag</field>
+        <field name="model_id" ref="model_knowledge_article"/>
+        <field name="domain_force">[('user_has_write_access', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="False"/>
+    </record>
+
+    <!-- ARTICLE MEMBER -->
+    <record id="rule_knowledge_article_member_users" model="ir.rule">
+        <field name="name">Article members: users/portal: read article members</field>
+        <field name="model_id" ref="model_knowledge_article_member"/>
+        <field name="domain_force">[('article_id.user_has_access', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal'))]"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="rule_knowledge_article_member_system" model="ir.rule">
+        <field name="name">Article members: System CRUD all</field>
+        <field name="model_id" ref="model_knowledge_article_member"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+
+    <!-- ARTICLE FAVORITE -->
+    <record id="rule_knowledge_article_favorite_users" model="ir.rule">
+        <field name="name">Article favorite: users/portal: own + readable articles</field>
+        <field name="model_id" ref="model_knowledge_article_favorite"/>
+        <field name="domain_force">[('user_id', '=', user.id), ('article_id.user_has_access', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="rule_knowledge_article_favorite_system" model="ir.rule">
+        <field name="name">Article favorite: System CRUD all</field>
+        <field name="model_id" ref="model_knowledge_article_favorite"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+
+    <!-- ITEM STAGES -->
+    <record id="rule_knowledge_article_stage_users_read" model="ir.rule">
+        <field name="name">Item Stages (Read): users/portal: readable articles</field>
+        <field name="model_id" ref="model_knowledge_article_stage"/>
+        <field name="domain_force">[('parent_id.user_has_access', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="rule_knowledge_article_stage_users_write" model="ir.rule">
+        <field name="name">Item Stages (Create/Write/Unlink): users/portal: writable articles</field>
+        <field name="model_id" ref="model_knowledge_article_stage"/>
+        <field name="domain_force">[('parent_id.user_has_write_access', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="False"/>
+    </record>
+
+    <record id="rule_knowledge_article_stage_system" model="ir.rule">
+        <field name="name">Item Stages: System CRUD all</field>
+        <field name="model_id" ref="model_knowledge_article_stage"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+
+    <!-- INVITE WIZARD -->
+    <record id="rule_knowledge_invite_users" model="ir.rule">
+        <field name="name">Invite: Users invite members</field>
+        <field name="model_id" ref="model_knowledge_invite"/>
+        <field name="domain_force">[('article_id.user_has_write_access', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="rule_knowledge_invite_system" model="ir.rule">
+        <field name="name">Invite: System invite members</field>
+        <field name="model_id" ref="model_knowledge_invite"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+
+    <!-- ARTICLE THREADS -->
+    <record id="rule_knowledge_article_thread_read" model="ir.rule">
+        <field name="name">Articles Threads: portal/users: read based on article access</field>
+        <field name="model_id" ref="model_knowledge_article_thread"/>
+        <field name="domain_force">[('article_id.user_has_access', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal'))]"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="rule_knowledge_article_thread_write" model="ir.rule">
+        <field name="name">Article Threads: portal/users: write and create based on article write access</field>
+        <field name="model_id" ref="model_knowledge_article_thread"/>
+        <field name="domain_force">[('article_id.user_has_write_access', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="False"/>
+    </record>
+</odoo>

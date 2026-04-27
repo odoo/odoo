@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <div t-name="knowledge.KnowledgeCommentsPanel" t-ref="root">
+        <div t-if="commentsState.displayMode === 'panel'" class="o_knowledge_comments_panel">
+            <select t-att-value="state.mode" t-on-change="onChangeMode" class="form-select border-0 my-2">
+                <option value="all">All Discussions</option>
+                <option value="resolved">Resolved Discussions</option>
+                <option value="unresolved">Open Discussions</option>
+            </select>
+            <t t-foreach="state.threadIds" t-as="threadId" t-key="threadId">
+                <div t-if="canDisplayRecord(threadId)" class="card ps-0 mb-2" t-att-class="{
+                        'o_knowledge_comment_card_borderless': !commentsState.threads[threadId],
+                    }">
+                    <div class="card-body p-0 m-0 row">
+                        <KnowledgeCommentsThread threadId="threadId"/>
+                    </div>
+                </div>
+            </t>
+            <div t-if="couldLoadMore" class="d-flex flex-column align-items-center mb-2">
+                <button class="btn btn-sm btn-link" t-on-click="loadMore" t-att-disabled="this.state.loading">
+                    Load More Discussions
+                </button>
+            </div>
+            <div t-if="!state.threadIds.length" class="o_comments_helper text-center p-4 d-flex flex-column align-items-center justify-content-end">
+                <p class="o_view_nocontent_smiling_face"/>
+                <h3>Nothing going on!</h3>
+                <p class="mb-0">
+                    Highlight content and use the <i class="fa fa-commenting"/> button to add comments
+                </p>
+            </div>
+        </div>
+    </div>
+</templates>

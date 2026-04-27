@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="resource_mail.AvatarCardResourcePopover" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_card_user_infos')]" position="inside">
+            <div class="pt-1">
+                <div t-if="roles?.length" class="d-flex flex-wrap gap-1 o_resource_roles_tags">
+                    <span class="fa fa-fw fa-certificate align-self-center" data-tooltip="Roles"/>
+                    <TagsList tags="roleTags" visibleItemsLimit="5"/>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_avatar_card_buttons')]" position="attributes">
+            <attribute t-if="roles?.length" name="class" add="pt-1" separator=" "/>
+        </xpath>
+    </t>
+</templates>

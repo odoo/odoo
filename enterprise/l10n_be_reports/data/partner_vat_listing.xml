@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_partner_vat_listing" model="account.report">
+        <field name="name">Partner VAT Listing</field>
+        <field name="filter_show_draft" eval="False"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="default_opening_date_filter">previous_year</field>
+        <field name="custom_handler_model_id" ref="model_l10n_be_partner_vat_handler"/>
+        <field name="load_more_limit" eval="80"/>
+        <field name="column_ids">
+            <record id="l10n_be_partner_vat_listing_vat_number" model="account.report.column">
+                <field name="name">VAT Number</field>
+                <field name="expression_label">vat_number</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="l10n_be_partner_vat_listing_turnover" model="account.report.column">
+                <field name="name">Turnover</field>
+                <field name="expression_label">turnover</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+            <record id="l10n_be_partner_vat_listing_vat_amount" model="account.report.column">
+                <field name="name">VAT Amount</field>
+                <field name="expression_label">vat_amount</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_be_partner_vat_listing_line" model="account.report.line">
+                <field name="name">Partner VAT Listing</field>
+                <field name="groupby">partner_id</field>
+                <field name="expression_ids">
+                    <record id="l10n_be_partner_vat_listing_line_vat_number" model="account.report.expression">
+                        <field name="label">vat_number</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_partner_vat_listing</field>
+                        <field name="subformula">vat_number</field>
+                    </record>
+                    <record id="l10n_be_partner_vat_listing_line_turnover" model="account.report.expression">
+                        <field name="label">turnover</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_partner_vat_listing</field>
+                        <field name="subformula">turnover</field>
+                    </record>
+                    <record id="l10n_be_partner_vat_listing_line_vat_amount" model="account.report.expression">
+                        <field name="label">vat_amount</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_partner_vat_listing</field>
+                        <field name="subformula">vat_amount</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+    <record id="action_account_report_l10n_be_partner_vat_listing" model="ir.actions.client">
+        <field name="name">Partner VAT Listing</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('l10n_be_reports.l10n_be_partner_vat_listing')}"/>
+    </record>
+
+    <menuitem
+            id="menu_action_account_report_l10n_be_partner_vat_listing"
+            name="Partner VAT Listing"
+            action="action_account_report_l10n_be_partner_vat_listing"
+            parent="l10n_be.account_reports_be_statements_menu"/>
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.form</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="priority">60</field>
+        <field name="arch" type="xml">
+            <field name="active" position="after">
+                <field name="leave_allocation_id" invisible="1"/>
+            </field>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_list_leaves"
+                    type="object" icon="fa-sun-o" class="oe_stat_button"
+                    invisible="not leave_allocation_id">
+                    <span>Allocations</span>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

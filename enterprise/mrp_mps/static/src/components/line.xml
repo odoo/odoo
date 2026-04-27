@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp_mps.MpsLineComponent">
+        <tbody class="o_mps_content" t-att-data-id="productionSchedule.id" t-att-data-warehouse_id="'warehouse_id' in productionSchedule and productionSchedule.warehouse_id[0]">
+            <tr class="bg-light">
+                <th>
+                    <CheckBox value='isSelected' onChange.bind="(ev) => this.toggleSelection(ev, productionSchedule.id)"/>
+                </th>
+                <th scope="col">
+                    <a href="#" class="o_mrp_mps_record_url" t-att-data-res-id="productionSchedule.product_id[0]" t-att-data-model="'product.product'" t-on-click.prevent="_onClickForecastReport"><t t-esc="productionSchedule.product_id[1]"/></a>
+                    <span t-if="'product_uom_id' in productionSchedule" class="text-muted"> by <t t-esc="productionSchedule.product_uom_id[1]"/></span>
+                    <span t-if="'warehouse_id' in productionSchedule"> - <t t-esc="productionSchedule.warehouse_id[1]"/></span>
+                    <span> </span>
+                    <button type="button" t-attf-class="{{! groups.mrp_mps_show_safety_stock and 'o_hidden' or 'btn btn-link text-muted o_no_padding o_mrp_mps_edit'}}" t-on-click.stop="(ev) => this._onClickEdit(ev, productionSchedule.id)">
+                        <span class="fa fa-pencil text-muted fa-fw" role="img" aria-label="Forecasted" title="Forecasted"/>
+                    </button>
+                </th>
+                <t t-foreach="productionSchedule.forecast_ids" t-as="forecast" t-key="forecast_index">
+                    <th class="text-end">
+                        <span t-attf-class="{{! groups.mrp_mps_show_starting_inventory and 'o_hidden' or 'text-end'}} {{forecast.starting_inventory_qty ? '' : 'o_zero_qty'}}" t-esc="formatFloat(forecast.starting_inventory_qty)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="The forecasted quantity in stock at the beginning of the period."/>
+                    </th>
+                </t>
+            </tr>
+            <tr name="demand_forecast_year_minus_2" t-attf-class="{{! groups.mrp_mps_show_actual_demand_year_minus_2 and 'o_hidden' or ''}}">
+                <th/>
+                <th scope="row">
+                    <span>Actual Demand Y-2</span>
+                </th>
+                <t t-foreach="productionSchedule.forecast_ids" t-as="forecast" t-key="forecast_index">
+                    <th class="text-end">
+                        <span t-esc="formatFloat(forecast.outgoing_qty_year_minus_2)"/>
+                    </th>
+                </t>
+            </tr>
+            <tr name="demand_forecast_year_minus_1" t-attf-class="{{! groups.mrp_mps_show_actual_demand_year_minus_1 and 'o_hidden' or ''}}">
+                <th/>
+                <th scope="row">
+                    <span>Actual Demand Y-1</span>
+                </th>
+                <t t-foreach="productionSchedule.forecast_ids" t-as="forecast" t-key="forecast_index">
+                    <th class="text-end">
+                        <span t-esc="formatFloat(forecast.outgoing_qty_year_minus_1)"/>
+                    </th>
+                </t>
+            </tr>
+            <tr t-ref="forecastRow" name="demand_forecast" t-attf-class="{{! (groups.mrp_mps_show_demand_forecast or groups.mrp_mps_show_actual_demand) and 'o_hidden' or ''}}">
+                <th class="o_text_align"> - </th>
+                <th scope="row">
+                    <span t-attf-class="{{! groups.mrp_mps_show_actual_demand and 'o_hidden' or ''}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="The confirmed demand, based on the confirmed sales orders.">Actual</span>
+                    <span t-attf-class="{{! (groups.mrp_mps_show_actual_demand and groups.mrp_mps_show_demand_forecast) and 'o_hidden' or ''}}"> / </span>
+                    <span t-attf-class="{{! groups.mrp_mps_show_demand_forecast and 'o_hidden' or ''}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="The forecasted demand. This value has to be entered manually.">Forecasted Demand</span>
+                </th>
+                <t t-foreach="productionSchedule.forecast_ids" t-as="forecast" t-key="forecast_index">
+                    <th>
+                        <div class="o_mps_inline">
+                            <a href="#"
+                            name="actual_demand"
+                            t-on-click="_onClickOpenDetails"
+                            data-action="action_open_actual_demand_details"
+                            t-att-data-date_index="forecast_index"
+                            t-att-data-date_start="forecast.date_start"
+                            t-att-data-date_stop="forecast.date_stop"
+                            t-attf-class="{{! groups.mrp_mps_show_actual_demand and 'o_hidden' or 'o_mrp_mps_open_details'}} {{forecast.outgoing_qty ? '' : 'o_zero_qty'}}">
+                                <t t-esc="formatFloat(forecast.outgoing_qty)"/>
+                            </a>
+                            <span t-attf-class="{{! (groups.mrp_mps_show_actual_demand and groups.mrp_mps_show_demand_forecast) and 'o_hidden' or ''}}"> / </span>
+                            <input type="text"
+                            t-att-data-date_index="forecast_index"
+                            t-attf-class="text-end o_highlight form-control
+                            {{! groups.mrp_mps_show_demand_forecast and 'o_hidden' or ''}}
+                            {{forecast.forecast_qty ? '' : 'o_zero_qty'}}"
+                            t-att-value="formatFloat(forecast.forecast_qty)"
+                            t-on-change.stop="(ev) => this._onChangeForecast(ev, productionSchedule.id)"
+                            t-on-focus.prevent="_onFocusInput"/>
+                        </div>
+                    </th>
+                </t>
+            </tr>
+            <tr name="indirect_demand" t-attf-class="{{(! groups.mrp_mps_show_indirect_demand or ! productionSchedule.has_indirect_demand) and 'o_hidden' or ''}}">
+                <th class="o_text_align"> - </th>
+                <th scope="row" data-bs-toggle="tooltip" data-bs-placement="bottom" title="The forecasted demand to fulfill the needs in components of the Manufacturing Orders.">
+                    Indirect Demand Forecast
+                </th>
+                <t t-foreach="productionSchedule.forecast_ids" t-as="forecast" t-key="forecast_index">
+                    <th t-attf-class="text-end {{forecast.indirect_demand_qty ? 'text-muted' : ''}} {{forecast.indirect_demand_qty ? '' : 'o_zero_qty'}}">
+                        <t t-esc="formatFloat(forecast.indirect_demand_qty)"/>
+                    </th>
+                </t>
+            </tr>
+            <tr t-ref="replenishRow" name="to_replenish" t-attf-class="{{! (groups.mrp_mps_show_to_replenish or groups.mrp_mps_show_actual_replenishment) and 'o_hidden' or ''}}">
+                <th class="o_text_align"> + </th>
+                <th scope="row">
+                    <span t-attf-class="{{! groups.mrp_mps_show_actual_replenishment and 'o_hidden' or ''}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="The quantity being replenished, based on the Requests for Quotation and the Manufacturing Orders.">Actual</span>
+                    <span t-attf-class="{{! (groups.mrp_mps_show_actual_replenishment and groups.mrp_mps_show_to_replenish) and 'o_hidden' or ''}}"> / </span>
+                    <span t-attf-class="{{! groups.mrp_mps_show_to_replenish and 'o_hidden' or ''}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="The quantity to replenish through Purchase Orders or Manufacturing Orders.">Replenishment: </span>
+                    <button type="button" title="Replenish" t-attf-class="{{! groups.mrp_mps_show_to_replenish and 'o_hidden' or 'btn btn-secondary o_mrp_mps_procurement'}}"
+                            t-if="forecastToReplenish"
+                            t-on-click.stop="() => this._onClickReplenish(productionSchedule.id)"
+                            t-on-mouseover.stop="_onMouseOverReplenish"
+                            t-on-mouseout.stop="_onMouseOutReplenish">
+                        Order
+                    </button>
+                </th>
+                <t t-foreach="productionSchedule.forecast_ids" t-as="forecast" t-key="forecast_index">
+                    <th t-attf-class="o_forecast_stock {{
+                        forecast.to_replenish and 'o_mrp_mps_to_replenish' or ''
+                        }} {{
+                        forecast.forced_replenish and 'o_mrp_mps_forced_replenish' or ''
+                        }}">
+                        <div class="o_mps_inline">
+                            <a href="#"
+                            name="actual_replenishment"
+                            t-on-click.prevent="_onClickOpenDetails"
+                            data-action="action_open_actual_replenishment_details"
+                            t-att-data-date_index="forecast_index"
+                            t-att-data-date_start="forecast.date_start"
+                            t-att-data-date_stop="forecast.date_stop"
+                            t-attf-class="o_mrp_mps_open_details {{
+                                ! groups.mrp_mps_show_actual_replenishment and 'o_hidden'
+                                }}">
+                                <t t-esc="formatFloat(forecast.incoming_qty)"/>
+                            </a>
+                            <span t-attf-class="{{! (groups.mrp_mps_show_actual_replenishment and groups.mrp_mps_show_to_replenish) and 'o_hidden' or ''}}"> / </span>
+                            <button type="button"
+                                t-if="forecast.replenish_qty_updated"
+                                t-on-click.stop="(ev) => this._onClickAutomaticMode(ev, productionSchedule.id)"
+                                t-att-data-date_index="forecast_index"
+                                t-attf-class="btn btn-link input-group-addon
+                                o_mrp_mps_automatic_mode fa fa-times o_no_padding
+                                {{! groups.mrp_mps_show_to_replenish and 'o_hidden' or ''}}"/>
+                            <input type="text"
+                            t-att-data-date_index="forecast_index"
+                            t-attf-class="form-control text-end
+                                o_mrp_mps_input_replenish_qty
+                                {{! groups.mrp_mps_show_to_replenish and 'o_hidden' or ''}}
+                                {{(!isReadonly and forecast.state == 'launched') and 'bg-secondary' or
+                                (!isReadonly and forecast.state == 'to_relaunch') and 'bg-warning-subtle' or
+                                (!isReadonly and forecast.state == 'to_correct') and 'bg-danger-subtle' or
+                                (!isReadonly and forecast.to_replenish) and 'bg-success-subtle' or
+                                (forecast.replenish_qty_updated and props.data.replenish_trigger != 'never') and 'bg-info-subtle' or ''
+                                }} {{
+                                forecast.replenish_qty ? '' : 'o_zero_qty'
+                                }}"
+                            t-att-value="formatFloat(forecast.replenish_qty)"
+                            t-on-change.stop="(ev) => this._onChangeToReplenish(ev, productionSchedule.id)"
+                            t-on-focus="_onFocusInput"
+                            t-att-readonly="isReadonly"/>
+                        </div>
+                    </th>
+                </t>
+            </tr>
+            <tr name="safety_stock" t-attf-class="{{! (groups.mrp_mps_show_safety_stock or groups.mrp_mps_show_available_to_promise) and 'o_hidden' or ''}}">
+                <th class="o_text_align"> = </th>
+                <th scope="row">
+                    <span t-attf-class="{{! groups.mrp_mps_show_available_to_promise and 'o_hidden' or ''}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Quantity predicted to be available for sale at the end of the period (= to replenish - actual demand).">ATP</span>
+                    <span t-attf-class="{{! (groups.mrp_mps_show_safety_stock and groups.mrp_mps_show_available_to_promise) and 'o_hidden' or ''}}"> / </span>
+                    <span t-attf-class="{{! groups.mrp_mps_show_safety_stock and 'o_hidden' or ''}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="The forecasted quantity in stock at the end of the period.">Forecasted Stock</span>
+                </th>
+                <t t-foreach="productionSchedule.forecast_ids" t-as="forecast" t-key="forecast_index">
+                    <th class="text-end">
+                        <span t-attf-class="{{! groups.mrp_mps_show_available_to_promise and 'o_hidden' or ''}} {{(forecast.starting_inventory_qty + forecast.replenish_qty - forecast.outgoing_qty) ? '' : 'o_zero_qty'}}" t-esc="formatFloat(forecast.starting_inventory_qty + forecast.replenish_qty - forecast.outgoing_qty)"/>
+                        <span t-attf-class="{{! (groups.mrp_mps_show_safety_stock and groups.mrp_mps_show_available_to_promise) and 'o_hidden' or ''}}"> / </span>
+                        <span t-attf-class="{{forecast.safety_stock_qty &lt; 0 and 'text-danger' or ''}} {{! groups.mrp_mps_show_safety_stock and 'o_hidden' or ''}} {{forecast.safety_stock_qty ? '' : 'o_zero_qty'}}" t-esc="formatFloat(forecast.safety_stock_qty)"/>
+                    </th>
+                </t>
+            </tr>
+        </tbody>
+    </t>
+
+</templates>

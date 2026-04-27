@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="account_reports.PartnerLedgerFollowupLineCell" t-inherit="account_reports.AccountReportLineCellCustomizable">
+        <xpath expr="//div[@class='content']" position="replace">
+            <div class="content">
+                <div
+                    class="o-checkbox form-check o_boolean_toggle form-switch"
+                    t-on-click.stop.prevent="toggleNoFollowup"
+                >
+                    <input type="checkbox" class="form-check-input" role="switch" t-att-checked="props.line.no_followup"/>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

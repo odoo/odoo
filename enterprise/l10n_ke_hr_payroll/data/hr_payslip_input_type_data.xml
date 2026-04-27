@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="input_fixed_bonus" model="hr.payslip.input.type">
+        <field name="name">Fixed Bonus</field>
+        <field name="code">BONUS</field>
+        <field name="country_id" ref="base.ke"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ke_hr_payroll.hr_payroll_structure_ken_employee_salary'))]"/>
+    </record>
+
+    <record id="input_fixed_commission" model="hr.payslip.input.type">
+        <field name="name">Fixed Commission</field>
+        <field name="code">COMMISSION</field>
+        <field name="country_id" ref="base.ke"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ke_hr_payroll.hr_payroll_structure_ken_employee_salary'))]"/>
+    </record>
+
+    <record id="input_helb" model="hr.payslip.input.type">
+        <field name="name">HELB</field>
+        <field name="code">HELB</field>
+        <field name="country_id" ref="base.ke"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ke_hr_payroll.hr_payroll_structure_ken_employee_salary'))]"/>
+    </record>
+
+    <record id="input_fringe_benefit" model="hr.payslip.input.type">
+        <field name="name">Fringe Benefit</field>
+        <field name="code">FRINGE_BENEFIT</field>
+        <field name="country_id" ref="base.ke"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ke_hr_payroll.hr_payroll_structure_ken_employee_salary'))]"/>
+    </record>
+
+    <record id="input_fixed_non_cash" model="hr.payslip.input.type">
+        <field name="name">Non-Cash Benefit</field>
+        <field name="code">NON_CASH_BENEFIT</field>
+        <field name="country_id" ref="base.ke"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ke_hr_payroll.hr_payroll_structure_ken_employee_salary'))]"/>
+    </record>
+</odoo>

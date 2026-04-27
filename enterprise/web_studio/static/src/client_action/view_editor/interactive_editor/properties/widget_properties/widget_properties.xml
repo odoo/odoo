@@ -1,0 +1,16 @@
+<templates>
+
+<t t-name="web_studio.ViewEditor.InteractiveEditorProperties.Widget">
+    <ViewStructureProperties>
+        <ClassAttribute
+            value="props.node.attrs.class"
+            onChange.bind="onChangeAttribute"
+        />
+        <TypeWidgetProperties
+            node="props.node"
+            onChangeAttribute.bind="onChangeAttribute"
+        />
+    </ViewStructureProperties>
+</t>
+
+</templates>

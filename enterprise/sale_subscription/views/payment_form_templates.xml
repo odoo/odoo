@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Add a disclaimer when managing a subscription from the /my/payment_method page. -->
+    <template id="payment_form_inherit" inherit_id="payment.form">
+        <xpath expr="//form" position="attributes">
+            <attribute name="t-att-data-tx-route-subscription">transaction_route_subscription</attribute>
+            <attribute name="t-att-data-subscription-anticipate">subscription_anticipate</attribute>
+        </xpath>
+        <xpath expr="//form" position="before">
+            <h3 t-if="subscription" class="mt-2 mb-0">
+                Set payment method for subscription <t t-out="subscription.name"/>
+            </h3>
+        </xpath>
+    </template>
+
+    <!-- Mention that the token will be saved when paying for a subscription. -->
+    <template id="payment_method_form" inherit_id="payment.method_form">
+        <xpath expr="//div[@name='o_payment_inline_form']" position="inside">
+            <label t-if="is_subscription and sale_order and provider_sudo.allow_tokenization and pm_sudo.support_tokenization" class="fst-italic">
+                Your payment details will be saved for automatic renewals.
+            </label>
+        </xpath>
+        <!-- Invite customers for automating payments with new token. -->
+        <xpath expr="//div[@name='o_payment_inline_form']//div[hasclass('d-flex')][hasclass('flex-column')]" position="attributes">
+            <attribute name="class" remove="flex-column" separator=" "/>
+        </xpath>
+        <xpath  expr="//div[@name='o_payment_tokenize_container']//label" position="before">
+            <t t-if="is_subscription and not sale_order and mode == 'payment' and not reference_prefix">
+                <label>
+                    <input name="o_payment_automate_payments_new_token" type="checkbox" class="form-check-input"/>
+                    <small class="text-600">Automate payments for the linked subscriptions</small>
+                </label>
+                <br/>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Invite customers for automating payments with saved token. -->
+    <template id="payment_token_form" inherit_id="payment.token_form">
+        <xpath expr="//div[@name='o_payment_inline_form']" position="attributes">
+            <attribute name="t-if" add="(is_subscription and not sale_order and mode == 'payment' and not reference_prefix)" separator=" or "/>
+        </xpath>
+        <xpath expr="//div[@name='o_payment_inline_form']/t[@t-call='{{inline_form_xml_id}}']" position="attributes">
+            <attribute name="t-if">inline_form_xml_id</attribute>
+        </xpath>
+        <xpath expr="//div[@name='o_payment_inline_form']" position="inside">
+            <label t-if="is_subscription and not sale_order and mode == 'payment' and not reference_prefix" class="mt-2">
+                <input name="o_payment_automate_payments_saved_token" t-att-payment-option-id="token_sudo.id" type="checkbox" class="form-check-input"/>
+                <small class="text-600">Automate payments for the linked subscriptions</small>
+            </label>
+        </xpath>
+    </template>
+</odoo>

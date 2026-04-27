@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="l10n_mx_hr_infonavit_form" model="ir.ui.view">
+        <field name="name">l10n.mx.hr.infonavit.form</field>
+        <field name="model">l10n.mx.hr.infonavit</field>
+        <field name="arch" type="xml">
+            <form string="Create an Infonavit Credit">
+                <group>
+                    <group>
+                        <field name="status"/>
+                        <field name="infonavit_type"/>
+                    </group>
+                    <group>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="monthly_insurance"/>
+                        <field name="extra_fixed_monthly_contribution"/>
+                        <field name="fixed_monetary_fee" invisible="infonavit_type != 'fixed_monetary_fee'"/>
+                        <field name="discount_factor" invisible="infonavit_type != 'discount_factor'"/>
+                        <label for="percentage" invisible="infonavit_type != 'percentage'"/>
+                        <div invisible="infonavit_type != 'percentage'">
+                            <field name="percentage" class="oe_inline"/>
+                            <span class="oe_inline">%</span>
+                        </div>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo>

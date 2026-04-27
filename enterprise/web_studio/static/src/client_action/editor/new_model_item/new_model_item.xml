@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+  <t t-name="web_studio.NewModelItem">
+    <a t-if="menus.getCurrentApp()" href="#" class="o_web_create_new_model o_nav_entry" role="button" t-on-click="onClick">
+      <i class="fa fa-fw fa-plus" />New Model
+    </a>
+  </t>
+
+  <t t-name="web_studio.SimpleNewModelDialog">
+    <Dialog size="'sm'" title.translate="Create a new Model" contentClass="'o_web_studio_new_model_modal'" >
+      <label t-attf-class="{{ state.showValidation and !state.modelName ? 'o_web_studio_field_warning': '' }}" >Model name
+        <input type="text" name="model_name" class="o_input" placeholder.translate="My model" t-model="state.modelName" />
+      </label>
+
+      <t t-set-slot="footer">
+        <button type="button" class="btn btn-primary confirm_button" t-attf-class="{{ !state.modelName ? 'opacity-50' : ''  }}" t-on-click="onConfigureModel">Configure Model</button>
+
+        <button type="button" class="btn btn-secondary" t-on-click="_cancel">Cancel</button>
+      </t>
+    </Dialog>
+  </t>
+
+</templates>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template id="template" xml:space="preserve">
+
+    <t t-name="sale_stock_renting.QtyAtDate" t-inherit="sale_stock.QtyAtDate" t-inherit-mode="extension">
+        <xpath expr="//a" position="attributes">
+            <attribute name="t-attf-class">fa fa-area-chart cursor-pointer {{ (calcData.forecasted_issue || !(props.record.data.available_reserved_lots ?? true)) ? 'text-danger' : '' }}</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="sale_stock_renting.QtyAtDatePopover" t-inherit="sale_stock.QtyAtDatePopover" t-inherit-mode="extension">
+        <xpath expr="//div" position="attributes">
+            <attribute name="t-if">!props.record.data.is_rental || !props.record.data.return_date || !props.record.data.start_date</attribute>
+        </xpath>
+        <xpath expr="//div" position="after">
+            <div class="p-2" t-else="">
+            <h6>Availability</h6>
+            <table class="table table-borderless table-sm">
+                <tbody>
+                    <tr>
+                        <td>
+                            <strong>Available for Rent</strong><br/>
+                            <small> <span t-out="props.calcData.stock_start_date"/></small>
+                            <small> to <span t-out="props.calcData.stock_end_date"/></small>
+                        </td>
+                        <td class="text-end">
+                            <t t-out="props.record.data.virtual_available_at_date"/> <t t-out="props.record.data.product_uom[1]"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <t t-if="!(props.record.data.available_reserved_lots ?? true)">
+                <strong class="text-danger">Reserved lots unavailable</strong><br/>
+            </t>
+            <button class="text-start btn btn-link" type="button" t-on-click="openRentalGanttView">
+                <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                View Rentals
+            </button>
+            </div>
+        </xpath>
+    </t>
+</template>

@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <data>
+        <record id="account_financial_report_bs" model="account.report">
+            <field name="name">Balance sheet</field>
+            <field name="active" eval="False"/>
+            <field name="root_report_id" ref="account_reports.balance_sheet"/>
+            <field name="filter_analytic_groupby" eval="True"/>
+            <field name="filter_unfold_all" eval="True"/>
+            <field name="filter_date_range" eval="False"/>
+            <field name="filter_journals" eval="True"/>
+            <field name="country_id" ref="base.nl"/>
+            <field name="filter_multi_company">selector</field>
+            <field name="column_ids">
+                <record id="account_financial_report_bs_column" model="account.report.column">
+                    <field name="name">Balance</field>
+                    <field name="expression_label">balance</field>
+                </record>
+            </field>
+            <field name="line_ids">
+                <record id="account_financial_report_bs_assets" model="account.report.line">
+                    <field name="name">ACTIVE</field>
+                    <field name="code">NL_ASSETS</field>
+                    <field name="aggregation_formula">NL_FIXED.balance + NL_CURRENT.balance</field>
+                    <field name="hierarchy_level">0</field>
+                    <field name="children_ids">
+                        <record id="account_financial_report_bs_fixed" model="account.report.line">
+                            <field name="name">FIXED ASSETS</field>
+                            <field name="code">NL_FIXED</field>
+                            <field name="aggregation_formula">NL_MAT.balance + NL_IMMAT.balance + NL_FIN.balance</field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_bs_mat" model="account.report.line">
+                                    <field name="name">Property, plant and equipment</field>
+                                    <field name="code">NL_MAT</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">03 + 04 + 02 + 01</field>
+                                </record>
+                                <record id="account_financial_report_bs_immat" model="account.report.line">
+                                    <field name="name">Intangible Fixed Asset</field>
+                                    <field name="code">NL_IMMAT</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">001 + 002</field>
+                                </record>
+                                <record id="account_financial_report_bs_fin" model="account.report.line">
+                                    <field name="name">Financial Fixed Active</field>
+                                    <field name="code">NL_FIN</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">05</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="account_financial_report_bs_current" model="account.report.line">
+                            <field name="name">CURRENT ASSETS</field>
+                            <field name="code">NL_CURRENT</field>
+                            <field name="aggregation_formula">NL_STOCK.balance + NL_CLAIMS.balance + NL_CASH.balance</field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_bs_stock" model="account.report.line">
+                                    <field name="name">Stocks</field>
+                                    <field name="code">NL_STOCK</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">3</field>
+                                </record>
+                                <record id="account_financial_report_bs_claims" model="account.report.line">
+                                    <field name="name">Receivables</field>
+                                    <field name="code">NL_CLAIMS</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">11 + 12</field>
+                                </record>
+                                <record id="account_financial_report_bs_cash" model="account.report.line">
+                                    <field name="name">Cash at bank and in hand</field>
+                                    <field name="code">NL_CASH</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">10</field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                </record>
+                <record id="account_financial_report_bs_leq" model="account.report.line">
+                    <field name="name">PASSIVE</field>
+                    <field name="code">NL_LEQ</field>
+                    <field name="aggregation_formula">NL_EQ.balance + NL_PROVISIONS.balance + NL_LONG_DEBT.balance + NL_SHORT_DEBT.balance</field>
+                    <field name="hierarchy_level">0</field>
+                    <field name="children_ids">
+                        <record id="account_financial_report_bs_eq" model="account.report.line">
+                            <field name="name">EQUITY</field>
+                            <field name="code">NL_EQ</field>
+                            <field name="foldable" eval="True"/>
+                            <field name="aggregation_formula">NL_CAP.balance + NL_PREMIUM.balance + NL_REVALUATION_RES.balance + NL_LEGAL_RES.balance + NL_OTHER_RES.balance + NL_UNDIST_PROFIT.balance</field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_bs_cap" model="account.report.line">
+                                    <field name="name">Paid-up and Called-up Capital</field>
+                                    <field name="code">NL_CAP</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-061</field>
+                                </record>
+                                <record id="account_financial_report_bs_premium" model="account.report.line">
+                                    <field name="name">Premium</field>
+                                    <field name="code">NL_PREMIUM</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-063</field>
+                                </record>
+                                <record id="account_financial_report_bs_revaluation_res" model="account.report.line">
+                                    <field name="name">Revaluation reserve</field>
+                                    <field name="code">NL_REVALUATION_RES</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-066</field>
+                                </record>
+                                <record id="account_financial_report_bs_legal_res" model="account.report.line">
+                                    <field name="name">Legal and Statutory Reserves</field>
+                                    <field name="code">NL_LEGAL_RES</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-062</field>
+                                </record>
+                                <record id="account_financial_report_bs_other_res" model="account.report.line">
+                                    <field name="name">Other Reserves</field>
+                                    <field name="code">NL_OTHER_RES</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-064 - 065</field>
+                                </record>
+                                <record id="account_financial_report_bs_undist_profit" model="account.report.line">
+                                    <field name="name">Undistributed Profit</field>
+                                    <field name="code">NL_UNDIST_PROFIT</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_bs_undist_profit_balance_account_codes" model="account.report.expression">
+                                            <field name="label">balance_account_codes</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">-9999</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_undist_profit_balance_aggregate" model="account.report.expression">
+                                            <field name="label">balance_aggregate</field>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">NL_CURR_YEAR_EARNINGS.balance + NL_PREV_YEARS_EARNINGS.balance</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_undist_profit_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">NL_UNDIST_PROFIT.balance_account_codes + NL_UNDIST_PROFIT.balance_aggregate</field>
+                                        </record>
+                                    </field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_curr_year_earnings" model="account.report.line">
+                                            <field name="name">Current Year Profit</field>
+                                            <field name="code">NL_CURR_YEAR_EARNINGS</field>
+                                            <field name="action_id" ref="action_account_financial_report_nl_pnl"/>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_bs_curr_year_earnings_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">aggregation</field>
+                                                    <field name="formula">NL_RESNB.balance</field>
+                                                    <field name="date_scope">from_fiscalyear</field>
+                                                    <field name="subformula">cross_report</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="account_financial_report_bs_prev_years_earnings" model="account.report.line">
+                                            <field name="name">Previous Years Profit</field>
+                                            <field name="code">NL_PREV_YEARS_EARNINGS</field>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_bs_prev_years_earnings_balance_domain" model="account.report.expression">
+                                                    <field name="label">balance_domain</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">-4 -5 -6 -7 -8 -9\(9999)</field>
+                                                    <field name="date_scope">from_beginning</field>
+                                                    <field name="subformula" eval="False"/>
+                                                </record>
+                                                <record id="account_financial_report_bs_prev_years_earnings_balance_aggregate" model="account.report.expression">
+                                                    <field name="label">balance_aggregate</field>
+                                                    <field name="engine">aggregation</field>
+                                                    <field name="formula">NL_RESNB.balance</field>
+                                                    <field name="date_scope">from_fiscalyear</field>
+                                                    <field name="subformula">cross_report</field>
+                                                </record>
+                                                <record id="account_financial_report_bs_prev_years_earnings_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">aggregation</field>
+                                                    <field name="formula">NL_PREV_YEARS_EARNINGS.balance_domain - NL_PREV_YEARS_EARNINGS.balance_aggregate</field>
+                                                    <field name="date_scope">from_beginning</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="account_financial_report_bs_l" model="account.report.line">
+                            <field name="name">CLAIMS</field>
+                            <field name="code">NL_L</field>
+                            <field name="aggregation_formula">NL_PROVISIONS.balance + NL_LONG_DEBT.balance + NL_SHORT_DEBT.balance</field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_bs_provisions" model="account.report.line">
+                                    <field name="name">Provisions</field>
+                                    <field name="code">NL_PROVISIONS</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-07</field>
+                                </record>
+                                <record id="account_financial_report_bs_long_debt" model="account.report.line">
+                                    <field name="name">Long-term liabilities</field>
+                                    <field name="code">NL_LONG_DEBT</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_bs_long_debt_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">-08</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_bs_short_debt" model="account.report.line">
+                                    <field name="name">Short-term Liabilities</field>
+                                    <field name="code">NL_SHORT_DEBT</field>
+                                    <field name="aggregation_formula">NL_SH_DEBT.balance + NL_CRED.balance</field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_sh_debt" model="account.report.line">
+                                            <field name="name">Current Liabilities</field>
+                                            <field name="code">NL_SH_DEBT</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_bs_sh_debt_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">-15 - 2 - 14 - 135 - 16</field>
+                                                    <field name="green_on_positive" eval="False"/>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="account_financial_report_bs_cred" model="account.report.line">
+                                            <field name="name">Creditors</field>
+                                            <field name="code">NL_CRED</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_bs_cred_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">-130</field>
+                                                    <field name="green_on_positive" eval="False"/>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                </record>
+            </field>
+        </record>
+    </data>
+</odoo>

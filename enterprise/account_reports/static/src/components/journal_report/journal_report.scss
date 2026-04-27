@@ -1,0 +1,38 @@
+.journal_report {
+    .sheet { min-width: 1140px }
+
+    table.striped > tbody > tr:not(.line_level_0):not(.empty) > td:nth-child(2n+3) { background: inherit }
+
+
+    .table > tbody > tr {
+        &.accent_header { background-color: $o-gray-200 }
+        &.accent_line {
+            background-color: $o-gray-100;
+            > td.muted { color: $o-gray-300 }
+        }
+        &.subtable {
+            > td { border-bottom: none }
+            &:hover > * { --table-accent-bg: none }
+        }
+    }
+
+    tr.subtable {
+        .table {
+            table-layout: fixed;
+            width: 100%;
+            max-width: 480px;
+            margin-top: 24px;
+            padding: 0;
+            border: 1px solid $o-gray-300;
+            border-radius: 0.25rem;
+
+            > thead > tr > th {
+                background-color: $o-gray-100;
+                text-align: left;
+
+                .btn_action { opacity: 1 }
+            }
+            :not(caption) > *:not(.btn_action) > *:not(.btn_action) { padding: 0.5rem 0.3rem }
+        }
+    }
+}

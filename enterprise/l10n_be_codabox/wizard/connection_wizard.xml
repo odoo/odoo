@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="connection_wizard_view" model="ir.ui.view">
+        <field name="name">l10n_be_codabox.connection.wizard.view.form</field>
+        <field name="model">l10n_be_codabox.connection.wizard</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form string="CodaBox Connection">
+                <field name="l10n_be_codabox_is_connected" invisible="1"/>
+                <field name="nb_connections" invisible="1"/>
+                <field name="connection_exists" invisible="1"/>
+                <field name="show_fidu_password" invisible="1"/>
+
+                <div>
+                    The following VAT/ID number(s) will be used for the CodaBox connection.
+                    You can edit them in the Company Settings if they are not correct.
+                </div>
+
+                <br/>
+
+                <div>
+                    You can access the documentation
+                    <a target="_blank" href="https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/belgium.html#codabox">
+                        by clicking here
+                        <i class="fa fa-external-link" aria-hidden="true"/>
+                    </a>
+                </div>
+
+                <br/>
+
+                <group>
+                    <field name="fiduciary_vat" invisible="company_vat == fiduciary_vat"/>
+                    <field name="company_vat"/>
+                    <field name="fidu_password" password="True" invisible="not show_fidu_password"/>
+                </group>
+
+                Status
+                <i class="fa fa-check text-success" invisible="not l10n_be_codabox_is_connected"/>
+                <span class="text-success" invisible="not l10n_be_codabox_is_connected">Connected</span>
+
+                <i class="fa fa-exclamation-triangle text-warning" invisible="l10n_be_codabox_is_connected"/>
+                <span class="text-warning" invisible="l10n_be_codabox_is_connected">Not connected</span>
+
+                <button name="refresh_connection_status" type="object" class="btn-link btn-primary">
+                    <i title="Update status" role="img" aria-label="Update status" class="fa fa-fw fa-refresh"/>
+                </button>
+
+                <footer>
+                    <button name="l10n_be_codabox_create_connection" string="Create connection" type="object" class="btn-primary" invisible="l10n_be_codabox_is_connected"/>
+                    <button name="l10n_be_codabox_open_change_password_wizard" string="Change password" type="object" class="btn-secondary" invisible="not connection_exists"/>
+                    <button name="l10n_be_codabox_revoke" string="Revoke" type="object" class="btn-secondary"
+                            confirm="Are you sure you want to revoke this connection ?" invisible="nb_connections == 1 or not connection_exists"/>
+                    <button name="l10n_be_codabox_revoke" string="Revoke" type="object" class="btn-secondary" invisible="nb_connections > 1 or not connection_exists"
+                            confirm="This is the last connection for this account. Are you sure you want to revoke it ?"/>
+                    <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

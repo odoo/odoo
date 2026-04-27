@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="quality_check_view_form_iot_inherit_quality" model="ir.ui.view">
+        <field name="name">quality.check.view.form.inherit.quality.iot</field>
+        <field name="model">quality.check</field>
+        <field name="inherit_id" ref="mrp_workorder.quality_check_view_form_tablet"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='production_id']" position="after">
+                <field name="ip" invisible="1"/>
+                <field name="identifier" invisible="1"/>
+                <field name="boxes" invisible="1"/>
+                <label for="device_name" invisible="test_type not in ['measure', 'picture', 'printer'] or not identifier"/>
+                <field name="device_name"
+                       readonly="1"
+                       invisible="test_type not in ['measure', 'picture', 'printer'] or not identifier"/>
+            </xpath>
+            <field name="picture" position="attributes">
+                <attribute name="widget">iot_picture</attribute>
+                <attribute name="options">{'ip_field': 'ip', 'identifier': 'identifier'}</attribute>
+            </field>
+        </field>
+    </record>
+
+
+    <!-- Workcenter views-->
+    <record id="mrp_workcenter_view_form_iot" model="ir.ui.view">
+        <field name="name">mrp.workcenter.form.iot</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="IoT Triggers" name="iot_triggers">
+                    <field name="trigger_ids">
+                        <list editable="top">
+                            <field name="sequence" widget="handle"/>
+                            <field name="device_id"/>
+                            <field name="key"/>
+                            <field name="action"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="iot_device_view_form" model="ir.ui.view">
+        <field name="name">iot.device.view.form.inherit.mrp.workorder.iot</field>
+        <field name="model">iot.device</field>
+        <field name="inherit_id" ref="iot.iot_device_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="IoT Triggers" name="iot_triggers" invisible="type != 'keyboard'">
+                    <field name="trigger_ids">
+                        <list>
+                            <field name="workcenter_id"/>
+                            <field name="key"/>
+                            <field name="action"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

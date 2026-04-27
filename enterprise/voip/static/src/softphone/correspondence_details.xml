@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<templates>
+    <t t-name="voip.CorrespondenceDetails">
+        <div t-attf-class="o-voip-CorrespondenceDetails {{ props.extraClass }}">
+            <div t-att-class="bgStyleClasses">
+                <button t-if="!call?.isInProgress" class="fa fa-2x fa-angle-left my-2 px-3 border-0 bg-transparent text-primary cursor-pointer" title="Close details" t-on-click="onClickClose"/>
+                <div class="d-flex flex-column align-items-center pb-4">
+                    <p t-if="call?.isInProgress" class="my-2 text-info fw-bolder" t-att-class="{ invisible: !isOnHold }">On Hold</p>
+                    <img class="o-voip-CorrespondenceDetails-avatar border rounded" t-att-src="props.correspondence.avatarUrl"/>
+                    <div t-if="partner"><b class="fw-bolder" t-esc="partner.name"/></div>
+                    <div t-esc="displayName" t-if="displayName and (!partner or displayName !== partner.name)"/>
+                    <div t-if="call?.isInProgress" t-attf-class="mb-2 small {{ call.state === 'ongoing' ? 'text-success' : 'text-muted' }}" t-esc="callStatus"/>
+                    <t t-if="call?.isInProgress" t-esc="call.phoneNumber"/>
+                    <t t-else="">
+                        <div t-if="landlineNumber"><a class="btn btn-link" t-attf-href="tel:{{ landlineNumber }}" t-on-click="(e) => this.onClickPhoneNumber(e, landlineNumber)"><i class="fa fa-phone" role="img"/> <t t-esc="landlineNumber"/></a></div>
+                        <div t-if="mobileNumber"><a class="btn btn-link" t-attf-href="tel:{{ mobileNumber }}" t-on-click="(e) => this.onClickPhoneNumber(e, mobileNumber)"><i class="fa fa-mobile" role="img"/> <t t-esc="mobileNumber"/></a></div>
+                    </t>
+                    <div t-if="call and !call.isInProgress" class="small" t-esc="call?.callDate"/>
+                </div>
+            </div>
+            <div class="mx-3 my-4">
+                <div class="o_horizontal_separator">Documents</div>
+                <div class="d-flex justify-content-around my-3">
+                    <button t-if="partner" class="btn btn-secondary p-3 border rounded-circle" title="Send e-mail" t-on-click="onClickEmail">
+                        <i class="fa fa-fw fa-lg fa-envelope-o" role="img"/>
+                    </button>
+                    <button class="btn btn-secondary p-3 border rounded-circle" title="Customer" t-on-click="onClickPartner">
+                        <i class="fa fa-fw fa-lg fa-user" role="img"/>
+                    </button>
+                    <button t-if="activity and activity.res_model !== 'res.partner'" class="btn btn-secondary p-3 border rounded-circle" t-att-title="activity.modelName" t-on-click="onClickRecord">
+                        <i class="fa fa-fw fa-lg fa-wpforms" role="img"/>
+                    </button>
+                    <button t-if="partner or activity" class="btn btn-secondary p-3 border rounded-circle" title="Schedule Activity" t-on-click="onClickActivity">
+                        <i class="fa fa-fw fa-lg fa-clock-o" role="img"/>
+                    </button>
+                </div>
+                <!-- In-call-only actions -->
+                <t t-if="call?.isInProgress">
+                    <div class="o_horizontal_separator">Call</div>
+                    <div class="d-flex justify-content-around my-3">
+                        <button class="btn btn-secondary p-3 border rounded-circle" t-att-disabled="areInCallActionsDisabled" title="Transfer" t-ref="transferButton" t-on-click="onClickTransfer">
+                            <i class="fa fa-fw fa-lg fa-arrows-h" role="img"/>
+                        </button>
+                        <button class="btn btn-secondary p-3 border rounded-circle" t-att-disabled="areInCallActionsDisabled || isOnHold" t-att-title="muteText" t-on-click="onClickMute">
+                            <i t-attf-class="fa fa-fw fa-lg {{ !userAgent.session?.isMute and !isOnHold ? 'fa-microphone' : 'fa-microphone-slash' }}" role="img"/>
+                        </button>
+                        <button class="btn btn-secondary p-3 border rounded-circle" t-att-disabled="areInCallActionsDisabled" t-att-title="putOnHoldText" t-on-click="onClickHold">
+                            <i t-attf-class="fa fa-fw fa-lg {{ !isOnHold ? 'fa-pause' : 'fa-play' }}" role="img"/>
+                        </button>
+                        <button t-if="isMobileOs" class="btn btn-secondary p-3 border rounded-circle" t-att-disabled="areInCallActionsDisabled" title="Change input device" t-on-click="onClickChangeInputDevice">
+                            <i t-attf-class="fa fa-fw fa-lg fa-headphones" role="img"/>
+                        </button>
+                    </div>
+                </t>
+                <t t-elif="activity">
+                    <div class="o_horizontal_separator">Activity</div>
+                    <div class="d-flex justify-content-around my-3">
+                        <button class="btn btn-secondary p-3 border rounded-circle" title="Mark as done" t-on-click="onClickMarkAsDone">
+                            <i class="fa fa-fw fa-lg fa-check" role="img"/>
+                        </button>
+                        <button class="btn btn-secondary p-3 border rounded-circle" title="Edit" t-on-click="onClickEdit">
+                            <i class="fa fa-fw fa-lg fa-pencil" role="img"/>
+                        </button>
+                        <button class="btn btn-secondary p-3 border rounded-circle" title="Cancel" t-on-click="onClickCancel">
+                            <i class="fa fa-fw fa-lg fa-close" role="img"/>
+                        </button>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

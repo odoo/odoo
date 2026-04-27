@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="planning.PlanningGanttRenderer.RowHeader" t-inherit="web_gantt.GanttRenderer.RowHeader">
+        <xpath expr="//t[@t-esc='row.name']" position="replace">
+            <Avatar t-if="hasAvatar(row)" t-props="getAvatarProps(row)"/>
+            <Material t-elif="hasMaterial(row)" t-props="getMaterialProps(row)"/>
+            <t t-else="" t-esc="row.name"/>
+        </xpath>
+    </t>
+
+    <t t-name="planning.PlanningGanttRenderer.Pill" t-inherit="web_gantt.GanttRenderer.Pill">
+        <xpath expr="//div[hasclass('o_gantt_pill_wrapper')]" position="after">
+            <t t-foreach="getSplitToolGrids(pill)" t-as="splitTool" t-key="splitTool_index">
+                <div class="o_gantt_pill_split_tool"
+                        t-att-style="getGridPosition(splitTool.grid)"
+                        t-att-data-split-tool-pill-id="pill.id + '_' + splitTool_index"
+                        t-on-click.synthetic="(ev) => this.onPillSplitToolClicked(ev, pill, splitTool_index)"
+                >
+                    <div class="o_slot_dashed_cut_line"/>
+                    <i class="fa fa-lg fa-scissors fa-rotate-270"/>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//span[hasclass('o_gantt_pill_title')]" position="after">
+            <t t-if="pill.hasAvatar">
+                <div class="ms-auto o_gantt_pill_avatar" t-att-title="pill.record.employee_id[1]">
+                    <Avatar t-props="pill.avatarProps"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="planning.PlanningGanttRenderer.GroupPill" t-inherit="web_gantt.GanttRenderer.GroupPill" owl="1">
+        <xpath expr="//div[contains(@class, 'o_gantt_group_pill')]/div" position="before">
+            <t t-set="workHours" t-value="_computeWorkHours(pill)"/>
+        </xpath>
+        <xpath expr="//div[contains(@class, 'o_gantt_group_pill')]/div" position="attributes">
+            <attribute name="t-attf-class" add="{{ _computeResourceOvertimeColors(pill, workHours) }}"/>
+        </xpath>
+        <xpath expr="//span[contains(@class, 'o_gantt_pill_title')]" position="attributes">
+            <attribute name="t-esc">_computeDisplayName(pill, workHours)</attribute>
+        </xpath>
+    </t>
+
+</templates>

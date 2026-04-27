@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="res_config_settings_view_form">
+        <field name="name">res.config.settings.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_nl.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <div id="dutch_localization_section" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </div>
+
+            <xpath expr="//block[@id='dutch_localization']" position="inside">
+                <setting company_dependent="1" string="SBR Services">
+                    <div class="row mt16">
+                        <label for="l10n_nl_reports_sbr_cert_id" class="col-lg-3 o_light_label"/>
+                        <field name="l10n_nl_reports_sbr_cert_id" options="{'no_create': True}" domain="[('company_id', '=', company_id), ('is_valid', '=', True)]"/>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

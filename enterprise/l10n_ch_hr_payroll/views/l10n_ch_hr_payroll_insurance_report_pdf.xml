@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="insurance_yearly_report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout_standard">
+                        <div class="page">
+                            <div>
+                                <div class="row border border-top-0">
+                                    <div class="col-4 border-end">
+                                        <span t-esc="company.name"/> <br/>
+                                        <span t-esc="company.street"/> <span t-esc="company.street2"/><br/>
+                                        <span t-esc="company.zip"/>,
+                                        <span t-esc="company.city"/> <br/>
+                                        <span t-esc="company.country_id.name"/> <br/>
+                                    </div>
+                                </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12 text-center text-uppercase fw-bold">
+                                    <t t-esc="report_name"/>
+                                </div>
+                            </div>
+                                <table class="table table-sm">
+                                    <thead class="o_black_border">
+                                        <tr>
+                                            <t t-foreach="columns" t-as="col">
+                                                <th scope="col"><t t-esc="col"/></th>
+                                            </t>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="employee_data" t-as="employee">
+                                            <tr>
+                                                <t t-foreach="employee"  t-as="data">
+                                                    <td><t t-esc="data"/></td>
+                                                </t>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                        </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+</data>
+</odoo>

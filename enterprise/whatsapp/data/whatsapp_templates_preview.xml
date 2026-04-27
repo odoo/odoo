@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="template_message_preview" t-name="WhatsApp Preview">
+        <div class="o_whatsapp_preview overflow-hidden ps-3 pe-5">
+            <div class="o_whatsapp_message mt-2 mb-1 fs-6 lh-1 float-start text-break text-black position-relative">
+                <div class="o_whatsapp_message_core p-2 position-relative">
+                    <div class="o_whatsapp_message_header bg-opacity-50" t-if="header_type != 'none' and header_type != 'text'">
+                        <div t-attf-class="d-block bg-400 p-4 text-center {{ 'rounded-top-2' if header_type == 'location' else 'rounded-2' }}">
+                            <img class="m-2 img-fluid" t-attf-src="/whatsapp/static/img/{{header_type}}.png" t-att-alt="header_type"/>
+                        </div>
+                        <div t-if="header_type == 'location'" class="o_whatsapp_location_footer d-flex p-2 bg-200 rounded-bottom-2 flex-column">
+                            <span class="o-whatsapp-font-11">{{Location name}}</span><br/>
+                            <span class="text-600 o-whatsapp-font-9">{{Address}}</span>
+                        </div>
+                    </div>
+                    <div class="o_whatsapp_message_body px-1 mt-2" t-attf-style="direction:{{language_direction}};">
+                        <t t-out="body"/>
+                    </div>
+                    <div t-if="footer_text" class="o_whatsapp_message_footer px-1">
+                        <span class="fs-6 text-400" t-out="footer_text" />
+                        <span class="o_whatsapp_msg_space me-5 d-inline-block"/>
+                    </div>
+                    <span class="position-absolute bottom-0 end-0 o-whatsapp-font-11 py-1 px-2 text-black-50" area-hidden="true">
+                        06:00
+                    </span>
+                </div>
+                <div class="o_whatsapp_message_links cursor-default px-2" t-if="buttons">
+                    <hr class="position-relative w-100 m-0"/>
+                    <t t-set="filtered_buttons" t-value="buttons[:3] if len(buttons) &lt; 4 else buttons[:2]" />
+                    <t t-set="show_all_options_button" t-value="len(buttons) &gt;= 4" />
+                    <t t-foreach="filtered_buttons" t-as="button">
+                        <span t-attf-class="o_whatsapp_message_link d-block text-center my-3">
+                            <t t-if="button.button_type == 'phone_number'">
+                                <i t-attf-class="fa fs-5 fa-phone"/>
+                            </t>
+                            <t t-elif="button.button_type == 'url'">
+                                <i t-attf-class="fa fs-5 fa-external-link"/>
+                            </t>
+                            <t t-else="">
+                                <i t-attf-class="fa fs-5 fa-reply"/>
+                            </t>
+                            <t t-out="button.name"/>
+                        </span>
+                    </t>
+                    <t t-if="show_all_options_button">
+                        <span t-attf-class="o_whatsapp_message_link d-block text-center my-3">
+                            <i t-attf-class="fa fs-5  fa-list-ul"/> See all options
+                        </span>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

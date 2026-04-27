@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_structure_ro_employee_salary" model="hr.payroll.structure">
+        <field name="name">Romania: Regular Pay</field>
+        <field name="code">ROMONTHLY</field>
+        <field name="country_id" ref="base.ro"/>
+        <field name="type_id" ref="l10n_ro_hr_payroll.structure_type_employee_ro"/>
+        <field name="report_id" ref="l10n_ro_hr_payroll.action_report_payslip_ro"/>
+    </record>
+    <record id="l10n_ro_hr_payroll.structure_type_employee_ro" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure_ro_employee_salary"/>
+    </record>
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.FontAwesomeIconSelector">
+    <SelectMenu
+        autoSort="false"
+        class="'o_font_awesome_icon_selector overflow-visible p-0 border-0 ' + this.props.className"
+        menuClass="'o_font_awesome_icon_selector_menu ' + props.menuClassName"
+        togglerClass="'p-0'"
+        value="this.props.value"
+        choices="iconChoices"
+        onSelect="this.props.onSelect"
+        required="true">
+        <t t-slot="default"/>
+        <t t-set-slot="choice" t-slot-scope="choice">
+            <i t-att-class="'o_font_awesome_icon_selector_value d-inline-flex justify-content-center align-items-center fs-3 ' + choice.data.value"  t-att-data-tooltip="getIconTooltip(choice.data.value)" />
+        </t>
+    </SelectMenu>
+</t>
+
+</templates>

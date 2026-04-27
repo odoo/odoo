@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_project_view_gantt" model="ir.ui.view">
+        <field name="name">project.project.view.gantt</field>
+        <field name="model">project.project</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <gantt date_start="date_start"
+                date_stop="date"
+                default_scale="month"
+                scales="week,month,year"
+                string="Planning"
+                display_unavailability="1"
+                js_class="project_gantt"
+                precision="{'week': 'day:full', 'month': 'day:full'}"
+                default_group_by="user_id"
+                total_row="True">
+                <templates>
+                    <div t-name="gantt-popover">
+                        <div t-if="user_id"><strong>Project Manager — </strong> <t t-esc="user_id[1]"/></div>
+                        <div t-if="partner_id"><strong>Customer — </strong> <t t-esc="partner_id[1]"/></div>
+                        <div>
+                            <t t-esc="date_start.toFormat('D ')"/>
+                            <i class="fa fa-long-arrow-right" title="Arrow"/>
+                            <t t-esc="date.toFormat(' D')"/>
+                        </div>
+                    </div>
+                </templates>
+                <field name="user_id"/>
+                <field name="partner_id"/>
+            </gantt>
+        </field>
+    </record>
+
+    <record id="project.open_view_project_all_group_stage" model="ir.actions.act_window">
+        <field name="view_mode">kanban,list,form,gantt,calendar,activity</field>
+    </record>
+
+    <record id="project.open_view_project_all_config_group_stage" model="ir.actions.act_window">
+        <field name="view_mode">list,kanban,form,gantt,calendar,activity</field>
+    </record>
+
+    <record id="view_task_kanban_inherited" model="ir.ui.view">
+        <field name="name">project.enterprise.task.kanban.nonprimary</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="js_class">project_enterprise_task_kanban</attribute>
+            </xpath>
+            <field name="date_deadline" position="attributes">
+                <attribute name="invisible">planned_date_begin or not date_deadline or state in ['1_done', '1_canceled']</attribute>
+            </field>
+            <field name="date_deadline" position="after">
+                <t t-set="cls" t-value="(luxon.DateTime.fromISO(record.date_deadline.raw_value) &lt; luxon.DateTime.local() and !['1_done', '1_canceled'].includes(record.state.raw_value)) ? 'text-danger' : ''"/>
+                <div invisible="not planned_date_begin"  t-attf-class="d-flex align-items-center #{cls}">
+                    <t t-if="luxon.DateTime.fromISO(record.planned_date_begin.raw_value).hasSame(luxon.DateTime.fromISO(record.date_deadline.raw_value), 'days')">
+                        <field name="planned_date_begin" widget="datetime" options="{'show_seconds': False}"/>
+                        <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow" invisible="not planned_date_begin"/>
+                        <t t-esc="luxon.DateTime.fromISO(record.date_deadline.raw_value).toFormat('HH:mm')" class="oe_date_deadline"/>
+                    </t>
+                    <t t-else="">
+                        <field name="planned_date_begin" widget="daterange" options="{'end_date_field': 'date_deadline', 'show_time': False, 'condensed': True}"/>
+                    </t>
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>

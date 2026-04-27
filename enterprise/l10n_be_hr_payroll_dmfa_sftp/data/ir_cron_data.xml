@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="ir_action_server_fetch_onss_files" model="ir.actions.server">
+            <field name="name">ONSS: Fetch SFTP files</field>
+            <field name="model_id" ref="l10n_be_hr_payroll_dmfa_sftp.model_l10n_be_onss_declaration"/>
+            <field name="binding_model_id" ref="l10n_be_hr_payroll_dmfa_sftp.model_l10n_be_onss_declaration"/>
+            <field name="binding_view_types">form,list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.with_company(records.company_id)._fetch_files()</field>
+        </record>
+
+        <record id="ir_cron_fetch_onss_files" model="ir.cron">
+            <field name="name">ONSS: Fetch SFTP files</field>
+            <field name="model_id" ref="l10n_be_hr_payroll_dmfa_sftp.model_l10n_be_onss_declaration"/>
+            <field name="state">code</field>
+            <field name="code">
+companies = env['res.company'].search([
+    ('onss_sftp_private_key', '!=', False),
+    ('onss_technical_user_name', '!=', False),
+])
+for company in companies:
+    model.with_company(company)._fetch_files()
+</field>
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(hours=1))"/>
+        </record>
+    </data>
+</odoo>

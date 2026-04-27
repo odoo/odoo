@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_l10n_mx_edi_invoice_form_inherit" model="ir.ui.view">
+            <field name="name">l10n_mx_edi.invoice.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='other_info']" position="inside">
+                    <group invisible="move_type not in ('out_invoice', 'out_refund') or country_code != 'MX'">
+                        <group string="External Trade">
+                            <field name="l10n_mx_edi_external_trade" invisible="1"/>
+                            <field name="l10n_mx_edi_external_trade_type"/>
+                            <field name="l10n_mx_edi_cer_source" invisible="l10n_mx_edi_external_trade_type not in ['02', '03']"/>
+                        </group>
+                    </group>
+                </xpath>
+                <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='price_subtotal']" position="after">
+                    <field name="l10n_mx_edi_qty_umt" column_invisible="parent.country_code != 'MX' or parent.l10n_mx_edi_external_trade_type not in ['02', '03']"/>
+                    <field name="l10n_mx_edi_umt_aduana_id" column_invisible="parent.country_code != 'MX' or parent.l10n_mx_edi_external_trade_type not in ['02', '03']"/>
+                    <field name="l10n_mx_edi_customs_number" column_invisible="parent.country_code != 'MX' or parent.move_type not in ('out_invoice', 'out_refund')"/>
+                </xpath>
+                <xpath expr="//field[@name='line_ids']/list" position="inside">
+                    <field name="l10n_mx_edi_qty_umt" column_invisible="1"/>
+                    <field name="l10n_mx_edi_umt_aduana_id" column_invisible="1"/>
+                    <field name="l10n_mx_edi_customs_number" column_invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

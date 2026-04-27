@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="picking_list" model="ir.ui.view">
+        <field name="name">Amazon Picking List</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="amazon_sync_status"
+                       widget="badge"
+                       decoration-info="amazon_sync_status == 'pending'"
+                       decoration-warning="amazon_sync_status == 'processing'"
+                       decoration-success="amazon_sync_status == 'done'"
+                       decoration-danger="amazon_sync_status == 'error'"
+                       optional="hide"/>
+                <field name="amazon_feed_ref"
+                       optional="hide"
+                       groups="base.group_no_one"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="picking_view_form" model="ir.ui.view">
+        <field name="name">amazon.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <button name="action_confirm" position="before">
+                <button string="Retry Amazon Sync"
+                        type="object"
+                        name="action_retry_amazon_sync"
+                        invisible="amazon_sync_status != 'error'"
+                        groups="sales_team.group_sale_manager"
+                        class="btn btn-primary"/>
+            </button>
+            <div name="button_box" position="after">
+                <div class="badge rounded-pill text-bg-info fs-6 float-end"
+                     invisible="amazon_sync_status != 'pending'">
+                    Scheduled for Amazon Synchronization
+                </div>
+                <div class="badge rounded-pill text-bg-warning fs-6 float-end"
+                     invisible="amazon_sync_status != 'processing'">
+                    In Processing by Amazon
+                </div>
+                <div class="badge rounded-pill text-bg-success fs-6 float-end"
+                     invisible="amazon_sync_status != 'done'">
+                    Synchronized with Amazon
+                </div>
+                <div class="badge rounded-pill text-bg-danger fs-6 float-end"
+                     invisible="amazon_sync_status != 'error'">
+                    Synchronization with Amazon failed
+                </div>
+            </div>
+            <field name="origin" position="after">
+                <field name="amazon_feed_ref"
+                       invisible="not amazon_feed_ref"
+                       groups="base.group_no_one"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,38 @@
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_urban_piper.orderInfoPopup">
+        <Dialog size="'md'" title.translate="Details">
+            <t t-foreach="this.cardsData" t-as="card" t-key="card.title">
+                <t t-if="card.visible">
+                    <div class="card rounded mt-3">
+                        <div class="card-header d-flex align-items-center">
+                            <i t-att-class="`fa ${card.icon}`" aria-hidden="true"/>
+                            <h5 class="ms-2 mb-0"><t t-esc="card.title"/></h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <t t-foreach="card.fields" t-as="field" t-key="field.label">
+                                    <div t-if="field.value" class="col-md-6 mb-2">
+                                        <div class="d-flex flex-column">
+                                            <div class="text-muted fs-7"><t t-esc="field.label"/></div>
+                                            <div>
+                                                <t t-if="field.link">
+                                                    <a t-att-href="field.link"><t t-esc="field.value"/></a>
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-esc="field.value"/>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+            <t t-set-slot="footer">
+                <button class="button btn btn-primary" t-on-click="onClose">Close</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="knowledge_base_slides_card" inherit_id="website_helpdesk.knowledge_base">
+        <xpath expr="//div[@id='o_knowledge_base_sections']" position="inside">
+            <div class="col" t-if="team.show_knowledge_base_slide_channel">
+                <div class="card position-relative h-100 overflow-visible">
+                    <div class="card-body d-flex align-items-start">
+                        <img t-attf-src="/website_helpdesk/static/src/img/gradcap.svg"
+                             class="position-md-absolute top-0 end-0 translate-middle order-1 order-md-0 ms-3 ms-md-0"/>
+                        <div class="d-flex flex-wrap">
+                            <h5 class="h5-fs card-title">Courses</h5>
+                            <p class="mb-0">Level up your skills with our training videos and tutorials</p>
+                        </div>
+                    </div>
+                    <div class="card-body h-100">
+                        <t t-if="team.website_top_channels" class="card-title">
+                            <small class="text-muted text-uppercase">
+                                <t t-if="len(team.website_top_channels) &gt; 4">Most popular</t>
+                                <t t-else="">Quick Links</t>
+                            </small>
+                            <ul class="nav flex-column gap-1 mt-2">
+                                <t t-foreach="team.website_top_channels" t-as="article">
+                                    <li class="nav-item">
+                                        <a class="nav-link rounded py-2 bg-100"
+                                           t-attf-href="/slides/{{ slug(article) }}"
+                                           target="_blank"
+                                           t-att-title="article.name"
+                                        >
+                                            <t t-esc="article.name"/>
+                                        </a>
+                                    </li>
+                                </t>
+                            </ul>
+                        </t>
+                    </div>
+                    <div class="card-body d-flex justify-content-center">
+                        <a class="btn btn-secondary flex-grow-1" t-attf-href="/helpdesk/{{ slug(team) }}/slides" target="_blank">
+                            Take courses
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="search_result" name="Knowledge Base: Slides Search Result">
+        <div class="d-flex w-100 py-4 border-top">
+            <p class="mt-1 text-400">
+                <i class="fa fa-2x fa-mortar-board" title="eLearning"/>
+            </p>
+            <div class="w-100 ms-3">
+                <h5 class="mb-1">
+                    <a t-att-href="url" target="_blank" t-out="record.name" class="fw-bold"/>
+                </h5>
+                <small>
+                    <time t-field="record.date_published" t-options='{"format": "d MMM yyyy"}'/>
+                    <t t-if="record.user_id">
+                        , by <a t-attf-href="/profile/user/{{record.user_id.id}}" class="fw-bold" t-out="record.user_id.name"/>
+                        <t t-call="website_slides.slides_misc_user_image">
+                            <t t-set="user" t-value="record.user_id"/>
+                            <t t-set="img_class" t-value="'rounded-circle me-1'"/>
+                            <t t-set="img_style" t-value="'width: 20px; height: 20px; object-fit: cover; vertical-align: sub;'"/>
+                        </t>
+                    </t>
+                    | <t t-out="record.total_views"/> Views
+                    | <t t-out="record.likes"/> Likes
+                    | <t t-out="record.comments_count"/> Comments
+                    | <i class="fa fa-folder-open-o"/> <a class="fw-bold" t-attf-href="{{record.channel_id.website_url}}" t-out="record.channel_id.name"/>
+                </small>
+                <div class="whelpdesk_search_description mt-3 text-break text-muted overflow-hidden" t-if="record.description and (record.is_preview or record.channel_id.is_member)" t-out="record.description"/>
+                <p class="d-flex gap-1 flex-wrap mt-3 mb-0" t-if="record.tag_ids">
+                    <a t-foreach="record.tag_ids" t-as="tag" t-attf-href="?{{ keep_query('*', tag=tag.name.lower()) }}" class="badge text-bg-secondary" t-out="tag.name"/>
+                </p>
+            </div>
+        </div>
+    </template>
+
+    <template id="channel_search_result" name="Knowledge Base: Slide Channel Search Result">
+        <div class="d-flex w-100 py-4 border-top">
+            <p class="mt-1 text-400">
+                <i class="fa fa-2x fa-mortar-board" title="eLearning Course"/>
+            </p>
+            <div class="w-100 ms-3">
+                <h5 class="mb-1">
+                    <a t-att-href="url" target="_blank" t-out="record.name" class="fw-bold"/>
+                </h5>
+                <small>
+                    <time t-field="record.slide_last_update" t-options='{"format": "d MMM yyyy"}'/>
+                    <t t-if="record.user_id">
+                        , by <a t-attf-href="/profile/user/{{record.user_id.id}}" class="fw-bold" t-out="record.user_id.name"/>
+                        <t t-call="website_slides.slides_misc_user_image">
+                            <t t-set="user" t-value="record.user_id"/>
+                            <t t-set="img_class" t-value="'rounded-circle me-1'"/>
+                            <t t-set="img_style" t-value="'width: 20px; height: 20px; object-fit: cover; vertical-align: sub;'"/>
+                        </t>
+                    </t>
+                    | <t t-out="record.nbr_document"/> <t t-if="record.channel_type == 'training'">Lessons</t><t t-else="">Documents</t>
+                    | <t t-out="round(record.total_time)"/> Hours to Complete
+                    | <t t-out="record.members_count"/> Members
+                    | <t t-call="portal_rating.rating_widget_stars_static">
+                        <t t-set="inline_mode" t-value="1"/>
+                        <t t-set="rating_avg" t-value="record.rating_avg_stars"/>
+                        <t t-set="rating_count" t-value="record.rating_count"/>
+                    </t>
+                </small>
+                <div class="whelpdesk_search_description mt-3 text-break text-muted overflow-hidden" t-if="record.description" t-out="record.description"/>
+                <p class="d-flex gap-1 flex-wrap mt-3 mb-0" t-if="record.tag_ids">
+                    <a t-foreach="record.tag_ids" t-as="tag" t-attf-href="?{{ keep_query('*', tag=tag.name.lower()) }}" t-attf-class="o_tag #{'o_color_'+str(tag.color)} badge" t-out="tag.name"/>
+                </p> 
+            </div>
+        </div>
+    </template>
+
+    <template id="website_helpdesk_slides.helpdesk_courses" inherit_id="website_slides.courses_all" primary="True">
+        <xpath expr="//nav" position="replace"/>
+    </template>
+</odoo>

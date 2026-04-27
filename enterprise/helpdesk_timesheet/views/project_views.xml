@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_project_action_view_helpdesk_tickets" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">list,kanban,form,pivot,graph,activity</field>
+        <field name="context">{'default_project_id': active_id, 'create': False}</field>
+        <field name="domain">[('project_id', '=', active_id)]</field>
+    </record>
+
+    <record id="project.open_view_project_all" model="ir.actions.act_window">
+        <field name="domain">[('is_internal_project', '=', False), ('helpdesk_team', '=', False)]</field>
+    </record>
+
+    <record id="project.open_view_project_all_group_stage" model="ir.actions.act_window">
+        <field name="domain">[('is_internal_project', '=', False), ('helpdesk_team', '=', False)]</field>
+    </record>
+
+</odoo>

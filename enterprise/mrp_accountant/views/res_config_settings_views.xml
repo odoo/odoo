@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.stock.accountant</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock_accountant.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='default_accounts']" position="inside">
+                <div class="row mt8">
+                    <label for="property_stock_account_production_cost_id" class="col-lg-5 o_light_label"/>
+                    <field name="property_stock_account_production_cost_id"/>
+                </div>
+            </xpath>
+            <xpath expr="//setting[@id='general_accounts']" position="after">
+                <setting string="WIP Account Properties">
+                        <div class="content-group">
+                            <div class="row mt8">
+                                <label for="account_production_wip_account_id" class="col-lg-4 o_light_label"/>
+                                <field name="account_production_wip_account_id"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="account_production_wip_overhead_account_id" class="col-lg-4 o_light_label"/>
+                                <field name="account_production_wip_overhead_account_id"/>
+                            </div>
+                        </div>
+                    </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

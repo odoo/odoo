@@ -1,0 +1,481 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * appointment_google_reserve
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2026-03-30 06:17+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-18/"
+"appointment_google_reserve/ar/>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Weblate 5.16.2\n"
+
+#. module: appointment_google_reserve
+#. odoo-python
+#: code:addons/appointment_google_reserve/models/appointment_type.py:0
+msgid ""
+"%(appointment_type_name)s: A %(appointment_category)s appointment type "
+"cannot be used with the Google Bookings integration."
+msgstr ""
+"%(appointment_type_name)s: نوع المواعيد %(appointment_category)s لا يمكن "
+"استخدامه مع حجوزات Google"
+
+#. module: appointment_google_reserve
+#. odoo-python
+#: code:addons/appointment_google_reserve/models/appointment_type.py:0
+msgid ""
+"%(appointment_type_name)s: Please configure your Google Reserve Merchant for"
+" Google Reserve."
+msgstr ""
+"%(appointment_type_name)s: يرجى تهيئة Google Reserve Merchant لـ Google "
+"Reserve."
+
+#. module: appointment_google_reserve
+#. odoo-python
+#: code:addons/appointment_google_reserve/models/appointment_type.py:0
+msgid ""
+"%(appointment_type_name)s: The Google Bookings integration only works in the"
+" auto-assign mode."
+msgstr ""
+"%(appointment_type_name)s: لا يعمل تكامل نظام حجوزات Google إلا في وضع التعيين "
+"التلقائي."
+
+#. module: appointment_google_reserve
+#: model_terms:ir.ui.view,arch_db:appointment_google_reserve.appointment_type_view_form
+msgid "<i class=\"ms-2 fa fa-info-circle\" title=\"Required for Google Reserve\"/>"
+msgstr ""
+"<i class=\"ms-2 fa fa-info-circle\" title=\"Required for Google Reserve\"/>"
+
+#. module: appointment_google_reserve
+#: model_terms:ir.ui.view,arch_db:appointment_google_reserve.appointment_type_view_form
+msgid ""
+"<span class=\"fa fa-check fa-fw me-1\"/>Your Google Reserve Synchronization "
+"is active."
+msgstr ""
+"<span class=\"fa fa-check fa-fw me-1\"/>تزامن Google Reserve الخاص بك نشط."
+
+#. module: appointment_google_reserve
+#: model_terms:ir.ui.view,arch_db:appointment_google_reserve.appointment_type_view_form
+msgid ""
+"<span class=\"fa fa-check fa-hourglass me-1\"/>Your Appointment Type is being synchronized with Google Reserve.<br/>\n"
+"                                This can take up to 24 hours to be active."
+msgstr ""
+"<span class=\"fa fa-check fa-hourglass me-1\"/>يتم مزامنة نوع موعدك مع "
+"Google Reserve.<br/>\n"
+"                                قد يستغرق ذلك ما يصل إلى 24 ساعة حتى يصبح "
+"نشطًا."
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__message_needaction
+msgid "Action Needed"
+msgstr "إجراء مطلوب"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__location_id
+msgid "Address"
+msgstr "العنوان"
+
+#. module: appointment_google_reserve
+#: model:ir.model,name:appointment_google_reserve.model_appointment_resource
+msgid "Appointment Resource"
+msgstr "مَورِد الموعد"
+
+#. module: appointment_google_reserve
+#: model:ir.model,name:appointment_google_reserve.model_appointment_type
+msgid "Appointment Type"
+msgstr "نوع الموعد"
+
+#. module: appointment_google_reserve
+#: model:ir.actions.server,name:appointment_google_reserve.ir_cron_iap_google_reserve_availabilities_ir_actions_server
+msgid "Appointment: Upload Availabilities to IAP for Google Reserve"
+msgstr ""
+"المواعيد: قم برفع المواعيد المتاحة إلى نظام الدفع داخل التطبيق (IAP) لـ "
+"Google Reserve"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__appointment_type_ids
+msgid "Appointments"
+msgstr "المواعيد"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_appointment_type__assign_method
+msgid "Assignment Method"
+msgstr "طريقة التعيين"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__message_attachment_count
+msgid "Attachment Count"
+msgstr "عدد المرفقات"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__mobile_blacklisted
+msgid "Blacklisted Phone Is Mobile"
+msgstr "الهاتف الذي تم إدراجه في القائمة السوداء هو هاتف محمول "
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__phone_blacklisted
+msgid "Blacklisted Phone is Phone"
+msgstr "الهاتف الذي تم إدراجه في القائمة السوداء هو هاتف"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__business_category
+msgid "Business Category"
+msgstr "فئة العمل"
+
+#. module: appointment_google_reserve
+#: model:ir.model,name:appointment_google_reserve.model_calendar_event
+msgid "Calendar Event"
+msgstr "فعالية التقويم"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,help:appointment_google_reserve.field_appointment_type__google_reserve_merchant_id
+msgid "Configure your company data for Google Reserve"
+msgstr "قم بتهيئة بيانات شركتك لـ Google Reserve"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__create_uid
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__create_date
+msgid "Created on"
+msgstr "أنشئ في"
+
+#. module: appointment_google_reserve
+#: model_terms:ir.ui.view,arch_db:appointment_google_reserve.appointment_type_view_form
+msgid "Disable Google Reserve"
+msgstr "تعطيل Google Reserve"
+
+#. module: appointment_google_reserve
+#: model_terms:ir.ui.view,arch_db:appointment_google_reserve.appointment_type_view_form
+msgid "Disable Synchronization"
+msgstr ""
+
+#. module: appointment_google_reserve
+#: model_terms:ir.ui.view,arch_db:appointment_google_reserve.appointment_type_view_form
+msgid "Discard"
+msgstr "إهمال"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__display_name
+msgid "Display Name"
+msgstr "اسم العرض"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_appointment_type__google_reserve_enable
+msgid "Enable Google Booking"
+msgstr "تمكين حجوزات Google"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,help:appointment_google_reserve.field_google_reserve_merchant__phone_sanitized
+msgid ""
+"Field used to store sanitized phone number. Helps speeding up searches and "
+"comparisons."
+msgstr ""
+"حقل مُستخدَم لتخزين أرقام الهواتف السليمة، مما يساعد على تسريع عمليات البحث "
+"والمقارنات."
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__message_follower_ids
+msgid "Followers"
+msgstr "المتابعين"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "المتابعين (الشركاء)"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_calendar_event__is_google_reserve
+msgid "From Google Reserve"
+msgstr "من Google Reserve"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_appointment_type__google_reserve_pending_sync
+msgid "Google Booking Pending Synchronization"
+msgstr "نظتم حجوزات Google بانتظار المزامنة"
+
+#. module: appointment_google_reserve
+#: model_terms:ir.ui.view,arch_db:appointment_google_reserve.appointment_type_view_form
+msgid "Google Bookings"
+msgstr "حجوزات Google"
+
+#. module: appointment_google_reserve
+#: model:ir.ui.menu,name:appointment_google_reserve.menu_appointment_google_reserve_merchants
+msgid "Google Reserve"
+msgstr "Google Reserve"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_appointment_type__google_reserve_access_token
+msgid "Google Reserve Access Token"
+msgstr "رمز وصول Google Reserve"
+
+#. module: appointment_google_reserve
+#: model:ir.model,name:appointment_google_reserve.model_google_reserve_merchant
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_appointment_type__google_reserve_merchant_id
+msgid "Google Reserve Merchant"
+msgstr "تاجر Google Reserve"
+
+#. module: appointment_google_reserve
+#: model:ir.actions.act_window,name:appointment_google_reserve.google_reserve_merchant_action
+msgid "Google Reserve Merchants"
+msgstr "تُجّار Google Reserve"
+
+#. module: appointment_google_reserve
+#. odoo-python
+#: code:addons/appointment_google_reserve/models/google_reserve_merchant.py:0
+msgid ""
+"Google Reserve requires a complete address.Including a Country, a City, a "
+"Postal Code and a Street"
+msgstr ""
+"يتطلب Google Reserve عنوانًا كاملاً. بما في ذلك الدولة والمدينة والرمز البريدي "
+"والشارع."
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__has_message
+msgid "Has Message"
+msgstr "يحتوي على رسالة"
+
+#. module: appointment_google_reserve
+#: model_terms:ir.ui.view,arch_db:appointment_google_reserve.appointment_type_view_form
+msgid ""
+"Hold a second — are you sure you want to stop showing on Google Reserve? "
+"Changes can take up to 24 hours to take effect."
+msgstr ""
+"تمهّل قليلاً — هل أنت متأكد من أنك ترغب في التوقف عن الظهور على Google Reserve؟ "
+"قد يستغرق تفعيل التغييرات ما يصل إلى 24 ساعة."
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,help:appointment_google_reserve.field_appointment_type__assign_method
+msgid ""
+"How users and resources will be assigned to meetings customers book on your "
+"website."
+msgstr ""
+"كيفية إسناد الموظفين والموارد إلى الاجتماعات التي يقوم العملاء بحجزها على "
+"موقعك الإلكتروني. "
+
+#. module: appointment_google_reserve
+#: model_terms:ir.ui.view,arch_db:appointment_google_reserve.appointment_type_view_form
+msgid "I'm ready, synchronize!"
+msgstr "أنا جاهز للمزامنة!"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__id
+msgid "ID"
+msgstr "المُعرف"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,help:appointment_google_reserve.field_google_reserve_merchant__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "إذا كان محددًا، فهناك رسائل جديدة عليك رؤيتها."
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,help:appointment_google_reserve.field_google_reserve_merchant__message_has_error
+#: model:ir.model.fields,help:appointment_google_reserve.field_google_reserve_merchant__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "إذا كان محددًا، فقد حدث خطأ في تسليم بعض الرسائل."
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,help:appointment_google_reserve.field_google_reserve_merchant__phone_sanitized_blacklisted
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
+msgstr ""
+"إذا كان رقم الهاتف السليم في القائمة السوداء، لن تستلم جهة الاتصال الرسائل "
+"النصية القصيرة الجماعية من أي قائمة بعد الآن"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,help:appointment_google_reserve.field_google_reserve_merchant__mobile_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"يشير إلى ما إذا كان رقم الهاتف السليم المدرج في القائمة السوداء أم لا.  يساعد "
+"في تمييز أي الأرقام تم إدراجها في القائمة السوداء عندما يمون هناك حقلان لرقم "
+"الهاتف والهاتف المحمول في إحدى النماذج. "
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,help:appointment_google_reserve.field_google_reserve_merchant__phone_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"يشير إلى ما إذا كان رقم الهاتف السليم رقم هاتف أم لا. يساعد في تمييز أي "
+"الأرقام تم إدراجها في القائمة السوداء عندما يكون هناك حقلان لرقم الهاتف "
+"والهاتف المحمول في أحد النماذج."
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__message_is_follower
+msgid "Is Follower"
+msgstr "متابع"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__name
+msgid "Merchant Name"
+msgstr "اسم التاجر"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__message_has_error
+msgid "Message Delivery error"
+msgstr "خطأ في تسليم الرسائل"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__message_ids
+msgid "Messages"
+msgstr "الرسائل"
+
+#. module: appointment_google_reserve
+#: model_terms:ir.ui.view,arch_db:appointment_google_reserve.appointment_type_view_form
+msgid "Not yet"
+msgstr "ليس بعد"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__message_needaction_counter
+msgid "Number of Actions"
+msgstr "عدد الإجراءات"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__message_has_error_counter
+msgid "Number of errors"
+msgstr "عدد الأخطاء"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,help:appointment_google_reserve.field_google_reserve_merchant__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,help:appointment_google_reserve.field_google_reserve_merchant__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "عدد الرسائل الحادث بها خطأ في التسليم"
+
+#. module: appointment_google_reserve
+#. odoo-python
+#: code:addons/appointment_google_reserve/models/appointment_type.py:0
+msgid ""
+"Only Appointment Managers can enable or disable the Google Reserve "
+"Integration"
+msgstr ""
+"مدراء المواعيد فقط هم الوحيدون الذين يمكنهم تمكين أو تعطيل تكامل Google "
+"Reserve."
+
+#. module: appointment_google_reserve
+#. odoo-python
+#: code:addons/appointment_google_reserve/models/appointment_type.py:0
+msgid "Only Appointment Managers can enable the Google Reserve Integration"
+msgstr "مدراء المواعيد فقط هم الوحيدون الذين يمكنهم تمكين تكامل Google Reserve"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__phone
+msgid "Phone"
+msgstr "رقم الهاتف"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__phone_sanitized_blacklisted
+msgid "Phone Blacklisted"
+msgstr "تم إدراج رقم الهاتف في القائمة السوداء"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__phone_mobile_search
+msgid "Phone/Mobile"
+msgstr "الهاتف/الهاتف المتحرك "
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__rating_ids
+msgid "Ratings"
+msgstr "التقييمات"
+
+#. module: appointment_google_reserve
+#: model_terms:ir.ui.view,arch_db:appointment_google_reserve.appointment_type_view_form
+msgid ""
+"Ready to synchronize your Appointment Type with Google Reserve? Make sure "
+"your setup is complete — changes may take up to 24 hours to appear once "
+"live."
+msgstr ""
+"هل أنت مستعد لمزامنة نوع موعدك مع Google Reserve؟ تأكد من إكمال الإعدادات — "
+"قد تستغرق التغييرات ما يصل إلى 24 ساعة لتظهر بعد نشرها."
+
+#. module: appointment_google_reserve
+#: model:ir.model,name:appointment_google_reserve.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "تفاصيل إجازة المَورد"
+
+#. module: appointment_google_reserve
+#: model:appointment.type,name:appointment_google_reserve.appointment_type_restaurant
+msgid "Rest'Odoo"
+msgstr "مطعم أودو"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "خطأ في تسليم الرسائل النصية القصيرة"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__phone_sanitized
+msgid "Sanitized Number"
+msgstr "رقم هاتف سليم"
+
+#. module: appointment_google_reserve
+#: model_terms:ir.ui.view,arch_db:appointment_google_reserve.appointment_type_view_form
+msgid "Stop syncing"
+msgstr "إيقاف المزامنة"
+
+#. module: appointment_google_reserve
+#: model_terms:ir.ui.view,arch_db:appointment_google_reserve.appointment_type_view_form
+msgid "Synchronize with Google Reserve"
+msgstr "المزتمنة مع Google Reserve"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,help:appointment_google_reserve.field_google_reserve_merchant__phone
+#: model:ir.model.fields,help:appointment_google_reserve.field_google_reserve_merchant__website_url
+msgid "Used by Google to properly match merchants and partners, recommended."
+msgstr "يستخدمه Google لمطابقة التجار والشركاء بشكل صحيح، نوصي باستخدامه."
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,help:appointment_google_reserve.field_google_reserve_merchant__business_category
+#: model:ir.model.fields,help:appointment_google_reserve.field_google_reserve_merchant__location_id
+msgid "Used by Google to try to match your physical address to your business."
+msgstr "يستخدمه Google لمحاولة مطابقة عنوانك الفعلي مع نشاطك التجاري."
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__website_message_ids
+msgid "Website Messages"
+msgstr "رسائل الموقع الإلكتروني"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,field_description:appointment_google_reserve.field_google_reserve_merchant__website_url
+msgid "Website URL"
+msgstr "رابط URL للموقع الإلكتروني"
+
+#. module: appointment_google_reserve
+#: model:ir.model.fields,help:appointment_google_reserve.field_google_reserve_merchant__website_message_ids
+msgid "Website communication history"
+msgstr "سجل تواصل الموقع الإلكتروني"
+
+#. module: appointment_google_reserve
+#: model_terms:ir.ui.view,arch_db:appointment_google_reserve.google_reserve_merchant_view_form
+msgid "e.g Restaurant"
+msgstr "مثال: مطعم"

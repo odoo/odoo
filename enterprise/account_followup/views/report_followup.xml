@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="template_followup_report">
+           <!-- doc is a 'res.partner' -->
+           <t t-set="report" t-value="doc.env['account.followup.report']"/>
+           <t t-set="options" t-value="report._get_followup_report_options(doc, options)"/>
+            <div class='o_account_reports_body'>
+                <div class="o_account_reports_page o_account_reports_no_print o_account_followup">
+                    <t t-call="account_followup.followup_filter_info_template"/>
+
+                    <div class="o_account_reports_header">
+                        <div class="print_only">
+                            <h2>
+                            <strong>
+                                Pending Invoices
+                            </strong>
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div class="o_account_reports_summary">
+                        <t t-set="report_summary" t-value="report._get_main_body(options)"/>
+                        <div class="o_account_report_summary" role="alert">
+                            <span class="o_account_report_summary_content" t-att-style="'' if report_summary else 'display: none;'">
+                                <span t-out="report_summary">Invoices Analysis</span>
+                            </span>
+                            <span t-if="not report_summary and not context.get('print_mode')" class="o_account_report_summary_placeholder">
+                                Add a note
+                            </span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="oe_structure"></div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="followup_filter_info_template">
+            <div t-if='context.get("mail") != True' class="print_only" style='margin-bottom: 20px;'>
+                <t t-set="invoice_address_id" t-value="doc.env['res.partner'].browse(doc.address_get(['invoice'])['invoice'])"/>
+                <t t-if="invoice_address_id" t-set="partner_addr" t-value="invoice_address_id"/>
+                <t t-else="" t-set="partner_addr" t-value="doc"/>
+
+                <t t-if="context.get('snailmail_layout')" t-set="contact_widget_fields" t-value="['address', 'name']"/>
+                <t t-else="" t-set="contact_widget_fields" t-value="['address', 'name', 'phone']"/>
+
+                <div class="oe_structure"></div>
+                <div class="row fallback_header">
+                    <div class="o_followup_address col-5 offset-7">
+                        <span t-field="partner_addr.self"
+                            t-options='{"widget": "contact", "fields": contact_widget_fields, "no_marker": True}'>Address</span>
+                        <span t-field="partner_addr.vat"/>
+                    </div>
+                </div>
+
+                <p style="margin-top: 35px;">
+                    Date: <span t-out="datetime.date.today()" t-options="{'widget': 'date'}">2023-09-06</span><br/>
+                    <span t-if='partner_addr.ref'>Customer ref: <span t-field="partner_addr.ref">Demo Ref</span></span>
+                </p>
+            </div>
+        </template>
+
+        <template id="table_header_template_followup_report">
+            <thead class="o_account_reports_header_hierarchy">
+                    <tr t-foreach="column_headers" t-as="header_line">
+                        <t t-foreach="header_line" t-as="cell">
+                            <th t-att-class="'acc_rep_column_header ' + (cell.get('class', ''))"
+                                t-att-style="cell.get('style', '')"
+                            >
+                                <div t-att-class="classes" t-att-style="style">
+                                    <t t-out="cell.get('name')">Table Header</t>
+                                </div>
+                            </th>
+                        </t>
+                    </tr>
+            </thead>
+        </template>
+
+        <template id="line_template">
+            <t t-foreach="lines" t-as="line">
+                <t t-set="trclass" t-value="'o_account_reports_default_style'"/>
+                <t t-set="domainClass" t-value="'o_account_reports_domain_line_2 acc_rep_line_name'"/>
+                <t t-if="line.get('level') != None">
+                    <t t-set="trclass" t-value="'o_account_searchable_line o_account_reports_level'+str(line['level'])"/>
+                    <t t-if="line.get('caret_options')">
+                        <t t-set="domainClass" t-value="'o_account_reports_domain_line_' + str(line['level']) + ' acc_rep_line_name'"/>
+                    </t>
+                </t>
+
+                <tr t-attf-class="#{trclass} #{line.get('class', '')} #{'o_js_account_report_parent_row_unfolded' if line.get('unfolded', False) else ''}"
+                    tabindex="0"
+                    t-att-data-parent-id="line.get('parent_id', False)"
+                    t-att="{k: v for k, v in line.items() if k.startswith('data-')}"
+                    t-att-style="line.get('style', '')">
+                    <td
+                        t-att-data-id="line['id']"
+                        t-att-class="'o_account_report_name_ellipsis o_account_report_line o_account_report_line_indent ' + (line.get('unfoldable') and 'js_account_report_foldable o_foldable_total' or '') + ' ps-2 pe-2' + line.get('name_class', '')"
+                        t-att-data-unfolded="line.get('unfolded', False)"
+                        t-att-data-groupby="line.get('groupby')"
+                        t-att-data-expand-function="line.get('expand_function')"
+                        t-att-data-offset="line.get('offset', 0)"
+                        t-att-data-progress="line.get('progress')"
+                        t-att-data-parent-id="line.get('parent_id')"
+                        t-att-colspan="line.get('colspan', '1')"
+                    >
+                        <span class="acc_rep_line_name" t-att-title="line.get('title_hover')">
+                            <t t-out="line.get('name')">Table Value</t>
+                        </span>
+                    </td>
+
+                    <t t-foreach="line.get('columns')" t-as="cell">
+                        <t t-set="cell_classes" t-value="(cell.get('class', '') + (line.get('unfoldable') and ' o_foldable_total' or ''))"/>
+                        <t t-set="style_classes" t-value="cell.get('style', '')"/>
+
+                        <td>
+                            <div t-att-style="style_classes" t-att-class="cell_classes + ' o_account_report_column_value ps-2 pe-2'">
+                                <span class="o_account_report_column_value" t-out="cell.get('name')">Name</span>
+                            </div>
+                        </td>
+                    </t>
+                </tr>
+            </t>
+        </template>
+
+        <template id="report_followup_print_all">
+            <t t-call="web.html_container">
+                <t t-set="company" t-value="docs.env.company"/>
+                <div class="oe_structure"></div>
+                <t t-foreach="docs" t-as="doc"> <!-- each doc is a 'res.partner', called doc for the 'web.external_layout' template -->
+                    <t t-call="web.external_layout">
+                        <t t-set="fallback_address" t-value="doc.browse(doc.address_get(['invoice'])['invoice']) or doc"/>
+                        <t t-call-assets="account_followup.assets_followup_report" />
+                        <div class="page">
+                            <span t-out="doc.get_followup_html(options)">Follow-up details</span>
+                        </div>
+                    </t>
+                    <div class="oe_structure"></div>
+                    <!-- The invoice PDFs are attached by extending function _render_qweb_pdf_prepare_streams of ir.actions.report -->
+                </t>
+            </t>
+        </template>
+
+        <record id="action_report_followup" model="ir.actions.report">
+            <field name="name">Print Follow-up Letter</field>
+            <field name="model">res.partner</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account_followup.report_followup_print_all</field>
+            <field name="report_file">account_followup.report_followup_print_all</field>
+            <field name="print_report_name">'Follow-up ' + object.display_name</field>
+        </record>
+
+        <function model="ir.default" name="set" eval="('res.partner', 'followup_next_action_date', False)"/>
+    </data>
+</odoo>

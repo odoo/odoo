@@ -1,0 +1,35 @@
+.o_web_studio_thumbnail_item {
+  transition: all .3s ease 0s;
+  width: 115px;
+  font-size: .9em;
+
+  &:hover {
+    box-shadow: 0 10px 26px -12px black !important;
+  }
+
+  &.disabled {
+    opacity: 0.4;
+  }
+
+  .o_web_studio_thumbnail {
+    height: 115px;
+
+    img {
+      width: 60px;
+    }
+  }
+
+  .o_web_studio_name {
+    height: 3em !important;
+
+    .o_web_studio_more {
+      background-color: $white;
+      width: 1.8em;
+      aspect-ratio: 1;
+
+      &:hover, &:focus {
+          background-color: $o-web-studio-bg-light !important;
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form_inherit_lpp_percentage" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.inherit.l10n.ch.hr.payroll.lpp.percentage</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll_elm_transmission.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='lpp_employee_amount']" position="before">
+                <field name="l10n_ch_lpp_in_percentage" widget="boolean_toggle" string="LPP Contributions in Percentage" groups="hr_payroll.group_hr_payroll_user"/>
+            </xpath>
+
+            <div name="lpp_employee_amount" position="replace">
+                <div class="o_row mw-50" name="lpp_employee_amount" groups="hr_payroll.group_hr_payroll_user" invisible="l10n_ch_lpp_in_percentage">
+                    <field name="lpp_employee_amount" required="l10n_ch_lpp_solutions and not l10n_ch_lpp_in_percentage" class="o_hr_narrow_field" nolabel="1"/>
+                    <span>CHF / Month</span>
+                </div>
+                <div class="o_row mw-50" name="lpp_percentage_employee" groups="hr_payroll.group_hr_payroll_user" invisible="not l10n_ch_lpp_in_percentage">
+                    <field name="l10n_ch_lpp_percentage_employee" required="l10n_ch_lpp_solutions and l10n_ch_lpp_in_percentage" class="o_hr_narrow_field" nolabel="1"/>
+                    <span>%</span>
+                </div>
+            </div>
+
+            <div name="lpp_company_amount" position="replace">
+                <div class="o_row mw-50" name="lpp_company_amount" groups="hr_payroll.group_hr_payroll_user" invisible="l10n_ch_lpp_in_percentage">
+                    <field name="lpp_company_amount" required="l10n_ch_lpp_solutions and not l10n_ch_lpp_in_percentage" class="o_hr_narrow_field" nolabel="1"/>
+                    <span>CHF / Month</span>
+                </div>
+                <div class="o_row mw-50" name="lpp_percentage_employer" groups="hr_payroll.group_hr_payroll_user" invisible="not l10n_ch_lpp_in_percentage">
+                    <field name="l10n_ch_lpp_percentage_employer" required="l10n_ch_lpp_solutions and l10n_ch_lpp_in_percentage" class="o_hr_narrow_field" nolabel="1"/>
+                    <span>%</span>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

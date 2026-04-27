@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_double_pay_recovery_line_view_tree" model="ir.ui.view">
+        <field name="name">l10n.be.double.pay.recovery.line.view.list</field>
+        <field name="model">l10n.be.double.pay.recovery.line</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="months_count"/>
+                <field name="amount"/>
+                <field name="occupation_rate"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="company_calendar" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_be_double_pay_recovery_line_view_form" model="ir.ui.view">
+        <field name="name">l10n.be.double.pay.recovery.line.view.form</field>
+        <field name="model">l10n.be.double.pay.recovery.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="months_count" string="#Months"/>
+                        <field name="amount" string="Amount"/>
+                    </group>
+                    <group>
+                        <field name="occupation_rate" string="Occupation Rate"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="company_calendar" invisible="1"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo>

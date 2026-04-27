@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://www.dhl.com"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.dhl.com"
+	xmlns:dhl="http://www.dhl.com/datatypes_global" elementFormDefault="unqualified">
+	<xsd:import namespace="http://www.dhl.com/datatypes_global"
+		schemaLocation="datatypes_global_v62.xsd" />
+	<xsd:element name="ErrorResponse">
+		<xsd:annotation>
+			<xsd:documentation>Generic error response root element
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="Response" type="dhl:ErrorResponse" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

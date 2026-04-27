@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="demo_partner_l10n_br_avatax_government_cbsibs" model="res.partner">
+        <field name="name">BR Company Customer Estimated Profit Government Delivery</field>
+        <field name="is_company" eval="True"/>
+        <field name="l10n_latam_identification_type_id" ref="l10n_br.cnpj"/>
+        <field name="street">Rua Barão de Jundiaí 523</field>
+        <field name="street2">Lapa</field>
+        <field name="city">São Paulo</field>
+        <field name="city_id" ref="l10n_br.city_br_001"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="zip">05073-010</field>
+        <field name="vat">51494569013170</field>
+        <field name="l10n_br_tax_regime">estimatedProfit</field>
+        <field name="state_id" ref="base.state_br_sp"/>
+        <field name="l10n_br_taxpayer">icms</field>
+        <field name="l10n_br_activity_sector">service</field>
+        <field name="l10n_br_entity_type">stateGovernment</field>
+    </record>
+
+    <record id="demo_partner_l10n_br_avatax_not_cbsibs" model="res.partner">
+        <field name="name">BR Company Customer Estimated Profit NOT CBS/IBS Taxpayer</field>
+        <field name="is_company" eval="True"/>
+        <field name="l10n_latam_identification_type_id" ref="l10n_br.cnpj"/>
+        <field name="street">Rua Barão de Jundiaí 523</field>
+        <field name="street2">Lapa</field>
+        <field name="city">São Paulo</field>
+        <field name="city_id" ref="l10n_br.city_br_001"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="zip">05073-010</field>
+        <field name="vat">51494569013170</field>
+        <field name="l10n_br_tax_regime">estimatedProfit</field>
+        <field name="state_id" ref="base.state_br_sp"/>
+        <field name="l10n_br_taxpayer">icms</field>
+        <field name="l10n_br_activity_sector">service</field>
+        <field name="l10n_br_entity_type">business</field>
+        <field name="l10n_br_is_cbs_ibs_taxpayer" eval="False"/>
+    </record>
+
+    <record id="demo_partner_l10n_br_avatax_simplified_mixed" model="res.partner">
+        <field name="name">BR Company Customer Simplified Mixed</field>
+        <field name="is_company" eval="True"/>
+        <field name="l10n_latam_identification_type_id" ref="l10n_br.cnpj"/>
+        <field name="street">Rua Barão de Jundiaí 523</field>
+        <field name="street2">Lapa</field>
+        <field name="city">São Paulo</field>
+        <field name="city_id" ref="l10n_br.city_br_001"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="zip">05073-010</field>
+        <field name="vat">51494569013170</field>
+        <field name="l10n_br_tax_regime">simplified</field>
+        <field name="state_id" ref="base.state_br_sp"/>
+        <field name="l10n_br_taxpayer">icms</field>
+        <field name="l10n_br_activity_sector">retail</field>
+        <field name="l10n_br_entity_type">business</field>
+        <field name="l10n_br_is_cbs_ibs_normal" eval="False"/>
+        <field name="l10n_br_cbs_credit">1.00</field>
+        <field name="l10n_br_ibs_credit">2.00</field>
+        <field name="l10n_br_iss_simples_rate">5.00</field>
+    </record>
+
+    <record id="demo_partner_l10n_br_avatax_individual_customer_no_cashback" model="res.partner">
+        <field name="name">Identified Individual Customer No Cashback</field>
+        <field name="is_company" eval="True"/>
+        <field name="l10n_latam_identification_type_id" ref="l10n_br.cnpj"/>
+        <field name="street">Rua, 123</field>
+        <field name="street2">Centro</field>
+        <field name="city">Curitiba</field>
+        <field name="city_id" ref="l10n_br.city_br_008"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="zip">80010-010</field>
+        <field name="vat">92355690448</field>
+        <field name="l10n_br_tax_regime">individual</field>
+        <field name="state_id" ref="base.state_br_pr"/>
+        <field name="l10n_br_taxpayer">non</field>
+        <field name="l10n_br_activity_sector">finalConsumer</field>
+        <field name="l10n_br_entity_type">individual</field>
+    </record>
+
+    <record id="demo_partner_l10n_br_avatax_individual_customer_cashback" model="res.partner">
+        <field name="name">Identified Individual Customer Cashback</field>
+        <field name="is_company" eval="True"/>
+        <field name="l10n_latam_identification_type_id" ref="l10n_br.cnpj"/>
+        <field name="street">Rua, 123</field>
+        <field name="street2">Centro</field>
+        <field name="city">Curitiba</field>
+        <field name="city_id" ref="l10n_br.city_br_008"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="zip">80010-010</field>
+        <field name="vat">92355690448</field>
+        <field name="l10n_br_tax_regime">individual</field>
+        <field name="state_id" ref="base.state_br_pr"/>
+        <field name="l10n_br_taxpayer">non</field>
+        <field name="l10n_br_activity_sector">finalConsumer</field>
+        <field name="l10n_br_entity_type">individual</field>
+        <field name="l10n_br_is_cashback_applied" eval="True"/>
+    </record>
+</odoo>

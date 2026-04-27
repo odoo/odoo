@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="helpdesk.HelpdeskTeamKanbanView" t-inherit="web.KanbanView" t-inherit-mode="primary">
+        <xpath expr="//t[@t-component='props.Renderer']" position="replace">
+            <div class="o_helpdesk_content flex-column d-flex h-100 mw-100">
+                <HelpdeskTeamDashboard/>
+                <div class="o_helpdesk_wrap_kanban_view flex-grow-1">$0</div>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

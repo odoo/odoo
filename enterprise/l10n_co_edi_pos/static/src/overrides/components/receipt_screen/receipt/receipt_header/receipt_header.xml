@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="after">
+            <t t-if="props.data.l10n_co_edi_pos">
+                <t t-set="header_data" t-value="props.data.l10n_co_edi_pos"/>
+                <div class="receipt_header_l10n_co_edi_type">
+                    <t t-if="header_data.l10n_co_edi_type == '1'">Factura Electrónica de Venta</t>
+                    <t t-else="">Nota Crédito Electrónica</t>
+                </div>
+
+                <div class="receipt_header_l10n_co_edi_document_number">Número de Documento: <t t-out="header_data.sequence_number"/></div>
+                <div class="receipt_header_l10n_co_edi_authorization_number">DIAN resolution: <t t-out="header_data.l10n_co_edi_dian_authorization_number"/></div>
+                <div class="receipt_header_l10n_co_edi_date_range">Fecha efectiva desde <t t-out="header_data.l10n_co_edi_dian_authorization_date"/> a <t t-out="header_data.l10n_co_edi_dian_authorization_end_date"/></div>
+                <div>Número de secuencia desde</div>
+                <div class="receipt_header_l10n_co_edi_sequence_range"><t t-out="header_data.l10n_co_edi_min_range_number"/> a <t t-out="header_data.l10n_co_edi_max_range_number"/></div>
+                <div class="receipt_header_l10n_co_edi_payment_option">Metodo de Pago: <t t-out="header_data.l10n_co_edi_pos_payment_option_id.name"/></div>
+
+                <div class="receipt_header_l10n_co_edi_payment_option_code">
+                    <t t-if="header_data.l10n_co_edi_pos_payment_option_id.code == '1'">Termino de Pago: Contado</t>
+                    <t t-if="header_data.l10n_co_edi_pos_payment_option_id.code == '2'">Termino de Pago: Crédito</t>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

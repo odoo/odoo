@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- /shop/l10n_mx_invoicing_info route -->
+    <template id="l10n_mx_edi_invoicing_info">
+        <t t-call="website_sale.checkout_layout">
+            <t t-set="additional_title">Billing information</t>
+            <t t-set="show_navigation_button" t-value="False"/>
+            <t t-set="oe_structure">
+                <!-- This is the drag-and-drop area for website building blocs at the end of each
+                     checkout page. This is append at the of the page in `checkout_layout`. The
+                     templates created in the database to store blocs are hooked using XPath on the
+                     `oe_struture` element ID. Therefore, we can't use dynamic IDs (like with
+                     t-att-id) and each template needs to define a div element. -->
+                <div class="oe_structure" id="oe_structure_l10n_mx_edi_website_sale_extra_info_1"/>
+            </t>
+
+            <section >
+                    <form action="/shop/l10n_mx_invoicing_info" method="post">
+                        <h3 class="mb-4">Required additional fields</h3>
+                        <t t-if="errors" t-foreach="errors.values()" t-as="err">
+                            <h5 class="text-danger" t-esc="err" />
+                        </t>
+                            <div class="col-12 col-lg-6 mb-3">
+                                <p class="mb-3 fw-bold">Do you need an invoice?</p>
+                                <div class="form-check d-flex flex-column">
+                                    <label class="col-form-label">
+                                        <div class="form-check ps-0">
+                                            <input type="radio" class="form-check-input"
+                                                    name="need_invoice" value="1"
+                                                    t-att-checked="default_vals.get('need_invoice')"/>
+                                            <div class="form-check-label fw-normal">
+                                                Yes
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <label class="col-form-label">
+                                        <div class="form-check ps-0">
+                                            <input type="radio" class="form-check-input"
+                                                    name="need_invoice" value="0"
+                                                    t-att-checked="not default_vals.get('need_invoice')"/>
+                                            <div class="form-check-label fw-normal">
+                                                No
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        <!-- Hide the additional fields by default, unless need_invoice: 'yes' is checked -->
+                        <div class="row div_l10n_mx_edi_additional_fields"
+                                t-att-style="default_vals.get('need_invoice') or 'display: none'">
+                            <div t-attf-class="#{errors.get('vat') and 'o_has_error' or ''} col-lg-6 mb-3">
+                                <label class="col-form-label" for="vat">RFC</label>
+                                <input type="text" name="vat"
+                                        t-attf-class="form-control #{errors.get('vat') and 'is-invalid' or ''}"
+                                        t-att-value="default_vals.get('vat')"
+                                        t-att-readonly="not can_edit_vat"/>
+                                <small t-if="not can_edit_vat" class="form-text text-muted">
+                                    Changing VAT number is not allowed once document(s) have been
+                                    issued for your account. Please contact us directly for this operation.
+                                </small>
+                            </div>
+                            <t t-foreach="l10n_mx_edi_fields" t-as="field">
+                                <t t-value="default_vals.get(field.name)" t-set="val"/>
+                                <div class="col-lg-6 mb-3" t-if="field.ttype in ('selection', 'many2one')">
+                                    <label class="col-form-label" t-att-for="field.name">
+                                        <t t-out="field.field_description"/>
+                                    </label>
+                                    <select t-att-name="field.name" class="form-select">
+                                        <option t-att-selected="not val" disabled="disabled"
+                                                value="">
+                                            <t t-out="'Select the %s ...' % field.field_description.lower()"/>
+                                        </option>
+                                        <t t-if="field.ttype == 'selection'" t-foreach="field.selection_ids" t-as="selection">
+                                            <option t-att-selected="val and val == selection.value"
+                                                    t-att-value="selection.value">
+                                                <t t-out="selection.name"/>
+                                            </option>
+                                        </t>
+                                        <t t-if="field.name == 'l10n_mx_edi_payment_method_id'" t-foreach="l10n_mx_edi_payment_methods" t-as="method">
+                                            <option t-att-selected="val and int(val) == method.id"
+                                                    t-att-value="method.id"
+                                                    t-out="method.name"/>
+                                        </t>
+                                    </select>
+                                </div>
+                                <div t-if="field.ttype == 'boolean'">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input"
+                                                t-att-id="field.name"
+                                                t-att-name="field.name"
+                                                t-att-checked="val"/>
+                                        <label class="form-check-label fw-normal"
+                                                t-att-for="field.name">
+                                            <t t-out="field.field_description"/>
+                                        </label>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <t t-call="website_sale.navigation_buttons">
+                            <t t-set="_form_send_navigation" t-value="True"/>
+                            <t t-set="_cta_classes" t-value="'a-submit a-submit-disable a-submit-loading'"/>
+                        </t>
+                    </form>
+            </section>
+        </t>
+    </template>
+</odoo>

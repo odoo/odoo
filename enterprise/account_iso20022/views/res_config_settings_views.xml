@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.account.sepa</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting id="sepa_payments" position="inside">
+                <div class="content-group" invisible="not module_account_iso20022">
+                    <div class="row mt16">
+                        <label for="iso20022_initiating_party_name" class="col-lg-3 o_light_label"/>
+                        <field name="iso20022_initiating_party_name" class="oe_inline"/>
+                    </div>
+                    <div class="row">
+                        <label for="iso20022_orgid_id" class="col-lg-3 o_light_label"/>
+                        <field name="iso20022_orgid_id" class="oe_inline"/>
+                    </div>
+                    <div class="row">
+                        <label for="iso20022_orgid_issr" class="col-lg-3 o_light_label"/>
+                        <field name="iso20022_orgid_issr" class="oe_inline"/>
+                    </div>
+                </div>
+            </setting>
+        </field>
+    </record>
+
+</odoo>

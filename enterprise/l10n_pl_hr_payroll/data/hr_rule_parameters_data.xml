@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_parameter_social_security_cap" model="hr.rule.parameter">
+        <field name="name">Poland: Social Security Cap</field>
+        <field name="code">l10n_pl_social_security_cap</field>
+        <field name="country_id" ref="base.pl"/>
+    </record>
+    <record id="rule_parameter_social_security_cap_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">177660</field>
+        <field name="rule_parameter_id" ref="rule_parameter_social_security_cap"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_pension_employee_rate" model="hr.rule.parameter">
+        <field name="name">Poland: Pension Contribution Employee Rate</field>
+        <field name="code">l10n_pl_pension_employee_rate</field>
+        <field name="country_id" ref="base.pl"/>
+    </record>
+    <record id="rule_parameter_pension_employee_rate_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">-9.76</field>
+        <field name="rule_parameter_id" ref="rule_parameter_pension_employee_rate"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_pension_employer_rate" model="hr.rule.parameter">
+        <field name="name">Poland: Pension Contribution Employer Rate</field>
+        <field name="code">l10n_pl_pension_employer_rate</field>
+        <field name="country_id" ref="base.pl"/>
+    </record>
+    <record id="rule_parameter_pension_employer_rate_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">9.76</field>
+        <field name="rule_parameter_id" ref="rule_parameter_pension_employer_rate"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_disability_employee_rate" model="hr.rule.parameter">
+        <field name="name">Poland: Disability Insurance Contribution Employee Rate</field>
+        <field name="code">l10n_pl_disability_employee_rate</field>
+        <field name="country_id" ref="base.pl"/>
+    </record>
+    <record id="rule_parameter_disability_employee_rate_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">-1.5</field>
+        <field name="rule_parameter_id" ref="rule_parameter_disability_employee_rate"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_disability_employer_rate" model="hr.rule.parameter">
+        <field name="name">Poland: Disability Insurance Contribution Employer Rate</field>
+        <field name="code">l10n_pl_disability_employer_rate</field>
+        <field name="country_id" ref="base.pl"/>
+    </record>
+    <record id="rule_parameter_disability_employer_rate_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">6.5</field>
+        <field name="rule_parameter_id" ref="rule_parameter_disability_employer_rate"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_sickness_employee_rate" model="hr.rule.parameter">
+        <field name="name">Poland: Sickness Insurance Contribution Employee Rate</field>
+        <field name="code">l10n_pl_sickness_employee_rate</field>
+        <field name="country_id" ref="base.pl"/>
+    </record>
+    <record id="rule_parameter_sickness_employee_rate_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">-2.45</field>
+        <field name="rule_parameter_id" ref="rule_parameter_sickness_employee_rate"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_accident_employer_rate" model="hr.rule.parameter">
+        <field name="name">Poland: Accident Insurance Contribution Employer Rate</field>
+        <field name="code">l10n_pl_accident_employer_rate</field>
+        <field name="country_id" ref="base.pl"/>
+    </record>
+    <record id="rule_parameter_accident_employer_rate_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">1.67</field>
+        <field name="rule_parameter_id" ref="rule_parameter_accident_employer_rate"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_laour_employer_rate" model="hr.rule.parameter">
+        <field name="name">Poland: Labour Fund and Solidarity Fund Employer Rate</field>
+        <field name="code">l10n_pl_labour_employer_rate</field>
+        <field name="country_id" ref="base.pl"/>
+    </record>
+    <record id="rule_parameter_laour_employer_rate_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">2.45</field>
+        <field name="rule_parameter_id" ref="rule_parameter_laour_employer_rate"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_standard_earning" model="hr.rule.parameter">
+        <field name="name">Poland: Standard Earning</field>
+        <field name="code">l10n_pl_standard_earning</field>
+        <field name="country_id" ref="base.pl"/>
+    </record>
+    <record id="rule_parameter_standard_earning_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">250</field>
+        <field name="rule_parameter_id" ref="rule_parameter_standard_earning"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_withholding_tax_threshold_low" model="hr.rule.parameter">
+        <field name="name">Poland: Wihholding Tax Threshold Low</field>
+        <field name="code">l10n_pl_withholding_tax_threshold_low</field>
+        <field name="country_id" ref="base.pl"/>
+    </record>
+    <record id="rule_parameter_withholding_tax_threshold_low_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">30000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_tax_threshold_low"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_withholding_tax_threshold_high" model="hr.rule.parameter">
+        <field name="name">Poland: Wihholding Tax Threshold High</field>
+        <field name="code">l10n_pl_withholding_tax_threshold_high</field>
+        <field name="country_id" ref="base.pl"/>
+    </record>
+    <record id="rule_parameter_withholding_tax_threshold_high_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">120000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_tax_threshold_high"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_withholding_tax_rate_low" model="hr.rule.parameter">
+        <field name="name">Poland: Wihholding Tax Rate Low</field>
+        <field name="code">l10n_pl_withholding_tax_rate_low</field>
+        <field name="country_id" ref="base.pl"/>
+    </record>
+    <record id="rule_parameter_withholding_tax_rate_low_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">-12</field>
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_tax_rate_low"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_withholding_tax_rate_high" model="hr.rule.parameter">
+        <field name="name">Poland: Wihholding Tax Rate High</field>
+        <field name="code">l10n_pl_withholding_tax_rate_high</field>
+        <field name="country_id" ref="base.pl"/>
+    </record>
+    <record id="rule_parameter_withholding_tax_rate_high_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">-32</field>
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_tax_rate_high"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_health_employee_rate" model="hr.rule.parameter">
+        <field name="name">Poland: Health Insurance Contributions</field>
+        <field name="code">l10n_pl_health_employee_rate</field>
+        <field name="country_id" ref="base.pl"/>
+    </record>
+    <record id="rule_parameter_health_employee_rate_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">-9</field>
+        <field name="rule_parameter_id" ref="rule_parameter_health_employee_rate"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_childcare_relief" model="hr.rule.parameter">
+        <field name="name">Poland: Chilcare Relief</field>
+        <field name="code">l10n_pl_childcare_relief</field>
+        <field name="country_id" ref="base.pl"/>
+    </record>
+    <record id="rule_parameter_childcare_relief_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">[92.67, 92.67, 166.67, 225]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_childcare_relief"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+</odoo>
+
+

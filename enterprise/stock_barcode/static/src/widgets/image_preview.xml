@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="stock_barcode.ImagePreviewField" t-inherit="web.ImageField" t-inherit-mode="primary">
+        <xpath expr="//img" position="attributes">
+            <attribute name="t-on-click">openImageFullScreen</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="stock_barcode.FullScreenImage">
+        <div class="d-flex justify-content-center modal modal-fullscreen">
+            <div class="o-FileViewer flex-column align-items-center d-flex w-100 h-100" tabindex="0">
+                <div class="o-FileViewer-header position-absolute top-0 w-100 bg-black-75">
+                    <div class="text-end p-3 h2 text-white" role="button">
+                        <i class="fa fa-fw fa-times" role="img" t-on-click="props.close" title="Close" aria-label="Close"></i>
+                    </div>
+                </div>
+                <div class="o-FileViewer-main position-absolute top-0 bottom-0 start-0 end-0 align-items-center justify-content-center d-flex" t-on-click="props.close">
+                    <div class="o-FileViewer-zoomer position-absolute align-items-center justify-content-center d-flex w-100 h-100">
+                        <img class="o-FileViewer-view o-FileViewer-viewImage mw-100 mh-100 transition-base" draggable="false" alt="Viewer" t-att-src="props.src" loading="lazy"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

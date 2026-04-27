@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="appointment.AppointmentSyncButton">
+        <a t-on-click="onConnectCalendar" role="button"
+            class="o_appointment_sync_btn btn btn-sm bg-transparent border-info d-flex align-items-center">
+            <img t-att-src="props.iconSrc"/>
+            <small>Connect<span class="ms-1" t-out="props.calendarName"/></small>
+        </a>
+    </t>
+</templates>

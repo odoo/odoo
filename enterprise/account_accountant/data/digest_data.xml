@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data noupdate="1">
+        <record id="digest.digest_digest_default" model="digest.digest">
+            <field name="kpi_account_bank_cash">True</field>
+        </record>
+    </data>
+    <data noupdate="0">
+        <record id="digest_tip_account_accountant_0" model="digest.tip">
+            <field name="name">Tip: Bulk update journal items</field>
+            <field name="sequence">900</field>
+            <field name="group_id" ref="account.group_account_user" />
+            <field name="tip_description" type="html">
+<div>
+    <b class="tip_title">Tip: Bulk update journal items</b>
+    <p class="tip_content">From any list view, select multiple records and the list becomes editable. If you update a cell, selected records are updated all at once. Use this feature to update multiple journal entries from the General Ledger, or any Journal view.</p>
+    <img src="https://download.odoocdn.com/digests/account_accountant/static/src/img/milk-accounting-bulk.gif" width="540" class="illustration_border" />
+</div>
+            </field>
+        </record>
+         <record id="digest_tip_account_accountant_1" model="digest.tip">
+            <field name="name">Tip: Find an Accountant or register your Accounting Firm</field>
+            <field name="sequence">1000</field>
+            <field name="group_id" ref="account.group_account_user" />
+            <field name="tip_description" type="html">
+<div>
+    <b class="tip_title">Tip: Find an Accountant or register your Accounting Firm</b>
+    <p class="tip_content">Click here to find an accountant or if you want to list out your accounting services on Odoo</p>
+    <p class="mt-3">
+        <a class="tip_button" href="https://odoo.com/accounting-firms" target="_blank"><span class="tip_button_text">Find an Accountant</span></a>
+        <a class="tip_button" href="https://odoo.com/accounting-firms/register" target="_blank"><span class="tip_button_text">Register your Accounting Firm</span></a>
+    </p>
+</div>
+            </field>
+        </record>
+    </data>
+</odoo>

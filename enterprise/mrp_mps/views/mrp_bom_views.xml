@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_bom_form_view_inherit_mps" model="ir.ui.view">
+        <field name="name">mrp.bom.form.inherit.mps</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@icon='fa-clock-o']" position="before">
+                <button class="oe_stat_button" name="action_open_mps_view" type="object"
+                   icon="fa-area-chart" groups="mrp.group_mrp_manager">
+                    <span>Schedules</span>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

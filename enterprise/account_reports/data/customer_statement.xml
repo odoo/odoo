@@ -1,0 +1,32 @@
+<odoo auto_sequence="1">
+    <record id="customer_statement_report" model="account.report">
+        <field name="name">Customer Statement</field>
+        <field name="filter_journals" eval="True"/>
+        <field name="root_report_id" ref="account_reports.partner_ledger_report" />
+        <field name="custom_handler_model_id" ref="model_account_customer_statement_report_handler"/>
+        <field name="column_ids">
+            <record id="customer_statement_report_invoicing_date" model="account.report.column">
+                <field name="name">Invoice Date</field>
+                <field name="expression_label">invoice_date</field>
+                <field name="figure_type">date</field>
+            </record>
+            <record id="customer_statement_report_date_maturity" model="account.report.column">
+                <field name="name">Due Date</field>
+                <field name="expression_label">date_maturity</field>
+                <field name="figure_type">date</field>
+            </record>
+            <record id="customer_statement_amount" model="account.report.column">
+                <field name="name">Amount</field>
+                <field name="expression_label">amount</field>
+            </record>
+            <record id="customer_statement_report_amount_currency" model="account.report.column">
+                <field name="name">Amount Currency</field>
+                <field name="expression_label">amount_currency</field>
+            </record>
+            <record id="customer_statement_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_view_swissdec_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.l10n.ch.hr.payroll</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll_elm_transmission.hr_employee_view_swissdec_form"/>
+        <field name="arch" type="xml">
+            <field name="l10n_ch_other_employment" position="before">
+                <field name="l10n_ch_telework_percentage" widget="percentage" class="o_hr_narrow_field"/>
+            </field>
+        </field>
+    </record>
+</odoo>

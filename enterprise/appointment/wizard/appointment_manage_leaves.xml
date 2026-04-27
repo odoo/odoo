@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="appointment_manage_leaves_view_form" model="ir.ui.view">
+        <field name="name">appointment.manage.leaves.view.form</field>
+        <field name="model">appointment.manage.leaves</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="appointment_resource_ids" widget="many2many_tags" options="{'no_create': True}"
+                           placeholder="Select Resources" required="1"/>
+                    <field name="leave_start_dt" string="Dates" widget="daterange" options="{'end_date_field': 'leave_end_dt'}"/>
+                    <field name="leave_end_dt" invisible="1"/>
+                    <field name="reason" placeholder="e.g. Inventory count and valuation"/>
+                </group>
+                <footer>
+                    <button string="Create Closing Day(s)" class="btn-primary" type="object" name="action_create_leave"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

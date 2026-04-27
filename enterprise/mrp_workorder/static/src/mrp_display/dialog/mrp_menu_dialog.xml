@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp_workorder.MrpDisplayMenuDialog">
+        <Dialog size="'md'" title="props.title" modalRef="modalRef" footer="false" withBodyPadding="false" bodyClass="'overflow-x-hidden'">
+            <div t-if="state.menu == 'main'" class="o_mrp_menu_dialog p-3">
+                <div class="button_list btn-group-vertical w-100">
+                    <!-- Invisible checkbox to avoid focus on first button when entering the modals -->
+                    <input type="checkbox" hidden="hidden"/>
+                    <button class="btn btn-outline-secondary d-flex justify-content-between align-items-center p-3 fs-3"
+                            name="action_scrap"
+                            t-on-click="() => this.callAction('button_scrap')">
+                        Scrap <i class="oi oi-chevron-right"/>
+                    </button>
+                    <button t-if="props.record.resModel == 'mrp.production' &amp;&amp; props.groups.workorders"
+                            class="btn btn-outline-secondary d-flex justify-content-between align-items-center p-3 fs-3"
+                            t-on-click="() => this.callAction('action_add_workorder')">
+                        Add Work Order <i class="oi oi-chevron-right"/>
+                    </button>
+                    <button class="btn btn-outline-secondary d-flex justify-content-between align-items-center p-3 fs-3"
+                            t-on-click="() => this.callAddComponentAction()"
+                            name="addComponent">
+                        Add Component <i class="oi oi-chevron-right"/>
+                    </button>
+                    <button t-if="props.groups.byproducts"
+                            class="btn btn-outline-secondary d-flex justify-content-between align-items-center p-3 fs-3"
+                            t-on-click="() => this.callAction('action_add_byproduct')"
+                            name="addByProduct">
+                        Add By-product <i class="oi oi-chevron-right"/>
+                    </button>
+                    <button class="btn btn-outline-secondary d-flex justify-content-between align-items-center p-3 fs-3"
+                            t-on-click="openMO" name="openMO">
+                        Open Manufacturing Order <i class="oi oi-chevron-right"/>
+                    </button>
+                    <button t-if="props.record.resModel == 'mrp.workorder'"
+                            class="btn btn-outline-secondary d-flex justify-content-between align-items-center p-3 fs-3"
+                            t-on-click="moveToWorkcenter" name="moveToWorkCenter">
+                        Move to work center <i class="oi oi-chevron-right"/>
+                    </button>
+                    <button t-if="props.record.resModel == 'mrp.workorder'"
+                            class="btn btn-outline-secondary d-flex justify-content-between align-items-center p-3 fs-3"
+                            t-on-click="displayInstructionsMenu" name="displayInstructionsMenu">
+                        Update Instructions <i class="oi oi-chevron-right"/>
+                    </button>
+                    <button t-if="props.record.resModel != 'mrp.workorder'"
+                            class="btn btn-outline-secondary d-flex justify-content-between align-items-center p-3 fs-3"
+                            t-on-click="() => this.callAction('action_log_note')">
+                        Log Note <i class="oi oi-chevron-right"/>
+                    </button>
+                </div>
+                <button t-if="props.record.resModel == 'mrp.workorder' &amp;&amp; props.record.data.working_state !== 'blocked'"
+                        class="btn btn-danger p-3 fs-3 w-100 mt-1"
+                        t-on-click="block" name="block">
+                    Block
+                </button>
+                <button t-if="props.record.resModel == 'mrp.workorder' &amp;&amp; props.record.data.working_state === 'blocked'"
+                        class="btn btn-success p-3 fs-3 w-100 mt-1"
+                        t-on-click="unblock" name="unblock">
+                    Unblock
+                </button>
+            </div>
+            <div t-if="state.menu == 'instructions'"
+                 class="d-flex flex-column gap-1 p-3">
+                <button class="btn btn-light p-3 fs-3 text-start" t-on-click="displayMainMenu">
+                    <i class="oi oi-chevron-left me-2"/> Back
+                </button>
+                <div class="btn-group-vertical">
+                    <button class="btn btn-outline-secondary d-flex justify-content-between align-items-center p-3 fs-3"
+                            t-on-click="() => this.callAction('action_log_note')">
+                        Log Note <i class="oi oi-chevron-right"/>
+                    </button>
+                    <button class="btn btn-outline-secondary d-flex justify-content-between align-items-center p-3 fs-3"
+                            t-on-click="displayImprovementMenu" name="displayImprovementMenu">
+                        Improvement Suggestion <i class="oi oi-chevron-right"/>
+                    </button>
+                </div>
+            </div>
+            <div t-if="state.menu == 'improvement'"
+                class="o_mrp_menu_update_instruction d-flex flex-column gap-1 p-3">
+                <button class="btn btn-light p-3 fs-3 text-start"
+                        t-on-click="displayInstructionsMenu">
+                    <i class="oi oi-chevron-left me-2"/> Back
+                </button>
+                <div class="btn-group-vertical">
+                    <button t-if="props.params.checks.length"
+                            class="btn btn-outline-secondary d-flex justify-content-between align-items-center p-3 fs-3"
+                            t-on-click="updateStep">
+                        Update Instructions <i class="oi oi-chevron-right"/>
+                    </button>
+                    <button t-if="props.params.checks.length"
+                            class="btn btn-outline-secondary d-flex justify-content-between align-items-center p-3 fs-3"
+                            t-on-click="removeStep">
+                        Delete a Step <i class="oi oi-chevron-right"/>
+                    </button>
+                    <button class="btn btn-outline-secondary d-flex justify-content-between align-items-center p-3 fs-3"
+                            t-on-click="addStep">
+                        Add a Step <i class="oi oi-chevron-right"/>
+                    </button>
+                    <button t-if="props.params.checks.length"
+                            class="btn btn-outline-secondary d-flex justify-content-between align-items-center p-3 fs-3"
+                            t-on-click="setPicture">
+                        Set a New picture <i class="oi oi-chevron-right"/>
+                    </button>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+</templates>

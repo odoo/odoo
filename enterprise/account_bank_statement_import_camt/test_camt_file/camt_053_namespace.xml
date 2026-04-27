@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<camt:Document xmlns:camt="urn:iso:std:iso:20022:tech:xsd:camt.053.001.04">
+  <camt:BkToCstmrStmt>
+    <camt:GrpHdr>
+      <camt:MsgId>2514988305.2019-02-13</camt:MsgId>
+      <camt:CreDtTm>2019-02-13T15:27:15.66+02:00</camt:CreDtTm>
+    </camt:GrpHdr>
+    <camt:Stmt>
+      <camt:Id>2514988305.2019-02-13</camt:Id>
+      <camt:CreDtTm>2019-02-13T15:27:15.66+02:00</camt:CreDtTm>
+      <camt:Acct>
+        <camt:Id>
+          <camt:IBAN></camt:IBAN>
+          <camt:Othr>
+            <camt:Id>112233</camt:Id>
+          </camt:Othr>
+        </camt:Id>
+      </camt:Acct>
+      <camt:Bal>
+        <camt:Tp>
+          <camt:CdOrPrtry>
+            <camt:Cd>OPBD</camt:Cd>
+          </camt:CdOrPrtry>
+        </camt:Tp>
+        <camt:Amt Ccy="USD">1000.00</camt:Amt>
+        <camt:CdtDbtInd>CRDT</camt:CdtDbtInd>
+        <camt:Dt>
+          <camt:Dt>2019-02-12</camt:Dt>
+        </camt:Dt>
+      </camt:Bal>
+      <camt:Bal>
+        <camt:Tp>
+          <camt:CdOrPrtry>
+            <camt:Cd>CLBD</camt:Cd>
+          </camt:CdOrPrtry>
+        </camt:Tp>
+        <camt:Amt Ccy="USD">1500.00</camt:Amt>
+        <camt:CdtDbtInd>CRDT</camt:CdtDbtInd>
+        <camt:Dt>
+          <camt:Dt>2019-02-13</camt:Dt>
+        </camt:Dt>
+      </camt:Bal>
+      <camt:Ntry>
+        <camt:Amt Ccy="USD">500.00</camt:Amt>
+        <camt:CdtDbtInd>CRDT</camt:CdtDbtInd>
+        <camt:Sts>BOOK</camt:Sts>
+        <camt:BkTxCd>
+          <camt:Prtry>
+            <camt:Cd>ABCD</camt:Cd>
+          </camt:Prtry>
+        </camt:BkTxCd>
+      </camt:Ntry>
+    </camt:Stmt>
+  </camt:BkToCstmrStmt>
+</camt:Document>

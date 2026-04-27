@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web_gantt.GanttRendererControls">
+        <div
+            class="o_gantt_renderer_controls d-inline-flex d-print-none flex-wrap column-gap-2 align-items-center w-100 bg-view border-bottom sticky-top start-0"
+            t-att-class="{ 'p-1': !env.isSmall, 'gap-1 py-1': env.isSmall }"
+        >
+            <t t-call="{{ constructor.rangeMenuTemplate }}" />
+            <hr t-if="env.isSmall" class="my-0 w-100"/>
+            <button
+                class="o_gantt_button_today btn btn-secondary"
+                t-att-class="{ 'ms-3': env.isSmall }"
+                title="Focus Today"
+                data-hotkey="t"
+                t-on-click="onTodayClicked"
+            >
+                <i class="fa fa-crosshairs"/>
+            </button>
+            <button class="btn btn-secondary"
+                t-att-disabled="state.scaleIndex === scalesRange.min"
+                data-hotkey="j"
+                t-on-click="() => this.incrementScale(-1)"
+            >
+                <i class="fa fa-search-minus"/>
+            </button>
+            <input
+                type="range"
+                class="form-range flex-grow-1 w-0"
+                t-att-min="scalesRange.min" t-att-max="scalesRange.max" step="1"
+                t-att-value="state.scaleIndex"
+                t-on-change="(ev) => this.selectScale(ev.target.value)"
+            />
+            <button class="btn btn-secondary"
+                t-att-disabled="state.scaleIndex === scalesRange.max"
+                data-hotkey="i"
+                t-on-click="() => this.incrementScale(1)"
+            >
+                <i class="fa fa-search-plus"/>
+            </button>
+            <t t-if="env.isSmall">
+                <div class="flex-grow-1 w-0"/>
+                <Dropdown>
+                    <button class="btn btn-secondary me-3" aria-label="Toolbar menu">
+                        <i class="fa fa-cog"/>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-call="{{ constructor.toolbarContentTemplate }}" />
+                    </t>
+                </Dropdown>
+            </t>
+            <t t-else="" t-call="{{ constructor.toolbarContentTemplate }}" />
+        </div>
+    </t>
+
+    <t t-name="web_gantt.GanttRendererControls.ToolbarContent">
+        <t t-if="!env.isSmall">
+            <div class="btn-toolbar gap-2" role="toolbar" name="ganttToolbar">
+                <button class="btn btn-secondary fa"
+                    t-att-class="{ 'fa-compress': model.displayParams.displayMode === 'sparse', 'fa-expand': model.displayParams.displayMode === 'dense'  }"
+                    t-att-title="model.displayParams.displayMode === 'dense' ? 'Activate sparse mode' : 'Activate dense mode'"
+                    t-on-click="model.toggleDisplayMode.bind(model)"
+                >
+                </button>
+                <div class="btn-group" t-att-class="{ invisible: !props.displayExpandCollapseButtons }" name="expandCollapseButtons">
+                    <button class="o_gantt_button_expand_rows btn btn-secondary" title="Expand rows" t-on-click="model.expandRows.bind(model)">
+                        <i class="fa fa-caret-square-o-right"/>
+                    </button>
+                    <button class="o_gantt_button_collapse_rows btn btn-secondary" title="Collapse rows" t-on-click="model.collapseRows.bind(model)">
+                        <i class="fa fa-caret-square-o-down"/>
+                    </button>
+                </div>
+            </div>
+        </t>
+        <t t-else="">
+            <DropdownItem onSelected="model.toggleDisplayMode.bind(model)">
+                <t t-if="model.displayParams.displayMode === 'dense'">
+                    <i class="fa fa-fw fa-expand"/>
+                    <span class="ms-1">Activate sparse mode</span>
+                </t>
+                <t t-else="">
+                    <i class="fa fa-fw fa-compress"/>
+                    <span class="ms-1">Activate dense mode</span>
+                </t>
+            </DropdownItem>
+            <t t-if="props.displayExpandCollapseButtons">
+                <div class="dropdown-divider" role="separator"/>
+                <DropdownItem onSelected="model.expandRows.bind(model)">
+                    <i class="fa fa-fw fa-caret-square-o-right"/>
+                    <span class="ms-1">Expand rows</span>
+                </DropdownItem>
+                <DropdownItem onSelected="model.collapseRows.bind(model)">
+                    <i class="fa fa-fw fa-caret-square-o-down"/>
+                    <span class="ms-1">Collapse rows</span>
+                </DropdownItem>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="web_gantt.GanttRendererControls.RangeMenu">
+        <div class="btn-group" t-att-class="{ 'ms-3': env.isSmall }">
+            <button class="btn btn-secondary" data-hotkey="p" t-on-click="() => this.selectRange('previous')" >
+                <i class="fa fa-arrow-left"/>
+            </button>
+            <button class="btn btn-secondary" data-hotkey="n" t-on-click="() => this.selectRange('next')">
+                <i class="fa fa-arrow-right"/>
+            </button>
+        </div>
+        <Dropdown state="dropdownState" menuClass="'o_gantt_range_menu'">
+            <div class="btn btn-secondary">
+                <i class="fa fa-calendar me-1"/>
+                <t t-if="state.rangeId === 'custom'">
+                     <div class="d-inline-flex gap-1 align-items-center">
+                         <t t-esc="getFormattedDate(state.startDate)"/>
+                         <i class="fa fa-long-arrow-right"/>
+                         <t t-esc="getFormattedDate(state.stopDate)"/>
+                     </div>
+                </t>
+                <t t-else="">
+                    <t t-esc="dateDescription"/>
+                </t>
+            </div>
+            <t t-set-slot="content">
+                <t t-foreach="Object.entries(model.metaData.ranges)" t-as="range" t-key="range[0]">
+                    <DropdownItem class="{ 'selected': isSelected(range[0]) }" onSelected="() => this.selectRangeId(range[0])">
+                        <t t-esc="range[1].description" />
+                    </DropdownItem>
+                </t>
+                <div class="dropdown-divider"/>
+                <DropdownItem class="{ 'o_gantt_range_custom_item py-0': true, 'selected': isSelected('custom') }" closingMode="'none'">
+                    <div class="d-flex align-items-center gap-1">
+                        <label>From </label>
+                        <span class="o_gantt_picker o_input cursor-pointer px-1" t-ref="start-picker" t-on-click="() => startPicker.open()">
+                            <t t-esc="getFormattedDate(pickerValues.startDate)" />
+                        </span>
+                        <label>to </label>
+                        <span class="o_gantt_picker o_input cursor-pointer px-1" t-ref="stop-picker" t-on-click="() => stopPicker.open()">
+                            <t t-esc="getFormattedDate(pickerValues.stopDate)" />
+                        </span>
+                        <button class="btn btn-sm btn-primary ms-1" t-on-click="onApply">Apply</button>
+                    </div>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

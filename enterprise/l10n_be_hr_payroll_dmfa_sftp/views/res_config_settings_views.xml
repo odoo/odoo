@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_be_hr_payroll_dmfa_sftp</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_be_hr_payroll.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <field name="onss_expeditor_number" position="before">
+                <field name="onss_technical_user_name"/>
+                <field name="onss_sftp_private_key"/>
+            </field>
+        </field>
+    </record>
+</odoo>

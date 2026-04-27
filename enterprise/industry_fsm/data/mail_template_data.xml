@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="mail_template_data_intervention_details" model="mail.template">
+        <field name="name">Field Service: Intervention Scheduled</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="subject">Your intervention is scheduled {{ object.planned_date_begin and object.date_deadline and 'from the ' + format_datetime(object.planned_date_begin, tz=object.partner_id.tz, lang_code=object.partner_id.lang) + ' to the ' + format_datetime(object.date_deadline, tz=object.partner_id.tz, lang_code=object.partner_id.lang) or '' }}</field>
+        <field name="use_default_to" eval="True"/>
+        <field name="description">Set this template on a project's stage to automate email when tasks reach stages</field>
+        <field name="body_html" type="html">
+<div>
+    <t t-set="date_begin" t-value="format_datetime(object.planned_date_begin, tz=object.partner_id.tz, lang_code=object.partner_id.lang)"/>
+
+    <t t-set="date_end" t-value="format_datetime(object.date_deadline, tz=object.partner_id.tz, lang_code=object.partner_id.lang)"/>
+
+    Dear <t t-out="object.partner_id.name or 'customer'">customer</t>,<br/><br/>
+    <t t-if="date_begin and date_end">
+        Your <t t-out="object.name or ''">Boiler maintenance</t> intervention is scheduled from the <t t-out="date_begin or ''">05/31/2021 12:30:00</t> to the <t t-out="date_end or ''">05/31/2021 14:30:00</t>.
+    </t>
+    <t t-else="">
+        Your <t t-out="object.name or ''">Boiler maintenance</t> intervention is scheduled.
+    </t>
+    <br/><br/>
+    Best regards,
+    <t t-if="user.signature">
+        <br/>
+        <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+    </t>
+</div>
+        </field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+    <record id="mail_template_data_task_report" model="mail.template">
+        <field name="name">Field Service: Field Service Report</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="subject">Field Service Report - {{ object.name }}</field>
+        <field name="partner_to">{{ object.partner_id.id }}</field>
+        <field name="description">Email sent when clicking on "send report" in a task</field>
+        <field name="body_html" type="html">
+            <p>
+                Dear <t t-out="object.partner_id.name or 'Customer'">Customer</t>,<br/><br/>
+                Please find attached the field service report for our onsite operation. <br/><br/>
+                Feel free to contact us if you have any questions.<br/><br/>
+                Best regards,<br/><br/>
+            </p>
+        </field>
+        <field name="report_template_ids" eval="[(4, ref('industry_fsm.task_custom_report'))]"/>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+    </record>
+
+</odoo>

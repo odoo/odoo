@@ -1,0 +1,791 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_budget
+#
+# Translators:
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2024
+# Björn Hayer, 2024
+# lasch a <bmail440@gmail.com>, 2024
+# Haojun Zou <apollo_zhj@msn.com>, 2024
+# Kristoffer Grundström <lovaren@gmail.com>, 2024
+# Robin Calvin, 2024
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
+# Lasse L, 2024
+# Martin Trigaux, 2024
+# Simon S, 2024
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2026-04-03 14:16+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-18/"
+"account_budget/sv/>\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.16.2\n"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_kanban
+msgid ""
+"<i class=\"fa fa-clock-o me-1\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/>"
+msgstr ""
+"<i class=\"fa fa-clock-o me-1\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/>"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_split_wizard_form_view
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"to\" title=\"to\"/>"
+msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"to\" title=\"till\"/>"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+msgid "Account"
+msgstr "Konto"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__achieved_amount
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__achieved
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_report__line_type__achieved
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_pivot
+msgid "Achieved"
+msgstr "Genomfört"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__achieved_percentage
+msgid "Achieved (%)"
+msgstr "Genomfört (%)"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_needaction
+msgid "Action Needed"
+msgstr "Åtgärd krävs"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_ids
+msgid "Activities"
+msgstr "Aktiviteter"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Undantagsaktiviteter dekoration"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_state
+msgid "Activity State"
+msgstr "Aktivitetsstatus"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikon för aktivitetstyp"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_line__committed_amount
+msgid "Already Billed amount + Confirmed purchase orders."
+msgstr "Belopp som redan fakturerats + Bekräftade inköpsorders."
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_line__achieved_amount
+msgid "Amount Billed/Invoiced."
+msgstr "Total summa för skickade fakturor."
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_line__theoritical_amount
+msgid ""
+"Amount supposed to be Billed/Invoiced, formula = (Budget Amount / Budget "
+"Days) x Budget Days Completed"
+msgstr ""
+"Summa som bör faktureras, formel = (budgeterat belopp / budgeterade dagar) x "
+"avklarade dagar"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_account_analytic_account
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__auto_account_id
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__auto_account_id
+msgid "Analytic Account"
+msgstr "Analytiskt konto"
+
+#. module: account_budget
+#: model:ir.ui.menu,name:account_budget.menu_act_budget_analytic_view
+msgid "Analytic Budget"
+msgstr "Analytisk budget"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_purchase_order_line__analytic_json
+msgid "Analytic JSON"
+msgstr "Analytisk JSON"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__analytical_plan_ids
+msgid "Analytic Plans"
+msgstr "Analytiska planer"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_attachment_count
+msgid "Attachment Count"
+msgstr "Antal bilagor"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__budget_type__both
+msgid "Both"
+msgstr "Båda"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_budget_analytic
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_report__line_type__budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+#: model_terms:ir.ui.view,arch_db:account_budget.purchase_order_form_account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_tree
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_pivot
+msgid "Budget"
+msgstr "Budget"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/wizards/budget_split_wizard.py:0
+msgid "Budget %s"
+msgstr "Budget %s"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__budget_analytic_id
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__budget_analytic_id
+msgid "Budget Analytic"
+msgstr "Analytisk budget"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_budget_line
+#: model:ir.model.fields,field_description:account_budget.field_account_analytic_account__budget_line_ids
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__budget_line_id
+msgid "Budget Line"
+msgstr "Budgetrad"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/budget_analytic.py:0
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__budget_line_ids
+#: model:ir.model.fields,field_description:account_budget.field_purchase_order_line__budget_line_ids
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_tree
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_pivot
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_tree
+msgid "Budget Lines"
+msgstr "Budgetrader"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__name
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__name
+msgid "Budget Name"
+msgstr "Budgetnamn"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.budget_report_action
+#: model:ir.model,name:account_budget.model_budget_report
+#: model:ir.ui.menu,name:account_budget.budget_report_menu
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_pivot
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_tree
+msgid "Budget Report"
+msgstr "Rapport om budget"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_budget_split_wizard
+msgid "Budget Split Wizard"
+msgstr "Guide för att dela budget"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__budget_analytic_state
+msgid "Budget State"
+msgstr "Budgetstatus"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__budget_type
+msgid "Budget Type"
+msgstr "Budgettyp"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__budget_amount
+msgid "Budgeted"
+msgstr "Inräknad i budgeten"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/wizards/budget_split_wizard.py:0
+#: model:ir.actions.act_window,name:account_budget.act_budget_analytic_view
+#: model_terms:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_search
+msgid "Budgets"
+msgstr "Budgetar"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.act_budget_lines_view
+msgid "Budgets Analysis"
+msgstr "Budgetanalyser"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_split_wizard_form_view
+msgid "Cancel"
+msgstr "Avbryt"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "Cancel Budget"
+msgstr "Avbryt budget"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__state__canceled
+msgid "Canceled"
+msgstr "Avbruten"
+
+#. module: account_budget
+#: model_terms:ir.actions.act_window,help:account_budget.act_budget_analytic_view
+msgid "Click to create a new budget."
+msgstr "Klicka för att skapa en ny budget."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__committed_amount
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__committed
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_report__line_type__committed
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "Committed"
+msgstr "Bundna kostnader"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__committed_percentage
+msgid "Committed (%)"
+msgstr "Bundna kostnader (%)"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__company_id
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__company_id
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__company_id
+msgid "Company"
+msgstr "Företag"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__create_uid
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__create_uid
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__create_uid
+msgid "Created by"
+msgstr "Skapad av"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__create_date
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__create_date
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__create_date
+msgid "Created on"
+msgstr "Skapad den"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__currency_id
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__date
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_search
+msgid "Date"
+msgstr "Datum"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/budget_analytic.py:0
+msgid "Deletion is only allowed in the Draft and Canceled stages."
+msgstr "Det är bara möjligt att radera objekt med status Utkast eller Avbruten."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__description
+msgid "Description"
+msgstr "Beskrivning"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "Details..."
+msgstr ""
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__display_name
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__display_name
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__display_name
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__res_id
+msgid "Document"
+msgstr "Dokument"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__state__done
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "Done"
+msgstr "Klar"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__state__draft
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_search
+msgid "Draft"
+msgstr "Utkast"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_search
+msgid "Draft Budgets"
+msgstr "Budgetutkast"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__date_to
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__date_to
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__date_to
+msgid "End Date"
+msgstr "Slutdatum"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__budget_type__expense
+msgid "Expense"
+msgstr "Kostnad"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_follower_ids
+msgid "Followers"
+msgstr "Följare"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Följare (partners)"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font Awesome-ikon t.ex. fa-tasks"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_split_wizard_form_view
+msgid "From"
+msgstr "Från"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_search
+msgid "Future Activities"
+msgstr "Kommande aktiviteter"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_tree
+msgid "Generate"
+msgstr "Skapa"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.budget_split_wizard_action
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_split_wizard_form_view
+msgid "Generate Budget"
+msgstr "Skapa budget"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_search
+msgid "Group By"
+msgstr "Gruppera efter"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__has_message
+msgid "Has Message"
+msgstr "Har meddelande"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__id
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__id
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__id
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_exception_icon
+msgid "Icon"
+msgstr "Ikon"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikon för att indikera en undantagsaktivitet."
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Om ikryssad, så finns det nya meddelanden som kräver din uppmärksamhet."
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__message_has_error
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Om ikryssad, så finns det meddelanden med leveransfel."
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+msgid "In a Budget"
+msgstr "I en budget"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__is_above_budget
+#: model:ir.model.fields,field_description:account_budget.field_purchase_order__is_above_budget
+#: model:ir.model.fields,field_description:account_budget.field_purchase_order_line__is_above_budget
+msgid "Is Above Budget"
+msgstr "Överskrider budget"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_purchase_order__is_analytic
+msgid "Is Analytic"
+msgstr "Är analytisk"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_is_follower
+msgid "Is Follower"
+msgstr "Är följare"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__write_uid
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__write_uid
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Senast uppdaterad av"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__write_date
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__write_date
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__write_date
+msgid "Last Updated on"
+msgstr "Senast uppdaterad den"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_search
+msgid "Late Activities"
+msgstr "Försenade aktiviteter"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_has_error
+msgid "Message Delivery error"
+msgstr "Leveransfelmeddelande"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_ids
+msgid "Messages"
+msgstr "Meddelanden"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__res_model
+msgid "Model"
+msgstr "Modell"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_split_wizard__period__month
+msgid "Month"
+msgstr "Månad"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Tidsgräns för mina aktiviteter"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/budget_analytic.py:0
+msgid "New revision"
+msgstr "Ny revidering"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Nästa aktivitetshändelse i kalendern"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Nästa tidsgräns för en aktivitet"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_summary
+msgid "Next Activity Summary"
+msgstr "Sammanfattning av nästa aktivitet"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_type_id
+msgid "Next Activity Type"
+msgstr "Nästa aktivitetstyp"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_search
+msgid "Not Cancelled"
+msgstr "Icke avbruten"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Antal åtgärder"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_has_error_counter
+msgid "Number of errors"
+msgstr "Antal fel"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Antal meddelanden som kräver en åtgärd"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Antal meddelanden med leveransfel"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__state__confirmed
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "Open"
+msgstr "Öppna"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+msgid "Open Budget"
+msgstr "Öppna budget"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__period
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "Period"
+msgstr "Period"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_graph
+msgid "Practical amount"
+msgstr "Faktiskt belopp"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__account_id
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__account_id
+msgid "Project Account"
+msgstr "Projektkonto"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_purchase_order
+msgid "Purchase Order"
+msgstr "Inköpsorder"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Inköpsorderrad"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_split_wizard__period__quarter
+msgid "Quarter"
+msgstr "Kvartal"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/budget_analytic.py:0
+msgid "REV %s"
+msgstr ""
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__rating_ids
+msgid "Ratings"
+msgstr "Omdömen"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "Reset to Draft"
+msgstr "Återställ till utkast"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__user_id
+msgid "Responsible"
+msgstr "Ansvarig"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_user_id
+msgid "Responsible User"
+msgstr "Ansvarig användare"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__budget_type__revenue
+msgid "Revenue"
+msgstr "Intäkter"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "Revise"
+msgstr "Revidera"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__state__revised
+msgid "Revised"
+msgstr "Reviderad"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__parent_id
+msgid "Revision Of"
+msgstr "Revidering av"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__children_ids
+msgid "Revisions"
+msgstr "Revideringar"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Leveransfel för SMS"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__sequence
+msgid "Sequence"
+msgstr "Sekvens"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_search
+msgid "Show all records which has next action date is before today"
+msgstr "Visa alla poster som har nästa händelse före idag"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_split_wizard_form_view
+msgid "Split"
+msgstr "Dela"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__date_from
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__date_from
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__date_from
+msgid "Start Date"
+msgstr "Startdatum"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__state
+msgid "Status"
+msgstr "Status"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status baserat på aktiviteter\n"
+"Försenat: Tidsgränsen har passerat\n"
+"Idag: Aktivitetens datum är idag\n"
+"Planerade: Kommande aktiviteter."
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/budget_line.py:0
+msgid "The 'End Date' must be greater than or equal to 'Start Date'."
+msgstr "'Slutdatum' måste vara större än eller lika med 'Startdatum'."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__theoritical_amount
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "Theoretical"
+msgstr "Teoretisk"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__theoritical_percentage
+msgid "Theoretical (%)"
+msgstr "Teoretisk (%)"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_search
+msgid "Today Activities"
+msgstr "Dagens aktiviteter"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_tree
+msgid "Total Achieved"
+msgstr "Total uppnådd summa"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_tree
+msgid "Total Budget"
+msgstr "Total budget"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_tree
+msgid "Total Committed"
+msgstr "Totala bundna kostnader"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__line_type
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+msgid "Type"
+msgstr "Typ"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Typ av undantagsaktivitet som har registrerats."
+
+#. module: account_budget
+#: model_terms:ir.actions.act_window,help:account_budget.act_budget_analytic_view
+msgid "Use budgets to compare actual with expected revenues and costs"
+msgstr ""
+"Använd budgetar för att jämföra faktiska intäkter och kostnader med "
+"förväntade intäkter och kostnader"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__user_id
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+msgid "User"
+msgstr "Användare"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__website_message_ids
+msgid "Website Messages"
+msgstr "Hemsidesmeddelanden"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__website_message_ids
+msgid "Website communication history"
+msgstr "Hemsidans kommunikationshistorik"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_split_wizard__period__year
+msgid "Year"
+msgstr "År"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/budget_analytic.py:0
+msgid "You cannot create recursive revision of budget."
+msgstr "Det är inte möjligt att skapa en ändring bakåt i tiden för en budget."
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "e.g. Budget 2023"
+msgstr "t.ex. Budget 2023"

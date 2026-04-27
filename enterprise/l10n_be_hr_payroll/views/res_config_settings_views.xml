@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_be_hr_payroll</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="45"/>
+        <field name="inherit_id" ref="hr_payroll.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='hr_payroll_accountant']" position="after">
+                <field name="company_country_code" invisible="1"/>
+                <block title="Belgian Localization" id="l10n_be_hr_payroll" invisible="company_country_code != 'BE'">
+                    <setting string="Benefits" help="Configure Default Values for Belgian Benefits">
+                        <div name="default_benefits" class="mt16 content-group">
+                            <div class="row ms-2">
+                                <label for="default_commission_on_target" class="col-md-7 p-0 m-0"/>
+                                <div class="col-md-5 p-0">
+                                    <field name="default_commission_on_target" nolabel="1"/>
+                                    <span>€ / month</span>
+                                </div>
+                            </div>
+                            <div class="row ms-2">
+                                <label for="default_fuel_card" class="col-md-7 p-0 m-0"/>
+                                <div class="col-md-5 p-0">
+                                    <field name="default_fuel_card" nolabel="1"/>
+                                    <span>€ / month</span>
+                                </div>
+                            </div>
+                            <div class="row ms-2">
+                                <label for="default_representation_fees" class="col-md-7 p-0 m-0"/>
+                                <div class="col-md-5 p-0">
+                                    <field name="default_representation_fees" nolabel="1"/>
+                                    <span>€ / month</span>
+                                </div>
+                            </div>
+                            <div class="row ms-2">
+                                <label for="default_internet" class="col-md-7 p-0 m-0"/>
+                                <div class="col-md-5 p-0">
+                                    <field name="default_internet" nolabel="1"/>
+                                    <span>€ / month</span>
+                                </div>
+                            </div>
+                            <div class="row ms-2">
+                                <label for="default_mobile" class="col-md-7 p-0 m-0"/>
+                                <div class="col-md-5 p-0">
+                                    <field name="default_mobile" nolabel="1"/>
+                                    <span>€ / month</span>
+                                </div>
+                            </div>
+                            <div class="row ms-2">
+                                <label for="default_l10n_be_canteen_cost" class="col-md-7 p-0 m-0"/>
+                                <div class="col-md-5 p-0">
+                                    <field name="default_l10n_be_canteen_cost" nolabel="1"/>
+                                    <span>€ / month</span>
+                                </div>
+                            </div>
+                            <div class="row ms-2">
+                                <label for="default_meal_voucher_amount" class="col-md-7 p-0 m-0"/>
+                                <div class="col-md-5 p-0">
+                                    <field name="default_meal_voucher_amount" nolabel="1"/>
+                                    <span>€ / month</span>
+                                </div>
+                            </div>
+                            <div class="row ms-2">
+                                <label for="default_eco_checks" class="col-md-7 p-0 m-0"/>
+                                <div class="col-md-5 p-0">
+                                    <field name="default_eco_checks" nolabel="1"/>
+                                    <span>€ / year</span>
+                                </div>
+                            </div>
+                            <div class="row ms-2">
+                                <label for="hospital_insurance_amount_child" class="col-md-7 p-0 m-0"/>
+                                <div class="col-md-5 p-0">
+                                    <field name="hospital_insurance_amount_child" nolabel="1"/>
+                                    <span>€ / month</span>
+                                </div>
+                            </div>
+                            <div class="row ms-2">
+                                <label for="hospital_insurance_amount_adult" class="col-md-7 p-0 m-0"/>
+                                <div class="col-md-5 p-0">
+                                    <field name="hospital_insurance_amount_adult" nolabel="1"/>
+                                    <span>€ / month</span>
+                                </div>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting string="ONSS" company_dependent="1" help="Configure ONSS codes">
+                        <group class="mt16">
+                            <field name="onss_company_id"/>
+                            <field name="onss_registration_number"/>
+                            <field name="dmfa_employer_class"/>
+                            <field name="onss_expeditor_number"/>
+                            <field name="onss_certificate_id"/>
+                        </group>
+                        <button name="%(l10n_be_hr_payroll.l10n_be_hr_payroll_action_work_address_codes)d" icon="oi-arrow-right" type="action" string="Work address DMFA codes" class="btn-link"/>
+                    </setting>
+                    <setting string="Accident Insurance" company_dependent="1" help="Configure your company accident insurance">
+                        <group class="mt16">
+                            <field name="accident_insurance_name" string="Insurer"/>
+                            <field name="accident_insurance_number" string="Contract Number"/>
+                        </group>
+                    </setting>
+                    <setting id="company_information" string="Company Information" help="Offical Company Information" company_dependent="1">
+                        <div class="mt16 content-group">
+                            <div class="row ms-2">
+                                <label for="l10n_be_company_number" class="col-md-6 p-0 m-0"/>
+                                <field name="l10n_be_company_number" class="col-md-6 p-0"/>
+                            </div>
+                            <div class="row ms-2">
+                                <label for="l10n_be_revenue_code" class="col-md-6 p-0 m-0"/>
+                                <field name="l10n_be_revenue_code" class="col-md-6 p-0"/>
+                            </div>
+                            <div class="row ms-2">
+                                <label for="l10n_be_ffe_employer_type" class="col-md-6 p-0 m-0"/>
+                                <field name="l10n_be_ffe_employer_type" required="1" class="col-md-6 p-0"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

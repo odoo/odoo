@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_sdd_payments_to_collect" model="ir.actions.act_window">
+            <field name="name">Direct debit payments to collect</field>
+            <field name="res_model">account.payment</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="sdd_account_payment_with_mandates_tree"/>
+            <field name="domain">
+                [('payment_method_code','in', ('sdd', 'sepa_direct_debit')),
+                 ('state', '=', 'in_process'),
+                 ('is_sent', '=', False),
+                ]
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No direct debit payment to collect
+                </p>
+            </field>
+        </record>
+
+        <record id="sdd_account_journal_dashboard_kanban_view" model="ir.ui.view">
+            <field name="name">sdd.account.journal.dashboard.kanban</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//t[@t-name='JournalBodyBankCash']//div[@name='kanban_primary_right']" position="inside">
+                    <div t-if="journal_type == 'bank' and dashboard.sdd_payments_to_send_number != 0">
+                        <div class="row">
+                            <div class="col-12">
+                                <a type="object" name="open_sdd_payments">
+                                    <t t-out="dashboard.sdd_payments_to_send_number"/>
+                                    <t t-if="dashboard.sdd_payments_to_send_number == 1">Direct Debit Payment to Collect</t>
+                                    <t t-if="dashboard.sdd_payments_to_send_number > 1">Direct Debit Payments to Collect</t>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

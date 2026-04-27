@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_au_previous_payroll_transfer_form" model="ir.ui.view">
+        <field name="name">l10n_au.previous.payroll.transfer.form</field>
+        <field name="model">l10n_au.previous.payroll.transfer</field>
+        <field name="arch" type="xml">
+            <form string="Set YTD Initial Balances">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="company_id" placeholder="Company"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="previous_bms_id"/>
+                            <field name="fiscal_year_start_date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="l10n_au_previous_payroll_transfer_employee_ids" widget="one2many_list" nolabel="1">
+                            <list editable="bottom">
+                                <field name="company_id" column_invisible="1"/>
+                                <field name="employee_id" domain="[('company_id', '=', company_id)]" options="{'no_create': True}"/>
+                                <field name="previous_payroll_id" readonly="0" />
+                                <field name="import_ytd" />
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_transfer" string="Transfer and Generate YTD" type="object" class="btn-primary" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

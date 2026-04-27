@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_br_edi_pos.TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('header-row')]" position="inside">
+            <div t-if="showBrazilianEDIStatus()" class="col p-2" name="EDI status">EDI</div>
+        </xpath>
+        <xpath expr="//div[hasclass('order-row')]" position="inside">
+            <div t-if="showBrazilianEDIStatus()" class="col p-2" t-esc="getBrazilianEDIStatus()"/>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="stock_barcode.MainMenu">
+        <div class="o_home_menu_background h-100 w-100 pt-sm-3">
+            <div class="o_stock_barcode_main_menu container d-flex flex-column h-100 h-sm-auto bg-view shadow">
+                <header>
+                    <div class="d-flex align-items-center justify-content-between my-3">
+                        <a t-if="!pwaService.isScopedApp" href="#" class="o_stock_barcode_home_menu oi oi-apps me-3 text-dark"
+                            t-on-click="() => this.home.toggle(true)"/>
+                        <span class="fs-2 me-auto">Barcode Scanner</span>
+                        <button t-if="pwaService.isScopedApp" class="btn btn-secondary" t-on-click="logout">Log out</button>
+                        <a t-elif="pwaService.isSupportedOnBrowser" class="btn btn-secondary d-flex align-items-center justify-content-center" href="/scoped_app?app_id=stock_barcode&amp;path=scoped_app/barcode" target="_blank">Install</a>
+                    </div>
+                </header>
+                <main class="flex-grow-1">
+                    <div t-if="state.displayDemoMessage" class="o_barcode_demo_message alert alert-info alert-dismissible" role="status">
+                        <p class="m-0">
+                            Print the <a href="/stock_barcode/static/img/barcodes_demo.pdf" target="_blank" aria-label="Download demo data sheet" title="Download demo data sheet">demo data sheet</a>
+                            to test or <a href="/stock_barcode/print_inventory_commands?barcode_type=barcode_commands_and_operation_types" target="_blank" aria-label="Download operation barcodes" title="Download operation barcodes">barcodes</a> for operations.
+                        </p>
+                        <button t-on-click="removeDemoMessage" type="button" class="btn-close" title="Close"/>
+                    </div>
+                    <div class="my-5 text-center" t-on-click="openManualBarcodeDialog">
+                        <div class="o_barcode_tap_to_scan m-auto mw-50 cursor-pointer">
+                            <img src="/stock_barcode/static/img/barcode.png" alt="Barcode" class="my-1"/>
+                            <div class="o_stock_barcode_laser"/>
+                        </div>
+                        <div class="o_stock_mobile_barcode text-primary fw-bold">
+                            Scan or tap
+                        </div>
+                    </div>
+                    <ul>
+                        <li>Scan a <b>product</b> to locate it</li>
+                        <li t-if="packagesEnabled &amp;&amp; trackingEnabled">Scan a <b>tracking number</b> or a <b>package</b> to open it</li>
+                        <li t-elif="trackingEnabled">Scan a <b>tracking number</b> to open it</li>
+                        <li t-elif="packagesEnabled">Scan a <b>package</b> to open it</li>
+                        <li>Scan a <b>picking</b> to open it</li>
+                        <li t-if="locationsEnabled">Scan a <b>location</b> to initiate a transfer</li>
+                        <li>Scan an <b>operation type</b> to start it</li>
+                    </ul>
+                </main>
+                <footer>
+                    <button class="o_button_operations btn btn-block btn-primary mb-3 p-3 w-100"
+                            t-on-click="() => this.actionService.doAction('stock_barcode.stock_picking_type_action_kanban')">
+                        Operations
+                    </button>
+                    <button class="o_button_inventory btn btn-block btn-info mb-3 p-3 w-100"
+                            t-on-click="() => this.actionService.doAction('stock_barcode.stock_barcode_inventory_client_action')">
+                        Inventory count
+                        <span t-if="this.quantCount" class="ms-2 p-1 px-2 bg-light rounded-circle text-primary" t-out="this.quantCount"/>
+                    </button>
+                </footer>
+            </div>
+        </div>
+    </t>
+</templates>

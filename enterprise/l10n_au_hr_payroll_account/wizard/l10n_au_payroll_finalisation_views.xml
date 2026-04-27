@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_au_payroll_finalisation_view_form" model="ir.ui.view">
+        <field name="name">l10n_au.payroll.finalisation.view.form</field>
+        <field name="model">l10n_au.payroll.finalisation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Finalise Payroll">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="company_id" />
+                            <field name="abn" />
+                            <field name="branch_code" />
+                            <field name="bms_id" />
+                            <field name="is_eofy" />
+                            <field name="finalisation" />
+                        </group>
+                        <group>
+                            <field name="date_start" />
+                            <field name="date_end" />
+                            <field name="fiscal_year" force_save="1"/>
+                            <field name="date_deadline" invisible="is_eofy"/>
+                            <field name="responsible_user_id" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="employees" string="Employee Finalisation">
+                            <field name="l10n_au_payroll_finalisation_emp_ids" widget="one2many_list" force_save="1">
+                                <list editable="bottom">
+                                    <field name="employee_id" options="{'no_create': True}"/>
+                                    <field name="contract_id" />
+                                    <field name="contract_active" optional="hide"/>
+                                    <field name="contract_start_date" />
+                                    <field name="contract_end_date" />
+                                    <field name="payslip_ids" />
+                                    <field name="ytd_balance_ids" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="submit_to_ato" string="Submit to ATO" type="object" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_au_payroll_finalisation" model="ir.actions.act_window">
+        <field name="name">Finalise Payroll</field>
+        <field name="res_model">l10n_au.payroll.finalisation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_au_l10n_au_payroll_finalisation"
+        name="STP Finalisation"
+        action="action_l10n_au_payroll_finalisation"
+        parent="l10n_au_hr_payroll.menu_reporting_l10n_au"
+        groups="hr.group_hr_user"
+        sequence="160" />
+
+</odoo>

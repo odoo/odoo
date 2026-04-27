@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<odoo>
+<template id="report_payslip_us" inherit_id="hr_payroll.report_payslip" primary="True">
+    <div id="employee_id" position="replace">
+        <strong class="me-2">SSN:</strong>
+        <span t-out="('XXX-XX-' + o.employee_id.ssnid[-4:]) if o.employee_id.ssnid else ''"/>
+    </div>
+
+    <div id="employee_email" position="replace"/>
+    <div id="employee_marital" position="replace"/>
+    <div id="employee_person_in_charge" position="replace"/>
+    <div id="computed_on" position="replace"/>
+    <div id="contract_start" position="replace"/>
+    <div id="working_schedule" position="replace"/>
+
+    <xpath expr="//div[@id='payslip_lines_table']" position="after">
+        <div>
+            <t t-set="leave_lines" t-value="o._l10n_us_get_leave_lines()"/>
+            <table class="table table-sm table-borderless" t-if="leave_lines">
+                <thead class="o_black_border">
+                    <tr>
+                        <th>Time Off</th>
+                        <th class="text-end">Hours Used</th>
+                        <th class="text-end">Accrual Hours</th>
+                        <th class="text-end">Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t id="leaves">
+                        <span t-foreach="leave_lines" t-as="line">
+                            <tr>
+                                <td><span t-out="line['type']"/></td>
+                                <td class="text-end"><span t-out="round(line['used'], 2)"
+                                    style="color:#875A7B;" t-if="line['used'] &gt; 0"/></td>
+                                <td class="text-end"><span t-out="round(line['accrual'], 2)"
+                                    style="color:#00A09D;" t-if="line['accrual'] &gt; 0"/></td>
+                                <td class="text-end"><span t-out="round(line['balance'], 2)"
+                                    t-att-style="'color:#875A7B;' if line['balance'] &lt;= 0 else ''"/></td>
+                            </tr>
+                        </span>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </xpath>
+
+    <th id="work_days_header_hours" position="after">
+        <th class="text-end">Rate</th>
+    </th>
+    <td id="worked_days_hours" position="after">
+        <td class="text-end">
+            <span t-out="worked_days._l10n_us_get_hourly_rate()" t-if="o.contract_id.wage_type == 'hourly'"
+                  digits="[42, 2]" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+        </td>
+    </td>
+    <td id="worked_days_total_hours" position="after">
+        <td/>
+    </td>
+
+    <th id="line_header_amount" position="replace"/>
+    <th id="line_header_quantity" position="replace"/>
+    <th id="line_header_rate" position="replace"/>
+    <td id="payslip_line_amount" position="replace"/>
+    <td id="payslip_line_quantity" position="replace"/>
+    <td id="payslip_line_rate" position="replace"/>
+</template>
+
+<template id="report_payslip_us_lang">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="o" t-value="o.with_context(lang=o.employee_id.lang or o.env.lang)"/>
+            <t t-call="l10n_us_hr_payroll.report_payslip_us" t-lang="o.env.lang"/>
+        </t>
+    </t>
+</template>
+
+<template id="report_light_payslip_us" inherit_id="hr_payroll.report_light_payslip" primary="True">
+    <tr id="employee_name" position="after">
+        <td>SSN:</td>
+        <td class="text-end"><strong t-out="('XXX-XX-' + o.employee_id.ssnid[-4:]) if o.employee_id.ssnid else ''"/></td>
+    </tr>
+
+    <xpath expr="//div[@id='payslip_lines_table']" position="after">
+        <div>
+            <t t-set="leave_lines" t-value="o._l10n_us_get_leave_lines()"/>
+            <table class="table table-sm table-borderless" t-if="leave_lines">
+                <thead>
+                    <tr>
+                        <th><strong>Time Off</strong></th>
+                        <th class="text-end"><strong>Hours Used</strong></th>
+                        <th class="text-end"><strong>Accrual Hours</strong></th>
+                        <th class="text-end"><strong>Balance</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t id="leaves">
+                        <span t-foreach="leave_lines" t-as="line">
+                            <tr>
+                                <td><span t-out="line['type']"/></td>
+                                <td class="text-end"><span t-out="round(line['used'], 2)"
+                                                           t-if="line['used'] &gt; 0"/></td>
+                                <td class="text-end"><span t-out="round(line['accrual'], 2)"
+                                                           t-if="line['accrual'] &gt; 0"/></td>
+                                <td class="text-end"><span t-out="round(line['balance'], 2)"/></td>
+                            </tr>
+                        </span>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </xpath>
+</template>
+
+<template id="report_light_payslip_us_lang">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="o" t-value="o.with_context(lang=o.employee_id.lang or o.env.lang)"/>
+            <t t-call="l10n_us_hr_payroll.report_light_payslip_us" t-lang="o.env.lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

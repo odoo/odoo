@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_l10n_ch_source_tax_institution_tree" model="ir.ui.view">
+        <field name="name">l10n.ch.source.tax.institution.tree</field>
+        <field name="model">l10n.ch.source.tax.institution</field>
+        <field name="arch" type="xml">
+            <list string="Source Tax Institutions">
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="canton"/>
+                <field name="dpi_number"/>
+                <field name="company_number"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_l10n_ch_source_tax_institution_form" model="ir.ui.view">
+        <field name="name">l10n.ch.source.tax.institution.form</field>
+        <field name="model">l10n.ch.source.tax.institution</field>
+        <field name="arch" type="xml">
+            <form string="Source Tax Institution">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder='e.g. "ACI Berne"'/></h1>
+                    </div>
+                    <group>
+                        <field name="company_id" required="1" groups="base.group_multi_company"/>
+                        <field name="canton"/>
+                        <field name="dpi_number"/>
+                        <field name="company_number"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_ch_source_tax_institution" model="ir.actions.act_window">
+        <field name="name">Source Tax Institutions</field>
+        <field name="res_model">l10n.ch.source.tax.institution</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Source Tax Institution
+            </p>
+        </field>
+    </record>
+</odoo>

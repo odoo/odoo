@@ -1,0 +1,85 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_delivery_sendcloud
+#
+# Translators:
+# Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:49+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: website_delivery_sendcloud
+#: model:ir.model.fields,help:website_delivery_sendcloud.field_delivery_carrier__sendcloud_use_locations
+msgid ""
+"Allows the ecommerce user to choose a pick-up point as delivery address."
+msgstr "يتيح لمستخدم المتجر الإلكتروني باختيار نقطة استلام كعنوان التوصبل. "
+
+#. module: website_delivery_sendcloud
+#: model:ir.model.fields,field_description:website_delivery_sendcloud.field_delivery_carrier__sendcloud_locations_id
+msgid "Locations Id"
+msgstr "معرف المواقع "
+
+#. module: website_delivery_sendcloud
+#: model_terms:ir.ui.view,arch_db:website_delivery_sendcloud.view_delivery_carrier_form
+msgid "Locations Radius"
+msgstr "نصف قطر المواقع "
+
+#. module: website_delivery_sendcloud
+#: model:ir.model.fields,help:website_delivery_sendcloud.field_delivery_carrier__sendcloud_locations_radius_value
+msgid "Maximum locations distance radius."
+msgstr "نصف قطر المسافة القصوى للمواقع. "
+
+#. module: website_delivery_sendcloud
+#: model:ir.model.fields,field_description:website_delivery_sendcloud.field_delivery_carrier__sendcloud_can_customize_use_locations
+msgid "Sendcloud Can Customize Use Locations"
+msgstr "بإمكان Sendcloud تخصيص مواقع الاستخدام "
+
+#. module: website_delivery_sendcloud
+#: model:ir.model.fields,field_description:website_delivery_sendcloud.field_delivery_carrier__sendcloud_locations_radius_value
+msgid "Sendcloud Locations Radius"
+msgstr "نطاق مواقع Sendcloud "
+
+#. module: website_delivery_sendcloud
+#: model:ir.model.fields,field_description:website_delivery_sendcloud.field_delivery_carrier__sendcloud_locations_radius_unit
+msgid "Sendcloud Locations Radius Unit"
+msgstr "وحدة نطاق مواقع Sendcloud "
+
+#. module: website_delivery_sendcloud
+#: model:ir.model.fields,field_description:website_delivery_sendcloud.field_delivery_carrier__sendcloud_locations_radius_unit_name
+msgid "Sendcloud Radius Unit Name"
+msgstr "اسم وحدة نطاق Sendcloud "
+
+#. module: website_delivery_sendcloud
+#: model:ir.model,name:website_delivery_sendcloud.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "طُرُق الشَّحن"
+
+#. module: website_delivery_sendcloud
+#. odoo-python
+#: code:addons/website_delivery_sendcloud/models/delivery_sendcloud.py:0
+msgid "The maximum radius allowed is %(distance)d%(unit)s"
+msgstr "الحد الأقصى المسموح به لنصف القطر هو %(distance)d%(unit)s"
+
+#. module: website_delivery_sendcloud
+#. odoo-python
+#: code:addons/website_delivery_sendcloud/models/delivery_sendcloud.py:0
+msgid "The minimum radius allowed is %(distance)d%(unit)s"
+msgstr "الحد الأدنى المسموح به لنصف القطر هو %(distance)d%(unit)s "
+
+#. module: website_delivery_sendcloud
+#: model:ir.model.fields,field_description:website_delivery_sendcloud.field_delivery_carrier__sendcloud_use_locations
+msgid "Use Sendcloud Locations"
+msgstr "استخدام مواقع Sendcloud "

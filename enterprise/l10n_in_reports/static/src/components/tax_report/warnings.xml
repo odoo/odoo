@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="l10n_in_reports.invalid_intra_state_warning">
+        <span>
+            IGST is not applicable for 
+            <a type="button" t-on-click="(ev) => controller.reportAction(ev, 'open_invalid_intra_state_lines', warningParams)">
+                Intra State Transactions
+            </a>
+        </span>
+    </t>
+
+    <t t-name="l10n_in_reports.invalid_inter_state_warning">
+        <span>
+            SGST and CGST are not applicable for 
+            <a type="button" t-on-click="(ev) => controller.reportAction(ev, 'open_invalid_inter_state_lines', warningParams)">
+                Inter State Transactions
+            </a>
+        </span>
+    </t>
+
+    <t t-name="l10n_in_reports.missing_hsn_warning">
+        <span>
+            <a type="button" t-on-click="(ev) => controller.reportAction(ev, 'open_missing_hsn_products', warningParams)">
+                Certain Product Lines
+            </a>
+            does not have HSN in Journal Items
+        </span>
+    </t>
+
+    <t t-name="l10n_in_reports.invalid_type_service_for_hsn_warning">
+        <span>
+            HSN for other than Service type product shall not start with 99,
+            <a type="button" t-on-click="(ev) => controller.reportAction(ev, 'open_invalid_type_service_for_hsn_products', warningParams)">
+                Certain Product Lines
+            </a>
+            do not comply with
+        </span>
+    </t>
+
+    <t t-name="l10n_in_reports.invalid_hsn_for_service_warning">
+        <span>
+            HSN for Service type product shall start with 99,
+            <a type="button" t-on-click="(ev) => controller.reportAction(ev, 'open_invalid_hsn_for_service_products', warningParams)">
+                Certain Product Lines
+            </a>
+            do not comply with
+        </span>
+    </t>
+
+    <t t-name="l10n_in_reports.invalid_uqc_code_warning">
+        <span> 
+            <a type="button" t-on-click="(ev) => controller.reportAction(ev, 'open_invalid_uqc_codes', warningParams)">
+                UQC code
+            </a>
+            must match the Indian GST standards
+        </span>
+    </t>
+
+    <t t-name="l10n_in_reports.out_of_fiscal_year_reversed_moves_warning">
+        <span>
+            Some
+            <a type="button" t-on-click="(ev) => controller.reportAction(ev, 'open_out_of_fiscal_year_reversed_moves', warningParams)">
+                Credit Notes
+            </a>
+            for invoices issued during financial year shouldn't be in GSTR-1 after November 30th, so it's advisable to remove the tax from it
+        </span>
+    </t>
+
+</templates>

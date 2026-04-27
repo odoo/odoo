@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<odoo>
+    <menuitem name="Referrals" id="menu_hr_referral_root" web_icon="hr_referral,static/description/icon.png" sequence="215" groups="hr_referral.group_hr_recruitment_referral_user"/>
+    <menuitem parent="menu_hr_referral_root" id="menu_hr_referral_configuration" name="Configuration" sequence="50" groups="hr_recruitment.group_hr_recruitment_manager,hr_referral.group_hr_referral_reward_responsible_user"/>
+
+    <record model="ir.ui.view" id="hr_applicant_view_form_inherit_referral">
+        <field name="name">hr.applicant.view.form.inherit.referral</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='medium_id']" position="after">
+                <field name="ref_user_id" domain="[('share', '=', False), ('company_id', 'in', allowed_company_ids)]" widget="many2one_avatar"/>
+                <field name="is_accessible_to_current_user" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_applicant_view_search_bis_inherit_referral" model="ir.ui.view">
+        <field name="name">hr.applicant.view.search.inherit.referral</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_search_bis"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='email_from']" position="after">
+                <field name="ref_user_id" string="Referred By" widget="many2one_avatar_user"/>
+            </xpath>
+            <xpath expr="//filter[@name='last_stage_update']" position="after">
+                <filter string="Referred By" name="ref_by_user_id" context="{'group_by':'ref_user_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="hr_recruitment.crm_case_categ0_act_job">
+        <field name="domain">[('is_accessible_to_current_user', '=', True)]</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="hr_recruitment.action_hr_job_applications">
+        <field name="domain">[('is_accessible_to_current_user', '=', True)]</field>
+    </record>
+
+    <record id="view_hr_applicant_employee_referral_kanban" model="ir.ui.view">
+        <field name="name">hr.applicant.employee.referral.kanban</field>
+        <field name="model">hr.applicant</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <kanban create="false" can_open="0" js_class="referral_kanban">
+                <field name="shared_item_infos"/>
+                <field name="referral_state"/>
+                <field name="friend_id"/>
+                <templates>
+                    <t t-name="card" class="px-3">
+                        <widget name="web_ribbon" title="Ongoing" bg_color="text-bg-primary"/>
+                        <widget name="web_ribbon" title="Hired" bg_color="text-bg-success" invisible="referral_state != 'hired'" class="z-1"/>
+                        <widget name="web_ribbon" title="Not Hired" bg_color="text-bg-danger" invisible="referral_state != 'closed'"/>
+                        <div class="d-flex" t-if="record.partner_name.value">
+                            <div class="d-flex flex-column">
+                                <field name="partner_name" class="fw-bold fs-4"/>
+                                <field name="job_id" class="text-muted mb-3"/>
+                            </div>
+                            <div t-if="record.friend_id.raw_value" class="o_head_friend ms-auto me-2 mt-3 z-0">
+                                <field name="friend_id" widget="image" options="{'preview_image': 'image_head'}"/>
+                            </div>
+                        </div>
+                        <div t-else="">
+                            <div t-if="record.friend_id.raw_value" class="o_head_friend ms-auto me-2 mt-3 z-0">
+                                <field name="friend_id" widget="image" options="{'preview_image': 'image_head'}"/>
+                            </div>
+                        </div>
+                        <div t-if="record.user_id.value"><b>Responsible: </b><field name="user_id"/></div>
+                        <h5>
+                            <div t-if="record.referral_state.raw_value == 'progress'">
+                                <field name="earned_points"/> / <field name="max_points"/> Points
+                            </div>
+                            <span t-else="">
+                                You earned <field name="earned_points"/> Points
+                            </span>
+                        </h5>
+                        <div class="progress z-0">
+                            <div class="progress-bar" role="progressbar" t-att-style="'width: ' + record.earned_points.value / record.max_points.value * 100 + '%;'" t-att-aria-valuenow="record.earned_points.value" aria-valuemin="0" t-att-aria-valuemax="record.max_points.value"/>
+                        </div>
+                        <table class="table">
+                            <tr t-foreach="JSON.parse(record.shared_item_infos.raw_value)" t-as="stage" t-key="stage_index">
+                                <td>
+                                    <t t-if="stage.done"><i class="text-success fa fa-check" title="Done"></i></t>
+                                    <t t-elif="record.referral_state.raw_value == 'closed'"><i class="text-danger fa fa-times" title="Closed"></i></t>
+                                    <t t-else=""><i class="fa fa-square-o" title="Open"></i></t>
+                                </td>
+                                <td><t t-esc="stage.name"/></td>
+                                <td t-if="stage.done">+<t t-esc="stage.points"/> Points</td>
+                                <td t-elif="record.referral_state.raw_value == 'closed'"></td>
+                                <td t-else="" class="text-muted">+<t t-esc="stage.points"/> Points</td>
+                            </tr>
+                        </table>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_hr_referral_filter" model="ir.ui.view">
+        <field name="name">hr.referral.filter</field>
+        <field name="model">hr.applicant</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <search string="Search Referral">
+                <filter domain="[('referral_state', '=', 'progress')]" string="In Progress" name="filter_progress"/>
+                <filter domain="[('referral_state', '=', 'hired')]" string="Hired" name="filter_hired"/>
+                <filter domain="[('referral_state', '=', 'closed'), ('active', '=', False)]" string="Not Hired" name="filter_closed"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_hr_applicant_employee_referral">
+        <field name="name">My Referral</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="hr_referral.view_hr_applicant_employee_referral_kanban"/>
+        <field name="search_view_id" ref="view_hr_referral_filter"/>
+        <field name="domain">[('ref_user_id','=',uid)]</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_referral_kanban">
+              Ready to receive points?
+          </p><p>
+              Let's share a job position.
+          </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_hr_refused_applicant_employee_referral">
+        <field name="name">My Referral</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="hr_referral.view_hr_applicant_employee_referral_kanban"/>
+        <field name="search_view_id" ref="view_hr_referral_filter"/>
+        <field name="domain">[('ref_user_id','=',uid)]</field>
+        <field name="context">{"search_default_filter_closed": 1}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_referral_kanban">
+              Ready to receive points?
+          </p><p>
+              Let's share a job position.
+          </p>
+        </field>
+    </record>
+</odoo>

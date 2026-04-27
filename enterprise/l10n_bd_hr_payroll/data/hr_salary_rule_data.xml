@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="l10n_bd_other_allowances_rule" model="hr.salary.rule">
+        <field name="name">Other Allowances</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="struct_id" ref="l10n_bd_hr_payroll.hr_payroll_structure_bd_employee_salary"/>
+        <field name="code">OTHER_ALLOW</field>
+        <field name="sequence">5</field>
+        <field name="condition_select">input</field>
+        <field name="condition_other_input_id" ref="l10n_bd_hr_payroll.input_other_allowances"/>
+        <field name="amount_select">input</field>
+        <field name="amount_other_input_id" ref="l10n_bd_hr_payroll.input_other_allowances"/>
+    </record>
+
+    <record id="l10n_bd_salary_arrears_rule" model="hr.salary.rule">
+        <field name="name">Salary Arrears</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="struct_id" ref="l10n_bd_hr_payroll.hr_payroll_structure_bd_employee_salary"/>
+        <field name="code">SALARY_ARREARS</field>
+        <field name="sequence">5</field>
+        <field name="condition_select">input</field>
+        <field name="condition_other_input_id" ref="l10n_bd_hr_payroll.input_salary_arrears"/>
+        <field name="amount_select">input</field>
+        <field name="amount_other_input_id" ref="l10n_bd_hr_payroll.input_salary_arrears"/>
+    </record>
+
+    <record id="l10n_bd_over_time_rule" model="hr.salary.rule">
+        <field name="name">Extra Hours</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="struct_id" ref="l10n_bd_hr_payroll.hr_payroll_structure_bd_employee_salary"/>
+        <field name="code">EXTRA_HOURS</field>
+        <field name="sequence">5</field>
+        <field name="condition_select">input</field>
+        <field name="condition_other_input_id" ref="l10n_bd_hr_payroll.input_extra_hours"/>
+        <field name="amount_select">input</field>
+        <field name="amount_other_input_id" ref="l10n_bd_hr_payroll.input_extra_hours"/>
+    </record>
+
+    <record id="l10n_bd_prov_fund_rule" model="hr.salary.rule">
+        <field name="name">Provident Fund</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="struct_id" ref="l10n_bd_hr_payroll.hr_payroll_structure_bd_employee_salary"/>
+        <field name="code">PROV_FUND</field>
+        <field name="sequence">5</field>
+        <field name="condition_select">input</field>
+        <field name="condition_other_input_id" ref="l10n_bd_hr_payroll.input_provident_fund"/>
+        <field name="amount_select">input</field>
+        <field name="amount_other_input_id" ref="l10n_bd_hr_payroll.input_provident_fund"/>
+    </record>
+
+    <record id="l10n_bd_grat_fund_rule" model="hr.salary.rule">
+        <field name="name">Gratuity Fund</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="struct_id" ref="l10n_bd_hr_payroll.hr_payroll_structure_bd_employee_salary"/>
+        <field name="code">GRAT_FUND</field>
+        <field name="sequence">5</field>
+        <field name="condition_select">input</field>
+        <field name="condition_other_input_id" ref="l10n_bd_hr_payroll.input_gratuity_fund"/>
+        <field name="amount_select">input</field>
+        <field name="amount_other_input_id" ref="l10n_bd_hr_payroll.input_gratuity_fund"/>
+    </record>
+
+    <record id="l10n_bd_tax_exemption_rule" model="hr.salary.rule">
+        <field name="name">Tax Credits (Investments)</field>
+        <field name="category_id" ref="l10n_bd_hr_payroll.rule_category_tax_credits"/>
+        <field name="struct_id" ref="l10n_bd_hr_payroll.hr_payroll_structure_bd_employee_salary"/>
+        <field name="code">TAX_CREDITS</field>
+        <field name="sequence">105</field>
+        <field name="condition_select">input</field>
+        <field name="condition_other_input_id" ref="l10n_bd_hr_payroll.input_tax_credits"/>
+        <field name="amount_select">input</field>
+        <field name="amount_other_input_id" ref="l10n_bd_hr_payroll.input_tax_credits"/>
+    </record>
+
+    <record id="l10n_bd_taxable_amount_rule" model="hr.salary.rule">
+        <field name="name">Taxable Amount</field>
+        <field name="category_id" ref="l10n_bd_hr_payroll.rule_category_taxable"/>
+        <field name="struct_id" ref="l10n_bd_hr_payroll.hr_payroll_structure_bd_employee_salary"/>
+        <field name="code">TAXABLE_AMOUNT</field>
+        <field name="sequence">110</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+yearly_income_exempt = min(payslip._rule_parameter('l10n_bd_maximum_yearly_exempt'), result_rules['GROSS']['total'] * 12 / 3)
+result = result_rules['GROSS']['total'] - result_rules['TAX_CREDITS']['total'] - yearly_income_exempt / 12
+        </field>
+    </record>
+
+    <record id="l10n_bd_income_tax_rule" model="hr.salary.rule">
+        <field name="name">Income Tax</field>
+        <field name="category_id" ref="l10n_bd_hr_payroll.rule_category_taxes"/>
+        <field name="struct_id" ref="l10n_bd_hr_payroll.hr_payroll_structure_bd_employee_salary"/>
+        <field name="code">TAXES</field>
+        <field name="sequence">115</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+def _is_senior():
+    age = relativedelta(payslip.date_from, employee.birthday).years
+    return age > 65
+yearly_taxable_amount = result_rules['TAXABLE_AMOUNT']['total'] * 12
+
+# All foreigners non-resident (excluding bangladeshi non-resident) are taxed at a 30% flat rate
+if employee.private_country_id.code != 'BD' and employee.country_id.code != 'BD':
+    income_tax = yearly_taxable_amount * 0.30
+
+# If bangladeshi or residing in Bangladesh
+else:
+    x = 0
+    if employee.l10n_bd_gazetted_war_founded_freedom_fighter:
+        x = payslip._rule_parameter('l10n_bd_gazetted_fighter_yearly_exempt')
+    elif employee.disabled:
+        x = payslip._rule_parameter('l10n_bd_disabled_yearly_exempt')
+    elif employee.gender in ('female', 'other') or _is_senior():
+        x = payslip._rule_parameter('l10n_bd_female_senior_yearly_exempt')
+    elif employee.gender == 'male':
+        x = payslip._rule_parameter('l10n_bd_male_yearly_exempt')
+    if employee.l10n_bd_disabled_dependent:
+        x += payslip._rule_parameter('l10n_bd_per_disabled_dependent_yearly_exempt') * employee.l10n_bd_disabled_dependent
+
+    yearly_taxable_amount -= min(yearly_taxable_amount, x)
+    income_tax = 0
+    for amount, rate in payslip._rule_parameter('l10n_bd_yearly_tax_rates'):
+        taxable_in_current = min(yearly_taxable_amount, amount)
+        yearly_taxable_amount -= taxable_in_current
+        income_tax += taxable_in_current * rate
+
+result = -max(income_tax, payslip._rule_parameter('l10n_bd_yearly_minimum_tax')) / 12
+        </field>
+    </record>
+</odoo>

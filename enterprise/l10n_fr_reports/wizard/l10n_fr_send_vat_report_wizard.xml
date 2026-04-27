@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_l10n_fr_reports_report_form" model="ir.ui.view">
+        <field name="name">l10n_fr_reports.send.vat.report.form</field>
+        <field name="model">l10n_fr_reports.send.vat.report</field>
+        <field name="arch" type="xml">
+            <form string="Options">
+                <field name="has_wrongly_configured_account" invisible="True"/>
+                <field name="bank_account_line_count" invisible="True"/>
+                <field name="is_vat_due" invisible="True"/>
+                <field name="currency_id" invisible="True"/>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="test_interchange" groups="base.group_no_one"/>
+                            <field name="recipient"/>
+                        </group>
+                        <group>
+                            <field name="vat_amount" invisible="is_vat_due" string="VAT to receive"/>
+                            <field name="vat_amount" invisible="not is_vat_due" string="VAT to pay"/>
+                            <field name="computed_vat_amount" invisible="is_vat_due" string="Amount to receive"/>
+                            <field name="computed_vat_amount" invisible="not is_vat_due" string="Amount to pay"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-warning d-flex flex-column gap-1"
+                         role="alert"
+                         invisible="not has_wrongly_configured_account and bank_account_line_count &lt;= 3 and vat_amount == computed_vat_amount and vat_amount"
+                    >
+                        <span invisible="vat_amount">
+                            There is no amount in your Tax report, Odoo will send an empty declaration (check box "declaration of nil" checked)
+                        </span>
+                        <span invisible="not has_wrongly_configured_account">
+                            Some accounts are wrongly configured. For the VAT declaration we need an account number and
+                            the BIC code.
+                        </span>
+                        <span invisible="bank_account_line_count &lt;= 3">
+                            You can't use more than 3 accounts.
+                        </span>
+                        <span invisible="is_vat_due or computed_vat_amount &gt;= vat_amount">
+                            The VAT amount does not match to the amount you want to receive.<br/>
+                            If you proceed without matching the VAT amount,
+                            the difference will be carried over to the next period.
+                        </span>
+                        <span invisible="not is_vat_due or computed_vat_amount &gt;= vat_amount">
+                            The VAT amount does not match to the amount you have to pay to the administration.
+                        </span>
+                        <span invisible="computed_vat_amount &lt;= vat_amount">
+                            It seems you're trying to
+                            <t invisible="is_vat_due">receive</t>
+                            <t invisible="not is_vat_due">send</t>
+                            more money than the amount due
+                            <t invisible="is_vat_due">by</t>
+                            <t invisible="not is_vat_due">to</t>
+                             the administration.
+                        </span>
+                    </div>
+                    <field name="bank_account_line_ids" nolabel="1">
+                        <list create="1" no_open="1" editable="bottom" decoration-danger="is_wrongly_configured">
+                            <field name="bank_partner_id" string="IBAN" context="{'default_partner_id': company_partner_id, 'default_bank_id': bank_id}"/>
+                            <field name="bank_id" string="BIC"/>
+                            <field name="vat_amount" string="Amount"/>
+                            <field name="is_wrongly_configured" column_invisible="True"/>
+                            <field name="company_partner_id" column_invisible="True"/>
+                            <field name="currency_id" column_invisible="True"/>
+                        </list>
+                    </field>
+                </sheet>
+                <footer>
+                    <button string="Send VAT Report" name="send_vat_return" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+           </form>
+        </field>
+    </record>
+</odoo>

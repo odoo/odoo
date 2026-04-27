@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="l10n_it_pos.FiscalInvoice">
+        <printerFiscalDocument>
+            <Header order="this.order" />
+            <PrintRecMessage messageType="6" message="client" font="2"  index="1"/>   
+            <beginFiscalDocument  operator="1" documentType="directInvoice" documentNumber="0" />
+            <Body order="this.order" />
+            <Footer order="this.order" />
+            <endFiscalDocument operator="1" /> 
+        </printerFiscalDocument>
+    </t>
+</templates>

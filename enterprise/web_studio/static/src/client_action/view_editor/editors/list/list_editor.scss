@@ -1,0 +1,44 @@
+.o_list_view .o_web_studio_list_view_editor .o_list_table.table {
+    // Define transparent borders to prevent flickering on hover
+    th, td {
+        border-left: 1px solid transparent;
+        border-right: 1px solid transparent;
+        &.o_web_studio_hook {
+            border-left: 2px solid transparent;
+            padding: 0;
+        }
+    }
+
+    // Default columns
+    th.o-web-studio--col-hovered {
+        outline: 1px dashed $o-brand-primary;
+    }
+    tr.o_data_row td.o-web-studio--col-hovered:not(.o_web_studio_hook) {
+        opacity: .8;
+    }
+
+    th.o-web-studio-editor--element-clicked {
+        outline: 2px solid $o-brand-primary;
+    }
+    tr.o_data_row td.o-web-studio-editor--element-clicked:not(.o_web_studio_hook) {
+        outline: 1px solid $o-brand-primary;
+    }
+
+    // New columns
+    th.o_web_studio_hook {
+        > i {
+            visibility: hidden;
+            color: $o-brand-primary;
+        }
+    }
+
+    .o_web_studio_hook {
+        &.o_web_studio_nearest_hook {
+            cursor: pointer !important;
+            border-left: 2px solid $o-brand-primary;
+            > i {
+                visibility: visible;
+            }
+        }
+    }
+}

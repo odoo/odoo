@@ -1,0 +1,9 @@
+<odoo>
+    <template id="libro_giornale_pdf" inherit_id="account_reports.journal_report_pdf_export_main" primary="True">
+        <xpath expr="//t[@t-call='account_reports.company_information']" position="after">
+            <div>Tax Code: <t t-out="report.env.company.l10n_it_codice_fiscale"/></div>
+        </xpath>
+        <xpath expr="//section/div[hasclass('o_section_title')]" position="replace">
+        </xpath>
+    </template>
+</odoo>

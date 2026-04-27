@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="hr_payroll_payment_report_view_form" model="ir.ui.view">
+        <field name="name">hr.payroll.payment.report.wizard.form</field>
+        <field name="model">hr.payroll.payment.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Payment Report">
+                <group id="payment_report_group">
+                    <field name="export_format"/>
+                </group>
+                <footer>
+                    <button string="Generate" class="btn-primary" name="generate_payment_report" type="object" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

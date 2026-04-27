@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_reconcile_model_form_inherit_account_accountant" model="ir.ui.view">
+            <field name="name">account.reconcile.model.form.inherit.account_accountant</field>
+            <field name="model">account.reconcile.model</field>
+            <field name="inherit_id" ref="account.view_account_reconcile_model_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='auto_reconcile']" position="replace">
+                    <label for="auto_reconcile" invisible="rule_type == 'writeoff_button'"/>
+                    <div class="o_row" invisible="rule_type == 'writeoff_button'">
+                        <field name="auto_reconcile"/>
+                        <button name="run_auto_reconciliation" invisible="not auto_reconcile" type="object" class="btn-link">
+                            <i title="Run manually" role="img" aria-label="Run manually" class="fa fa-refresh"/>
+                            Run manually
+                        </button>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

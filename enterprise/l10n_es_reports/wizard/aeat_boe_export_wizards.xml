@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+
+        <record id="mod111_boe_wizard" model="ir.ui.view">
+            <field name="name">l10n_es_reports.aeat.boe.mod111.export.wizard.form</field>
+            <field name="model">l10n_es_reports.aeat.boe.mod111.export.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="declaration_type"/>
+                            <field name="complementary_declaration"/>
+                            <field name="company_id" invisible="True"/>
+                            <field name="company_partner_id" invisible="True"/>
+                            <field name="partner_bank_id"/>
+                            <field name="previous_report_number" invisible="not complementary_declaration"/>
+                        </group>
+                    </group>
+
+                    <footer>
+                        <button string="Cancel" special="cancel" data-hotkey="x"/>
+                        <button string="Generate BOE" class="oe_highlight" type="object" name="download_boe_action" data-hotkey="q"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="mod115_boe_wizard" model="ir.ui.view">
+            <field name="name">l10n_es_reports.aeat.boe.mod115.export.wizard.form</field>
+            <field name="model">l10n_es_reports.aeat.boe.mod115.export.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="declaration_type"/>
+                            <field name="company_id" invisible="True"/>
+                            <field name="company_partner_id" invisible="True"/>
+                            <field name="partner_bank_id"/>
+                            <field name="complementary_declaration"/>
+                            <field name="previous_report_number" invisible="not complementary_declaration"/>
+                        </group>
+                    </group>
+
+                    <footer>
+                        <button string="Cancel" special="cancel" data-hotkey="x"/>
+                        <button string="Generate BOE" class="oe_highlight" type="object" name="download_boe_action" data-hotkey="q"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="mod303_boe_wizard" model="ir.ui.view">
+            <field name="name">l10n_es_reports.aeat.boe.mod303.export.wizard.form</field>
+            <field name="model">l10n_es_reports.aeat.boe.mod303.export.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="declaration_type"/>
+                            <field name="company_id" invisible="True"/>
+                            <field name="company_partner_id" invisible="True"/>
+                            <field name="partner_bank_id"/>
+                            <field name="complementary_declaration"/>
+                            <field name="monthly_return"/>
+                            <field name="previous_report_number" invisible="not complementary_declaration"/>
+                            <field name="using_sii"/>
+                            <field name="exempted_from_mod_390" invisible="not exempted_from_mod_390_available"/>
+                            <field name="exempted_from_mod_390_available" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <footer>
+                        <button string="Cancel" special="cancel" data-hotkey="x"/>
+                        <button string="Generate BOE" class="oe_highlight" type="object" name="download_boe_action"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="mod347_boe_wizard" model="ir.ui.view">
+            <field name="name">l10n_es_reports.aeat.boe.mod347.export.wizard.form</field>
+            <field name="model">l10n_es_reports.aeat.boe.mod347.export.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="contact_person_name"/>
+                            <field name="contact_person_phone" required="1"/>
+                        </group>
+                        <group>
+                            <field name="complementary_declaration"/>
+                            <field name="substitutive_declaration"/>
+                            <field name="previous_report_number"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <field name="cash_basis_mod347_data"/>
+                    </group>
+
+                    <footer>
+                        <button string="Cancel" special="cancel" data-hotkey="x"/>
+                        <button string="Generate BOE" class="oe_highlight" type="object" name="download_boe_action"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="mod347_manual_partner_data_tree" model="ir.ui.view">
+            <field name="name">l10n_es_reports.aeat.boe.mod347.manual.partner.data.list</field>
+            <field name="model">l10n_es_reports.aeat.mod347.manual.partner.data</field>
+            <field name="arch" type="xml">
+                <list editable="bottom">
+                    <field name="partner_id"/>
+                    <field name="perceived_amount"/>
+                    <field name="operation_class"/>
+                    <field name="operation_key"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="mod349_boe_wizard" model="ir.ui.view">
+            <field name="name">l10n_es_reports.aeat.boe.mod349.export.wizard.form</field>
+            <field name="model">l10n_es_reports.aeat.boe.mod349.export.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="contact_person_name"/>
+                            <field name="contact_person_phone"/>
+                            <field name="complementary_declaration"/>
+                            <field name="substitutive_declaration"/>
+                            <field name="previous_report_number"/>
+                            <field name="trimester_2months_report"/>
+                        </group>
+                    </group>
+
+                    <footer>
+                        <button string="Cancel" special="cancel" data-hotkey="x"/>
+                        <button string="Generate BOE" class="oe_highlight" type="object" name="download_boe_action"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="mod390_boe_wizard" model="ir.ui.view">
+            <field name="name">l10n_es_reports.aeat.boe.mod390.export.wizard.form</field>
+            <field name="model">l10n_es_reports.aeat.boe.mod390.export.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="physical_person_name"/>
+                        <field name="monthly_return"/>
+                    </group>
+                    <separator string="Principal activity"/>
+                    <group>
+                        <group>
+                            <field name="principal_activity"/>
+                        </group>
+                        <group>
+                            <field name="principal_iae_epigrafe"/>
+                        </group>
+                        <group>
+                            <field name="principal_code_activity"/>
+                        </group>
+                    </group>
+                    <separator string="Judicial person"/>
+                    <group>
+                        <group>
+                            <field name="judicial_person_name"/>
+                        </group>
+                        <group>
+                            <field name="judicial_person_nif"/>
+                        </group>
+                        <group>
+                            <field name="judicial_person_procuration_date"/>
+                        </group>
+                        <group>
+                            <field name="judicial_person_notary"/>
+                        </group>
+                        <group>
+                            <field name="is_in_tax_unit" invisible="1"/>
+                            <field name="group_number" invisible="not is_in_tax_unit"/>
+                        </group>
+                    </group>
+                    <separator string="Special Regimen"/>
+                    <group>
+                        <group>
+                            <field name="special_regime_applicable_163"/>
+                        </group>
+                        <group>
+                            <field name="special_cash_basis"/>
+                        </group>
+                    </group>
+                    <separator string="Substitute declaration"/>
+                    <group>
+                        <group>
+                            <field name="is_substitute_declaration"/>
+                        </group>
+                        <group>
+                            <field name="is_substitute_decl_by_rectif_of_quotas" invisible="not is_substitute_declaration"/>
+                        </group>
+                        <group>
+                            <field name="previous_decl_number" invisible="not is_substitute_declaration"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Cancel" special="cancel" data-hotkey="z"/>
+                        <button string="Generate BOE" class="oe_highlight" type="object" name="download_boe_action"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

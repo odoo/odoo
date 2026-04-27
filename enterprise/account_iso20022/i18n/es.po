@@ -1,0 +1,463 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_iso20022
+#
+# Translators:
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Wil Odoo, 2024
+# Larissa Manderfeld, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-29 18:45+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_batch_payment.py:0
+msgid "A bank account is not defined."
+msgstr "Una cuenta bancaria no está definida."
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_payment_register.py:0
+msgid "A bank account must be set on the following documents: %s(doc_name)"
+msgstr ""
+"Se debe establecer una cuenta bancaria en los siguientes documentos: "
+"%s(doc_name)"
+
+#. module: account_iso20022
+#: model:ir.model.fields.selection,name:account_iso20022.selection__account_journal__sepa_pain_version__pain_001_001_03_austrian_004
+msgid "Austrian"
+msgstr "Austriaco"
+
+#. module: account_iso20022
+#: model_terms:ir.ui.view,arch_db:account_iso20022.view_batch_payment_form_inherit
+msgid "Batch Booking"
+msgstr "Reserva en lote"
+
+#. module: account_iso20022
+#: model:ir.model,name:account_iso20022.model_account_batch_payment
+msgid "Batch Payment"
+msgstr "Pagos por lotes"
+
+#. module: account_iso20022
+#: model:ir.model.fields,field_description:account_iso20022.field_account_batch_payment__iso20022_charge_bearer
+msgid "Charge Bearer"
+msgstr "Portador de coste"
+
+#. module: account_iso20022
+#: model:ir.model,name:account_iso20022.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: account_iso20022
+#: model:ir.model,name:account_iso20022.model_res_config_settings
+msgid "Config Settings"
+msgstr "Opciones de configuración"
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_batch_payment.py:0
+msgid "Configure Journal"
+msgstr "Configurar diario"
+
+#. module: account_iso20022
+#: model:ir.model,name:account_iso20022.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: account_iso20022
+#: model:ir.model.fields.selection,name:account_iso20022.selection__account_batch_payment__iso20022_charge_bearer__cred
+msgid "Creditor"
+msgstr "Acreedor"
+
+#. module: account_iso20022
+#: model:ir.model.fields.selection,name:account_iso20022.selection__account_batch_payment__iso20022_charge_bearer__debt
+msgid "Debtor"
+msgstr "Deudor"
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_journal.py:0
+msgid "Employee %s has no country in their address."
+msgstr "No hay ningún país en la dirección del empleado %s."
+
+#. module: account_iso20022
+#: model:ir.model.fields,help:account_iso20022.field_res_company__iso20022_orgid_issr
+msgid ""
+"Entity that assigns the identification (eg. KBE-BCO or Finanzamt Muenchen "
+"IV)."
+msgstr "Entidad que asigna la identificación (por ejemplo, BBVA o CaixaBank)."
+
+#. module: account_iso20022
+#: model:ir.model.fields.selection,name:account_iso20022.selection__account_journal__sepa_pain_version__pain_001_001_03_de
+msgid "German"
+msgstr "Alemán"
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_batch_payment.py:0
+msgid "Go to settings"
+msgstr "Ir a los ajustes"
+
+#. module: account_iso20022
+#: model:ir.model.fields,field_description:account_iso20022.field_account_journal__has_sepa_ct_payment_method
+msgid "Has Sepa Ct Payment Method"
+msgstr "Tiene el método de pago SEPA Credit Transfer"
+
+#. module: account_iso20022
+#: model:account.payment.method,name:account_iso20022.account_payment_method_iso20022
+msgid "ISO20022"
+msgstr "ISO20022"
+
+#. module: account_iso20022
+#: model:ir.model.fields,field_description:account_iso20022.field_res_company__iso20022_orgid_id
+#: model:ir.model.fields,field_description:account_iso20022.field_res_config_settings__iso20022_orgid_id
+msgid "Identification"
+msgstr "Identificación"
+
+#. module: account_iso20022
+#: model:ir.model.fields,help:account_iso20022.field_res_company__iso20022_orgid_id
+#: model:ir.model.fields,help:account_iso20022.field_res_config_settings__iso20022_orgid_id
+msgid "Identification assigned by an institution (eg. VAT number)."
+msgstr "Identificación asignada por una institución (por ejemplo, el NIF)"
+
+#. module: account_iso20022
+#: model:ir.model.fields,field_description:account_iso20022.field_res_company__iso20022_orgid_issr
+#: model:ir.model.fields,field_description:account_iso20022.field_res_config_settings__iso20022_orgid_issr
+msgid "Issuer"
+msgstr "Emisor"
+
+#. module: account_iso20022
+#: model:ir.model,name:account_iso20022.model_account_journal
+msgid "Journal"
+msgstr "Diario"
+
+#. module: account_iso20022
+#: model:ir.model.fields,field_description:account_iso20022.field_res_company__iso20022_lei
+#: model:ir.model.fields,field_description:account_iso20022.field_res_partner__iso20022_lei
+#: model:ir.model.fields,field_description:account_iso20022.field_res_users__iso20022_lei
+msgid "LEI"
+msgstr "LEI"
+
+#. module: account_iso20022
+#: model:ir.model.fields,help:account_iso20022.field_res_company__iso20022_lei
+#: model:ir.model.fields,help:account_iso20022.field_res_partner__iso20022_lei
+#: model:ir.model.fields,help:account_iso20022.field_res_users__iso20022_lei
+msgid "Legal Entity Identifier"
+msgstr "Legal Entity Identifier (Identificador de Entidad Legal)"
+
+#. module: account_iso20022
+#: model_terms:ir.ui.view,arch_db:account_iso20022.res_partner_sepa_inherit_form
+msgid "Miscellaneous"
+msgstr "Varios"
+
+#. module: account_iso20022
+#: model:ir.model.fields,help:account_iso20022.field_res_config_settings__iso20022_initiating_party_name
+msgid ""
+"Name of the Creditor Reference Party. Usage Rule: Limited to 70 characters "
+"in length."
+msgstr ""
+"Nombre de la referencia de la parte del acreedor. Regla de uso: limitado a "
+"70 caracteres de longitud."
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_batch_payment.py:0
+msgid "Non-EUR Payments"
+msgstr "Pagos no en EUR"
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_journal.py:0
+msgid "Partner %s has no country code defined."
+msgstr "El partner %s no tiene un código de país definido."
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_journal.py:0
+msgid "Partner %s has not bank account defined."
+msgstr "El socio %s no tiene una cuenta bancaria definida."
+
+#. module: account_iso20022
+#: model:ir.model,name:account_iso20022.model_account_payment_register
+msgid "Pay"
+msgstr "Pagar"
+
+#. module: account_iso20022
+#: model:ir.model,name:account_iso20022.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Métodos de pago"
+
+#. module: account_iso20022
+#: model_terms:ir.ui.view,arch_db:account_iso20022.account_journal_dashboard_kanban_view_inherited
+msgid "Payment to send via SEPA"
+msgstr "Pagos a enviar vía SEPA"
+
+#. module: account_iso20022
+#: model:ir.model,name:account_iso20022.model_account_payment
+msgid "Payments"
+msgstr "Pagos"
+
+#. module: account_iso20022
+#: model_terms:ir.ui.view,arch_db:account_iso20022.account_journal_dashboard_kanban_view_inherited
+msgid "Payments to send via SEPA"
+msgstr "Pagos a enviar vía SEPA"
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_batch_payment.py:0
+msgid "Payments without IBAN"
+msgstr "Pagos sin IBAN"
+
+#. module: account_iso20022
+#: model:ir.model.fields,help:account_iso20022.field_account_batch_payment__iso20022_batch_booking
+msgid "Request batch booking from the bank for the related bank statements."
+msgstr ""
+"Solicitar al banco una reserva por lote para los estados bancarios "
+"relacionados. "
+
+#. module: account_iso20022
+#: model:ir.model.fields,field_description:account_iso20022.field_account_batch_payment__iso20022_batch_booking
+msgid "SCT Batch Booking"
+msgstr "Reserva en lote SCT"
+
+#. module: account_iso20022
+#: model:account.payment.method,name:account_iso20022.account_payment_method_sepa_ct
+#: model_terms:ir.ui.view,arch_db:account_iso20022.view_account_journal_form
+msgid "SEPA Credit Transfer"
+msgstr "Transferencias de crédito SEPA"
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_journal_dashboard.py:0
+msgid "SEPA Credit Transfers to Send"
+msgstr "Transferencias de crédito SEPA a enviar"
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_payment.py:0
+msgid "SEPA only accepts payments in EUR."
+msgstr "SEPA solo acepta pagos en EUR."
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_batch_payment.py:0
+msgid ""
+"SEPA only accepts payments in EUR. Some payments are using another currency."
+msgstr ""
+"SEPA solo acepta pagos en EUR. Algunos pagos se están realizando en otra "
+"moneda."
+
+#. module: account_iso20022
+#: model:ir.model.fields,help:account_iso20022.field_account_journal__sepa_pain_version
+#: model:ir.model.fields,help:account_iso20022.field_account_payment__sepa_pain_version
+msgid ""
+"SEPA version to use to generate Credit Transfer XML files from this journal"
+msgstr ""
+"Versión SEPA a usar para generar archivos XML de transferencia de crédito de "
+"este diario"
+
+#. module: account_iso20022
+#: model:ir.model.fields.selection,name:account_iso20022.selection__account_batch_payment__iso20022_charge_bearer__slev
+msgid "Service Level"
+msgstr "Nivel de serivico"
+
+#. module: account_iso20022
+#: model:ir.model.fields.selection,name:account_iso20022.selection__account_batch_payment__iso20022_charge_bearer__shar
+msgid "Shared"
+msgstr "Compartido"
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_batch_payment.py:0
+msgid "Some payments are above the maximum amount allowed."
+msgstr "Algunos pagos rebasan el monto máximo permitido."
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_batch_payment.py:0
+msgid "Some payments have no recipient bank account set."
+msgstr "Algunos pagos no tienen una cuenta bancaria acreedora registrada."
+
+#. module: account_iso20022
+#: model:ir.model.fields,help:account_iso20022.field_account_batch_payment__iso20022_charge_bearer
+msgid ""
+"Specifies which party/parties will bear the charges associated with the "
+"processing of the payment transaction."
+msgstr ""
+"Especifica qué parte o partes serán responsables de los cargos asociados con "
+"el procesamiento de esta transacción de pago."
+
+#. module: account_iso20022
+#: model:account.payment.method,name:account_iso20022.account_payment_method_iso20022_se
+msgid "Swedish ISO20022"
+msgstr "ISO20022 sueco"
+
+#. module: account_iso20022
+#: model:account.payment.method,name:account_iso20022.account_payment_method_iso20022_ch
+msgid "Swiss ISO20022"
+msgstr "ISO20022 suizo"
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_journal.py:0
+msgid ""
+"The BIC code '%(bic_code)s' associated to the bank '%(bank)s' of bank "
+"account '%(account)s' of partner '%(partner)s' does not respect the required "
+"convention.\n"
+"It must contain 8 or 11 characters and match the following structure:\n"
+"- 4 letters: institution code or bank code\n"
+"- 2 letters: country code\n"
+"- 2 letters or digits: location code\n"
+"- 3 letters or digits: branch code, optional\n"
+msgstr ""
+"El código BIC '%(bic_code)s' vinculado al banco '%(bank)s' de la cuenta "
+"bancaria '%(account)s' del contacto '%(partner)s' no cumple con los "
+"requisitos.\n"
+"Debe tener 8 u 11 caracteres y seguir la siguiente estructura:\n"
+"- 4 letras: código de la institución o del banco\n"
+"- 2 letras: código del país\n"
+"- 2 letras o dígitos: código de ubicación\n"
+"- 3 letras o dígitos: código de sucursal, opcional\n"
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/res_partner.py:0
+msgid ""
+"The LEI number must contain 20 characters and match the following "
+"structure:\n"
+"- 18 alphanumeric characters with capital letters\n"
+"- 2 digits in the end\n"
+msgstr ""
+"El número del identificador de entidad jurídica debe contener 20 caracteres "
+"y coincidir con la siguiente estructura:\n"
+"- 18 caracteres alfanuméricos con mayúsculas\n"
+"- 2 dígitos al final\n"
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_batch_payment.py:0
+msgid ""
+"The Name Identification and Issuer details are required to proceed. Please "
+"configure them in the settings."
+msgstr ""
+"Los datos de identificación del nombre y del emisor son necesarios para "
+"continuar. Configúrelos en los ajustes."
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_batch_payment.py:0
+msgid ""
+"The bank account %(account)s, of journal '%(journal)s', is not of type "
+"IBAN.\n"
+"A valid IBAN account is required to use SEPA features."
+msgstr ""
+"La cuenta bancaria %(account)s del diario '%(journal)s' no es de tipo IBAN.\n"
+"Se requiere una cuenta bancaria IBAN para usar las funciones SEPA."
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_batch_payment.py:0
+msgid ""
+"The customer bank account set on some payments does not have an IBAN number. "
+"This is required for SEPA."
+msgstr ""
+"La cuenta bancaria del cliente que está configurada en algunos pagos no "
+"tiene un número IBAN, el cual se necesita para la domiciliación SEPA."
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_payment.py:0
+msgid ""
+"The journal '%s' requires a proper IBAN account to pay via SEPA. Please "
+"configure it first."
+msgstr ""
+"El diario ‘%s’ requiere una cuenta IBAN para pagar vía SEPA. Configúrela "
+"primero."
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_journal.py:0
+msgid "This journal does not have a bank account defined."
+msgstr "Este diario no tiene una cuenta bancaria definida."
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_journal.py:0
+msgid "Too many transactions for a single file."
+msgstr "Son demasiadas transacciones para un solo archivo."
+
+#. module: account_iso20022
+#: model:ir.model.fields,field_description:account_iso20022.field_account_payment__iso20022_uetr
+msgid "UETR"
+msgstr "UETR"
+
+#. module: account_iso20022
+#: model:ir.model.fields,help:account_iso20022.field_account_payment__iso20022_uetr
+msgid "Unique end-to-end transaction reference"
+msgstr "Referencia única de transacción de extremo a extremo (UETR)"
+
+#. module: account_iso20022
+#. odoo-python
+#: code:addons/account_iso20022/models/account_batch_payment.py:0
+msgid "View Payments"
+msgstr "Ver pagos"
+
+#. module: account_iso20022
+#: model:ir.model.fields,help:account_iso20022.field_res_company__iso20022_initiating_party_name
+msgid ""
+"Will appear as the name of the party initiating the payment. Limited to 70 "
+"characters."
+msgstr ""
+"Aparecerá como el nombre de la parte que inicia el pago. Limitado a 70 "
+"caracteres"
+
+#. module: account_iso20022
+#: model:ir.model.fields,help:account_iso20022.field_res_config_settings__iso20022_orgid_issr
+msgid ""
+"Will appear in SEPA payments as the name of the party initiating the "
+"payment. Limited to 70 characters."
+msgstr ""
+"Aparecerá en los pagos SEPA como el nombre de la parte que inicia el pago. "
+"Limitado a 70 caracteres"
+
+#. module: account_iso20022
+#: model:ir.model.fields,field_description:account_iso20022.field_account_journal__sepa_pain_version
+#: model:ir.model.fields,field_description:account_iso20022.field_account_payment__sepa_pain_version
+msgid "XML Format"
+msgstr "Formato XML"
+
+#. module: account_iso20022
+#: model:ir.model.fields,field_description:account_iso20022.field_res_company__iso20022_initiating_party_name
+#: model:ir.model.fields,field_description:account_iso20022.field_res_config_settings__iso20022_initiating_party_name
+msgid "Your Company Name"
+msgstr "Nombre de la compañía"
+
+#. module: account_iso20022
+#: model:ir.model.fields.selection,name:account_iso20022.selection__account_journal__sepa_pain_version__pain_001_001_03
+msgid "pain.001.001.03"
+msgstr "pain.001.001.03"
+
+#. module: account_iso20022
+#: model:ir.model.fields.selection,name:account_iso20022.selection__account_journal__sepa_pain_version__pain_001_001_09
+msgid "pain.001.001.09"
+msgstr "pain.001.001.09"
+
+#~ msgid ""
+#~ "Some payments are missing a value for 'UETR', required for the SEPA "
+#~ "Pain.001.001.09 format."
+#~ msgstr ""
+#~ "A algunos pagos les falta el valor 'UETR' que es obligatorio para el "
+#~ "formato SEPA Pain.001.001.09."

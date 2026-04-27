@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="account_invoice_extract.Status">
+        <div t-if="state.status === 'error_status'" class="alert alert-danger text-center">
+            <t t-out="state.errorMessage" class="oe_inline" style="width:auto !important;"/>
+            <button t-att-disabled="state.retryLoading" type="object" t-on-click="retryDigitalization" class="btn btn-link">
+                <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                Retry
+            </button>
+        </div>
+        <div t-if="['waiting_extraction', 'extract_not_ready'].includes(state.status)" class="alert alert-info text-center">
+            All fields will be automatically populated by Artificial Intelligence, it might take 5 seconds.
+            <button t-att-disabled="state.checkStatusLoading" type="object" class="btn btn-link" t-on-click="checkOcrStatus">
+                <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                Refresh
+            </button>
+        </div>
+        <div t-if="state.status === 'not_enough_credit'" class="alert alert-danger text-center">
+            You don't have enough credit to extract data from your document.
+            <button t-att-disabled="state.retryLoading" type="object" t-on-click="buyCredits" class="btn btn-link">
+                <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                Buy credits
+            </button>
+            <button t-att-disabled="state.retryLoading" type="object" t-on-click="retryDigitalization" class="btn btn-link">
+                <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                Retry
+            </button>
+        </div>
+        <div t-if="state.status === 'waiting_validation'" class="alert alert-success text-center">
+            Document successfully parsed. Please refresh.
+            <button type="object" class="btn btn-link" t-on-click="refreshPage">
+                <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                Refresh
+            </button>
+        </div>
+    </t>
+</templates>

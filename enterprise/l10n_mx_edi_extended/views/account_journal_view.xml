@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record id="account_journal_form_inherit_l10n_mx_edi_extended" model="ir.ui.view">
+            <field name="name">account.journal.form.inherit.l10n_mx_edi_extended</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="l10n_mx_edi.account_journal_form_inherit_l10n_mx_edi"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name='l10n_mx_edi_payment_method_id' position="before">
+                        <field name="l10n_mx_address_issued_id"
+                               invisible="type not in ('sale', 'cash', 'bank') or country_code != 'MX'"
+                               context="{'default_type': 'invoice'}"/>
+                    </field>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</odoo>

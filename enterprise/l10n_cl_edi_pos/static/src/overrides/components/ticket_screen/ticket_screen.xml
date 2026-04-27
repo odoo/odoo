@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="l10n_cl_edi_pos.TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension">
+        <xpath expr="//InvoiceButton" position="attributes">
+            <attribute name="t-if">!pos.isChileanCompany()</attribute>
+        </xpath>
+    </t>
+</templates>

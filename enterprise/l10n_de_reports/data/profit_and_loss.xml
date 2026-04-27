@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="p_and_l_l10n_de" model="account.report">
+        <field name="name">Profit and Loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.de"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="p_and_l_l10n_de_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="skr_pl_line_total" model="account.report.line">
+                <field name="name">Net income (profit or loss)</field>
+                <field name="code">SKR_PL_TOTAL</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="skr_pl_line_total_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">SKR_TAXES.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="skr_pl_line_income" model="account.report.line">
+                        <field name="name">Operating revenues</field>
+                        <field name="code">SKR_INCOME</field>
+                        <field name="expression_ids">
+                            <record id="skr_pl_line_income_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SKR_1.balance + SKR_2.balance + SKR_3.balance + SKR_4.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="skr_pl_line_income_1" model="account.report.line">
+                                <field name="name">1. Sales</field>
+                                <field name="code">SKR_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_pl_line_income_1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_01')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_pl_line_income_2" model="account.report.line">
+                                <field name="name">2. Increase or decrease in finished goods inventories and work in progress</field>
+                                <field name="code">SKR_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_pl_line_income_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_02')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_pl_line_income_3" model="account.report.line">
+                                <field name="name">3. Other own work capitalized</field>
+                                <field name="code">SKR_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_pl_line_income_3_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_03')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_pl_line_income_4" model="account.report.line">
+                                <field name="name">4. Other operating income</field>
+                                <field name="code">SKR_4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_pl_line_income_4_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_04')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="skr_pl_line_expense_mat" model="account.report.line">
+                        <field name="name">Gross profit</field>
+                        <field name="code">SKR_EXPENSE_MAT</field>
+                        <field name="expression_ids">
+                            <record id="skr_pl_line_expense_mat_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SKR_INCOME.balance - SKR_5.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="skr_pl_line_expense_1" model="account.report.line">
+                                <field name="name">5. Cost of materials</field>
+                                <field name="code">SKR_5</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_pl_line_expense_1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_05')])]"/>
+                                        <field name="subformula">sum</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="skr_pl_line_expense" model="account.report.line">
+                        <field name="name">Operating result</field>
+                        <field name="code">SKR_EXPENSE</field>
+                        <field name="expression_ids">
+                            <record id="skr_pl_line_expense_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SKR_EXPENSE_MAT.balance - SKR_6.balance - SKR_7.balance - SKR_8.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="skr_pl_line_expense_2" model="account.report.line">
+                                <field name="name">6. Personnel expenses</field>
+                                <field name="code">SKR_6</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_pl_line_expense_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_06')])]"/>
+                                        <field name="subformula">sum</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_pl_line_expense_3" model="account.report.line">
+                                <field name="name">7. Depreciation</field>
+                                <field name="code">SKR_7</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_pl_line_expense_3_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_07')])]"/>
+                                        <field name="subformula">sum</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_pl_line_expense_4" model="account.report.line">
+                                <field name="name">8. Other operating expenses</field>
+                                <field name="code">SKR_8</field>
+                                <field name="expression_ids">
+                                    <record id="skr_pl_line_expense_4_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SKR_8_1.balance + SKR_8_2.balance + SKR_8_3.balance + SKR_8_4.balance + SKR_8_5.balance + SKR_8_6.balance + SKR_8_7.balance</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="skr_pl_line_expense_4_1" model="account.report.line">
+                                        <field name="name">Room costs</field>
+                                        <field name="code">SKR_8_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_pl_line_expense_4_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_08_1')])]"/>
+                                                <field name="subformula">sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_pl_line_expense_4_2" model="account.report.line">
+                                        <field name="name">Insurance, contributions and levies</field>
+                                        <field name="code">SKR_8_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_pl_line_expense_4_2_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_08_2')])]"/>
+                                                <field name="subformula">sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_pl_line_expense_4_3" model="account.report.line">
+                                        <field name="name">Repairs and maintenance</field>
+                                        <field name="code">SKR_8_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_pl_line_expense_4_3_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_08_3')])]"/>
+                                                <field name="subformula">sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_pl_line_expense_4_4" model="account.report.line">
+                                        <field name="name">Vehicle costs</field>
+                                        <field name="code">SKR_8_4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_pl_line_expense_4_4_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_08_4')])]"/>
+                                                <field name="subformula">sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_pl_line_expense_4_5" model="account.report.line">
+                                        <field name="name">Advertising and travel expenses</field>
+                                        <field name="code">SKR_8_5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_pl_line_expense_4_5_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_08_5')])]"/>
+                                                <field name="subformula">sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_pl_line_expense_4_6" model="account.report.line">
+                                        <field name="name">Cost of goods delivery</field>
+                                        <field name="code">SKR_8_6</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_pl_line_expense_4_6_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_08_6')])]"/>
+                                                <field name="subformula">sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="skr_pl_line_expense_4_7" model="account.report.line">
+                                        <field name="name">Miscellaneous operating expenses</field>
+                                        <field name="code">SKR_8_7</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="skr_pl_line_expense_4_7_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_08_7')])]"/>
+                                                <field name="subformula">sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="skr_pl_line_finance_operation" model="account.report.line">
+                        <field name="name">Financial result</field>
+                        <field name="code">SKR_FINANCE</field>
+                        <field name="expression_ids">
+                            <record id="skr_pl_line_finance_operation_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SKR_9.balance + SKR_10.balance + SKR_11.balance - SKR_12.balance - SKR_13.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="skr_pl_line_business_operation_1" model="account.report.line">
+                                <field name="name">9. Income from investments</field>
+                                <field name="code">SKR_9</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_pl_line_business_operation_1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_09')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_pl_line_business_operation_2" model="account.report.line">
+                                <field name="name">10. Income from other investments and long-term loans</field>
+                                <field name="code">SKR_10</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_pl_line_business_operation_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_10')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_pl_line_business_operation_3" model="account.report.line">
+                                <field name="name">11. Other interest and similar income</field>
+                                <field name="code">SKR_11</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_pl_line_business_operation_3_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_11')])]"/>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_pl_line_business_operation_4" model="account.report.line">
+                                <field name="name">12. Write-downs of financial assets and marketable securities</field>
+                                <field name="code">SKR_12</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_pl_line_business_operation_4_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_12')])]"/>
+                                        <field name="subformula">sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_pl_line_business_operation_5" model="account.report.line">
+                                <field name="name">13. Interest and similar expenses</field>
+                                <field name="code">SKR_13</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_pl_line_business_operation_5_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_13')])]"/>
+                                        <field name="subformula">sum</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="skr_pl_line_business_operation" model="account.report.line">
+                        <field name="name">Result from ordinary activities</field>
+                        <field name="code">SKR_BUSINESS</field>
+                        <field name="expression_ids">
+                            <record id="skr_pl_line_business_operation_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SKR_EXPENSE.balance + SKR_FINANCE.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="skr_pl_line_taxes" model="account.report.line">
+                        <field name="name">Earnings after taxes</field>
+                        <field name="code">SKR_TAXES</field>
+                        <field name="expression_ids">
+                            <record id="skr_pl_line_taxes_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SKR_BUSINESS.balance - SKR_14.balance - SKR_15.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="skr_pl_line_taxes_1" model="account.report.line">
+                                <field name="name">14. Taxes on income and earnings</field>
+                                <field name="code">SKR_14</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_pl_line_taxes_1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_14')])]"/>
+                                        <field name="subformula">sum</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="skr_pl_line_taxes_2" model="account.report.line">
+                                <field name="name">15. Other taxes</field>
+                                <field name="code">SKR_15</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="skr_pl_line_taxes_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.tag_ids', 'in', [ref('l10n_de.tag_de_pl_15')])]"/>
+                                        <field name="subformula">sum</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_move_form_vat_return" model="ir.ui.view">
+        <field name="name">account.move.form.vat.return</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                <field name="tax_closing_report_id" invisible="1"/>
+
+                <div class="alert alert-info text-center" invisible="not tax_closing_report_id or state != 'draft'" role="alert">
+                    Proposition of tax closing journal entry.
+                    <button class="btn btn-link p-0 align-baseline" string="-> Refresh" name="refresh_tax_entry" type="object" groups="account.group_account_invoice"/>
+                </div>
+                <field name="tax_closing_alert" invisible="1"/>
+                <div class="alert alert-info text-center" invisible="not tax_closing_alert" role="alert">
+                    This tax closing entry is posted, but the tax lock date is earlier than the covered period's last day. You might need to reset it to draft and refresh its content, in case other entries using taxes have been posted in the meantime.
+                </div>
+            </xpath>
+
+            <xpath expr="//div[hasclass('oe_button_box')]/button" position="before">
+                <button
+                    name="action_open_tax_report"
+                    class="oe_stat_button"
+                    icon="fa-book"
+                    type="object"
+                    string="Tax Report"
+                    invisible="not tax_closing_report_id"/>
+            </xpath>
+
+            <xpath expr="//field[@name='line_ids']//list//field[@name='tax_ids']" position="attributes">
+                <attribute name="column_invisible">parent.tax_closing_report_id</attribute>
+            </xpath>
+            <xpath expr="//field[@name='line_ids']//list//field[@name='tax_tag_ids']" position="attributes">
+                <attribute name="column_invisible">parent.tax_closing_report_id</attribute>
+            </xpath>
+            <xpath expr="//field[@name='line_ids']//form//field[@name='tax_ids']" position="attributes">
+                <attribute name="invisible">parent.tax_closing_report_id</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

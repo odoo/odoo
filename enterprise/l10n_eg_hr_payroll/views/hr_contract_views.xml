@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">View Contract Form</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <group name="salary" position="inside">
+                <field name="country_code" invisible="1"/>
+                <label for="l10n_eg_housing_allowance" invisible="country_code != 'EG'" string="Housing Allowance"/>
+                <div class="o_row mw-50" name="l10n_eg_housing_allowance" invisible="country_code != 'EG'" >
+                    <field name="l10n_eg_housing_allowance" class="oe_inline o_hr_narrow_field" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <label for="l10n_eg_transportation_allowance" invisible="country_code != 'EG'" string="Transportation Allowance"/>
+                <div class="o_row mw-50" name="l10n_eg_transportation_allowance" invisible="country_code != 'EG'">
+                    <field name="l10n_eg_transportation_allowance" class="oe_inline o_hr_narrow_field" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <label for="l10n_eg_other_allowances" invisible="country_code != 'EG'" string="Other Allowances"/>
+                <div class="o_row mw-50" name="l10n_eg_other_allowances" invisible="country_code != 'EG'">
+                    <field name="l10n_eg_other_allowances" class="oe_inline o_hr_narrow_field" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+            </group>
+            <group name="yearly_benefits" position="after">
+                <group name="end_of_service_benefit" string="End Of Service benefit" invisible="country_code != 'EG'">
+                    <field name="l10n_eg_number_of_days"/>
+                    <field name="l10n_eg_total_number_of_days"/>
+                    <field name="l10n_eg_total_eos_benefit" invisible="active_employee"/>
+                </group>
+                <group name="social_insurance_reference" string="Social Insurance Reference" invisible="country_code != 'EG'">
+                    <field name="l10n_eg_social_insurance_reference"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

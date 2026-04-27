@@ -1,0 +1,472 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* marketing_automation_whatsapp
+#
+# Translators:
+# Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:47+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_activity_summary_template_whatsapp
+msgid "\" <strong>doesn't get opened</strong>,"
+msgstr "\" <strong>لا يتم فتحها</strong>، "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_activity_summary_template_whatsapp
+msgid "\" <strong>doesn't get replied</strong>,"
+msgstr "\" <strong>لا يتم الرد عليها</strong>، "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_activity_summary_template_whatsapp
+msgid "\" <strong>gets bounced</strong>,"
+msgstr "\" <strong>ترتد</strong>، "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields,field_description:marketing_automation_whatsapp.field_marketing_campaign__whatsapp_template_count
+msgid "# Whatsapp"
+msgstr "# Whatsapp"
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_campaign_view_form
+msgid "<i class=\"fa fa-exclamation-circle\"/> Bounced after"
+msgstr "<i class=\"fa fa-exclamation-circle\"/> ارتدت بعد "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_campaign_view_form
+msgid "<i class=\"fa fa-exclamation-circle\"/> Clicked within"
+msgstr "<i class=\"fa fa-exclamation-circle\"/> تم الضغط عليها خلال "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_campaign_view_form
+msgid "<i class=\"fa fa-exclamation-circle\"/> Not Clicked within"
+msgstr "<i class=\"fa fa-exclamation-circle\"/> لم يتم الضغط عليها خلال "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_campaign_view_form
+msgid "<i class=\"fa fa-exclamation-circle\"/> Not Opened after"
+msgstr "<i class=\"fa fa-exclamation-circle\"/> لم يتم فتحها بعد "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_campaign_view_form
+msgid "<i class=\"fa fa-exclamation-circle\"/> Not Replied within"
+msgstr "<i class=\"fa fa-exclamation-circle\"/> لم يتم الرد خلال "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_campaign_view_form
+msgid "<i class=\"fa fa-exclamation-circle\"/> Opened after"
+msgstr "<i class=\"fa fa-exclamation-circle\"/> تم فتحها بعد "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_campaign_view_form
+msgid "<i class=\"fa fa-exclamation-circle\"/> Replied within"
+msgstr "<i class=\"fa fa-exclamation-circle\"/> قام بالرد خلال "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_campaign_view_form
+msgid "<i class=\"fa fa-pie-chart\"/> Details"
+msgstr "<i class=\"fa fa-pie-chart\"/> التفاصيل "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_campaign_view_form
+msgid ""
+"<i data-trigger-type=\"whatsapp_read\" class=\"fa fa-check-circle "
+"o_ma_text_read o_add_child_activity text-info\" title=\"Opened\" "
+"role=\"img\" aria-label=\"Opened\"/>\n"
+"                <i data-trigger-type=\"whatsapp_not_read\" class=\"fa fa-"
+"check-circle o_ma_text_read o_add_child_activity text-danger\" title=\"Not "
+"Opened\" role=\"img\" aria-label=\"Not Opened\"/>\n"
+"                <i data-trigger-type=\"whatsapp_replied\" class=\"fa fa-"
+"reply o_ma_text_replied o_add_child_activity text-success\" "
+"title=\"replied\" role=\"img\" aria-label=\"replied\"/>\n"
+"                <i data-trigger-type=\"whatsapp_not_replied\" class=\"fa fa-"
+"reply o_ma_text_replied o_add_child_activity text-danger\" title=\"not "
+"replied\" role=\"img\" aria-label=\"not replied\"/>\n"
+"                <i data-trigger-type=\"whatsapp_click\" class=\"fa fa-hand-"
+"pointer-o o_ma_text_processed o_add_child_activity text-success\" "
+"title=\"Clicked\" role=\"img\" aria-label=\"Clicked\"/>\n"
+"                <i data-trigger-type=\"whatsapp_not_click\" class=\"fa fa-"
+"hand-pointer-o o_ma_text_rejected o_add_child_activity text-danger\" "
+"title=\"Not Clicked\" role=\"img\" aria-label=\"Not Clicked\"/>\n"
+"                <i data-trigger-type=\"whatsapp_bounced\" class=\"fa fa-"
+"exclamation-circle o_ma_text_error o_add_child_activity text-danger\" "
+"title=\"Bounced\" role=\"img\" aria-label=\"Error\"/>"
+msgstr ""
+"<i data-trigger-type=\"whatsapp_read\" class=\"fa fa-check-circle "
+"o_ma_text_read o_add_child_activity text-info\" title=\"تم فتحها \" "
+"role=\"img\" aria-label=\"Opened\"/>\n"
+"                <i data-trigger-type=\"whatsapp_not_read\" class=\"fa fa-"
+"check-circle o_ma_text_read o_add_child_activity text-danger\" title=\"لم "
+"يتم فتحها \" role=\"img\" aria-label=\"Not Opened\"/>\n"
+"                <i data-trigger-type=\"whatsapp_replied\" class=\"fa fa-"
+"reply o_ma_text_replied o_add_child_activity text-success\" title=\"تم الرد "
+"عليها \" role=\"img\" aria-label=\"replied\"/>\n"
+"                <i data-trigger-type=\"whatsapp_not_replied\" class=\"fa fa-"
+"reply o_ma_text_replied o_add_child_activity text-danger\" title=\"لم يتم "
+"الرد عليها \" role=\"img\" aria-label=\"not replied\"/>\n"
+"                <i data-trigger-type=\"whatsapp_click\" class=\"fa fa-hand-"
+"pointer-o o_ma_text_processed o_add_child_activity text-success\" title=\"تم "
+"الضغط عليها \" role=\"img\" aria-label=\"Clicked\"/>\n"
+"                <i data-trigger-type=\"whatsapp_not_click\" class=\"fa fa-"
+"hand-pointer-o o_ma_text_rejected o_add_child_activity text-danger\" "
+"title=\"لم يتم الضغط عليها \" role=\"img\" aria-label=\"Not Clicked\"/>\n"
+"                <i data-trigger-type=\"whatsapp_bounced\" class=\"fa fa-"
+"exclamation-circle o_ma_text_error o_add_child_activity text-danger\" "
+"title=\"ارتدت \" role=\"img\" aria-label=\"Error\"/>"
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_participant_view_form
+msgid ""
+"<span class=\"text-primary\">\n"
+"                        <i class=\"fa fa-check-circle\"/> Not opened yet\n"
+"                    </span>"
+msgstr ""
+"<span class=\"text-primary\">\n"
+"                        <i class=\"fa fa-check-circle\"/> لم يتم فتحها بعد\n"
+"                    </span>"
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_participant_view_form
+msgid ""
+"<span class=\"text-primary\">\n"
+"                        <i class=\"fa fa-exclamation-circle\"/> Didn't "
+"bounce yet\n"
+"                    </span>"
+msgstr ""
+"<span class=\"text-primary\">\n"
+"                        <i class=\"fa fa-exclamation-circle\"/> لم ترتد بعد\n"
+"                    </span>"
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_participant_view_form
+msgid ""
+"<span class=\"text-primary\">\n"
+"                        <i class=\"fa fa-hand-pointer-o\"/> Not clicked yet\n"
+"                    </span>"
+msgstr ""
+"<span class=\"text-primary\">\n"
+"                        <i class=\"fa fa-hand-pointer-o\"/> لم يتم الضغط "
+"عليها بعد\n"
+"                    </span>"
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_participant_view_form
+msgid ""
+"<span class=\"text-primary\">\n"
+"                        <i class=\"fa fa-reply\"/> Not replied\n"
+"                    </span>"
+msgstr ""
+"<span class=\"text-primary\">\n"
+"                        <i class=\"fa fa-reply\"/> لم يتم الرد\n"
+"                    </span> "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields,field_description:marketing_automation_whatsapp.field_marketing_activity__activity_type
+msgid "Activity Type"
+msgstr "نوع النشاط"
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_campaign_view_form
+msgid "Clicked"
+msgstr "تم النقر عليها "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields,field_description:marketing_automation_whatsapp.field_whatsapp_message__links_click_datetime
+msgid "Clicked On"
+msgstr "تم النقر عليها "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model,name:marketing_automation_whatsapp.model_discuss_channel
+msgid "Discussion Channel"
+msgstr "قناة المناقشة"
+
+#. module: marketing_automation_whatsapp
+#. odoo-python
+#: code:addons/marketing_automation_whatsapp/models/marketing_activity.py:0
+msgid "Exception in Whatsapp Marketing: %s"
+msgstr "الاستثناء في التسويق عبر Whatsapp: %s "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model,name:marketing_automation_whatsapp.model_link_tracker_click
+msgid "Link Tracker Click"
+msgstr "نقرة متتبع الرابط"
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_activity_view_form
+msgid ""
+"Make sure you select url tracking under buttons option, otherwise those "
+"links won't be tracked"
+msgstr ""
+"احرص على تحديد خاصية تتبع عنوان url ضمن خيار الأزرار، وإلا فلن يتم تتبع هذه "
+"الروابط "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model,name:marketing_automation_whatsapp.model_marketing_activity
+msgid "Marketing Activity"
+msgstr "نشاط تسويقي"
+
+#. module: marketing_automation_whatsapp
+#: model:ir.actions.act_window,name:marketing_automation_whatsapp.whatsapp_template_action_marketing_automation
+msgid "Marketing Automation Whatsapp"
+msgstr "أتمتة السويق عبر رسائل Whatsapp "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model,name:marketing_automation_whatsapp.model_marketing_campaign
+msgid "Marketing Campaign"
+msgstr "حملة التسويق"
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields,field_description:marketing_automation_whatsapp.field_marketing_trace__whatsapp_message_id
+msgid "Marketing Template"
+msgstr "قالب التسويق "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model,name:marketing_automation_whatsapp.model_marketing_trace
+#: model:ir.model.fields,field_description:marketing_automation_whatsapp.field_whatsapp_message__marketing_trace_ids
+msgid "Marketing Trace"
+msgstr "أثر التسويق"
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_campaign_view_form
+msgid "Message Clicked"
+msgstr "تم الضغط على الرسالة "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_campaign_view_form
+msgid "Message Opened"
+msgstr "تم فتح الرسالة "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_campaign_view_form
+msgid "Message Replied"
+msgstr "تم الرد على الرسالة "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_campaign_view_form
+msgid "Message Sent"
+msgstr "تم إرسال الرسالة "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_campaign_view_form
+msgid "Opened"
+msgstr "مفتوحة"
+
+#. module: marketing_automation_whatsapp
+#. odoo-python
+#: code:addons/marketing_automation_whatsapp/models/marketing_trace.py:0
+msgid "Parent Whatsapp message got opened"
+msgstr "تم فتح رسالة Whatsapp الرئيسي "
+
+#. module: marketing_automation_whatsapp
+#. odoo-python
+#: code:addons/marketing_automation_whatsapp/models/marketing_trace.py:0
+msgid "Parent Whatsapp message was clicked"
+msgstr "تم الضغط على رسالة Whatsapp الرئيسي "
+
+#. module: marketing_automation_whatsapp
+#. odoo-python
+#: code:addons/marketing_automation_whatsapp/models/marketing_trace.py:0
+msgid "Parent Whatsapp was replied to"
+msgstr "تم الرد على رسالة Whatsapp الرئيسي "
+
+#. module: marketing_automation_whatsapp
+#. odoo-python
+#: code:addons/marketing_automation_whatsapp/models/marketing_trace.py:0
+msgid "Parent whatsapp was bounced"
+msgstr "ارتدت رسائل WhatsApp الرئيسي "
+
+#. module: marketing_automation_whatsapp
+#. odoo-python
+#: code:addons/marketing_automation_whatsapp/models/marketing_activity.py:0
+msgid "Participants of %(name)s (%(filter)s)"
+msgstr "مشاركي %(name)s (%(filter)s) "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_activity_view_form
+msgid "Pick a Template..."
+msgstr "اختر قالباً..."
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_campaign_view_form
+msgid "Replied"
+msgstr "تم الرد "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_campaign_view_form
+msgid "Sent"
+msgstr "تم الإرسال"
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields,help:marketing_automation_whatsapp.field_whatsapp_message__links_click_datetime
+msgid "Stores last click datetime in case of multi clicks."
+msgstr "يقوم بتخزين تاريخ ووقت آخر نقرة في حال كانت هناك نقرات متعددة. "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields.selection,name:marketing_automation_whatsapp.selection__whatsapp_template_button__url_type__tracked
+msgid "Tracked"
+msgstr "متتبع "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields,field_description:marketing_automation_whatsapp.field_marketing_activity__trigger_category
+msgid "Trigger Category"
+msgstr "فئة المشغل "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields,field_description:marketing_automation_whatsapp.field_marketing_activity__trigger_type
+msgid "Trigger Type"
+msgstr "نوع المشغل "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields,field_description:marketing_automation_whatsapp.field_whatsapp_template_button__url_type
+msgid "Url Type"
+msgstr "نوع رابط URL "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields.selection,name:marketing_automation_whatsapp.selection__marketing_activity__trigger_category__whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_participant_view_form
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model,name:marketing_automation_whatsapp.model_whatsapp_message
+msgid "WhatsApp Messages"
+msgstr "رسائل Whatsapp "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model,name:marketing_automation_whatsapp.model_whatsapp_template
+msgid "WhatsApp Template"
+msgstr "قالب Whatsapp "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model,name:marketing_automation_whatsapp.model_whatsapp_template_button
+msgid "WhatsApp Template Button"
+msgstr "زر قالب Whatsapp "
+
+#. module: marketing_automation_whatsapp
+#. odoo-python
+#: code:addons/marketing_automation_whatsapp/models/marketing_activity.py:0
+#: code:addons/marketing_automation_whatsapp/models/whatsapp_message.py:0
+msgid "WhatsApp canceled"
+msgstr "تم إلغاء WhatsApp "
+
+#. module: marketing_automation_whatsapp
+#. odoo-python
+#: code:addons/marketing_automation_whatsapp/models/marketing_activity.py:0
+msgid "WhatsApp failed"
+msgstr "فشل تطبيق WhatsApp "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields,field_description:marketing_automation_whatsapp.field_marketing_activity__whatsapp_error
+msgid "Whatsapp Error"
+msgstr "حدث خطأ في Whatsapp "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields,field_description:marketing_automation_whatsapp.field_link_tracker_click__whatsapp_message_id
+#: model:ir.model.fields.selection,name:marketing_automation_whatsapp.selection__marketing_activity__activity_type__whatsapp
+msgid "Whatsapp Message"
+msgstr "رسالة Whatsapp "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields,field_description:marketing_automation_whatsapp.field_marketing_activity__whatsapp_template_id
+msgid "Whatsapp Template"
+msgstr "قالب Whatsapp "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields.selection,name:marketing_automation_whatsapp.selection__marketing_activity__trigger_type__whatsapp_click
+msgid "Whatsapp: click"
+msgstr "Whatsapp: تم الضغط على الرسالة "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields.selection,name:marketing_automation_whatsapp.selection__marketing_activity__trigger_type__whatsapp_bounced
+msgid "Whatsapp: message bounced"
+msgstr "Whatsapp: ارتدت الرسالة "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields.selection,name:marketing_automation_whatsapp.selection__marketing_activity__trigger_type__whatsapp_not_click
+msgid "Whatsapp: not click"
+msgstr "Whatsapp: لم يتم الضغط "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields.selection,name:marketing_automation_whatsapp.selection__marketing_activity__trigger_type__whatsapp_not_read
+msgid "Whatsapp: not opened"
+msgstr "Whatsapp: لم يتم فتح الرسالة "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields.selection,name:marketing_automation_whatsapp.selection__marketing_activity__trigger_type__whatsapp_not_replied
+msgid "Whatsapp: not replied"
+msgstr "Whatsapp: لم يتم الرد على الرسالة "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields.selection,name:marketing_automation_whatsapp.selection__marketing_activity__trigger_type__whatsapp_read
+msgid "Whatsapp: opened"
+msgstr "Whatsapp: تم فتح الرسالة "
+
+#. module: marketing_automation_whatsapp
+#: model:ir.model.fields.selection,name:marketing_automation_whatsapp.selection__marketing_activity__trigger_type__whatsapp_replied
+msgid "Whatsapp: replied"
+msgstr "Whatsapp: تم الرد على الرسالة "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_activity_summary_template_whatsapp
+msgid "after the <strong>Whatsapp message</strong> sent by the Activity \""
+msgstr "بعد إرسال <strong>الرسالة النصية القصيرة</strong> من قِبَل النشاط \" "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_activity_summary_template_whatsapp
+msgid ""
+"after the Participant <strong>clicks</strong><br/>on any link included in "
+"the <strong>Whatsapp message</strong> sent by the Activity \""
+msgstr ""
+"بعد قيام المشترِك <strong>بالضغط</strong><br/> على أي رابط تم تضميته في "
+"<strong>رسالة Whatsapp</strong> المرسَلة بواسطة النشاط\" "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_activity_summary_template_whatsapp
+msgid ""
+"after the Participant <strong>opens the Whatsapp message</strong> sent by "
+"the Activity \""
+msgstr ""
+"بعد قيام المشترك <strong>بفتح رسالة Whatsapp</strong> التي أرسلها النشاط \""
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_activity_summary_template_whatsapp
+msgid ""
+"after the Participant <strong>replies to the Whatsapp message</strong> sent "
+"by the Activity \""
+msgstr ""
+"بعد قيام المشترك <strong>بالرد على رسالة Whatsapp</strong> التي أرسلها "
+"النشاط \""
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_activity_summary_template_whatsapp
+msgid "doesn't get clicked,"
+msgstr "لم يتم الضغط على الرسالة، "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_activity_summary_template_whatsapp
+msgid "if <strong>Whatsapp message</strong> sent by the Activity \""
+msgstr "إذا تم إرسال <strong>الرسالة النصية القصيرة</strong> من قِبَل النشاط \" "
+
+#. module: marketing_automation_whatsapp
+#: model_terms:ir.ui.view,arch_db:marketing_automation_whatsapp.marketing_activity_summary_template_whatsapp
+msgid ""
+"if no link included in the <strong>Whatsapp message</strong> sent by the "
+"Activity \""
+msgstr ""
+"إذا لم يكن هناك رابط في <strong>رسالة Whatsapp</strong> التي تم إرسالها "
+"بواسطة النشاط \" "

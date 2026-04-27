@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.dhl.com" xmlns:dhl="http://www.dhl.com/datatypes_global" targetNamespace="http://www.dhl.com" elementFormDefault="unqualified">
+	<xsd:import namespace="http://www.dhl.com/datatypes_global" schemaLocation="datatypes_global_v10.xsd"/>
+	<xsd:element name="ShipmentResponse">
+		<xsd:annotation>
+			<xsd:documentation>Shipment Validation Global response root element</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="Response" type="dhl:Response">
+					<xsd:annotation>
+						<xsd:documentation>The element contains the header information for the message. It is present in both the request and response XML message. The response element contains a complex datatype ServiceHeader</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="RegionCode" type="dhl:RegionCode">
+					<xsd:annotation>
+						<xsd:documentation>The RegionCode element indicates the shipment transaction originated from which region</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Note" type="dhl:Note">
+					<xsd:annotation>
+						<xsd:documentation>The Note element is a complex element which consists of two child elements “ActionNote” and “Condition” element. The Note element is returned by the backend service while processing the Shipment validation request. The element is a mandatory element</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="AirwayBillNumber" type="dhl:AWBNumber">
+					<xsd:annotation>
+						<xsd:documentation>The AirwayBillNumber element contains the DHL defines 10-digit waybill number. It is a mandatory field in the shipment validation response. If shipment validation request is successful, this is the actual waybill number assigned to the shipment</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="DHLInvoiceLanguageCode" type="dhl:InvLanguageCode" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The DHLInvoiceLanguageCode identifies the Invoice Language code. It is a optional field</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="DHLInvoiceType" type="dhl:InvoiceType" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The DHLInvoiceType element identifies the type of invoice. It is a optional field</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="BillingCode" type="dhl:BillCode" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The BillingCode element identifies how the shipment is billed. It is a optional field</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="CurrencyCode" type="dhl:CurrencyCode">
+					<xsd:annotation>
+						<xsd:documentation>The CurrencyCode element identifies the shipment is billed in which currency</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="CourierMessage" type="dhl:CourierMsg" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The CourierMessage element contains the courier message. It is an optional field</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="DestinationServiceArea" type="dhl:DestinationServiceArea">
+					<xsd:annotation>
+						<xsd:documentation>The DestinationServiceArea element contains the information of the shipment’s destination along with the facility code and the inbound sort code information</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="OriginServiceArea" type="dhl:OriginServiceArea">
+					<xsd:annotation>
+						<xsd:documentation>The OriginServiceArea element contains the information of the shipment’s origin along with the outbound sort code info</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="PackageCharge" type="dhl:Money" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The PackageCharge element contains the package charge of the shipment. It is an optional field</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Rated" type="dhl:YesNo">
+					<xsd:annotation>
+						<xsd:documentation>The Rated element indicates whether shipment is rated or not. It is a mandatory field. Its value is either Y (Yes) or N (No). “N” indicates that no rates could be retrieved for the given search criteria. Value will be “N” for third party or receiver payment type. “N” value when shipper is payer indicates that rates could not be obtained because of system configuration or availability reasons</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ShippingCharge" type="dhl:Money" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The ShipmentCharge element contains the shipment charge for the shipment. It is an optional field. This field will be filled if rated is ‘Y’</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ShipmentCharges" type="dhl:ShipmentCharges" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The shipmentcharges element consist of shipment details shipment charges. This element is optional</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="WeightUnit">
+					<xsd:annotation>
+						<xsd:documentation>The WeightUnit element contains the unit by which the shipment weight is measured. It is a mandatory field</xsd:documentation>
+					</xsd:annotation>
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:minLength value="0"/>
+							<xsd:maxLength value="1"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="ChargeableWeight" type="dhl:Weight" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The ChargeableWeight element contains the weight that is used to calculate shipment charge. This is an optional field</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="DimensionalWeight" type="dhl:Weight" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The DimensionalWeight element contains the dimensional weight of the shipment. It is an optional field</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ReadyByTime" type="dhl:TimeHM" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The ReadyByTime element indicates the ready by time of the shipment</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="PickupCharge" type="dhl:Money" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The PickupCharge element indicates pick up charges of the shipment</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="CallInTime" type="dhl:TimeHM" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The CallInTime indicates the Callin time of the shipment</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="DaysAdvanceNotice" type="dhl:AdvanceDaysNotice" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The DaysAdvanceNotice element indicates the advance days notice required for the shipment</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ConversionRate" type="dhl:Money" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The ConversionRate indicates the conversion rate of the shipment if any</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="CountryCode" type="dhl:CountryCode">
+					<xsd:annotation>
+						<xsd:documentation>Its value should be valid DHL Country/Region code. This element must be declared once in the response element. Please refer to the Reference Data (DHL Country/Region) for Country/Region codes</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Barcodes">
+					<xsd:annotation>
+						<xsd:documentation>The Barcodes element contains the Barcode images for construction of Waybill and DHL Routing barcode. It is a mandatory field</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="AWBBarCode" type="dhl:BarCode">
+								<xsd:annotation>
+									<xsd:documentation>Air Waybill Barcode</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="OriginDestnBarcode" type="dhl:BarCode">
+								<xsd:annotation>
+									<xsd:documentation>Origin Destination Barcode</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="ClientIDBarCode" type="dhl:BarCode" minOccurs="0">
+								<xsd:annotation>
+									<xsd:documentation>Client ID Barcode</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="BarCode2D" type="dhl:BarCode" minOccurs="0" maxOccurs="1">
+								<xsd:annotation>
+									<xsd:documentation>Barcode 2D</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="DHLRoutingBarCode" type="dhl:BarCode" minOccurs="0" maxOccurs="1">
+								<xsd:annotation>
+									<xsd:documentation>DHL Routing Barcode</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="Piece" type="xsd:positiveInteger" minOccurs="0"> <!-- Manually added minOccurs="0" - GOA -->
+					<xsd:annotation>
+						<xsd:documentation>No of pieces contained in shipment</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Contents" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>The contents element contains the shipment content description. It is a mandatory field</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Reference" type="dhl:Reference" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>This element identifies the reference information. It is an optional field</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Consignee" type="dhl:Consignee">
+					<xsd:annotation>
+						<xsd:documentation>Consignee element contains the details of the Consignee (Receiver). This element should be declared once in the shipment validation response message</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Shipper" type="dhl:Shipper">
+					<xsd:annotation>
+						<xsd:documentation>Shipper element contains the details of the Shipper. This element should be declared once in the Book Shipment validation Response message</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="AccountNumber" type="dhl:AccountNumber" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>This element contains the DHL account number. It is a mandatory field</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="CustomerID" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>This element contains the Customer ID</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ShipmentDate" type="dhl:Date">
+					<xsd:annotation>
+						<xsd:documentation>This element contains the date of the shipment. It is a mandatory field</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="GlobalProductCode" type="dhl:GlobalProductCode">
+					<xsd:annotation>
+						<xsd:documentation>The GlobalProductCode element contains the DHL Global product code for the shipment</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="CustData" type="dhl:CustData" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The CustData element consists of customer data that required to be printed on shipment level in GLS transport label CI template</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="SpecialService" type="dhl:SpecialService" minOccurs="0" maxOccurs="5">
+					<xsd:annotation>
+						<xsd:documentation>The SpecialService Element provides various special services for shipment. It is an optional field</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Billing" type="dhl:Billing" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The Billing element contains the billing information of the shipment</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Dutiable" type="dhl:Dutiable" minOccurs="0"> <!-- Manually added minOccurs="0" - GOA -->
+					<xsd:annotation>
+						<xsd:documentation>For non-domestic shipments, The Dutiable element provides informations which defines the types of duties to be levied</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ExportDeclaration" type="dhl:ExportDeclaration" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>For non -domestic shipments, the ExportDeclaration element provides information which is used for export declarartion documents.It is a mandatory field</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="NewShipper" type="dhl:YesNo" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The NewShipper element indicates whether shipper is new or not. The valid values are Y (Yes) and N (No)</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="DHLRoutingCode" type="dhl:DHLRoutingCode" minOccurs="0" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>The DHL ISO Routing Barcode in plain text format. It contains destination Country/Region, destination zip code, transport products and associated product features</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="DHLRoutingDataId" type="dhl:DHLRoutingCode" minOccurs="0" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>The DHL Routing barcode contains the data Identifier.The available values are  2L, 403</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ProductContentCode" type="xsd:string" minOccurs="0" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>The Product content code indicates the DHL’s internal code of the product</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ProductShortName" type="xsd:string" minOccurs="0" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>The product short name indicates the type of the product name which the underlying transport service has been sold to the cusomter</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="InternalServiceCode" type="dhl:InternalServiceCode" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>The internal service code contains the DHL’s product handling relevant services or features</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="DeliveryDateCode" type="xsd:string" minOccurs="0" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>The delivery date code contains the date of delivery of the shipment</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="DeliveryTimeCode" type="xsd:string" minOccurs="0" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>The delivery time code contains the time of delivery of the shipment</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Pieces" type="dhl:ShipValResponsePieces" minOccurs="0" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>The Pieces element contains the License Plate information and barcode along with the piece details</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="PLTStatus" type="dhl:PLTStatus" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The PLTStatus element indicates the shipper account’s PLT subscription status. The valid values are A, D and S.
+							For PLTStatus field value of 'A' – Active, it signifies it is a valid PLT registered customer and allowed to proceed for PLT shipment process.
+							For PLTStatus field value of 'D' – De-registered, XML-PI Shipment Validation service will stop the shipment processing and returned an error to the XML-PI client.
+							For PLTStatus field value of 'S' – Suspended, XML-PI Shipment Validation service will stop the shipment processing and return an error message to the XML-PI client.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="QtdSInAdCur" type="dhl:QtdSInAdCur" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>The QtdSInAdCur element contains the multiple currency billing details returned for different billing role of shipment charges if available in DCT tariff. Note: For PLT shipment, it will be interface with DCT getQuote interface for tariff. For EU regular shipment, if it is switched to interface with DCT getQuote is configurable in XML Services application backend</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="LabelImage" type="dhl:LabelImage" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>The LabelImage element contains the GLS’s generated Global and Archive label image output if it is required by user via LabelImageFormat element in request XML</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ODDURLLink" type="xsd:string" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The ODDURLLink element contains the URL for the On Demand Delivery (ODD) page. This element is optional</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="DGs" type="dhl:DGs" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The DGs element defines the details of the Dangerous Goods items that included in shipment</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Label" type="dhl:Label" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>The Label element defines the required label template used and its customer’s barcode type, barcode code and barcode text if available in client’s request</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Importer" type="dhl:Importer" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Party that makes (or on whose behalf an agent or broker makes) the import declaration, and who is liable for the payment of duties (if any) on the imported goods. Normally, this party is named either as the consignee in the shipping documents and/or as the buyer in the exporter's invoice.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Exporter" type="dhl:Exporter" minOccurs="0">			
+					<xsd:annotation>
+						<xsd:documentation>The party who is responsible for the legality of the shipment under applicable export control laws, which includes determining the proper export classification and authorization needed to ship the Items.The Exporter is usually the party who controls the transaction, acts as declarant in its own name and provides the corresponding instructions for the export, regardless of who files the export declaration. The Exporter may or may not be the Shipper.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Seller" type="dhl:Seller" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>The party that makes, offers or contracts to make a sale to an actual or potential buyer. Also called vendor.</xsd:documentation>
+				</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Payer" type="dhl:Payer" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>The party responsible for the full or partial payment of associated charges/cost. There can be many payers related to the different elements linked to a Shipment (e.g Services, fiscal charges).</xsd:documentation>
+				</xsd:annotation>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

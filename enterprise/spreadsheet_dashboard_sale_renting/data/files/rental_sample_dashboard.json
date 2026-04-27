@@ -1,0 +1,701 @@
+{
+    "version": 21,
+    "sheets": [
+        {
+            "id": "sheet1",
+            "name": "Dashboard",
+            "colNumber": 7,
+            "rowNumber": 49,
+            "rows": {
+                "6": {
+                    "size": 40
+                },
+                "22": {
+                    "size": 40
+                },
+                "23": {
+                    "size": 40
+                },
+                "24": {
+                    "size": 30
+                },
+                "25": {
+                    "size": 30
+                },
+                "26": {
+                    "size": 30
+                },
+                "27": {
+                    "size": 30
+                },
+                "28": {
+                    "size": 30
+                },
+                "29": {
+                    "size": 30
+                },
+                "30": {
+                    "size": 30
+                },
+                "31": {
+                    "size": 30
+                },
+                "32": {
+                    "size": 30
+                },
+                "33": {
+                    "size": 30
+                },
+                "35": {
+                    "size": 40
+                },
+                "36": {
+                    "size": 40
+                },
+                "37": {
+                    "size": 30
+                },
+                "38": {
+                    "size": 30
+                },
+                "39": {
+                    "size": 30
+                },
+                "40": {
+                    "size": 30
+                },
+                "41": {
+                    "size": 30
+                },
+                "42": {
+                    "size": 30
+                },
+                "43": {
+                    "size": 30
+                },
+                "44": {
+                    "size": 30
+                },
+                "45": {
+                    "size": 30
+                },
+                "46": {
+                    "size": 30
+                }
+            },
+            "cols": {
+                "0": {
+                    "size": 275
+                },
+                "1": {
+                    "size": 100
+                },
+                "2": {
+                    "size": 100
+                },
+                "3": {
+                    "size": 50
+                },
+                "4": {
+                    "size": 275
+                },
+                "5": {
+                    "size": 100
+                },
+                "6": {
+                    "size": 100
+                }
+            },
+            "merges": [],
+            "cells": {
+                "A7": {
+                    "content": "[Daily Rentals](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"state\",\"in\",[\"sale\",\"done\"]]],\"context\":{\"group_by\":[],\"graph_measure\":\"quantity\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"date:day\"]},\"modelName\":\"sale.rental.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Rental Analysis\"})"
+                },
+                "A23": {
+                    "content": "[Top Product Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"state\",\"in\",[\"sale\",\"done\"]],[\"categ_id\",\"!=\",false]],\"context\":{\"group_by\":[\"categ_id\"],\"pivot_measures\":[\"quantity\",\"price\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"categ_id\"]},\"modelName\":\"sale.rental.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Product Categories\"})"
+                },
+                "A24": {
+                    "content": "=_t(\"Category\")"
+                },
+                "A36": {
+                    "content": "[Top Salespeople](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"state\",\"in\",[\"sale\",\"done\"]],[\"user_id\",\"!=\",false]],\"context\":{\"group_by\":[\"user_id\"],\"pivot_measures\":[\"quantity\",\"price\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"user_id\"]},\"modelName\":\"sale.rental.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Salespeople\"})"
+                },
+                "A37": {
+                    "content": "=_t(\"Salesperson\")"
+                },
+                "B24": {
+                    "content": "=_t(\"Ordered\")"
+                },
+                "B37": {
+                    "content": "=_t(\"Ordered\")"
+                },
+                "C24": {
+                    "content": "=_t(\"Revenue\")"
+                },
+                "C37": {
+                    "content": "=_t(\"Revenue\")"
+                },
+                "E23": {
+                    "content": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"state\",\"in\",[\"sale\",\"done\"]],[\"product_id\",\"!=\",false]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"quantity\",\"price\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"sale.rental.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Products\"})"
+                },
+                "E24": {
+                    "content": "=_t(\"Product\")"
+                },
+                "E36": {
+                    "content": "[Top Customers](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"state\",\"in\",[\"sale\",\"done\"]]],\"context\":{\"group_by\":[\"partner_id\"],\"pivot_measures\":[\"quantity\",\"price\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"sale.rental.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Customers\"})"
+                },
+                "E37": {
+                    "content": "=_t(\"Customer\")"
+                },
+                "F24": {
+                    "content": "=_t(\"Ordered\")"
+                },
+                "F37": {
+                    "content": "=_t(\"Ordered\")"
+                },
+                "G24": {
+                    "content": "=_t(\"Revenue\")"
+                },
+                "G37": {
+                    "content": "=_t(\"Revenue\")"
+                }
+            },
+            "styles": {
+                "A7": 1,
+                "A23": 1,
+                "A36": 1,
+                "E23": 1,
+                "E36": 1,
+                "A24": 2,
+                "A37": 2,
+                "E24": 2,
+                "E37": 2,
+                "B24:C24": 3,
+                "B37:C37": 3,
+                "F24:G24": 3,
+                "F37:G37": 3
+            },
+            "formats": {},
+            "borders": {
+                "A23:C23": 1,
+                "A36:C36": 1,
+                "A7:G7": 1,
+                "E23:G23": 1,
+                "E36:G36": 1,
+                "A24:C24": 2,
+                "A37:C37": 2,
+                "A8:G8": 2,
+                "E24:G24": 2,
+                "E37:G37": 2,
+                "A25": 3,
+                "A38": 3,
+                "E25": 3,
+                "E38": 3,
+                "A26:A34": 4,
+                "A39:A45": 4,
+                "A47": 4,
+                "E26:E34": 4,
+                "E39:E45": 4,
+                "E47": 4,
+                "A35:C35": 5,
+                "A48:C48": 5,
+                "E35:G35": 5,
+                "E48:G48": 5,
+                "A46:C46": 6,
+                "E46:G46": 6,
+                "B25": 7,
+                "B38": 7,
+                "F25": 7,
+                "F38": 7,
+                "B26:B34": 8,
+                "B39:B45": 8,
+                "B47": 8,
+                "F26:F34": 8,
+                "F39:F45": 8,
+                "F47": 8,
+                "C25": 9,
+                "C38": 9,
+                "G25": 9,
+                "G38": 9,
+                "C26:C34": 10,
+                "C39:C45": 10,
+                "C47": 10,
+                "G26:G34": 10,
+                "G39:G45": 10,
+                "G47": 10
+            },
+            "conditionalFormats": [],
+            "figures": [
+                {
+                    "id": "01657be1-2ed9-48bd-aab5-158f7d15e752",
+                    "x": 220,
+                    "y": 12,
+                    "width": 211,
+                    "height": 102,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": {
+                            "text": "Rentals",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#EFF6FF",
+                        "baseline": "Data!E3",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D3",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "097038ff-456e-48b7-9908-2a07d5ff3440",
+                    "x": 440,
+                    "y": 12,
+                    "width": 200,
+                    "height": 102,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": {
+                            "text": "Revenue",
+                            "color": "#434343",
+                            "bold": true
+                        },
+                        "type": "scorecard",
+                        "background": "#EFF6FF",
+                        "baseline": "Data!E7",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D7",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "81f8cba7-aabc-4e13-a454-4660645be79f",
+                    "x": 0,
+                    "y": 12,
+                    "width": 211,
+                    "height": 102,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": {
+                            "text": "Quotations",
+                            "color": "#434343",
+                            "bold": true
+                        },
+                        "type": "scorecard",
+                        "background": "#EFF6FF",
+                        "baseline": "Data!E2",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D2",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "680d6c54-0871-4d0a-830f-53ed8f90bb55",
+                    "x": 0,
+                    "y": 178.109375,
+                    "width": 1001,
+                    "height": 347,
+                    "tag": "chart",
+                    "data": {
+                        "type": "line",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!C10:C16",
+                                "yAxisId": "y"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "labelRange": "Data!A10:A16",
+                        "title": {},
+                        "labelsAsText": false,
+                        "stacked": false,
+                        "aggregated": false,
+                        "cumulative": true,
+                        "fillArea": true
+                    }
+                }
+            ],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        },
+        {
+            "id": "d4904225-836f-41ab-afe0-fa94d5f553d1",
+            "name": "Data",
+            "colNumber": 19,
+            "rowNumber": 99,
+            "rows": {},
+            "cols": {},
+            "merges": [],
+            "cells": {
+                "A1": {
+                    "content": "=_t(\"KPI\")"
+                },
+                "A2": {
+                    "content": "=_t(\"Quotations\")"
+                },
+                "A3": {
+                    "content": "=_t(\"Orders\")"
+                },
+                "A4": {
+                    "content": "=_t(\"Ordered Qty\")"
+                },
+                "A5": {
+                    "content": "=_t(\"Picked-up Qty\")"
+                },
+                "A6": {
+                    "content": "=_t(\"Returned Qty\")"
+                },
+                "A7": {
+                    "content": "=_t(\"Revenue\")"
+                },
+                "A10": {
+                    "content": "=TODAY() - B10"
+                },
+                "A11": {
+                    "content": "=TODAY() - B11"
+                },
+                "A12": {
+                    "content": "=TODAY() - B12"
+                },
+                "A13": {
+                    "content": "=TODAY() - B13"
+                },
+                "A14": {
+                    "content": "=TODAY() - B14"
+                },
+                "A15": {
+                    "content": "=TODAY() - B15"
+                },
+                "A16": {
+                    "content": "=TODAY() - B16"
+                },
+                "B1": {
+                    "content": "=_t(\"Current\")"
+                },
+                "B2": {
+                    "content": "10"
+                },
+                "B3": {
+                    "content": "15"
+                },
+                "B4": {
+                    "content": "34"
+                },
+                "B5": {
+                    "content": "24"
+                },
+                "B6": {
+                    "content": "0"
+                },
+                "B7": {
+                    "content": "697272"
+                },
+                "B10": {
+                    "content": "0"
+                },
+                "B11": {
+                    "content": "1"
+                },
+                "B12": {
+                    "content": "2"
+                },
+                "B13": {
+                    "content": "3"
+                },
+                "B14": {
+                    "content": "4"
+                },
+                "B15": {
+                    "content": "5"
+                },
+                "B16": {
+                    "content": "6"
+                },
+                "C1": {
+                    "content": "=_t(\"Previous\")"
+                },
+                "C2": {
+                    "content": "4"
+                },
+                "C3": {
+                    "content": "11"
+                },
+                "C4": {
+                    "content": "39"
+                },
+                "C5": {
+                    "content": "30"
+                },
+                "C6": {
+                    "content": "0"
+                },
+                "C7": {
+                    "content": "490567"
+                },
+                "C10": {
+                    "content": "18"
+                },
+                "C11": {
+                    "content": "12"
+                },
+                "C12": {
+                    "content": "15"
+                },
+                "C13": {
+                    "content": "5"
+                },
+                "C14": {
+                    "content": "2"
+                },
+                "C15": {
+                    "content": "1"
+                },
+                "C16": {
+                    "content": "10"
+                },
+                "D1": {
+                    "content": "=_t(\"Current\")"
+                },
+                "D2": {
+                    "content": "=FORMAT.LARGE.NUMBER(B2)"
+                },
+                "D3": {
+                    "content": "=FORMAT.LARGE.NUMBER(B3)"
+                },
+                "D4": {
+                    "content": "=FORMAT.LARGE.NUMBER(B4)"
+                },
+                "D5": {
+                    "content": "=FORMAT.LARGE.NUMBER(B5)"
+                },
+                "D6": {
+                    "content": "=FORMAT.LARGE.NUMBER(B6)"
+                },
+                "D7": {
+                    "content": "=FORMAT.LARGE.NUMBER(B7)"
+                },
+                "E1": {
+                    "content": "=_t(\"Previous\")"
+                },
+                "E2": {
+                    "content": "=FORMAT.LARGE.NUMBER(C2)"
+                },
+                "E3": {
+                    "content": "=FORMAT.LARGE.NUMBER(C3)"
+                },
+                "E4": {
+                    "content": "=FORMAT.LARGE.NUMBER(C4)"
+                },
+                "E5": {
+                    "content": "=FORMAT.LARGE.NUMBER(C5)"
+                },
+                "E6": {
+                    "content": "=FORMAT.LARGE.NUMBER(C6)"
+                },
+                "E7": {
+                    "content": "=FORMAT.LARGE.NUMBER(C7)"
+                }
+            },
+            "styles": {
+                "A1:E1": 4,
+                "D2:E7": 5
+            },
+            "formats": {
+                "A10:A16": 1,
+                "B2:C3": 2,
+                "B4:C6": 3,
+                "B7:E7": 4
+            },
+            "borders": {},
+            "conditionalFormats": [],
+            "figures": [],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        }
+    ],
+    "styles": {
+        "1": {
+            "textColor": "#01666b",
+            "bold": true,
+            "fontSize": 16
+        },
+        "2": {
+            "textColor": "#434343",
+            "fontSize": 11,
+            "bold": true
+        },
+        "3": {
+            "textColor": "#434343",
+            "fontSize": 11,
+            "bold": true,
+            "align": "center"
+        },
+        "4": {
+            "bold": true
+        },
+        "5": {
+            "fillColor": "#f2f2f2"
+        }
+    },
+    "formats": {
+        "1": "d mmm yyyy",
+        "2": "0",
+        "3": "#,##0.00",
+        "4": "[$$]#,##0"
+    },
+    "borders": {
+        "1": {
+            "bottom": {
+                "style": "thin",
+                "color": "#CCCCCC"
+            }
+        },
+        "2": {
+            "top": {
+                "style": "thin",
+                "color": "#CCCCCC"
+            }
+        },
+        "3": {
+            "bottom": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            }
+        },
+        "4": {
+            "top": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            }
+        },
+        "5": {
+            "top": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            }
+        },
+        "6": {
+            "top": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            }
+        },
+        "7": {
+            "bottom": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            }
+        },
+        "8": {
+            "top": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            }
+        },
+        "9": {
+            "bottom": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            }
+        },
+        "10": {
+            "top": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            }
+        }
+    },
+    "revisionId": "START_REVISION",
+    "uniqueFigureIds": true,
+    "settings": {
+        "locale": {
+            "name": "English (US)",
+            "code": "en_US",
+            "thousandsSeparator": ",",
+            "decimalSeparator": ".",
+            "dateFormat": "mm/dd/yyyy",
+            "timeFormat": "hh:mm:ss",
+            "formulaArgSeparator": ",",
+            "weekStart": 7
+        }
+    },
+    "pivots": {},
+    "pivotNextId": 9,
+    "customTableStyles": {},
+    "odooVersion": 12,
+    "globalFilters": [],
+    "lists": {},
+    "listNextId": 1
+}

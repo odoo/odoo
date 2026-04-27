@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <div t-inherit="documents.DocumentsViews.ControlPanel" t-inherit-mode="extension">
+        <xpath expr="*[1]" position="before">
+            <div class="d-flex align-items-center">
+                <a class="me-1" href="/my">
+                    <i class="fa fa-arrow-left fa-2x d-block d-md-none"></i>
+                    <i class="fa fa-arrow-left d-none d-md-block"></i>
+                </a>
+            </div>
+        </xpath>
+    </div>
+</templates>

@@ -1,0 +1,26 @@
+<odoo>
+    <record id="email_template_customer_statement" model="mail.template">
+        <field name="name">Customer Statement</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="email_from">{{ object._get_followup_responsible().email_formatted }}</field>
+        <field name="subject">{{ (object.company_id or object._get_followup_responsible().company_id).name }} Statement - {{ object.commercial_company_name }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px;">
+                    <t t-if="object.id != object.commercial_partner_id.id">Dear <t t-out="object.name or ''"/> (<t t-out="object.commercial_partner_id.name or ''"/>),</t>
+                    <t t-else="">Dear <t t-out="object.name or ''"/>,</t>
+                    <br/>
+                    Please find enclosed the statement of your account.
+                    <br/>
+                    Do not hesitate to contact us if you have any questions.
+                    <br/>
+                    Sincerely,
+                    <br/>
+	                <t t-out="object._get_followup_responsible().name if is_html_empty(object._get_followup_responsible().signature) else object._get_followup_responsible().signature"/>
+                </p>
+            </div>
+        </field>
+        <field name="lang">{{ object.lang }}</field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+</odoo>

@@ -1,0 +1,58 @@
+<templates>
+
+	<t t-name="web_studio.AddButtonAction">
+		<button class="o-web-studio-editor--add-button-action btn btn-link" t-on-click="onClick">
+			Add a button
+		</button>
+	</t>
+
+	<t t-name="web_studio.DialogNewButtonStatusBar">
+		<Dialog size="'sm'" title.translate="Buttons Properties">
+			<div class="o-web-studio-editor--modal-add-action d-flex flex-column gap-4">
+				<div>
+					<label for="set_label">
+						Label
+					</label>
+					<input id="set_label" placeholder="Label of the button" class="o_input" type="text" t-model="state.label" />
+				</div>
+				<div>
+					<label for="label">
+						What should the button do
+					</label>
+					<div>
+						<input type="radio" t-on-change="onChange" id="set_button_type_to_action" value="action" t-model="state.button_type" />
+						<label for="set_button_type_to_action" class="oe_label" style="display: inline;">
+							Run a Server Action
+						</label>
+						<br />
+						<input type="radio" t-on-change="onChange" id="set_button_type_to_object" value="object" t-model="state.button_type" />
+						<label for="set_button_type_to_object" class="oe_label" style="display: inline;">
+							Call a method
+						</label>
+					</div>
+					<div t-if="state.button_type === 'action'">
+						<label for="select_action_to_run" class="oe_label" style="display: inline;">
+							Action to run
+						</label>
+            <RecordSelector t-props="multiRecordSelectorProps"/>
+					</div>
+					<div t-if="state.button_type === 'object'">
+						<label for="set_method" class="oe_label" style="display: inline;">
+							Method to run
+						</label>
+						<div t-if="state.error?.length > 0" class="text-danger" t-esc="state.error"></div>
+						<input t-on-change="checkMethod" id="set_method" type="text" class="o_input" placeholder="Method to run" t-model="state.methodId" />
+					</div>
+					<t t-set-slot="footer">
+						<button t-att-disabled="checkValidity" class="o-web-studio-editor--add-button-confirm  btn btn-primary" t-on-click="onConfirm">
+							Confirm
+						</button>
+						<button class="o-web-studio-editor--add-button-cancel btn btn-secondary" t-on-click="onCancel">
+							Cancel
+						</button>
+					</t>
+				</div>
+			</div>
+		</Dialog>
+	</t>
+</templates>

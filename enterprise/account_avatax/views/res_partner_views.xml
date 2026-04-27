@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <group name="sale" position="inside">
+                <field name="avatax_unique_code" invisible="fiscal_country_codes not in ('US', 'CA')"/>
+                <field name="avalara_partner_code" invisible="parent_id or not is_company or fiscal_country_codes not in ('US', 'CA')"/>
+                <field name="avalara_exemption_id" invisible="parent_id or not is_company or fiscal_country_codes not in ('US', 'CA')"/>
+            </group>
+            <xpath expr="//div[@name='partner_address_country']" position="inside">
+                <field name="avalara_show_address_validation" invisible="1"/>
+                <span class="o_form_label o_td_label"/>
+                <button class="btn-link"
+                        type="object"
+                        name="action_open_validation_wizard"
+                        string="Validate"
+                        invisible="not avalara_show_address_validation"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

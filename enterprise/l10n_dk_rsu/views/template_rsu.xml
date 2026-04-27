@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_dk_rsu.calendarService" name="Calendar Service">
+        <ns4:VirksomhedKalenderHent_I xmlns="http://rep.oio.dk/skat.dk/basis/kontekst/xml/schemas/2006/09/01/"
+                                      xmlns:ns2="http://rep.oio.dk/skat.dk/motor/class/virksomhed/xml/schemas/20080401/"
+                                      xmlns:ns3="urn:oio:skat:nemvirksomhed:1.0.0"
+                                      xmlns:ns4="urn:oio:skat:nemvirksomhed:ws:1.0.0"
+                                      xmlns:ns5="http://rep.oio.dk/skat.dk/TSE/angivelse/xml/schemas/2006/09/01/"
+                                      xmlns:ns6="http://rep.oio.dk/cvr.dk/xml/schemas/2005/03/22/">
+            <HovedOplysninger>
+                <TransaktionIdentifikator t-out="transaction_id"/>
+                <TransaktionTid t-out="transaction_time"/>
+            </HovedOplysninger>
+            <ns2:VirksomhedSENummerIdentifikator t-out="company_registry"/>
+            <ns3:AngivelseTypeNavn t-out="description"/>
+            <ns4:AngivelseBetalingFristHentFra>
+                <ns3:SoegeDatoFraDate t-out="date_from"/>
+                <ns3:SoegeDatoTilDate t-out="date_to"/>
+            </ns4:AngivelseBetalingFristHentFra>
+        </ns4:VirksomhedKalenderHent_I>
+    </template>
+
+    <template id="l10n_dk_rsu.submitDraftService" name="Submit Draft Service">
+        <ns3:ModtagMomsangivelseForeloebig_I xmlns="http://rep.oio.dk/skat.dk/basis/kontekst/xml/schemas/2006/09/01/"
+                                             xmlns:ns2="http://rep.oio.dk/skat.dk/motor/class/virksomhed/xml/schemas/20080401/"
+                                             xmlns:ns3="urn:oio:skat:nemvirksomhed:ws:1.0.0"
+                                             xmlns:ns4="urn:oio:skat:nemvirksomhed:1.0.0">
+            <HovedOplysninger>
+                <TransaktionIdentifikator t-out="transaction_id"/>
+                <TransaktionTid t-out="transaction_time"/>
+            </HovedOplysninger>
+            <ns3:Angivelse>
+                <ns3:AngiverVirksomhedSENummer>
+                    <ns2:VirksomhedSENummerIdentifikator t-out="company_registry"/>
+                </ns3:AngiverVirksomhedSENummer>
+                <ns3:Angivelsesoplysninger>
+                    <ns4:AngivelsePeriodeFraDato t-out="settlement_start"/>
+                    <ns4:AngivelsePeriodeTilDato t-out="settlement_end"/>
+                </ns3:Angivelsesoplysninger>
+                <ns3:Angivelsesafgifter>
+                    <ns4:MomsAngivelseAfgiftTilsvarBeloeb t-out="vat_declaration"/>
+                    <ns4:MomsAngivelseCO2AfgiftBeloeb t-out="co2_tax" t-if="co2_tax"/>
+                    <ns4:MomsAngivelseEUKoebBeloeb t-out="categoryA_goods" t-if="categoryA_goods"/>
+                    <ns4:MomsAngivelseEUSalgBeloebVarerBeloeb t-out="categoryB_eu_goods" t-if="categoryB_eu_goods"/>
+                    <ns4:MomsAngivelseIkkeEUSalgBeloebVarerBeloeb t-out="categoryB_non_eu_goods" t-if="categoryB_non_eu_goods"/>
+                    <ns4:MomsAngivelseElAfgiftBeloeb t-out="electricity" t-if="electricity"/>
+                    <ns4:MomsAngivelseEksportOmsaetningBeloeb t-out="categoryC_other_goods_service" t-if="categoryC_other_goods_service"/>
+                    <ns4:MomsAngivelseGasAfgiftBeloeb t-out="natural_or_town_gas" t-if="natural_or_town_gas"/>
+                    <ns4:MomsAngivelseKoebsMomsBeloeb t-out="purchase_vat" t-if="purchase_vat"/>
+                    <ns4:MomsAngivelseKulAfgiftBeloeb t-out="coal" t-if="coal"/>
+                    <ns4:MomsAngivelseMomsEUKoebBeloeb t-out="vat_on_purchase_goods" t-if="vat_on_purchase_goods"/>
+                    <ns4:MomsAngivelseMomsEUYdelserBeloeb t-out="vat_on_purchase_services" t-if="vat_on_purchase_services"/>
+                    <ns4:MomsAngivelseOlieAfgiftBeloeb t-out="oil" t-if="oil"/>
+                    <ns4:MomsAngivelseSalgsMomsBeloeb t-out="sale_vat" t-if="sale_vat"/>
+                    <ns4:MomsAngivelseVandAfgiftBeloeb t-out="water" t-if="water"/>
+                    <ns4:MomsAngivelseEUKoebYdelseBeloeb t-out="categoryA_benefits" t-if="categoryA_benefits"/>
+                    <ns4:MomsAngivelseEUSalgYdelseBeloeb t-out="categoryB_services" t-if="categoryB_services"/>
+                </ns3:Angivelsesafgifter>
+            </ns3:Angivelse>
+        </ns3:ModtagMomsangivelseForeloebig_I>
+    </template>
+
+    <template id="l10n_dk_rsu.receiptService" name="Receipt Service">
+        <ns4:MomsangivelseKvitteringHent_I xmlns="http://rep.oio.dk/skat.dk/basis/kontekst/xml/schemas/2006/09/01/"
+                                           xmlns:ns2="urn:oio:skat:nemvirksomhed:1.0.0"
+                                           xmlns:ns3="http://rep.oio.dk/skat.dk/motor/class/virksomhed/xml/schemas/20080401/"
+                                           xmlns:ns4="urn:oio:skat:nemvirksomhed:ws:1.0.0"
+                                           xmlns:ns5="http://rep.oio.dk/skat.dk/TSE/angivelse/xml/schemas/2006/09/01/"
+                                           xmlns:ns6="http://rep.oio.dk/cvr.dk/xml/schemas/2005/03/22/">
+            <HovedOplysninger>
+                <TransaktionIdentifikator t-out="transaction_id"/>
+                <TransaktionTid t-out="transaction_time"/>
+            </HovedOplysninger>
+            <ns2:TransaktionIdentifier t-out="received_transaction_identifier"/>
+            <ns4:Angiver>
+                <ns3:VirksomhedSENummerIdentifikator t-out="company_registry"/>
+            </ns4:Angiver>
+        </ns4:MomsangivelseKvitteringHent_I>
+    </template>
+
+</odoo>

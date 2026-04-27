@@ -1,0 +1,270 @@
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+    xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2     http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-Invoice-2.1.xsd">
+    <ext:UBLExtensions>___ignore___</ext:UBLExtensions>
+    <cbc:UBLVersionID>UBL 2.1</cbc:UBLVersionID>
+    <cbc:CustomizationID>11</cbc:CustomizationID>
+    <cbc:ProfileID>DIAN 2.1: documento soporte en adquisiciones efectuadas a no obligados a facturar.</cbc:ProfileID>
+    <cbc:ProfileExecutionID>2</cbc:ProfileExecutionID>
+    <cbc:ID>DS/2024/01/0001</cbc:ID>
+    <cbc:UUID schemeID="2" schemeName="CUDS-SHA384">22c568404f1950d2ba3276a7ccfbb34e499cbd128f0ae3be1f7c3aad6cf6fc65f7b065730b32cbc5582e88b43cc03582</cbc:UUID>
+    <cbc:IssueDate>2024-01-29</cbc:IssueDate>
+    <cbc:IssueTime>19:00:00-05:00</cbc:IssueTime>
+    <cbc:DueDate>2024-01-30</cbc:DueDate>
+    <cbc:InvoiceTypeCode>05</cbc:InvoiceTypeCode>
+    <cbc:Note>DS/2024/01/00012024-01-2919:00:00-05:001600.0001304.001904.00900108281018419008123452</cbc:Note>
+    <cbc:DocumentCurrencyCode listAgencyID="6" listAgencyName="United Nations Economic Commission for Europe" listID="ISO 4217 Alpha">COP</cbc:DocumentCurrencyCode>
+    <cbc:LineCountNumeric>2</cbc:LineCountNumeric>
+    <cac:OrderReference>
+        <cbc:ID>DS/2024/01/0001</cbc:ID>
+    </cac:OrderReference>
+    <cac:AccountingSupplierParty>
+        <cbc:AdditionalAccountID>2</cbc:AdditionalAccountID>
+        <cac:Party>
+            <cac:PartyIdentification>
+                <cbc:ID schemeName="31" schemeID="1">90010828</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyName>
+                <cbc:Name>ADQUIRIENTE DE EJEMPLO</cbc:Name>
+            </cac:PartyName>
+            <cac:PhysicalLocation>
+                <cac:Address>
+                    <cbc:ID>11001</cbc:ID>
+                    <cbc:CityName>Bogotá D.C.</cbc:CityName>
+                    <cbc:PostalZone>110110</cbc:PostalZone>
+                    <cbc:CountrySubentity>Bogotá</cbc:CountrySubentity>
+                    <cbc:CountrySubentityCode>11</cbc:CountrySubentityCode>
+                    <cac:AddressLine>
+                        <cbc:Line>CARRERA 8 No 20-14/40 </cbc:Line>
+                    </cac:AddressLine>
+                    <cac:Country>
+                        <cbc:IdentificationCode>US</cbc:IdentificationCode>
+                        <cbc:Name languageID="en">Estados Unidos</cbc:Name>
+                    </cac:Country>
+                </cac:Address>
+            </cac:PhysicalLocation>
+            <cac:PartyTaxScheme>
+                <cbc:RegistrationName>ADQUIRIENTE DE EJEMPLO</cbc:RegistrationName>
+                <cbc:CompanyID schemeName="31" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeAgencyID="195" schemeID="1">90010828</cbc:CompanyID>
+                <cbc:TaxLevelCode>O-47</cbc:TaxLevelCode>
+                <cac:RegistrationAddress>
+                    <cbc:ID>11001</cbc:ID>
+                    <cbc:CityName>Bogotá D.C.</cbc:CityName>
+                    <cbc:PostalZone>110110</cbc:PostalZone>
+                    <cbc:CountrySubentity>Bogotá</cbc:CountrySubentity>
+                    <cbc:CountrySubentityCode>11</cbc:CountrySubentityCode>
+                    <cac:AddressLine>
+                        <cbc:Line>CARRERA 8 No 20-14/40 </cbc:Line>
+                    </cac:AddressLine>
+                    <cac:Country>
+                        <cbc:IdentificationCode>US</cbc:IdentificationCode>
+                        <cbc:Name languageID="en">United States</cbc:Name>
+                    </cac:Country>
+                </cac:RegistrationAddress>
+                <cac:TaxScheme>
+                    <cbc:ID>01</cbc:ID>
+                    <cbc:Name>IVA</cbc:Name>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>ADQUIRIENTE DE EJEMPLO</cbc:RegistrationName>
+                <cbc:CompanyID schemeName="31" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeAgencyID="195" schemeID="1">90010828</cbc:CompanyID>
+                <cac:CorporateRegistrationScheme>
+                    <cbc:ID>DS</cbc:ID>
+                    <cbc:Name>1018419008</cbc:Name>
+                </cac:CorporateRegistrationScheme>
+            </cac:PartyLegalEntity>
+            <cac:Contact>
+                <cbc:Name>ADQUIRIENTE DE EJEMPLO</cbc:Name>
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingSupplierParty>
+    <cac:AccountingCustomerParty>
+        <cbc:AdditionalAccountID>1</cbc:AdditionalAccountID>
+        <cac:Party>
+            <cac:PartyName>
+                <cbc:Name>CO Company Test</cbc:Name>
+            </cac:PartyName>
+            <cac:PhysicalLocation>
+                <cac:Address>
+                    <cbc:ID>11001</cbc:ID>
+                    <cbc:CityName>Bogotá D.C.</cbc:CityName>
+                    <cbc:PostalZone>110110</cbc:PostalZone>
+                    <cbc:CountrySubentity>Bogotá</cbc:CountrySubentity>
+                    <cbc:CountrySubentityCode>11</cbc:CountrySubentityCode>
+                    <cac:AddressLine>
+                        <cbc:Line>CL 12A </cbc:Line>
+                    </cac:AddressLine>
+                    <cac:Country>
+                        <cbc:IdentificationCode>CO</cbc:IdentificationCode>
+                        <cbc:Name languageID="es">Colombia</cbc:Name>
+                    </cac:Country>
+                </cac:Address>
+            </cac:PhysicalLocation>
+            <cac:PartyTaxScheme>
+                <cbc:RegistrationName>CO Company Test</cbc:RegistrationName>
+                <cbc:CompanyID schemeName="31" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeAgencyID="195" schemeID="5">1018419008</cbc:CompanyID>
+                <cbc:TaxLevelCode>O-47</cbc:TaxLevelCode>
+                <cac:RegistrationAddress>
+                    <cbc:ID>11001</cbc:ID>
+                    <cbc:CityName>Bogotá D.C.</cbc:CityName>
+                    <cbc:PostalZone>110110</cbc:PostalZone>
+                    <cbc:CountrySubentity>Bogotá</cbc:CountrySubentity>
+                    <cbc:CountrySubentityCode>11</cbc:CountrySubentityCode>
+                    <cac:AddressLine>
+                        <cbc:Line>CL 12A </cbc:Line>
+                    </cac:AddressLine>
+                    <cac:Country>
+                        <cbc:IdentificationCode>CO</cbc:IdentificationCode>
+                        <cbc:Name languageID="es">Colombia</cbc:Name>
+                    </cac:Country>
+                </cac:RegistrationAddress>
+                <cac:TaxScheme>
+                    <cbc:ID>01</cbc:ID>
+                    <cbc:Name>IVA</cbc:Name>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>CO Company Test</cbc:RegistrationName>
+                <cbc:CompanyID schemeName="31" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeAgencyID="195" schemeID="5">1018419008</cbc:CompanyID>
+            </cac:PartyLegalEntity>
+            <cac:Contact>
+                <cbc:Name>CO Company Test</cbc:Name>
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingCustomerParty>
+    <cac:PaymentMeans>
+        <cbc:ID>1</cbc:ID>
+        <cbc:PaymentMeansCode>1</cbc:PaymentMeansCode>
+        <cbc:PaymentDueDate>2024-01-30</cbc:PaymentDueDate>
+        <cbc:PaymentID>DS/2024/01/0001</cbc:PaymentID>
+    </cac:PaymentMeans>
+    <cac:TaxTotal>
+        <cbc:TaxAmount currencyID="COP">304.00</cbc:TaxAmount>
+        <cac:TaxSubtotal>
+            <cbc:TaxableAmount currencyID="COP">1600.00</cbc:TaxableAmount>
+            <cbc:TaxAmount currencyID="COP">304.00</cbc:TaxAmount>
+            <cac:TaxCategory>
+                <cbc:Percent>19.00</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID>01</cbc:ID>
+                    <cbc:Name>IVA</cbc:Name>
+                </cac:TaxScheme>
+            </cac:TaxCategory>
+        </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    <cac:WithholdingTaxTotal>
+        <cbc:TaxAmount currencyID="COP">22.80</cbc:TaxAmount>
+        <cac:TaxSubtotal>
+            <cbc:TaxableAmount currencyID="COP">152.00</cbc:TaxableAmount>
+            <cbc:TaxAmount currencyID="COP">22.80</cbc:TaxAmount>
+            <cac:TaxCategory>
+                <cbc:Percent>15.00</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID>05</cbc:ID>
+                    <cbc:Name>ReteIVA</cbc:Name>
+                </cac:TaxScheme>
+            </cac:TaxCategory>
+        </cac:TaxSubtotal>
+    </cac:WithholdingTaxTotal>
+    <cac:LegalMonetaryTotal>
+        <cbc:LineExtensionAmount currencyID="COP">1600.00</cbc:LineExtensionAmount>
+        <cbc:TaxExclusiveAmount currencyID="COP">1600.00</cbc:TaxExclusiveAmount>
+        <cbc:TaxInclusiveAmount currencyID="COP">1904.00</cbc:TaxInclusiveAmount>
+        <cbc:PayableAmount currencyID="COP">1904.00</cbc:PayableAmount>
+    </cac:LegalMonetaryTotal>
+    <cac:InvoiceLine>
+        <cbc:ID>1</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="94">1.0</cbc:InvoicedQuantity>
+        <cbc:LineExtensionAmount currencyID="COP">800.00</cbc:LineExtensionAmount>
+        <cac:InvoicePeriod>
+            <cbc:StartDate>2024-01-30</cbc:StartDate>
+            <cbc:DescriptionCode>1</cbc:DescriptionCode>
+            <cbc:Description>Por operación</cbc:Description>
+        </cac:InvoicePeriod>
+        <cac:TaxTotal>
+            <cbc:TaxAmount currencyID="COP">152.00</cbc:TaxAmount>
+            <cac:TaxSubtotal>
+                <cbc:TaxableAmount currencyID="COP">800.00</cbc:TaxableAmount>
+                <cbc:TaxAmount currencyID="COP">152.00</cbc:TaxAmount>
+                <cac:TaxCategory>
+                    <cbc:Percent>19.00</cbc:Percent>
+                    <cac:TaxScheme>
+                        <cbc:ID>01</cbc:ID>
+                        <cbc:Name>IVA</cbc:Name>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:TaxSubtotal>
+        </cac:TaxTotal>
+        <cac:Item>
+            <cbc:Description>product_a</cbc:Description>
+            <cbc:Name>product_a</cbc:Name>
+            <cac:SellersItemIdentification>
+                <cbc:ID>562438192</cbc:ID>
+                <cbc:ExtendedID>562438192</cbc:ExtendedID>
+            </cac:SellersItemIdentification>
+            <cac:StandardItemIdentification>
+                <cbc:ID schemeID="010" schemeName="GTIN">562438192</cbc:ID>
+            </cac:StandardItemIdentification>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="COP">800.0</cbc:PriceAmount>
+            <cbc:BaseQuantity unitCode="94">1.0</cbc:BaseQuantity>
+        </cac:Price>
+    </cac:InvoiceLine>
+    <cac:InvoiceLine>
+        <cbc:ID>2</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="94">1.0</cbc:InvoicedQuantity>
+        <cbc:LineExtensionAmount currencyID="COP">800.00</cbc:LineExtensionAmount>
+        <cac:InvoicePeriod>
+            <cbc:StartDate>2024-01-30</cbc:StartDate>
+            <cbc:DescriptionCode>1</cbc:DescriptionCode>
+            <cbc:Description>Por operación</cbc:Description>
+        </cac:InvoicePeriod>
+        <cac:TaxTotal>
+            <cbc:TaxAmount currencyID="COP">152.00</cbc:TaxAmount>
+            <cac:TaxSubtotal>
+                <cbc:TaxableAmount currencyID="COP">800.00</cbc:TaxableAmount>
+                <cbc:TaxAmount currencyID="COP">152.00</cbc:TaxAmount>
+                <cac:TaxCategory>
+                    <cbc:Percent>19.00</cbc:Percent>
+                    <cac:TaxScheme>
+                        <cbc:ID>01</cbc:ID>
+                        <cbc:Name>IVA</cbc:Name>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:TaxSubtotal>
+        </cac:TaxTotal>
+        <cac:WithholdingTaxTotal>
+            <cbc:TaxAmount currencyID="COP">22.80</cbc:TaxAmount>
+            <cac:TaxSubtotal>
+                <cbc:TaxableAmount currencyID="COP">152.00</cbc:TaxableAmount>
+                <cbc:TaxAmount currencyID="COP">22.80</cbc:TaxAmount>
+                <cac:TaxCategory>
+                    <cbc:Percent>15.00</cbc:Percent>
+                    <cac:TaxScheme>
+                        <cbc:ID>05</cbc:ID>
+                        <cbc:Name>ReteIVA</cbc:Name>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:TaxSubtotal>
+        </cac:WithholdingTaxTotal>
+        <cac:Item>
+            <cbc:Description>product_a</cbc:Description>
+            <cbc:Name>product_a</cbc:Name>
+            <cac:SellersItemIdentification>
+                <cbc:ID>562438192</cbc:ID>
+                <cbc:ExtendedID>562438192</cbc:ExtendedID>
+            </cac:SellersItemIdentification>
+            <cac:StandardItemIdentification>
+                <cbc:ID schemeID="010" schemeName="GTIN">562438192</cbc:ID>
+            </cac:StandardItemIdentification>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="COP">800.0</cbc:PriceAmount>
+            <cbc:BaseQuantity unitCode="94">1.0</cbc:BaseQuantity>
+        </cac:Price>
+    </cac:InvoiceLine>
+</Invoice>

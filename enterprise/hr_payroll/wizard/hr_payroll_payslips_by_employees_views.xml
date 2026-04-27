@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="view_hr_payslip_by_employees" model="ir.ui.view">
+            <field name="name">hr_payroll_payslip_employees</field>
+            <field name="model">hr.payslip.employees</field>
+            <field name="arch" type="xml">
+                <form string="Payslips by Employees">
+                    <span nolabel="1" colspan="2">This wizard will generate payslips for all selected employee(s) based on the dates and credit note specified on Payslips Run.</span>
+                    <separator string="Employees Selection"/>
+                    <div class="o_row ms-2">
+                        <group>
+                            <field name="department_id" class="w-75"
+                                help="Set a specific department if you wish to select all the employees from this department (and subdepartments) at once."/>
+                            <field name="job_id" class="w-75" invisible="not department_id" domain="[('department_id', 'child_of', department_id)]"
+                                help="Set a specific job if you wish to select all the employees from this job at once."/>
+                            <field name="job_id" class="w-75" invisible="department_id"
+                                help="Set a specific job if you wish to select all the employees from this job at once."/>
+                            <field name="structure_type_id" class="w-75"
+                                help="Set a specific structure type if you wish to select all the employees from this structure type at once."/>
+                        </group>
+                    </div>
+                    <separator string="Payslip Generation" colspan="2"/>
+                    <div class="o_row ms-2">
+                        <group>
+                            <field name="structure_id" class="w-75" invisible="not structure_type_id" domain="[('type_id', '=', structure_type_id)]"
+                                help="If empty, the default salary structure from the Salary structure type of the employee will be used"/>
+                            <field name="structure_id" class="w-75" invisible="structure_type_id"
+                                help="If empty, the default salary structure from the Salary structure type of the employee will be used"/>
+                        </group>
+                    </div>
+                    <separator string="Employees"/>
+                    <field name="employee_ids" nolabel="1" widget="employee_line_many2many" context="{'list_view_ref' : 'hr_payroll.hr_payroll_employee_tree_inherit'}">
+                        <list>
+                            <field name="name"/>
+                            <field name="work_email"/>
+                            <field name="department_id"/>
+                            <field name="job_id"/>
+                            <field name="structure_type_id"/>
+                        </list>
+                    </field>
+                    <footer>
+                        <button string="Generate" name="compute_sheet" type="object" class="oe_highlight" data-hotkey="q" invisible="not employee_ids"/>
+                        <button string="Generate" name="compute_sheet" type="object" class="oe_highlight disabled" data-hotkey="q" invisible="employee_ids"/>
+                        <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="hr_payroll_employee_tree_inherit" model="ir.ui.view">
+            <field name="name">hr.payroll.employee.list.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="work_phone" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <field name="activity_ids" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <field name="activity_date_deadline" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <field name="first_contract_date" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <field name="company_id" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <field name="parent_id" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <field name="job_id" position="after">
+                    <field name="structure_type_id" string="Salary Structure Type"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="action_hr_payslip_by_employees" model="ir.actions.act_window">
+            <field name="name">Generate Payslips</field>
+            <field name="res_model">hr.payslip.employees</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="view_hr_payslip_by_employees"/>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.actions.server" id="action_generate_payslips_from_work_entries">
+            <field name="name">Generate payslips</field>
+            <field name="model_id" ref="model_hr_payslip_employees"/>
+            <field name="binding_model_id" ref="model_hr_payslip_employees"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = env['hr.payslip.employees'].create({}).compute_sheet()
+            </field>
+        </record>
+</odoo>

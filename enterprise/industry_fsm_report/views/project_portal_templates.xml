@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_task" inherit_id="industry_fsm.portal_my_task">
+        <xpath expr="//div[@t-if='timesheets and allow_timesheets' and hasclass('nav-item')]" position="after">
+            <li t-if="task.worksheet_count and task.worksheet_template_id.report_view_id and worksheet_map.get(task.id) and task.allow_worksheets" class="nav-item">
+                <a class="nav-link p-0" href="#task_worksheet">Worksheet</a>
+            </li>
+        </xpath>
+        <xpath expr="//div[@name='worksheet_signature']" position="before">
+            <t t-if="task.worksheet_count and task.worksheet_template_id.report_view_id and worksheet_map.get(task.id) and task.allow_worksheets">
+                <div name="worksheet_map" style="page-break-inside: avoid">
+                    <hr class="mt-4 mb-4"/>
+                    <h5 id="task_worksheet" class="mt-2 mb-2" data-anchor="true">Worksheet</h5>
+                    <t t-set="worksheet" t-value="worksheet_map.get(task.id)"/>
+                    <t t-call="#{task.worksheet_template_id.report_view_id.id}"/>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[@id='nav-report']" position="attributes">
+            <attribute name="t-if">(allow_timesheets and timesheets) or (task.allow_worksheets and task.worksheet_count)</attribute>
+        </xpath>
+    </template>
+
+</odoo>

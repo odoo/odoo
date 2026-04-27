@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="pos_delivery_provider_ubereats" model="pos.delivery.provider">
+        <field name="name">Uber Eats</field>
+        <field name="technical_name">ubereats</field>
+        <field name="journal_code">UET</field>
+        <field name="image_128" type="base64" file="pos_urban_piper_ubereats/static/img/Ubereats.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.au'), ref('base.be'), ref('base.ca'), ref('base.cl'),
+                ref('base.cr'), ref('base.do'), ref('base.ec'), ref('base.sv'), ref('base.fr'), ref('base.de'), ref('base.gt'),
+                ref('base.ie'), ref('base.it'), ref('base.jp'), ref('base.ke'), ref('base.lu'), ref('base.mx'), ref('base.nl'),
+                ref('base.nz'), ref('base.pa'), ref('base.pl'), ref('base.pt'), ref('base.za'), ref('base.es'), ref('base.lk'),
+                ref('base.se'), ref('base.ch'), ref('base.tw'), ref('base.uk'), ref('base.us')])]"/>
+    </record>
+</odoo>

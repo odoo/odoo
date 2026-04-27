@@ -1,0 +1,187 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * quality_mrp
+#
+# Translators:
+# Ilya Rozhkov, 2025
+# Wil Odoo, 2025
+#
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2025-10-22 09:11+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-18/"
+"quality_mrp/ru/>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: quality_mrp
+#: model_terms:ir.ui.view,arch_db:quality_mrp.mrp_production_view_form_inherit_quality
+msgid "<span class=\"o_stat_text text-danger\">Quality Checks</span>"
+msgstr "<span class=\"o_stat_text text-danger\">Проверки качества</span>"
+
+#. module: quality_mrp
+#: model_terms:ir.ui.view,arch_db:quality_mrp.mrp_production_view_form_inherit_quality
+msgid "<span class=\"o_stat_text text-success\">Quality Checks</span>"
+msgstr "<span class=\"o_stat_text text-success\">Проверки качества</span>"
+
+#. module: quality_mrp
+#: model_terms:ir.ui.view,arch_db:quality_mrp.mrp_production_view_form_inherit_quality
+msgid "<span class=\"o_stat_text\">Quality Alerts</span>"
+msgstr "<span class=\"o_stat_text\">Предупреждения о качестве</span>"
+
+#. module: quality_mrp
+#: model_terms:ir.ui.view,arch_db:quality_mrp.mrp_production_view_form_inherit_quality
+msgid "<span class=\"o_stat_text\">Quality Checks</span>"
+msgstr "<span class=\"o_stat_text\">Проверки качества</span>"
+
+#. module: quality_mrp
+#: model_terms:ir.ui.view,arch_db:quality_mrp.worksheet_page
+msgid "<strong>Manufacturing Order: </strong>"
+msgstr "<strong>Заказ на изготовление: </strong>"
+
+#. module: quality_mrp
+#: model:ir.model.fields,field_description:quality_mrp.field_mrp_production__quality_alert_ids
+msgid "Alerts"
+msgstr "Оповещения"
+
+#. module: quality_mrp
+#: model:ir.model.fields,field_description:quality_mrp.field_mrp_production__check_ids
+msgid "Checks"
+msgstr "Проверки"
+
+#. module: quality_mrp
+#. odoo-python
+#: code:addons/quality_mrp/models/quality.py:0
+msgid ""
+"It will not be possible to edit the failed quantity of a quantity type "
+"quality check on a manufacturing order"
+msgstr ""
+"После того как вы зафиксируете количество брака в производственном заказе "
+"(при проверке типа «количество»), изменить это значение будет невозможно"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_mrp_production
+#: model:ir.model.fields,field_description:quality_mrp.field_quality_check_on_demand__production_id
+msgid "Manufacturing Order"
+msgstr "Заказ на производство"
+
+#. module: quality_mrp
+#. odoo-python
+#: code:addons/quality_mrp/models/mrp_production.py:0
+msgid "On-Demand Quality Check"
+msgstr "Проверка качества по запросу"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Перемещение продукта (Позиции движения запасов)"
+
+#. module: quality_mrp
+#: model:ir.model.fields,field_description:quality_mrp.field_quality_alert__production_id
+#: model:ir.model.fields,field_description:quality_mrp.field_quality_check__production_id
+msgid "Production Order"
+msgstr "Заказ на производство"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_quality_alert
+#: model_terms:ir.ui.view,arch_db:quality_mrp.mrp_production_view_form_inherit_quality
+msgid "Quality Alert"
+msgstr "Предупреждение о качестве"
+
+#. module: quality_mrp
+#: model:ir.model.fields,field_description:quality_mrp.field_mrp_production__quality_alert_count
+msgid "Quality Alert Count"
+msgstr "Количество предупреждений о качестве"
+
+#. module: quality_mrp
+#: model:ir.actions.server,name:quality_mrp.mrp_production_action_quality_check_on_demand
+#: model:ir.model,name:quality_mrp.model_quality_check
+msgid "Quality Check"
+msgstr "Проверка качества"
+
+#. module: quality_mrp
+#: model:ir.model.fields,field_description:quality_mrp.field_mrp_production__quality_check_fail
+msgid "Quality Check Fail"
+msgstr "Проверка качества не удалась"
+
+#. module: quality_mrp
+#: model:ir.model.fields,field_description:quality_mrp.field_mrp_production__quality_check_todo
+msgid "Quality Check Todo"
+msgstr "Проверка качества Сделать"
+
+#. module: quality_mrp
+#: model:ir.actions.act_window,name:quality_mrp.quality_check_action_mo
+#: model_terms:ir.ui.view,arch_db:quality_mrp.mrp_production_view_form_inherit_quality
+msgid "Quality Checks"
+msgstr "Проверки качества"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_quality_point
+msgid "Quality Control Point"
+msgstr "Пункт контроля качества"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_stock_move
+msgid "Stock Move"
+msgstr "Движение запасов"
+
+#. module: quality_mrp
+#. odoo-python
+#: code:addons/quality_mrp/models/quality.py:0
+msgid "Warning"
+msgstr "Предупреждение"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_quality_check_wizard
+msgid "Wizard for Quality Check Pop Up"
+msgstr "Мастер для проверки качества Всплывающее окно"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_quality_check_on_demand
+msgid "Wizard to select on-demand quality check points"
+msgstr "Мастер выбора точек контроля качества по запросу"
+
+#. module: quality_mrp
+#. odoo-python
+#: code:addons/quality_mrp/models/mrp_production.py:0
+#: code:addons/quality_mrp/wizard/on_demand_quality_check_wizard.py:0
+msgid ""
+"You can not create quality check for a draft, done or cancelled "
+"manufacturing order."
+msgstr ""
+"Нельзя создать проверку качества для черновиков, а также для уже выполненных "
+"или отмененных заказов."
+
+#. module: quality_mrp
+#. odoo-python
+#: code:addons/quality_mrp/models/mrp_production.py:0
+msgid ""
+"You cannot perform a quality check if the quantity producing is zero. Please "
+"set the production quantity first."
+msgstr ""
+"Нельзя выполнить проверку качества, если производимое количество равно нулю. "
+"Сначала задайте количество для производства."
+
+#. module: quality_mrp
+#. odoo-python
+#: code:addons/quality_mrp/models/mrp_production.py:0
+msgid "You still need to do the quality checks!"
+msgstr "Вам все равно нужно проверять качество!"
+
+#~ msgid ""
+#~ "The Quantity quality check type is not possible with work order "
+#~ "operations."
+#~ msgstr ""
+#~ "К сожалению, система не позволяет проверять количество брака на каждом "
+#~ "этапе производства, а только по завершении всего производственного заказа."

@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+
+        <xpath expr="//t[@t-set='layout_document_title']" position="before">
+            <div>Régimen FEL - Documento Tributario Electrónico</div>
+        </xpath>
+
+        <xpath expr="//div[@id='payment_term']" position="after">
+            <t t-set="gt_values" t-value="o._l10n_gt_edi_get_extra_invoice_report_values()"/>
+            <t t-if="gt_values and gt_values['total_lines'] > 6"><br/><br/><br/><br/><br/><br/><hr/></t>
+            <!--These <br/> elements prevents the QR code from being split across 2 pages, when the invoice has a lot of lines.-->
+            <div class="row col-12 lh-sm" id="complement" t-if="gt_values">
+                <div class="col-2 gap-3">
+                    <img alt="Guatemalan SAT Barcode" t-att-src="gt_values['barcode_src']"/>
+                    <img alt="FEL Factura Electronica Logo" height="85" width="120" src="/l10n_gt_edi/static/img/logo_fel.png"/>
+                </div>
+                <div class="complement-details col-4">
+                    <div t-out="gt_values['document_name']"/>
+                    <div>Serie: <t t-out="gt_values['series']"/></div>
+                    <div>No.: <t t-out="gt_values['serial_number']"/></div>
+                    <hr class="my-1 me-3"/>
+                    <div>Número de Autorización</div>
+                    <div style="font-size: 10px !important;" t-out="gt_values['uuid']"/>
+                    <hr class="my-1 me-3"/>
+                    <div>Fecha de Certificación</div>
+                    <div t-out="gt_values['certification_date']"/>
+                    <hr class="my-1 me-3"/>
+                    <div>Certificador: INFILE, S.A.</div>
+                    <div>Certificador NIT: 12521337</div>
+                </div>
+                <div class="col-6" t-attf-style="font-size: {{'12px' if gt_values['have_exportacion'] or gt_values['have_referencias'] or gt_values['have_cambiaria'] or gt_values['is_especial_fectura'] else '16px'}} !important;">
+                    <div>Nombre de la Empresa: <t t-out="gt_values['company_name']"/></div>
+                    <div>NIT de la Empresa: <t t-out="gt_values['company_vat']"/></div>
+                    <hr class="my-1 me-3"/>
+                    <div>Frases:</div>
+                    <ul class="my-0"><t t-foreach="gt_values['phrases']" t-as="phrase"><li t-out="phrase"/></t></ul>
+
+                    <t t-if="gt_values['have_exportacion']">
+                        <hr class="my-1 me-3"/>
+                        <div class="fw-bold">Complemento - Exportacion</div>
+                        <div>Nombre Consignatario O Destinario: <t t-out="gt_values['exportacion_nombre_consignatario_o_destinatario']"/></div>
+                        <div>Direccion Consignatario O Destinario: <t t-out="gt_values['exportacion_direccion_consignatario_o_destinatario']"/></div>
+                        <div>Codigo Consignatario O Destinario: <t t-out="gt_values['exportacion_codigo_consignatario_o_destinatario']"/></div>
+                        <div>Otra Referencia: <t t-out="gt_values['exportacion_otra_referencia']"/></div>
+                        <div t-if="exportacion_incoterm">INCOTERM: <t t-out="gt_values['exportacion_incoterm']"/></div>
+                    </t>
+                    <t t-if="gt_values['have_referencias']">
+                        <hr class="my-1 me-3"/>
+                        <div class="fw-bold">Complemento - Referencias Nota</div>
+                        <div>Motivo Ajuste: <t t-out="gt_values['referencias_motivo_ajuste']"/></div>
+                        <div>Fecha Emision Documento Origen: <t t-out="gt_values['referencias_fecha_emision_documento_origen']"/></div>
+                        <div>Numero Autorizacion Documento Origen: <t t-out="gt_values['referencias_numero_autorizacion_documento_origen']"/></div>
+                        <div>Numero Documento Origen: <t t-out="gt_values['referencias_numero_documento_origen']"/></div>
+                        <div>Serie Documento Origen: <t t-out="gt_values['referencias_serie_documento_origen']"/></div>
+                    </t>
+                    <t t-if="gt_values['have_cambiaria']">
+                        <hr class="my-1 me-3"/>
+                        <div class="fw-bold">Complemento - Cambiaria</div>
+                        <t t-foreach="gt_values['abonos']" t-as="abonos">
+                            <div>Numero Abono: <t t-out="abonos['numero_abono']"/></div>
+                            <div>Fecha Vencimiento: <t t-out="abonos['fecha_vencimiento']"/></div>
+                            <div>Monto Abono: <t t-out="abonos['monto_abono']"/></div>
+                        </t>
+                    </t>
+                    <t t-if="gt_values['is_especial_fectura']">
+                        <hr class="my-1 me-3"/>
+                        <div class="fw-bold">Complemento - Retenciones Factura Especial</div>
+                        <div>Retencion IVA: <t t-out="gt_values['retencion_iva']"/></div>
+                        <div>Retencion ISR: <t t-out="gt_values['retencion_isr']"/></div>
+                        <div>Total Menos Retenciones: <t t-out="gt_values['retencion_grand_total']"/></div>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+
+    </template>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_gt_edi.report_invoice_document'"
+               t-call="l10n_gt_edi.report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_document_file_kanban_mrp_plm" model="ir.ui.view">
+        <field name="name">product.document kanban.mrp.plm</field>
+        <field name="inherit_id" ref="product.product_document_kanban"/>
+        <field name="model">product.document</field>
+        <field name="priority">20</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="mimetype" position="after">
+                <field name="origin_attachment_id"/>
+            </field>
+            <xpath expr="//aside" position="before">
+                <widget name="web_ribbon" title="New" bg_color="text-bg-primary" invisible="origin_attachment_id or not active or res_model != 'mrp.eco'"/>
+                <widget name="web_ribbon" title="Variant" bg_color="text-bg-secondary" invisible="not active or origin_res_model != 'product.product'" groups="product.group_product_variant"/>
+            </xpath>
+            <xpath expr="//a[@type='delete']" position="replace">
+                <a t-if="widget.deletable" type="delete" class="dropdown-item" invisible="1">Delete</a>
+                <a name="toggle_active" type="object" class="dropdown-item">
+                    <span t-if="record.active.raw_value">Remove</span>
+                    <span t-if="!record.active.raw_value">Undo</span>
+                </a>
+            </xpath>
+            <xpath expr="//main/div" position="replace">
+                <div class="mt-2" invisible="origin_res_model != 'product.product'">
+                    <field name="origin_res_name" class="text-decoration-underline fst-italic"/>
+                </div>
+            </xpath>
+            <xpath expr="//t[@t-name='card']" position="attributes">
+                <attribute name="t-att-style">(!record.active.raw_value) &amp;&amp; "background: linear-gradient(45deg, white 25%, lightgrey 25%, lightgrey 50%, white 50%, white 75%, lightgrey 75%); background-size: 20px 20px;"</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

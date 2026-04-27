@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+    <record id="account_disallowed_expenses_comp_rule" model="ir.rule">
+        <field name="name">Account disallowed expenses multi-country</field>
+        <field name="model_id" ref="model_account_disallowed_expenses_category"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+</data>
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="amazon_offer_view_tree" model="ir.ui.view">
+        <field name="name">amazon.offer.list</field>
+        <field name="model">amazon.offer</field>
+        <field name="arch" type="xml">
+            <list string="Amazon Offers" editable="top">
+                <field name="account_id" column_invisible="True"/>
+                <field name="active_marketplace_ids" column_invisible="True"/>
+                <field name="marketplace_id" options="{'no_create_edit': True, 'no_open': True}"/>
+                <field name="product_id"/>
+                <field name="sku"/>
+                <button name="action_view_online"
+                        type="object"
+                        string="View on Seller Central"
+                        icon="fa-external-link"/>
+                <field name="amazon_sync_status"
+                       widget="badge"
+                       decoration-warning="amazon_sync_status == 'processing'"
+                       decoration-success="amazon_sync_status == 'done'"
+                       decoration-danger="amazon_sync_status == 'error'"
+                       optional="hide"
+                />
+                <field name="amazon_feed_ref" optional="hide" groups="base.group_no_one"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="amazon_offer_view_search" model="ir.ui.view">
+        <field name="name">amazon.offer.search</field>
+        <field name="model">amazon.offer</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="marketplace_id"
+                       filter_domain="[('marketplace_id.name', 'ilike', self)]"/>
+                <field name="product_id"/>
+            </search>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_job_post_view_list" model="ir.ui.view">
+        <field name="name">hr.job.post.tree</field>
+        <field name="model">hr.job.post</field>
+        <field name="arch" type="xml">
+            <list>
+                <header>
+                    <button name="action_post_now"
+                            type="object"
+                            string="Post Now"/>
+                    <button name="action_stop_campaign"
+                            type="object"
+                            string="Stop Campaigns"/>
+                </header>
+                <field name="platform_id" widget="many2one_avatar"/>
+                <field name="job_id"/>
+                <field name="campaign_start_date" string="Start Date"/>
+                <field name="campaign_end_date" string="Stop Date"/>
+                <field name="apply_method" optional="hide"/>
+                <field name="apply_vector" optional="hide"/>
+                <field
+                    name="status"
+                    decoration-danger="status == 'failure'"
+                    decoration-warning="status not in ('success', 'failure')"
+                    decoration-success="status == 'success'"
+                    optional="hide"/>
+                <field name="create_date" optional="hide"/>
+                <field name="create_uid" widget="many2one_avatar_user" optional="hide"/>
+                <field name="company_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_job_post_view_form" model="ir.ui.view">
+        <field name="name">hr.job.post.form</field>
+        <field name="model">hr.job.post</field>
+        <field name="arch" type="xml">
+            <form js_class="job_post_no_save_form">
+                <header>
+                    <button
+                        name="action_post_now"
+                        string="Post Now"
+                        type="object"
+                        class="btn-primary"
+                        invisible="status != 'pending'"/>
+                    <button
+                        name="action_update_job_post_check"
+                        string="Update"
+                        type="object"
+                        class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <field name="status"
+                        widget="integration_state_selection"
+                        options="{'ribbon': true}"/>
+                    <group class="my-4">
+                        <group>
+                            <field name="job_id"/>
+                            <field name="platform_id" widget="many2one_avatar"/>
+                            <label for="campaign_start_date" string="Campaign Duration"/>
+                            <div>
+                                <field name="campaign_start_date"
+                                    class="oe_inline o_hr_narrow_field"/>
+                                <strong class="px-2">to</strong>
+                                <field name="campaign_end_date"
+                                    class="oe_inline o_hr_narrow_field"
+                                    no_label="1"
+                                    placeholder="No Limit"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="apply_method"/>
+                            <field name="apply_vector"/>
+                            <field name="recruiter_id" widget="many2one_avatar"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <div>
+                                <field name="post_html" style="height:45em; overflow: auto;"/>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter open_attachments="True"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_job_post_view_kanban" model="ir.ui.view">
+        <field name="name">hr.job.post.kanban</field>
+        <field name="model">hr.job.post</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="card" class="flex-row">
+                        <main>
+                            <div class="d-flex">
+                                <h3 class="flex-grow-1 d-flex">
+                                    <field
+                                        name="platform_icon"
+                                        widget="image"
+                                        alt="plateform icon"
+                                        class="pe-2"
+                                        options="{'img_class': 'rounded', 'size': [30,30]}"/>
+                                    <div>
+                                        <field name="job_id"/>
+                                        <span class="px-2">-</span>
+                                        <field name="platform_id"/>
+                                    </div>
+                                </h3>
+                                <field
+                                    name="status"
+                                    widget="integration_state_selection"
+                                    nolabel="1"
+                                    class="float-end"/>
+                            </div>
+                            <div>
+                                <strong class="o_kanban_label_width">From:</strong>
+                                <field name="campaign_start_date"/>
+                            </div>
+                            <div>
+                                <strong class="o_kanban_label_width">To:</strong>
+                                <field name="campaign_end_date"
+                                    invisible="not campaign_end_date"/>
+                                <span class="text-muted"
+                                    invisible="campaign_end_date">No limit</span>
+                            </div>
+                            <footer>
+                                <div class="d-flex ms-auto">
+                                    <field
+                                        name="create_uid"
+                                        widget="many2one_avatar_user"
+                                        readonly="1"
+                                        class="mb-1 ms-2 text-end"/>
+                                </div>
+                            </footer>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="hr_job_post_view_kanban_search" model="ir.ui.view">
+        <field name="name">hr.job.post.kanban.search</field>
+        <field name="model">hr.job.post</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="job_id"/>
+                <field name="platform_id"/>
+                <field name="apply_vector"/>
+                <separator/>
+                <filter name="filter_published"
+                    string="Published"
+                    domain="[('status', '=', 'success')]"/>
+                <filter name="filter_expired"
+                    string="Expired"
+                    domain="[('status', '=', 'expired')]"/>
+                <filter name="filter_issue"
+                    string="Issue"
+                    domain="[('status', 'in', ['warning', 'failure'])]"/>
+                <separator/>
+                <filter
+                    name="filter_campaign_end_date"
+                    date="campaign_end_date"
+                    string="Expiration date"
+                    default_period="year"
+                    start_year="0"
+                    end_year="2"
+                    start_month="0"
+                    end_month="2"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_platform"
+                        string="Platform"
+                        context="{'group_by': 'platform_id'}"/>
+                    <filter name="group_job_id"
+                        string="Job"
+                        context="{'group_by': 'job_id'}"/>
+                    <filter name="group_status"
+                        string="Status"
+                        context="{'group_by': 'status'}"/>
+                    <filter name="group_method"
+                        string="Contact Method"
+                        context="{'group_by': 'apply_method'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_open_hr_job_post" model="ir.actions.act_window">
+        <field name="name">Job Boards Posts</field>
+        <field name="res_model">hr.job.post</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="hr_job_post_view_kanban_search"/>
+    </record>
+
+    <menuitem
+        name="Job Boards Posts"
+        parent="hr_recruitment.menu_crm_case_categ0_act_job"
+        id="menu_hr_job_boards"
+        action="action_open_hr_job_post"
+        groups="hr_recruitment.group_hr_recruitment_manager"
+        sequence="45"/>
+
+    <record id="hr_job_post_double_check_action" model="ir.actions.server">
+        <field name="name">Double Check Job Post</field>
+        <field name="model_id" ref="model_hr_job_post"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = env['hr.job.post']\
+                .browse(env.context.get('active_id'))\
+                .with_user(env.context.get('uid'))\
+                .action_update_job_post()
+        </field>
+    </record>
+</odoo> 

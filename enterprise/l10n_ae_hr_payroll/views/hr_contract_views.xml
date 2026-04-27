@@ -1,0 +1,42 @@
+<odoo>
+    <data noupdate="0">
+        <record id="hr_contract_view_form" model="ir.ui.view">
+            <field name="name">View Contract Form</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+                <group name="salary" position="inside" >
+                    <label for="l10n_ae_housing_allowance" invisible="country_code != 'AE'"/>
+                    <div class="o_row" name="l10n_ae_housing_allowance" invisible="country_code != 'AE'">
+                        <field name="l10n_ae_housing_allowance" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                    <label for="l10n_ae_transportation_allowance" invisible="country_code != 'AE'"/>
+                    <div class="o_row" name="l10n_ae_transportation_allowance" invisible="country_code != 'AE'">
+                        <field name="l10n_ae_transportation_allowance" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                    <label for="l10n_ae_other_allowances" invisible="country_code != 'AE'"/>
+                    <div class="o_row" name="l10n_ae_other_allowances" invisible="country_code != 'AE'">
+                        <field name="l10n_ae_other_allowances" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                </group>
+                <group name="salary_info" position="after">
+                    <group>
+                        <group name="annual_leave_provision" string="Annual Leave Provision" invisible="country_code != 'AE'">
+                            <field name="l10n_ae_number_of_leave_days"/>
+                        </group>
+                        <group name="dews_benefits" string="DEWS Benefits" invisible="country_code != 'AE'">
+                            <field name="l10n_ae_is_dews_applied"/>
+                        </group>
+                    </group>
+                    <group name="ae_eos" string="End Of Service" invisible="country_code != 'AE'">
+                        <field name="l10n_ae_is_computed_based_on_daily_salary"/>
+                        <field name="l10n_ae_eos_daily_salary" invisible="not l10n_ae_is_computed_based_on_daily_salary"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+    </data>
+</odoo>

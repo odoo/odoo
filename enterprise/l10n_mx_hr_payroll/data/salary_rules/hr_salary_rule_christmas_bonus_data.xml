@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_mx_christmas_bonus_basic" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="name">Basic Christmas Bonus</field>
+        <field name="code">BASIC</field>
+        <field name="sequence">1</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+first_day = max(date(payslip.date_to.year, 1, 1), employee.first_contract_date)
+days_of_year_in_contract_until_payslip = (payslip.date_to - first_day).days + 1
+unpaid_worked_days = payslip.env['hr.payslip'].search([
+    ('employee_id', '=', employee.id),
+    ('structure_code', '=', 'MX_REGULAR'),
+    ('state', 'in', ['paid', 'done']),
+    ('date_from', '>=', date(payslip.date_to.year, 1, 1)),
+    ('date_to', '&lt;=', payslip.date_to),
+])._get_worked_days_line_values(['LEAVE90', 'LEAVE1000', 'LEAVE1100', 'LEAVE1200'], ['number_of_days'], True)
+unpaid_days = sum(worked_day_line['sum']['number_of_days'] for worked_day_line in unpaid_worked_days.values())
+
+work_ratio = (days_of_year_in_contract_until_payslip - unpaid_days) / payslip.l10n_mx_days_of_year
+result = payslip.l10n_mx_daily_salary * payslip._rule_parameter('l10n_mx_christmas_bonus') * work_ratio
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_christmas_bonus"/>
+    </record>
+
+    <record id="l10n_mx_christmas_bonus_non_taxable" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_exemption"/>
+        <field name="name">Christmas Bonus (Non-Taxable)</field>
+        <field name="code">EXEMPT</field>
+        <field name="sequence">99</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = payslip._rule_parameter('l10n_mx_christmas_bonus_exemption') * payslip._rule_parameter('l10n_mx_uma')
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_christmas_bonus"/>
+    </record>
+
+    <record id="l10n_mx_christmas_bonus_taxable" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.GROSS"/>
+        <field name="name">Christmas Bonus (Taxable)</field>
+        <field name="code">GROSS</field>
+        <field name="sequence">100</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = max(categories['BASIC'] - categories['MX_EXEMPTION'], 0)
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_christmas_bonus"/>
+    </record>
+
+    <record id="l10n_mx_christmas_bonus_isr" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_taxes"/>
+        <field name="name">ISR (Income Tax)</field>
+        <field name="code">ISR</field>
+        <field name="sequence">101</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+def find_rates(x, rates):
+    for low, high, fix, rate in rates:
+        if low &lt;= x &lt;= high:
+            return low, high, fix, rate
+worked_days = (payslip.date_to - contract.employee_id.first_contract_date).days
+monthly_salary = contract._get_contract_wage()
+isr_tables = payslip._rule_parameter('l10n_mx_isr_tables')
+isr_monthly_table = isr_tables['monthly']
+
+taxable_amount = categories['GROSS']
+if taxable_amount == 0:
+    result = 0
+else:
+    fraction_I = categories['GROSS'] * 30.4 / payslip.l10n_mx_days_of_year
+
+    fraction_II = monthly_salary + fraction_I
+    low, high, fix, rate = find_rates(fraction_II, isr_monthly_table)
+    fraction_II = (fraction_II - low) * rate + fix
+
+    low, high, fix, rate = find_rates(monthly_salary, isr_monthly_table)
+    fraction_III = (monthly_salary - low) * rate + fix
+    fraction_III = fraction_II - fraction_III
+
+    fraction_V = fraction_III / fraction_I
+
+    fraction_IV = categories['GROSS'] * fraction_V
+
+    result = - fraction_IV
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_christmas_bonus"/>
+        <field name="note">
+        </field>
+    </record>
+
+    <record id="l10n_mx_christmas_bonus_net" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="name">Net Christmas Bonus</field>
+        <field name="code">NET</field>
+        <field name="sequence">200</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['BASIC'] + categories['MX_TAXES']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_christmas_bonus"/>
+    </record>
+
+</odoo>

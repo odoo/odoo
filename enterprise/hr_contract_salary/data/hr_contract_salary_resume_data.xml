@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    <record id="hr_contract_salary_resume_category_monthly_salary" model="hr.contract.salary.resume.category">
+        <field name="name">Monthly Salary</field>
+        <field name="sequence">5</field>
+        <field name="periodicity">monthly</field>
+    </record>
+
+    <record id="hr_contract_salary_resume_category_monthly_benefits" model="hr.contract.salary.resume.category">
+        <field name="name">Monthly Benefits</field>
+        <field name="sequence">10</field>
+        <field name="periodicity">monthly</field>
+    </record>
+
+    <record id="hr_contract_salary_resume_category_yearly_benefits" model="hr.contract.salary.resume.category">
+        <field name="name">Yearly Benefits</field>
+        <field name="sequence">15</field>
+        <field name="periodicity">yearly</field>
+    </record>
+
+    <record id="hr_contract_salary_resume_category_total" model="hr.contract.salary.resume.category">
+        <field name="name">Total</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="hr_contract_salary_resume_gross" model="hr.contract.salary.resume">
+        <field name="name">Gross</field>
+        <field name="value_type">contract</field>
+        <field name="code">wage_with_holidays</field>
+        <field name="category_id" ref="hr_contract_salary.hr_contract_salary_resume_category_monthly_salary"/>
+        <!-- Note: Will be set to False once payroll is installed, as we'll take the net into account instead -->
+        <field name="impacts_monthly_total" eval="True"/>
+    </record>
+
+    <record id="hr_contract_salary_resume_monthly_total" model="hr.contract.salary.resume">
+        <field name="name">Monthly Equivalent</field>
+        <field name="value_type">monthly_total</field>
+        <field name="category_id" ref="hr_contract_salary.hr_contract_salary_resume_category_total"/>
+    </record>
+
+    <record id="hr_contract_salary_resume_final_yearly_costs" model="hr.contract.salary.resume">
+        <field name="name">Employer Cost</field>
+        <field name="value_type">contract</field>
+        <field name="code">final_yearly_costs</field>
+        <field name="category_id" ref="hr_contract_salary.hr_contract_salary_resume_category_total"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee"/>
+    </record>
+    </data>
+</odoo>

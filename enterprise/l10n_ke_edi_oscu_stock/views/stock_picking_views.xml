@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_picking_form_inherit_l10n_ke_edi_stock" model="ir.ui.view">
+        <field name="model">stock.picking</field>
+        <field name="name">stock.picking.form.inherit.l10n.ke.edi.oscu.stock</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="l10n_ke_oscu_flow_type_code" invisible="1"/>
+
+            </xpath>
+            <xpath expr="//header" position="after">
+                <div class="m-0" name="warnings">
+                    <field name="l10n_ke_validation_msg" class="o_field_html" widget="actionable_errors"/>
+                    <field name="l10n_ke_error_msg" class="o_field_html" widget="actionable_errors"/>
+                </div>
+            </xpath>
+            <field name="origin" position="after">
+                <field name="l10n_ke_state" invisible="not l10n_ke_oscu_flow_type_code or state != 'done'"/>
+            </field>
+            <page name="extra" position="inside">
+                <group name="kra_info" string="KRA eTIMS Info" invisible="not l10n_ke_oscu_flow_type_code or state != 'done'">
+                    <field name="l10n_ke_oscu_sar_number"/>
+                    <field name="l10n_ke_oscu_flow_type_code"/>
+                </group>
+            </page>
+            <field name="partner_id" position="attributes">
+                <attribute name="readonly">state == 'cancel'</attribute>
+            </field>
+        </field>
+    </record>
+    <record id="stock_picking_tree_inherit_l10n_ke_edi_stock" model="ir.ui.view">
+        <field name="model">stock.picking</field>
+        <field name="name">stock.picking.list.inherit.l10n.ke.edi.oscu.stock</field>
+        <field name="inherit_id" ref="stock.vpicktree" />
+        <field name="arch" type="xml">
+            <field name="origin" position="after">
+                <field name="l10n_ke_state" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- New picking view for cancelling the errors -->
+    <record id="stock_picking_tree_inherit_l10n_ke_edi_stock_special" model="ir.ui.view">
+        <field name="model">stock.picking</field>
+        <field name="name">stock.picking.list.inherit.l10n.ke.edi.oscu.stock</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="stock.vpicktree" />
+        <field name="arch" type="xml">
+            <field name="origin" position="after">
+                <field name="l10n_ke_state"/>
+            </field>
+            <list position="attributes">
+                <field name="default_order">date</field>
+            </list>
+        </field>
+    </record>
+
+
+</odoo>

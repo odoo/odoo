@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_aprroval_request_document">
+        <t t-call="web.external_layout">
+            <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
+            <h5 class="mt-2" t-field="o.category_id.name">Test Category</h5>
+            <div class="row mt-4">
+                <div class="col-6">
+                    <div class="d-flex">
+                        <h6 class="col-3 fw-bold">Request By:</h6>
+                        <h6 class="col-9" t-field="o.request_owner_id">Marc Demo</h6>
+                    </div>
+                    <div class="d-flex">
+                        <h6 class="col-3 fw-bold">Approvers:</h6>
+                        <div class="col-9">
+                            <h6 t-foreach="o.approver_ids" t-as="approver_id" class="mb-2">
+                                <span t-field="approver_id.user_id.name">Mitchell Admin</span>
+                                <span t-if="approver_id.status == 'approved'">(&#10004;)</span>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <h6 class="col-3 fw-bold">Status:</h6>
+                        <h6 t-field="o.request_status">Approved</h6>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="d-flex mt-1" t-if="o.date">
+                        <h6 class="col-3 fw-bold">Date:</h6>
+                        <h6 t-field="o.date">07/07/2023 10:00:00</h6>
+                    </div>
+                    <div class="d-flex mt-1" t-if="o.date_start">
+                        <h6 class="col-3 fw-bold">Period:</h6>
+                        <h6>
+                            <span t-field="o.date_start">07/07/2023 10:00:00</span> <span class="fw-bold">To</span> <span t-field="o.date_end">07/08/2023 10:00:00</span>
+                        </h6>
+                    </div>
+                    <div class="d-flex mt-1" t-if="o.location">
+                        <h6 class="col-3 fw-bold">Location:</h6>
+                        <h6 t-field="o.location">Brussels</h6>
+                    </div>
+                    <div class="d-flex mt-1" t-if="o.partner_id">
+                        <h6 class="col-3 fw-bold">Contact:</h6>
+                        <h6 class="col-9" t-field="o.partner_id">Mitchell Admin</h6>
+                    </div>
+                    <div class="d-flex mt-1" t-if="o.amount">
+                        <h6 class="col-3 fw-bold">Amount:</h6>
+                        <h6 t-field="o.amount">1200</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="page mt-4" t-if="o.product_line_ids">
+                <div class="oe_structure"/>
+                <table class="table table-sm mt-4">
+                    <thead class="o_black_border">
+                        <tr>
+                            <th name="th_description" class="text-start fw-bold">Product Description</th>
+                            <th name="th_expected_date" class="text-center fw-bold">Quantity</th>
+                            <th name="th_uom" class="text-center fw-bold">UoM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="o.product_line_ids" t-as="product_line">
+                            <td><span t-field="product_line.product_id">Test Product</span></td>
+                            <td class="text-center"><span t-field="product_line.quantity">2</span></td>
+                            <td class="text-center"><span t-field="product_line.product_uom_id">Units</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="oe_structure"/>
+            </div>
+            <div t-if="o.reason" class="mt-4">
+                <h6 class="d-flex">
+                    <span class="col-2 fw-bold">Description:</span>
+                    <span t-field="o.reason">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span>
+                </h6>
+            </div>
+            <div class="row mt-4" t-if="o.reference">
+                <div class="d-flex">
+                    <h6 class="col-2 fw-bold">Reference:</h6>
+                    <h6 t-field="o.reference">Test Reference</h6>
+                </div>
+            </div>
+            <div class="row mt-4" t-if="o.attachment_ids.ids">
+                <div class="d-flex">
+                    <h6 class="col-2 fw-bold">Documents:</h6>
+                    <h6 t-foreach="o.attachment_ids" t-as="attachment" t-out="attachment.name">Test Document</h6>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_approval_request">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="approvals.report_aprroval_request_document" t-lang="o.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>

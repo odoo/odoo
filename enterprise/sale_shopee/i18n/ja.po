@@ -1,0 +1,1441 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_shopee
+#
+# Translators:
+# Wil Odoo, 2025
+# Junko Augias, 2025
+#
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:45+0000\n"
+"PO-Revision-Date: 2026-04-14 08:19+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/"
+"sale_shopee/ja/>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.16.2\n"
+
+#. module: sale_shopee
+#: model:mail.template,body_html:sale_shopee.order_sync_failure
+msgid ""
+"<div>\n"
+"                <p>The synchronization of the Shopee order with reference <t "
+"t-out=\"ctx.get('shopee_order_ref') or ''\">REF</t> encountered an error and "
+"was not completed.</p>\n"
+"                <p>Unless the order is cancelled in Shopee, no other "
+"synchronization will be attempted.</p>\n"
+"                <p>To schedule a new synchronization attempt, proceed as "
+"follows:\n"
+"                    </p><ol>\n"
+"                        <li>Enter the Developer Tools.</li>\n"
+"                        <li>Open the form of the Shopee Shop on which the "
+"order was placed.</li>\n"
+"                        <li>Navigate to the Order Follow-up tab.</li>\n"
+"                        <li>Set a date for <em>Last Order Synchronization "
+"Date</em> that is anterior to the last status update of the order.</li>\n"
+"                        <li>Save the changes and click on the <em>SYNC "
+"ORDERS</em> button.</li>\n"
+"                    </ol>\n"
+"                \n"
+"                <p>If the problem persists, contact <a href=\"https://"
+"www.odoo.com/help/\">Odoo support</a>.</p>\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div>\n"
+"                <p>Shopeeオーダ <t t-out=\"ctx.get('shopee_order_ref') or "
+"''\">REF</t> の同期中にエラーが発生し完了できませんでした。</p>\n"
+"                <p>オーダがShopeeでキャンセルされない限り、他の同期を試みるこ"
+"とはありません。</p>\n"
+"                <p>T新しい同期の試行を予定するには以下を行います:\n"
+"                    </p><ol>\n"
+"                        <li>ディベロッパーツールを入力する。</li>\n"
+"                        <li>注文したShopeeアカウントのフォームを開く。</li>\n"
+"                        <li>注文フォローアップタブに移動します。</li>\n"
+"                        <li>以下の日付を設定: <em>最終オーダ同期</em> オーダ"
+"の最後のステータス更新より前のものであるもの。</li>\n"
+"                        <li>変更を保存し、以下をクリック <em>オーダを同期</"
+"em> ボタン。</li>\n"
+"                    </ol>\n"
+"                \n"
+"                <p>問題が解決しない場合は、 <a href=\"https://www.odoo.com/"
+"help/\">Odoo サポート</a>にご連絡下さい。</p>\n"
+"            </div>\n"
+"        "
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid ""
+"<strong>Warning:</strong>\n"
+"                    Shop authorization is expired. Please re-authorize the "
+"shop in the Shopee Account page."
+msgstr ""
+"<strong>警告:</strong>\n"
+"                    ショップの承認が失効しています。Shopeeアカウントページで"
+"ショップを再承認して下さい。"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid ""
+"<strong>Warning:</strong>\n"
+"                    Shop authorization will expire soon. Re-authorize the "
+"shop in the Shopee Account page."
+msgstr ""
+"<strong>警告:</strong>\n"
+"                    ショップの承認はまもなく使用期限が切れます。Shopeeアカウ"
+"ントページでショップの承認を再度行って下さい。"
+
+#. module: sale_shopee
+#: model:mail.template,body_html:sale_shopee.picking_sync_failure
+msgid ""
+"<style>\n"
+"                .shopee_table {\n"
+"                    width: 100%;\n"
+"                    max-width: 900px;\n"
+"                    border-collapse: collapse;\n"
+"                }\n"
+"\n"
+"                .shopee_table th,\n"
+"                .shopee_table td {\n"
+"                    border: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .shopee_table th {\n"
+"                    white-space: nowrap;\n"
+"                }\n"
+"\n"
+"                .shopee_table thead th {\n"
+"                    padding: 0.5em 0.5em;\n"
+"                    text-align: center;\n"
+"                    border-bottom: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .shopee_table tbody th,\n"
+"                .shopee_table tbody td {\n"
+"                    padding: 0.5em 0.5em 1em;\n"
+"                    vertical-align: top;\n"
+"                }\n"
+"            </style>\n"
+"            <body><div>\n"
+"                <p>The synchronization of the Shopee shipping labels "
+"encountered some errors and was not completed.</p>\n"
+"                <p>Please correct the problem before manually synchronizing "
+"the pickings again, as no other synchronization will be attempted.</p>\n"
+"                <p>Here are the errors sent by Shopee: </p>\n"
+"                <table class=\"shopee_table\">\n"
+"                    <thead>\n"
+"                        <tr>\n"
+"                            <th>Batch Picking References</th>\n"
+"                            <th>Message</th>\n"
+"                        </tr>\n"
+"                    </thead>\n"
+"                    <tbody>\n"
+"                        <tr t-foreach=\"ctx.get('error_messages')\" t-"
+"as=\"error\">\n"
+"                            <th><t t-out=\"error['batch_picking_refs']\"/></"
+"th>\n"
+"                            <td>\n"
+"                                <t t-if=\"error['message']\" t-"
+"out=\"error['message']\"/>\n"
+"                                <t t-else=\"\">An unknown error occurred "
+"during the synchronisation with Shopee.\n"
+"                                    Unfortunately you need to manually check "
+"if the state of the order is correct or not.\n"
+"                                    If the problem persists, contact <a "
+"href=\"https://www.odoo.com/help/\">Odoo support </a>.\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"            </div>\n"
+"        </body>"
+msgstr ""
+"<style>\n"
+"                .shopee_table {\n"
+"                    width: 100%;\n"
+"                    max-width: 900px;\n"
+"                    border-collapse: collapse;\n"
+"                }\n"
+"\n"
+"                .shopee_table th,\n"
+"                .shopee_table td {\n"
+"                    border: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .shopee_table th {\n"
+"                    white-space: nowrap;\n"
+"                }\n"
+"\n"
+"                .shopee_table thead th {\n"
+"                    padding: 0.5em 0.5em;\n"
+"                    text-align: center;\n"
+"                    border-bottom: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .shopee_table tbody th,\n"
+"                .shopee_table tbody td {\n"
+"                    padding: 0.5em 0.5em 1em;\n"
+"                    vertical-align: top;\n"
+"                }\n"
+"            </style>\n"
+"            <body><div>\n"
+"                <p>出荷オーダの同期中にエラーが発生し完了できませんでした。"
+"</p>\n"
+"                <p>出荷オーダを再度手動で同期する前に、問題を訂正して下さい。"
+"他に試行される同期はありません。</p>\n"
+"                <p>Shopeeから送られたエラーは以下です: </p>\n"
+"                <table class=\"shopee_table\">\n"
+"                    <thead>\n"
+"                        <tr>\n"
+"                            <th>バッチピッキング参照番号</th>\n"
+"                            <th>メッセージ</th>\n"
+"                        </tr>\n"
+"                    </thead>\n"
+"                    <tbody>\n"
+"                        <tr t-foreach=\"ctx.get('error_messages')\" t-as="
+"\"error\">\n"
+"                            <th><t t-out=\"error['batch_picking_refs']\""
+"/></th>\n"
+"                            <td>\n"
+"                                <t t-if=\"error['message']\" t-out="
+"\"error['message']\"/>\n"
+"                                <t t-else=\"\">Shopeeとの同期中に不明なエラー"
+"が発生しました。\n"
+"                                    お手数ですが、オーダのステートの正誤をマ"
+"ニュアルで確認する必要があります。\n"
+"                                    問題が続くようであれば、以下までご連絡下"
+"さい <a href=\"https://www.odoo.com/help/\">Odooサポート </a>。\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"            </div>\n"
+"        </body>"
+
+#. module: sale_shopee
+#: model:mail.template,body_html:sale_shopee.inventory_sync_failure
+msgid ""
+"<style>\n"
+"                .shopee_table {\n"
+"                    width: 100%;\n"
+"                    max-width: 900px;\n"
+"                    border-collapse: collapse;\n"
+"                }\n"
+"\n"
+"                .shopee_table th,\n"
+"                .shopee_table td {\n"
+"                    border: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .shopee_table th {\n"
+"                    white-space: nowrap;\n"
+"                }\n"
+"\n"
+"                .shopee_table thead th {\n"
+"                    padding: 0.5em 0.5em;\n"
+"                    text-align: center;\n"
+"                    border-bottom: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .shopee_table tbody th,\n"
+"                .shopee_table tbody td {\n"
+"                    padding: 0.5em 0.5em 1em;\n"
+"                    vertical-align: top;\n"
+"                }\n"
+"            </style>\n"
+"            <body><div>\n"
+"                <p>The synchronization of the inventory for Shopee Shop\n"
+"                    <b><t t-out=\"ctx.get('shopee_shop') or ''\">REF</t></"
+"b>\n"
+"                    encountered some errors and was not completed.</p>\n"
+"                <p>Here are the errors sent by Shopee: </p>\n"
+"                <table class=\"shopee_table\">\n"
+"                    <thead>\n"
+"                        <tr>\n"
+"                            <th>Shopee Item Identifier</th>\n"
+"                            <th>Message</th>\n"
+"                        </tr>\n"
+"                    </thead>\n"
+"                    <tbody>\n"
+"                        <tr t-foreach=\"ctx.get('error_messages')\" t-"
+"as=\"error\">\n"
+"                            <th><t t-out=\"error['item_identifier']\"/></"
+"th>\n"
+"                            <td>\n"
+"                                <t t-if=\"error['message']\" t-"
+"out=\"error['message']\"/>\n"
+"                                <t t-else=\"\">An unknown error occurred "
+"during the synchronisation with Shopee.\n"
+"                                    Unfortunately you need to manually check "
+"if the available quantity for the product is correct or not.\n"
+"                                    If the problem persists, contact <a "
+"href=\"https://www.odoo.com/help/\">Odoo support </a>.\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"            </div>\n"
+"        </body>"
+msgstr ""
+"<style>\n"
+"                .shopee_table {\n"
+"                    width: 100%;\n"
+"                    max-width: 900px;\n"
+"                    border-collapse: collapse;\n"
+"                }\n"
+"\n"
+"                .shopee_table th,\n"
+"                .shopee_table td {\n"
+"                    border: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .shopee_table th {\n"
+"                    white-space: nowrap;\n"
+"                }\n"
+"\n"
+"                .shopee_table thead th {\n"
+"                    padding: 0.5em 0.5em;\n"
+"                    text-align: center;\n"
+"                    border-bottom: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .shopee_table tbody th,\n"
+"                .shopee_table tbody td {\n"
+"                    padding: 0.5em 0.5em 1em;\n"
+"                    vertical-align: top;\n"
+"                }\n"
+"            </style>\n"
+"            <body><div>\n"
+"                <p>Shopee店舗\n"
+"                    <b><t t-out=\"ctx.get('shopee_shop') or ''\">REF</t></"
+"b>\n"
+"                    の在庫の同期中にエラーが発生して完了できませんでした。</"
+"p>\n"
+"                <p>Shopeeから送られたエラー: </p>\n"
+"                <table class=\"shopee_table\">\n"
+"                    <thead>\n"
+"                        <tr>\n"
+"                            <th>Shopee項目識別子</th>\n"
+"                            <th>メッセージ</th>\n"
+"                        </tr>\n"
+"                    </thead>\n"
+"                    <tbody>\n"
+"                        <tr t-foreach=\"ctx.get('error_messages')\" t-"
+"as=\"error\">\n"
+"                            <th><t t-out=\"error['item_identifier']\"/></"
+"th>\n"
+"                            <td>\n"
+"                                <t t-if=\"error['message']\" t-"
+"out=\"error['message']\"/>\n"
+"                                <t t-else=\"\">Shopeeとの同期中に不明なエラー"
+"が発生しました。\n"
+"                                   お手数ですが、オーダのステートの正誤をマ"
+"ニュアルで確認する必要があります。\n"
+"                                    問題が続くようであれば、以下までご連絡下"
+"さい <a href=\"https://www.odoo.com/help/\">Odooサポート </a>。\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"            </div>\n"
+"        </body>"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__api_endpoint
+msgid "API Endpoint"
+msgstr "APIエンドポイント"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__access_token
+msgid "Access Token"
+msgstr "アクセストークン"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__access_token_expiration_date
+msgid "Access Token Expiration Date"
+msgstr "アクセストークン使用期限日"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__access_token
+msgid "Access Token expires in 4 hours and is used to access the Shopee API."
+msgstr ""
+"アクセストークンの使用期限は4時間で、Shopee APIへのアクセスに使用されます。"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__access_token_expiration_date
+msgid ""
+"Access token expiration date. Computed using the expires_in returned by "
+"Shopee."
+msgstr ""
+"アクセストークンの使用期限。Shopeeから返されたexpires_inを使用して計算されま"
+"す。"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_account_view_form
+msgid "Account Name"
+msgstr "アカウント名"
+
+#. module: sale_shopee
+#: model:ir.ui.menu,name:sale_shopee.accounts_menu
+msgid "Accounts"
+msgstr "アカウント"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__active
+#: model:ir.model.fields.selection,name:sale_shopee.selection__shopee_shop__status__active
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_search
+msgid "Active"
+msgstr "有効"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Add-on Deal Main"
+msgstr "追加取引メイン"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Add-on Deal Sub"
+msgstr "追加取引サブ"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__company_ids
+msgid "Allowed Company"
+msgstr "許可された会社"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Archived"
+msgstr "アーカイブ済"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/utils.py:0
+msgid ""
+"At shop - %(shop_name)s, error %(error_code)s occurred during operation %"
+"(operation)s when contacting the Shopee API. Shopee sent:\n"
+"\n"
+"%(error_message)s"
+msgstr ""
+"店舗 - %(shop_name)sで、エラー %(error_code)s がオペレーション %(operation)s "
+"中にShopee APIに連絡中に発生しました。 Shopeeは以下を送信しています:\n"
+"\n"
+"%(error_message)s"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/utils.py:0
+msgid ""
+"At shop - %(shop_name)s, error %(error_code)s occurred during operation %"
+"(operation)s when contacting the Shopee API:\n"
+"\n"
+"%(error_message)s"
+msgstr ""
+"ショップ - %(shop_name)sで、エラー %(error_code)s がオペレーション %"
+"(operation)s 中にShopee APIに連絡中に発生しました:\n"
+"\n"
+"%(error_message)s"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/utils.py:0
+msgid ""
+"Authorization Code is required to request an Access Token. Please authorize "
+"the connection first."
+msgstr ""
+"アクセストークンをリクエストするには、認証コードが必要です。まず接続を認証し"
+"て下さい。"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__authorization_expiration_date
+msgid "Authorization Expiration Date"
+msgstr "認証有効期限日"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__authorization_remaining_days
+msgid "Authorization Remaining Days"
+msgstr "認証有効残日数"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_account_view_form
+msgid "Authorize Shop"
+msgstr "ショップを認証"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Bundle Deal"
+msgstr "バンドル取引"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.quick_create_account_form
+msgid "Cancel"
+msgstr "キャンセル"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__sale_order__shopee_delivery_status__cancelled
+msgid "Cancelled"
+msgstr "取消済"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.picking_view_form
+msgid "Cancelled on Shopee"
+msgstr "Shopeeでの取消"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_account.py:0
+msgid "Changing API endpoint will reset the authorization of the shops."
+msgstr "APIエンドポイントを変更すると、ショップの認証がリセットされます。"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Changing the company of a Shopee shop is not allowed."
+msgstr "Shopeeショップの会社を変更することはできません。"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__company_id
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__company_id
+msgid "Company"
+msgstr "会社"
+
+#. module: sale_shopee
+#: model:ir.model,name:sale_shopee.model_res_partner
+msgid "Contact"
+msgstr "連絡先"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/controllers/onboarding.py:0
+msgid "Could not find Shopee account with id %(account)s"
+msgstr "ID %(account)s の Shopee アカウントが見つかりませんでした。"
+
+#. module: sale_shopee
+#: model:ir.actions.act_window,name:sale_shopee.quick_create_account_action
+msgid "Create Shopee Accounts"
+msgstr "Shopeeアカウントを作成する"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__create_uid
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__create_uid
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__create_date
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__create_date
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_account_view_form
+msgid "Credentials"
+msgstr "認証情報"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Days"
+msgstr "日"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__team_id
+msgid "Default Sales Team"
+msgstr "デフォルト販売チーム"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__user_id
+msgid "Default Salesperson"
+msgstr "デフォルト販売担当者"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__display_name
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__display_name
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__shopee_shop__status__error
+msgid "Error"
+msgstr "エラー"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__authorization_expiration_date
+msgid ""
+"Expiration Date of Authorization of a shop, that was returned during the "
+"Shopee shop authorization on Shopee Account view. Once expired, the user "
+"must re-authorize the connection on Shopee Account view."
+msgstr ""
+"ショップ認証の有効期限日。Shopeeアカウントのショップ認証中に返されたショッ"
+"プ。有効期限が切れた場合、ユーザはShopeeアカウントの画面で接続を再認証する必"
+"要があります。"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__fbs_location_id
+msgid "FBS Stock Location"
+msgstr "FBS在庫ロケーション"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__stock_picking__shopee_label_status__failed
+msgid "Failed"
+msgstr "失敗"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_account.py:0
+msgid ""
+"Failed to authorize shop due to the following error:\n"
+"- %(message)s\n"
+"\n"
+"One of the following input could be incorrect: Partner ID, Partner Key, or "
+"API Endpoint."
+msgstr ""
+"以下のエラーによりショップの認証に失敗しました:\n"
+"- %(message)s\n"
+"\n"
+"以下の入力内容に誤りがある可能性があります：取引先ID、取引先キー、またはAPIエ"
+"ンドポイント。"
+
+#. module: sale_shopee
+#: model:ir.actions.server,name:sale_shopee.action_fetch_shipping_label
+msgid "Fetch Shipping Label"
+msgstr "配送ラベルを生成"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Fetch Shipping Labels"
+msgstr "配送ラベルを生成"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.picking_view_form
+msgid "Fetch Shopee Label"
+msgstr "Shopeeラベルを生成"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Flash Sale"
+msgstr "フラッシュ・セール"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.view_order_form
+msgid "Fulfilled by Cross Border Seller"
+msgstr "越境販売者より発送"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.view_order_form
+msgid "Fulfilled by Merchant"
+msgstr "販売者によりフルフィルメントが行われる"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.view_order_form
+msgid "Fulfilled by Shopee"
+msgstr "Shopeeより発送"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__sale_order__shopee_fulfillment_type__hybrid
+msgid "Fulfillment by Cross Border Seller"
+msgstr "越境セラ―によるフルフィルメント"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__sale_order__shopee_fulfillment_type__fbm
+msgid "Fulfillment by Merchant"
+msgstr "販売者によるフルフィルメント(FBM)"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__sale_order__shopee_fulfillment_type__fbs
+msgid "Fulfillment by Shopee"
+msgstr "Shopeeによるフルフィルメント"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__id
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__id
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__active
+msgid ""
+"If made inactive, this account will no longer be synchronized with Shopee."
+msgstr "無効化された場合、このアカウントはShopeeと同期されなくなります。"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.view_order_form
+msgid ""
+"If the sale is locked, you can not modify it anymore. However, you will "
+"still be able to invoice or deliver."
+msgstr "販売がロックされている場合は、これ以上編集できません。ただし、請求や出荷は引"
+"き続き可能です。"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_account__company_ids
+msgid "If this field is empty, all companies will be allowed."
+msgstr "このフィールドが空欄の場合、全ての会社が許可されます。"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__shopee_shop__status__inactive
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_search
+msgid "Inactive"
+msgstr "無効"
+
+#. module: sale_shopee
+#: model:ir.model.constraint,message:sale_shopee.constraint_shopee_item_unique_shopee_item_and_model_identifiers
+msgid "Item and Model Identifiers must be unique for a given shop."
+msgstr ""
+"アイテムおよびモデル識別子は、特定のショップに対して一意でなければなりませ"
+"ん。"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_stock_picking__shopee_label_status
+msgid "Label Status"
+msgstr "ラベルステータス"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__last_orders_sync_date
+msgid "Last Order Synchronization Date"
+msgstr "最終オーダ同期日"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_stock_picking__last_picking_sync_date
+msgid "Last Picking Sync Date"
+msgstr "最終ピッキング同期日"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__last_shop_status_sync_date
+msgid "Last Shop Status Synchronization Date"
+msgstr "最終ショップステータス同期日"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__last_inventory_sync_date
+msgid "Last Sync Date"
+msgstr "最終同期日"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__write_uid
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__write_uid
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__write_date
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__write_date
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.view_order_form
+msgid "Lock"
+msgstr "ロック"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__name
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__name
+msgid "Name"
+msgstr "名称"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.picking_view_form
+msgid "Need to rearrange shipment on Shopee"
+msgstr "Shopeeで再度配送の手配が必要です"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_account_view_list
+msgid "New"
+msgstr "新規"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__stock_picking__shopee_label_status__not_available
+msgid "Not Available"
+msgstr "利用不可"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__order_count
+msgid "Order Count"
+msgstr "オーダ数"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Orders"
+msgstr "オーダ"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__partner_identifier
+msgid "Partner ID"
+msgstr "取引先ID"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__partner_key
+msgid "Partner Key"
+msgstr "パートナーキー"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__sale_order__shopee_delivery_status__error
+msgid "Pickup Failed"
+msgstr "集荷ができませんでした"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__stock_picking__shopee_label_status__processing
+msgid "Processing"
+msgstr "処理中"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__product_id
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_item_view_search
+msgid "Product"
+msgstr "プロダクト"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Product Promotion"
+msgstr "プロダクトプロモーション"
+
+#. module: sale_shopee
+#: model:ir.model,name:sale_shopee.model_product_product
+msgid "Product Variant"
+msgstr "プロダクトバリアント"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__stock_picking__shopee_label_status__ready
+msgid "Ready"
+msgstr "準備完了"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__sale_order__shopee_delivery_status__draft
+msgid "Ready to Ship"
+msgstr "配送準備完了"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.picking_view_form
+msgid "Ready to arrange shipment via Shopee"
+msgstr "Shopee経由で配送手配する準備ができました"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__refresh_token
+msgid "Refresh Token"
+msgstr "リフレッシュトークン"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__refresh_token
+msgid ""
+"Refresh Token is used to request a new Access Token and expires in 30 days. "
+"Once expired, the user must re-authorize the connection on Shopee Account "
+"view."
+msgstr ""
+"リフレッシュトークンは、新しいアクセストークンのリクエストに使用され、30日で"
+"使用期限が切れます。使用期限が切れると、ユーザはShopeeアカウントの表示で接続"
+"を再承認する必要があります。"
+
+#. module: sale_shopee
+#: model_terms:ir.actions.act_window,help:sale_shopee.action_shopee_account_list
+msgid "Register your Shopee account"
+msgstr "Shopeeアカウントを登録"
+
+#. module: sale_shopee
+#: model_terms:ir.actions.act_window,help:sale_shopee.action_shopee_account_list
+msgid "Register yours to start synchronizing your orders into Odoo."
+msgstr "情報を登録してオーダをOdooと同期し始める"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__authorization_remaining_days
+msgid ""
+"Remaining days of the shop authorization. Show a warning in the Shopee Shop "
+"view that the authorization will expire soon."
+msgstr ""
+"ショップの承認残日数。Shopeeショップビューに、承認がまもなく使用期限切れにな"
+"るという警告を表示します。"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Sale Orders"
+msgstr "販売オーダ"
+
+#. module: sale_shopee
+#: model:ir.model,name:sale_shopee.model_sale_order
+msgid "Sales Order"
+msgstr "販売オーダ"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.quick_create_account_form
+msgid "Save And Authorize"
+msgstr "保存して承認"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__sale_order__shopee_delivery_status__confirmed
+msgid "Shipment Arranged"
+msgstr "配送が手配されました"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.picking_view_form
+msgid "Shipment arranged via Shopee"
+msgstr "Shopee経由で配送が手配されました"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__sale_order__shopee_delivery_status__done
+msgid "Shipped"
+msgstr "配送済"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.picking_view_form
+msgid "Shipped via Shopee"
+msgstr "Shopeeにより配送済"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/stock_picking.py:0
+msgid "Shipping Label Not Ready"
+msgstr "配送ラベルの用意ができていません"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__shop_id
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_search
+msgid "Shop"
+msgstr "ショップ"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__shop_count
+msgid "Shop Count"
+msgstr "ショップ数"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Shop Information"
+msgstr "ショップ情報"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Shop Name"
+msgstr "ショップ名"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Shop Settings"
+msgstr "ショップ設定"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Shop Status: Active"
+msgstr "ショップステータス: 有効"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Shop Status: Error"
+msgstr "ショップステータス: エラー"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Shop Status: Inactive"
+msgstr "ショップステータス: 無効"
+
+#. module: sale_shopee
+#: model:ir.ui.menu,name:sale_shopee.root_menu
+msgid "Shopee"
+msgstr "Shopee"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_account.py:0
+msgid "Shopee API Account - %(partner_id)s"
+msgstr "Shopee API アカウント - %(partner_id)s"
+
+#. module: sale_shopee
+#: model:ir.model,name:sale_shopee.model_shopee_account
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__account_id
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_account_view_form
+msgid "Shopee Account"
+msgstr "Shopeeアカウント"
+
+#. module: sale_shopee
+#: model:ir.actions.act_window,name:sale_shopee.action_shopee_account_list
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_account_view_list
+msgid "Shopee Accounts"
+msgstr "Shopeeアカウント"
+
+#. module: sale_shopee
+#: model:product.template,name:sale_shopee.default_adjustment_product_product_template
+msgid "Shopee Amount Adjustment"
+msgstr "Shopee金額調整"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_res_partner__shopee_buyer_identifier
+#: model:ir.model.fields,field_description:sale_shopee.field_res_users__shopee_buyer_identifier
+msgid "Shopee Buyer ID"
+msgstr "Shopee購入者D"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Shopee Customer #%(order_no)s"
+msgstr "Shopee顧客 #%(order_no)s"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_sale_order__shopee_fulfillment_type
+msgid "Shopee Fulfillment Type"
+msgstr "Shopeeフルフィルメントタイプ"
+
+#. module: sale_shopee
+#: model:ir.model,name:sale_shopee.model_shopee_item
+msgid "Shopee Item"
+msgstr "Shopeeアイテム"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__shopee_item_count
+msgid "Shopee Item Count"
+msgstr "Shopeeアイテム数"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__shopee_item_identifier
+msgid "Shopee Item ID"
+msgstr "ShopeeアイテムID"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+#: model:ir.actions.act_window,name:sale_shopee.sale_shopee_item_action
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__shopee_item_ids
+#: model:ir.ui.menu,name:sale_shopee.items_menu
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_item_view_list
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Shopee Items"
+msgstr "Shopeeアイテム"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/stock_picking.py:0
+msgid "Shopee Label"
+msgstr "Shopeeラベル"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__shopee_model_identifier
+msgid "Shopee Model ID"
+msgstr "ShopeeモデルID"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/tests/test_shopee.py:0
+msgid "Shopee Order %(order)s at mock_shopee_shop"
+msgstr "Shopeeオーダ %(order)s  mock_shopee_shop"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Shopee Order %(shopee_order_ref)s at %(shop_name)s"
+msgstr "Shopeeオーダ %(shopee_order_ref)s  %(shop_name)s"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+#: code:addons/sale_shopee/tests/test_shopee.py:0
+msgid "Shopee Pricelist %(currency)s"
+msgstr "Shopee価格表 %(currency)s"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__shopee_account__api_endpoint__production_brazil
+msgid "Shopee Production Endpoint (Brazil)"
+msgstr "Shopee本番エンドポイント (ブラジル)"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__shopee_account__api_endpoint__production_china
+msgid "Shopee Production Endpoint (China)"
+msgstr "Shopee本番エンドポイント (中国)"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__shopee_account__api_endpoint__production_singapore
+msgid "Shopee Production Endpoint (Singapore)"
+msgstr "Shopee本番エンドポイント (シンガポール)"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_sale_order__shopee_order_ref
+#: model:ir.model.fields,field_description:sale_shopee.field_stock_picking__shopee_order_ref
+msgid "Shopee Reference"
+msgstr "Shopee参照番号"
+
+#. module: sale_shopee
+#: model:product.template,name:sale_shopee.default_sale_product_product_template
+msgid "Shopee Sale"
+msgstr "Shopee販売"
+
+#. module: sale_shopee
+#: model:product.template,name:sale_shopee.default_shipping_product_product_template
+msgid "Shopee Shipping"
+msgstr "Shopee配送"
+
+#. module: sale_shopee
+#: model:ir.model,name:sale_shopee.model_shopee_shop
+#: model:ir.model.fields,field_description:sale_shopee.field_sale_order__shopee_shop_id
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_item_view_search
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Shopee Shop"
+msgstr "Shopeeショップ"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Shopee Shop #%(shop_id)s"
+msgstr "Shopeeショップ#%(shop_id)s"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__shop_identifier
+msgid "Shopee Shop ID"
+msgstr "ShopeeショップID"
+
+#. module: sale_shopee
+#: model:ir.actions.act_window,name:sale_shopee.action_shopee_shop_list
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_list
+msgid "Shopee Shops"
+msgstr "Shopeeショップ"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_sale_order__shopee_delivery_status
+#: model:ir.model.fields,field_description:sale_shopee.field_stock_picking__shopee_delivery_status
+msgid "Shopee Status"
+msgstr "Shopeeステータス"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__shopee_account__api_endpoint__test
+msgid "Shopee Testing Endpoint"
+msgstr "Shopeeテストエンドポイント"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__shopee_account__api_endpoint__test_china
+msgid "Shopee Testing Endpoint (China)"
+msgstr "Shopeeテストエンドポイント (中国)"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Shopee Warehouse - %(shop)s"
+msgstr "Shopee倉庫 - %(shop)s"
+
+#. module: sale_shopee
+#: model_terms:ir.actions.act_window,help:sale_shopee.action_shopee_account_list
+msgid "Shopee accounts correspond to Shopee Seller Central accounts."
+msgstr "Shopeeアカウントは Shopeeセラーセントラル アカウントに対応しています。"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/stock_picking.py:0
+msgid ""
+"Shopee is processing the shipping label. Odoo will try fetching the shipping "
+"label again later."
+msgstr ""
+"Shopee が配送ラベルの処理を行っています。Odooは後で再度配送ラベルを取得しよう"
+"とします。"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Shopee move: %(name)s"
+msgstr "Shopee移動: %(name)s"
+
+#. module: sale_shopee
+#: model:mail.template,name:sale_shopee.inventory_sync_failure
+msgid "Shopee: Inventory Synchronization Failure"
+msgstr "Shopee: 在庫同期失敗"
+
+#. module: sale_shopee
+#: model:mail.template,name:sale_shopee.order_sync_failure
+msgid "Shopee: Order Synchronization Failure"
+msgstr "Shopee: オーダ同期失敗"
+
+#. module: sale_shopee
+#: model:mail.template,name:sale_shopee.picking_sync_failure
+msgid "Shopee: Shipping Label Synchronization Failure"
+msgstr "Shopee: 配送ラベル同期失敗"
+
+#. module: sale_shopee
+#: model:ir.actions.server,name:sale_shopee.ir_cron_sync_shopee_pickings_retry_ir_actions_server
+msgid "Shopee: retry sync shipping labels"
+msgstr "Shopee: 配送ラベル同期再試行"
+
+#. module: sale_shopee
+#: model:ir.actions.server,name:sale_shopee.ir_cron_sync_shopee_inventory_ir_actions_server
+msgid "Shopee: sync inventory"
+msgstr "Shopee: 在庫同期"
+
+#. module: sale_shopee
+#: model:ir.actions.server,name:sale_shopee.ir_cron_sync_shopee_orders_ir_actions_server
+msgid "Shopee: sync orders"
+msgstr "Shopee: オーダ同期"
+
+#. module: sale_shopee
+#: model:ir.actions.server,name:sale_shopee.ir_cron_sync_shopee_pickings_ir_actions_server
+msgid "Shopee: sync shipping labels"
+msgstr "Shopee: 配送ラベル同期"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_account.py:0
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__shop_ids
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_account_view_form
+msgid "Shops"
+msgstr "ショップ"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__status
+msgid "Status"
+msgstr "状態"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__stock_picking__shopee_label_status__stored
+msgid "Stored"
+msgstr "保管済"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Sync Inventory"
+msgstr "在庫同期"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Sync Orders"
+msgstr "オーダ同期"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Synchronization Information"
+msgstr "同期情報"
+
+#. module: sale_shopee
+#: model:mail.template,subject:sale_shopee.inventory_sync_failure
+msgid "Synchronization of Shopee inventory has failed"
+msgstr "Shopee在庫の同期に失敗しました"
+
+#. module: sale_shopee
+#: model:mail.template,subject:sale_shopee.order_sync_failure
+msgid ""
+"Synchronization of Shopee order {{ ctx.get('shopee_order_ref') }} has failed"
+msgstr "Shopeeオーダ同期 {{ ctx.get('shopee_order_ref') }} に失敗しました"
+
+#. module: sale_shopee
+#: model:mail.template,subject:sale_shopee.picking_sync_failure
+msgid "Synchronization of shipping labels has failed"
+msgstr "配送ラベルの同期に失敗しました"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__synchronize_inventory
+msgid "Synchronize Inventory"
+msgstr "在庫同期"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__sync_to_shopee
+msgid "Synchronize Inventory to Shopee"
+msgstr "Shopeeへ在庫同期"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_account__api_endpoint
+msgid ""
+"The API endpoint to use for the Shopee API calls. There are production and "
+"testing endpoints. Among the endpoints, choose the one that is "
+"geographically closest to the marketplace you are targeting."
+msgstr ""
+"Shopee APIコールで使用するAPIエンドポイント。本番用とテスト用のエンドポイント"
+"があります。エンドポイントのうち、対象とするマーケットプレイスに地理的に最も"
+"近いものを選択して下さい。"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_sale_order__shopee_shop_id
+msgid "The Shopee shop from which the order was placed."
+msgstr "オーダが行われたShopeeショップ。"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_sale_order__shopee_order_ref
+#: model:ir.model.fields,help:sale_shopee.field_stock_picking__shopee_order_ref
+msgid "The Shopee-defined order reference."
+msgstr "Shopeeが定義したオーダ参照番号。"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__team_id
+msgid "The default Sales Team assigned to Shopee orders for reporting"
+msgstr "デフォルトでShopeeオーダのレポートに割当られる販売チーム"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__user_id
+msgid "The default salesperson assigned to Shopee orders"
+msgstr "Shopeeオーダにデフォルトで割当られる販売担当者"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__last_orders_sync_date
+msgid ""
+"The last time the orders were synchronized with Shopee. Orders whose status "
+"has not changed since this date will not be created nor updated in Odoo."
+msgstr ""
+"前回、Shopeeとオーダが同期されました。この日以降、ステータスが変更されていな"
+"いオーダは、Odooで作成または更新されません。"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_stock_picking__last_picking_sync_date
+msgid "The last time the picking was synchronized with Shopee."
+msgstr "Shopeeとピッキングの最終同期。"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__last_shop_status_sync_date
+msgid "The last time the shop status was synchronized with Shopee"
+msgstr "Shopeeとショップステータスの最終同期。"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/controllers/onboarding.py:0
+msgid "The request signature is not valid."
+msgstr "署名依頼が無効です。"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__status
+msgid ""
+"The shop status on Shopee.- Inactive: The shop is not yet approved by "
+"Shopee.- Active: The shop is active and can be synchronized with Odoo.- "
+"Error: The shop is banned and cannot be synchronized with Odoo."
+msgstr ""
+"Shopee.のショップステータス - 無効: ショップはまだShopee.によって承認されてい"
+"ません。 - 有効: ショップは有効化されており、Odoo.と同期できます。 - エラー: "
+"ショップは禁止されており、Odoo.と同期できません。"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_sale_order__shopee_delivery_status
+#: model:ir.model.fields,help:sale_shopee.field_stock_picking__shopee_delivery_status
+msgid ""
+"The status of the delivery order on Shopee:\n"
+"- Ready to Ship: Seller can arrange shipment.\n"
+"- Shipment Arranged: Seller has arranged shipment online and got tracking "
+"number from 3PL.\n"
+"- Shipped: The parcel has been dropped at 3PL or picked up by 3PL.\n"
+"- Cancelled: The order has been cancelled.\n"
+"- Pickup Failed: 3PL parcel pickup failed. Need to rearrange shipment."
+msgstr ""
+"Shopeeでの出荷オーダステータス:\n"
+"- 出荷準備完了: 出荷を手配できます。\n"
+"- 出荷手配済: 出荷がオンラインで手配され、3PL から追跡番号を取得しました。\n"
+"- 出荷済: 小包が3PL に投函されたか、3PL によって引き取られました。\n"
+"- 取消済: オーダが取消されました。\n"
+"- ピックアップ失敗: 3PL の小包ピックアップに失敗しました。出荷を再手配する必"
+"要があります。"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_stock_picking__shopee_label_status
+msgid ""
+"The status of the shipping label:\n"
+"- Not Available: The shipping label is not available yet.\n"
+"- Processing: The shipping label is being processed.\n"
+"- Ready: The shipping label is ready to be downloaded.\n"
+"- Stored: The shipping label has been downloaded and stored.\n"
+"- Failed: The shipping label creation failed."
+msgstr ""
+"出荷ラベルのステータス:\n"
+"\n"
+"- 利用不可: 出荷ラベルはまだ利用できません。\n"
+"- 処理中: 出荷ラベルは処理中です。\n"
+"- 準備完了: 出荷ラベルをダウンロードする準備ができました。\n"
+"- 保存済: 出荷ラベルがダウンロードされ、保存されました。\n"
+"- 失敗: 出荷ラベルの作成に失敗しました。"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__fbs_location_id
+msgid ""
+"The stock location managed by Shopee under the Fulfilled by Shopee (FBS) "
+"program."
+msgstr ""
+"Shopeeによるフルフィルメント(FBS)プログラムでShopeeが管理する在庫ロケーショ"
+"ン。"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_account__name
+msgid "The user-defined name of the account."
+msgstr "ユーザー定義のアカウント名。"
+
+#. module: sale_shopee
+#: model:ir.model.constraint,message:sale_shopee.constraint_sale_order_unique_shopee_order_ref_shopee_shop_id
+msgid ""
+"There can only exist one sale order for a given Shopee Order Reference per "
+"Shop."
+msgstr ""
+"特定のショップーオーダ参照番号に対して、販売オーダはショップごとに1つしか存在"
+"できません。"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Tokens"
+msgstr "トークン"
+
+#. module: sale_shopee
+#: model:ir.model,name:sale_shopee.model_stock_picking
+msgid "Transfer"
+msgstr "転送"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Unknown Promotion Type"
+msgstr "不明なプロモーションタイプ"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Update Shop"
+msgstr "ショップを更新"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_account.py:0
+msgid "Warning"
+msgstr "警告"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__synchronize_inventory
+msgid ""
+"Whether the available quantities of products linked to this shop are  "
+"synchronized with Shopee. Only products available in FBM or hybrid will be "
+"synchronized."
+msgstr ""
+"このショップにリンクされているプロダクトの在庫数がShopeeと同期されているかど"
+"うか。FBMまたはハイブリッドで利用可能なプロダクトのみが同期されます。"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/controllers/onboarding.py:0
+msgid "You are not allowed to access this page."
+msgstr "このページへのアクセス権がありません。"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "[%(sku)s] %(product_name)s"
+msgstr "[%(sku)s] %(product_name)s"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid ""
+"[%(sku)s] %(product_title)s\n"
+"Promotion: %(promotion_type)s - id: %(promotion_id)d"
+msgstr ""
+"[%(sku)s] %(product_title)s\n"
+"プロモーション: %(promotion_type)s - id: %(promotion_id)d"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_account_view_form
+msgid "e.g. American Market"
+msgstr "例：アメリカ市場"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "e.g. Indonesian Shop"
+msgstr "例:  インドネシアショップ"

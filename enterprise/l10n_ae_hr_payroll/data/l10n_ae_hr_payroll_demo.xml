@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="base.partner_demo_company_ae" model="res.partner" forcecreate="1">
+        <field name="name">AE Company</field>
+        <field name="vat"/>
+        <field name="street">A شارع ملقا</field>
+        <field name="city">الشارقة</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="state_id" ref="base.state_ae_uq"/>
+        <field name="zip">81730</field>
+        <field name="phone">+971 50 123 4567</field>
+        <field name="email">info@company.aeexample.com</field>
+        <field name="website">www.aeexample.com</field>
+    </record>
+
+    <record id="base.demo_company_ae" model="res.company" forcecreate="1">
+        <field name="name">AE Company</field>
+        <field name="partner_id" ref="base.partner_demo_company_ae"/>
+    </record>
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_ae'))]"/>
+    </record>
+    <record id="base.user_demo" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_ae'))]"/>
+    </record>
+
+    <record id="l10n_ae_hr_payroll.demo_user_ae" model="hr.employee">
+        <field name="name">Jacob Michael</field>
+        <field name="company_id" ref="base.demo_company_ae"/>
+        <field name="image_1920" type="base64" file="hr/static/img/employee_ngh-image.jpg"/>
+    </record>
+
+    <record id="l10n_ae_hr_payroll.demo_contract_ae" model="hr.contract">
+        <field name="name">Demo Contract AE</field>
+        <field name="company_id" ref="base.demo_company_ae"/>
+        <field name="structure_type_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure_type"/>
+        <field name="employee_id" ref="l10n_ae_hr_payroll.demo_user_ae"/>
+        <field name="date_start" eval="time.strftime('%Y-1-1')"/>
+        <field name="wage">3000</field>
+    </record>
+
+    <function model="hr.contract" name="generate_work_entries">
+        <value eval="[ref('l10n_ae_hr_payroll.demo_contract_ae')]"/>
+        <value eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1, days=-1)).date()"/>
+        <value eval="DateTime.today().date()"/>
+    </function>
+
+    <function model="hr.work.entry" name="action_validate">
+        <value model="hr.work.entry" eval="obj().search([('employee_id', '=', ref('l10n_ae_hr_payroll.demo_contract_ae'))]).ids"/>
+    </function>
+
+    <record id="l10n_ae_hr_payroll.demo_payslip_ae" model="hr.payslip">
+        <field name="name" eval="'Mitchell Admin ' + time.strftime('June %Y')"/>
+        <field name="contract_id" ref="l10n_ae_hr_payroll.demo_contract_ae"/>
+        <field name="date_from" eval="time.strftime('%Y-6-1')"/>
+        <field name="date_to" eval="time.strftime('%Y-6-30')"/>
+        <field name="employee_id" ref="l10n_ae_hr_payroll.demo_user_ae"/>
+        <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        <field name="number">SLIP001</field>
+        <field name="company_id" ref="base.demo_company_ae"/>
+    </record>
+    <record id="l10n_ae_input_salary_arrears" model="hr.payslip.input">
+        <field name="payslip_id" ref="l10n_ae_hr_payroll.demo_payslip_ae"/>
+        <field name="input_type_id" ref="l10n_ae_hr_payroll.input_salary_arrears"/>
+        <field name="amount">1500</field>
+    </record>
+    <record id="l10n_ae_input_other_earnings" model="hr.payslip.input">
+        <field name="payslip_id" ref="l10n_ae_hr_payroll.demo_payslip_ae"/>
+        <field name="input_type_id" ref="l10n_ae_hr_payroll.input_other_earnings"/>
+        <field name="amount">250</field>
+    </record>
+    <record id="l10n_ae_input_salary_deduction" model="hr.payslip.input">
+        <field name="payslip_id" ref="l10n_ae_hr_payroll.demo_payslip_ae"/>
+        <field name="input_type_id" ref="l10n_ae_hr_payroll.input_salary_deduction"/>
+        <field name="amount">500</field>
+    </record>
+    <record id="l10n_ae_input_other_deduction" model="hr.payslip.input">
+        <field name="payslip_id" ref="l10n_ae_hr_payroll.demo_payslip_ae"/>
+        <field name="input_type_id" ref="l10n_ae_hr_payroll.input_other_deduction"/>
+        <field name="amount">100</field>
+    </record>
+
+    <function model="hr.payslip" name="action_refresh_from_work_entries" eval="[[p.id for p in [
+        obj().env.ref('l10n_ae_hr_payroll.demo_payslip_ae'),
+    ] if p.state in ['draft', 'verify']]]"/>
+    <function model="hr.payslip" name="action_payslip_done" eval="[[
+        ref('l10n_ae_hr_payroll.demo_payslip_ae'),
+    ]]"/>
+</odoo>

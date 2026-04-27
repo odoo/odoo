@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="amazon_marketplace_view_tree" model="ir.ui.view">
+        <field name="name">amazon.marketplace.list</field>
+        <field name="model">amazon.marketplace</field>
+        <field name="arch" type="xml">
+            <list string="Amazon Marketplaces" delete="false">
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="amazon_marketplace_view_form" model="ir.ui.view">
+        <field name="name">amazon.marketplace.form</field>
+        <field name="model">amazon.marketplace</field>
+        <field name="arch" type="xml">
+            <form string="Amazon Marketplace" delete="false">
+                <sheet>
+                    <div class="oe_title" id="title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="api_ref"/>
+                            <field name="region"/>
+                            <field name="seller_central_url"/>
+                            <field name="tax_included" groups="base.group_no_one"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

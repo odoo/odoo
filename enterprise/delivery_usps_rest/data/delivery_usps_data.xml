@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+    <record id="stock_package_type_usps_priority_mail_medium_box" model="stock.package.type">
+      <field name="name">Priority Mail Medium Flat Rate Box</field>
+      <field name="barcode">USPS_MEDIUM_FLAT_RATE_BOX</field>
+      <field name="height">152</field>
+      <field name="width">222</field>
+      <field name="packaging_length">285</field>
+      <field name="max_weight">10.0</field>
+      <field name="package_carrier_type">usps_rest</field>
+    </record>
+
+    <record id="product_product_delivery_usps_domestic" model="product.product">
+      <field name="name">USPS Domestic</field>
+      <field name="default_code">Delivery_012</field>
+      <field name="type">service</field>
+      <field name="categ_id" ref="delivery.product_category_deliveries"/>
+      <field name="sale_ok" eval="False"/>
+      <field name="purchase_ok" eval="False"/>
+      <field name="list_price">0.0</field>
+      <field name="invoice_policy">order</field>
+    </record>
+    <record id="delivery_carrier_usps_domestic" model="delivery.carrier">
+        <field name="name">USPS Domestic</field>
+        <field name="product_id" ref="delivery_usps_rest.product_product_delivery_usps_domestic"/>
+        <field name="delivery_type">usps_rest</field>
+        <field name="usps_delivery_nature">domestic</field>
+        <field name="usps_domestic_service">PRIORITY_MAIL</field>
+        <field name="usps_domestic_rating_indicator">SP</field>
+        <field name="usps_processing_category">MACHINABLE</field>
+        <field name="usps_default_package_type_id" ref="delivery_usps_rest.stock_package_type_usps_priority_mail_medium_box"/>
+        <field name="country_ids" eval="[(4,(ref('base.us')))]"/>
+        <field name="usps_eps_account_number">1000005549</field>
+        <field name="usps_crid">94879959</field>
+        <field name="usps_mid">901097701</field>
+        <field name="usps_manifest_mid">901097699</field>
+        <field name="usps_api_key">r6hEO9uYMZUlSTAFzZjUXabsGMnw6eA5</field>
+        <field name="usps_api_secret">lR6fS5avAeXCsaoo</field>
+    </record>
+
+    <record id="product_product_delivery_usps_international" model="product.product">
+      <field name="name">USPS International</field>
+      <field name="default_code">Delivery_013</field>
+      <field name="type">service</field>
+      <field name="categ_id" ref="delivery.product_category_deliveries"/>
+      <field name="sale_ok" eval="False"/>
+      <field name="purchase_ok" eval="False"/>
+      <field name="list_price">0.0</field>
+      <field name="invoice_policy">order</field>
+    </record>
+    <record id="delivery_carrier_usps_international" model="delivery.carrier">
+      <field name="name">USPS International</field>
+      <field name="product_id" ref="delivery_usps_rest.product_product_delivery_usps_international"/>
+      <field name="delivery_type">usps_rest</field>
+      <field name="usps_delivery_nature">international</field>
+      <field name="usps_international_service">PRIORITY_MAIL_INTERNATIONAL</field>
+      <field name="usps_international_rating_indicator">SP</field>
+      <field name="usps_processing_category">MACHINABLE</field>
+      <field name="usps_rest_content_type">MERCHANDISE</field>
+      <field name="usps_default_package_type_id" ref="delivery_usps_rest.stock_package_type_usps_priority_mail_medium_box"/>
+      <field name="usps_eps_account_number">1000005549</field>
+      <field name="usps_crid">94879959</field>
+      <field name="usps_mid">901097701</field>
+      <field name="usps_manifest_mid">901097699</field>
+      <field name="usps_api_key">r6hEO9uYMZUlSTAFzZjUXabsGMnw6eA5</field>
+      <field name="usps_api_secret">lR6fS5avAeXCsaoo</field>
+  </record>
+
+</data>
+</odoo>

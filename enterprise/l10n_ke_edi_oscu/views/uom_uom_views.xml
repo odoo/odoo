@@ -1,0 +1,47 @@
+<odoo>
+    <data>
+        <record id="product_uom_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.uom.form.view.inherit.l10n.ke.edi.oscu</field>
+            <field name="model">uom.uom</field>
+            <field name="inherit_id" ref="uom.product_uom_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='uom_type']" position="after">
+                    <field name="l10n_ke_quantity_unit_id" invisible="'KE' not in fiscal_country_codes"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="product_uom_l10n_ke_tree" model="ir.ui.view">
+            <field name="name">product.uom.l10n.ke.edi.oscu</field>
+            <field name="model">uom.uom</field>
+            <field name="arch" type="xml">
+                <list editable="top" multi_edit="1">
+                    <field name="display_name"/>
+                    <field name="l10n_ke_quantity_unit_id"/>
+                </list>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_product_uom_categ_form_ke">
+            <field name="name">view.uom.categ.ke.form</field>
+            <field name="model">uom.category</field>
+            <field name="inherit_id" ref="uom.product_uom_categ_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='uom_type']" position="after">
+                    <field name="l10n_ke_quantity_unit_id"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_product_uom_categ_form_ke">
+            <field name="name">view.uom.categ.ke.form</field>
+            <field name="model">uom.category</field>
+            <field name="inherit_id" ref="uom.product_uom_categ_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="fiscal_country_codes" invisible="1"/>"
+                </xpath>
+                <xpath expr="//field[@name='uom_type']" position="after">
+                    <field name="l10n_ke_quantity_unit_id" column_invisible="'KE' not in parent.fiscal_country_codes"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

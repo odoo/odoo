@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="l10n_in_qr_code_bill_scan.billScanInput">
+        <Dialog title.translate="Scan a Bill QR Code" size="'md'" fullscreen="false" withBodyPadding="false">
+            <div class="o_bill_qr_code_scan_main_menu">
+                <h4 class="mt-3">
+                    Scan an indian bill QR code to automatically open the Bill, or create a new one.
+                </h4>
+                <div class="o_bill_qr_code_scan_container position-relative d-inline-block">
+                    <div t-if='isMobileScanner' class="o_bill_qr_mobile_container">
+                        <button class="btn btn-primary o_bill_mobile_qr_code" t-on-click="openMobileScanner">
+                            <i class="fa fa-camera fa-2x o_mobile_bill_qr_camera"/> Tap to scan the Bill
+                        </button>
+                        <img src="/l10n_in_qr_code_bill_scan/static/img/qrcode.png" alt="QRcode" class="img-fluid mb-1 mt-1"/>
+                    </div>
+                    <img t-else="" src="/l10n_in_qr_code_bill_scan/static/img/qrcode.png" alt="QRcode" class="img-fluid mb-1 mt-1"/>
+                    <span class="o_bill_qr_code_laser"/>
+                </div>
+                <h6 class="mt-4">
+                    Use QR code scanner attached to computer or scan using mobile camera.
+                </h6>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-secondary o_form_button_cancel" t-on-click="props.close">Close</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

@@ -1,0 +1,89 @@
+<odoo>
+    <template id="report_wage_types_document">
+        <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="wizard">
+        <t t-set="company" t-value="doc.get('company')"/>
+        <t t-call="web.external_layout_standard">
+            <div class="page">
+                <h2>Wage Types Report - <t t-esc="company.name"/> - <t t-esc="year"/>-<t t-esc="month"/></h2>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>+/-</th>
+                            <th>Gross</th>
+                            <th>AVS</th>
+                            <th>LAA</th>
+                            <th>LAAC</th>
+                            <th>IJM</th>
+                            <th>ST</th>
+                            <th>Certificate</th>
+                            <th>Statistic (M)</th>
+                            <th>Statistic (Y)</th>
+                            <th>LPP Forecast</th>
+                            <th>LPP Factor</th>
+                            <th>LPP Retroactive</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="doc.get('salary_rules', [])" t-as="rule">
+                            <tr t-if="rule.l10n_ch_code">
+                                <td><t t-esc="rule.l10n_ch_code"/></td>
+                                <td><t t-esc="rule.name"/></td>
+                                <td>
+                                    <t t-if="rule.category_id.code in ['BASIC', 'ALW']">
+                                        +
+                                    </t>
+                                    <t t-elif="rule.category_id.code == 'DED'">
+                                        -
+                                    </t>
+                                    <t t-else="">
+                                    </t>
+                                </td>
+                                <td>
+                                    <t t-esc="1 if rule.l10n_ch_gross_included else 0"/>
+                                </td>
+                                <td>
+                                    <t t-esc="1 if rule.l10n_ch_ac_included else 0"/>
+                                </td>
+                                <td>
+                                    <t t-esc="1 if rule.l10n_ch_aanp_included else 0"/>
+                                </td>
+                                <td>
+                                    <t t-esc="1 if rule.l10n_ch_laac_included else 0"/>
+                                </td>
+                                <td>
+                                    <t t-esc="1 if rule.l10n_ch_ijm_included else 0"/>
+                                </td>
+                                <td>
+                                    <t t-esc="1 if rule.l10n_ch_source_tax_included else 0"/>
+                                </td>
+                                <td>
+                                    <t t-esc="rule.l10n_ch_salary_certificate"/>
+                                </td>
+                                <td>
+                                    <t t-esc="rule.l10n_ch_wage_statement"/>
+                                </td>
+                                <td>
+                                    <t t-esc="rule.l10n_ch_yearly_statement"/>
+                                </td>
+                                <td>
+                                    <t t-esc="1 if rule.l10n_ch_lpp_forecast else ''"/>
+                                </td>
+                                <td>
+                                    <t t-esc="rule.l10n_ch_lpp_factor or ''"/>
+                                </td>
+                                <td>
+                                    <t t-esc="1 if rule.l10n_ch_lpp_retroactive else ''"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+        </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_invoice_document_inherit_l10n_uy_edi" inherit_id="account.report_invoice_document">
+
+        <div class="row" position="after">
+            <t t-if="o.l10n_uy_edi_journal_type in ['electronic', 'contingency']">
+                <div class="watermark" style="position:absolute;opacity:0.25;font-size:3em;color:red;width:100%;text-align:center;z-index:1000;">NOT LEGAL DOCUMENT</div>
+            </t>
+        </div>
+    </template>
+
+</odoo>

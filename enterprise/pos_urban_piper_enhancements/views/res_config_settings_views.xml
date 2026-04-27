@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_pos_urban_piper_enhancements" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.pos.urban.piper.enhancements</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='urbanpiper_create_store']" position="before">
+                <div class="row">
+                    <label string="Preparation Time(seconds)" for="pos_urbanpiper_minimum_preparation_time" class="col-lg-5 o_light_label"/>
+                    <field name="pos_urbanpiper_minimum_preparation_time" readonly="pos_has_active_session"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

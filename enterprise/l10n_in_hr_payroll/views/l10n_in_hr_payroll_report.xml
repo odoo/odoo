@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="payslip_details_report" model="ir.actions.report">
+        <field name="name">PaySlip Details</field>
+        <field name="model">hr.payslip</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_in_hr_payroll.report_payslip</field>
+        <field name="report_file">l10n_in_hr_payroll.report_payslip</field>
+        <field name="print_report_name">'Payslip - %s' % (object.employee_id.name)</field>
+        <field name="binding_model_id" ref="hr_payroll.model_hr_payslip"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="light_payslip_details_report" model="ir.actions.report">
+        <field name="name">PaySlip Details (Light)</field>
+        <field name="model">hr.payslip</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_in_hr_payroll.report_light_payslip</field>
+        <field name="report_file">l10n_in_hr_payroll.report_light_payslip</field>
+        <field name="print_report_name">'Payslip - %s' % (object.employee_id.name)</field>
+        <field name="binding_model_id" ref="hr_payroll.model_hr_payslip"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="hr_payroll.paperformat_euro_light"/>
+    </record>
+
+    <record id="payroll_advice_report" model="ir.actions.report">
+        <field name="name">Advice Report</field>
+        <field name="model">hr.payroll.payment.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_in_hr_payroll.report_payrolladvice</field>
+        <field name="report_file">l10n_in_hr_payroll.report_payrolladvice</field>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_hryearlysalary" model="ir.actions.report">
+        <field name="name">Yearly Salary by Employee</field>
+        <field name="model">yearly.salary.detail</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_in_hr_payroll.report_hryearlysalary</field>
+        <field name="report_file">l10n_in_hr_payroll.report_hryearlysalary</field>
+        <field name="paperformat_id" ref="l10n_in_hr_payroll.paperformat_yealy_salary_head"/>
+        <field name="binding_model_id" ref="model_yearly_salary_detail"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_salary_statement" model="ir.actions.report">
+        <field name="name">Salary Statement</field>
+        <field name="model">hr.employee</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_in_hr_payroll.report_salary_statement</field>
+        <field name="report_file">l10n_in_hr_payroll.report_salary_statement</field>
+        <field name="print_report_name">(object._get_report_base_filename())</field>
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="knowledge.EmbeddedViewLinkPopover">
+        <div class="shadow p-3 d-flex">
+            <div class="cursor-pointer flex-grow-1 text-primary fw-bold text-truncate pe-2" t-on-click="props.openViewLink" t-out="props.name"/>
+            <div class="cursor-pointer mx-1" t-on-click="props.onCopyViewLinkClick" title="Copy Link">
+                <i class="fa fa-clone"/>
+            </div>
+            <div class="cursor-pointer mx-1" t-on-click="props.onEditViewLinkClick" title="Edit Link">
+                <i class="fa fa-edit"/>
+            </div>
+            <div class="cursor-pointer mx-1" t-on-click="props.onRemoveViewLinkClick" title="Remove Link">
+                <i class="fa fa-chain-broken"/>
+            </div>
+        </div>
+    </t>
+</templates>

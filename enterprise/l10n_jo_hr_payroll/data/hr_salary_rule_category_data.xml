@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_salary_rule_category_jo_tax_brackets" model="hr.salary.rule.category">
+        <field name="name">Tax Brackets</field>
+        <field name="code">TB</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_salary_rule_category_jo_ssd" model="hr.salary.rule.category">
+        <field name="name">Social Security Deduction</field>
+        <field name="code">SSD</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+</odoo>

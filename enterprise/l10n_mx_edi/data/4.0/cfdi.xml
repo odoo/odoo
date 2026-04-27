@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="cfdiv40">
+        <cfdi:Comprobante
+            xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/Pagos20 http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos20.xsd http://www.sat.gob.mx/ComercioExterior20 http://www.sat.gob.mx/sitio_internet/cfd/ComercioExterior20/ComercioExterior20.xsd http://www.sat.gob.mx/implocal http://www.sat.gob.mx/sitio_internet/cfd/implocal/implocal.xsd"
+            xmlns:cfdi="http://www.sat.gob.mx/cfd/4"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:cce20="http://www.sat.gob.mx/ComercioExterior20"
+            xmlns:implocal="http://www.sat.gob.mx/implocal"
+            Version="4.0"
+            t-att-Fecha="fecha"
+            t-att-Folio="format_string(folio, 25)"
+            t-att-Serie="format_string(serie, 40)"
+            Sello="TO BE INJECTED"
+            t-att-FormaPago="forma_pago"
+            t-att-NoCertificado="no_certificado"
+            t-att-Certificado="certificado"
+            t-att-CondicionesDePago="format_string(condiciones_de_pago, 100)"
+            t-att-SubTotal="format_float(subtotal)"
+            t-att-Descuento="format_float(descuento)"
+            t-att-Moneda="moneda"
+            t-att-TipoCambio="format_float(tipo_cambio, precision=6)"
+            t-att-Total="format_float(total)"
+            t-att-TipoDeComprobante="tipo_de_comprobante"
+            t-att-Exportacion="exportacion"
+            t-att-MetodoPago="metodo_pago"
+            t-att-LugarExpedicion="lugar_expedicion">
+            <cfdi:InformacionGlobal
+                t-if="information_global"
+                t-att-Periodicidad="information_global['periodicidad']"
+                t-att-Meses="information_global['meses']"
+                t-att-Año="information_global['ano']"/>
+            <cfdi:CfdiRelacionados t-if="tipo_relacion and cfdi_relationado_list" t-att-TipoRelacion="tipo_relacion">
+                <t t-foreach="cfdi_relationado_list" t-as="cfdi_relationado">
+                    <cfdi:CfdiRelacionado t-att-UUID="cfdi_relationado"/>
+                </t>
+            </cfdi:CfdiRelacionados>
+            <cfdi:Emisor
+                t-att-Rfc="emisor['rfc']"
+                t-att-Nombre="format_string(emisor['nombre'], 254)"
+                t-att-RegimenFiscal="emisor['regimen_fiscal']"/>
+            <cfdi:Receptor
+                t-att-Rfc="receptor['rfc']"
+                t-att-Nombre="format_string(receptor['nombre'], 254)"
+                t-att-ResidenciaFiscal="receptor['residencia_fiscal']"
+                t-att-DomicilioFiscalReceptor="receptor['domicilio_fiscal_receptor']"
+                t-att-RegimenFiscalReceptor="receptor['regimen_fiscal_receptor']"
+                t-att-UsoCFDI="receptor['uso_cfdi']"/>
+            <cfdi:Conceptos>
+                <t t-foreach="conceptos_list" t-as="line_values">
+                    <cfdi:Concepto
+                        t-att-ClaveProdServ="line_values['clave_prod_serv']"
+                        t-att-NoIdentificacion="format_string(line_values['no_identificacion'], 100)"
+                        t-att-Cantidad="format_float(line_values['cantidad'], precision=6)"
+                        t-att-ClaveUnidad="line_values['clave_unidad']"
+                        t-att-Unidad="format_string(line_values['unidad'], 20)"
+                        t-att-Descripcion="format_string(line_values['description'], 1000)"
+                        t-att-ValorUnitario="format_float(line_values['valor_unitario'], precision=6)"
+                        t-att-Importe="format_float(line_values['importe'], precision=6)"
+                        t-att-ObjetoImp="line_values['objeto_imp']"
+                        t-att-Descuento="format_float(line_values['descuento'], precision=6)">
+                        <cfdi:Impuestos t-if="line_values['traslados_list'] or line_values['retenciones_list']">
+                            <cfdi:Traslados t-if="line_values['traslados_list']">
+                                <t t-foreach="line_values['traslados_list']" t-as="tax_values">
+                                    <cfdi:Traslado
+                                        t-att-Base="format_float(tax_values['base'], precision=6)"
+                                        t-att-Importe="format_float(tax_values['importe'], precision=6)"
+                                        t-att-Impuesto="tax_values['impuesto']"
+                                        t-att-TipoFactor="tax_values['tipo_factor']"
+                                        t-att-TasaOCuota="format_float(tax_values['tasa_o_cuota'], precision=6)"
+                                    />
+                                </t>
+                            </cfdi:Traslados>
+                            <cfdi:Retenciones t-if="line_values['retenciones_list']">
+                                <t t-foreach="line_values['retenciones_list']" t-as="tax_values">
+                                    <cfdi:Retencion
+                                        t-att-Base="format_float(tax_values['base'], precision=6)"
+                                        t-att-Importe="format_float(tax_values['importe'], precision=6)"
+                                        t-att-Impuesto="tax_values['impuesto']"
+                                        t-att-TipoFactor="tax_values['tipo_factor']"
+                                        t-att-TasaOCuota="format_float(tax_values['tasa_o_cuota'], precision=6)"
+                                    />
+                                </t>
+                            </cfdi:Retenciones>
+                        </cfdi:Impuestos>
+                        <cfdi:CuentaPredial t-if="line_values['cuenta_predial']" t-att-Numero="line_values['cuenta_predial']"/>
+                    </cfdi:Concepto>
+                </t>
+            </cfdi:Conceptos>
+            <cfdi:Impuestos
+                t-if="retenciones_reduced_list or traslados_list"
+                t-att-TotalImpuestosTrasladados="format_float(total_impuestos_trasladados)"
+                t-att-TotalImpuestosRetenidos="format_float(total_impuestos_retenidos)"
+            >
+                <cfdi:Retenciones t-if="retenciones_reduced_list">
+                    <t t-foreach="retenciones_reduced_list" t-as="tax_values">
+                        <cfdi:Retencion
+                            t-att-Importe="format_float(tax_values['importe'])"
+                            t-att-Impuesto="tax_values['impuesto']"
+                        />
+                    </t>
+                </cfdi:Retenciones>
+                <cfdi:Traslados t-if="traslados_list">
+                    <t t-foreach="traslados_list" t-as="tax_values">
+                        <cfdi:Traslado
+                            t-att-Base="format_float(tax_values['base'])"
+                            t-att-Importe="format_float(tax_values['importe'])"
+                            t-att-Impuesto="tax_values['impuesto']"
+                            t-att-TipoFactor="tax_values['tipo_factor']"
+                            t-att-TasaOCuota="format_float(tax_values['tasa_o_cuota'], precision=6)"
+                        />
+                    </t>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+            <cfdi:Complemento t-if="local_retenciones_list or local_traslados_list">
+                <implocal:ImpuestosLocales
+                    t-att-TotaldeRetenciones="format_float(total_local_impuestos_retenidos, 2)"
+                    t-att-TotaldeTraslados="format_float(total_local_impuestos_trasladados, 2)"
+                    t-att-version="1.0"
+                >
+                    <t t-foreach="local_retenciones_list" t-as="tax_values">
+                        <implocal:RetencionesLocales
+                            t-att-ImpLocRetenido="tax_values['local_tax_name']"
+                            t-att-Importe="format_float(tax_values['importe'], 2)"
+                            t-att-TasadeRetencion="format_float(tax_values['tasade'], 2)"
+                        />
+                    </t>
+                    <t t-foreach="local_traslados_list" t-as="tax_values">
+                        <implocal:TrasladosLocales
+                            t-att-ImpLocTrasladado="tax_values['local_tax_name']"
+                            t-att-Importe="format_float(tax_values['importe'], 2)"
+                            t-att-TasadeTraslado="format_float(tax_values['tasade'], 2)"/>
+                    </t>
+                </implocal:ImpuestosLocales>
+            </cfdi:Complemento>
+        </cfdi:Comprobante>
+    </template>
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="preparation_display_main_restaurant_to_prepare_stage"
+            model="pos_preparation_display.stage">
+            <field name="name">To cook</field>
+            <field name="color">#C8C9CB</field>
+            <field name="alert_timer">10</field>
+        </record>
+        <record id="preparation_display_main_restaurant_ready_stage"
+            model="pos_preparation_display.stage">
+            <field name="name">Ready</field>
+            <field name="color">#60A8FF</field>
+            <field name="alert_timer">5</field>
+        </record>
+        <record id="preparation_display_main_restaurant_completed_stage"
+            model="pos_preparation_display.stage">
+            <field name="name">Completed</field>
+            <field name="color">#59C629</field>
+            <field name="alert_timer">0</field>
+        </record>
+
+        <record
+            id="preparation_display_main_restaurant" model="pos_preparation_display.display">
+            <field name="name">Kitchen Display</field>
+            <field name="pos_config_ids"
+                eval="[(6, 0, [ref('pos_restaurant.pos_config_main_restaurant')])]" />
+            <field name="stage_ids"
+                eval="[(6, 0, [ref('preparation_display_main_restaurant_to_prepare_stage'),
+            ref('preparation_display_main_restaurant_ready_stage'),
+            ref('preparation_display_main_restaurant_completed_stage')])]" />
+        </record>
+    </data>
+</odoo>

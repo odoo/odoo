@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="knowledge.ReadonlyEmbeddedFile" t-inherit="html_editor.ReadonlyEmbeddedFile" t-inherit-mode="primary">
+        <xpath expr='//EmbeddedComponentToolbar/t[@t-set-slot="buttons"]' position="inside">
+            <t t-call="knowledge.MacrosFileButtons"/>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,31 @@
+<odoo>
+    <record id="social_stream_post_view_kanban" model="ir.ui.view">
+        <field name="name">social.stream.post.view.kanban.inherit.instagram</field>
+        <field name="model">social.stream.post</field>
+        <field name="inherit_id" ref="social.social_stream_post_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stream_post_image_urls']" position="after">
+                <field name="instagram_facebook_author_id"/>
+                <field name="instagram_likes_count"/>
+                <field name="account_id"/>
+            </xpath>
+            <xpath expr="//span[hasclass('o_social_stream_post_author_image')]" position="inside">
+                <img t-if="record.instagram_facebook_author_id.raw_value" t-attf-src="https://graph.facebook.com/v17.0/#{record.instagram_facebook_author_id.raw_value}/picture" alt="Author Image" class="rounded"/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_social_stream_post_message')]" position="inside">
+                <div class="o_social_stream_post_instagram_stats d-flex justify-content-around" t-if="record.media_type.raw_value === 'instagram'">
+                    <div t-if="record.instagram_likes_count.value !== '0'"
+                         class="o_social_subtle_btn_readonly ps-2 pe-3">
+                        <i class="fa fa-heart me-1" title="Likes"/>
+                        <field name="instagram_likes_count" class="fw-bold"/>
+                    </div>
+                    <div t-attf-class="o_social_instagram_comments o_social_comments o_social_subtle_btn px-3">
+                        <i class="fa fa-comments me-1" title="Comments"/>
+                        <field t-if="record.instagram_comments_count.value" name="instagram_comments_count" class="fw-bold"/>
+                    </div>
+                    <div class="flex-grow-1" />
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

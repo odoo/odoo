@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<div t-name="spreadsheet_edition.CellThreadPopover"
+    t-key="props.threadId"
+    t-on-focusin="() => this.onFocused()"
+    class="o-thread-popover"
+    t-on-click.prevent="">
+    <!-- the prevent on click is necessary because we cannot benefit from the scroller service event listener -->
+    <t t-if="state.thread.id">
+        <div t-att-class="{'o-thread-highlight': !props.isInteractive}">
+            <CellThread threadId="state.thread.id" t-key="state.thread.localId" edit="props.isInteractive" />
+        </div>
+    </t>
+    <t t-else="1">
+        <div class="o-thread-start-composer">
+            <SpreadsheetCommentComposer
+                placeholder.translate="Add a comment..."
+                composer="state.thread.composer"
+                type="'note'"
+                mode="'extended'"
+                showFullComposer="false"
+                onPostCallback.bind="insertNewThread"
+                autofocus="1"
+            />
+        </div>
+    </t>
+    <div t-if="props.isInteractive" class="o-thread-highlight">
+        <button
+            class="p-2 btn text-primary pointer-event"
+            t-on-click="() => this.showAllComments()">Open all comments</button>
+    </div>
+</div>
+
+</templates>

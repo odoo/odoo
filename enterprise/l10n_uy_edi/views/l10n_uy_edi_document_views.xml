@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="l10n_uy_edi_document_view_form" model="ir.ui.view">
+        <field name="name">l10n_uy_edi.document.view.form</field>
+        <field name="model">l10n_uy_edi.document</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="request_datetime"/>
+                        <label for="state"/>
+                        <div>
+                            <field name="state" class="oe_inline" widget="account_document_state"/>
+                            <button name="action_update_dgi_state" type="object" title="Update DGI Status" class="oe_inline oe_link" invisible="state != 'received'" icon="fa-refresh" groups="base.group_no_one"/>
+                        </div>
+                        <field name="attachment_id" invisible="1"/>
+                        <field name="move_id"/>
+                        <field name="uuid"/>
+                        <field name="message" invisible="1"/>
+                        <button name="action_download_file" type="object" string="Download Preview XML" class="oe_link" groups="base.group_no_one" colspan="2"/>
+                        <field name="l10n_latam_document_type_id" invisible="not attachment_id"/>
+                        <field name="partner_id"/>
+                        <field name="company_id"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+</odoo>

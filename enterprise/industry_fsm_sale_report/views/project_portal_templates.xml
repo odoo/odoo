@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_task" inherit_id="industry_fsm.portal_my_task">
+        <xpath expr="//div[@id='nav-report']" position="attributes">
+            <attribute name="t-if">(allow_timesheets and timesheets) or (task.allow_worksheets and task.worksheet_count) or (task.allow_material and task.material_line_product_count)</attribute>
+        </xpath>
+    </template>
+
+</odoo>

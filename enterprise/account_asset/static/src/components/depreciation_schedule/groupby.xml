@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_asset.DepreciationScheduleGroupBy">
+        <Dropdown>
+            <button class="btn btn-secondary">
+                <i class="fa fa-list me-1"/>
+                <t t-if="controller.options.assets_grouping_field === 'account_id'">
+                    Group by Account
+                </t>
+                <t t-elif="controller.options.assets_grouping_field === 'asset_group_id'">
+                    Group by Asset Group
+                </t>
+                <t t-elif="controller.options.assets_grouping_field === 'none'">
+                    No Grouping
+                </t>
+            </button>
+
+            <t t-set-slot="content">
+                <DropdownItem
+                    class="{ 'selected': controller.options.assets_grouping_field === 'account_id' }"
+                    onSelected="() => this.filterClicked({ optionKey: 'assets_grouping_field', optionValue: 'account_id', reload: true})"
+                >
+                    Group By Account
+                </DropdownItem>
+
+                <DropdownItem
+                    class="{ 'selected': controller.options.assets_grouping_field === 'asset_group_id' }"
+                    onSelected="() => this.filterClicked({ optionKey: 'assets_grouping_field', optionValue: 'asset_group_id', reload: true})"
+                >
+                    Group By Asset Group
+                </DropdownItem>
+
+                <DropdownItem
+                    class="{ 'selected': controller.options.assets_grouping_field === 'none'}"
+                    onSelected="() => this.filterClicked({ optionKey: 'assets_grouping_field', optionValue: 'none', reload: true})"
+                >
+                    No Grouping
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

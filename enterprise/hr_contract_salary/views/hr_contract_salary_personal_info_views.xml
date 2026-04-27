@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_salary_personal_info_action" model="ir.actions.act_window">
+        <field name="name">Personal Info</field>
+        <field name="res_model">hr.contract.salary.personal.info</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_view_tree" model="ir.ui.view">
+        <field name="name">hr.contract.salary.personal.info.view.list</field>
+        <field name="model">hr.contract.salary.personal.info</field>
+        <field name="arch" type="xml">
+            <list string="Salary Package Personal Info">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="res_field_id"/>
+                <field name="field" column_invisible="True"/>
+                <field name="structure_type_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.salary.personal.info.view.form</field>
+        <field name="model">hr.contract.salary.personal.info</field>
+        <field name="arch" type="xml">
+            <form string="Salary Package Personal Info">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Information"/>
+                        <h1><field name="name" placeholder="e.g. Birthdate"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="applies_on" string="Related Model" required="1"/>
+                            <field name="res_field_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                            <field name="res_model" invisible="1"/>
+                            <field name="field" invisible="1"/>
+                            <field name="info_type_id" string="Category"/>
+                            <field name="placeholder"/>
+                            <field name="helper"/>
+                            <field name="is_required"/>
+                        </group>
+                        <group>
+                            <field name="structure_type_id"/>
+                        	<field name="position"/>
+                            <field name="display_type" required="1"/>
+                            <field name="dropdown_selection" invisible="display_type != 'dropdown'" required="display_type == 'dropdown'"/>
+                            <field name="value_ids" invisible="display_type not in ['dropdown', 'radio'] or dropdown_selection != 'specific'">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="value"/>
+                                </list>
+                            </field>
+                            <field name="impacts_net_salary" invisible="display_type in ['text', 'email', 'document']"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <menuitem
+        id="salary_package_personal_info"
+        action="hr_contract_salary_personal_info_action"
+        parent="hr_contract_salary.salary_package_menu"
+        sequence="2"/>
+
+</odoo>

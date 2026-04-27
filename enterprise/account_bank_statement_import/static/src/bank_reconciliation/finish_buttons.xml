@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="account_bank_statement_import.BankRecFinishButtons" t-inherit="account_accountant.BankRecFinishButtons" t-inherit-mode="extension">
+        <xpath expr="//p" position="before">
+            <div class="mb-1" t-call="account.AccountViewUploadButton"/>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="spreadsheet_edition.SpreadsheetNavbar" t-inherit="web_enterprise.EnterpriseNavBar" t-inherit-mode="primary">
+        <xpath expr="//img[hasclass('o_menu_brand_icon')]" position="replace">
+            <img
+                t-if="!env.isSmall"
+                src="/spreadsheet/static/description/icon.svg"
+                class="o_menu_brand_icon d-inline position-absolute start-0 h-100 ps-1 ms-2"
+                alt="Spreadsheet"
+                t-ref="appIcon"/>
+        </xpath>
+
+        <xpath expr="//span[hasclass('o_menu_brand')]" position="attributes">
+            <attribute name="t-esc"/>
+        </xpath>
+        <xpath expr="//span[hasclass('o_menu_brand')]" position="inside">
+            Spreadsheet
+        </xpath>
+
+        <xpath expr="//div[hasclass('o_navbar_breadcrumbs')]" position="replace">
+            <div class="d-flex align-items-center flex-fill" t-att-class="{'o_navbar_breadcrumbs': env.isSmall}">
+                <t t-if="env.isSmall">
+                    <button class="o_back_button btn btn-link d-print-none px-1 py-0" t-on-click.prevent="onBreadcrumbClicked">
+                        <i class="oi oi-fw oi-arrow-left"/>
+                    </button>
+                </t>
+                <t t-else="">
+                    <div t-if="breadcrumbs.length > 1" class="btn btn-link o-sp-breadcrumb fw-normal" t-on-click="onBreadcrumbClicked" t-esc="breadcrumbTitle"/>
+                </t>
+                <SpreadsheetName name="props.spreadsheetName" isReadonly="props.isReadonly" onSpreadsheetNameChanged="props.onSpreadsheetNameChanged" />
+                <t t-slot="navbar-additional-actions"/>
+            </div>
+        </xpath>
+        <xpath expr="//t[@t-call='web.NavBar.SectionsMenu']" position="replace"/>
+    </t>
+</templates>

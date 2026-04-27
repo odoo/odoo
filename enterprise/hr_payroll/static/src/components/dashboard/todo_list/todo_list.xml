@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="hr_payroll.TodoList">
+        <div class="o_hr_payroll_dashboard_block o_hr_payroll_dashboard_todo card h-100 g-0 d-flex flex-column ms-md-1 ms-lg-0 me-3 me-lg-4 position-relative">
+            <div class="card-header d-flex bg-view border-bottom-0 p-0 bg-view">
+                <ul class="o_hr_payroll_todo_tabs nav nav-tabs flex-nowrap overflow-x-auto w-100 border-bottom-0 border-start-0">
+                    <t t-foreach="state.records" t-as="rec" t-key="rec.id">
+                        <t t-set="isActiveNote" t-value="rec.id === state.activeNoteId"/>
+                        <li class="o_hr_payroll_todo_tab nav-item flex-shrink-0 border-end  cursor-pointer"
+                            t-att-class="((isActiveNote) ? '' : ' border-bottom ')"
+                            t-on-click="() => this.onClickNoteTab(rec)"
+                            t-on-dblclick="() => this.startNameEdition(rec)">
+                            <a t-attf-class="mb-0 nav-link text-dark {{ (isActiveNote) ? 'd-flex align-items-center justify-content-between gap-2 active border-0 border-odoo border-top ' : '' }}">
+                                <t t-if="state.isEditingNoteName &amp;&amp; isActiveNote">
+                                    <input type="text" t-ref="autofocus" t-att-value="this.bufferedText" t-on-input="onInputNoteNameInput" t-on-keydown="onKeyDownNoteNameInput" t-on-blur="handleBlur" class="o_input"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-esc="(rec.name || 'untitled').substring(0, 30)"/>
+                                    <button type="button" class="btn p-0" aria-label="Close" t-if="isActiveNote" t-on-click="onNoteDelete">
+                                        <i class="oi oi-close"/>
+                                    </button>
+                                </t>
+                            </a>
+                        </li>
+                    </t>
+                    <li class="flex-grow-1 border-bottom border-end order-2"/>
+                </ul>
+                <button class="o_hr_payroll_todo_tab o_hr_payroll_todo_create btn d-flex align-items-center border-bottom rounded-0" t-on-click="onClickCreateNote">
+                    <i title="Create new todo note" class="fa fa-plus"/>
+                </button>
+            </div>
+
+            <div class="card-body content overflow-hidden">
+                <div class="o_hr_payroll_todo_value overflow-auto h-100">
+                    <Record t-if="state.activeNoteId" resModel="recordInfo.model" fieldNames="['note']" resId="state.activeNoteId" t-slot-scope="data" mode="'edit'" onRecordChanged.bind="onRecordChanged">
+                        <Field name="'note'" record="data.record" class="'h-100'" isCollaborative="true"/>
+                    </Record>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

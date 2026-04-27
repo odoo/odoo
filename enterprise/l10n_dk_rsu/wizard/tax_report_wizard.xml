@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_dk_reports_rsu_tax_report_calendar_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_dk_rsu.tax.report.calendar.wizard.view.form</field>
+        <field name="model">l10n_dk_rsu.tax.report.calendar.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Danish tax report - Calendar service">
+                <sheet>
+                    <group>
+                        <field name="date_from" required="True"/>
+                        <field name="date_to" required="True"/>
+                        <field name="description" required="True"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_call_company_calendar" string="Send Interval" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_dk_reports_rsu_tax_report_submit_draft_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_dk_rsu.tax.report.submit.draft.wizard.view.form</field>
+        <field name="model">l10n_dk_rsu.tax.report.submit.draft.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Danish tax report - Submit draft">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="settlement_period_start"/>
+                            <field name="settlement_period_end"/>
+                            <field name="start_date"/>
+                            <field name="end_date" invisible="not end_date"/>
+                            <field name="frequency_code"/>
+                        </group>
+                        <group>
+                            <field name="deadline_date"/>
+                            <field name="due_date" invisible="not due_date"/>
+                            <field name="payment_date" invisible="not payment_date"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_submit_draft" string="Submit draft" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_dk_reports_rsu_tax_report_receipt_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_dk_rsu.tax.report.receipt.wizard.view.form</field>
+        <field name="model">l10n_dk_rsu.tax.report.receipt.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Danish tax report - Receipt">
+                <sheet>
+                    <group invisible="is_receipt_received">
+                        <p colspan="2">
+                            When clicking on "Approve Report" you will be redirected to a page where you will be able to
+                            approve the tax report. Once it's done, you can click on "Receive receipt".
+                        </p>
+                    </group>
+
+                    <group invisible="not is_receipt_received">
+                        <group>
+                            <field name="ocr_card_type_code"/>
+                            <field name="ocr_identification_number"/>
+                            <field name="ocr_account_number"/>
+                        </group>
+                        <group>
+                            <field name="payment_ref"/>
+                            <field name="deadline_date"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_approve_tax_report" string="Approve report" type="object" class="btn-primary" data-hotkey="q" invisible="is_report_approved or is_receipt_received"/>
+                    <button name="action_receive_receipt" string="Receive receipt" type="object" class="btn-primary" data-hotkey="q" invisible="not is_report_approved or is_receipt_received"/>
+                    <button name="action_download_pdf" string="Download PDF" type="object" class="btn-primary" data-hotkey="q" invisible="not is_receipt_received"/>
+                    <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

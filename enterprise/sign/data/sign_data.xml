@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tour template -->
+    <record id="attachment_sign_tour" model="ir.attachment">
+        <field name="name">Sample Contract.pdf</field>
+        <field name="datas" type="base64" file="sign/static/demo/sample_contract.pdf"/>
+        <field name="mimetype">application/pdf</field>
+    </record>
+    <record id="template_sign_tour" model="sign.template">
+        <field name="attachment_id" ref="attachment_sign_tour"/>
+        <field name="active" eval="False"/>
+        <field name="group_ids" eval="[Command.link(ref('sign.group_sign_user'))]"/>
+    </record>
+
+    <!-- Reminder CRON -->
+    <record model="ir.cron" id="sign_reminder_cron">
+        <field name="name">Sign: Send mail reminder</field>
+        <field name="model_id" ref="sign.model_sign_request"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_reminder()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="nextcall" eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d 10:00:00')"/>
+    </record>
+
+    <!-- Item types -->
+    <record model="sign.item.type" id="sign_item_type_signature">
+        <field name="name">Signature</field>
+        <field name="item_type">signature</field>
+        <field name="tip">sign it</field>
+        <field name="placeholder">Signature</field>
+        <field name="default_width" type="float">0.200</field>
+        <field name="default_height" type="float">0.050</field>
+        <field name="icon">fa-pencil-square-o</field>
+    </record>
+
+    <record model="sign.item.type" id="sign_item_type_initial">
+        <field name="name">Initials</field>
+        <field name="item_type">initial</field>
+        <field name="tip">mark it</field>
+        <field name="placeholder">Initials</field>
+        <field name="default_width" type="float">0.085</field>
+        <field name="default_height" type="float">0.030</field>
+        <field name="icon">fa-pencil-square-o</field>
+    </record>
+
+    <record model="sign.item.type" id="sign_item_type_name">
+        <field name="name">Name</field>
+        <field name="placeholder">Name</field>
+        <field name="auto_field">name</field>
+        <field name="icon">fa-user</field>
+    </record>
+
+    <record model="sign.item.type" id="sign_item_type_email">
+        <field name="name">Email</field>
+        <field name="placeholder">Email</field>
+        <field name="auto_field">email</field>
+        <field name="icon">fa-envelope-o</field>
+    </record>
+
+    <record model="sign.item.type" id="sign_item_type_phone">
+        <field name="name">Phone</field>
+        <field name="placeholder">Phone</field>
+        <field name="auto_field">phone</field>
+        <field name="icon">fa-phone</field>
+    </record>
+
+    <record model="sign.item.type" id="sign_item_type_company">
+        <field name="name">Company</field>
+        <field name="placeholder">Company</field>
+        <field name="icon">fa-building-o</field>
+    </record>
+
+    <record model="sign.item.type" id="sign_item_type_text">
+        <field name="name">Text</field> <!-- default: type 'text', tip 'fill in', empty placeholder, default_width and default_height, no auto_field -->
+        <field name="placeholder">Text</field>
+        <field name="icon">fa-font</field>
+    </record>
+
+    <record model="sign.item.type" id="sign_item_type_multiline_text">
+        <field name="name">Multiline Text</field>
+        <field name="placeholder">Multiline Text</field>
+        <field name="item_type">textarea</field>
+        <field name="default_width" type="float">0.300</field>
+        <field name="default_height" type="float">0.0500</field>
+        <field name="icon">fa-bars</field>
+    </record>
+
+    <record model="sign.item.type" id="sign_item_type_checkbox">
+        <field name="name">Checkbox</field>
+        <field name="placeholder">&#9745;</field>
+        <field name="item_type">checkbox</field>
+        <field name="default_width" type="float">0.05</field>
+        <field name="default_height" type="float">0.025</field>
+        <field name="icon">fa-check-square-o</field>
+    </record>
+
+    <record model="sign.item.type" id="sign_item_type_radio">
+        <field name="name">Radio Buttons</field>
+        <field name="placeholder">&#9673;</field>
+        <field name="item_type">radio</field>
+        <field name="default_width" type="float">0.06</field>
+        <field name="default_height" type="float">0.020</field>
+        <field name="icon">fa-dot-circle-o</field>
+    </record>
+
+    <record model="sign.item.type" id="sign_item_type_selection">
+        <field name="name">Selection</field>
+        <field name="item_type">selection</field>
+        <field name="placeholder">Selection</field>
+        <field name="tip">Select an option</field>
+        <field name="default_width" type="float">0.300</field>
+        <field name="default_height" type="float">0.030</field>
+        <field name="icon">fa-dot-circle-o</field>
+    </record>
+
+    <record model="sign.item.type" id="sign_item_type_date">
+        <field name="name">Date</field>
+        <field name="placeholder">Date</field>
+        <field name="icon">fa-calendar</field>
+    </record>
+
+    <!-- Item responsibles -->
+    <record model="sign.item.role" id="sign_item_role_customer">
+        <field name="name">Customer</field>
+        <field name="color" eval="3"/>
+    </record>
+
+    <record model="sign.item.role" id="sign_item_role_user">
+        <field name="name">User</field>
+        <field name="change_authorized" eval="True"/>
+        <field name="color" eval="9"/>
+    </record>
+
+    <record model="sign.item.role" id="sign_item_role_employee">
+        <field name="name">Employee</field>
+        <field name="color" eval="10"/>
+    </record>
+
+    <record model="sign.item.role" id="sign_item_role_default">
+        <field name="name">Standard</field>
+        <field name="default" eval="True"/>
+    </record>
+
+    <!-- Template tags -->
+    <record id="sign_template_tag_1" model="sign.template.tag">
+        <field name="name">HR</field>
+        <field name="color">2</field>
+    </record>
+    <record id="sign_template_tag_2" model="sign.template.tag">
+        <field name="name">NDA</field>
+        <field name="color">3</field>
+    </record>
+    <record id="sign_template_tag_3" model="sign.template.tag">
+        <field name="name">Sales</field>
+        <field name="color">4</field>
+    </record>
+
+</odoo>

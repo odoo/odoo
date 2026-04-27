@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_tax_form_inherit_l10n_gt_edi" model="ir.ui.view">
+        <field name="name">account.tax.form.inherit.l10n_gt_edi</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <field name="country_id" position="after">
+                <field name="l10n_gt_edi_taxable_unit_code"
+                       invisible="country_code != 'GT'"
+                       required="country_code == 'GT'"/>
+                <field name="l10n_gt_edi_short_name"
+                       invisible="country_code != 'GT'"
+                       required="country_code == 'GT' and not (amount &lt; 0 and amount_type == 'percent')"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

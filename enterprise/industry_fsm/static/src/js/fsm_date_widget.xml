@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="industry_fsm.FsmDateWidget" t-inherit="web.DateTimeField" t-inherit-mode="primary">
+        <xpath expr="//span[@t-esc='getFormattedValue(0)']" position="attributes">
+            <attribute name="t-att-class">className</attribute>
+        </xpath>
+    </t>
+</templates>

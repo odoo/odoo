@@ -1,0 +1,1 @@
+from . import test_pos_self_order_preparation_display

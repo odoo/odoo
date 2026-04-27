@@ -1,0 +1,104 @@
+<templates>
+
+    <t t-name="web_studio.ViewEditor.ListEditorSidebar">
+        <InteractiveEditorSidebar>
+            <t t-set-slot="new" isDefault="true">
+                <NewFields />
+                <ExistingFields resModel="viewEditorModel.resModel" fields="viewEditorModel.fields" fieldsInArch="viewEditorModel.fieldsInArch"/>
+            </t>
+            <t t-set-slot="view">
+                <Property
+                    name="'create'"
+                    type="'boolean'"
+                    value="archInfo.activeActions.create === true"
+                    onChange.bind="onAttributeChanged"
+                >
+                    Can Create
+                </Property>
+                <Property
+                    name="'edit'"
+                    type="'boolean'"
+                    value="archInfo.activeActions.edit === true"
+                    onChange.bind="onAttributeChanged"
+                >
+                    Can Edit
+                </Property>
+                <Property
+                    name="'delete'"
+                    type="'boolean'"
+                    value="archInfo.activeActions.delete === true"
+                    onChange.bind="onAttributeChanged"
+                >
+                    Can Delete
+                </Property>
+
+                <t t-call="web_studio.ViewEditor.ShowInvisibleToggler" />
+
+                <Property
+                    name="'editable'"
+                    type="'selection'"
+                    value="archInfo.editable or ''"
+                    onChange.bind="onAttributeChanged"
+                    childProps="{ choices: editableChoices }"
+                >
+                    When Creating Record
+                </Property>
+                <Property
+                    t-if="archInfo.activeActions.edit === true"
+                    name="'multi_edit'"
+                    type="'boolean'"
+                    value="archInfo.multiEdit === true"
+                    onChange.bind="onAttributeChanged"
+                >
+                    Enable Mass Editing
+                </Property>
+                <Property
+                    t-if="archInfo.editable"
+                    name="'open_form_view'"
+                    type="'boolean'"
+                    value="archInfo.openFormView === true"
+                    onChange.bind="onAttributeChanged"
+                >
+                    Show link to record
+                </Property>
+                <Property
+                    name="'sort_by'"
+                    type="'selection'"
+                    value="defaultOrder.name or null"
+                    onChange.bind="setSortBy"
+                    childProps="{ choices: sortChoices, required: false }"
+                >
+                    Sort By
+                </Property>
+                <Property
+                    t-if="this.defaultOrder.name"
+                    name="'sort_order'"
+                    type="'selection'"
+                    value="defaultOrder.asc ? 'asc' : 'desc'"
+                    onChange.bind="setOrder"
+                    childProps="{ choices: orderChoices }"
+                >
+                    Order
+                </Property>
+                <Property
+                    name="'default_group_by'"
+                    type="'selection'"
+                    value="archInfo.defaultGroupBy"
+                    onChange="(value, name) => this.onAttributeChanged(value or '', name)"
+                    childProps="{ choices: defaultGroupbyChoices, required: false }"
+                >
+                    Default Group By
+                </Property>
+                <p t-if="archInfo.defaultGroupBy" class="alert alert-dark fst-italic p-2 mt-3" role="alert">
+                    <small><i class="fa fa-info-circle me-1" aria-hidden="true"/>Grouping is not applied while in Studio to allow editing.</small>
+                </p>
+                <SidebarViewToolbox onMore="props.openViewInForm" canEditXml="!viewEditorModel.isEditingSubview" openDefaultValues="props.openDefaultValues" />
+            </t>
+
+            <t t-set-slot="properties">
+                <Properties propertiesComponents="propertiesComponents"/>
+            </t>
+        </InteractiveEditorSidebar>
+    </t>
+
+</templates>

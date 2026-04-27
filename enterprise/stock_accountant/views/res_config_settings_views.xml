@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.stock.accountant</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='default_accounts']" position="after">
+                <block title="Stock Valuation" id="stock_valuation">
+                    <setting string="General Account Properties" id="general_accounts">
+                        <div class="content-group">
+                            <div class="row mt8">
+                                <label for="property_account_income_categ_id" class="col-lg-4 o_light_label"/>
+                                <field name="property_account_income_categ_id"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="property_account_expense_categ_id" class="col-lg-4 o_light_label"/>
+                                <field name="property_account_expense_categ_id"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting help="Enable automatic accounting entries for stock movements" id="default_stock_valuation_accounts">
+                        <field name="group_stock_accounting_automatic" string="Automatic Accounting"/>
+                        <div name="default_accounts" class="content-group" invisible="not group_stock_accounting_automatic">
+                            <div class="text-muted">
+                                The below accounts will be used by default for automatic inventory valuation.
+                            </div>
+                            <div class="row mt8">
+                                <label for="property_stock_valuation_account_id" class="col-lg-5 o_light_label"/>
+                                <field name="property_stock_valuation_account_id"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="property_stock_journal" class="col-lg-5 o_light_label"/>
+                                <field name="property_stock_journal"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="property_stock_account_input_categ_id" class="col-lg-5 o_light_label"/>
+                                <field name="property_stock_account_input_categ_id"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="property_stock_account_output_categ_id" class="col-lg-5 o_light_label"/>
+                                <field name="property_stock_account_output_categ_id"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

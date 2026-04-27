@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportAmlIrFilters">
+        <Dropdown>
+            <button class="btn btn-secondary">
+                <i class="fa fa-star me-1"/>Filters: <t t-out="selectedAmlIrFilters"/>
+            </button>
+
+            <t t-set-slot="content">
+                <t t-foreach="controller.options.aml_ir_filters" t-as="amlIrFilter" t-key="amlIrFilter_index">
+                    <DropdownItem
+                        class="{ 'selected': amlIrFilter.selected }"
+                        onSelected="() => this.filterClicked({ optionKey: 'aml_ir_filters.' + amlIrFilter_index + '.selected', reload: true})"
+                        closingMode="'none'"
+                        t-out="amlIrFilter.name"
+                    />
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

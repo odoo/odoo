@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.worksheet</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="industry_fsm.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='module_industry_fsm_report']" position="after">
+                <button name="%(fsm_worksheets_action_settings)d" type="action"
+                    string="Design worksheet templates" icon="oi-arrow-right" class="btn-link"
+                    invisible="not module_industry_fsm_report"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

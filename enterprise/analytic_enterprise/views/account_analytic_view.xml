@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+        <record id="account_analytic_line_report_view_grid" model="ir.ui.view">
+            <field name="name">account.analytic.line.report.grid</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <grid string="Analytic Entries" edit="false" js_class="analytic_line_grid">
+                    <field name="account_id" type="row" section="1"/>
+                    <field name="date" type="col">
+                        <range name="year" string="Year" span="year" step="month"/>
+                        <range name="month" string="Month" span="month" step="day"/>
+                    </field>
+                    <field name="amount" type="measure" widget="float"/>
+                </grid>
+            </field>
+        </record>
+        <record id="analytic.account_analytic_line_action_entries" model="ir.actions.act_window">
+            <field name="view_mode">list,kanban,form,graph,pivot,grid</field>
+
+            <!-- there's a lot of grid views on analytic lines so we
+                 have to explicitly define
+                 account_analytic_line_report_view_grid. If we only
+                 specify that one it becomes the default view, so we
+                 have to define all of them. -->
+            <field name="view_ids" eval="[(5,0,0),
+                   (0, 0, {'view_mode': 'list', 'view_id': ref('analytic.view_account_analytic_line_tree')}),
+                   (0, 0, {'view_mode': 'kanban', 'view_id': ref('analytic.view_account_analytic_line_kanban')}),
+                   (0, 0, {'view_mode': 'form', 'view_id': ref('analytic.view_account_analytic_line_form')}),
+                   (0, 0, {'view_mode': 'graph', 'view_id': ref('analytic.view_account_analytic_line_graph')}),
+                   (0, 0, {'view_mode': 'pivot', 'view_id': ref('analytic.view_account_analytic_line_pivot')}),
+                   (0, 0, {'view_mode': 'grid', 'view_id': ref('analytic_enterprise.account_analytic_line_report_view_grid')})]"/>
+        </record>
+        <record id="account.action_analytic_reporting" model="ir.actions.act_window">
+            <field name="view_mode">pivot,list,kanban,form,graph,grid</field>
+            <field name="view_ids" eval="[(5,0,0),
+                   (0, 0, {'view_mode': 'pivot', 'view_id': ref('analytic.view_account_analytic_line_pivot')}),
+                   (0, 0, {'view_mode': 'list', 'view_id': ref('analytic.view_account_analytic_line_tree')}),
+                   (0, 0, {'view_mode': 'kanban', 'view_id': ref('analytic.view_account_analytic_line_kanban')}),
+                   (0, 0, {'view_mode': 'form', 'view_id': ref('analytic.view_account_analytic_line_form')}),
+                   (0, 0, {'view_mode': 'graph', 'view_id': ref('analytic.view_account_analytic_line_graph')}),
+                   (0, 0, {'view_mode': 'grid', 'view_id': ref('analytic_enterprise.account_analytic_line_report_view_grid')})]"/>
+        </record>
+	</data>
+</odoo>

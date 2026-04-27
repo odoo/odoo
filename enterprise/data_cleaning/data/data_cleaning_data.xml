@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="0">
+        <!-- res.partner -->
+        <record id="data_cleaning_model_res_partner" model="data_cleaning.model">
+            <field name="name">Contact</field>
+            <field name="res_model_id" ref="base.model_res_partner"/>
+            <field name="notify_user_ids" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record id="data_cleaning_rule_res_partner_name" model="data_cleaning.rule">
+            <field name="cleaning_model_id" ref="data_cleaning_model_res_partner"/>
+            <field name="field_id" ref="base.field_res_partner__name"/>
+            <field name="action">trim</field>
+            <field name="action_trim">superfluous</field>
+        </record>
+        <record id="data_cleaning_rule_res_partner_email" model="data_cleaning.rule">
+            <field name="cleaning_model_id" ref="data_cleaning_model_res_partner"/>
+            <field name="field_id" ref="base.field_res_partner__email"/>
+            <field name="action">trim</field>
+            <field name="action_trim">all</field>
+        </record>
+        <record id="data_cleaning_rule_res_partner_vat" model="data_cleaning.rule">
+            <field name="cleaning_model_id" ref="data_cleaning_model_res_partner"/>
+            <field name="field_id" ref="base.field_res_partner__vat"/>
+            <field name="action">trim</field>
+            <field name="action_trim">all</field>
+        </record>
+        <record id="data_cleaning_rule_res_partner_phone" model="data_cleaning.rule">
+            <field name="cleaning_model_id" ref="data_cleaning_model_res_partner"/>
+            <field name="field_id" ref="base.field_res_partner__phone"/>
+            <field name="action">phone</field>
+        </record>
+        <record id="data_cleaning_rule_res_partner_mobile" model="data_cleaning.rule">
+            <field name="cleaning_model_id" ref="data_cleaning_model_res_partner"/>
+            <field name="field_id" ref="base.field_res_partner__mobile"/>
+            <field name="action">phone</field>
+        </record>
+    </data>
+    <data noupdate="1">
+        <!-- res.partner -->
+        <record model="data_merge.model" id="data_merge_model_res_partner">
+            <field name="name">Contact</field>
+            <field name="domain">[('is_company', '=', False)]</field>
+            <field name="res_model_id" ref="base.model_res_partner"/>
+            <field name="notify_user_ids" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record model="data_merge.rule" id="data_merge_field_res_partner_name">
+            <field name="model_id" ref="data_merge_model_res_partner"/>
+            <field name="field_id" ref="base.field_res_partner__name"/>
+            <field name="match_mode">exact</field>
+        </record>
+        <record model="data_merge.rule" id="data_merge_field_res_partner_vat">
+            <field name="model_id" ref="data_merge_model_res_partner"/>
+            <field name="field_id" ref="base.field_res_partner__vat"/>
+            <field name="match_mode">exact</field>
+        </record>
+        <record model="data_merge.rule" id="data_merge_field_res_partner_email">
+            <field name="model_id" ref="data_merge_model_res_partner"/>
+            <field name="field_id" ref="base.field_res_partner__email"/>
+            <field name="match_mode">exact</field>
+        </record>
+        <record model="data_merge.rule" id="data_merge_field_res_partner_ref">
+            <field name="model_id" ref="data_merge_model_res_partner"/>
+            <field name="field_id" ref="base.field_res_partner__ref"/>
+            <field name="match_mode">exact</field>
+        </record>
+
+        <!-- res.partner.category -->
+        <record model="data_merge.model" id="data_merge_model_res_partner_category">
+            <field name="name">Partner Tags</field>
+            <field name="res_model_id" ref="base.model_res_partner_category"/>
+            <field name="notify_user_ids" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record model="data_merge.rule" id="data_merge_field_res_partner_category_name">
+            <field name="model_id" ref="data_merge_model_res_partner_category"/>
+            <field name="field_id" ref="base.field_res_partner_category__name"/>
+            <field name="match_mode">exact</field>
+        </record>
+
+        <!-- res.partner.industry -->
+        <record model="data_merge.model" id="data_merge_model_res_partner_industry">
+            <field name="name">Industry</field>
+            <field name="res_model_id" ref="base.model_res_partner_industry"/>
+            <field name="notify_user_ids" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record model="data_merge.rule" id="data_merge_field_res_partner_industry_name">
+            <field name="model_id" ref="data_merge_model_res_partner_industry"/>
+            <field name="field_id" ref="base.field_res_partner_industry__name"/>
+            <field name="match_mode">exact</field>
+        </record>
+
+        <record model="data_merge.rule" id="data_merge_field_res_partner_industry_full_name">
+            <field name="model_id" ref="data_merge_model_res_partner_industry"/>
+            <field name="field_id" ref="base.field_res_partner_industry__full_name"/>
+            <field name="match_mode">exact</field>
+        </record>
+
+        <!-- res.country -->
+        <record model="data_merge.model" id="data_merge_model_res_country">
+            <field name="name">Country</field>
+            <field name="res_model_id" ref="base.model_res_country"/>
+            <field name="notify_user_ids" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record model="data_merge.rule" id="data_merge_field_res_country_name">
+            <field name="model_id" ref="data_merge_model_res_country"/>
+            <field name="field_id" ref="base.field_res_country__name"/>
+            <field name="match_mode">exact</field>
+        </record>
+
+        <!-- res.country.state -->
+        <record model="data_merge.model" id="data_merge_model_res_country_state">
+            <field name="name">Country State</field>
+            <field name="res_model_id" ref="base.model_res_country_state"/>
+            <field name="notify_user_ids" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record model="data_merge.rule" id="data_merge_field_res_country_state">
+            <field name="model_id" ref="data_merge_model_res_country_state"/>
+            <field name="field_id" ref="base.field_res_country_state__name"/>
+            <field name="match_mode">exact</field>
+        </record>
+
+    </data>
+    <data noupdate="1">
+        <function model="data_merge.rule" name="_update_default_rules">
+            <value eval="[ref('data_merge_field_res_partner_name'),
+                ref('data_merge_field_res_partner_email'),
+                ref('data_merge_field_res_partner_category_name'),
+                ref('data_merge_field_res_partner_industry_name'),
+                ref('data_merge_field_res_partner_industry_full_name'),
+                ref('data_merge_field_res_country_name'),
+                ref('data_merge_field_res_country_state')]"/>
+        </function>
+    </data>
+</odoo>

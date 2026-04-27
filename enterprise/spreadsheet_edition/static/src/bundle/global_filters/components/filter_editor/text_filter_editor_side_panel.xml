@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name="spreadsheet_edition.TextFilterEditorSidePanel" class="o_spreadsheet_filter_editor_side_panel">
+        <div class="o-section">
+            <FilterEditorLabel
+                inputClass="missingLabel ? 'o_field_invalid' : ''"
+                label="genericState.label"
+                setLabel.bind="this.setLabel"
+                placeholder="placeholder"
+            />
+        </div>
+        <t t-if="isValid">
+            <Section>
+                <t t-set-slot="title">Filter value</t>
+                <div class="o-section-subtitle">Default value</div>
+                <TextFilterValue
+                    value="textState.defaultValue"
+                    options="textOptionsFromRange"
+                    onValueChanged="(value) => (this.textState.defaultValue = value)"
+                />
+                <div class="o-section-subtitle mt-4">Possible values</div>
+                <Checkbox
+                    className="'restrict_to_range mb-1'"
+                    label.translate="Restrict values to a range"
+                    onChange="(value) => (this.textState.restrictValuesToRange = value)"
+                    value="!!textState.restrictValuesToRange"
+                />
+                <SelectionInput
+                    t-if="textState.restrictValuesToRange"
+                    ranges="this.rangesForSelectionInput"
+                    hasSingleRange="true"
+                    required="true"
+                    onSelectionChanged.bind="this.onRangeChanged"
+                    onSelectionConfirmed.bind="this.onRangeConfirmed"
+                />
+
+            </Section>
+            <SidePanelCollapsible t-if="shouldDisplayFieldMatching()" collapsedAtInit="!isNewFilter">
+                <t t-set-slot="title">Field matching</t>
+                <t t-set-slot="content">
+                    <Section class="'pt-0'">
+                        <FilterEditorFieldMatching
+                            fieldMatchings="fieldMatchings"
+                            wrongFieldMatchings="wrongFieldMatchings"
+                            selectField.bind="onSelectedField"
+                            filterModelFieldSelectorField.bind="filterModelFieldSelectorField"
+                        />
+                    </Section>
+                </t>
+            </SidePanelCollapsible>
+        </t>
+        <Section t-else="1">
+            <ValidationMessages messages="[invalidModel]" msgType="'error'"/>
+        </Section>
+        <div class="o-section o-sidePanelButtons">
+            <t t-call="spreadsheet_edition.FilterEditorButtons">
+                <t t-set="onDelete" t-value="this.props.id and onDelete.bind(this)" />
+                <t t-set="onSave" t-value="isValid and onSave.bind(this)" />
+                <t t-set="onCancel" t-value="onCancel.bind(this)" />
+            </t>
+        </div>
+    </div>
+</templates>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_batch_payment_form_inherit_eft" model="ir.ui.view">
+        <field name="name">account.batch.payment.form.inherit.eft</field>
+        <field name="model">account.batch.payment</field>
+        <field name="inherit_id" ref="account_batch_payment.view_batch_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_method_id']" position="after">
+                <field name="l10n_nz_company_partner_id" invisible="1"/>
+                <field name="l10n_nz_dishonour_account_id"
+                       invisible="payment_method_code not in ('l10n_nz_eft_in', 'l10n_nz_eft_out') or l10n_nz_file_format != 'anz'"
+                       domain="[('partner_id','=', l10n_nz_company_partner_id)]"
+                />
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="l10n_nz_file_format" invisible="payment_method_code not in ('l10n_nz_eft_in', 'l10n_nz_eft_out')"
+                       readonly="state != 'draft'" placeholder="Select a file format..."/>
+                <field name="l10n_nz_batch_reference" invisible="payment_method_code not in ('l10n_nz_eft_in', 'l10n_nz_eft_out')"/>
+                <field name="l10n_nz_batch_particulars" invisible="payment_method_code not in ('l10n_nz_eft_in', 'l10n_nz_eft_out')"/>
+                <field name="l10n_nz_dd_info" invisible="payment_method_code != 'l10n_nz_eft_in' or l10n_nz_file_format not in ('bnz', 'asb', 'anz')"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

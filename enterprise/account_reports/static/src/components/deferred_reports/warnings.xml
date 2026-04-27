@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.deferred_report_warning_partially_generated">
+        Deferrals have not yet been completely generated for this period.
+        <div>
+            <a type="button" t-on-click="(ev) => controller.reportAction(ev, 'open_deferral_entries', {})">
+                Show already generated deferrals.
+            </a>
+        </div>
+    </t>
+    <t t-name="account_reports.deferred_report_warning_never_generated">
+        Deferrals have not yet been generated for this period.
+    </t>
+    <t t-name="account_reports.deferred_report_info_fully_generated">
+        <a type="button" t-on-click="(ev) => controller.reportAction(ev, 'open_deferral_entries', {})">
+            Show already generated deferrals.
+        </a>
+    </t>
+</templates>

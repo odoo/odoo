@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_fps_belgium" model="res.partner">
+        <field name="name">FPS Finance - VAT Revenue Service Brussels</field>
+    </record>
+
+    <data noupdate="1">
+        <record id="fps_vat_current_account" model="res.partner.bank">
+            <field name="acc_number">BE22679200300047</field>
+            <field name="partner_id" ref="partner_fps_belgium"/>
+            <field name="allow_out_payment">True</field>
+        </record>
+    </data>
+</odoo>

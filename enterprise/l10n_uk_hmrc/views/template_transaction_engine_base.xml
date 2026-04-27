@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="hmrc_transaction_engine_base" name="HMRC Verification Request">
+        <GovTalkMessage xmlns="http://www.govtalk.gov.uk/CM/envelope">
+            <EnvelopeVersion>2.0</EnvelopeVersion>
+            <Header>
+                <MessageDetails>
+                    <Class t-out="transaction['class']"/>
+                    <Qualifier>request</Qualifier>
+                    <Function>submit</Function>
+                    <CorrelationID/>
+                    <Transformation>XML</Transformation>
+                    <GatewayTest t-if="transaction['mode'] != 'production'">1</GatewayTest>
+                </MessageDetails>
+                <SenderDetails>
+                    <IDAuthentication>
+                        <SenderID t-out="credentials.get('sender_id', '*****')"/>
+                        <Authentication>
+                            <Method>clear</Method>
+                            <Role>principal</Role>
+                            <Value t-out="credentials.get('password', '*****')"/>
+                        </Authentication>
+                    </IDAuthentication>
+                </SenderDetails>
+            </Header>
+            <GovTalkDetails>
+                <Keys>
+                    <Key Type="TaxOfficeNumber" t-out="credentials.get('tax_office_number', '*****')"/>
+                    <Key Type="TaxOfficeReference" t-out="credentials.get('tax_office_reference', '*****')"/>
+                </Keys>
+                <ChannelRouting>
+                    <Channel>
+                        <URI>9117</URI>
+                        <Product>Odoo</Product>
+                        <Version>1.0</Version>
+                    </Channel>
+                </ChannelRouting>
+            </GovTalkDetails>
+            <t t-call="{{transaction['body_template']}}"/>
+        </GovTalkMessage>
+    </template>
+</odoo>

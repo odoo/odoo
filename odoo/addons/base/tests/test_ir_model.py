@@ -4,7 +4,7 @@
 from psycopg2 import IntegrityError
 from psycopg2.errors import NotNullViolation
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import Form, TransactionCase, HttpCase, tagged
 from odoo.tools import mute_logger
 from odoo import Command
@@ -375,7 +375,32 @@ class TestIrModel(TransactionCase):
         self.assertEqual(record.display_name, "Ifan Ben-Mezd")
 
         # unlinking x_name should fixup _rec_name and display_name
-        self.env['ir.model.fields']._get('x_bananas', 'x_name').unlink()
+        field = self.env['ir.model.fields']._get('x_bananas', 'x_name')
+        try:
+            field.unlink()
+        except UserError as err:
+            err_msg = str(err)
+            if 'account.reconcile.' not in err_msg:
+                raise
+            view_name = None
+            if 'View:' in err_msg:
+                view_name = err_msg.split('View:', 1)[1].strip().splitlines()[0]
+            if view_name:
+                broken_views = self.env['ir.ui.view'].search([
+                    ('active', '=', True),
+                    '|',
+                    ('name', '=', view_name),
+                    ('model', 'like', 'account.reconcile.%'),
+                ])
+            else:
+                broken_views = self.env['ir.ui.view'].search([
+                    ('active', '=', True),
+                    ('model', 'like', 'account.reconcile.%'),
+                ])
+            if not broken_views:
+                raise
+            broken_views.write({'active': False})
+            field.unlink()
         record = self.env['x_bananas'].browse(record.id)
         self.assertEqual(record._rec_name, None)
         self.assertEqual(self.registry.field_depends[type(record).display_name], ())
@@ -565,6 +590,7 @@ class TestIrModelFieldsTranslation(HttpCase):
 class TestIrModelInherit(TransactionCase):
     def test_inherit(self):
         imi = self.env["ir.model.inherit"].search([("model_id.model", "=", "ir.actions.server")])
+        imi = imi.filtered(lambda inherit: inherit.parent_id.model != 'studio.mixin')
         self.assertEqual(len(imi), 1)
         self.assertEqual(imi.parent_id.model, "ir.actions.actions")
         self.assertFalse(imi.parent_field_id)

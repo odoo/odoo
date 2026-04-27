@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="frontdesk.VisitorForm">
+        <div class="d-flex flex-column justify-content-center">
+            <form class="row d-flex justify-content-center align-items-start" t-on-submit.prevent="_onSubmit">
+                <div t-att-class="props.isPlannedVisitors ? 'col-xl-9' : 'col-lg-6'">
+                    <div>
+                        <label for="name" class="form-label">Your Name <span class="small text-danger">*</span></label>
+                        <input type="text" class="form-control" t-att-class="props.theme === 'light' ? '' : 'bg-700 border-0 text-white'" id="name" t-ref="inputName" placeholder="e.g. John Doe" required="1" t-att-value="props.visitorData.visitorName"/>
+                    </div>
+                    <t t-if="props.stationInfo.authenticate_guest">
+                        <div t-if="props.stationInfo.ask_email !== 'none'" class="mt-3">
+                            <label for="email" class="form-label">Your Email <t t-if="props.stationInfo.ask_email != 'optional'"><span class="small text-danger">*</span></t></label>
+                            <input type="email" class="form-control" t-att-class="props.theme === 'light' ? '' : 'bg-700 border-0 text-white'" id="email" t-ref="inputEmail" placeholder="e.g. john@company.com" t-att-required="props.stationInfo.ask_email === 'required'" t-att-value="props.visitorData.visitorEmail"/>
+                        </div>
+                        <div t-if="props.stationInfo.ask_phone !== 'none'" class="mt-3">
+                            <label for="phone" class="form-label">Your Phone Number <t t-if="props.stationInfo.ask_phone != 'optional'"><span class="small text-danger">*</span></t></label>
+                            <input type="phone" class="form-control" t-att-class="props.theme === 'light' ? '' : 'bg-700 border-0 text-white'" id="phone" t-ref="inputPhone" t-att-required="props.stationInfo.ask_phone === 'required'" t-att-value="props.visitorData.visitorPhone"/>
+                        </div>
+                        <div t-if="props.stationInfo.ask_company !== 'none'" class="mt-3">
+                            <label for="company" class="form-label">Your Company <t t-if="props.stationInfo.ask_company != 'optional'"><span class="small text-danger">*</span></t></label>
+                            <input type="text" class="form-control" t-att-class="props.theme === 'light' ? '' : 'bg-700 border-0 text-white'" id="company" t-ref="inputCompany" placeholder="e.g. My Company" t-att-required="props.stationInfo.ask_company === 'required'" t-att-value="props.visitorData.visitorCompany"/>
+                        </div>
+                    </t>
+                    <button type="submit" class="btn btn-primary mt-4 w-100">Check In</button>
+                </div>
+            </form>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="rental_order_wizard_view_form" model="ir.ui.view">
+        <field name="name">rental.order.wizard.form</field>
+        <field name="model">rental.order.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="status" invisible="1"/>
+                    <field name="is_late" invisible="1"/>
+                    <field name="order_id" invisible="1"/>
+                    <field name="rental_wizard_line_ids">
+                        <list create="false" editable="top">
+                            <field name="product_id" readonly="1" force_save="1" options="{'no_open': True}"/>
+                            <field name="order_line_id" column_invisible="True"/>
+                            <field name="rental_order_wizard_id" column_invisible="True"/>
+                            <field name="qty_reserved" readonly="1" column_invisible="parent.status == 'return'"/>
+                            <field name="qty_delivered" readonly="parent.status == 'return'" force_save="1"/>
+                            <field name="qty_returned" column_invisible="parent.status == 'pickup'"/>
+                            <field name="status" column_invisible="True"/>
+                            <button icon="fa-clock-o" column_invisible="not parent.is_late or parent.status == 'pickup'"
+                                class="text-danger" title="Some delay cost will be added to the sales order."/>
+                        </list>
+                    </field>
+                    <footer>
+                        <button name="apply" string="Validate" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

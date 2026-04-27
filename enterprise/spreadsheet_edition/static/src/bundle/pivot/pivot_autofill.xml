@@ -1,0 +1,10 @@
+
+<templates xml:space="preserve">
+
+    <div t-name="spreadsheet_edition.AutofillTooltip">
+        <t t-foreach="props.content" t-as="line" t-key="line.value+line_index">
+            <div><t t-esc="line.value"/></div>
+        </t>
+    </div>
+
+</templates>

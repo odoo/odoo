@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="knowledge.WebsitePublishingButton" t-inherit="knowledge.PermissionPanel" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_knowledge_permission_panel')]/*[1]" position="before">
+            <div class="d-flex px-3"
+                 t-on-click="() => this.toggleWebsitePublished()">
+                <div class="o_knowledge_share_panel_icon align-self-center d-flex justify-content-center align-items-center flex-shrink-0">
+                    <i class="fa fa-globe fa-2x" title="Share to web"/>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="lead fw-bold col-sm-8">
+                            <t t-if="this.props.record.data.website_published">
+                                Article shared to web
+                            </t>
+                            <t t-elif="this.isInternalUser and this.props.record.data.user_can_write">
+                                Share to web
+                            </t>
+                            <t t-else="">
+                                Article not Published
+                            </t>
+                        </div>
+                        <div class="col-sm o_knowledge_share_toggle align-self-start d-flex align-items-end pe-3 form-check form-switch"
+                            t-if="this.props.record.data.user_can_write and isInternalUser">
+                            <input class="form-check-input" type="checkbox" role="switch" t-att-checked="this.props.record.data.website_published"/>
+                        </div>
+                    </div>
+                    <div class="row text-muted ps-3">
+                        <t t-if="this.props.record.data.website_published">
+                            It and its published children can be read by anyone
+                        </t>
+                        <t t-elif="this.isInternalUser and this.props.record.data.user_can_write">
+                            Publish this Article and its children on the web
+                        </t>
+                        <t t-else="">
+                            Only specific people can access
+                        </t>
+                    </div>
+                </div>
+            </div>
+            <div class="px-3 my-2 o_field_CopyClipboardChar" t-if="this.props.record.data.website_published">
+                <CopyClipboardCharField name="'article_url'" record="props.record" readonly="true"/>
+            </div>
+            <div class="dropdown-divider" t-if="this.state.members.length !== 0"></div>
+        </xpath>
+    </t>
+</templates>

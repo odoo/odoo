@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(3, ref('documents.group_documents_manager'))]"/>
+        </record>
+
+        <!-- folders -->
+        <record id="document_marketing_brand1_folder" model="documents.document" forcecreate="0">
+            <field name="type">folder</field>
+            <field name="folder_id" ref="document_marketing_folder"/>
+            <field name="access_internal">edit</field>
+            <field name="name">Brand 1</field>
+        </record>
+
+        <record id="document_marketing_brand1_shared_folder" model="documents.document" forcecreate="0">
+            <field name="type">folder</field>
+            <field name="folder_id" ref="document_marketing_brand1_folder"/>
+            <field name="access_internal">edit</field>
+            <field name="access_via_link">view</field>
+            <field name="name">Shared</field>
+        </record>
+
+         <record id="document_marketing_brand2_folder" model="documents.document" forcecreate="0">
+             <field name="type">folder</field>
+            <field name="folder_id" ref="document_marketing_folder"/>
+             <field name="access_internal">edit</field>
+            <field name="name">Brand 2</field>
+        </record>
+
+        <!-- internal -->
+
+        <record id="documents_data_multi_pdf_document" model="documents.document" forcecreate="0">
+            <field name="name">Mails_inbox.pdf</field>
+            <field name="datas" type="base64" file="documents/data/files/Mails_inbox.pdf"/>
+            <field name="folder_id" ref="documents.document_internal_folder"/>
+            <field name="access_internal">view</field>
+        </record>
+
+        <record id="documents_image_city_document" model="documents.document" forcecreate="0">
+            <field name="name">city.jpg</field>
+            <field name="datas" type="base64" file="documents/demo/files/city.jpg"/>
+            <field name="folder_id" ref="documents.document_internal_folder"/>
+            <field name="access_internal">view</field>
+        </record>
+
+        <record id="documents_image_mail_document" model="documents.document" forcecreate="0">
+            <field name="name">mail.png</field>
+            <field name="datas" type="base64" file="documents/data/files/mail.png"/>
+            <field name="folder_id" ref="documents.document_internal_folder"/>
+            <field name="access_internal">view</field>
+        </record>
+        <!-- The thumbnail is added after -->
+        <record id="documents_image_mail_document" model="documents.document" forcecreate="0">
+            <field name="thumbnail" type="base64" file="documents/data/files/mail_thumbnail.png"/>
+        </record>
+
+        <record id="documents_image_people_document" model="documents.document" forcecreate="0">
+            <field name="name">people.jpg</field>
+            <field name="datas" type="base64" file="documents/demo/files/people.jpg"/>
+            <field name="folder_id" ref="documents.document_internal_folder"/>
+            <field name="access_internal">view</field>
+        </record>
+
+
+        <!-- finance -->
+
+        <record id="documents_vendor_bill_inv_007" model="documents.document" forcecreate="0">
+            <field name="name">Invoice-INV_2018_0007.pdf</field>
+            <field name="datas" type="base64" file="documents/demo/files/Invoice2018_0007.pdf"/>
+            <field name="folder_id" ref="documents.document_finance_folder"/>
+            <field name="access_internal">edit</field>
+            <field name="tag_ids" eval="[(6,0,[ref('documents.documents_tag_validated')])]"/>
+        </record>
+
+        <record id="documents_vendor_bill_extract_azure_interior_document" model="documents.document" forcecreate="0">
+            <field name="name">invoice Azure Interior.pdf</field>
+            <field name="datas" type="base64" file="documents/demo/files/invoice_azure_interior.pdf"/>
+            <field name="folder_id" ref="documents.document_finance_folder"/>
+            <field name="access_internal">edit</field>
+            <field name="tag_ids" eval="[(6,0,[ref('documents.documents_tag_to_validate')])]"/>
+        </record>
+
+        <record id="documents_vendor_bill_extract_open_value_document" model="documents.document" forcecreate="0">
+            <field name="name">invoice OpenValue.pdf</field>
+            <field name="datas" type="base64" file="documents/demo/files/invoice_openvalue.pdf"/>
+            <field name="folder_id" ref="documents.document_finance_folder"/>
+            <field name="access_internal">edit</field>
+        </record>
+
+        <record id="documents_data_comercial_tenancy_agreement" model="documents.document" forcecreate="0">
+            <field name="name">Commercial-Tenancy-Agreement.pdf</field>
+            <field name="datas" type="base64" file="documents/demo/files/Commercial-Tenancy-Agreement.pdf"/>
+            <field name="folder_id" ref="documents.document_finance_folder"/>
+            <field name="access_internal">edit</field>
+        </record>
+
+        <!-- marketing -->
+
+        <record id="documents_image_La_landscape_document" model="documents.document" forcecreate="0">
+            <field name="name">LA landscape.jpg</field>
+            <field name="datas" type="base64" file="documents/demo/files/la.jpg"/>
+            <field name="folder_id" ref="documents.document_marketing_brand1_folder"/>
+            <field name="access_internal">edit</field>
+            <field name="tag_ids" eval="[(6,0,[ref('documents.documents_tag_images')])]"/>
+        </record>
+
+        <record id="documents_attachment_sorry_netsuite_document" model="documents.document" forcecreate="0">
+            <field name="name">Sorry Netsuite.jpg</field>
+            <field name="datas" type="base64" file="documents/demo/files/sorry_netsuite.jpg"/>
+            <field name="folder_id" ref="documents.document_marketing_brand1_shared_folder"/>
+            <field name="tag_ids" eval="[(6,0,[ref('documents.documents_tag_ads')])]"/>
+            <field name="access_internal">edit</field>
+            <field name="access_via_link">view</field>
+        </record>
+
+    </data>
+</odoo>

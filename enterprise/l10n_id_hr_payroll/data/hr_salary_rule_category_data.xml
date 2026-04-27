@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- PPH21 included as part of deduction -->
+    <record id="PPH21" model="hr.salary.rule.category">
+        <field name="name">PPH 21</field>
+        <field name="code">PPH21</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="PPH21_yearly" model="hr.salary.rule.category">
+        <field name="name">PPH 21 Yearly</field>
+        <field name="code">PPH21_YEARLY</field>
+    </record>
+
+    <record id="PTKP" model="hr.salary.rule.category">
+        <field name="name">PTKP</field>
+        <field name="code">PTKP</field>
+    </record>
+
+    <record id="PKP" model="hr.salary.rule.category">
+        <field name="name">PKP</field>
+        <field name="code">PKP</field>
+    </record>
+
+    <record id="BASE" model="hr.salary.rule.category">
+        <field name="name">Base Salary</field>
+        <field name="code">BASE</field>
+    </record>
+
+    <record id="JABATAN" model="hr.salary.rule.category">
+        <field name="name">Jabatan</field>
+        <field name="code">JABATAN</field>
+    </record>
+
+    <record id="YEARLY_GROSS" model="hr.salary.rule.category">
+        <field name="name">Yearly Gross</field>
+        <field name="code">YEARLY_GROSS</field>
+    </record>
+</odoo>

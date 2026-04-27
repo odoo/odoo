@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    <record id="spreadsheet_demo_pipeline" model="documents.document" forcecreate="0">
+        <field name="name">Pipeline dashboard</field>
+        <field name="folder_id" eval="ref('documents_spreadsheet.document_spreadsheet_folder')"/>
+        <field name="handler">spreadsheet</field>
+        <field name="mimetype">application/o-spreadsheet</field>
+        <field name="datas" type="base64" file="documents_spreadsheet/demo/files/pipeline_dashboard.json"/>
+        <field name="thumbnail" type="base64" file="documents_spreadsheet/demo/files/pipeline_dashboard_thumbnail.jpeg"/>
+    </record>
+    <record id="spreadsheet_demo_sales_commission" model="documents.document" forcecreate="0">
+        <field name="name">Sales Commissions</field>
+        <field name="folder_id" eval="ref('documents_spreadsheet.document_spreadsheet_folder')"/>
+        <field name="handler">spreadsheet</field>
+        <field name="mimetype">application/o-spreadsheet</field>
+        <field name="datas" type="base64" file="documents_spreadsheet/demo/files/sales_commission.json"/>
+        <field name="thumbnail" type="base64" file="documents_spreadsheet/demo/files/sales_commission_thumbnail.jpeg"/>
+    </record>
+    </data>
+</odoo>

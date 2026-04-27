@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Spreadsheet contributor -->
+    <record id="spreadsheet_contributor_action" model="ir.actions.act_window">
+        <field name="name">Contributors</field>
+        <field name="res_model">spreadsheet.contributor</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="spreadsheet_contributor_view_tree" model="ir.ui.view">
+        <field name="name">spreadsheet.contributor</field>
+        <field name="model">spreadsheet.contributor</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="document_id"/>
+                <field name="user_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Spreadsheet Templates -->
+    <record id="spreadsheet_template_action" model="ir.actions.act_window">
+        <field name="name">Spreadsheet Templates</field>
+        <field name="res_model">spreadsheet.template</field>
+        <field name="view_mode">list</field>
+        <field name="context">{
+            'search_default_my_template_filter': 1,
+        }</field>
+    </record>
+
+    <record id="spreadsheet_template_view_tree" model="ir.ui.view">
+        <field name="name">spreadsheet.template</field>
+        <field name="model">spreadsheet.template</field>
+        <field name="arch" type="xml">
+            <list create="0" editable="top">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="create_uid" optional="show"/>
+                <field name="create_date" optional="show"/>
+                <field name="file_name" column_invisible="1"/>
+                <field name="spreadsheet_binary_data" widget="binary" filename="file_name" optional="show"/>
+                <field name="thumbnail" widget="image" options="{'size':[0,90]}" optional="hide"/>
+                <button string="Make a copy" class="float-end" name="copy" type="object" icon="fa-clone"/>
+                <button string="Edit" class="float-end" name="action_edit_template" type="object" icon="fa-pencil"/>
+                <button string="New spreadsheet" class="o-new-spreadsheet float-end" name="action_create_spreadsheet" type="object" icon="fa-plus"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="spreadsheet_template_view_search" model="ir.ui.view">
+        <field name="name">spreadsheet search view</field>
+        <field name="model">spreadsheet.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="My Templates" name="my_template_filter" domain="[('create_uid', '=', uid)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="spreadsheet_contributor_view_form" model="ir.ui.view">
+        <field name="name">spreadsheet.revision form view</field>
+        <field name="model">spreadsheet.revision</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="create_date" readonly="1"/>
+                            <field name="revision_uuid" readonly="1"/>
+                            <field name="res_model" readonly="1"/>
+                            <field name="res_id" readonly="1"/>
+                        </group>
+                        <field name="commands" widget="text" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Add in Documents/Configuration -->
+    <menuitem id="menu_technical_spreadsheet_template"
+        name="Spreadsheet Templates"
+        parent="documents.Config" sequence="20"
+        groups="documents.group_documents_manager"
+        action="spreadsheet_template_action"/>
+
+
+    <!-- Add in Technical/Spreadsheet -->
+    <menuitem id="menu_technical_spreadsheet_contributor"
+        name="Contributors"
+        parent="spreadsheet_edition.menu_technical_spreadsheet" sequence="1"
+        action="spreadsheet_contributor_action"/>
+</odoo>

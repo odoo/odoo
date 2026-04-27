@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportFilterJournal">
+        <Dropdown disabled="!controller.options.journals.length">
+            <button class="btn btn-secondary">
+                <i class="fa fa-book me-1"/><t t-out="controller.options.name_journal_group"/>
+            </button>
+
+            <t t-set-slot="content">
+                <t t-foreach="controller.options.journals" t-as="journal" t-key="journal_index">
+                    <t t-if="journal.id === 'divider'">
+                        <div t-att-class="'d-flex dropdown-header w-100 align-items-center' + (journal.model == 'res.company' ? ' pt-0 ps-0 mx-0 my-1' : '')">
+                            <t t-if="journal.model == 'account.journal.group'">
+                                <t t-out="journal.name"/>
+                            </t>
+                            <t t-if="journal.model == 'res.company'">
+                                <button class="btn btn_foldable d-flex align-items-center w-100 border-0"
+                                        t-on-click="() => this.unfoldCompanyJournals(journal)"
+                                >
+                                    <i t-att-class="journal.unfolded ? 'fa fa-caret-down' : 'fa fa-caret-right'"/>
+                                    <span class="pt-0 mt-0 ps-2 dropdown-header" t-out="journal.name"/>
+                                </button>
+                           </t>
+                        </div>
+
+                    </t>
+                    <t t-elif="['account.journal', 'account.journal.group'].includes(journal.model)">
+                        <DropdownItem
+                            class="{ 'selected': journal.selected, 'ps-4': true, 'd-none': (journal.model == 'account.journal' and !journal.visible) }"
+                            onSelected="() => this.selectJournal(journal)"
+                            closingMode="'none'"
+                            t-out="journal.name"
+                        />
+                    </t>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

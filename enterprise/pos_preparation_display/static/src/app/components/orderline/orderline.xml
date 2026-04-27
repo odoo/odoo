@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_preparation_display.Orderline">
+        <section
+            class="o_preparation_display_orderline py-2 border-top border-light text-800"
+            t-on-click="() => this.changeOrderlineStatus()"
+            t-att-orderlineId="this.props.orderline.id"
+        >
+            <div class="o_pdis_orderline_infos d-flex pe-2">
+                <div class="o_pdis_quantity px-2 text-center text-muted">
+                    <div class="o_pdis_todo" t-esc="`${this.props.orderline.productCount}x`"/>
+                </div>
+                <div
+                    class="o_pdis_product-name flex-grow-1"
+                    t-esc="this.props.orderline.productName"
+                    t-att-class="{ 'o_pdis_orderline--done opacity-25 text-decoration-line-through text-muted': this.props.orderline.todo === false }"
+                    />
+            </div>
+
+            <div t-if="this.props.orderline.attribute_ids.length > 0" class="ms-4 my-1 text-muted">
+                <div t-foreach="attributeData" t-as="attribute" t-key="attribute.id">
+                    <p class="p-0 m-0">
+                        - <t t-esc="attribute.name" /> : <t t-esc="attribute.value" />
+                    </p>
+                </div>
+            </div>
+
+            <div class="o_pdis_orderline_warning" t-att-class="{ 'o_pdis_orderline--done': this.props.orderline.todo === false }">
+                <div t-if="this.props.orderline.internalNote" class="list-inline o_pdis_note d-flex ms-4 px-2" t-att-class="{ 'o_pdis_orderline_blinking': this.props.orderline.blinkingNote }">
+                    <t t-foreach="this.props.orderline.internalNote.split('\n')" t-as="note" t-key="note">
+                        <li t-if="note and note.trim() !== ''" class="internal-note px-1 m-1 badge rounded-pill bg-warning text-warning bg-opacity-25 small" style="font-size: 0.85rem;">
+                            <t t-esc="note" />
+                        </li>
+                    </t>
+                </div>
+                <div t-if="this.props.orderline.productCancelled > 0" class="o_pdis--cancelled d-flex w-100 pe-2">
+                    <div
+                        t-if="this.props.orderline.productCancelled > 0"
+                        t-esc="`${this.props.orderline.productQuantity}x`"
+                        class="ps-2 pe-3 text-danger opacity-50 small text-decoration-line-through"
+                    />
+                    <div t-esc="`${this.props.orderline.productCancelled} cancelled`"
+                        class="px-2 rounded bg-danger bg-opacity-25 text-danger small"
+                    />
+                </div>
+            </div>
+        </section>
+    </t>
+</templates>

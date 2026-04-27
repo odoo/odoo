@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_template_form_view_inherit_account_l10n_ke_edi_oscu" model="ir.ui.view">
+            <field name="name">product.template.form.inherit.account.l10n.ke.edi.oscu.stock</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="account.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <button name="action_l10n_ke_oscu_save_item" position="after">
+                    <div class="cell"/>
+                    <button name="action_l10n_ke_oscu_save_stock_master" string="Save Stock Master"
+                            type="object" groups="base.group_no_one"
+                            invisible="'KE' not in fiscal_country_codes"/>
+                    <div class="cell"/>
+                </button>
+            </field>
+        </record>
+        <record id="product_product_form__view_inherit_l10n_ke_edi_oscu" model="ir.ui.view">
+            <field name="name">product.product.form.inherit.l10n.ke.edi.oscu.stock</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+            <field name="arch" type="xml">
+                <button name="action_l10n_ke_oscu_save_item" position="after">
+                    <div class="cell"/>
+                    <button name="action_l10n_ke_oscu_save_stock_master" string="Save Stock Master"
+                            type="object" groups="base.group_no_one"
+                            invisible="'KE' not in fiscal_country_codes"/>
+                </button>
+            </field>
+        </record>
+    </data>
+</odoo>

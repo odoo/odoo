@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <data>
+        <record id="product_packaging_charges" model="product.product">
+            <field name="name">Packaging Charges</field>
+            <field name="type">service</field>
+            <field name="list_price">0</field>
+            <field name="available_in_pos">1</field>
+            <field name="taxes_id" eval="[(5,)]"/>
+        </record>
+        <record id="product_delivery_charges" model="product.product">
+            <field name="name">Delivery Charges</field>
+            <field name="type">service</field>
+            <field name="list_price">0</field>
+            <field name="available_in_pos">1</field>
+            <field name="taxes_id" eval="[(5,)]"/>
+        </record>
+        <record id="product_other_charges" model="product.product">
+            <field name="name">Other Charges</field>
+            <field name="type">service</field>
+            <field name="list_price">0</field>
+            <field name="available_in_pos">1</field>
+            <field name="taxes_id" eval="[(5,)]"/>
+        </record>
+    </data>
+</odoo>

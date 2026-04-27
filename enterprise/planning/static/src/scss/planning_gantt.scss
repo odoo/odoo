@@ -1,0 +1,22 @@
+.o_planning_gantt {
+    .o_gantt_pill {
+        &:not(.decoration-danger):not(.decoration-warning).decoration-info::before {
+            // Removes the "triangle" if .decoration-info is the only .decoration-* class set
+            content: none !important; 
+        }
+        &.o_gantt_color_0.decoration-info {
+            @include o-gantt-gradient-decorations(nth($o-colors-complete, 1));
+        }
+    }
+}
+
+.o_gantt_row_title .o_material_resource {
+    height: var(--Avatar-size, #{$o-avatar-size});
+    width: var(--Avatar-size, #{$o-avatar-size});
+}
+
+.o_calendar_filter .o_calendar_filter_item .o_cw_filter_avatar {
+    &.fa-wrench {
+        padding: 2px 3px !important;
+    }
+}

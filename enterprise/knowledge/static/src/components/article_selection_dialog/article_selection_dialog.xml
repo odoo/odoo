@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="knowledge.ArticleSelectionDialog">
+        <Dialog size="'md'" title="this.props.title">
+            <div class="m-0">
+                <SelectMenu
+                    onInput.bind="fetchArticles"
+                    onSelect.bind="selectArticle"
+                    choices="this.state.knowledgeArticles || []"
+                    togglerClass="'form-control o_knowledge_select_menu show'"
+                    class="'o_knowledge_select_menu fst-normal fw-normal show'"
+                    required="true">
+                    <span t-ref="togglerRef" class="fw-lighter"><t t-out="state.selectedArticleName || this.placeholderLabel"/></span>
+                    <t t-set-slot="choice" t-slot-scope="choice">
+                        <span>
+                            <t t-out="choice.data.label"/>
+                            <span t-if="choice.data.value and choice.data.value.rootArticleName" class="text-muted small">
+                                - <t t-out="choice.data.value.rootArticleName"/>
+                            </span>
+                        </span>
+                    </t>
+                    <t t-set-slot="bottomArea" t-slot-scope="select">
+                        <DropdownItem
+                            t-if="select.data.searchValue and this.state.isInternalUser"
+                            class="'o_select_menu_sticky o_select_menu_item position-sticky text-italic bottom-0 text-primary text-start'"
+                            onSelected="() => this.createKnowledgeArticle(select.data.searchValue)"
+                        >
+                            <t t-out="this.state.createLabel"/>
+                        </DropdownItem>
+                    </t>
+                </SelectMenu>
+            </div>
+            <t t-set-slot="footer">
+                <button t-attf-class="btn btn-primary #{!this.state.selectedArticleName ? 'disabled' : ''}" t-out="this.props.confirmLabel"
+                    t-on-click="this.confirmArticleSelection.bind(this)"/>
+                <button class="btn btn-secondary" t-on-click="this.props.close.bind(this)">
+                    Cancel
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

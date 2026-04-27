@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="sign.Many2ManyBinaryField" t-inherit="web.Many2ManyBinaryField" t-inherit-mode="primary">
+        <!-- Make the paperclip icon and Attachments label be in the same line. -->
+        <xpath expr="//div//div[hasclass('oe_add')]//button" position="attributes">
+            <attribute name="class" add="d-flex" separator=" "/>
+        </xpath>
+        <!-- Add a padding space between the icon, label and borders. -->
+        <xpath expr="//div//div[hasclass('oe_add')]//button//span" position="attributes">
+            <attribute name="class" add="p-1" separator=" "/>
+        </xpath>
+        <!-- Add margin space between the separator line and the Attachments button. -->
+        <xpath expr="//div//div[hasclass('oe_add')]//button" position="attributes">
+            <attribute name="class" add="mt-1" separator=" "/>
+        </xpath>
+        <!-- Apply d-flex to oe_add div for alignment without affecting Attachments button's click area -->
+        <xpath expr="//div//div[hasclass('oe_add')]" position="attributes">
+            <attribute name="class" add="d-flex" separator=" "/>
+        </xpath>
+    </t>
+
+</templates>

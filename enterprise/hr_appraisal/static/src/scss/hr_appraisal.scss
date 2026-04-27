@@ -1,0 +1,117 @@
+.o_appraisal_form {
+    .o_form_sheet {
+        padding-bottom: 0 !important;
+    }
+    .o_form_sheet_bg{
+        max-width: 100% !important;
+    }
+    div.o_field_boolean_toggle_confirm, div.o_field_boolean_toggle {
+        display: inline-flex;
+    }
+    div.o_boolean_toggle {
+        &.o_readonly_modifier {
+            cursor: not-allowed;
+        }
+    }
+    .o_appraisal_overlay {
+        position: absolute;
+        top: 40px;
+        width: 100%;
+        font-size: 1.5rem;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        min-height: 6rem;
+
+        .fa {
+            display: block;
+            font-size: 4rem;
+        }
+    }
+    .o_appraisal_blur {
+        filter: blur(0.2rem);
+        line-height: 1;
+        margin-top: 2rem;
+        opacity: .3;
+        user-select: none;
+        pointer-events: none;
+    }
+    .o_appraisal_both_feedback {
+        margin: -16px var(--notebook-margin-x) !important;
+        &>.o_appraisal_feedback {
+            max-width: 50%;
+        }
+    }
+    .o_appraisal_feedback {
+        display: block;
+        box-sizing: border-box;
+        flex: 1;
+        padding: 32px 16px;
+        max-width: 100%;
+        * {
+            box-sizing: border-box;
+        }
+        .o_field_html {
+            margin-bottom: 0;
+        }
+        .row {
+            max-width: 100%;
+            margin: 0;
+        }
+        .o_appraisal_input {
+            padding: 0 16px;
+        }
+        .o_appraisal_input, .o_appraisal_input > * {
+            max-width: 100%;
+        }
+        .o_height{
+            height: 30rem;
+            overflow: hidden;
+        }
+    }
+    .o_appraisal_height{
+        min-height: 30rem;
+    }
+    .note-editable {
+        overflow: hidden;
+    }
+    .o_appraisal_manager_feedback {
+        background-color: map-get($grays, '200');
+        .note-editable {
+            background-color: map-get($grays, '200');
+        }
+    }
+    @include media-breakpoint-down(lg) {
+        .o_appraisal_feedback_title {
+            flex-direction: column;
+        }
+        .o_appraisal_input .o_we_power_buttons {
+            display: none!important;
+        }
+    }
+    @include media-breakpoint-down(md) {
+        .o_appraisal_feedback_title {
+            flex-direction: row;
+        }
+        .o_appraisal_both_feedback>.o_appraisal_feedback {
+            max-width: 100%!important;
+            margin: 0;
+        }
+    }
+    @include media-breakpoint-down(sm) {
+        .o_appraisal_feedback_title {
+            flex-direction: column;
+        }
+    }
+}
+
+.o_goal_list {
+    .o_badge_cell{
+        text-align: center;
+    }
+}
+
+.feedback-template .note-editable {
+    border: none;
+}

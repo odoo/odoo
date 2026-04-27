@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="timesheet_grid.TimesheetTimerHeader">
+        <div class="timesheet-timer flex-grow-1 d-md-flex align-items-center ps-3 py-2"
+            t-attf-style="height: {{this.isMobile ? 'auto' : '50px'}}"
+            t-att-class="props.className"
+            t-on-timer-started="props.onTimerStarted"
+            t-on-timer-stopped="props.onTimerStopped"
+            t-on-timer-unlink="props.onTimerUnlinked"
+            t-on-click.prevent="props.onClick"
+        >
+            <t t-if="_timerIsRunning">
+                <div class="d-md-flex flex-grow-1 flex-wrap flex-lg-nowrap">
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-primary btn_stop_timer text-nowrap" name="stop_timer" t-on-click.stop="_onClickStopTimer" data-hotkey="x" t-ref="stopButton" t-att-disabled="otherCompany">
+                            <i class="fa fa-stop me-2"></i> Stop
+                        </button>
+                        <div class="o_timer_discard">
+                            <button class="btn btn-muted stop-timer" t-on-click.stop="_onClickUnlinkTimer" title="Press Esc to discard" t-att-disabled="otherCompany">Discard</button>
+                        </div>
+                        <div name="display_timer" class="ms-auto ms-lg-0 fs-4 fw-bold">
+                            <TimesheetDisplayTimer
+                                t-if="props.timesheet"
+                                record="props.timesheet"
+                                name="'unit_amount'"
+                                timerRunning="true"
+                                displayRed="false"
+                                readonly="true"
+                                timerReactive="props.timerReactive"
+                            />
+                        </div>
+                    </div>
+                    <div t-if="otherCompany" class="input_m2o flex-fill p-md-2 px-0">
+                        <span class="px-2">
+                            A timer is running in another company.
+                        </span>
+                    </div>
+                    <div t-elif="props.timesheet"
+                         class="input_m2o d-grid align-items-center ms-lg-3 mt-3 mt-lg-0 w-100 w-lg-75"
+                         t-on-keydown="_onKeyDown"
+                         t-attf-style="
+                            grid-template-rows: {{ env.isSmall ? 'repeat(3, 1fr)' : '1fr' }};
+                            grid-template-columns: {{ env.isSmall ? '1fr' : 'repeat(3, 1fr)' }};
+                            grid-{{ env.isSmall ? 'row' : 'column' }}-gap: 1rem;
+                        "
+                    >
+                        <Field
+                            name="'name'"
+                            class="!props.timesheet.isInEdition and 'd-inline align-middle pt-1'"
+                            record="props.timesheet"
+                            fieldInfo="props.fields['name']"
+                            placeholder="props.fields['name'].placeholder"
+                        />
+                        <Field
+                            name="'project_id'"
+                            class="!props.timesheet.isInEdition ? 'd-inline align-middle pt-1 o_required_modifier' : 'o_required_modifier'"
+                            record="props.timesheet"
+                            canCreateEdit="false"
+                            fieldInfo="props.fields['project_id']"
+                            placeholder="props.fields['project_id'].placeholder"
+                            canQuickCreate="getIsProjectManager()"
+                        />
+                        <Field
+                            name="'task_id'"
+                            class="!props.timesheet.isInEdition and 'd-inline align-middle pt-1'"
+                            record="props.timesheet"
+                            canCreateEdit="false"
+                            fieldInfo="fieldsInfo.task_id"
+                            placeholder="props.fields['task_id'].placeholder"
+                        />
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="position-md-sticky start-0 d-flex align-items-center">
+                    <button class="btn_start_timer btn btn-primary text-uppercase" t-on-click.stop="_onClickStartTimer" t-ref="startButton">
+                        <i class="fa fa-play me-2"></i> Start
+                    </button>
+                    <div class="ms-3">
+                        <t t-if="!isMobile">
+                            <t t-if="viewType == 'grid'">
+                                <div>
+                                    <span class="text-muted">Press</span> <b>Enter</b> <span class="text-muted">or <b>[a]</b> to launch the timer</span>
+                                </div>
+                                <div>
+                                    <span class="text-muted">Press</span> <b>Shift</b> <span class="text-muted">+ <b>[A]</b> to add <t t-esc="props.stepTimer"/> min</span>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div>
+                                    <span class="text-muted">Press</span> <b>Enter</b> <span class="text-muted">or click on</span> <i class="fa fa-play"/> <span class="text-muted">to launch the timer</span>
+                                </div>
+                                <div>
+                                    <span class="text-muted">Press</span> <b>Shift</b> <span class="text-muted">and click on</span> <i class="fa fa-plus"/> <span class="text-muted">to add 15 min</span>
+                                </div>
+                            </t>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

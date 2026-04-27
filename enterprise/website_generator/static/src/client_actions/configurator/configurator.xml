@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="website_generator.Configurator.WebsiteGeneratorScreen">
+    <div class="o_configurator_screen h-100 d-flex flex-column o_website_generator_screen">
+        <div class="o_configurator_odoo_logo mt-4 ms-5" style="height: 31px; width: 99px;"/>
+        <div class="o_configurator_screen_content d-flex h-100 flex-grow-1">
+            <div class="o_main_content m-auto d-flex mh-100 flex-column p-4">
+                <div class="o_configurator_typing_text o_configurator_show_fast">Import your <b class="text-info">Pages</b> and <b class="text-warning">Features</b> <sup>beta</sup></div>
+                <h2 class="o_configurator_show_fast text-muted pb-lg-3">You'll be able to create your pages later on.</h2>
+
+                <form class="o_form_view mt-2" t-on-submit="this.makeWebsiteGeneratorRequest" autocomplete="off">
+                    <div class="d-flex mb-4">
+                        <label for="url" class="col-sm-3 col-6 form-check-label">
+                            Website URL<sup class="text-info p-1"
+                                            data-tooltip-template="web.FieldTooltip"
+                                            data-tooltip-info="{&quot;field&quot;:{&quot;help&quot;:&quot;By clicking \&quot;Import my website\&quot;, you confirm that you are the owner of the website and all associated components (such as images and other content), and you take full responsibility for their use and any potential legal implications.&quot;}}"
+                                            data-tooltip-touch-tap-to-show="true"
+                                            title="">?</sup>
+                        </label>
+                        <div class="col-sm-9 col-6">
+                            <input id="url" name="url" type="url" required="true"
+                                   class="o_input form-control" placeholder="Enter your website URL"/>
+                        </div>
+                    </div>
+
+                    <div class="d-flex mb-4">
+                        <label for="import_products" class="col-sm-3 col-6 form-check-label">Import Products</label>
+                        <div class="col-sm-9 col-6">
+                            <div class="form-switch">
+                                <input id="import_products" name="import_products" type="checkbox" checked="checked"
+                                       class="form-check-input"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info" role="alert">
+                        <i class="fa fa-info-circle"/> During beta, the number of imported pages may be limited.
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-2 align-self-start">Import my website</button>
+                </form>
+            </div>
+        </div>
+        <SkipButton skip="this.props.skip"/>
+    </div>
+</t>
+
+<t t-name="website_generator.Configurator.Configurator" t-inherit="website.Configurator.Configurator" t-inherit-mode="extension">
+    <xpath expr="//WelcomeScreen" position="before">
+        <WebsiteGeneratorScreen t-elif="state.currentStep === 6" navigate.bind="navigate" skip.bind="skipConfigurator"/>
+    </xpath>
+</t>
+
+</templates>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Portal -->
+    <template id="portal_my_home_menu_appointment" name="Portal layout : appointment menu entries" inherit_id="portal.portal_breadcrumbs">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'appointment' or event" t-attf-class="breadcrumb-item #{'active ' if not event else ''}">
+                <a t-if="event" t-attf-href="/my/appointments?{{ keep_query() }}">Appointments</a>
+                <t t-else="">Appointments</t>
+            </li>
+            <li t-if="event" class="breadcrumb-item active">
+                <span t-field="event.name"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_appointment" name="Appointments" inherit_id="portal.portal_my_home">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_client_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_client_category" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/appointment/static/src/img/calendar.svg'"/>
+                <t t-set="text">Follow, reschedule or cancel your appointments</t>
+                <t t-set="title">Appointments</t>
+                <t t-set="url" t-value="'/my/appointments'"/>
+                <t t-set="placeholder_count" t-value="'appointment_count'"/>
+            </t>
+        </div>
+    </template>
+
+    <template id="portal_my_appointments" name="My Appointments">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Appointments</t>
+            </t>
+            <t t-if="not appointments">
+                <div class="alert alert-warning" role="alert">
+                    <p class="mb-0">There is no appointment linked to your account.</p>
+                </div>
+            </t>
+            <t t-else="" t-call="portal.portal_table">
+                <t t-set="appointments" t-value="grouped_appointments or appointments"/>
+                <thead>
+                    <tr>
+                        <th>Appointment Name</th>
+                        <th class="text-end">Date</th>
+                    </tr>
+                </thead>
+                <t t-foreach="appointments" t-as="appts">
+                    <tbody t-if="grouped_appointments and not groupby == 'none'">
+                        <t t-set="groupby_record" t-value="appts[0]"/>
+                        <t t-set="appts" t-value="appts[1]"/>
+                        <tr class="table-light">
+                            <th>
+                                <em class="fw-normal text-muted">Appointments by <t t-out="searchbar_groupby[groupby]['label']"/>:</em>
+                                <span t-field="groupby_record.name"/>
+                            </th>
+                            <th class="text-end">
+                                Total: <span class="text-muted" t-out="len(appts)"/>
+                            </th>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <t t-foreach="appts" t-as="appointment">
+                            <tr>
+                                <td>
+                                    <a t-attf-href="/calendar/view/#{appointment.access_token}?partner_id=#{request.env.user.partner_id.id}">
+                                        <t t-out="appointment.appointment_type_id.name"/> 
+                                        <t t-if="appointment.appointment_type_id.schedule_based_on == 'users'">
+                                            with <t t-out="appointment.user_id.name"/>
+                                        </t>
+                                    </a>
+                                </td>
+                                <td class="text-end"><span t-field="appointment.start"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

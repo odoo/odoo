@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_package_type_form" model="ir.ui.view">
+        <field name="name">stock.package.type.form.inherit</field>
+        <field name="model">stock.package.type</field>
+        <field name="inherit_id" ref="stock.stock_package_type_form"/>
+        <field name="arch" type="xml">
+            <field name="barcode" position="after">
+                <field name="l10n_br_brand"/>
+            </field>
+        </field>
+    </record>
+</odoo>

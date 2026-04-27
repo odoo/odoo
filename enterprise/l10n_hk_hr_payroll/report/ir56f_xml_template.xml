@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="ir56f_xml_report">
+        <IR56F xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ir56f.xsd">
+            <Section><t t-esc="data['Section']" /></Section>
+            <ERN><t t-esc="data['ERN']"/></ERN>
+            <SubDate><t t-esc="data['SubDate'].strftime('%Y%m%d')" /></SubDate>
+            <ErName><t t-esc="data['ErName']" /></ErName>
+            <NAME_OF_SIGNER><t t-esc="data['NAME_OF_SIGNER'].upper()" /></NAME_OF_SIGNER>
+            <Designation><t t-esc="data['Designation']" /></Designation>
+            <NoRecordBatch><t t-esc="total_data['NoRecordBatch']"/></NoRecordBatch>
+            <TotIncomeBatch><t t-esc="total_data['TotIncomeBatch']" /></TotIncomeBatch>
+            <IR56VER>F0001</IR56VER>
+            <t t-foreach="employees_data" t-as="employee_data">
+                <t t-set="emp_start_date" t-value="employee_data.get('StartDateOfEmp').strftime('%Y%m%d')"/>
+                <t t-set="emp_end_date" t-value="employee_data.get('EndDateOfEmp').strftime('%Y%m%d')"/>
+                <t t-set="emp_period_str" t-value="'{} - {}'.format(emp_start_date, emp_end_date)"/>
+                <Employee>
+                    <SheetNo><t t-esc="'{:06}'.format(employee_data['SheetNo'])" /></SheetNo>
+                    <HKID><t t-esc="employee_data['HKID'].replace('(', '').replace(')', '')" /></HKID>
+                    <TypeOfForm><t t-esc="employee_data['TypeOfForm']" /></TypeOfForm>
+                    <Surname><t t-esc="employee_data['Surname']"/></Surname>
+                    <GivenName><t t-esc="employee_data['GivenName']"/></GivenName>
+                    <NameInChinese><t t-esc="employee_data['NameInChinese']" /></NameInChinese>
+                    <Sex><t t-esc="employee_data['Sex']" /></Sex>
+                    <MaritalStatus><t t-esc="employee_data['MaritalStatus']" /></MaritalStatus>
+                    <PpNum><t t-esc="employee_data['PpNum']" /></PpNum>
+                    <SpouseName><t t-esc="employee_data['SpouseName']" /></SpouseName>
+                    <SpouseHKID><t t-esc="employee_data['SpouseHKID'].replace('(', '').replace(')', '')" /></SpouseHKID>
+                    <SpousePpNum><t t-esc="employee_data['SpousePpNum']" /></SpousePpNum>
+                    <RES_ADDR_LINE1><t t-esc="employee_data['RES_ADDR_LINE1']"/></RES_ADDR_LINE1>
+                    <RES_ADDR_LINE2><t t-esc="employee_data['RES_ADDR_LINE2']"/></RES_ADDR_LINE2>
+                    <RES_ADDR_LINE3><t t-esc="employee_data.get('RES_ADDR_LINE3')"/></RES_ADDR_LINE3>
+                    <AreaCodeResAddr><t t-esc="employee_data['AreaCodeResAddr']" /></AreaCodeResAddr>
+                    <POS_ADDR_LINE1></POS_ADDR_LINE1>
+                    <POS_ADDR_LINE2></POS_ADDR_LINE2>
+                    <POS_ADDR_LINE3></POS_ADDR_LINE3>
+                    <POS_ADDR_AREA></POS_ADDR_AREA>
+                    <Capacity><t t-esc="employee_data['Capacity']" /></Capacity>
+                    <CESSATION_DATE><t t-esc="emp_end_date" /></CESSATION_DATE>
+                    <CESSATION_REASON><t t-esc="employee_data['CESSATION_REASON']" /></CESSATION_REASON>
+                    <CESSATION_REASON_OTHER><t t-esc="employee_data['CESSATION_REASON_OTHER']" /></CESSATION_REASON_OTHER>
+                    <RTN_ASS_YR><t t-esc="employee_data['RTN_ASS_YR']" /></RTN_ASS_YR>
+                    <StartDateOfEmp><t t-esc="emp_start_date" /></StartDateOfEmp>
+                    <EndDateOfEmp><t t-esc="emp_end_date"/></EndDateOfEmp>
+                    <PerOfSalary><t t-esc="emp_period_str"/></PerOfSalary>
+                    <AmtOfSalary><t t-esc="employee_data['AmtOfSalary']"/></AmtOfSalary>
+                    <PerOfLeavePay></PerOfLeavePay>
+                    <AmtOfLeavePay>0</AmtOfLeavePay>
+                    <PerOfDirectorFee></PerOfDirectorFee>
+                    <AmtOfDirectorFee>0</AmtOfDirectorFee>
+                    <PerOfCommFee><t t-if="employee_data['AmtOfCommFee']" t-esc="emp_period_str" /></PerOfCommFee>
+                    <AmtOfCommFee><t t-esc="employee_data['AmtOfCommFee']"/></AmtOfCommFee>
+                    <PerOfBonus><t t-if="employee_data['AmtOfBonus']" t-esc="emp_period_str" /></PerOfBonus>
+                    <AmtOfBonus><t t-esc="employee_data['AmtOfBonus']"/></AmtOfBonus>
+                    <PerOfBpEtc><t t-if="employee_data['AmtOfBpEtc']" t-esc="emp_period_str" /></PerOfBpEtc>
+                    <AmtOfBpEtc><t t-esc="employee_data['AmtOfBpEtc']"/></AmtOfBpEtc>
+                    <PerOfPayRetire></PerOfPayRetire>
+                    <AmtOfPayRetire>0</AmtOfPayRetire>
+                    <PerOfSalTaxPaid></PerOfSalTaxPaid>
+                    <AmtOfSalTaxPaid>0</AmtOfSalTaxPaid>
+                    <PerOfEduBen></PerOfEduBen>
+                    <AmtOfEduBen>0</AmtOfEduBen>
+                    <PerOfGainShareOption></PerOfGainShareOption>
+                    <AmtOfGainShareOption>0</AmtOfGainShareOption>
+                    <NatureOtherRAP1><t t-if="employee_data['AmtOfOtherRAP1']" t-esc="employee_data['NatureOtherRAP1']"/></NatureOtherRAP1>
+                    <PerOfOtherRAP1><t t-if="employee_data['AmtOfOtherRAP1']" t-esc="emp_period_str" /></PerOfOtherRAP1>
+                    <AmtOfOtherRAP1><t t-esc="employee_data['AmtOfOtherRAP1']"/></AmtOfOtherRAP1>
+                    <NatureOtherRAP2></NatureOtherRAP2>
+                    <PerOfOtherRAP2></PerOfOtherRAP2>
+                    <AmtOfOtherRAP2>0</AmtOfOtherRAP2>
+                    <NatureOtherRAP3></NatureOtherRAP3>
+                    <PerOfOtherRAP3></PerOfOtherRAP3>
+                    <AmtOfOtherRAP3>0</AmtOfOtherRAP3>
+                    <!-- TODO: add new fields and update template -->
+                    <NATURE_PAYMENT_LEFT></NATURE_PAYMENT_LEFT>
+                    <OTHER_PAYMENTS_AMT></OTHER_PAYMENTS_AMT>
+                    <TotalIncome><t t-esc="employee_data['TotalIncome']"/></TotalIncome>
+                    <PlaceOfResInd><t t-esc="employee_data['PlaceOfResInd']"/></PlaceOfResInd>
+                    <AddrOfPlace1><t t-esc="employee_data['AddrOfPlace1']"/></AddrOfPlace1>
+                    <NatureOfPlace1><t t-esc="employee_data['NatureOfPlace1']"/></NatureOfPlace1>
+                    <PerOfPlace1><t t-esc="employee_data['PerOfPlace1']"/></PerOfPlace1>
+                    <RentPaidEr1>0</RentPaidEr1>
+                    <RentPaidEe1><t t-esc="employee_data['RentPaidEe1']"/></RentPaidEe1>
+                    <RentRefund1><t t-esc="employee_data['RentRefund1']"/></RentRefund1>
+                    <RentPaidErByEe1>0</RentPaidErByEe1>
+                    <AddrOfPlace2><t t-esc="employee_data['AddrOfPlace2']"/></AddrOfPlace2>
+                    <NatureOfPlace2><t t-esc="employee_data['NatureOfPlace2']"/></NatureOfPlace2>
+                    <PerOfPlace2><t t-esc="employee_data['PerOfPlace2']"/></PerOfPlace2>
+                    <RentPaidEr2>0</RentPaidEr2>
+                    <RentPaidEe2><t t-esc="employee_data['RentPaidEe2']"/></RentPaidEe2>
+                    <RentRefund2><t t-esc="employee_data['RentRefund2']"/></RentRefund2>
+                    <RentPaidErByEe2>0</RentPaidErByEe2>
+                    <OverseaIncInd>0</OverseaIncInd>
+                    <AmtPaidOverseaCo></AmtPaidOverseaCo>
+                    <NameOfOverseaCo></NameOfOverseaCo>
+                    <AddrOfOverseaCo></AddrOfOverseaCo>
+                </Employee>
+            </t>
+        </IR56F>
+    </template>
+</odoo>

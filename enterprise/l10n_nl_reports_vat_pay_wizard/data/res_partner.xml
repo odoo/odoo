@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_belastingdienst_netherlands" model="res.partner">
+        <field name="name">Belastingdienst</field>
+    </record>
+    <data noupdate='1'>
+        <record id="belastingdienst_current_account" model="res.partner.bank">
+            <field name="acc_number">NL86INGB0002445588</field>
+            <field name="partner_id" ref="partner_belastingdienst_netherlands"/>
+            <field name="allow_out_payment">True</field>
+        </record>
+    </data>
+</odoo>

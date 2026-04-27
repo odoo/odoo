@@ -1,0 +1,1434 @@
+{
+  "version": 21,
+  "sheets": [
+    {
+      "id": "sheet1",
+      "name": "Dashboard",
+      "colNumber": 9,
+      "rowNumber": 90,
+      "rows": {
+        "6": { "size": 41 },
+        "21": { "size": 23 },
+        "22": { "size": 41 },
+        "23": { "size": 23 },
+        "24": { "size": 23 },
+        "25": { "size": 23 },
+        "26": { "size": 23 },
+        "27": { "size": 23 },
+        "28": { "size": 23 },
+        "29": { "size": 23 },
+        "30": { "size": 23 },
+        "31": { "size": 23 },
+        "32": { "size": 23 },
+        "33": { "size": 23 },
+        "34": { "size": 23 },
+        "35": { "size": 23 },
+        "36": { "size": 23 },
+        "37": { "size": 23 },
+        "38": { "size": 40 },
+        "39": { "size": 40 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "51": { "size": 40 },
+        "52": { "size": 40 },
+        "53": { "size": 28 },
+        "54": { "size": 28 },
+        "55": { "size": 28 },
+        "56": { "size": 28 },
+        "57": { "size": 28 },
+        "58": { "size": 28 },
+        "59": { "size": 28 },
+        "60": { "size": 28 },
+        "61": { "size": 28 },
+        "62": { "size": 28 },
+        "64": { "size": 40 },
+        "65": { "size": 40 },
+        "66": { "size": 28 },
+        "67": { "size": 28 },
+        "68": { "size": 28 },
+        "69": { "size": 28 },
+        "70": { "size": 28 },
+        "71": { "size": 28 },
+        "72": { "size": 28 },
+        "73": { "size": 28 },
+        "74": { "size": 28 },
+        "75": { "size": 28 },
+        "77": { "size": 40 },
+        "78": { "size": 40 },
+        "79": { "size": 28 },
+        "80": { "size": 28 },
+        "81": { "size": 28 },
+        "82": { "size": 28 },
+        "83": { "size": 28 },
+        "84": { "size": 28 },
+        "85": { "size": 28 },
+        "86": { "size": 28 },
+        "87": { "size": 28 },
+        "88": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 175 },
+        "1": { "size": 100 },
+        "2": { "size": 100 },
+        "3": { "size": 100 },
+        "4": { "size": 50 },
+        "5": { "size": 268 },
+        "6": { "size": 100 },
+        "7": { "size": 44 },
+        "8": { "size": 63 }
+      },
+      "merges": [],
+      "cells": {
+        "A7": {
+          "content": "[New Applications](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"stage_id\"],\"graph_measure\":\"count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"stage_id\"]},\"modelName\":\"hr.recruitment.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"New Applications\"})"
+        },
+        "A23": {
+          "content": "[Applications refused per stage](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"stage_id\"],\"graph_measure\":\"count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"stage_id\"]},\"modelName\":\"hr.recruitment.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"New Applications\"})"
+        },
+        "A39": {
+          "content": "[Recent Job Positions](odoo://view/{\"viewType\":\"list\",\"action\":{\"domain\":[[\"is_published\",\"=\",true]],\"context\":{\"group_by\":[]},\"modelName\":\"hr.job\",\"views\":[[false,\"kanban\"],[false,\"list\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Job Positions\"})"
+        },
+        "A40": { "content": "=_t(\"Job Position\")" },
+        "A41": { "content": "=ODOO.LIST(3,1,\"name\")" },
+        "A42": { "content": "=ODOO.LIST(3,2,\"name\")" },
+        "A43": { "content": "=ODOO.LIST(3,3,\"name\")" },
+        "A44": { "content": "=ODOO.LIST(3,4,\"name\")" },
+        "A45": { "content": "=ODOO.LIST(3,5,\"name\")" },
+        "A46": { "content": "=ODOO.LIST(3,6,\"name\")" },
+        "A47": { "content": "=ODOO.LIST(3,7,\"name\")" },
+        "A48": { "content": "=ODOO.LIST(3,8,\"name\")" },
+        "A49": { "content": "=ODOO.LIST(3,9,\"name\")" },
+        "A50": { "content": "=ODOO.LIST(3,10,\"name\")" },
+        "A52": {
+          "content": "[Top Applicant Refuse Reasons](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"is_accessible_to_current_user\",\"=\",true],\"&\",[\"active\",\"=\",false],[\"refuse_reason_id\",\"!=\",false]],\"context\":{\"group_by\":[],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"refuse_reason_id\"]},\"modelName\":\"hr.applicant\",\"views\":[[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"calendar\"],[false,\"activity\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Applications\"})"
+        },
+        "A53": { "content": "=_t(\"Reason\")" },
+        "A54": { "content": "=PIVOT.HEADER(10,\"#refuse_reason_id\",1)" },
+        "A55": { "content": "=PIVOT.HEADER(10,\"#refuse_reason_id\",2)" },
+        "A56": { "content": "=PIVOT.HEADER(10,\"#refuse_reason_id\",3)" },
+        "A57": { "content": "=PIVOT.HEADER(10,\"#refuse_reason_id\",4)" },
+        "A58": { "content": "=PIVOT.HEADER(10,\"#refuse_reason_id\",5)" },
+        "A59": { "content": "=PIVOT.HEADER(10,\"#refuse_reason_id\",6)" },
+        "A60": { "content": "=PIVOT.HEADER(10,\"#refuse_reason_id\",7)" },
+        "A61": { "content": "=PIVOT.HEADER(10,\"#refuse_reason_id\",8)" },
+        "A62": { "content": "=PIVOT.HEADER(10,\"#refuse_reason_id\",9)" },
+        "A63": { "content": "=PIVOT.HEADER(10,\"#refuse_reason_id\",10)" },
+        "A65": {
+          "content": "[Top Mediums](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"medium_id\",\"!=\",false]],\"context\":{\"group_by\":[\"medium_id\"],\"pivot_measures\":[\"__count\",\"hired\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"medium_id\"]},\"modelName\":\"hr.recruitment.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Recruitment Analysis\"})"
+        },
+        "A66": { "content": "=_t(\"Medium\")" },
+        "A67": { "content": "=PIVOT.HEADER(7,\"#medium_id\",1)" },
+        "A68": { "content": "=PIVOT.HEADER(7,\"#medium_id\",2)" },
+        "A69": { "content": "=PIVOT.HEADER(7,\"#medium_id\",3)" },
+        "A70": { "content": "=PIVOT.HEADER(7,\"#medium_id\",4)" },
+        "A71": { "content": "=PIVOT.HEADER(7,\"#medium_id\",5)" },
+        "A72": { "content": "=PIVOT.HEADER(7,\"#medium_id\",6)" },
+        "A73": { "content": "=PIVOT.HEADER(7,\"#medium_id\",7)" },
+        "A74": { "content": "=PIVOT.HEADER(7,\"#medium_id\",8)" },
+        "A75": { "content": "=PIVOT.HEADER(7,\"#medium_id\",9)" },
+        "A76": { "content": "=PIVOT.HEADER(7,\"#medium_id\",10)" },
+        "A78": {
+          "content": "[Top Recruiters](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"user_id\",\"!=\",false]],\"context\":{\"group_by\":[\"user_id\"],\"pivot_measures\":[\"__count\",\"hired\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"user_id\"]},\"modelName\":\"hr.recruitment.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Recruitment Analysis\"})"
+        },
+        "A79": { "content": "=_t(\"Recruiter\")" },
+        "A80": { "content": "=PIVOT.HEADER(6,\"#user_id\",1)" },
+        "A81": { "content": "=PIVOT.HEADER(6,\"#user_id\",2)" },
+        "A82": { "content": "=PIVOT.HEADER(6,\"#user_id\",3)" },
+        "A83": { "content": "=PIVOT.HEADER(6,\"#user_id\",4)" },
+        "A84": { "content": "=PIVOT.HEADER(6,\"#user_id\",5)" },
+        "A85": { "content": "=PIVOT.HEADER(6,\"#user_id\",6)" },
+        "A86": { "content": "=PIVOT.HEADER(6,\"#user_id\",7)" },
+        "A87": { "content": "=PIVOT.HEADER(6,\"#user_id\",8)" },
+        "A88": { "content": "=PIVOT.HEADER(6,\"#user_id\",9)" },
+        "A89": { "content": "=PIVOT.HEADER(6,\"#user_id\",10)" },
+        "B66": { "content": "=_t(\"Applications\")" },
+        "B67": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",1)" },
+        "B68": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",2)" },
+        "B69": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",3)" },
+        "B70": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",4)" },
+        "B71": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",5)" },
+        "B72": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",6)" },
+        "B73": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",7)" },
+        "B74": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",8)" },
+        "B75": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",9)" },
+        "B76": { "content": "=PIVOT.VALUE(7,\"__count\",\"#medium_id\",10)" },
+        "B79": { "content": "=_t(\"Applications\")" },
+        "B80": { "content": "=PIVOT.VALUE(6,\"__count\",\"#user_id\",1)" },
+        "B81": { "content": "=PIVOT.VALUE(6,\"__count\",\"#user_id\",2)" },
+        "B82": { "content": "=PIVOT.VALUE(6,\"__count\",\"#user_id\",3)" },
+        "B83": { "content": "=PIVOT.VALUE(6,\"__count\",\"#user_id\",4)" },
+        "B84": { "content": "=PIVOT.VALUE(6,\"__count\",\"#user_id\",5)" },
+        "B85": { "content": "=PIVOT.VALUE(6,\"__count\",\"#user_id\",6)" },
+        "B86": { "content": "=PIVOT.VALUE(6,\"__count\",\"#user_id\",7)" },
+        "B87": { "content": "=PIVOT.VALUE(6,\"__count\",\"#user_id\",8)" },
+        "B88": { "content": "=PIVOT.VALUE(6,\"__count\",\"#user_id\",9)" },
+        "B89": { "content": "=PIVOT.VALUE(6,\"__count\",\"#user_id\",10)" },
+        "C40": { "content": "=_t(\"Recruiter\")" },
+        "C41": { "content": "=ODOO.LIST(3,1,\"user_id\")" },
+        "C42": { "content": "=ODOO.LIST(3,2,\"user_id\")" },
+        "C43": { "content": "=ODOO.LIST(3,3,\"user_id\")" },
+        "C44": { "content": "=ODOO.LIST(3,4,\"user_id\")" },
+        "C45": { "content": "=ODOO.LIST(3,5,\"user_id\")" },
+        "C46": { "content": "=ODOO.LIST(3,6,\"user_id\")" },
+        "C47": { "content": "=ODOO.LIST(3,7,\"user_id\")" },
+        "C48": { "content": "=ODOO.LIST(3,8,\"user_id\")" },
+        "C49": { "content": "=ODOO.LIST(3,9,\"user_id\")" },
+        "C50": { "content": "=ODOO.LIST(3,10,\"user_id\")" },
+        "C66": { "content": "=_t(\"Hired\")" },
+        "C67": { "content": "=PIVOT.VALUE(7,\"hired\",\"#medium_id\",1)" },
+        "C68": { "content": "=PIVOT.VALUE(7,\"hired\",\"#medium_id\",2)" },
+        "C69": { "content": "=PIVOT.VALUE(7,\"hired\",\"#medium_id\",3)" },
+        "C70": { "content": "=PIVOT.VALUE(7,\"hired\",\"#medium_id\",4)" },
+        "C71": { "content": "=PIVOT.VALUE(7,\"hired\",\"#medium_id\",5)" },
+        "C72": { "content": "=PIVOT.VALUE(7,\"hired\",\"#medium_id\",6)" },
+        "C73": { "content": "=PIVOT.VALUE(7,\"hired\",\"#medium_id\",7)" },
+        "C74": { "content": "=PIVOT.VALUE(7,\"hired\",\"#medium_id\",8)" },
+        "C75": { "content": "=PIVOT.VALUE(7,\"hired\",\"#medium_id\",9)" },
+        "C76": { "content": "=PIVOT.VALUE(7,\"hired\",\"#medium_id\",10)" },
+        "C79": { "content": "=_t(\"Hired\")" },
+        "C80": { "content": "=PIVOT.VALUE(6,\"hired\",\"#user_id\",1)" },
+        "C81": { "content": "=PIVOT.VALUE(6,\"hired\",\"#user_id\",2)" },
+        "C82": { "content": "=PIVOT.VALUE(6,\"hired\",\"#user_id\",3)" },
+        "C83": { "content": "=PIVOT.VALUE(6,\"hired\",\"#user_id\",4)" },
+        "C84": { "content": "=PIVOT.VALUE(6,\"hired\",\"#user_id\",5)" },
+        "C85": { "content": "=PIVOT.VALUE(6,\"hired\",\"#user_id\",6)" },
+        "C86": { "content": "=PIVOT.VALUE(6,\"hired\",\"#user_id\",7)" },
+        "C87": { "content": "=PIVOT.VALUE(6,\"hired\",\"#user_id\",8)" },
+        "C88": { "content": "=PIVOT.VALUE(6,\"hired\",\"#user_id\",9)" },
+        "C89": { "content": "=PIVOT.VALUE(6,\"hired\",\"#user_id\",10)" },
+        "D40": { "content": "=_t(\"Creation date\")" },
+        "D41": { "content": "=ODOO.LIST(3,1,\"create_date\")" },
+        "D42": { "content": "=ODOO.LIST(3,2,\"create_date\")" },
+        "D43": { "content": "=ODOO.LIST(3,3,\"create_date\")" },
+        "D44": { "content": "=ODOO.LIST(3,4,\"create_date\")" },
+        "D45": { "content": "=ODOO.LIST(3,5,\"create_date\")" },
+        "D46": { "content": "=ODOO.LIST(3,6,\"create_date\")" },
+        "D47": { "content": "=ODOO.LIST(3,7,\"create_date\")" },
+        "D48": { "content": "=ODOO.LIST(3,8,\"create_date\")" },
+        "D49": { "content": "=ODOO.LIST(3,9,\"create_date\")" },
+        "D50": { "content": "=ODOO.LIST(3,10,\"create_date\")" },
+        "D53": { "content": "=_t(\"# Applications\")" },
+        "D54": {
+          "content": "=PIVOT.VALUE(10,\"__count\",\"#refuse_reason_id\",1)"
+        },
+        "D55": {
+          "content": "=PIVOT.VALUE(10,\"__count\",\"#refuse_reason_id\",2)"
+        },
+        "D56": {
+          "content": "=PIVOT.VALUE(10,\"__count\",\"#refuse_reason_id\",3)"
+        },
+        "D57": {
+          "content": "=PIVOT.VALUE(10,\"__count\",\"#refuse_reason_id\",4)"
+        },
+        "D58": {
+          "content": "=PIVOT.VALUE(10,\"__count\",\"#refuse_reason_id\",5)"
+        },
+        "D59": {
+          "content": "=PIVOT.VALUE(10,\"__count\",\"#refuse_reason_id\",6)"
+        },
+        "D60": {
+          "content": "=PIVOT.VALUE(10,\"__count\",\"#refuse_reason_id\",7)"
+        },
+        "D61": {
+          "content": "=PIVOT.VALUE(10,\"__count\",\"#refuse_reason_id\",8)"
+        },
+        "D62": {
+          "content": "=PIVOT.VALUE(10,\"__count\",\"#refuse_reason_id\",9)"
+        },
+        "D63": {
+          "content": "=PIVOT.VALUE(10,\"__count\",\"#refuse_reason_id\",10)"
+        },
+        "D66": { "content": "=_t(\"Rate\")" },
+        "D67": { "content": "=IFERROR(C67/B67)" },
+        "D68": { "content": "=IFERROR(C68/B68)" },
+        "D69": { "content": "=IFERROR(C69/B69)" },
+        "D70": { "content": "=IFERROR(C70/B70)" },
+        "D71": { "content": "=IFERROR(C71/B71)" },
+        "D72": { "content": "=IFERROR(C72/B72)" },
+        "D73": { "content": "=IFERROR(C73/B73)" },
+        "D74": { "content": "=IFERROR(C74/B74)" },
+        "D75": { "content": "=IFERROR(C75/B75)" },
+        "D76": { "content": "=IFERROR(C76/B76)" },
+        "D79": { "content": "=_t(\"Rate\")" },
+        "D80": { "content": "=IFERROR(C80/B80)" },
+        "D81": { "content": "=IFERROR(C81/B81)" },
+        "D82": { "content": "=IFERROR(C82/B82)" },
+        "D83": { "content": "=IFERROR(C83/B83)" },
+        "D84": { "content": "=IFERROR(C84/B84)" },
+        "D85": { "content": "=IFERROR(C85/B85)" },
+        "D86": { "content": "=IFERROR(C86/B86)" },
+        "D87": { "content": "=IFERROR(C87/B87)" },
+        "D88": { "content": "=IFERROR(C88/B88)" },
+        "D89": { "content": "=IFERROR(C89/B89)" },
+        "F7": {
+          "content": "[Most Hired Job Positions](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"job_id\"],\"graph_measure\":\"count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"job_id\"]},\"modelName\":\"hr.recruitment.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Recruitment Analysis\"})"
+        },
+        "F23": {
+          "content": "[Total offers per validity date](odoo://ir_menu_xml_id/hr_contract_salary.menu_hr_contract_salary_job_offer)"
+        },
+        "F39": {
+          "content": "[Top Job Positions](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"job_id\",\"!=\",false]],\"context\":{\"group_by\":[\"job_id\"],\"pivot_measures\":[\"__count\",\"hired\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"job_id\"]},\"modelName\":\"hr.recruitment.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Recruitment Analysis\"})"
+        },
+        "F40": { "content": "=_t(\"Job Position\")" },
+        "F41": { "content": "=PIVOT.HEADER(5,\"#job_id\",1)" },
+        "F42": { "content": "=PIVOT.HEADER(5,\"#job_id\",2)" },
+        "F43": { "content": "=PIVOT.HEADER(5,\"#job_id\",3)" },
+        "F44": { "content": "=PIVOT.HEADER(5,\"#job_id\",4)" },
+        "F45": { "content": "=PIVOT.HEADER(5,\"#job_id\",5)" },
+        "F46": { "content": "=PIVOT.HEADER(5,\"#job_id\",6)" },
+        "F47": { "content": "=PIVOT.HEADER(5,\"#job_id\",7)" },
+        "F48": { "content": "=PIVOT.HEADER(5,\"#job_id\",8)" },
+        "F49": { "content": "=PIVOT.HEADER(5,\"#job_id\",9)" },
+        "F50": { "content": "=PIVOT.HEADER(5,\"#job_id\",10)" },
+        "F52": {
+          "content": "[Top Offer Refuse Reasons](odoo://view/{\"viewType\":\"list\",\"action\":{\"xmlId\":\"hr_contract_salary.hr_contract_salary_offer_recruitment_action\",\"domain\":[[\"employee_id\",\"=\",false]],\"context\":{\"group_by\":[\"state\"]},\"modelName\":\"hr.contract.salary.offer\",\"views\":[[false,\"list\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Offers\"})"
+        },
+        "F53": { "content": "=_t(\"Reason\")" },
+        "F54": { "content": "=PIVOT.HEADER(14,\"#refusal_reason\",1)" },
+        "F55": { "content": "=PIVOT.HEADER(14,\"#refusal_reason\",2)" },
+        "F56": { "content": "=PIVOT.HEADER(14,\"#refusal_reason\",3)" },
+        "F57": { "content": "=PIVOT.HEADER(14,\"#refusal_reason\",4)" },
+        "F58": { "content": "=PIVOT.HEADER(14,\"#refusal_reason\",5)" },
+        "F59": { "content": "=PIVOT.HEADER(14,\"#refusal_reason\",6)" },
+        "F60": { "content": "=PIVOT.HEADER(14,\"#refusal_reason\",7)" },
+        "F61": { "content": "=PIVOT.HEADER(14,\"#refusal_reason\",8)" },
+        "F62": { "content": "=PIVOT.HEADER(14,\"#refusal_reason\",9)" },
+        "F63": { "content": "=PIVOT.HEADER(14,\"#refusal_reason\",10)" },
+        "F65": {
+          "content": "[Top Sources](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"source_id\",\"!=\",false]],\"context\":{\"group_by\":[\"source_id\"],\"pivot_measures\":[\"__count\",\"hired\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"source_id\"]},\"modelName\":\"hr.recruitment.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Recruitment Analysis\"})"
+        },
+        "F66": { "content": "=_t(\"Source\")" },
+        "F67": { "content": "=PIVOT.HEADER(8,\"#source_id\",1)" },
+        "F68": { "content": "=PIVOT.HEADER(8,\"#source_id\",2)" },
+        "F69": { "content": "=PIVOT.HEADER(8,\"#source_id\",3)" },
+        "F70": { "content": "=PIVOT.HEADER(8,\"#source_id\",4)" },
+        "F71": { "content": "=PIVOT.HEADER(8,\"#source_id\",5)" },
+        "F72": { "content": "=PIVOT.HEADER(8,\"#source_id\",6)" },
+        "F73": { "content": "=PIVOT.HEADER(8,\"#source_id\",7)" },
+        "F74": { "content": "=PIVOT.HEADER(8,\"#source_id\",8)" },
+        "F75": { "content": "=PIVOT.HEADER(8,\"#source_id\",9)" },
+        "F76": { "content": "=PIVOT.HEADER(8,\"#source_id\",10)" },
+        "G40": { "content": "=_t(\"Applications\")" },
+        "G41": { "content": "=PIVOT.VALUE(5,\"__count\",\"#job_id\",1)" },
+        "G42": { "content": "=PIVOT.VALUE(5,\"__count\",\"#job_id\",2)" },
+        "G43": { "content": "=PIVOT.VALUE(5,\"__count\",\"#job_id\",3)" },
+        "G44": { "content": "=PIVOT.VALUE(5,\"__count\",\"#job_id\",4)" },
+        "G45": { "content": "=PIVOT.VALUE(5,\"__count\",\"#job_id\",5)" },
+        "G46": { "content": "=PIVOT.VALUE(5,\"__count\",\"#job_id\",6)" },
+        "G47": { "content": "=PIVOT.VALUE(5,\"__count\",\"#job_id\",7)" },
+        "G48": { "content": "=PIVOT.VALUE(5,\"__count\",\"#job_id\",8)" },
+        "G49": { "content": "=PIVOT.VALUE(5,\"__count\",\"#job_id\",9)" },
+        "G50": { "content": "=PIVOT.VALUE(5,\"__count\",\"#job_id\",10)" },
+        "G66": { "content": "=_t(\"Applications\")" },
+        "G67": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",1)" },
+        "G68": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",2)" },
+        "G69": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",3)" },
+        "G70": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",4)" },
+        "G71": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",5)" },
+        "G72": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",6)" },
+        "G73": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",7)" },
+        "G74": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",8)" },
+        "G75": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",9)" },
+        "G76": { "content": "=PIVOT.VALUE(8,\"__count\",\"#source_id\",10)" },
+        "H40": { "content": "=_t(\"Hired\")" },
+        "H41": { "content": "=PIVOT.VALUE(5,\"hired\",\"#job_id\",1)" },
+        "H42": { "content": "=PIVOT.VALUE(5,\"hired\",\"#job_id\",2)" },
+        "H43": { "content": "=PIVOT.VALUE(5,\"hired\",\"#job_id\",3)" },
+        "H44": { "content": "=PIVOT.VALUE(5,\"hired\",\"#job_id\",4)" },
+        "H45": { "content": "=PIVOT.VALUE(5,\"hired\",\"#job_id\",5)" },
+        "H46": { "content": "=PIVOT.VALUE(5,\"hired\",\"#job_id\",6)" },
+        "H47": { "content": "=PIVOT.VALUE(5,\"hired\",\"#job_id\",7)" },
+        "H48": { "content": "=PIVOT.VALUE(5,\"hired\",\"#job_id\",8)" },
+        "H49": { "content": "=PIVOT.VALUE(5,\"hired\",\"#job_id\",9)" },
+        "H50": { "content": "=PIVOT.VALUE(5,\"hired\",\"#job_id\",10)" },
+        "H66": { "content": "=_t(\"Hired\")" },
+        "H67": { "content": "=PIVOT.VALUE(8,\"hired\",\"#source_id\",1)" },
+        "H68": { "content": "=PIVOT.VALUE(8,\"hired\",\"#source_id\",2)" },
+        "H69": { "content": "=PIVOT.VALUE(8,\"hired\",\"#source_id\",3)" },
+        "H70": { "content": "=PIVOT.VALUE(8,\"hired\",\"#source_id\",4)" },
+        "H71": { "content": "=PIVOT.VALUE(8,\"hired\",\"#source_id\",5)" },
+        "H72": { "content": "=PIVOT.VALUE(8,\"hired\",\"#source_id\",6)" },
+        "H73": { "content": "=PIVOT.VALUE(8,\"hired\",\"#source_id\",7)" },
+        "H74": { "content": "=PIVOT.VALUE(8,\"hired\",\"#source_id\",8)" },
+        "H75": { "content": "=PIVOT.VALUE(8,\"hired\",\"#source_id\",9)" },
+        "H76": { "content": "=PIVOT.VALUE(8,\"hired\",\"#source_id\",10)" },
+        "I40": { "content": "=_t(\"Rate\")" },
+        "I41": { "content": "=IFERROR(H41/G41)" },
+        "I42": { "content": "=IFERROR(H42/G42)" },
+        "I43": { "content": "=IFERROR(H43/G43)" },
+        "I44": { "content": "=IFERROR(H44/G44)" },
+        "I45": { "content": "=IFERROR(H45/G45)" },
+        "I46": { "content": "=IFERROR(H46/G46)" },
+        "I47": { "content": "=IFERROR(H47/G47)" },
+        "I48": { "content": "=IFERROR(H48/G48)" },
+        "I49": { "content": "=IFERROR(H49/G49)" },
+        "I50": { "content": "=IFERROR(H50/G50)" },
+        "I53": { "content": "=_t(\"# Offers\")" },
+        "I54": {
+          "content": "=PIVOT.VALUE(14,\"__count\",\"#refusal_reason\",1)"
+        },
+        "I55": {
+          "content": "=PIVOT.VALUE(14,\"__count\",\"#refusal_reason\",2)"
+        },
+        "I56": {
+          "content": "=PIVOT.VALUE(14,\"__count\",\"#refusal_reason\",3)"
+        },
+        "I57": {
+          "content": "=PIVOT.VALUE(14,\"__count\",\"#refusal_reason\",4)"
+        },
+        "I58": {
+          "content": "=PIVOT.VALUE(14,\"__count\",\"#refusal_reason\",5)"
+        },
+        "I59": {
+          "content": "=PIVOT.VALUE(14,\"__count\",\"#refusal_reason\",6)"
+        },
+        "I60": {
+          "content": "=PIVOT.VALUE(14,\"__count\",\"#refusal_reason\",7)"
+        },
+        "I61": {
+          "content": "=PIVOT.VALUE(14,\"__count\",\"#refusal_reason\",8)"
+        },
+        "I62": {
+          "content": "=PIVOT.VALUE(14,\"__count\",\"#refusal_reason\",9)"
+        },
+        "I63": {
+          "content": "=PIVOT.VALUE(14,\"__count\",\"#refusal_reason\",10)"
+        },
+        "I66": { "content": "=_t(\"Rate\")" },
+        "I67": { "content": "=IFERROR(H67/G67)" },
+        "I68": { "content": "=IFERROR(H68/G68)" },
+        "I69": { "content": "=IFERROR(H69/G69)" },
+        "I70": { "content": "=IFERROR(H70/G70)" },
+        "I71": { "content": "=IFERROR(H71/G71)" },
+        "I72": { "content": "=IFERROR(H72/G72)" },
+        "I73": { "content": "=IFERROR(H73/G73)" },
+        "I74": { "content": "=IFERROR(H74/G74)" },
+        "I75": { "content": "=IFERROR(H75/G75)" },
+        "I76": { "content": "=IFERROR(H76/G76)" }
+      },
+      "styles": {
+        "A7": 1,
+        "A23": 1,
+        "A39": 1,
+        "A52": 1,
+        "A65": 1,
+        "A78": 1,
+        "F7": 1,
+        "F23": 1,
+        "F39": 1,
+        "F52": 1,
+        "F65": 1,
+        "A40": 2,
+        "A53": 2,
+        "A66": 2,
+        "A79": 2,
+        "C40:D40": 2,
+        "F40": 2,
+        "F53": 2,
+        "F66": 2,
+        "A41:A50": 3,
+        "A54:A63": 4,
+        "C41:D50": 4,
+        "D54:D63": 4,
+        "A67:D76": 4,
+        "A80:D89": 4,
+        "F54:F63": 4,
+        "F41:I50": 4,
+        "I54:I63": 4,
+        "F67:I76": 4,
+        "D53": 5,
+        "B66:D66": 5,
+        "B79:D79": 5,
+        "G40:I40": 5,
+        "I53": 5,
+        "G66:I66": 5
+      },
+      "formats": {},
+      "borders": {
+        "A7:D7": 1,
+        "A23:D23": 1,
+        "A39:D39": 1,
+        "A52:D52": 1,
+        "A65:D65": 1,
+        "A78:D78": 1,
+        "F7:I7": 1,
+        "F23:I23": 1,
+        "F39:I39": 1,
+        "F52:I52": 1,
+        "F65:I65": 1,
+        "A8:D8": 2,
+        "A24:D24": 2,
+        "A40:D40": 2,
+        "A53:D53": 2,
+        "A66:D66": 2,
+        "A79:D79": 2,
+        "F8:I8": 2,
+        "F24:I24": 2,
+        "F40:I40": 2,
+        "F53:I53": 2,
+        "F66:I66": 2,
+        "A17:D17": 3,
+        "A18:D18": 4,
+        "A54": 5,
+        "A67": 5,
+        "A80": 5,
+        "F41": 5,
+        "F54": 5,
+        "F67": 5,
+        "A55:A63": 6,
+        "A68:A76": 6,
+        "A81:A89": 6,
+        "F42:F50": 6,
+        "F55:F63": 6,
+        "F68:F76": 6,
+        "A64:D64": 7,
+        "A77:D77": 7,
+        "A90:D90": 7,
+        "F51:I51": 7,
+        "F64:I64": 7,
+        "F77:I77": 7,
+        "B54:C54": 8,
+        "B67:C67": 8,
+        "B80:C80": 8,
+        "G41:H41": 8,
+        "G54:H54": 8,
+        "G67:H67": 8,
+        "B55:C63": 9,
+        "B68:C76": 9,
+        "B81:C89": 9,
+        "G42:H50": 9,
+        "G55:H63": 9,
+        "G68:H76": 9,
+        "D54": 10,
+        "D67": 10,
+        "D80": 10,
+        "I41": 10,
+        "I54": 10,
+        "I67": 10,
+        "D55:D63": 11,
+        "D68:D76": 11,
+        "D81:D89": 11,
+        "I42:I50": 11,
+        "I55:I63": 11,
+        "I68:I76": 11
+      },
+      "conditionalFormats": [
+        {
+          "rule": {
+            "type": "DataBarRule",
+            "color": 15531509,
+            "rangeValues": "H41:H50"
+          },
+          "id": "29ef268d-a7a6-4f4e-8e67-727b4386d961",
+          "ranges": ["F41:F50"]
+        },
+        {
+          "rule": {
+            "type": "DataBarRule",
+            "color": 16708338,
+            "rangeValues": "D54:D63"
+          },
+          "id": "54f167f0-51e8-4a04-b8df-adbf39fd4ccb",
+          "ranges": ["A54:A63"]
+        },
+        {
+          "rule": {
+            "type": "DataBarRule",
+            "color": 15726335,
+            "rangeValues": "I54:I63"
+          },
+          "id": "1bdfd5d8-f984-456e-9fd7-a8265ea11aec",
+          "ranges": ["F54:F63"]
+        },
+        {
+          "rule": {
+            "type": "DataBarRule",
+            "color": 16775149,
+            "rangeValues": "C67:C76"
+          },
+          "id": "94bc6681-d265-43d8-9379-1526a46afb9b",
+          "ranges": ["A67:A76"]
+        },
+        {
+          "rule": {
+            "type": "DataBarRule",
+            "color": 15531509,
+            "rangeValues": "H67:H76"
+          },
+          "id": "f360b7e7-fd75-49bc-afea-3bd0c0e24d11",
+          "ranges": ["F67:F76"]
+        },
+        {
+          "rule": {
+            "type": "DataBarRule",
+            "color": 16708338,
+            "rangeValues": "C80:C89"
+          },
+          "id": "8f5fb27b-50c4-4712-9f33-a771ae236ce2",
+          "ranges": ["A80:A89"]
+        }
+      ],
+      "figures": [
+        {
+          "id": "ed3c8d72-864c-4aeb-9f4e-cfa9886b961b",
+          "x": 187.09091186523438,
+          "y": 10,
+          "width": 176,
+          "height": 107,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": {
+              "text": "New Hires",
+              "align": "center",
+              "bold": true,
+              "color": "#434343"
+            },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!C3",
+            "keyValue": "Data!B3",
+            "humanize": false
+          }
+        },
+        {
+          "id": "4915c374-aebc-481a-bfa7-39781ffaac44",
+          "x": 0,
+          "y": 179,
+          "width": 475,
+          "height": 346,
+          "tag": "chart",
+          "data": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "none",
+            "metaData": {
+              "groupBy": ["stage_id"],
+              "measure": "count",
+              "order": null,
+              "resModel": "hr.recruitment.report",
+              "mode": "bar"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [],
+              "groupBy": ["stage_id"],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "verticalAxisPosition": "left",
+            "stacked": true,
+            "fieldMatching": {
+              "f93b0b68-4ddf-4141-b8e7-9e666c54bc45": {
+                "chain": "create_date",
+                "type": "datetime",
+                "offset": 0
+              },
+              "2a7d8441-ed48-4fb4-a2cf-87ba86b068b6": {
+                "chain": "job_id",
+                "type": "many2one"
+              },
+              "a5279de1-3e92-4dbd-8897-06d34b7ce62a": {
+                "chain": "user_id",
+                "type": "many2one"
+              },
+              "f1bc3bcb-c60a-4222-82c5-1dad28754122": {
+                "chain": "medium_id",
+                "type": "many2one"
+              },
+              "2f535150-c79b-4a1e-8961-b97f083427c3": {
+                "chain": "source_id",
+                "type": "many2one"
+              },
+              "a6015d8c-333c-48ec-926f-6c9bd312a50e": {
+                "chain": "company_id",
+                "type": "many2one"
+              }
+            }
+          }
+        },
+        {
+          "id": "91c732c5-b044-4b07-9dee-f7048033b161",
+          "x": 525,
+          "y": 179,
+          "width": 475,
+          "height": 341,
+          "tag": "chart",
+          "data": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "none",
+            "metaData": {
+              "groupBy": ["job_id"],
+              "measure": "hired",
+              "order": "DESC",
+              "resModel": "hr.recruitment.report",
+              "mode": "bar"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [],
+              "groupBy": ["job_id"],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "verticalAxisPosition": "left",
+            "stacked": true,
+            "fieldMatching": {
+              "f93b0b68-4ddf-4141-b8e7-9e666c54bc45": {
+                "chain": "create_date",
+                "type": "datetime",
+                "offset": 0
+              },
+              "2a7d8441-ed48-4fb4-a2cf-87ba86b068b6": {
+                "chain": "job_id",
+                "type": "many2one"
+              },
+              "a5279de1-3e92-4dbd-8897-06d34b7ce62a": {
+                "chain": "user_id",
+                "type": "many2one"
+              },
+              "f1bc3bcb-c60a-4222-82c5-1dad28754122": {
+                "chain": "medium_id",
+                "type": "many2one"
+              },
+              "2f535150-c79b-4a1e-8961-b97f083427c3": {
+                "chain": "source_id",
+                "type": "many2one"
+              },
+              "a6015d8c-333c-48ec-926f-6c9bd312a50e": {
+                "chain": "company_id",
+                "type": "many2one"
+              }
+            }
+          }
+        },
+        {
+          "id": "e0624db2-bdc1-46b2-9fb0-2d50cb39fb54",
+          "x": 0,
+          "y": 10,
+          "width": 176,
+          "height": 104,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": {
+              "text": "New Applications",
+              "align": "center",
+              "bold": true,
+              "color": "#434343"
+            },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!C2",
+            "keyValue": "Data!B2",
+            "humanize": false
+          }
+        },
+        {
+          "id": "9821be88-e50b-4837-a0a7-a167e6ec81aa",
+          "x": 374,
+          "y": 10,
+          "width": 176,
+          "height": 107,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": {
+              "text": "Hired Rate",
+              "align": "center",
+              "bold": true,
+              "color": "#434343"
+            },
+            "type": "scorecard",
+            "background": "#ECFDF5",
+            "baseline": "Data!C4",
+            "keyValue": "Data!B4",
+            "humanize": false
+          }
+        },
+        {
+          "id": "b8a54130-6779-4cef-9662-003d06e27d80",
+          "x": 560,
+          "y": 10,
+          "width": 176,
+          "height": 107,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": {
+              "text": "Process Duration",
+              "align": "center",
+              "bold": true,
+              "color": "#434343"
+            },
+            "type": "scorecard",
+            "background": "#FEF2F2",
+            "baseline": "Data!C5",
+            "keyValue": "Data!B5",
+            "humanize": false
+          }
+        },
+        {
+          "id": "68f7146e-4e85-45e8-be34-255da1ba1f0b",
+          "x": 0,
+          "y": 565,
+          "width": 477,
+          "height": 346,
+          "tag": "chart",
+          "data": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "none",
+            "metaData": {
+              "groupBy": ["stage_id"],
+              "measure": "count",
+              "order": null,
+              "resModel": "hr.recruitment.report",
+              "mode": "bar"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [["state", "=", "refused"]],
+              "groupBy": ["stage_id"],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "verticalAxisPosition": "left",
+            "stacked": false,
+            "fieldMatching": {
+              "f93b0b68-4ddf-4141-b8e7-9e666c54bc45": {
+                "chain": "create_date",
+                "type": "datetime"
+              },
+              "2a7d8441-ed48-4fb4-a2cf-87ba86b068b6": {
+                "chain": "job_id",
+                "type": "many2one"
+              },
+              "a5279de1-3e92-4dbd-8897-06d34b7ce62a": {
+                "chain": "user_id",
+                "type": "many2one"
+              },
+              "f1bc3bcb-c60a-4222-82c5-1dad28754122": {
+                "chain": "medium_id",
+                "type": "many2one"
+              },
+              "2f535150-c79b-4a1e-8961-b97f083427c3": {
+                "chain": "source_id",
+                "type": "many2one"
+              },
+              "a6015d8c-333c-48ec-926f-6c9bd312a50e": {
+                "chain": "company_id",
+                "type": "many2one"
+              }
+            }
+          }
+        },
+        {
+          "id": "4acd3243-2434-4819-a190-ee6cd137d1f3",
+          "x": 525,
+          "y": 565,
+          "width": 475,
+          "height": 345,
+          "tag": "chart",
+          "data": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "none",
+            "metaData": {
+              "groupBy": ["offer_end_date:month"],
+              "measure": "final_yearly_costs",
+              "order": null,
+              "resModel": "hr.contract.salary.offer",
+              "mode": "bar"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [["employee_id", "=", false]],
+              "groupBy": ["offer_end_date:month"],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "verticalAxisPosition": "left",
+            "stacked": true,
+            "fieldMatching": {}
+          }
+        }
+      ],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": { "ROW": [], "COL": [] },
+      "dataValidationRules": [],
+      "comments": {}
+    },
+    {
+      "id": "e03bb609-aa78-428b-ae47-0001b68b26f0",
+      "name": "Data",
+      "colNumber": 26,
+      "rowNumber": 111,
+      "rows": {},
+      "cols": {
+        "0": { "size": 154 },
+        "1": { "size": 103 },
+        "2": { "size": 100 },
+        "3": { "size": 115 },
+        "4": { "size": 83 },
+        "5": { "size": 107 }
+      },
+      "merges": [],
+      "cells": {
+        "A2": { "content": "=_t(\"New applicants\")" },
+        "A3": { "content": "=_t(\"Hired\")" },
+        "A4": { "content": "=_t(\"Hired ratio\")" },
+        "A5": { "content": "=_t(\"Process duration\")" },
+        "B1": { "content": "=_t(\"Current\")" },
+        "B2": { "content": "=PIVOT.VALUE(1,\"count\")" },
+        "B3": { "content": "=PIVOT.VALUE(1,\"hired\")" },
+        "B4": { "content": "=PIVOT.VALUE(1,\"hiring_ratio\")/100" },
+        "B5": {
+          "content": "=CONCATENATE(ROUND(PIVOT.VALUE(1,\"process_duration\")), _t(\" days\"))"
+        },
+        "C1": { "content": "=_t(\"Previous\")" },
+        "C2": { "content": "=PIVOT.VALUE(2,\"count\")" },
+        "C3": { "content": "=PIVOT.VALUE(2,\"hired\")" },
+        "C4": { "content": "=PIVOT.VALUE(2,\"hiring_ratio\")/100" },
+        "C5": {
+          "content": "=CONCATENATE(ROUND(PIVOT.VALUE(2,\"process_duration\")), _t(\" days\"))"
+        }
+      },
+      "styles": { "B1:C1": 6 },
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": { "ROW": [], "COL": [] },
+      "dataValidationRules": [],
+      "comments": {}
+    }
+  ],
+  "styles": {
+    "1": { "textColor": "#01666b", "bold": true, "fontSize": 16 },
+    "2": { "textColor": "#434343", "fontSize": 11, "bold": true },
+    "3": { "textColor": "#01666B", "verticalAlign": "middle" },
+    "4": { "textColor": "#434343", "verticalAlign": "middle" },
+    "5": {
+      "textColor": "#434343",
+      "fontSize": 11,
+      "bold": true,
+      "align": "center"
+    },
+    "6": { "bold": true }
+  },
+  "formats": {},
+  "borders": {
+    "1": { "bottom": { "style": "thin", "color": "#CCCCCC" } },
+    "2": { "top": { "style": "thin", "color": "#CCCCCC" } },
+    "3": { "bottom": { "style": "thin", "color": "#000" } },
+    "4": { "top": { "style": "thin", "color": "#000" } },
+    "5": {
+      "bottom": { "style": "thick", "color": "#FFFFFF" },
+      "right": { "style": "thick", "color": "#FFFFFF" }
+    },
+    "6": {
+      "top": { "style": "thick", "color": "#FFFFFF" },
+      "bottom": { "style": "thick", "color": "#FFFFFF" },
+      "right": { "style": "thick", "color": "#FFFFFF" }
+    },
+    "7": { "top": { "style": "thick", "color": "#FFFFFF" } },
+    "8": {
+      "bottom": { "style": "thick", "color": "#FFFFFF" },
+      "left": { "style": "thick", "color": "#FFFFFF" },
+      "right": { "style": "thick", "color": "#FFFFFF" }
+    },
+    "9": {
+      "top": { "style": "thick", "color": "#FFFFFF" },
+      "bottom": { "style": "thick", "color": "#FFFFFF" },
+      "left": { "style": "thick", "color": "#FFFFFF" },
+      "right": { "style": "thick", "color": "#FFFFFF" }
+    },
+    "10": {
+      "bottom": { "style": "thick", "color": "#FFFFFF" },
+      "left": { "style": "thick", "color": "#FFFFFF" }
+    },
+    "11": {
+      "top": { "style": "thick", "color": "#FFFFFF" },
+      "bottom": { "style": "thick", "color": "#FFFFFF" },
+      "left": { "style": "thick", "color": "#FFFFFF" }
+    }
+  },
+  "revisionId": "START_REVISION",
+  "uniqueFigureIds": true,
+  "settings": {
+    "locale": {
+      "name": "English (US)",
+      "code": "en_US",
+      "thousandsSeparator": ",",
+      "decimalSeparator": ".",
+      "dateFormat": "mm/dd/yyyy",
+      "timeFormat": "hh:mm:ss",
+      "formulaArgSeparator": ",",
+      "weekStart": 7
+    }
+  },
+  "pivots": {
+    "1": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "f93b0b68-4ddf-4141-b8e7-9e666c54bc45": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "2a7d8441-ed48-4fb4-a2cf-87ba86b068b6": {
+          "chain": "job_id",
+          "type": "many2one"
+        },
+        "a5279de1-3e92-4dbd-8897-06d34b7ce62a": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "f1bc3bcb-c60a-4222-82c5-1dad28754122": {
+          "chain": "medium_id",
+          "type": "many2one"
+        },
+        "2f535150-c79b-4a1e-8961-b97f083427c3": {
+          "chain": "source_id",
+          "type": "many2one"
+        },
+        "a6015d8c-333c-48ec-926f-6c9bd312a50e": {
+          "chain": "company_id",
+          "type": "many2one"
+        }
+      },
+      "context": {},
+      "domain": [],
+      "id": "1",
+      "measures": [
+        { "id": "count", "fieldName": "count" },
+        { "id": "hired", "fieldName": "hired" },
+        { "id": "hiring_ratio", "fieldName": "hiring_ratio" },
+        { "id": "process_duration", "fieldName": "process_duration" }
+      ],
+      "model": "hr.recruitment.report",
+      "name": "stats - current",
+      "sortedColumn": null,
+      "formulaId": "1",
+      "columns": [],
+      "rows": []
+    },
+    "2": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "f93b0b68-4ddf-4141-b8e7-9e666c54bc45": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "2a7d8441-ed48-4fb4-a2cf-87ba86b068b6": {
+          "chain": "job_id",
+          "type": "many2one"
+        },
+        "a5279de1-3e92-4dbd-8897-06d34b7ce62a": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "f1bc3bcb-c60a-4222-82c5-1dad28754122": {
+          "chain": "medium_id",
+          "type": "many2one"
+        },
+        "2f535150-c79b-4a1e-8961-b97f083427c3": {
+          "chain": "source_id",
+          "type": "many2one"
+        },
+        "a6015d8c-333c-48ec-926f-6c9bd312a50e": {
+          "chain": "company_id",
+          "type": "many2one"
+        }
+      },
+      "context": {},
+      "domain": [],
+      "id": "2",
+      "measures": [
+        { "id": "count", "fieldName": "count" },
+        { "id": "hired", "fieldName": "hired" },
+        { "id": "hiring_ratio", "fieldName": "hiring_ratio" },
+        { "id": "process_duration", "fieldName": "process_duration" }
+      ],
+      "model": "hr.recruitment.report",
+      "name": "stats - previous",
+      "sortedColumn": null,
+      "formulaId": "2",
+      "columns": [],
+      "rows": []
+    },
+    "5": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "f93b0b68-4ddf-4141-b8e7-9e666c54bc45": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "2a7d8441-ed48-4fb4-a2cf-87ba86b068b6": {
+          "chain": "job_id",
+          "type": "many2one"
+        },
+        "a5279de1-3e92-4dbd-8897-06d34b7ce62a": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "f1bc3bcb-c60a-4222-82c5-1dad28754122": {
+          "chain": "medium_id",
+          "type": "many2one"
+        },
+        "2f535150-c79b-4a1e-8961-b97f083427c3": {
+          "chain": "source_id",
+          "type": "many2one"
+        },
+        "a6015d8c-333c-48ec-926f-6c9bd312a50e": {
+          "chain": "company_id",
+          "type": "many2one"
+        }
+      },
+      "context": {},
+      "domain": [["job_id", "!=", false]],
+      "id": "5",
+      "measures": [
+        { "id": "__count", "fieldName": "__count" },
+        { "id": "hired", "fieldName": "hired" }
+      ],
+      "model": "hr.recruitment.report",
+      "name": "Recruitment Analysis by Job",
+      "sortedColumn": {
+        "groupId": [[], []],
+        "measure": "hired",
+        "order": "desc"
+      },
+      "formulaId": "5",
+      "columns": [],
+      "rows": [{ "fieldName": "job_id" }]
+    },
+    "6": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "f93b0b68-4ddf-4141-b8e7-9e666c54bc45": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "2a7d8441-ed48-4fb4-a2cf-87ba86b068b6": {
+          "chain": "job_id",
+          "type": "many2one"
+        },
+        "a5279de1-3e92-4dbd-8897-06d34b7ce62a": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "f1bc3bcb-c60a-4222-82c5-1dad28754122": {
+          "chain": "medium_id",
+          "type": "many2one"
+        },
+        "2f535150-c79b-4a1e-8961-b97f083427c3": {
+          "chain": "source_id",
+          "type": "many2one"
+        },
+        "a6015d8c-333c-48ec-926f-6c9bd312a50e": {
+          "chain": "company_id",
+          "type": "many2one"
+        }
+      },
+      "context": {},
+      "domain": [["user_id", "!=", false]],
+      "id": "6",
+      "measures": [
+        { "id": "__count", "fieldName": "__count" },
+        { "id": "hired", "fieldName": "hired" }
+      ],
+      "model": "hr.recruitment.report",
+      "name": "Recruitment Analysis by Recruiter",
+      "sortedColumn": {
+        "groupId": [[], []],
+        "measure": "hired",
+        "order": "desc"
+      },
+      "formulaId": "6",
+      "columns": [],
+      "rows": [{ "fieldName": "user_id" }]
+    },
+    "7": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "f93b0b68-4ddf-4141-b8e7-9e666c54bc45": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "2a7d8441-ed48-4fb4-a2cf-87ba86b068b6": {
+          "chain": "job_id",
+          "type": "many2one"
+        },
+        "a5279de1-3e92-4dbd-8897-06d34b7ce62a": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "f1bc3bcb-c60a-4222-82c5-1dad28754122": {
+          "chain": "medium_id",
+          "type": "many2one"
+        },
+        "2f535150-c79b-4a1e-8961-b97f083427c3": {
+          "chain": "source_id",
+          "type": "many2one"
+        },
+        "a6015d8c-333c-48ec-926f-6c9bd312a50e": {
+          "chain": "company_id",
+          "type": "many2one"
+        }
+      },
+      "context": {},
+      "domain": [["medium_id", "!=", false]],
+      "id": "7",
+      "measures": [
+        { "id": "__count", "fieldName": "__count" },
+        { "id": "hired", "fieldName": "hired" }
+      ],
+      "model": "hr.recruitment.report",
+      "name": "Recruitment Analysis by Medium",
+      "sortedColumn": {
+        "groupId": [[], []],
+        "measure": "hired",
+        "order": "desc"
+      },
+      "formulaId": "7",
+      "columns": [],
+      "rows": [{ "fieldName": "medium_id" }]
+    },
+    "8": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "f93b0b68-4ddf-4141-b8e7-9e666c54bc45": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "2a7d8441-ed48-4fb4-a2cf-87ba86b068b6": {
+          "chain": "job_id",
+          "type": "many2one"
+        },
+        "a5279de1-3e92-4dbd-8897-06d34b7ce62a": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "f1bc3bcb-c60a-4222-82c5-1dad28754122": {
+          "chain": "medium_id",
+          "type": "many2one"
+        },
+        "2f535150-c79b-4a1e-8961-b97f083427c3": {
+          "chain": "source_id",
+          "type": "many2one"
+        },
+        "a6015d8c-333c-48ec-926f-6c9bd312a50e": {
+          "chain": "company_id",
+          "type": "many2one"
+        }
+      },
+      "context": {},
+      "domain": [["source_id", "!=", false]],
+      "id": "8",
+      "measures": [
+        { "id": "__count", "fieldName": "__count" },
+        { "id": "hired", "fieldName": "hired" }
+      ],
+      "model": "hr.recruitment.report",
+      "name": "Recruitment Analysis by Source",
+      "sortedColumn": {
+        "groupId": [[], []],
+        "measure": "hired",
+        "order": "desc"
+      },
+      "formulaId": "8",
+      "columns": [],
+      "rows": [{ "fieldName": "source_id" }]
+    },
+    "10": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "f93b0b68-4ddf-4141-b8e7-9e666c54bc45": {
+          "chain": "create_date",
+          "type": "datetime"
+        },
+        "2a7d8441-ed48-4fb4-a2cf-87ba86b068b6": {
+          "chain": "job_id",
+          "type": "many2one"
+        },
+        "a5279de1-3e92-4dbd-8897-06d34b7ce62a": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "f1bc3bcb-c60a-4222-82c5-1dad28754122": {
+          "chain": "medium_id",
+          "type": "many2one"
+        },
+        "2f535150-c79b-4a1e-8961-b97f083427c3": {
+          "chain": "source_id",
+          "type": "many2one"
+        },
+        "a6015d8c-333c-48ec-926f-6c9bd312a50e": {
+          "chain": "company_id",
+          "type": "many2one"
+        }
+      },
+      "context": { "search_default_stage": 1 },
+      "domain": [
+        "&",
+        ["active", "=", false],
+        ["refuse_reason_id", "!=", false]
+      ],
+      "id": "10",
+      "measures": [{ "id": "__count", "fieldName": "__count" }],
+      "model": "hr.applicant",
+      "name": "Job Applications by Refuse Reason",
+      "sortedColumn": {
+        "groupId": [[], []],
+        "measure": "__count",
+        "order": "desc"
+      },
+      "formulaId": "10",
+      "columns": [],
+      "rows": [{ "fieldName": "refuse_reason_id" }]
+    },
+    "23814660-76da-4271-b78a-1530d5747e3e": {
+      "type": "ODOO",
+      "domain": ["&", ["employee_id", "=", false], ["state", "=", "refused"]],
+      "context": {},
+      "sortedColumn": {
+        "groupId": [[], []],
+        "measure": "__count",
+        "order": "desc",
+        "originIndexes": [0]
+      },
+      "measures": [{ "id": "__count", "fieldName": "__count" }],
+      "model": "hr.contract.salary.offer",
+      "columns": [],
+      "rows": [{ "fieldName": "refusal_reason" }],
+      "name": "Salary Package Offer by Refusal Reason",
+      "actionXmlId": "hr_contract_salary.hr_contract_salary_offer_recruitment_action",
+      "formulaId": "14",
+      "fieldMatching": {}
+    }
+  },
+  "pivotNextId": 15,
+  "customTableStyles": {},
+  "odooVersion": 12,
+  "globalFilters": [
+    {
+      "id": "f93b0b68-4ddf-4141-b8e7-9e666c54bc45",
+      "type": "date",
+      "label": "Date",
+      "rangeType": "from_to"
+    },
+    {
+      "id": "2a7d8441-ed48-4fb4-a2cf-87ba86b068b6",
+      "type": "relation",
+      "label": "Job Position",
+      "modelName": "hr.job",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    },
+    {
+      "id": "a5279de1-3e92-4dbd-8897-06d34b7ce62a",
+      "type": "relation",
+      "label": "Recruiter",
+      "modelName": "res.users",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    },
+    {
+      "id": "f1bc3bcb-c60a-4222-82c5-1dad28754122",
+      "type": "relation",
+      "label": "Medium",
+      "modelName": "utm.medium",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    },
+    {
+      "id": "2f535150-c79b-4a1e-8961-b97f083427c3",
+      "type": "relation",
+      "label": "Source",
+      "modelName": "utm.source",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    },
+    {
+      "id": "a6015d8c-333c-48ec-926f-6c9bd312a50e",
+      "type": "relation",
+      "label": "Company",
+      "modelName": "res.company",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    }
+  ],
+  "lists": {
+    "3": {
+      "columns": [
+        "name",
+        "department_id",
+        "application_count",
+        "no_of_recruitment",
+        "create_date",
+        "is_published",
+        "user_id"
+      ],
+      "domain": [["is_published", "=", true]],
+      "model": "hr.job",
+      "context": {},
+      "orderBy": [
+        { "name": "create_date", "asc": false },
+        { "name": "sequence", "asc": true }
+      ],
+      "id": "3",
+      "name": "Job Positions by Created on",
+      "fieldMatching": {}
+    }
+  },
+  "listNextId": 4,
+  "chartOdooMenusReferences": {
+    "4915c374-aebc-481a-bfa7-39781ffaac44": "hr_recruitment.menu_hr_recruitment_root",
+    "9f196086-2b54-44f8-b80e-9ba2bcfbf1fe": "hr_recruitment.menu_hr_recruitment_root",
+    "91c732c5-b044-4b07-9dee-f7048033b161": "hr_recruitment.menu_hr_recruitment_root",
+    "e0624db2-bdc1-46b2-9fb0-2d50cb39fb54": "hr_recruitment.menu_crm_case_categ_all_app",
+    "ed3c8d72-864c-4aeb-9f4e-cfa9886b961b": "hr_recruitment.hr_applicant_report_menu",
+    "9821be88-e50b-4837-a0a7-a167e6ec81aa": "hr_recruitment.hr_applicant_report_menu",
+    "b8a54130-6779-4cef-9662-003d06e27d80": "hr_recruitment.hr_applicant_report_menu",
+    "68f7146e-4e85-45e8-be34-255da1ba1f0b": "hr_recruitment.menu_hr_recruitment_root",
+    "4acd3243-2434-4819-a190-ee6cd137d1f3": "hr_recruitment.menu_hr_recruitment_root"
+  }
+}

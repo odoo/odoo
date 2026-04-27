@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_be_mobility_budget_amount" model="hr.contract.salary.benefit">
+            <field name="name">Mobility Budget</field>
+            <field name="show_name">True</field>
+            <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_mobility_budget_amount_monthly')])"/>
+            <field name="sequence">23</field>
+            <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+            <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+            <field name="folded" eval="True"/>
+            <field name="fold_label">Mobility Budget</field>
+            <field name="fold_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_mobility_budget')])"/>
+            <field name="display_type">always</field>
+        </record>
+
+        <record id="l10n_be_hr_contract_salary.hr_contract_salary_resume_monthly_cash" model="hr.contract.salary.resume">
+            <field name="benefit_ids" eval="[
+                (4, ref('l10n_be_hr_contract_salary_mobility_budget.l10n_be_mobility_budget_amount')),
+            ]"/>
+        </record>
+    </data>
+
+    <record id="l10n_be_hr_contract_salary.hr_contract_salary_payroll_resume_gross_cp200" model="hr.contract.salary.resume">
+        <field name="code">l10n_be_wage_with_mobility_budget</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,198 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_payroll_account_iso20022
+#
+# Translators:
+# Wil Odoo, 2025
+# Marta Wacławek, 2025
+#
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:47+0000\n"
+"PO-Revision-Date: 2025-11-06 17:25+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/"
+"hr_payroll_account_iso20022/pl/>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.view_employee_form
+msgid ""
+"<span class=\"d-flex gap-2 w-50\">\n"
+"                            <span invisible=\"is_trusted_bank_account\" "
+"class=\"text-muted\">Untrusted</span>\n"
+"                            <span invisible=\"not is_trusted_bank_account\" "
+"class=\"text-success\">Trusted</span>\n"
+"                        </span>"
+msgstr ""
+"<span class=\"d-flex gap-2 w-50\">\n"
+"                            <span invisible=\"is_trusted_bank_account\" "
+"class=\"text-muted\">Niezaufane</span>\n"
+"                            <span invisible=\"not is_trusted_bank_account\" "
+"class=\"text-success\">Zaufane</span>\n"
+"                        </span>"
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.view_employee_form
+msgid "Bank Account"
+msgstr "Konto bankowe"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,field_description:hr_payroll_account_iso20022.field_hr_payroll_payment_report_wizard__journal_id
+msgid "Bank Journal"
+msgstr "Dziennik bankowy"
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.hr_payslip_view_form
+msgid "Create Payment Report"
+msgstr "Utwórz raport płatności"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model,name:hr_payroll_account_iso20022.model_hr_employee
+msgid "Employee"
+msgstr "Pracownik"
+
+#. module: hr_payroll_account_iso20022
+#: model:hr.payroll.dashboard.warning,name:hr_payroll_account_iso20022.hr_payroll_dashboard_warning_employee_invalid_bank_account
+msgid "Employees With Invalid Bank Accounts"
+msgstr "Pracownicy z nieprawidłowymi kontami bankowymi"
+
+#. module: hr_payroll_account_iso20022
+#: model:hr.payroll.dashboard.warning,name:hr_payroll_account_iso20022.hr_payroll_dashboard_warning_employee_no_country
+msgid "Employees Without Any Country"
+msgstr "Pracownicy bez żadnego kraju"
+
+#. module: hr_payroll_account_iso20022
+#: model:hr.payroll.dashboard.warning,name:hr_payroll_account_iso20022.hr_payroll_dashboard_warning_untrusted_bank_accounts
+msgid "Employees with untrusted Bank Account numbers"
+msgstr "Pracownicy z niezaufanymi numerami kont bankowych"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,field_description:hr_payroll_account_iso20022.field_hr_payroll_payment_report_wizard__export_format
+msgid "Export Format"
+msgstr "Eksportuj format"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model,name:hr_payroll_account_iso20022.model_hr_payroll_payment_report_wizard
+msgid "HR Payroll Payment Report Wizard"
+msgstr "Kreator raportu płatności wynagrodzeń HR"
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.hr_payslip_view_form
+msgid "Mark as paid"
+msgstr "Oznacz jako opłacone"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model,name:hr_payroll_account_iso20022.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Pasek wypłaty"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model,name:hr_payroll_account_iso20022.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "Listy płac"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields.selection,name:hr_payroll_account_iso20022.selection__hr_payroll_payment_report_wizard__export_format__sepa
+msgid "SEPA"
+msgstr "SEPA"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,field_description:hr_payroll_account_iso20022.field_hr_employee__is_trusted_bank_account
+msgid "Send Money"
+msgstr "Wyślij pieniądze"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,help:hr_payroll_account_iso20022.field_hr_employee__is_trusted_bank_account
+msgid ""
+"Sending fake invoices with a fraudulent account number is a common phishing "
+"practice. To protect yourself, always verify new bank account numbers, "
+"preferably by calling the vendor, as phishing usually happens when their "
+"emails are compromised. Once verified, you can activate the ability to send "
+"money."
+msgstr ""
+"Wysyłanie fałszywych faktur z fałszywym numerem konta jest powszechną "
+"praktyką phishingową. Aby się chronić, zawsze weryfikuj nowe numery kont "
+"bankowych, najlepiej dzwoniąc do sprzedawcy, ponieważ phishing zwykle ma "
+"miejsce, gdy ich e-maile są zagrożone. Po weryfikacji można aktywować "
+"możliwość wysyłania pieniędzy."
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/wizard/hr_payroll_payment_report_wizard.py:0
+msgid "Some employees (%s) don't have a valid name on the work contact."
+msgstr ""
+"Niektórzy pracownicy (%s) nie mają prawidłowego imienia w swojej umowie "
+"zatrudnienia."
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/wizard/hr_payroll_payment_report_wizard.py:0
+msgid "Some employees (%s) don't have a work contact."
+msgstr "Niektórzy pracownicy (%s) nie mają umowy zatrudnienia."
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields.selection,name:hr_payroll_account_iso20022.selection__hr_payroll_payment_report_wizard__export_format__iso20022_ch
+msgid "Swiss ISO20022"
+msgstr "Szwajcarskie ISO20022"
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/models/hr_employee.py:0
+msgid ""
+"The following employees have invalid bank accounts and could not be "
+"trusted:\n"
+"%s"
+msgstr ""
+"Następujący pracownicy mają nieprawidłowe konta bankowe, które nie mogą być "
+"zaufane:\n"
+"%s"
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/wizard/hr_payroll_payment_report_wizard.py:0
+msgid ""
+"The journal '%s' requires a proper IBAN account to pay via SEPA. Please "
+"configure it first."
+msgstr ""
+"Dziennik '%s' wymaga odpowiedniego konta IBAN, aby płacić przez SEPA. "
+"Najpierw go skonfiguruj."
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.view_employee_form
+msgid "Trust Bank Account"
+msgstr "Zaufane konto bankowe"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,field_description:hr_payroll_account_iso20022.field_hr_payslip__iso20022_uetr
+msgid "UETR"
+msgstr "UETR"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,help:hr_payroll_account_iso20022.field_hr_payslip__iso20022_uetr
+msgid "Unique end-to-end transaction reference"
+msgstr "Unikalny identyfikator transakcji płatniczej"
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.view_employee_form
+msgid "Untrust Bank Account"
+msgstr "Niezaufane konto bankowe"
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/models/hr_employee.py:0
+msgid "You do not have the right to trust or un-trust a bank account."
+msgstr ""
+"Nie masz uprawnień oznaczać konta bankowego jako zaufane lub niezaufane."

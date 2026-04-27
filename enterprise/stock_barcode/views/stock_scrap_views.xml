@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="stock_scrap_wizard_inherit_mrp_barcode" model="ir.ui.view">
+        <field name="name">stock.scrap.form.inherit.barcode</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="stock.stock_scrap_form_view2"/>
+        <field name="arch" type="xml">
+            <form position="inside">
+                <field name="_barcode_scanned" widget="barcode_handler"/>
+            </form>
+            <xpath expr="//button[@name='action_validate']" position="attributes">
+                <attribute name="barcode_trigger">VLDT</attribute>
+            </xpath>
+            <xpath expr="//button[@special='cancel']" position="attributes">
+                <!-- TODO : Clarify next 2 lines-->
+                <attribute name="barcode_trigger">DISC</attribute> <!--OCDDISC : Legit but unavailable in PDF-->
+                <attribute name="class" add="o_form_button_cancel" separator=" "/> <!--OCDDISC : Hacky but available in PDF-->
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_scrap_inherit_mrp_barcode" model="ir.ui.view">
+        <field name="name">stock.scrap.form.inherit.barcode</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="stock.stock_scrap_form_view"/>
+        <field name="arch" type="xml">
+            <form position="inside">
+                <field name="_barcode_scanned" widget="barcode_handler"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="scrap_product_selector" model="ir.ui.view">
+        <field name="name">scrap.product.selector</field>
+        <field name="model">stock.scrap</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form class="o_barcode_line_form flex-column">
+                <div class="row mt-4 mb-4">
+                    <field name="company_id" force_save="1" invisible="1" readonly="state == 'done'"/>
+                    <field name="state" invisible="1" />
+                    <div class="col-12 d-flex align-items-baseline">
+                        <i class="fa fa-fw fa-lg fa-tags me-3" title="Product"/>
+                        <field name="product_id" placeholder="Product" domain="[('id', 'in', context.get('product_ids', []))]"
+                            context="{'default_is_storable': True}"
+                            options="{'no_create': True}"
+                            required="1"
+                            readonly="state == 'done'" nolabel="1"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 my-2 d-flex align-items-baseline">
+                        <i class="fa fa-fw fa-lg fa-cube me-3" title="Quantity"/>
+                        <field name="scrap_qty" class="text-end o_qty_done_field_not_completed me-2" options="{'type': 'number'}" placeholder="Quantity" readonly="state == 'done'"/>
+                        <field name="product_uom_id" placeholder="Unit of Measure" groups="uom.group_uom"
+                            options="{'no_open': True}" readonly="1" force_save="1" />
+                    </div>
+                </div>
+                <div class="row justify-content-center justify-content-md-start">
+                    <div class="col-12 col-sm-10 col-md-8 my-2 ms-md-5 align-items-baseline"
+                        invisible="tracking == 'serial'">
+                        <widget name="digipad" field_to_edit="scrap_qty"/>
+                    </div>
+                </div>
+                <div class="row" groups="stock.group_stock_multi_locations">
+                    <div class="col-12 my-2 d-flex align-items-baseline">
+                        <i class="fa fa-fw fa-lg fa-solid fa-map-marker me-3" title="Source Location" />
+                        <field name="location_id" placeholder="Source Location"
+                               readonly="state == 'done'"/>
+                        <i class="fa fa-fw fa-lg fa-long-arrow-right me-3" title="Scrap Location" />
+                        <field name="scrap_location_id" placeholder="Scrap Location"
+                               readonly="state == 'done'"/>
+                    </div>
+                </div>
+                <field name="tracking" invisible="1"/>
+                <div class="row" groups="stock.group_production_lot" invisible="not product_id or tracking == 'none'">
+                    <div class="col-12 my-2 d-flex align-items-baseline">
+                        <i class="fa fa-fw fa-lg fa-barcode me-3" title="Serial/Lot Number"/>
+                        <field name="lot_id" placeholder="Serial/Lot Number" options="{'no_open': True}"
+                               context="{'default_product_id': product_id}"
+                               readonly="state == 'done'"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 d-flex align-items-baseline">
+                        <field name="should_replenish" class="test-end me-3" readonly="state == 'done'"/>
+                        <span>Replenish Quantities</span>
+                    </div>
+                </div>
+                <div class="fixed-bottom">
+                    <div class="o_barcode_control d-flex justify-content-between p-2 gap-2">
+                        <button string="Discard" class="btn btn-secondary o_discard" special="cancel"/>
+                        <button string="Scrap" class="btn btn-primary o_save" name="action_validate" type="object"/>
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
+
+</odoo>

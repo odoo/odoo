@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_inherit_stock" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <header position="after">
+                <field name="carrier_price" invisible="1"/>
+                <div class="alert alert-info" role="alert" invisible="delivery_type != 'starshipit' or state != 'done' or carrier_price">
+                    The Shipping Cost is being fetched in the background.
+                </div>
+            </header>
+        </field>
+    </record>
+</odoo>

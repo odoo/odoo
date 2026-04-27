@@ -1,0 +1,59 @@
+<templates xml:space="preserve">
+<t t-name="swissdec_notification_template">
+    <t t-if="this.props.notifications">
+        <t t-if="this.props.type == 'warning'">
+            <div class="alert alert-warning mt-2" role="alert">
+                <h4 class="alert-heading"><i class="fa fa-exclamation-triangle me-2"></i>Warnings</h4>
+                <hr/>
+                <ul class="list-unstyled mb-0">
+                    <t t-foreach="this.props.notifications" t-as="notif" t-key="notif_index">
+                        <li class="mb-2">
+                            <span class="badge rounded-pill bg-secondary">Code: <t t-esc="notif.DescriptionCode"/></span>
+                            <span class="badge rounded-pill bg-secondary ms-2">Quality Level: <t t-esc="notif.QualityLevel"/></span>
+                            <div class="mt-1 text-muted">
+                                <t t-esc="notif.Description"/>
+                            </div>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+        </t>
+
+        <t t-elif="this.props.type == 'error'">
+            <div class="alert alert-danger mt-2" role="alert">
+                <h4 class="alert-heading"><i class="fa fa-times-circle me-2"></i>Errors</h4>
+                <hr/>
+                <ul class="list-unstyled mb-0">
+                    <t t-foreach="this.props.notifications" t-as="notif" t-key="notif_index">
+                        <li class="mb-2">
+                            <span class="badge rounded-pill bg-secondary">Code: <t t-esc="notif.DescriptionCode"/></span>
+                            <span class="badge rounded-pill bg-secondary ms-2">Quality Level: <t t-esc="notif.QualityLevel"/></span>
+                            <div class="mt-1 text-muted">
+                                <t t-esc="notif.Description"/>
+                            </div>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+        </t>
+
+        <t t-else="">
+            <div class="alert alert-info mt-2" role="alert">
+                <h4 class="alert-heading"><i class="fa fa-info-circle me-2"></i>Information</h4>
+                <hr/>
+                <ul class="list-unstyled mb-0">
+                    <t t-foreach="this.props.notifications" t-as="notif" t-key="notif_index">
+                        <li class="mb-2">
+                            <span class="badge rounded-pill bg-secondary">Code: <t t-esc="notif.DescriptionCode"/></span>
+                            <span class="badge rounded-pill bg-secondary ms-2">Quality Level: <t t-esc="notif.QualityLevel"/></span>
+                            <div class="mt-1 text-muted">
+                                <t t-esc="notif.Description"/>
+                            </div>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+    </t>
+    </t>
+</t>
+</templates>

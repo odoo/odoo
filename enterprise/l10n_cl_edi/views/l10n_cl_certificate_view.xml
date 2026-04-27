@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="certificate_certificate_view_form" model="ir.ui.view">
+            <field name="name">certificate_certificate_view_form.inherit.l10n_cl_edi</field>
+            <field name="model">certificate.certificate</field>
+            <field name="inherit_id" ref="certificate.certificate_certificate_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@id='certificate_data']" position="after">
+                    <div class="alert alert-warning text-start" invisible="l10n_cl_is_there_shared_certificate or country_code != 'CL'" role="alert">
+                        <strong>Warning:</strong> there is no shared digital signature for this company. You need to define at least one certificate without a user.
+                        Otherwise, you will need to send electronic invoices to the SII manually, and Odoo won't be able to send automatic receipt acknowledgements for vendor bills.
+                    </div>
+                    <group invisible="country_code != 'CL'">
+                        <field name="user_id"/>
+                        <field name="last_token"/>
+                        <field name="subject_serial_number" required="1"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

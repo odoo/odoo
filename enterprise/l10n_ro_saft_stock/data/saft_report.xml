@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- The spec from ANAF differs somewhat from the official SAF-T specification.
+         See https://www.anaf.ro/anaf/internet/ANAF/despre_anaf/strategii_anaf/proiecte_digitalizare/saf_t/ for the full spec. -->
+
+    <template id="saft_template" inherit_id="l10n_ro_saft.saft_template">
+        <xpath expr="//Owners" position="inside">
+            <Owner t-foreach="owners" t-as="owner">
+                <CompanyStructure>
+                    <t t-set="partner_id" t-value="owner['partner_id']"/>
+                    <RegistrationNumber t-out="partner_detail_map[partner_id]['registration_number']"/>
+                    <t t-call="l10n_ro_saft.addresses_contacts"/>
+                </CompanyStructure>
+                <OwnerID t-out="owner['owner_id']"/>
+                <AccountID t-out="owner['account_id']"/>
+            </Owner>
+        </xpath>
+
+        <xpath expr="//MovementTypeTable" position="inside">
+            <MovementTypeTableEntry t-foreach="movement_types" t-as="movement_type">
+                <MovementType t-out="movement_type['code']"/>
+                <Description t-out="movement_type['name']"/>
+            </MovementTypeTableEntry>
+        </xpath>
+
+        <xpath expr="//Products" position="after">
+            <PhysicalStock t-if="l10n_ro_saft_required_sections['master_files']['physical_stocks']">
+                <PhysicalStockEntry t-foreach="physical_stocks" t-as="physical_stock">
+                    <WarehouseID t-out="physical_stock['warehouse_id']"/>
+                    <LocationID t-out="physical_stock['location_id']"/>
+                    <ProductCode t-out="physical_stock['product_code']"/>
+                    <StockAccountNo t-out="physical_stock['lot']"/>
+                    <ProductType t-out="physical_stock['product_type']"/>
+                    <StockAccountCommodityCode t-out="physical_stock['commodity_code']"/>
+                    <OwnerID t-out="physical_stock['owner_id']"/>
+                    <UOMPhysicalStock t-out="physical_stock['uom_physical_stock']"/>
+                    <UOMToUOMBaseConversionFactor t-out="physical_stock['uom_conversion_factor']"/>
+                    <UnitPrice t-out="format_float(physical_stock['unit_price'])"/>
+                    <OpeningStockQuantity t-out="physical_stock['opening_stock_quantity']"/>
+                    <OpeningStockValue t-out="physical_stock['opening_stock_value']"/>
+                    <ClosingStockQuantity t-out="physical_stock['closing_stock_quantity']"/>
+                    <ClosingStockValue t-out="physical_stock['closing_stock_value']"/>
+                    <StockCharacteristics>
+                        <StockCharacteristic t-out="physical_stock['stock_characteristic']"/>
+                        <StockCharacteristicValue t-out="'0'"/>
+                    </StockCharacteristics>
+                </PhysicalStockEntry>
+            </PhysicalStock>
+        </xpath>
+
+        <xpath expr="//MovementOfGoods" position="inside">
+            <t t-if="l10n_ro_saft_required_sections['source_documents']['movement_of_goods']">
+                <NumberOfMovementLines t-out="movement_of_goods['nb_stock_movement_lines']"/>
+                <TotalQuantityReceived t-out="movement_of_goods['total_quantity_received']"/>
+                <TotalQuantityIssued t-out="movement_of_goods['total_quantity_issued']"/>
+                <StockMovement t-foreach="movement_of_goods['stock_movements']" t-as="stock_movement">
+                    <MovementReference t-out="stock_movement['movement_reference']"/>
+                    <MovementDate t-out="stock_movement['movement_date']"/>
+                    <MovementType t-out="stock_movement['movement_type']"/>
+                    <StockMovementLine t-foreach="stock_movement['stock_movement_lines']" t-as="stock_movement_line">
+                        <LineNumber t-out="stock_movement_line['line_number']"/>
+                        <AccountID t-out="stock_movement_line['account_id']"/>
+                        <CustomerID t-out="stock_movement_line['customer_id']"/>
+                        <SupplierID t-out="stock_movement_line['supplier_id']"/>
+                        <ShipTo t-if="stock_movement_line['ship_to']">
+                            <WarehouseID t-out="stock_movement_line['ship_to']['warehouse_id']"/>
+                            <LocationID t-out="stock_movement_line['ship_to']['location_id']"/>
+                        </ShipTo>
+                        <ShipFrom t-if="stock_movement_line['ship_from']">
+                            <WarehouseID t-out="stock_movement_line['ship_from']['warehouse_id']"/>
+                            <LocationID t-out="stock_movement_line['ship_from']['location_id']"/>
+                        </ShipFrom>
+                        <ProductCode t-out="stock_movement_line['product_code']"/>
+                        <StockAccountNo t-out="physical_stock['lot']"/>
+                        <Quantity t-out="stock_movement_line['quantity']"/>
+                        <UnitOfMeasure t-out="stock_movement_line['unit_of_measure']"/>
+                        <UOMToUOMPhysicalStockConversionFactor t-out="stock_movement_line['uom_conversion_factor']"/>
+                        <MovementSubType t-out="stock_movement_line['movement_subtype']"/>
+                    </StockMovementLine>
+                </StockMovement>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

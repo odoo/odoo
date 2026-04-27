@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="mrp_mps.SearchBar" t-inherit="web.SearchBar">
+        <xpath expr="//SearchBarMenu" position="replace">
+            <MrpMpsSearchBarMenu/>
+        </xpath>
+    </t>
+
+    <t t-name="mrp_mps.SearchBarMenu" t-inherit="web.SearchBarMenu">
+        <xpath expr="//Dropdown/t[@t-set-slot='content']/t[node()]" position="before">
+            <GroupMenu items="env.model.data.groups[0]"/>
+        </xpath>
+    </t>
+
+</templates>

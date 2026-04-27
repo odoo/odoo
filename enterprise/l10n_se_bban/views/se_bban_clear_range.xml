@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_se_bban_clear_range_form" model="ir.ui.view">
+        <field name="name">se.bban.clear.range.form</field>
+        <field name="model">se.bban.clear.range</field>
+        <field name="arch" type="xml">
+            <form string="Clearing Numbers">
+                <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="checksum"/>
+                    </group>
+                    <group>
+                        <field name="min_num"/>
+                        <field name="max_num"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_se_bban_clear_range_tree" model="ir.ui.view">
+        <field name="name">se.bban.clear.range.tree</field>
+        <field name="model">se.bban.clear.range</field>
+        <field name="arch" type="xml">
+            <list string="Clearing Range">
+                <field name="name"/>
+                <field name="checksum"/>
+                <field name="min_num"/>
+                <field name="max_num"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_se_bban_clear_range_group_tree" model="ir.actions.act_window">
+        <field name="name">Swedish BBAN clearing ranges</field>
+        <field name="res_model">se.bban.clear.range</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        name="Swedish BBAN Clearing Numbers"
+        parent="account.account_account_menu"
+        action="action_se_bban_clear_range_group_tree"
+        id="menu_action_se_bban_clearing_range"
+        groups="base.group_no_one"
+        sequence="20"
+    />
+</odoo>

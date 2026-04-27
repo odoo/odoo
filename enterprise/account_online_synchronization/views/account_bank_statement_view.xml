@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_bank_statement_line_tree_inherit" model="ir.ui.view">
+            <field name="name">bank.statement.line.list.inherit</field>
+            <field name="model">account.bank.statement.line</field>
+            <field name="inherit_id" ref="account_accountant.view_bank_statement_line_tree_bank_rec_widget"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='account_number']" position="after">
+                    <field name="online_transaction_identifier" optional="hide"/>
+                    <field name="online_account_id" optional="hide"/>
+                    <field name="online_link_id" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_bank_statement_line_form_bank_rec_widget_inherit" model="ir.ui.view">
+            <field name="name">account.bank.statement.line.form.bank_rec_widget.inherit</field>
+            <field name="model">account.bank.statement.line</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="account_accountant.view_bank_statement_line_form_bank_rec_widget"/>
+            <field name="arch" type="xml">
+                <xpath expr="//footer" position="replace"/>
+            </field>
+        </record>
+    </data>
+</odoo>

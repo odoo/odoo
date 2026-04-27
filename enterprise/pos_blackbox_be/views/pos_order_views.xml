@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_pos_pos_form">
+            <field name="name">pos.order</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tax_ids']" position="after">
+                    <field name="vat_letter"/>
+                </xpath>
+                <xpath expr="//page[@name='extra']" position="inside">
+                    <group string="Belgian Fiscal Data Module information">
+                        <field name="blackbox_date" readonly="1"/>
+                        <field name="blackbox_time" readonly="1"/>
+                        <field name="blackbox_pos_receipt_time" readonly="1"/>
+                        <field name="blackbox_ticket_counters" readonly="1"/>
+                        <field name="blackbox_unique_fdm_production_number" readonly="1"/>
+                        <field name="blackbox_vsc_identification_number" readonly="1"/>
+                        <field name="blackbox_signature" readonly="1"/>
+                        <field name="blackbox_tax_category_a" readonly="1"/>
+                        <field name="blackbox_tax_category_b" readonly="1"/>
+                        <field name="blackbox_tax_category_c" readonly="1"/>
+                        <field name="blackbox_tax_category_d" readonly="1"/>
+                        <field name="plu_hash" readonly="1"/>
+                        <field name="pos_version" readonly="1"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

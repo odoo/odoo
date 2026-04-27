@@ -1,0 +1,19 @@
+<templates>
+
+<t t-name="web_studio.ReportEditor.SnackBar" >
+    <div class="d-flex flex-row">
+        <button class="btn rounded-0 text-uppercase o-web-studio-save-report" t-on-click="props.onSave" t-attf-class="{{ props.state.isDirty ? 'btn-primary' : '' }}" >
+            <i class="fa fa-light fa-save me-2"/>Save
+        </button>
+
+        <button t-if="props.onDiscard" class="btn rounded-0 ms-1 text-uppercase o-web-studio-discard-report" t-on-click="props.onDiscard" t-attf-class="{{ props.state.isDirty ? 'btn-secondary' : '' }}" >
+            <i class="fa fa-times me-2"/>Discard
+        </button>
+
+        <div t-if="props.state.warningMessage" class="text-warning pb-1 px-2" style="padding-top: 6px">
+            <i class="fa fa-exclamation-triangle me-2"/><t class="o-web-studio-warning-message" t-esc="props.state.warningMessage"/>
+        </div>
+    </div>
+</t>
+
+</templates>

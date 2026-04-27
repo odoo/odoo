@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_274_XX_view_form" model="ir.ui.view">
+        <field name="name">l10n_be.274_xx.view.form.inherit</field>
+        <field name="model">l10n_be.274_xx</field>
+        <field name="inherit_id" ref="l10n_be_hr_payroll.l10n_be_274_XX_view_form"/>
+        <field name="arch" type="xml">
+            <p name="xls_file" position="after">
+                <h2 invisible="not move_id">Accounting Entry Generated</h2>
+                <p invisible="not move_id">
+                    The withholing taxes exemption has been posted on the accounting entries: <field name="move_id" readonly="1"/>
+                </p>
+            </p>
+            <button name="action_generate_xls" position="after">
+                <button name="action_post_account_entries" string="Post Journal Entries"
+                    groups="account.group_account_user" type="object" class="btn-secondary"/>
+            </button>
+        </field>
+    </record>
+</odoo>

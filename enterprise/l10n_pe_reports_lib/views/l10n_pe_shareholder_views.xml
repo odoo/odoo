@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_pe_shareholder_view_tree" model="ir.ui.view">
+        <field name="name">l10n_pe_reports_lib.shareholder.view.tree</field>
+        <field name="model">l10n_pe_reports_lib.shareholder</field>
+        <field name="arch" type="xml">
+            <list string="Shareholder" editable="bottom">
+                <field name="partner_id"/>
+                <field name="participation_type_code"/>
+                <field name="shares_qty"/>
+                <field name="shares_percentage"/>
+                <field name="shares_date"/>
+            </list>
+        </field>
+    </record>
+</odoo>

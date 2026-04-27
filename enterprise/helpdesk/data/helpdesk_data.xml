@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="helpdesk_team1" model="helpdesk.team">
+        <field name="name">Customer Care</field>
+        <field name="alias_name">customer-care</field>
+        <field name="stage_ids" eval="False"/> <!-- eval=False to don't get the default stage. New stages are setted below-->
+        <field name="use_sla" eval="True"/>
+        <field name="member_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+    </record>
+
+    <!-- stage "New" gets created by default with sequence 0-->
+    <record id="stage_new" model="helpdesk.stage">
+        <field name="name">New</field>
+        <field name="sequence">0</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team1'))]"/>
+        <field name="template_id" ref="helpdesk.new_ticket_request_email_template"/>
+    </record>
+    <record id="stage_in_progress" model="helpdesk.stage">
+        <field name="name">In Progress</field>
+        <field name="sequence">1</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team1'))]"/>
+    </record>
+    <record id="stage_on_hold" model="helpdesk.stage">
+        <field name="name">On Hold</field>
+        <field name="sequence">2</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team1'))]"/>
+    </record>
+    <record id="stage_solved" model="helpdesk.stage">
+        <field name="name">Solved</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team1'))]"/>
+        <field name="sequence">3</field>
+        <field name="fold" eval="True"/>
+    </record>
+    <record id="stage_cancelled" model="helpdesk.stage">
+        <field name="name">Cancelled</field>
+        <field name="sequence">4</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team1'))]"/>
+        <field name="fold" eval="True"/>
+    </record>
+
+</odoo>

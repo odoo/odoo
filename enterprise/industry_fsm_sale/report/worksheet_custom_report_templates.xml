@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="worksheet_custom_page" inherit_id="industry_fsm.worksheet_custom_page">
+        <div name="worksheet_task_timesheet" position="before">
+            <t t-if="doc.allow_billable and doc.sale_order_id and not doc.under_warranty and not doc._has_no_billable_products()">
+                <h2>Time &amp; Material</h2>
+                <t t-call="industry_fsm_sale.worksheet_time_and_material"/>
+                <br/>
+            </t>
+        </div>
+    </template>
+</odoo>

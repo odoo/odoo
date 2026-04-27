@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ch_lpp_insurance_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.lpp.insurance.view.form</field>
+        <field name="model">l10n.ch.lpp.insurance</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll_elm_transmission.l10n_ch_lpp_insurance_view_form"/>
+        <field name="arch" type="xml">
+            <sheet position="inside">
+                 <group string="Coordination" colspan="2">
+                    <field name="lpp_coordination_ids" nolabel="1" colspan="2">
+                        <list editable="top">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="lpp_coordination_deduction" string="Coordination Deduction"/>
+                            <field name="lpp_maximum_amount" string="Maximum Amount"/>
+                        </list>
+                    </field>
+                </group>
+            </sheet>
+        </field>
+    </record>
+</odoo>

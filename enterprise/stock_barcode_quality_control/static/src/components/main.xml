@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="stock_barcode.MainComponent" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('o_validate_page')]" position="after">
+            <button t-if="hasQualityChecksTodo" t-on-click="checkQuality"
+                class="btn btn-success text-uppercase o_check_quality">
+                Quality Checks
+            </button>
+        </xpath>
+        <xpath expr="//div[hasclass('o_buttons_operations')]" position="after">
+            <button t-if="env.model.displayOnDemandQualityCheckButton" t-on-click="onDemandQualityCheck"
+                class="o_check_quality w-100 fs-4 btn btn-danger mb-2 py-2">
+                Quality Check
+            </button>
+        </xpath>
+    </t>
+
+</templates>

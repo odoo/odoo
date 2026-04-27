@@ -1,0 +1,50 @@
+.o_stock_barcode_main_menu {
+    max-width: map-get($grid-breakpoints, sm);
+    overflow: auto;
+
+    .o_barcode_demo_message {
+        font-size: 0.9em;
+    }
+
+    .o_barcode_tap_to_scan {
+        position: relative;
+
+        img {
+            width: 100%;
+        }
+
+        .o_stock_barcode_laser {
+            opacity: 0;
+            width: 120%;
+            height: 4px;
+            position: absolute;
+            top: 0;
+            left: -10%;
+            background: red;
+            animation: o_barcode_scanner_intro 1.4s cubic-bezier(0.6, -0.28, 0.735, 0.045) 0.4s;
+            animation-fill-mode: forwards;
+        }
+
+    }
+}
+
+@keyframes o_barcode_scanner_intro {
+    0% {
+        opacity: 0;
+        top: 0;
+    }
+    25% {
+        opacity: 0.5;
+        top: 60%;
+    }
+    50% {
+        top: 10%;
+    }
+    75% {
+        top: 80%;
+    }
+    100% {
+        opacity: 0.5;
+        top: 50%;
+    }
+}

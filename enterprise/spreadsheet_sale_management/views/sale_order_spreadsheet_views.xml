@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_spreadsheet_view_list" model="ir.ui.view">
+        <field name="name">sale.order.spreadsheet list view</field>
+        <field name="model">sale.order.spreadsheet</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="name"/>
+                <field name="order_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="spreadsheet_binary_data" widget="binary_spreadsheet" filename="spreadsheet_file_name"/>
+                <field name="spreadsheet_file_name" column_invisible="1"/> <!-- Used as the file name -->
+            </list>
+        </field>
+    </record>
+
+    <record id="sale_order_spreadsheet_view_search" model="ir.ui.view">
+        <field name="name">sale.order.spreadsheet search view</field>
+        <field name="model">sale.order.spreadsheet</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="calculator_templates" string="Calculator Templates" domain="[('order_id', '=', False)]"/>
+                <filter name="quote_sheets" string="Quote Sheets" domain="[('order_id', '!=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="sale_order_spreadsheet_action" model="ir.actions.act_window">
+        <field name="name">Sale Order Spreadsheets</field>
+        <field name="res_model">sale.order.spreadsheet</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'search_default_calculator_templates':1}</field>
+    </record>
+
+    <menuitem id="menu_technical_spreadsheet_sale_order_template"
+        name="Sale Order Spreadsheets"
+        parent="spreadsheet_edition.menu_technical_spreadsheet" sequence="15"
+        action="sale_order_spreadsheet_action"/>
+</odoo>

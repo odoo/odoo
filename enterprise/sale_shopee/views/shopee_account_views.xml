@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="quick_create_account_action" model="ir.actions.act_window">
+        <field name="name">Create Shopee Accounts</field>
+        <field name="res_model">shopee.account</field>
+        <field name="target">new</field>
+        <field name="view_mode">form</field>
+    </record>
+
+    <record id="shopee_account_view_list" model="ir.ui.view">
+        <field name="name">shopee.account.list</field>
+        <field name="model">shopee.account</field>
+        <field name="arch" type="xml">
+            <list string="Shopee Accounts" create="false" delete="false">
+                <header>
+                    <button
+                        name="%(sale_shopee.quick_create_account_action)d"
+                        string="New"
+                        class="btn-primary"
+                        type="action"
+                        display="always"
+                    />
+                </header>
+                <field name="name" optional="show"/>
+                <field name="api_endpoint" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="shopee_account_view_form" model="ir.ui.view">
+        <field name="name">shopee.account.form</field>
+        <field name="model">shopee.account</field>
+        <field name="arch" type="xml">
+            <form string="Shopee Account" create="false">
+                <header>
+                    <button
+                        name="action_open_auth_link"
+                        string="Authorize Shop"
+                        type="object"
+                        class="oe_highlight"
+                        invisible="not (partner_identifier and partner_key)"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_view_shops"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-home"
+                            invisible="not id"
+                        >
+                            <field name="shop_count" widget="statinfo" string="Shops"/>
+                        </button>
+                    </div>
+                    <div class="oe_title" id="title">
+                        <label for="name" string="Account Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. American Market"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="api_endpoint"/>
+                            <field
+                                name="company_ids"
+                                widget="many2many_tags"
+                                groups="base.group_multi_company"
+                            />
+                        </group>
+                    </group>
+                    <notebook groups="base.group_no_one">
+                        <page string="Credentials">
+                            <group>
+                                <field
+                                    name="partner_identifier"
+                                    options="{'enable_formatting': false}"
+                                />
+                                <field name="partner_key"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="quick_create_account_form" model="ir.ui.view">
+        <field name="name">Quick Create Shopee Account Form</field>
+        <field name="model">shopee.account</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="api_endpoint"/>
+                    <field name="partner_identifier" required="True"/>
+                    <field name="partner_key" required="True"/>
+                </group>
+                <footer>
+                    <button
+                        string="Save And Authorize"
+                        type="object"
+                        name="action_open_auth_link"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_shopee_account_list" model="ir.actions.act_window">
+        <field name="name">Shopee Accounts</field>
+        <field name="res_model">shopee.account</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register your Shopee account
+            </p>
+            <p>
+                Shopee accounts correspond to Shopee Seller Central accounts.
+            </p>
+            <p>
+                Register yours to start synchronizing your orders into Odoo.
+            </p>
+        </field>
+    </record>
+
+    <record id="quick_create_account_action_form" model="ir.actions.act_window.view">
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="quick_create_account_form"/>
+        <field name="act_window_id" ref="quick_create_account_action"/>
+    </record>
+</odoo>

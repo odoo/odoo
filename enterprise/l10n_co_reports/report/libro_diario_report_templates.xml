@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_libro_diario">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="document">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2 style="padding-top: 15px; text-align: center;">
+                                <span>DAILY JOURNAL REPORT</span>
+                            </h2>
+                            <div style="border: 2px solid black;padding: 5px;">
+                                <div class="row">
+                                    <div class="col-6 fw-bold">
+                                        <t t-out="company.display_name"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <t t-out="company.street"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <t t-out="company.city + ', ' + company.state_id.name + ', ' + company.zip"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <t t-out="company.country_id.name"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 fw-bold">
+                                        NIT: <t t-out="company.vat"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="text-align: right;padding: 10px;">
+                                FROM <t t-out="date_range[0]"/> TO <t t-out="date_range[1]"/>
+                            </div>
+                            <div class="row">
+                                <table class="o_ignore_layout_styling table">
+                                    <thead>
+                                        <tr>
+                                            <th class="fw-bold">DATE</th>
+                                            <th class="fw-bold">MOVE</th>
+                                            <th class="fw-bold">ACCOUNT</th>
+                                            <th class="fw-bold">PARTNER</th>
+                                            <th class="fw-bold">LABEL</th>
+                                            <th class="fw-bold">DEBIT</th>
+                                            <th class="fw-bold">CREDIT</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="font-size: 0.75em;">
+                                        <tr t-foreach="document['lines']" t-as="line">
+                                            <td><t t-esc="line.get('line_date')"/></td>
+                                            <td><t t-esc="line.get('move_name')"/></td>
+                                            <td><t t-esc="line.get('account_name')"/></td>
+                                            <td><t t-esc="line.get('partner_name')"/></td>
+                                            <td><t t-esc="line.get('line_label')"/></td>
+                                            <td><t t-esc="line.get('line_debit')"/></td>
+                                            <td><t t-esc="line.get('line_credit')"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <record id="action_report_libro_diario" model="ir.actions.report">
+            <field name="name">Daily Journal Report</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_co_reports.report_libro_diario</field>
+            <field name="report_file">l10n_co_reports.report_libro_diario</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_readonly'))]"/>
+        </record>
+    </data>
+</odoo>

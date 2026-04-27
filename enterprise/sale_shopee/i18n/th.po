@@ -1,0 +1,1422 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_shopee
+#
+# Translators:
+# Wil Odoo, 2025
+# Rasareeyar Lappiam, 2025
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:45+0000\n"
+"PO-Revision-Date: 2025-11-17 14:23+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-18/sale_shopee/"
+"th/>\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: sale_shopee
+#: model:mail.template,body_html:sale_shopee.order_sync_failure
+msgid ""
+"<div>\n"
+"                <p>The synchronization of the Shopee order with reference <t "
+"t-out=\"ctx.get('shopee_order_ref') or ''\">REF</t> encountered an error and "
+"was not completed.</p>\n"
+"                <p>Unless the order is cancelled in Shopee, no other "
+"synchronization will be attempted.</p>\n"
+"                <p>To schedule a new synchronization attempt, proceed as "
+"follows:\n"
+"                    </p><ol>\n"
+"                        <li>Enter the Developer Tools.</li>\n"
+"                        <li>Open the form of the Shopee Shop on which the "
+"order was placed.</li>\n"
+"                        <li>Navigate to the Order Follow-up tab.</li>\n"
+"                        <li>Set a date for <em>Last Order Synchronization "
+"Date</em> that is anterior to the last status update of the order.</li>\n"
+"                        <li>Save the changes and click on the <em>SYNC "
+"ORDERS</em> button.</li>\n"
+"                    </ol>\n"
+"                \n"
+"                <p>If the problem persists, contact <a href=\"https://"
+"www.odoo.com/help/\">Odoo support</a>.</p>\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div>\n"
+"                <p>การซิงค์ใบสั่งซื้อ Shopee กับข้อมูลอ้างอิง <t t-"
+"out=\"ctx.get('shopee_order_ref') or ''\">REF</t> พบข้อผิดพลาดและไม่เสร็จสมบูรณ์</"
+"p>\n"
+"                <p>เว้นแต่จะมีการยกเลิกคำสั่งซื้อใน Shopee "
+"จะไม่มีการพยายามซิงโครไนซ์อื่นเกิดขึ้น</p>\n"
+"                <p>หากต้องการกำหนดเวลาการพยายามซิงโครไนซ์ใหม่ "
+"ให้ดำเนินการดังต่อไปนี้:\n"
+"                    </p><ol>\n"
+"                        <li>เข้าสู่เครื่องมือสำหรับนักพัฒนา</li>\n"
+"                        <li>เปิดแบบฟอร์มของร้านค้า Shopee ที่ทำการสั่งซื้อ</li>\n"
+"                        <li>ไปที่แท็บการติดตามคำสั่งซื้อ</li>\n"
+"                        <li>กำหนดวันที่สำหรับ <em>วันที่ซิงโครไนซ์คำสั่งซื้อครั้งสุดท้าย</em> "
+"ที่อยู่ก่อนหน้าการอัปเดตสถานะคำสั่งซื้อครั้งล่าสุด</li>\n"
+"                        <li>บันทึกการเปลี่ยนแปลงและคลิกปุ่ม <em>ซิงค์คำสั่งซื้อ</em></"
+"li>\n"
+"                    </ol>\n"
+"                \n"
+"                <p>หากยังเกิดปัญหาอยู่ ให้ติดต่อ <a href=\"https://www.odoo.com/help/"
+"\">Odoo support</a></p>\n"
+"            </div>\n"
+"        "
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid ""
+"<strong>Warning:</strong>\n"
+"                    Shop authorization is expired. Please re-authorize the "
+"shop in the Shopee Account page."
+msgstr ""
+"<strong>คำเตือน:</strong>\n"
+"                    สิทธิ์การอนุญาตร้านค้าหมดอายุ กรุณาทำการอนุญาตร้านค้าอีกครั้งในหน้าบัญชี "
+"Shopee"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid ""
+"<strong>Warning:</strong>\n"
+"                    Shop authorization will expire soon. Re-authorize the "
+"shop in the Shopee Account page."
+msgstr ""
+"<strong>คำเตือน:</strong>\n"
+"                    สิทธิ์การอนุญาตร้านค้าจะหมดอายุเร็วๆ นี้ "
+"โปรดอนุญาตร้านค้าอีกครั้งในหน้าบัญชี Shopee"
+
+#. module: sale_shopee
+#: model:mail.template,body_html:sale_shopee.picking_sync_failure
+msgid ""
+"<style>\n"
+"                .shopee_table {\n"
+"                    width: 100%;\n"
+"                    max-width: 900px;\n"
+"                    border-collapse: collapse;\n"
+"                }\n"
+"\n"
+"                .shopee_table th,\n"
+"                .shopee_table td {\n"
+"                    border: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .shopee_table th {\n"
+"                    white-space: nowrap;\n"
+"                }\n"
+"\n"
+"                .shopee_table thead th {\n"
+"                    padding: 0.5em 0.5em;\n"
+"                    text-align: center;\n"
+"                    border-bottom: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .shopee_table tbody th,\n"
+"                .shopee_table tbody td {\n"
+"                    padding: 0.5em 0.5em 1em;\n"
+"                    vertical-align: top;\n"
+"                }\n"
+"            </style>\n"
+"            <body><div>\n"
+"                <p>The synchronization of the Shopee shipping labels "
+"encountered some errors and was not completed.</p>\n"
+"                <p>Please correct the problem before manually synchronizing "
+"the pickings again, as no other synchronization will be attempted.</p>\n"
+"                <p>Here are the errors sent by Shopee: </p>\n"
+"                <table class=\"shopee_table\">\n"
+"                    <thead>\n"
+"                        <tr>\n"
+"                            <th>Batch Picking References</th>\n"
+"                            <th>Message</th>\n"
+"                        </tr>\n"
+"                    </thead>\n"
+"                    <tbody>\n"
+"                        <tr t-foreach=\"ctx.get('error_messages')\" t-"
+"as=\"error\">\n"
+"                            <th><t t-out=\"error['batch_picking_refs']\"/></"
+"th>\n"
+"                            <td>\n"
+"                                <t t-if=\"error['message']\" t-"
+"out=\"error['message']\"/>\n"
+"                                <t t-else=\"\">An unknown error occurred "
+"during the synchronisation with Shopee.\n"
+"                                    Unfortunately you need to manually check "
+"if the state of the order is correct or not.\n"
+"                                    If the problem persists, contact <a "
+"href=\"https://www.odoo.com/help/\">Odoo support </a>.\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"            </div>\n"
+"        </body>"
+msgstr ""
+"<style>\n"
+"                .shopee_table {\n"
+"                    width: 100%;\n"
+"                    max-width: 900px;\n"
+"                    border-collapse: collapse;\n"
+"                }\n"
+"\n"
+"                .shopee_table th,\n"
+"                .shopee_table td {\n"
+"                    border: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .shopee_table th {\n"
+"                    white-space: nowrap;\n"
+"                }\n"
+"\n"
+"                .shopee_table thead th {\n"
+"                    padding: 0.5em 0.5em;\n"
+"                    text-align: center;\n"
+"                    border-bottom: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .shopee_table tbody th,\n"
+"                .shopee_table tbody td {\n"
+"                    padding: 0.5em 0.5em 1em;\n"
+"                    vertical-align: top;\n"
+"                }\n"
+"            </style>\n"
+"            <body><div>\n"
+"                <p>การซิงโครไนซ์ฉลากการจัดส่งของ Shopee "
+"พบข้อผิดพลาดบางอย่างและไม่เสร็จสมบูรณ์</p>\n"
+"                <p>โปรดแก้ไขปัญหาก่อนที่จะซิงค์การเลือกด้วยตนเองอีกครั้ง "
+"เนื่องจากจะไม่มีการพยายามซิงค์อื่น</p>\n"
+"                <p>นี่คือข้อผิดพลาดที่ส่งโดย Shopee: </p>\n"
+"                <table class=\"shopee_table\">\n"
+"                    <thead>\n"
+"                        <tr>\n"
+"                            <th>ข้อมูลอ้างอิงการเลือกชุด</th>\n"
+"                            <th>ข้อความ</th>\n"
+"                        </tr>\n"
+"                    </thead>\n"
+"                    <tbody>\n"
+"                        <tr t-foreach=\"ctx.get('error_messages')\" t-"
+"as=\"error\">\n"
+"                            <th><t t-out=\"error['batch_picking_refs']\"/></"
+"th>\n"
+"                            <td>\n"
+"                                <t t-if=\"error['message']\" t-"
+"out=\"error['message']\"/>\n"
+"                                <t t-"
+"else=\"\">เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุระหว่างการซิงโครไนซ์กับ Shopee\n"
+"                                    ขออภัย "
+"คุณต้องตรวจสอบด้วยตนเองว่าสถานะของคำสั่งซื้อนั้นถูกต้องหรือไม่\n"
+"                                    หากยังเกิดปัญหาอยู่ ให้ติดต่อ <a href=\"https://"
+"www.odoo.com/help/\">Odoo support </a>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"            </div>\n"
+"        </body>"
+
+#. module: sale_shopee
+#: model:mail.template,body_html:sale_shopee.inventory_sync_failure
+msgid ""
+"<style>\n"
+"                .shopee_table {\n"
+"                    width: 100%;\n"
+"                    max-width: 900px;\n"
+"                    border-collapse: collapse;\n"
+"                }\n"
+"\n"
+"                .shopee_table th,\n"
+"                .shopee_table td {\n"
+"                    border: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .shopee_table th {\n"
+"                    white-space: nowrap;\n"
+"                }\n"
+"\n"
+"                .shopee_table thead th {\n"
+"                    padding: 0.5em 0.5em;\n"
+"                    text-align: center;\n"
+"                    border-bottom: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .shopee_table tbody th,\n"
+"                .shopee_table tbody td {\n"
+"                    padding: 0.5em 0.5em 1em;\n"
+"                    vertical-align: top;\n"
+"                }\n"
+"            </style>\n"
+"            <body><div>\n"
+"                <p>The synchronization of the inventory for Shopee Shop\n"
+"                    <b><t t-out=\"ctx.get('shopee_shop') or ''\">REF</t></"
+"b>\n"
+"                    encountered some errors and was not completed.</p>\n"
+"                <p>Here are the errors sent by Shopee: </p>\n"
+"                <table class=\"shopee_table\">\n"
+"                    <thead>\n"
+"                        <tr>\n"
+"                            <th>Shopee Item Identifier</th>\n"
+"                            <th>Message</th>\n"
+"                        </tr>\n"
+"                    </thead>\n"
+"                    <tbody>\n"
+"                        <tr t-foreach=\"ctx.get('error_messages')\" t-"
+"as=\"error\">\n"
+"                            <th><t t-out=\"error['item_identifier']\"/></"
+"th>\n"
+"                            <td>\n"
+"                                <t t-if=\"error['message']\" t-"
+"out=\"error['message']\"/>\n"
+"                                <t t-else=\"\">An unknown error occurred "
+"during the synchronisation with Shopee.\n"
+"                                    Unfortunately you need to manually check "
+"if the available quantity for the product is correct or not.\n"
+"                                    If the problem persists, contact <a "
+"href=\"https://www.odoo.com/help/\">Odoo support </a>.\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"            </div>\n"
+"        </body>"
+msgstr ""
+"<style>\n"
+"                .shopee_table {\n"
+"                    width: 100%;\n"
+"                    max-width: 900px;\n"
+"                    border-collapse: collapse;\n"
+"                }\n"
+"\n"
+"                .shopee_table th,\n"
+"                .shopee_table td {\n"
+"                    border: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .shopee_table th {\n"
+"                    white-space: nowrap;\n"
+"                }\n"
+"\n"
+"                .shopee_table thead th {\n"
+"                    padding: 0.5em 0.5em;\n"
+"                    text-align: center;\n"
+"                    border-bottom: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .shopee_table tbody th,\n"
+"                .shopee_table tbody td {\n"
+"                    padding: 0.5em 0.5em 1em;\n"
+"                    vertical-align: top;\n"
+"                }\n"
+"            </style>\n"
+"            <body><div>\n"
+"                <p>การซิงค์สินค้าคงคลังสำหรับร้านค้า Shopee\n"
+"                    <b><t t-out=\"ctx.get('shopee_shop') or ''\">REF</t></"
+"b>\n"
+"                    พบข้อผิดพลาดบางประการและยังดำเนินการไม่เสร็จสิ้น</p>\n"
+"                <p>นี่คือข้อผิดพลาดที่ส่งโดย Shopee: </p>\n"
+"                <table class=\"shopee_table\">\n"
+"                    <thead>\n"
+"                        <tr>\n"
+"                            <th>รหัสสินค้า Shopee</th>\n"
+"                            <th>ข้อความ</th>\n"
+"                        </tr>\n"
+"                    </thead>\n"
+"                    <tbody>\n"
+"                        <tr t-foreach=\"ctx.get('error_messages')\" t-"
+"as=\"error\">\n"
+"                            <th><t t-out=\"error['item_identifier']\"/></"
+"th>\n"
+"                            <td>\n"
+"                                <t t-if=\"error['message']\" t-"
+"out=\"error['message']\"/>\n"
+"                                <t t-"
+"else=\"\">เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุระหว่างการซิงโครไนซ์กับ Shopee\n"
+"                                    ขออภัย "
+"คุณต้องตรวจสอบด้วยตนเองว่าปริมาณที่มีอยู่สำหรับผลิตภัณฑ์นั้นถูกต้องหรือไม่\n"
+"                                   หากยังเกิดปัญหาอยู่ ให้ติดต่อ<a href=\"https://"
+"www.odoo.com/help/\">Odoo support </a>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"            </div>\n"
+"        </body>"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__api_endpoint
+msgid "API Endpoint"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__access_token
+msgid "Access Token"
+msgstr "โทเค็นการเข้าถึง"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__access_token_expiration_date
+msgid "Access Token Expiration Date"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__access_token
+msgid "Access Token expires in 4 hours and is used to access the Shopee API."
+msgstr "โทเค็นการเข้าถึงจะหมดอายุใน 4 ชั่วโมงและใช้ในการเข้าถึง Shopee API"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__access_token_expiration_date
+msgid ""
+"Access token expiration date. Computed using the expires_in returned by "
+"Shopee."
+msgstr "วันหมดอายุของโทเค็นการเข้าถึง คำนวณโดยใช้ expires_in ที่ส่งคืนโดย Shopee"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_account_view_form
+msgid "Account Name"
+msgstr "ชื่อบัญชี"
+
+#. module: sale_shopee
+#: model:ir.ui.menu,name:sale_shopee.accounts_menu
+msgid "Accounts"
+msgstr "บัญชี"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__active
+#: model:ir.model.fields.selection,name:sale_shopee.selection__shopee_shop__status__active
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_search
+msgid "Active"
+msgstr "เปิดใช้งาน"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Add-on Deal Main"
+msgstr ""
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Add-on Deal Sub"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__company_ids
+msgid "Allowed Company"
+msgstr "บริษัทที่ได้รับอนุญาต"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Archived"
+msgstr "เก็บถาวรแล้ว"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/utils.py:0
+msgid ""
+"At shop - %(shop_name)s, error %(error_code)s occurred during operation %"
+"(operation)s when contacting the Shopee API. Shopee sent:\n"
+"\n"
+"%(error_message)s"
+msgstr ""
+"ที่ร้านค้า - %(shop_name)s เกิดข้อผิดพลาด %(error_code)s ระหว่างการดำเนินการ %"
+"(operation)s เมื่อติดต่อกับ Shopee API Shopee ส่ง:\n"
+"\n"
+"%(error_message)s"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/utils.py:0
+msgid ""
+"At shop - %(shop_name)s, error %(error_code)s occurred during operation %"
+"(operation)s when contacting the Shopee API:\n"
+"\n"
+"%(error_message)s"
+msgstr ""
+"ที่ร้านค้า - %(shop_name)s เกิดข้อผิดพลาด %(error_code)s ระหว่างการดำเนินการ %"
+"(operation)s เมื่อติดต่อกับ Shopee API:\n"
+"\n"
+"%(error_message)s"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/utils.py:0
+msgid ""
+"Authorization Code is required to request an Access Token. Please authorize "
+"the connection first."
+msgstr "จำเป็นต้องมีรหัสอนุญาตเพื่อขอโทเค็นการเข้าถึง โปรดอนุญาตการเชื่อมต่อก่อน"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__authorization_expiration_date
+msgid "Authorization Expiration Date"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__authorization_remaining_days
+msgid "Authorization Remaining Days"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_account_view_form
+msgid "Authorize Shop"
+msgstr ""
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Bundle Deal"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.quick_create_account_form
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__sale_order__shopee_delivery_status__cancelled
+msgid "Cancelled"
+msgstr "ยกเลิก"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.picking_view_form
+msgid "Cancelled on Shopee"
+msgstr ""
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_account.py:0
+msgid "Changing API endpoint will reset the authorization of the shops."
+msgstr "การเปลี่ยนแปลงจุดสิ้นสุด API จะรีเซ็ตการอนุญาตของร้านค้า"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Changing the company of a Shopee shop is not allowed."
+msgstr "การเปลี่ยนบริษัทร้านค้า Shopee ไม่ได้รับอนุญาต"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__company_id
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__company_id
+msgid "Company"
+msgstr "บริษัท"
+
+#. module: sale_shopee
+#: model:ir.model,name:sale_shopee.model_res_partner
+msgid "Contact"
+msgstr "ติดต่อ"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/controllers/onboarding.py:0
+msgid "Could not find Shopee account with id %(account)s"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.actions.act_window,name:sale_shopee.quick_create_account_action
+msgid "Create Shopee Accounts"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__create_uid
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__create_uid
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__create_date
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__create_date
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_account_view_form
+msgid "Credentials"
+msgstr "ข้อมูลประจำตัว"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Days"
+msgstr "วัน"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__team_id
+msgid "Default Sales Team"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__user_id
+msgid "Default Salesperson"
+msgstr "ค่าเริ่มต้นพนักงานขาย"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__display_name
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__display_name
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__shopee_shop__status__error
+msgid "Error"
+msgstr "ผิดพลาด"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__authorization_expiration_date
+msgid ""
+"Expiration Date of Authorization of a shop, that was returned during the "
+"Shopee shop authorization on Shopee Account view. Once expired, the user "
+"must re-authorize the connection on Shopee Account view."
+msgstr ""
+"วันหมดอายุของการอนุญาตของร้านค้าที่ส่งคืนระหว่างการอนุญาตร้านค้า Shopee บนมุมมองบัญชี Shopee "
+"เมื่อวันหมดอายุแล้ว ผู้ใช้จะต้องอนุญาตการเชื่อมต่ออีกครั้งบนมุมมองบัญชี Shopee"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__fbs_location_id
+msgid "FBS Stock Location"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__stock_picking__shopee_label_status__failed
+msgid "Failed"
+msgstr "ล้มเหลว"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_account.py:0
+msgid ""
+"Failed to authorize shop due to the following error:\n"
+"- %(message)s\n"
+"\n"
+"One of the following input could be incorrect: Partner ID, Partner Key, or "
+"API Endpoint."
+msgstr ""
+"ไม่สามารถอนุญาติให้ร้านค้าใช้งานได้เนื่องจากเกิดข้อผิดพลาดต่อไปนี้:\n"
+"- %(message)s\n"
+"\n"
+"ข้อมูลอินพุตต่อไปนี้อาจไม่ถูกต้อง: Partner ID, Partner Key หรือ API Endpoint"
+
+#. module: sale_shopee
+#: model:ir.actions.server,name:sale_shopee.action_fetch_shipping_label
+msgid "Fetch Shipping Label"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Fetch Shipping Labels"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.picking_view_form
+msgid "Fetch Shopee Label"
+msgstr ""
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Flash Sale"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.view_order_form
+msgid "Fulfilled by Cross Border Seller"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.view_order_form
+msgid "Fulfilled by Merchant"
+msgstr "เติมเต็มโดยผู้ค้า"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.view_order_form
+msgid "Fulfilled by Shopee"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__sale_order__shopee_fulfillment_type__hybrid
+msgid "Fulfillment by Cross Border Seller"
+msgstr "การดำเนินการโดยผู้ขายข้ามพรมแดน"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__sale_order__shopee_fulfillment_type__fbm
+msgid "Fulfillment by Merchant"
+msgstr "การเติมเต็มโดยผู้ค้า"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__sale_order__shopee_fulfillment_type__fbs
+msgid "Fulfillment by Shopee"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__id
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__id
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__id
+msgid "ID"
+msgstr "ไอดี"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__active
+msgid ""
+"If made inactive, this account will no longer be synchronized with Shopee."
+msgstr "หากไม่ได้ใช้งานบัญชีนี้จะไม่ได้รับการซิงค์กับ Shopee อีกต่อไป"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.view_order_form
+msgid ""
+"If the sale is locked, you can not modify it anymore. However, you will "
+"still be able to invoice or deliver."
+msgstr ""
+"หากการขายถูกล็อก คุณจะไม่สามารถแก้ไขได้อีกต่อไป อย่างไรก็ตาม "
+"คุณจะยังสามารถออกใบแจ้งหนี้หรือจัดส่งได้"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_account__company_ids
+msgid "If this field is empty, all companies will be allowed."
+msgstr "หากช่องนี้ว่าง บริษัททั้งหมดจะได้รับอนุญาต"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__shopee_shop__status__inactive
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_search
+msgid "Inactive"
+msgstr "ปิดใช้งาน"
+
+#. module: sale_shopee
+#: model:ir.model.constraint,message:sale_shopee.constraint_shopee_item_unique_shopee_item_and_model_identifiers
+msgid "Item and Model Identifiers must be unique for a given shop."
+msgstr "ตัวระบุรายการและรุ่นจะต้องไม่ซ้ำกันสำหรับร้านค้าที่กำหนด"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_stock_picking__shopee_label_status
+msgid "Label Status"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__last_orders_sync_date
+msgid "Last Order Synchronization Date"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_stock_picking__last_picking_sync_date
+msgid "Last Picking Sync Date"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__last_shop_status_sync_date
+msgid "Last Shop Status Synchronization Date"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__last_inventory_sync_date
+msgid "Last Sync Date"
+msgstr "วันที่ซิงค์ครั้งล่าสุด"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__write_uid
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__write_uid
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__write_uid
+msgid "Last Updated by"
+msgstr "อัปเดตครั้งล่าสุดโดย"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__write_date
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__write_date
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__write_date
+msgid "Last Updated on"
+msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.view_order_form
+msgid "Lock"
+msgstr "ล็อก"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__name
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__name
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.picking_view_form
+msgid "Need to rearrange shipment on Shopee"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_account_view_list
+msgid "New"
+msgstr "ใหม่"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__stock_picking__shopee_label_status__not_available
+msgid "Not Available"
+msgstr "ไม่พร้อมใช้"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__order_count
+msgid "Order Count"
+msgstr "จำนวนคำสั่ง"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Orders"
+msgstr "คำสั่ง"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__partner_identifier
+msgid "Partner ID"
+msgstr "ID พาร์ทเนอร์"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__partner_key
+msgid "Partner Key"
+msgstr "คีย์พาร์ทเนอร์"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__sale_order__shopee_delivery_status__error
+msgid "Pickup Failed"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__stock_picking__shopee_label_status__processing
+msgid "Processing"
+msgstr "กำลังดำเนินการ"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__product_id
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_item_view_search
+msgid "Product"
+msgstr "สินค้า"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Product Promotion"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model,name:sale_shopee.model_product_product
+msgid "Product Variant"
+msgstr "ตัวแปรสินค้า"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__stock_picking__shopee_label_status__ready
+msgid "Ready"
+msgstr "พร้อม"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__sale_order__shopee_delivery_status__draft
+msgid "Ready to Ship"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.picking_view_form
+msgid "Ready to arrange shipment via Shopee"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__refresh_token
+msgid "Refresh Token"
+msgstr "รีเฟรชโทเคน"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__refresh_token
+msgid ""
+"Refresh Token is used to request a new Access Token and expires in 30 days. "
+"Once expired, the user must re-authorize the connection on Shopee Account "
+"view."
+msgstr ""
+"โทเค็นรีเฟรชใช้สำหรับขอโทเค็นการเข้าถึงใหม่ และจะหมดอายุใน 30 วัน เมื่อหมดอายุแล้ว "
+"ผู้ใช้จะต้องอนุญาตการเชื่อมต่ออีกครั้งในมุมมองบัญชี Shopee"
+
+#. module: sale_shopee
+#: model_terms:ir.actions.act_window,help:sale_shopee.action_shopee_account_list
+msgid "Register your Shopee account"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.actions.act_window,help:sale_shopee.action_shopee_account_list
+msgid "Register yours to start synchronizing your orders into Odoo."
+msgstr "ลงทะเบียนเพื่อเริ่มซิงโครไนซ์คำสั่งซื้อของคุณกับ Odoo"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__authorization_remaining_days
+msgid ""
+"Remaining days of the shop authorization. Show a warning in the Shopee Shop "
+"view that the authorization will expire soon."
+msgstr "วันคงเหลือของสิทธิ์ร้านค้า แสดงคำเตือนในมุมมองร้านค้า Shopee ว่าสิทธิ์จะหมดอายุเร็วๆ นี้"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Sale Orders"
+msgstr "คำสั่งขาย"
+
+#. module: sale_shopee
+#: model:ir.model,name:sale_shopee.model_sale_order
+msgid "Sales Order"
+msgstr "คำสั่งขาย"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.quick_create_account_form
+msgid "Save And Authorize"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__sale_order__shopee_delivery_status__confirmed
+msgid "Shipment Arranged"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.picking_view_form
+msgid "Shipment arranged via Shopee"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__sale_order__shopee_delivery_status__done
+msgid "Shipped"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.picking_view_form
+msgid "Shipped via Shopee"
+msgstr ""
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/stock_picking.py:0
+msgid "Shipping Label Not Ready"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__shop_id
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_search
+msgid "Shop"
+msgstr "ร้านค้า"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__shop_count
+msgid "Shop Count"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Shop Information"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Shop Name"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Shop Settings"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Shop Status: Active"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Shop Status: Error"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Shop Status: Inactive"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.ui.menu,name:sale_shopee.root_menu
+msgid "Shopee"
+msgstr ""
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_account.py:0
+msgid "Shopee API Account - %(partner_id)s"
+msgstr "บัญชี API ของ Shopee - %(partner_id)s"
+
+#. module: sale_shopee
+#: model:ir.model,name:sale_shopee.model_shopee_account
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__account_id
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_account_view_form
+msgid "Shopee Account"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.actions.act_window,name:sale_shopee.action_shopee_account_list
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_account_view_list
+msgid "Shopee Accounts"
+msgstr ""
+
+#. module: sale_shopee
+#: model:product.template,name:sale_shopee.default_adjustment_product_product_template
+msgid "Shopee Amount Adjustment"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_res_partner__shopee_buyer_identifier
+#: model:ir.model.fields,field_description:sale_shopee.field_res_users__shopee_buyer_identifier
+msgid "Shopee Buyer ID"
+msgstr ""
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Shopee Customer #%(order_no)s"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_sale_order__shopee_fulfillment_type
+msgid "Shopee Fulfillment Type"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model,name:sale_shopee.model_shopee_item
+msgid "Shopee Item"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__shopee_item_count
+msgid "Shopee Item Count"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__shopee_item_identifier
+msgid "Shopee Item ID"
+msgstr ""
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+#: model:ir.actions.act_window,name:sale_shopee.sale_shopee_item_action
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__shopee_item_ids
+#: model:ir.ui.menu,name:sale_shopee.items_menu
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_item_view_list
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Shopee Items"
+msgstr ""
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/stock_picking.py:0
+msgid "Shopee Label"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__shopee_model_identifier
+msgid "Shopee Model ID"
+msgstr ""
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/tests/test_shopee.py:0
+msgid "Shopee Order %(order)s at mock_shopee_shop"
+msgstr ""
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Shopee Order %(shopee_order_ref)s at %(shop_name)s"
+msgstr ""
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+#: code:addons/sale_shopee/tests/test_shopee.py:0
+msgid "Shopee Pricelist %(currency)s"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__shopee_account__api_endpoint__production_brazil
+msgid "Shopee Production Endpoint (Brazil)"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__shopee_account__api_endpoint__production_china
+msgid "Shopee Production Endpoint (China)"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__shopee_account__api_endpoint__production_singapore
+msgid "Shopee Production Endpoint (Singapore)"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_sale_order__shopee_order_ref
+#: model:ir.model.fields,field_description:sale_shopee.field_stock_picking__shopee_order_ref
+msgid "Shopee Reference"
+msgstr ""
+
+#. module: sale_shopee
+#: model:product.template,name:sale_shopee.default_sale_product_product_template
+msgid "Shopee Sale"
+msgstr ""
+
+#. module: sale_shopee
+#: model:product.template,name:sale_shopee.default_shipping_product_product_template
+msgid "Shopee Shipping"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model,name:sale_shopee.model_shopee_shop
+#: model:ir.model.fields,field_description:sale_shopee.field_sale_order__shopee_shop_id
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_item_view_search
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Shopee Shop"
+msgstr ""
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Shopee Shop #%(shop_id)s"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__shop_identifier
+msgid "Shopee Shop ID"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.actions.act_window,name:sale_shopee.action_shopee_shop_list
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_list
+msgid "Shopee Shops"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_sale_order__shopee_delivery_status
+#: model:ir.model.fields,field_description:sale_shopee.field_stock_picking__shopee_delivery_status
+msgid "Shopee Status"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__shopee_account__api_endpoint__test
+msgid "Shopee Testing Endpoint"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__shopee_account__api_endpoint__test_china
+msgid "Shopee Testing Endpoint (China)"
+msgstr ""
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Shopee Warehouse - %(shop)s"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.actions.act_window,help:sale_shopee.action_shopee_account_list
+msgid "Shopee accounts correspond to Shopee Seller Central accounts."
+msgstr ""
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/stock_picking.py:0
+msgid ""
+"Shopee is processing the shipping label. Odoo will try fetching the shipping "
+"label again later."
+msgstr ""
+"Shopee กำลังประมวลผลฉลากการจัดส่ง Odoo จะพยายามเรียกใช้ฉลากการจัดส่งอีกครั้งในภายหลัง"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Shopee move: %(name)s"
+msgstr ""
+
+#. module: sale_shopee
+#: model:mail.template,name:sale_shopee.inventory_sync_failure
+msgid "Shopee: Inventory Synchronization Failure"
+msgstr ""
+
+#. module: sale_shopee
+#: model:mail.template,name:sale_shopee.order_sync_failure
+msgid "Shopee: Order Synchronization Failure"
+msgstr ""
+
+#. module: sale_shopee
+#: model:mail.template,name:sale_shopee.picking_sync_failure
+msgid "Shopee: Shipping Label Synchronization Failure"
+msgstr "Shopee: การซิงโครไนซ์ฉลากการจัดส่งล้มเหลว"
+
+#. module: sale_shopee
+#: model:ir.actions.server,name:sale_shopee.ir_cron_sync_shopee_pickings_retry_ir_actions_server
+msgid "Shopee: retry sync shipping labels"
+msgstr "Shopee: ลองซิงค์ฉลากการจัดส่งอีกครั้ง"
+
+#. module: sale_shopee
+#: model:ir.actions.server,name:sale_shopee.ir_cron_sync_shopee_inventory_ir_actions_server
+msgid "Shopee: sync inventory"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.actions.server,name:sale_shopee.ir_cron_sync_shopee_orders_ir_actions_server
+msgid "Shopee: sync orders"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.actions.server,name:sale_shopee.ir_cron_sync_shopee_pickings_ir_actions_server
+msgid "Shopee: sync shipping labels"
+msgstr ""
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_account.py:0
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_account__shop_ids
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_account_view_form
+msgid "Shops"
+msgstr "ร้านค้า"
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__status
+msgid "Status"
+msgstr "สถานะ"
+
+#. module: sale_shopee
+#: model:ir.model.fields.selection,name:sale_shopee.selection__stock_picking__shopee_label_status__stored
+msgid "Stored"
+msgstr "ชื่อไฟล์ที่จัดเก็บ"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Sync Inventory"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Sync Orders"
+msgstr "ซิงค์คำสั่ง"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Synchronization Information"
+msgstr ""
+
+#. module: sale_shopee
+#: model:mail.template,subject:sale_shopee.inventory_sync_failure
+msgid "Synchronization of Shopee inventory has failed"
+msgstr ""
+
+#. module: sale_shopee
+#: model:mail.template,subject:sale_shopee.order_sync_failure
+msgid ""
+"Synchronization of Shopee order {{ ctx.get('shopee_order_ref') }} has failed"
+msgstr "การซิงโครไนซ์คำสั่งซื้อ Shopee {{ ctx.get('shopee_order_ref') }} ล้มเหลว"
+
+#. module: sale_shopee
+#: model:mail.template,subject:sale_shopee.picking_sync_failure
+msgid "Synchronization of shipping labels has failed"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_shop__synchronize_inventory
+msgid "Synchronize Inventory"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,field_description:sale_shopee.field_shopee_item__sync_to_shopee
+msgid "Synchronize Inventory to Shopee"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_account__api_endpoint
+msgid ""
+"The API endpoint to use for the Shopee API calls. There are production and "
+"testing endpoints. Among the endpoints, choose the one that is "
+"geographically closest to the marketplace you are targeting."
+msgstr ""
+"จุดสิ้นสุดของ API ที่จะใช้สำหรับการเรียกใช้ API ของ Shopee "
+"มีจุดสิ้นสุดสำหรับการผลิตและการทดสอบ ในบรรดาจุดสิ้นสุด "
+"ให้เลือกจุดสิ้นสุดที่ใกล้กับตลาดเป้าหมายของคุณมากที่สุด"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_sale_order__shopee_shop_id
+msgid "The Shopee shop from which the order was placed."
+msgstr "ร้านค้า Shopee ที่ทำการสั่งซื้อ"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_sale_order__shopee_order_ref
+#: model:ir.model.fields,help:sale_shopee.field_stock_picking__shopee_order_ref
+msgid "The Shopee-defined order reference."
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__team_id
+msgid "The default Sales Team assigned to Shopee orders for reporting"
+msgstr "ทีมขายเริ่มต้นที่กำหนดให้กับคำสั่งซื้อของ Shopee สำหรับการรายงาน"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__user_id
+msgid "The default salesperson assigned to Shopee orders"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__last_orders_sync_date
+msgid ""
+"The last time the orders were synchronized with Shopee. Orders whose status "
+"has not changed since this date will not be created nor updated in Odoo."
+msgstr ""
+"ครั้งสุดท้ายที่คำสั่งซื้อถูกซิงโครไนซ์กับ Shopee "
+"คำสั่งซื้อที่สถานะไม่เปลี่ยนแปลงตั้งแต่วันที่นี้จะไม่ถูกสร้างหรืออัปเดตใน Odoo"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_stock_picking__last_picking_sync_date
+msgid "The last time the picking was synchronized with Shopee."
+msgstr "ครั้งสุดท้ายที่การเลือกถูกซิงโครไนซ์กับ Shopee"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__last_shop_status_sync_date
+msgid "The last time the shop status was synchronized with Shopee"
+msgstr "ครั้งสุดท้ายที่สถานะร้านค้าซิงโครไนซ์กับ Shopee"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/controllers/onboarding.py:0
+msgid "The request signature is not valid."
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__status
+msgid ""
+"The shop status on Shopee.- Inactive: The shop is not yet approved by "
+"Shopee.- Active: The shop is active and can be synchronized with Odoo.- "
+"Error: The shop is banned and cannot be synchronized with Odoo."
+msgstr ""
+"สถานะร้านค้าบน Shopee - ปิดใช้งาน: ร้านค้ายังไม่ได้รับการอนุมัติจาก Shopee - เปิดใช้งาน: "
+"ร้านค้าเปิดใช้งานอยู่และสามารถซิงโครไนซ์กับ Odoo ได้ - ข้อผิดพลาด: "
+"ร้านค้าถูกแบนและไม่สามารถซิงโครไนซ์กับ Odoo ได้"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_sale_order__shopee_delivery_status
+#: model:ir.model.fields,help:sale_shopee.field_stock_picking__shopee_delivery_status
+msgid ""
+"The status of the delivery order on Shopee:\n"
+"- Ready to Ship: Seller can arrange shipment.\n"
+"- Shipment Arranged: Seller has arranged shipment online and got tracking "
+"number from 3PL.\n"
+"- Shipped: The parcel has been dropped at 3PL or picked up by 3PL.\n"
+"- Cancelled: The order has been cancelled.\n"
+"- Pickup Failed: 3PL parcel pickup failed. Need to rearrange shipment."
+msgstr ""
+"สถานะคำสั่งซื้อการจัดส่งบน Shopee:\n"
+"- พร้อมส่ง: ผู้ขายสามารถจัดเตรียมการจัดส่งได้\n"
+"- จัดส่งเรียบร้อยแล้ว: ผู้ขายจัดเตรียมการจัดส่งทางออนไลน์และได้รับหมายเลขติดตามจาก 3PL\n"
+"- จัดส่งแล้ว: พัสดุถูกส่งไปที่ 3PL หรือ 3PL รับสินค้าเอง\n"
+"- ยกเลิก: ยกเลิกคำสั่งซื้อแล้ว\n"
+"- การรับสินค้าล้มเหลว: การรับพัสดุของ 3PL ล้มเหลว ต้องจัดเตรียมการจัดส่งใหม่"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_stock_picking__shopee_label_status
+msgid ""
+"The status of the shipping label:\n"
+"- Not Available: The shipping label is not available yet.\n"
+"- Processing: The shipping label is being processed.\n"
+"- Ready: The shipping label is ready to be downloaded.\n"
+"- Stored: The shipping label has been downloaded and stored.\n"
+"- Failed: The shipping label creation failed."
+msgstr ""
+"สถานะของฉลากการจัดส่ง:\n"
+"- ไม่พร้อมใช้งาน: ฉลากการจัดส่งยังไม่พร้อมใช้งาน\n"
+"- กำลังดำเนินการ: ฉลากการจัดส่งกำลังได้รับการดำเนินการ\n"
+"- พร้อม: ฉลากการจัดส่งพร้อมที่จะดาวน์โหลดแล้ว\n"
+"- จัดเก็บแล้ว: ฉลากการจัดส่งได้รับการดาวน์โหลดและจัดเก็บแล้ว\n"
+"- ล้มเหลว: การสร้างฉลากการจัดส่งล้มเหลว"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__fbs_location_id
+msgid ""
+"The stock location managed by Shopee under the Fulfilled by Shopee (FBS) "
+"program."
+msgstr "ตำแหน่งสต็อกที่จัดการโดย Shopee ภายใต้โปรแกรม Fulfilled by Shopee (FBS)"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_account__name
+msgid "The user-defined name of the account."
+msgstr "ชื่อบัญชีที่ผู้ใช้กำหนด"
+
+#. module: sale_shopee
+#: model:ir.model.constraint,message:sale_shopee.constraint_sale_order_unique_shopee_order_ref_shopee_shop_id
+msgid ""
+"There can only exist one sale order for a given Shopee Order Reference per "
+"Shop."
+msgstr "สามารถมีคำสั่งซื้อได้เพียงหนึ่งรายการสำหรับการอ้างอิงคำสั่งซื้อ Shopee ต่อร้านค้าเท่านั้น"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Tokens"
+msgstr ""
+
+#. module: sale_shopee
+#: model:ir.model,name:sale_shopee.model_stock_picking
+msgid "Transfer"
+msgstr "โอน"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "Unknown Promotion Type"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "Update Shop"
+msgstr ""
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_account.py:0
+msgid "Warning"
+msgstr "คำเตือน"
+
+#. module: sale_shopee
+#: model:ir.model.fields,help:sale_shopee.field_shopee_shop__synchronize_inventory
+msgid ""
+"Whether the available quantities of products linked to this shop are  "
+"synchronized with Shopee. Only products available in FBM or hybrid will be "
+"synchronized."
+msgstr ""
+"จำนวนสินค้าที่พร้อมจำหน่ายที่ลิงก์กับร้านค้านี้จะถูกซิงค์กับ Shopee หรือไม่ เฉพาะสินค้าที่มีจำหน่ายใน "
+"FBM หรือไฮบริดเท่านั้นที่จะซิงโครไนซ์ได้"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/controllers/onboarding.py:0
+msgid "You are not allowed to access this page."
+msgstr ""
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid "[%(sku)s] %(product_name)s"
+msgstr "[%(sku)s] %(product_name)s"
+
+#. module: sale_shopee
+#. odoo-python
+#: code:addons/sale_shopee/models/shopee_shop.py:0
+msgid ""
+"[%(sku)s] %(product_title)s\n"
+"Promotion: %(promotion_type)s - id: %(promotion_id)d"
+msgstr ""
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_account_view_form
+msgid "e.g. American Market"
+msgstr "เช่น ตลาดอเมริกา"
+
+#. module: sale_shopee
+#: model_terms:ir.ui.view,arch_db:sale_shopee.shopee_shop_view_form
+msgid "e.g. Indonesian Shop"
+msgstr ""

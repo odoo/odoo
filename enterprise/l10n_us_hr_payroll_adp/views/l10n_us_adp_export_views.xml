@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_us_adp_export_view_form" model="ir.ui.view">
+        <field name="name">l10n.us.adp.export.view.form</field>
+        <field name="model">l10n.us.adp.export</field>
+        <field name="arch" type="xml">
+            <form string="W2 Form">
+                <header>
+                    <button name="action_generate_csv" string="Generate" type="object" class="btn btn-primary" invisible="csv_file"/>
+                    <button name="action_generate_csv" string="Generate" type="object" class="btn btn-secondary" invisible="not csv_file"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_open_work_entries" icon="fa-calendar">
+                            <span>Work entries</span>
+                        </button>
+                    </div>
+                    <div>
+                        This wizard will generate a CSV file containing relevant Paydata information for importing into ADP.
+                        By default, validated work entries for the selected period will be displayed below.
+                        Use the "Add a line" option, at the bottom of the list, to add necessary work entries to the report.
+                        The information extracted comes from work entries, employee master data, and contract information.
+                    </div>
+                    <div>
+                        <strong>Note:</strong> Information downloaded regarding employee's rate and name is purely informational and will not override what you have already filled in ADP.
+                    </div>
+                    <group class="mt-2" colspan="2">
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="batch_id" placeholder="YYYY-MM-DD-###"/>
+                            <field name="batch_description"/>
+                            <field name="work_entry_ids" invisible="1"/>
+                            <field name="csv_filename" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <p invisible="not csv_file">
+                        Download the CSV file: <field name="csv_file" filename="csv_filename"/>
+                    </p>
+                    <div class="text-center alert alert-warning" role="alert" invisible="not warning_message or warning_message == ''">
+                        <field name="warning_message"/>
+                    </div>
+                    <field name="employee_ids">
+                        <list create="False" edit="false" no_open="1">
+                            <field name="name"/>
+                            <field name="department_id"/>
+                            <field name="l10n_us_adp_code"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_us_adp_export_view_tree" model="ir.ui.view">
+        <field name="name">l10n.us.adp.export.view.list</field>
+        <field name="model">l10n.us.adp.export</field>
+        <field name="arch" type="xml">
+            <list string="ADP Exports">
+                <field name="batch_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_us_adp_export_action" model="ir.actions.act_window">
+        <field name="name">Export to ADP</field>
+        <field name="res_model">l10n.us.adp.export</field>
+        <field name="view_mode">list,form</field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_us_adp_export"
+        name="ADP Export"
+        action="l10n_us_adp_export_action"
+        parent="l10n_us_hr_payroll.menu_reporting_l10n_us"
+        sequence="95"/>
+</odoo>

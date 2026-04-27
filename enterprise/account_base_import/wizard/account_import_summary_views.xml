@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_import_summary_form" model="ir.ui.view">
+        <field name="name">account.import.summary.form</field>
+        <field name="model">account.import.summary</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="import_summary_account_ids" invisible="1"/>
+                    <field name="import_summary_journal_ids" invisible="1"/>
+                    <field name="import_summary_move_ids" invisible="1"/>
+                    <field name="import_summary_partner_ids" invisible="1"/>
+                    <field name="import_summary_tax_ids" invisible="1"/>
+                    <field name="import_summary_have_data" invisible="1"/>
+                    <h4>Imported Data</h4>
+                    <hr/>
+                    <ul class="o_import_summary">
+                        <li invisible="not import_summary_account_ids">
+                            <a name="action_open_account_view" type="object">
+                                <field name="import_summary_len_account" readonly="1"/> accounts imported
+                            </a>
+                        </li>
+                        <li invisible="not import_summary_journal_ids">
+                            <a name="action_open_journal_view" type="object">
+                                <field name="import_summary_len_journal" readonly="1"/> journals imported
+                            </a>
+                        </li>
+                        <li invisible="not import_summary_move_ids">
+                            <a name="action_open_move_view" type="object">
+                                <field name="import_summary_len_move" readonly="1"/> moves imported
+                            </a>
+                        </li>
+                        <li invisible="not import_summary_partner_ids">
+                            <a name="action_open_partner_view" type="object">
+                                <field name="import_summary_len_partner" readonly="1"/> partners imported
+                            </a>
+                        </li>
+                        <li invisible="not import_summary_tax_ids">
+                            <a name="action_open_tax_view" type="object">
+                                <field name="import_summary_len_tax" readonly="1"/> taxes imported
+                            </a>
+                        </li>
+                    </ul>
+                    <div invisible="import_summary_have_data" class="text-muted">
+                        No data was imported.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

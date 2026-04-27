@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="planning_slot_report_view_search_inherit_planning_holidays" model="ir.ui.view">
+        <field name="name">planning.slot.report.search.inherit.planning.holidays</field>
+        <field name="model">planning.analysis.report</field>
+        <field name="inherit_id" ref="planning.planning_analysis_report_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="is_absent" position="replace"/>
+        </field>
+    </record>
+
+</odoo>

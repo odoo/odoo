@@ -1,0 +1,121 @@
+.journal_report_pdf {
+    font-family: 'Verdana';
+    margin: 20px;
+
+    header {
+        width: 100%;
+        padding: 50px 20px;
+
+        .o_header_font {
+            font-size: 0.8rem;
+        }
+
+        .o_title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .o_subtitle {
+            font-size: 1.2rem;
+            font-weight: medium;
+            text-align: center;
+            color: $o-gray-700;
+            margin-bottom: 15px;
+        }
+    }
+
+    .o_table {
+        width: 100%;
+        direction: ltr;
+        font-size: 0.6rem;
+        white-space: nowrap;
+
+        thead, tbody, tfoot, tr, td, th { border-style: none }
+
+        td, th {
+            padding: 6px 10px 3px;
+            vertical-align: text-top;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        .o_right_alignment {
+            text-align: right;
+        }
+
+        .o_muted {
+            color: $o-gray-500;
+        }
+
+        > thead {
+            background-color: $o-gray-200;
+
+            tr > th:nth-child(3) {
+                width: 50%;
+                max-width: 50%;
+            }
+        }
+
+        > tbody {
+
+            tr > td:nth-child(3) {
+                white-space: normal;
+                overflow-wrap: break-word;
+            }
+
+            tr:last-child {
+                font-weight: bold;
+                border-top: 1px solid $o-gray-200;
+            }
+        }
+    }
+
+    .tax_summary {
+        width: 100%;
+
+        > div > div {
+            padding: 2px 15px;
+        }
+
+        .o_table > tbody > tr:last-child {
+            font-weight: normal;
+            border: 0;
+        }
+
+        .o_table > thead > tr > th:nth-child(3) {
+            width: auto;
+            max-width: fit-content;
+        }
+    }
+
+    ///////////////////////////////////////////////
+    ///     Global
+    //////////////////////////////////////////////
+
+    .o_section_title {
+        width: 100%;
+
+        font-size: 1.5rem;
+        font-weight: 500;
+        text-align: center;
+        color: $o-gray-700;
+
+        margin-bottom: 10px;
+    }
+
+    .o_section_subtitle {
+        font-size: 1rem;
+        font-weight: 300;
+        margin-top: 50px;
+    }
+
+    .o_even {
+        background-color: $o-gray-200;
+    }
+
+    .o_bold {
+        font-weight: bold;
+    }
+}

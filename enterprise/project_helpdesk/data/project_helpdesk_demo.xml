@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="task_to_ticket_wizard" model="project.task.convert.wizard">
+            <field name="team_id" ref="helpdesk.helpdesk_team1"/>
+            <field name="stage_id" ref="helpdesk.stage_new"/>
+        </record>
+
+        <record id="ticket_to_task_wizard" model="helpdesk.ticket.convert.wizard">
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="stage_id" ref="project.project_stage_0"/>
+        </record>
+
+        <record id="project_helpdesk_task_1" model="project.task">
+            <field name="name">Install High-speed Internet</field>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="stage_id" ref="project.project_stage_2"/>
+            <field name="state">1_done</field>
+            <field name="partner_id" ref="base.partner_demo_portal"/>
+        </record>
+
+        <record id="project_helpdesk_task_1_message_1" model="mail.message">
+            <field name="model">project.task</field>
+            <field name="res_id" ref="project_helpdesk_task_1"/>
+            <field name="body">Hello, the connection was working fine last week, but I'm having issues today.
+                Could you look into it? Thanks!
+            </field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_demo_portal"/>
+        </record>
+
+        <record id="project_helpdesk_task_1_message_2" model="mail.message">
+            <field name="model">project.task</field>
+            <field name="res_id" ref="project_helpdesk_task_1"/>
+            <field name="body">Hello Joel Willis, I'm sorry to hear that your connection is net working.
+                I was unable to troubleshoot the issue remotely, but I will forward it to our technical support team and they will address it ASAP.
+            </field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+        </record>
+
+        <function model="project.task.convert.wizard" name="action_convert" context="{'to_convert': [ref('project_helpdesk_task_1')]}">
+            <value model="project.task.convert.wizard" eval="obj().env.ref('project_helpdesk.task_to_ticket_wizard').id"/>
+        </function>
+
+        <record id="project_helpdesk_ticket_1" model="helpdesk.ticket">
+            <field name="name">Wrong paint color!!</field>
+            <field name="team_id" ref="helpdesk.helpdesk_team1"/>
+            <field name="partner_id" ref="base.partner_demo_portal"/>
+            <field name="description">I was very displeased to catch one of your employees red-handed painting the walls of the first room with orange. I didn't give the green light for this, I even specifically blacklisted that color!</field>
+        </record>
+
+        <record id="project_helpdesk_ticket_1_message_1" model="mail.message">
+            <field name="model">helpdesk.ticket</field>
+            <field name="res_id" ref="project_helpdesk_ticket_1"/>
+            <field name="body">Hello Joel Willis,
+                I am very sorry to hear about this situation. I doubt our employee did that out of the blue, there must be some gray area in the specification.
+                Rest assured that we will do our best to resolve this.
+            </field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_admin"/>
+        </record>
+
+        <record id="project_helpdesk_ticket_1_message_2" model="mail.message">
+            <field name="model">helpdesk.ticket</field>
+            <field name="res_id" ref="project_helpdesk_ticket_1"/>
+            <field name="body">Enough of your white lies, I was very clear! I see you are starting to show your true colors...</field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_demo_portal"/>
+        </record>
+
+        <record id="project_helpdesk_ticket_1_message_3" model="mail.message">
+            <field name="model">helpdesk.ticket</field>
+            <field name="res_id" ref="project_helpdesk_ticket_1"/>
+            <field name="body">I will make this a priority task, let's fix this hue-ge mistake before the customer sees red!</field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_note"/>
+            <field name="author_id" ref="base.partner_admin"/>
+        </record>
+
+        <function model="helpdesk.ticket.convert.wizard" name="action_convert" context="{'to_convert': [ref('project_helpdesk_ticket_1')]}">
+            <value model="helpdesk.ticket.convert.wizard" eval="obj().env.ref('project_helpdesk.ticket_to_task_wizard').id"/>
+        </function>
+
+        <function model="project.task" name="write">
+            <value model="project.task" eval="obj().search([], order='id desc', limit=1).id"/>
+            <value eval="{'priority': '1'}"/>
+        </function>
+    </data>
+</odoo>

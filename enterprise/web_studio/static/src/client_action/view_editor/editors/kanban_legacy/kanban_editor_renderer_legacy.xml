@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web_studio.KanbanEditorRendererLegacy" t-inherit="web.KanbanRenderer" >
+  <xpath expr="//KanbanHeader" position="replace" />
+
+  <!--   Demo kanban records ungrouped -->
+  <xpath expr="//div[contains(@class, 'o_kanban_ghost')]" position="before">
+    <t t-call="web_studio.KanbanEditorRenderer.KanbanDemoRecordsLegacy">
+      <t t-set="demoAmount" t-value="6" />
+    </t>
+  </xpath>
+
+  <!--   Demo kanban records grouped -->
+  <xpath expr="//div[contains(@class, 'o_kanban_group')]" position="after" >
+    <div class="o_kanban_group flex-shrink-0 flex-grow-1 flex-md-grow-0">
+      <div class="o_kanban_header top-0 py-3" />
+      <t t-call="web_studio.KanbanEditorRenderer.KanbanDemoRecordsLegacy">
+        <t t-set="demoAmount" t-value="7" />
+        <t t-set="additionalClass" t-value="'mt-2'" />
+      </t>
+    </div>
+  </xpath>
+  <xpath expr="//t[@t-foreach='group.list.records']" position="inside">
+    <t t-call="web_studio.KanbanEditorRenderer.KanbanDemoRecordsLegacy">
+      <t t-set="demoAmount" t-value="6" />
+      <t t-set="additionalClass" t-value="'mt-2'" />
+    </t>
+  </xpath>
+</t>
+
+<t t-name="web_studio.KanbanEditorRenderer.KanbanDemoRecordsLegacy" >
+  <div t-foreach="new Array(demoAmount)" t-as="d" t-key="d_index" class="o_kanban_record o_kanban_demo opacity-50 d-flex flex-grow-1 flex-md-shrink-1 flex-shrink-0" t-attf-class="{{ additionalClass }}">
+      <div class="flex-grow-1"/>
+  </div>
+</t>
+
+</templates>

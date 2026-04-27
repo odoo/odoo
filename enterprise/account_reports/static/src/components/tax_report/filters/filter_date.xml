@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.TaxReportFilterDate" t-inherit="account_reports.AccountReportFilterDate">
+        <xpath expr="//t[last()]/t[@t-call='account_reports.AccountReportFilterDateSelection']" position="before">
+            <DropdownItem
+            t-if="this.controller.options.show_tax_period_filter"
+            class="{ 'd-flex justify-content-between date_filter': true, 'selected': (this.isPeriodSelected('tax_period')) }"
+            onSelected="() => this.selectDateFilter('tax_period', controller.options.date.period_type != 'tax_period')"
+            closingMode="'none'"
+            >
+                <div class="filter_name pe-3">
+                    Tax Period
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <button
+                        class="btn_previous_date fa fa-caret-left"
+                        t-on-click="() => this.selectPreviousPeriod('tax_period')"
+                    />
+                    <time class="d-flex justify-content-center" style="min-width: 120px;">
+                        <t t-out="this.displayPeriod('tax_period')"/>
+                    </time>
+                    <button
+                    class="btn_next_date fa fa-caret-right"
+                    t-on-click="() => this.selectNextPeriod('tax_period')"
+                    />
+                </div>
+            </DropdownItem>
+            <div id="filter_date_divider_range_period" class="dropdown-divider"/>
+        </xpath>
+    </t>
+</templates>

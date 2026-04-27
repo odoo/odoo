@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_yearly_salary_detail" model="ir.ui.view">
+            <field name="name">Employee Yearly Salary</field>
+            <field name="model">yearly.salary.detail</field>
+            <field name="arch" type="xml">
+            <form string="Pay Head Employee Breakup">
+                <span class="o_form_label">This wizard will print for employees with paid payslips on the selected year.</span>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="btn-primary disabled" data-hotkey="q" invisible="employee_ids"/>
+                    <button name="print_report" string="Print" type="object" class="btn-primary" data-hotkey="q" invisible="not employee_ids"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
+                </footer>
+                <group class="mt-4">
+                    <group>
+                        <field name="year"/>
+                        <field name="department_id"/>
+                    </group>
+                    <group>
+                        <field name="job_id"/>
+                    </group>
+                </group>
+                    <group>
+                        <separator string="Employees" />
+                        <field name="employee_ids" nolabel="1" colspan="2" context="{'list_view_ref' : 'l10n_in_hr_payroll.hr_employee_tree_inherit'}"
+                                domain="[('id', 'in', related_employee_ids)]">
+                            <list no_open="True" create="False">
+                                <field name="name" string="Employee Name"/>
+                                <field name="registration_number" string="Employee Code"/>
+                                <field name="department_id" string="Department"/>
+                                <field name="job_id" string="Job Position"/>
+                            </list>
+                        </field>
+                    </group>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_yearly_salary_detail" model="ir.actions.act_window">
+            <field name="name">Yearly Salary by Employee</field>
+            <field name="res_model">yearly.salary.detail</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            name="Yearly Salary by Employee"
+            parent="l10n_in_hr_payroll.menu_reporting_l10n_in"
+            action="action_yearly_salary_detail"
+            sequence="250"
+            id="menu_yearly_salary_detail"
+            groups="hr_payroll.group_hr_payroll_manager,hr_payroll.group_hr_payroll_user"
+           />
+</odoo>

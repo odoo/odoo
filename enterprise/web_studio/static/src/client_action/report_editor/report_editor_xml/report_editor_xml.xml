@@ -1,0 +1,24 @@
+<templates>
+
+<t t-name="web_studio.ReportEditorXml">
+    <XmlResourceEditor mainResourceId="reportEditorModel.reportData.report_name" onClose.bind="onCloseXmlEditor" onCodeChange.bind="onXmlChanged" canSave="false" minWidth="minWidth" reloadSources="state.reloadSources" onResourceChange.bind="onResourceChanged" displayAlerts="false" getDefaultResource.bind="getDefaultResource">
+        <t t-set-slot="additionalControlButtons" t-slot-scope="xmlEditor">
+            <div class="d-flex">
+                <TranslationButton resourceId="xmlEditor.currentResourceId" />
+                <button class="btn btn-link p-0" name="view_diff" t-on-click="() => this.switchToDiff(xmlEditor.currentResourceId)" t-if="env.debug and !this.state.viewIdToDiff" type="button" data-tooltip="See what changes have been made to this view">DIFF</button >
+                <button class="btn btn-link p-0" name="leave_view_diff" t-on-click="() => this.switchToDiff(null)" t-if="state.viewIdToDiff" type="button">Leave DIFF</button>
+            </div>
+        </t>
+    </XmlResourceEditor>
+    <div class="h-100 w-100 position-relative overflow-hidden" t-if="!this.state.viewIdToDiff">
+        <div class="position-absolute top-0 end-0 me-5 mt-4" style="z-index: 1050;" >
+            <ReportRecordNavigation />
+        </div>
+        <ReportEditorIframe iframeKey="reportEditorModel.reportHtml" iframeSource="reportEditorModel.reportHtml" onIframeLoaded.bind="onIframeLoaded" />
+    </div>
+    <div class="w-100 h-100 p-3 overflow-auto" t-if="this.state.viewIdToDiff">
+        <View t-props="diffProps" className="'shadow'" t-key="state.reloadSources"/>
+    </div>
+</t>
+
+</templates>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_product_template_form" model="ir.ui.view">
+            <field name="name">product.template.form.inherit.iap</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <group name="sale" position="after">
+                    <group name="l10n_br_avatax_summary" string="Brazil Accounting" invisible="'BR' not in fiscal_country_codes">
+                        <field name="l10n_br_cest_code" invisible="'BR' not in fiscal_country_codes or type == 'service'"/>
+                        <label for="l10n_br_ncm_code_id" string="Mercosul NCM Code" invisible="type == 'service'"/>
+                        <label for="l10n_br_ncm_code_id" string="LC116 Code" invisible="type != 'service'"/>
+                        <field name="l10n_br_ncm_code_id" invisible="'BR' not in fiscal_country_codes" nolabel="1"/>
+                        <field name="l10n_br_source_origin" invisible="'BR' not in fiscal_country_codes or type == 'service'"/>
+                        <field name="l10n_br_sped_type" invisible="'BR' not in fiscal_country_codes or type == 'service'"/>
+                        <field name="l10n_br_use_type" invisible="'BR' not in fiscal_country_codes"/>
+                        <field name="l10n_br_company_city_id" invisible="1"/>
+                        <field name="l10n_br_property_service_code_origin_id"
+                            invisible="'BR' not in fiscal_country_codes or type != 'service'"
+                            context="{'default_city_id': l10n_br_company_city_id}"
+                            options="{'no_create_edit': True}"/>
+                        <field name="l10n_br_labor" invisible="'BR' not in fiscal_country_codes or type != 'service'"/>
+                        <field name="l10n_br_transport_cost_type" invisible="type != 'service' or 'BR' not in fiscal_country_codes"/>
+                        <field name="l10n_br_service_code_ids" invisible="'BR' not in fiscal_country_codes or type != 'service'"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+    </data>
+</odoo>

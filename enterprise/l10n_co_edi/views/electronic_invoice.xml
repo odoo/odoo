@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="tim_section">
+            <TIM t-foreach="tim_sections" t-as="tim_section">
+                <TIM_1 t-out="tim_section['TIM_1']"/>
+                <TIM_2 t-out="format_float(tim_section['TIM_2'], 2)"/>
+                <TIM_3 t-out="tim_section['TIM_3']"/>
+                <TIM_4 t-out="format_float(tim_section['TIM_4'], 3)"/>
+                <TIM_5 t-out="tim_section['TIM_5']"/>
+                <IMP t-foreach="tim_section['IMPS']" t-as="tim_imp_section">
+                    <IMP_1 t-out="tim_imp_section['IMP_1']"/>
+                    <IMP_2 t-out="format_float(tim_imp_section['IMP_2'], 2)"/>
+                    <IMP_3 t-out="tim_imp_section['IMP_3']"/>
+                    <IMP_4 t-out="format_float(tim_imp_section['IMP_4'], 2)"/>
+                    <IMP_5 t-out="tim_imp_section['IMP_5']"/>
+                    <IMP_6 t-out="format_float(tim_imp_section['IMP_6'], tim_imp_section['IMP_6_dp'])"/>
+                    <IMP_7 t-out="tim_imp_section['IMP_7']"/>
+                    <IMP_8 t-out="tim_imp_section['IMP_8']"/>
+                    <IMP_9 t-out="tim_imp_section['IMP_9']"/>
+                    <IMP_10 t-out="tim_imp_section['IMP_10']"/>
+                    <IMP_11 t-out="tim_imp_section['IMP_11']"/>
+                </IMP>
+            </TIM>
+        </template>
+
+        <template id="tii_section">
+            <TII t-foreach="tii_sections" t-as="tii_section">
+                <TII_1 t-out="format_monetary(tii_section['TII_1'], currency)"/>
+                <TII_2 t-out="tii_section['TII_2']"/>
+                <TII_3 t-out="tii_section['TII_3']"/>
+                <TII_4 t-out="format_float(tii_section['TII_4'], 3)"/>
+                <TII_5 t-out="tii_section['TII_5']"/>
+                <IIM>
+                    <IIM_1 t-out="tii_section['IIM_1']"/>
+                    <IIM_2 t-out="format_monetary(tii_section['IIM_2'], currency)"/>
+                    <IIM_3 t-out="tii_section['IIM_3']"/>
+                    <IIM_4 t-out="format_monetary(tii_section['IIM_4'], currency)"/>
+                    <IIM_5 t-out="tii_section['IIM_5']"/>
+                    <IIM_6 t-out="tii_section['IIM_6']"/>
+                    <IIM_7 t-out="tii_section['IIM_7']"/>
+                    <IIM_8 t-out="tii_section['IIM_8']"/>
+                    <IIM_9 t-out="format_float(tii_section['IIM_9'], 2)"/>
+                    <IIM_10 t-out="tii_section['IIM_10']"/>
+                    <IIM_11 t-out="tii_section['IIM_11']"/>
+                </IIM>
+            </TII>
+        </template>
+        <template id="electronic_invoice_body">
+            <ENC>
+                <ENC_1 t-out="invoice._l10n_co_edi_get_electronic_invoice_type()"/>
+                <ENC_2 t-out="company_partner._get_vat_without_verification_code()"/>
+                <ENC_3 t-out="invoice_partner._get_vat_without_verification_code()"/>
+                <ENC_4>UBL 2.1</ENC_4>
+                <ENC_5 t-out="invoice._l10n_co_edi_get_electronic_invoice_type_info()"/>
+                <ENC_6 t-out="invoice.name"/>
+                <ENC_7 t-out="invoice.invoice_date"/>
+                <ENC_8 t-out="validation_time"/>
+                <ENC_9 t-out="edi_type"/>
+                <ENC_10 t-out="invoice.company_currency_id.name"/>
+                <ENC_11 t-if="invoice.l10n_co_edi_operation_type in ['22', '32']"
+                        t-out="'%sT%s' % (invoice.invoice_date, validation_time)"/>
+                <ENC_12 t-if="invoice.l10n_co_edi_operation_type in ['22', '32']"
+                        t-out="'%sT%s' % (invoice.invoice_date, validation_time)"/>
+                <ENC_15 t-out="len(invoice.invoice_line_ids.filtered(lambda line: line.display_type == 'product'))"/>
+                <ENC_16 t-out="invoice.invoice_date_due"/>
+                <ENC_17 t-out="invoice.l10n_co_edi_attachment_url"/>
+                <ENC_20 t-out="'2' if invoice.company_id.l10n_co_edi_test_mode else '1'"/>
+                <ENC_21 t-out="invoice.l10n_co_edi_operation_type"/>
+            </ENC>
+
+            <EMI>
+                <EMI_1 t-out="company_partner._l10n_co_edi_get_partner_type()"/>
+                <EMI_2 t-out="company_partner._get_vat_without_verification_code()"/>
+                <EMI_3 t-out="company_partner._l10n_co_edi_get_carvajal_code_for_identification_type()"/>
+                <EMI_4 t-out="company_partner._l10n_co_edi_get_fiscal_regimen_code()"/>
+                <EMI_6 t-out="company_partner.display_name"/>
+                <EMI_7 t-out="company_partner.l10n_co_edi_commercial_name or company_partner.name"/>
+                <EMI_8/>
+                <EMI_9/>
+                <EMI_10 t-out="company_partner._l10n_co_edi_get_company_address()"/>
+                <EMI_11 t-out="str(company_partner.state_id.l10n_co_edi_code).zfill(2)"/>
+                <EMI_12/>
+                <EMI_13 t-out="company_partner.city_id.name"/>
+                <EMI_14 t-out="company_partner.zip"/>
+                <EMI_15 t-out="company_partner.country_id.code"/>
+                <EMI_18/>
+                <EMI_19 t-out="company_partner.state_id.name"/>
+                <EMI_21 t-out="company_partner.country_id.name"/>
+                <EMI_22 t-out="company_partner._get_vat_verification_code()"/>
+                <EMI_23 t-out="str(company_partner.city_id.l10n_co_edi_code).zfill(5)"/>
+                <EMI_24 t-out="company_partner.l10n_co_edi_commercial_name or company_partner.name"/>
+
+                <TAC>
+                    <TAC_1 t-out="';'.join(company_partner.l10n_co_edi_obligation_type_ids.mapped('name'))"/>
+                </TAC>
+
+                <ICC>
+                    <ICC_1/>
+                    <ICC_9 t-out="invoice.sequence_prefix"/>
+                </ICC>
+
+                <DFE>
+                    <DFE_1 t-out="str(company_partner.city_id.l10n_co_edi_code).zfill(5)"/>
+                    <DFE_2 t-out="str(company_partner.state_id.l10n_co_edi_code).zfill(2)"/>
+                    <DFE_3 t-out="company_partner.country_id.code"/>
+                    <DFE_4 t-out="company_partner.zip"/>
+                    <DFE_5 t-out="company_partner.country_id.name"/>
+                    <DFE_6 t-out="company_partner.state_id.name"/>
+                    <DFE_7 t-out="company_partner.city_id.name"/>
+                    <DFE_8/>
+                </DFE>
+
+                <GTE>
+                    <GTE_1 t-out="company_partner._l10n_co_edi_get_fiscal_regimen_code()"/>
+                    <GTE_2 t-out="company_partner._l10n_co_edi_get_fiscal_regimen_name()"/>
+                </GTE>
+
+                <CDE>
+                    <CDE_1 t-out="'2' if sales_partner.type == 'delivery' else '1'"/>
+                    <CDE_2 t-out="sales_partner.function[:30] if sales_partner.function else 'Representante de Ventas'"/>
+                    <CDE_3 t-out="format_domestic_phone_number(company_partner.phone)"/>
+                    <CDE_4 t-out="company_partner.email"/>
+                </CDE>
+            </EMI>
+            <ADQ>
+                <ADQ_1 t-out="invoice_partner._l10n_co_edi_get_partner_type()"/>
+                <ADQ_2 t-out="invoice_partner._get_vat_without_verification_code()"/>
+                <ADQ_3 t-out="invoice_partner._l10n_co_edi_get_carvajal_code_for_identification_type()"/>
+                <ADQ_4 t-out="'No Aplica' if invoice_partner.vat != '222222222222' else invoice_partner.l10n_co_edi_fiscal_regimen"/>
+                <ADQ_5 t-out="invoice_partner.ref"/>
+                <ADQ_6 t-out="invoice_partner.display_name"/>
+                <ADQ_7 t-out="invoice_partner.l10n_co_edi_commercial_name or invoice_partner.name"/>
+                <ADQ_8 t-out="invoice_partner.display_name if invoice_partner._l10n_co_edi_get_partner_type() == '2' else ''"/>
+                <ADQ_10 t-out="invoice_partner._l10n_co_edi_get_company_address()"/>
+                <ADQ_11 t-out="str(invoice_partner.state_id.l10n_co_edi_code).zfill(2)"/>
+                <ADQ_12/>
+                <ADQ_13 t-out="invoice.partner_id.city"/>
+                <ADQ_14 t-out="invoice.partner_id.zip"/>
+                <ADQ_15 t-out="invoice.partner_id.country_id.code"/>
+                <ADQ_18/>
+                <ADQ_19 t-out="invoice.partner_id.state_id.name"/>
+                <ADQ_21 t-out="invoice.partner_id.country_id.name"/>
+                <ADQ_22 t-out="invoice_partner._get_vat_verification_code()"/>
+                <ADQ_23 t-out="str(invoice_partner.city_id.l10n_co_edi_code).zfill(5)"/>
+                <ADQ_24 t-out="invoice_partner._get_vat_without_verification_code()"/>
+                <ADQ_25 t-out="invoice_partner._l10n_co_edi_get_carvajal_code_for_identification_type()"/>
+                <ADQ_26 t-out="invoice_partner._get_vat_verification_code()"/>
+
+                <TCR>
+                    <TCR_1 t-out="'R-99-PN' if invoice_partner.vat == '222222222222'
+                                  else ';'.join(invoice_partner.commercial_partner_id.l10n_co_edi_obligation_type_ids.mapped('name'))"/>
+                </TCR>
+
+                <ILA t-if="invoice_partner.vat != '222222222222'">
+                   <ILA_1 t-out="invoice_partner.display_name"/>
+                   <ILA_2 t-out="invoice_partner._get_vat_without_verification_code()"/>
+                   <ILA_3 t-out="invoice_partner._l10n_co_edi_get_carvajal_code_for_identification_type()"/>
+                   <ILA_4 t-out="invoice_partner._get_vat_verification_code()"/>
+                </ILA>
+
+                <ICR/>
+
+                <DFA t-if="invoice_partner.vat != '222222222222'">
+                    <DFA_1 t-out="invoice_partner.country_id.code"/>
+                    <DFA_2 t-out="str(invoice_partner.state_id.l10n_co_edi_code).zfill(2)"/>
+                    <DFA_3 t-out="invoice_partner.zip"/>
+                    <DFA_4 t-out="str(invoice_partner.city_id.l10n_co_edi_code).zfill(5)"/>
+                    <DFA_5 t-out="invoice_partner.country_id and invoice_partner.country_id.name or 'Colombia'"/>
+                    <DFA_6 t-out="invoice_partner.state_id.name"/>
+                    <DFA_7 t-out="invoice_partner.city"/>
+                    <DFA_8/>
+                </DFA>
+
+                <CDA>
+                    <CDA_1 t-out="'2' if invoice_partner.type == 'delivery' else '1'"/>
+                    <CDA_2 t-out="'%s/%s' % (invoice_partner.name, invoice_partner.function)"/>
+                    <CDA_3 t-out="invoice_partner.phone"/>
+                    <CDA_4 t-out="invoice_partner.email"/>
+                </CDA>
+
+                <GTA>
+                    <t t-if="invoice_partner.vat == '222222222222'">
+                        <GTA_1>ZZ</GTA_1>
+                        <GTA_2>No Aplica</GTA_2>
+                    </t>
+                    <t t-else="">
+                        <GTA_1 t-out="invoice_partner._l10n_co_edi_get_fiscal_regimen_code()"/>
+                        <GTA_2 t-out="invoice_partner._l10n_co_edi_get_fiscal_regimen_name()"/>
+                    </t>
+                </GTA>
+            </ADQ>
+            <TOT>
+                <TOT_1 t-out="format_monetary(-sign * invoice.amount_untaxed_signed, invoice.company_currency_id)"/>
+                <TOT_2 t-out="invoice.company_currency_id.name"/>
+                <TOT_3 t-out="format_monetary(-sign * invoice.amount_untaxed_signed, invoice.company_currency_id)"/>
+                <TOT_4 t-out="invoice.company_currency_id.name"/>
+                <TOT_5 t-out="withholding_amount_company"/>
+                <TOT_6 t-out="invoice.company_currency_id.name"/>
+                <TOT_7 t-out="withholding_amount_company"/>
+                <TOT_8 t-out="invoice.company_currency_id.name"/>
+            </TOT>
+            <t t-call="l10n_co_edi.tim_section">
+                <t t-set="currency" t-value="invoice.company_currency_id"/>
+                <t t-set="tim_sections" t-value="tim_sections_retention"/>
+            </t>
+            <t t-call="l10n_co_edi.tim_section">
+                <t t-set="currency" t-value="invoice.company_currency_id"/>
+                <t t-set="tim_sections" t-value="tim_sections_regular"/>
+            </t>
+            <TDC t-if="invoice.currency_id != invoice.company_currency_id">
+                <TDC_1 t-out="invoice.company_currency_id.name"/>
+                <TDC_2 t-out="invoice.currency_id.name"/>
+                <TDC_3 t-out="currency_rate"/>
+                <TDC_4 t-out="invoice.invoice_date"/>
+                <TDC_5 t-out="currency_rate"/>
+                <TDC_6>1.00</TDC_6>
+            </TDC>
+            <DRF>
+                <DRF_1 t-out="invoice.journal_id.l10n_co_edi_dian_authorization_number"/>
+                <DRF_2 t-out="invoice.journal_id.l10n_co_edi_dian_authorization_date"/>
+                <DRF_3 t-out="invoice.journal_id.l10n_co_edi_dian_authorization_end_date"/>
+                <DRF_4 t-out="invoice.sequence_prefix"/>
+                <DRF_5 t-out="invoice.journal_id.l10n_co_edi_min_range_number"/>
+                <DRF_6 t-out="invoice.journal_id.l10n_co_edi_max_range_number"/>
+            </DRF>
+            <ITD>
+                <ITD_5 t-out="format_monetary(-sign * invoice.amount_total_signed, invoice.company_currency_id)"/>
+                <ITD_6 t-out="invoice.company_currency_id.name"/>
+            </ITD>
+
+            <NOT t-foreach="notas" t-as="nota">
+                <NOT_1 t-out="nota"/>
+            </NOT>
+
+            <ORC>
+                <ORC_1 t-out="invoice.ref and invoice.ref[:35]"/>
+                <ORC_4 t-out="invoice.invoice_origin and invoice.invoice_origin[:35]"/>
+            </ORC>
+
+            <t t-set="origin_invoice" t-value="invoice.reversed_entry_id or invoice.debit_origin_id or False"/>
+            <REF t-if="origin_invoice">
+                <REF_1 t-out="'FTC' if edi_type == '03' else invoice_type_to_ref_1[origin_invoice.move_type]"/>
+                <REF_2 t-out="origin_invoice.name"/>
+                <REF_3 t-out="origin_invoice.date"/>
+                <REF_4 t-out="origin_invoice.l10n_co_edi_cufe_cude_ref"/>
+                <REF_5 t-out="'CUFE-SHA384' if origin_invoice.move_type == 'out_invoice' else 'CUDE-SHA384'"/>
+            </REF>
+
+            <IEN t-if="invoice_partner.vat != '222222222222'">
+                <IEN_1 t-out="shipping_partner.street if shipping_partner else ''"/>
+                <IEN_2 t-out="str(invoice.partner_shipping_id.state_id.l10n_co_edi_code or '').zfill(2)"/>
+                <IEN_3/>
+                <IEN_4 t-out="shipping_partner.city if shipping_partner else ''"/>
+                <IEN_5 t-out="shipping_partner.zip"/>
+                <IEN_6 t-out="shipping_partner.country_id.code if shipping_partner else ''"/>
+                <IEN_7 t-out="invoice_partner.name"/>
+                <IEN_8 t-out="delivery_date"/>
+                <IEN_12 t-out="str(invoice.partner_shipping_id.city_id.l10n_co_edi_code or '').zfill(5)"/>
+                <IEN_22 t-out="shipping_partner.state_id.name"/>
+                <IEN_23 t-out="shipping_partner.country_id.name"/>
+                <IEN_24 t-out="company_partner.lang.split('_')[0] if company_partner.lang and '_' in company_partner.lang else ''"/>
+            </IEN>
+
+            <TDE>
+                <TDE_1 t-out="company_partner.l10n_co_edi_commercial_name or company_partner.name"/>
+                <TDE_2 t-out="company_partner.country_id.code"/>
+                <TDE_3 t-out="str(company_partner.state_id.l10n_co_edi_code).zfill(2)"/>
+                <TDE_4 t-out="company_partner.zip"/>
+                <TDE_5 t-out="str(company_partner.city_id.l10n_co_edi_code).zfill(5)"/>
+                <TDE_6 t-out="company_partner.city_id.name"/>
+                <TDE_7 t-out="company_partner.state_id.name"/>
+                <TDE_8 t-out="company_partner.country_id.name"/>
+                <TDE_9 t-out="company_partner.lang.split('_')[0] if company_partner.lang and '_' in company_partner.lang else ''"/>
+                <TDE_10 t-out="company_partner._l10n_co_edi_get_company_address()"/>
+                <ITT>
+                    <ITT_1 t-out="company_partner.display_name"/>
+                    <ITT_2 t-out="';'.join(company_partner.l10n_co_edi_obligation_type_ids.mapped('name'))"/>
+                    <ITT_3 t-out="company_partner._l10n_co_edi_get_fiscal_regimen_code()"/>
+                    <ITT_4 t-out="company_partner._get_vat_without_verification_code()"/>
+                    <ITT_5 t-out="company_partner._l10n_co_edi_get_carvajal_code_for_identification_type()"/>
+                    <ITT_6 t-out="company_partner._get_vat_verification_code()"/>
+                </ITT>
+                <DFT>
+                    <t t-if="tax_types">
+                        <DFT_1 t-out="tax_types[0].code"/>
+                        <DFT_2 t-out="tax_types[0].name"/>
+                    </t>
+                    <DFT_3 t-out="company_partner.country_id.code"/>
+                    <DFT_4 t-out="str(company_partner.state_id.l10n_co_edi_code).zfill(2)"/>
+                    <DFT_5 t-out="company_partner.zip"/>
+                    <DFT_6 t-out="str(company_partner.city_id.l10n_co_edi_code).zfill(5)"/>
+                    <DFT_7 t-out="company_partner.city_id.name"/>
+                    <DFT_8 t-out="company_partner.state_id.name"/>
+                    <DFT_9 t-out="company_partner.country_id.name"/>
+                    <DFT_10 t-out="company_partner.lang.split('_')[0] if company_partner.lang and '_' in company_partner.lang else ''"/>
+                    <DFT_11 t-out="company_partner._l10n_co_edi_get_company_address()"/>
+                </DFT>
+            </TDE>
+
+            <MEP>
+                <MEP_1 t-out="invoice.l10n_co_edi_payment_option_id.code"/>
+                <MEP_2 t-out="'1' if invoice.l10n_co_edi_is_direct_payment else '2'"/>
+                <MEP_3 t-out="invoice.invoice_date_due if not invoice.l10n_co_edi_is_direct_payment else ''"/>
+            </MEP>
+
+            <CTS>
+                <CTS_1 t-out="invoice.company_id._get_l10n_co_edi_template_code_description()"/>
+            </CTS>
+
+            <CDN>
+                <CDN_1 t-out="description_code"/>
+                <CDN_2 t-out="description"/>
+            </CDN>
+
+            <ITE t-foreach="base_lines" t-as="base_line">
+                    <t t-set="line" t-value="base_line['record']"/>
+                    <ITE_1 t-out="base_line['co_edi_index']"/>
+                    <ITE_2/>
+                    <ITE_3 t-out="line.quantity"/>
+                    <ITE_4 t-out="line.product_uom_id.l10n_co_edi_ubl or '94'"/>
+                    <ITE_5 t-out="format_monetary(base_line['co_price_subtotal'], invoice.company_currency_id)"/>
+                    <ITE_6 t-out="invoice.company_currency_id.name"/>
+                    <ITE_7 t-out="format_monetary(base_line['co_price_unit'], invoice.company_currency_id)"/>
+                    <ITE_8 t-out="invoice.company_currency_id.name"/>
+                    <ITE_10 t-out="line._l10n_co_edi_get_line_name()"/>
+                    <ITE_11 t-out="line._l10n_co_edi_get_line_name()"/>
+                    <ITE_18 t-out="line.product_id.default_code or line.product_id.product_tmpl_id.default_code"/>
+                    <ITE_19 t-out="format_monetary(base_line['co_price_subtotal'], invoice.company_currency_id)"/>
+                    <ITE_20 t-out="invoice.company_currency_id.name"/>
+                    <ITE_21 t-out="format_monetary(base_line['co_price_subtotal'], invoice.company_currency_id)"/>
+                    <ITE_22 t-out="invoice.company_currency_id.name"/>
+                    <ITE_27 t-out="line.quantity"/>
+                    <ITE_28 t-out="line.product_uom_id.l10n_co_edi_ubl or '94'"/>
+    
+                    <IRF>
+                        <IRF_1 t-out="invoice_type_to_ref_1[invoice.move_type]"/>
+                        <IRF_2 t-out="invoice.name"/>
+                        <IRF_3 t-out="base_line['co_edi_index']"/>
+                    </IRF>
+    
+                    <MYM>
+                        <MYM_1 t-out="line.product_id.product_tmpl_id.l10n_co_edi_brand"/>
+                        <MYM_2 t-out="line.product_id.display_name"/>
+                    </MYM>
+    
+                    <IDE>
+                        <IDE_1 t-out="'false' if float_compare(base_line['co_price_subtotal'], 0, precision_rounding=line.company_currency_id.rounding or invoice.company_currency_id.rounding) &gt;= 0 else 'true'"/>
+                        <IDE_2 t-out="format_monetary(round(invoice.company_currency_id.round(base_line['co_discount_amount']), 2), invoice.company_currency_id)"/>
+                        <IDE_3 t-out="invoice.company_currency_id.name"/>
+                        <IDE_6 t-out="line.discount"/>
+                        <IDE_7 t-out="format_monetary(round(base_line['co_price_subtotal_before_discount'], 2), invoice.company_currency_id)"/>
+                        <IDE_8 t-out="invoice.company_currency_id.name"/>
+                        <IDE_10>1</IDE_10>
+                    </IDE>
+    
+                    <t t-call="l10n_co_edi.tii_section">
+                        <t t-set="currency" t-value="invoice.company_currency_id"/>
+                        <t t-set="tii_sections" t-value="base_line['co_tii_sections']"/>
+                    </t>
+                    <IAE>
+                        <t t-set="product_code" t-value="line._l10n_co_edi_get_product_code()"/>
+                        <IAE_1 t-out="product_code[0]"/>
+                        <IAE_2 t-out="product_code[1]"/>
+                        <IAE_4 t-out="product_code[2]"/>
+                    </IAE>
+                    <NTI t-if="base_line['co_is_exempt_tax']">
+                        <NTI_1 t-out="'Bienes Cubiertos'"/>
+                    </NTI>
+            </ITE>
+
+            <t t-if="invoice.currency_id != invoice.company_currency_id">
+                <EXT>
+                    <EXT_1>Exportación</EXT_1>
+                </EXT>
+
+                <EGC>
+                    <EGC_1>DATOS ADICIONALES</EGC_1>
+                </EGC>
+
+                <ECA>
+                    <ECA_1>Observaciones</ECA_1>
+                    <ECA_2>Ninguna</ECA_2>
+                </ECA>
+
+                <VMT>
+                    <VMT_1 t-out="currency_rate"/>
+                    <VMT_2 t-out="invoice.currency_id.name"/>
+                    <VMT_3 t-out="format_monetary(invoice.amount_untaxed, invoice.currency_id)"/>
+                    <VMT_4 t-out="0.00"/>
+                    <VMT_5 t-out="0.00"/>
+                    <VMT_6 t-out="format_monetary(invoice.amount_untaxed, invoice.currency_id)"/>
+                    <VMT_7 t-out="format_monetary(vmt_section['vmt7'], invoice.currency_id)"/>
+                    <VMT_8 t-out="format_monetary(vmt_section['vmt8'], invoice.currency_id)"/>
+                    <VMT_9 t-out="''"/>
+                    <VMT_10 t-out="''"/>
+                    <VMT_11 t-out="''"/>
+                    <VMT_12 t-out="withholding_amount"/>
+                    <VMT_13 t-out="''"/>
+                    <VMT_14 t-out="''"/>
+                    <VMT_15 t-out="withholding_amount"/>
+                    <VMT_16 t-out="format_monetary(vmt_section['vmt16'], invoice.currency_id)"/>
+                    <VMT_17 t-out="format_monetary(vmt_section['vmt17'], invoice.currency_id)"/>
+                    <VMT_18 t-out="format_monetary(vmt_section['vmt18'], invoice.currency_id)"/>
+                    <VMT_19 t-out="0.00"/>
+                </VMT>
+            </t>
+
+        </template>
+        <template id="electronic_invoice_xml">
+            <NOTA t-if="'_refund' in invoice.move_type or ('_invoice' in invoice.move_type and invoice.l10n_co_edi_debit_note)">
+                <t t-call="l10n_co_edi.electronic_invoice_body"/>
+            </NOTA>
+            <FACTURA t-else="">
+                <t t-call="l10n_co_edi.electronic_invoice_body"/>
+            </FACTURA>
+        </template>
+    </data>
+</odoo>

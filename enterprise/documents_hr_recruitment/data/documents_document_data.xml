@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="document_recruitment_folder" model="documents.document" forcecreate="0">
+            <field name="name">Recruitment</field>
+            <field name="type">folder</field>
+            <field name="is_pinned_folder">True</field>
+            <field name="folder_id" ref="documents_hr.document_hr_folder"/>
+            <field name="access_internal">view</field>
+        </record>
+    </data>
+</odoo>

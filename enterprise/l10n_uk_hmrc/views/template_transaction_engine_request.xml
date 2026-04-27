@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="hmrc_transaction_engine_request" name="HMRC Transaction Engine Request Base">
+        <GovTalkMessage xmlns="http://www.govtalk.gov.uk/CM/envelope">
+            <EnvelopeVersion>2.0</EnvelopeVersion>
+            <Header>
+                <MessageDetails>
+                    <Class t-out="transaction['class']"/>
+                    <Qualifier t-out="transaction['qualifier']"/>
+                    <Function t-out="transaction['function']"/>
+                    <CorrelationID t-out="transaction['correlation_id']"/>
+                    <Transformation>XML</Transformation>
+                </MessageDetails>
+            </Header>
+            <GovTalkDetails>
+                <Keys/>
+            </GovTalkDetails>
+        </GovTalkMessage>
+    </template>
+</odoo>

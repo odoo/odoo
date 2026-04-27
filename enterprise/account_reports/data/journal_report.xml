@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data auto_sequence="1">
+    <record id="journal_report" model="account.report">
+        <field name="name">Journal Report</field>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_show_draft" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_hierarchy">never</field>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_unreconciled" eval="False"/>
+        <field name="filter_hide_0_lines">never</field>
+        <field name="default_opening_date_filter">this_year</field>
+        <field name="custom_handler_model_id" ref="model_account_journal_report_handler"/>
+        <field name="column_ids">
+            <record id="journal_report_code" model="account.report.column">
+                <field name="name">Code</field>
+                <field name="expression_label">code</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="journal_report_debit" model="account.report.column">
+                <field name="name">Debit</field>
+                <field name="expression_label">debit</field>
+            </record>
+            <record id="journal_report_credit" model="account.report.column">
+                <field name="name">Credit</field>
+                <field name="expression_label">credit</field>
+            </record>
+            <record id="journal_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="journal_report_line" model="account.report.line">
+                <field name="name">Name</field>
+                <field name="groupby">journal_id, account_id</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="journal_report_line_code" model="account.report.expression">
+                        <field name="label">code</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_journal_report</field>
+                        <field name="subformula">code</field>
+                    </record>
+                    <record id="journal_report_line_debit" model="account.report.expression">
+                        <field name="label">debit</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_journal_report</field>
+                        <field name="subformula">debit</field>
+                    </record>
+                    <record id="journal_report_line_credit" model="account.report.expression">
+                        <field name="label">credit</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_journal_report</field>
+                        <field name="subformula">credit</field>
+                    </record>
+                    <record id="journal_report_line_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_journal_report</field>
+                        <field name="subformula">balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+  </data>
+
+  <data>
+    <template id="journal_report_pdf_export_main">
+        <html>
+            <head>
+                 <base t-att-href="base_url"/>
+                 <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+                 <t t-call-assets="account_reports.assets_pdf_export" t-js="False"/>
+             </head>
+            <body t-att-dir="env['res.lang']._get_data(code=lang or env.user.lang).direction or 'ltr'">
+                <div t-att-class="options['css_custom_class']">
+                    <header>
+                        <div class="row align-items-center">
+                            <div class="col-4 o_header_font">
+                                 <t t-call="account_reports.company_information"/>
+                            </div>
+                            <div class="col-4">
+                                 <div class="o_title">
+                                    <t t-if="report.filter_show_draft and options['all_entries']">[Draft]</t>
+                                    <t t-out="report.name"/>
+                                </div>
+                                <div class="o_subtitle">
+                                    <t t-out="options['date']['date_from']"/> - <t t-out="options['date']['date_to']"/>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    <!-- Journal entries -->
+                    <t t-foreach="document_data['journals_vals']" t-as="journal_vals">
+                        <section style="page-break-after: always;">
+                            <div class="o_section_title">
+                                <t t-out="journal_vals.get('name')"/>
+                            </div>
+                            <div class="d-flex align-items-start">
+                                <t t-call="account_reports.journal_report_pdf_body_default"/>
+                            </div>
+
+                            <t t-if="journal_vals.get('tax_summary')">
+                                <t t-call="account_reports.pdf_journal_report_taxes_summary">
+                                    <t t-set="tax_summary" t-value="journal_vals['tax_summary']"/>
+                                </t>
+                            </t>
+                        </section>
+                    </t>
+
+                    <section t-if="document_data.get('global_tax_summary')">
+                        <div class="o_section_title">
+                            Global Tax Summary
+                        </div>
+                        <t t-call="account_reports.pdf_journal_report_taxes_summary">
+                            <t t-set="tax_summary" t-value="document_data['global_tax_summary']"/>
+                        </t>
+                    </section>
+                </div>
+            </body>
+        </html>
+    </template>
+
+    <template id="journal_report_pdf_body_default">
+        <table class="o_table">
+            <thead>
+                <tr>
+                    <t t-foreach="journal_vals['columns']" t-as="column">
+                        <th t-att-class="column.get('class', '')">
+                            <t t-out="column.get('name', '')"/>
+                        </th>
+                    </t>
+                </tr>
+            </thead>
+
+            <tbody>
+                <t t-foreach="journal_vals['lines']" t-as="line">
+                    <tr t-att-class="line.get('line_class', '')">
+                        <t t-foreach="journal_vals['columns']" t-as="column">
+                            <t t-if="line.get(column['label'])">
+                                <t t-set="cell_style" t-value="line[column['label']].get('class', '')"/>
+                                <t t-set="column_style" t-value="column.get('class', '')"/>
+                                <td t-att-class="cell_style + column_style">
+                                    <t t-out="line[column['label']]['data']"/>
+                                </td>
+                            </t>
+                            <t t-else="">
+                                <td/>
+                            </t>
+                        </t>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+    </template>
+
+    <template id="pdf_journal_report_taxes_summary">
+        <div class="container tax_summary" style="page-break-inside: avoid;">
+            <t t-set="taxes" t-value="tax_summary.get('tax_report_lines')"/>
+            <t t-if="taxes">
+                <div class="row o_section_subtitle">
+                    <p>Tax Applied</p>
+                </div>
+                <div class="row taxes">
+                    <t t-set="extra_columns" t-value="tax_summary.get('extra_columns')"/>
+                    <table class="o_table">
+                        <thead>
+                            <tr>
+                                <th t-if="len(taxes) > 1">Country</th>
+                                <th>Name</th>
+                                <th class="o_right_alignment">Base Amount</th>
+                                <th class="o_right_alignment">Tax Amount</th>
+                                <th t-if="tax_summary.get('tax_non_deductible_column')" class="o_right_alignment">Non-Deductible</th>
+                                <th t-if="tax_summary.get('tax_deductible_column')" class="o_right_alignment">Deductible</th>
+                                <th t-if="tax_summary.get('tax_due_column')" class="o_right_alignment">Due</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="taxes" t-as="country_name">
+                                <tr t-foreach="taxes[country_name]" t-as="tax">
+                                    <t t-if="country_name_size > 1">
+                                        <td>
+                                            <t t-if="tax_index == 0" t-out="country_name"/>
+                                        </td>
+                                    </t>
+                                    <td t-out="tax['name']"/>
+                                    <td class="o_right_alignment" t-out="tax['base_amount']"/>
+                                    <td class="o_right_alignment" t-out="tax['tax_amount']"/>
+                                    <td t-if="tax_summary.get('tax_non_deductible_column')" class="o_right_alignment" t-out="tax['tax_non_deductible']"/>
+                                    <td t-if="tax_summary.get('tax_deductible_column')" class="o_right_alignment" t-out="tax['tax_deductible']"/>
+                                    <td t-if="tax_summary.get('tax_due_column')" class="o_right_alignment" t-out="tax['tax_due']"/>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+            <t t-set="grids" t-value="tax_summary.get('tax_grid_summary_lines')"/>
+            <t t-if="grids">
+                <div class="row o_section_subtitle">
+                    <p>Impacted Tax Grids</p>
+                </div>
+                <div class="row tax_grid">
+                    <table class="o_table">
+                        <thead>
+                            <tr>
+                                <th t-if="len(grids) > 1">Country</th>
+                                <th>Grid</th>
+                                <th class="o_right_alignment">+</th>
+                                <th class="o_right_alignment">-</th>
+                                <th class="o_right_alignment">Impact On Grid</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="grids" t-as="country_name">
+                                <tr t-foreach="grids[country_name]" t-as="grid_name">
+                                    <t t-if="country_name_size > 1">
+                                        <td>
+                                            <t t-if="grid_name_index == 0" t-out="country_name"/>
+                                        </td>
+                                    </t>
+                                    <td t-out="grid_name"/>
+                                    <td class="o_right_alignment" t-out="grids[country_name][grid_name].get('+', 0)"/>
+                                    <td class="o_right_alignment" t-out="grids[country_name][grid_name].get('-', 0)"/>
+                                    <td class="o_right_alignment" t-out="grids[country_name][grid_name]['impact']"/>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </div>
+    </template>
+  </data>
+</odoo>

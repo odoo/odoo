@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<odoo>
+<template id="report_bonus_month" inherit_id="hr_payroll.report_payslip" primary="True">
+    <div id="worked_days_table" position="replace"/>
+</template>
+
+<template id="report_bonus_lang">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="o" t-value="o.with_context(lang=o.employee_id.lang or o.env.lang)"/>
+            <t t-call="l10n_be_hr_payroll.report_bonus_month" t-lang="o.env.lang"/>
+        </t>
+    </t>
+</template>
+
+<template id="report_belgium_payslip" inherit_id="hr_payroll.report_payslip" primary="True">
+    <xpath expr="//div[@id='employee_person_in_charge']" position="replace">
+        <t t-set="person_in_charge" t-value="o.employee_id.children + o.employee_id.other_senior_dependent + o.employee_id.other_juniors_dependent"/>
+        <div id="employee_person_in_charge" t-if="person_in_charge">
+            <strong class="me-2">Person in Charge:</strong>
+            <span t-out="person_in_charge"/>
+        </div>
+    </xpath>
+    <div id="wage" position="after">
+        <t t-set="ecovouchers" t-value="o._get_input_line_amount('ECOVOUCHERS')"/>
+        <div id="employee_eco_vouchers" t-if="ecovouchers">
+            <strong class="me-2">Eco-Vouchers:</strong>
+            <span t-out="round(ecovouchers, 2)"/>€<span class="me-2"/>
+            (= <span t-out="int(ecovouchers // 10)"/>*10€ + 1*<span t-out="round(ecovouchers % 10, 2)"/>€)
+        </div>
+    </div>
+</template>
+
+<template id="report_belgium_payslip_lang">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="o" t-value="o.with_context(lang=o.employee_id.lang or o.env.lang)"/>
+            <t t-call="l10n_be_hr_payroll.report_belgium_payslip" t-lang="o.env.lang"/>
+        </t>
+    </t>
+</template>
+
+<template id="report_belgium_light_payslip" inherit_id="hr_payroll.report_light_payslip" primary="True">
+    <tr id="pay_period" position="after">
+        <t t-set="ecovouchers" t-value="o._get_input_line_amount('ECOVOUCHERS')"/>
+        <tr t-if="ecovouchers">
+            <td>Eco-Vouchers:</td>
+            <td class="text-end fw-bold">
+                <span t-out="round(ecovouchers, 2)"/>€<span class="me-2"/>
+                (= <span t-out="int(ecovouchers // 10)"/>*10€ + 1*<span t-out="round(ecovouchers % 10, 2)"/>€)
+            </td>
+        </tr>
+    </tr>
+</template>
+
+<template id="report_belgium_light_payslip_lang">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="o" t-value="o.with_context(lang=o.employee_id.lang or o.env.lang)"/>
+            <t t-call="l10n_be_hr_payroll.report_belgium_light_payslip" t-lang="o.env.lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

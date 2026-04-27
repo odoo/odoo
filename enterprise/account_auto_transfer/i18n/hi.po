@@ -1,0 +1,484 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_auto_transfer
+#
+# Translators:
+# Wil Odoo, 2024
+# Manav Shah, 2025
+# Ujjawal Pathak, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2024-09-25 09:43+0000\n"
+"Last-Translator: Ujjawal Pathak, 2025\n"
+"Language-Team: Hindi (https://app.transifex.com/odoo/teams/41243/hi/)\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "<span> to </span>"
+msgstr "<span> से </span>"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "अकाउंट चार्ट टेंप्लेट"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_transfer_model
+msgid "Account Transfer Model"
+msgstr "अकाउंट ट्रांसफ़र मॉडल"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_transfer_model_line
+msgid "Account Transfer Model Line"
+msgstr "अकाउंट ट्रांसफ़र मॉडल लाइन"
+
+#. module: account_auto_transfer
+#: model:ir.actions.server,name:account_auto_transfer.ir_cron_auto_transfer_ir_actions_server
+msgid "Account automatic transfers: Perform transfers"
+msgstr "अकाउंट ऑटोमैटिक ट्रांसफ़र: ट्रांसफ़र परफ़ार्म करें"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Activate"
+msgstr "ऐक्टिवेट"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__active
+msgid "Active"
+msgstr "सक्रिय"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,help:account_auto_transfer.field_account_transfer_model_line__analytic_account_ids
+msgid ""
+"Adds a condition to only transfer the sum of the lines from the origin "
+"accounts that match these analytic accounts to the destination account"
+msgstr ""
+"एक ऐसी शर्त जोड़ी जा रही है जिसके तहत, जब आप कुछ खातों से पैसा दूसरे खाते में भेज रहे हों, "
+"तो सिर्फ़ वही रकम भेजी जाएगी जो उन एंट्रीज़ से आई है जो खास 'एनालिटिक खातों' से मेल "
+"खाती हैं"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,help:account_auto_transfer.field_account_transfer_model_line__partner_ids
+msgid ""
+"Adds a condition to only transfer the sum of the lines from the origin "
+"accounts that match these partners to the destination account"
+msgstr ""
+"एक ऐसी शर्त जोड़ी जा रही है जिसके तहत, जब आप कुछ खातों से पैसा दूसरे खाते में भेज रहे हों, "
+"तो सिर्फ़ वही रकम भेजी जाएगी जो उन एंट्रीज़ से आई है जो पार्टनर से मेल खाती हैं"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__analytic_account_ids
+msgid "Analytic Filter"
+msgstr "एनालिटिक फ़िल्टर"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_search
+msgid "Archived"
+msgstr "संग्रहीत किया गया"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Automated Transfer"
+msgstr "ऑटोमैटेड ट्रांसफ़र"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+msgid "Automatic Transfer (%(percent)s%% from account %(origin_account)s)"
+msgstr "ऑटोमैटिक ट्रांसफ़र (%(origin_account)s खाते से %(percent)s%%)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+msgid "Automatic Transfer (-%s%%)"
+msgstr "ऑटोमैटिक ट्रांसफ़र (-%s%%)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+msgid ""
+"Automatic Transfer (entries with analytic account(s): %(analytic_accounts)s "
+"and partner(s): %(partners)s)"
+msgstr ""
+"ऑटोमैटिक ट्रांसफ़र (एनालिटिक अकाउंट से एंट्रीज़): %(analytic_accounts)s और पार्टनर: %"
+"(partners)s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+msgid "Automatic Transfer (entries with analytic account(s): %s)"
+msgstr "ऑटोमैटिक ट्रांसफ़र (एनालिटिक अकाउंट से एंट्रीज़): %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+msgid "Automatic Transfer (entries with partner(s): %s)"
+msgstr "ऑटोमैटिक ट्रांसफ़र (पार्टनर के साथ एंट्रीज़): %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+msgid ""
+"Automatic Transfer (from account %(origin_account)s with analytic "
+"account(s): %(analytic_accounts)s and partner(s): %(partners)s)"
+msgstr ""
+"ऑटोमैटिक ट्रांसफ़र (एनालिटिक अकाउंट के साथ %(origin_account)s खाते से): %"
+"(analytic_accounts)s और पार्टनर: %(partners)s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+msgid ""
+"Automatic Transfer (from account %(origin_account)s with analytic "
+"account(s): %(analytic_accounts)s)"
+msgstr ""
+"ऑटोमैटिक ट्रांसफ़र (एनालिटिक अकाउंट के साथ %(origin_account)s खाते से): %"
+"(analytic_accounts)s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+msgid ""
+"Automatic Transfer (from account %(origin_account)s with partner(s): %"
+"(partners)s)"
+msgstr ""
+"ऑटोमैटिक ट्रांसफ़र (पार्टनर के साथ %(origin_account)s खाते से): %"
+"(analytic_accounts)s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+msgid "Automatic Transfer (to account %s)"
+msgstr "ऑटोमैटिक ट्रांसफ़र (%s खाते से)"
+
+#. module: account_auto_transfer
+#: model:ir.actions.act_window,name:account_auto_transfer.transfer_model_action
+msgid "Automatic Transfers"
+msgstr "ऑटोमैटिक ट्रांसफ़र"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__company_id
+msgid "Company"
+msgstr "संस्था"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,help:account_auto_transfer.field_account_transfer_model__company_id
+msgid "Company related to this journal"
+msgstr "जो कंपनियां इस जर्नल से जुड़ी हैं"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Compute Transfer"
+msgstr "ट्रांसफ़र की गणना करें"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__create_uid
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__create_uid
+msgid "Created by"
+msgstr "द्वारा निर्मित"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__create_date
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__create_date
+msgid "Created on"
+msgstr "इस तारीख को बनाया गया"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Description"
+msgstr "विवरण"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__account_id
+msgid "Destination Account"
+msgstr "डेस्टिनेशन अकाउंट"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__line_ids
+msgid "Destination Accounts"
+msgstr "डेस्टिनेशन अकाउंट"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__journal_id
+msgid "Destination Journal"
+msgstr "डेस्टिनेशन जर्नल"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Disable"
+msgstr "बंद करें"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__state__disabled
+msgid "Disabled"
+msgstr "बंद किया गया"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__display_name
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__display_name
+msgid "Display Name"
+msgstr "डिस्प्ले नाम"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__frequency
+msgid "Frequency"
+msgstr "फ्रीक्वेंसी"
+
+#. module: account_auto_transfer
+#: model:ir.actions.act_window,name:account_auto_transfer.generated_transfers_action
+msgid "Generated Entries"
+msgstr "जनरेट की गई एंट्रीज़"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__move_ids
+msgid "Generated Moves"
+msgstr "मूव्स जनरेट केरं"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__id
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__id
+msgid "ID"
+msgstr "आईडी"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/demo/account_demo.py:0
+msgid "IFRS Automatic Transfers"
+msgstr "IFRS ऑटोमैटिक ट्रांसफ़र"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/demo/account_demo.py:0
+msgid "IFRS rent expense transfer"
+msgstr "IFRS रेंट एक्सपेंस ट्रांसफ़र"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_journal
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Journal"
+msgstr "पत्रिका"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_move
+msgid "Journal Entry"
+msgstr "जर्नल एंट्री"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_move_line
+msgid "Journal Item"
+msgstr "जर्नल आइटम"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__write_uid
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__write_uid
+msgid "Last Updated by"
+msgstr "इन्होंने आखिरी बार अपडेट किया"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__write_date
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__write_date
+msgid "Last Updated on"
+msgstr "आखिरी बार अपडेट हुआ"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__frequency__month
+msgid "Monthly"
+msgstr "महीने के हिसाब से"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__move_ids_count
+msgid "Move Ids Count"
+msgstr "मूव आईडी काउं"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Move Model"
+msgstr "मूव मॉडल"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_tree
+msgid "Move Models"
+msgstr "मूव मॉड"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__name
+msgid "Name"
+msgstr "नाम"
+
+#. module: account_auto_transfer
+#: model:ir.model.constraint,message:account_auto_transfer.constraint_account_transfer_model_line_unique_account_by_transfer_model
+msgid "Only one account occurrence by transfer model"
+msgstr "एक ट्रांसफ़र मॉडल के लिए एक ही खाता होना चाहिए"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__account_ids
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Origin Accounts"
+msgstr "मूल खाता"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_bank_statement_line__transfer_model_id
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_move__transfer_model_id
+msgid "Originating Model"
+msgstr "मूल मॉडल"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__partner_ids
+msgid "Partner Filter"
+msgstr "पार्टनर फ़िल्टर"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__percent
+msgid "Percent"
+msgstr "प्रतिशत"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Percent (%)"
+msgstr "प्रतिशत (%)"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__percent_is_readonly
+msgid "Percent Is Readonly"
+msgstr "प्रतिशत बदला नहीं जा सकता, सिर्फ़ देखा जा सकता है"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,help:account_auto_transfer.field_account_transfer_model_line__percent
+msgid ""
+"Percentage of the sum of lines from the origin accounts will be transferred "
+"to the destination account"
+msgstr ""
+"जितनी भी रकम 'शुरुआती खातों' से जुड़ी है, उसके कुल जोड़ का कुछ प्रतिशत, एक दूसरे 'डेस्टिनेशन "
+"अकाउंट' में चला जाएगा"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Period"
+msgstr "समयावधि"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__frequency__quarter
+msgid "Quarterly"
+msgstr "त्रैमासिक"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__state__in_progress
+msgid "Running"
+msgstr "फैलना"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__sequence
+msgid "Sequence"
+msgstr "अनुक्रम"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__date_start
+msgid "Start Date"
+msgstr "प्रारंभ दिनांक"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__state
+msgid "State"
+msgstr "स्थिति"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__date_stop
+msgid "Stop Date"
+msgstr "आखिरी तारीख"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+msgid "The analytic filter %s is duplicated"
+msgstr "एनालिटिक फ़िल्टर %s डुप्लीकेट है"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+msgid ""
+"The partner filter %(partner_filter)s in combination with the analytic "
+"filter %(analytic_filter)s is duplicated"
+msgstr ""
+"जो पार्टनर फ़िल्टर आपने %(partner_filter)s चुना है, उसे जब एनालिटिक फ़िल्टर %"
+"(analytic_filter)s के साथ मिलाया जाता है, तो यह दोबारा आ रहा है"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+msgid "The partner filter %s is duplicated"
+msgstr "पार्टनर फ़िल्टर %s डुप्लीकेट है"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+msgid "The total percentage (%s) should be less or equal to 100!"
+msgstr "कुल प्रतिशत (%s) 100 या कम होना चाहिए!"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__total_percent
+msgid "Total Percent"
+msgstr "कुल प्रतिशत"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__transfer_model_id
+msgid "Transfer Model"
+msgstr ""
+"ट्रांसफ़र मॉडल\n"
+" "
+
+#. module: account_auto_transfer
+#: model:ir.ui.menu,name:account_auto_transfer.menu_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Transfers"
+msgstr "ट्रांसफ़र"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__frequency__year
+msgid "Yearly"
+msgstr "सालान"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/demo/account_demo.py:0
+msgid "Yearly liabilites auto transfers"
+msgstr "हर साल का उधार अपने-आप ट्रांसफर हो जाएगा"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+msgid ""
+"You cannot delete an automatic transfer that has draft moves attached "
+"('%s'). Please delete them before deleting this transfer."
+msgstr ""
+"आप उस ऑटोमेटिक ट्रांसफर को मिटा नहीं सकते जिससे अधूरी एंट्रीज़ ('%s') जुड़ी हैं. कृपया पहले "
+"उन एंट्रीज़ को मिटाएं, फिर ट्रांसफर को."
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+msgid ""
+"You cannot delete an automatic transfer that has posted moves attached "
+"('%s')."
+msgstr ""
+"आप उस ऑटोमेटिक ट्रांसफ़र को नहीं हटा सकते जिससे फाइनल हो चुकी एंट्रीज़ ('%s') जुड़ी हैं."
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/account_move_line.py:0
+msgid "You cannot set Tax on Automatic Transfer's entries."
+msgstr "आप ऑटोमेटिक ट्रांसफ़र से जुड़ी एंट्रीज़ पर टैक्स नहीं लगा सकते."
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "e.g. Monthly Expense Transfer"
+msgstr "जैसे, महीने के हिसाब एक्सपेंस ट्रांसफ़र"

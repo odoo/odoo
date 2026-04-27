@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web_studio.SafeKanbanRecordLegacy" t-inherit="web.KanbanRecord">
+  <xpath expr="//t[@t-call]" position="attributes">
+    <attribute name="t-if">!safe.hasError</attribute>
+  </xpath>
+  <xpath expr="//t[@t-call]" position="after">
+    <div t-else="">Preview is not available</div>
+  </xpath>
+</t>
+
+<t t-name="web_studio.SafeKanbanRecordLegacyMenu" t-inherit="web.KanbanRecordMenu">
+  <xpath expr="//Dropdown" position="attributes">
+    <attribute name="studioXpath">dropdownXpath</attribute>
+    <attribute name="hasCoverSetter">dropdownHasCoverSetter</attribute>
+  </xpath>
+</t>
+
+<t t-name="web_studio.KanbanEditorRecord.Dropdown">
+  <div t-ref="root" t-on-click="() => this.handleClick()">
+    <t t-slot="default"/>
+  </div>
+</t>
+
+<t t-name="web_studio.KanbanEditorRecord.AvatarPlaceholder">
+  <div class="oe_kanban_bottom_right" >
+    <span class="oe_kanban_avatar">
+        <i class="fa fa-user"/>
+    </span>
+  </div>
+</t>
+
+</templates>

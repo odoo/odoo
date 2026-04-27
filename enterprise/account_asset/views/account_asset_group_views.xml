@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="asset_group_form_view" model="ir.ui.view">
+            <field name="name">account.asset.group.form</field>
+            <field name="model">account.asset.group</field>
+            <field name="arch" type="xml">
+                <form string="Asset Group">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_open_linked_assets"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-bars"
+                                invisible="count_linked_assets == 0">
+                                <field string="Asset(s)" name="count_linked_assets" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="Asset Group"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                               <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="asset_group_list_view" model="ir.ui.view">
+            <field name="name">account.asset.group.list</field>
+            <field name="model">account.asset.group</field>
+            <field name="arch" type="xml">
+                <list string="Asset Group">
+                    <field name="name"/>
+                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                </list>
+            </field>
+        </record>
+    </data>
+</odoo>

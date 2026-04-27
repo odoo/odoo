@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top menu / dashboard icon -->
+    <menuitem name="Documents" id="documents.menu_root" groups="base.group_user" web_icon="documents,static/description/icon.png" sequence="65"/>
+
+    <!-- Top bar menus -->
+    <menuitem name="Documents"
+        id="documents.dashboard"
+        parent="documents.menu_root"
+        action="document_action"
+        groups="base.group_user"
+        sequence="0"/>
+    <menuitem name="Configuration"
+        id="documents.Config"
+        parent="documents.menu_root"
+        groups="documents.group_documents_manager"
+        sequence="10"/>
+
+    <menuitem name="Settings"
+        id="documents.settings_menu"
+        parent="documents.Config"
+        action="configuration_action"
+        groups="base.group_system"
+        sequence="10"/>
+
+    <menuitem name="Structure"
+        id="documents.structure"
+        parent="documents.Config"
+        groups="documents.group_documents_manager"
+        sequence="40"/>
+
+    <menuitem name="Tags"
+        id="documents.category_menu"
+        parent="documents.structure"
+        action="tag_action"
+        sequence="10"/>
+
+    <menuitem name="Activities"
+        id="documents.mail_activities"
+        parent="documents.Config"
+        groups="documents.group_documents_manager"
+        sequence="50"/>
+
+    <menuitem name="Activity Types"
+        id="documents.mail_activity_type_menu"
+        parent="documents.mail_activities"
+        action="mail_activity_type_action_document"
+        sequence="10"/>
+    <menuitem name="Activity Plans"
+        id="documents.mail_activity_plan_menu"
+        parent="documents.mail_activities"
+        action="mail_activity_plan_action_document"
+        sequence="20"/>
+</odoo>

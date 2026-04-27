@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sales_tax_report" model="account.report">
+        <field name="name">Sales</field>
+        <field name="country_id" ref="base.vn"/>
+        <field name="filter_show_draft" eval="True"/>
+        <field name="filter_partner" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_unreconciled" eval="True"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="default_opening_date_filter">this_quarter</field>
+        <field name="search_bar" eval="False"/>
+        <field name="load_more_limit" eval="80"/>
+        <field name="custom_handler_model_id" ref="model_l10n_vn_sales_tax_report_handler"/>
+        <field name="column_ids">
+            <record id="sales_tax_report_invoice_number" model="account.report.column">
+                <field name="name">Invoice Number</field>
+                <field name="expression_label">invoice_number</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="sales_tax_report_invoice_date" model="account.report.column">
+                <field name="name">Invoice Date</field>
+                <field name="expression_label">invoice_date</field>
+                <field name="figure_type">date</field>
+            </record>
+            <record id="sales_tax_report_partner_id" model="account.report.column">
+                <field name="name">Customer</field>
+                <field name="expression_label">partner_id</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="sales_tax_report_tax_id" model="account.report.column">
+                <field name="name">Tax ID</field>
+                <field name="expression_label">tax_id</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="sales_tax_report_ref" model="account.report.column">
+                <field name="name">Description</field>
+                <field name="expression_label">ref</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="sales_tax_report_untaxed_amount" model="account.report.column">
+                <field name="name">Untaxed sales of goods and services</field>
+                <field name="expression_label">untaxed_amount</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="sales_tax_report_amount_tax" model="account.report.column">
+                <field name="name">VAT Amount</field>
+                <field name="expression_label">tax_amount</field>
+                <field name="figure_type">monetary</field>
+            </record>
+        </field>
+    </record>
+
+    <record id="purchase_tax_report" model="account.report">
+        <field name="name">Purchase</field>
+        <field name="country_id" ref="base.vn"/>
+        <field name="filter_show_draft" eval="True"/>
+        <field name="filter_partner" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_unreconciled" eval="True"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="default_opening_date_filter">this_quarter</field>
+        <field name="search_bar" eval="False"/>
+        <field name="load_more_limit" eval="80"/>
+        <field name="custom_handler_model_id" ref="model_l10n_vn_purchase_tax_report_handler"/>
+        <field name="column_ids">
+            <record id="purchase_tax_report_invoice_number" model="account.report.column">
+                <field name="name">Invoice Number</field>
+                <field name="expression_label">invoice_number</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="purchase_tax_report_invoice_date" model="account.report.column">
+                <field name="name">Invoice Date</field>
+                <field name="expression_label">invoice_date</field>
+                <field name="figure_type">date</field>
+            </record>
+            <record id="purchase_tax_report_partner_id" model="account.report.column">
+                <field name="name">Customer</field>
+                <field name="expression_label">partner_id</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="purchase_tax_report_tax_id" model="account.report.column">
+                <field name="name">Tax ID</field>
+                <field name="expression_label">tax_id</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="purchase_tax_report_ref" model="account.report.column">
+                <field name="name">Description</field>
+                <field name="expression_label">ref</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="purchase_tax_report_untaxed_amount" model="account.report.column">
+                <field name="name">Untaxed purchase of goods and services</field>
+                <field name="expression_label">untaxed_amount</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="purchase_tax_report_amount_tax" model="account.report.column">
+                <field name="name">VAT Amount</field>
+                <field name="expression_label">tax_amount</field>
+                <field name="figure_type">monetary</field>
+            </record>
+        </field>
+    </record>
+
+    <record id="tax_report" model="account.report">
+        <field name="name">Sales/Purchase Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.vn"/>
+        <field name="filter_show_draft" eval="True"/>
+        <field name="filter_partner" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_unreconciled" eval="True"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="default_opening_date_filter">this_quarter</field>
+        <field name="search_bar" eval="True"/>
+        <field name="load_more_limit" eval="80"/>
+        <field name="use_sections" eval="True"/>
+        <field name="custom_handler_model_id" ref="model_l10n_vn_tax_report_handler"/>
+        <field name="section_report_ids" eval="[(6, 0, [ref('l10n_vn_reports.sales_tax_report'), ref('l10n_vn_reports.purchase_tax_report')])]"/>
+    </record>
+
+</odoo>

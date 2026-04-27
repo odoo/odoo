@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_template_unspsc" model="ir.ui.view">
+            <field name="name">product.template.form.unspsc</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='invoicing']//group[@name='accounting']" position="inside">
+                    <group name="unspsc" string="UNSPSC">
+                        <field name="unspsc_code_id"/>
+                    </group>
+                </xpath>
+                <page name="invoicing" position="attributes">
+                    <attribute name="groups">account.group_account_invoice,account.group_account_readonly</attribute>
+                </page>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_product_uom_form_unspsc">
+            <field name="name">view.uom.uom.unspsc.form</field>
+            <field name="model">uom.uom</field>
+            <field name="inherit_id" ref="uom.product_uom_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='uom_type']" position="after">
+                    <field name="unspsc_code_id"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_product_uom_categ_form_unspsc">
+            <field name="name">view.uom.categ.unspsc.form</field>
+            <field name="model">uom.category</field>
+            <field name="inherit_id" ref="uom.product_uom_categ_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='uom_type']" position="after">
+                    <field name="unspsc_code_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_product_uom_categ_tree_unspsc">
+            <field name="name">view.uom.categ.unspsc.list</field>
+            <field name="model">product.unspsc.code</field>
+            <field name="arch" type="xml">
+                <list string="UNSPSC Category">
+                    <field name="code"/>
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_product_uom_categ_search_unspsc">
+            <field name="name">view.uom.categ.unspsc.search</field>
+            <field name="model">product.unspsc.code</field>
+            <field name="arch" type="xml">
+                <search string="UNSPSC Category">
+                    <field name="name"/>
+                    <field name="code" filter_domain="[('code', '=ilike', self + '%')]"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_product_unspsc_code_form">
+            <field name="name">view.product.unspsc.code.form</field>
+            <field name="model">product.unspsc.code</field>
+            <field name="arch" type="xml">
+                <form string="UNSPSC Category">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="code"/>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="applies_to"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

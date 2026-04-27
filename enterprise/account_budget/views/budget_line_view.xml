@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_budget_line_search">
+        <field name="name">account.budget.line.search</field>
+        <field name="model">budget.line</field>
+        <field name="arch" type="xml">
+            <search string="Budget Lines">
+                <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                <field name="budget_analytic_id"/>
+                <filter name="filter_not_cancelled" string="Not Cancelled" domain="[('budget_analytic_id.state', '!=', 'canceled')]"/>
+                <separator/>
+                <filter string="Date" name="filter_date_from" date="date_from"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_budget_analytic_id" string="Budgets" domain="[]" context="{'group_by': 'budget_analytic_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_budget_line_tree">
+        <field name="name">budget.line.list</field>
+        <field name="model">budget.line</field>
+        <field name="arch" type="xml">
+            <list string="Budget Lines" create="0" delete="0" multi_edit="1">
+                <field name="currency_id" column_invisible="True"/>
+                <field name="budget_analytic_id" optional="show"/>
+                <field name="budget_analytic_state" optional="hide"/>
+                <field name="account_id" groups="analytic.group_analytic_accounting" optional="show" readonly="1"/>
+                <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                <field name="date_from" readonly="1"/>
+                <field name="date_to" readonly="1"/>
+                <field name="budget_amount" readonly="budget_analytic_state != 'draft'"/>
+                <field name="committed_amount" readonly="1"/>
+                <field name="achieved_amount" readonly="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_budget_line_form">
+        <field name="name">budget.line.form</field>
+        <field name="model">budget.line</field>
+        <field name="arch" type="xml">
+            <form string="Budget Lines">
+                <sheet>
+                    <group col="4">
+                        <field name="budget_analytic_state" invisible="1"/>
+                        <field name="budget_analytic_id"  readonly="budget_analytic_state != 'draft'"/>
+                        <field name="account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" readonly="budget_analytic_state != 'draft'" groups="analytic.group_analytic_accounting"/>
+                        <field name="date_from"  readonly="budget_analytic_state != 'draft'"/>
+                        <field name="date_to"  readonly="budget_analytic_state != 'draft'"/>
+                        <field name="budget_amount" readonly="budget_analytic_state != 'draft'"/>
+                        <field name="achieved_amount" readonly="budget_analytic_state != 'draft'"/>
+                        <field name="theoritical_amount" readonly="budget_analytic_state != 'draft'"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" readonly="budget_analytic_state != 'draft'"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_budget_line_pivot">
+        <field name="name">budget.line.pivot</field>
+        <field name="model">budget.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Budget Lines" sample="1">
+                <field name="budget_analytic_id" type="row"/>
+                <field name="achieved_amount" type="measure" string="Achieved"/>
+                <field name="budget_amount"  type="measure" string="Budget"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_budget_line_graph">
+        <field name="name">budget.line.graph</field>
+        <field name="model">budget.line</field>
+        <field name="arch" type="xml">
+            <graph string="Budget Lines" sample="1">
+                <field name="budget_analytic_id" type="row"/>
+                <field name="budget_amount" type="measure" string="Budget"/>
+                <field name="achieved_amount" type="measure" string="Practical amount"/>
+            </graph>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="act_budget_lines_view">
+        <field name="name">Budgets Analysis</field>
+        <field name="res_model">budget.line</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="view_id" eval="False"/>
+        <field name="context"></field>
+    </record>
+
+</odoo>

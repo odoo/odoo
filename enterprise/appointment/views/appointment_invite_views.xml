@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="appointment_invite_view_search" model="ir.ui.view">
+        <field name="name">appointment.invite.view.search</field>
+        <field name="model">appointment.invite</field>
+        <field name="arch" type="xml">
+            <search string="Appointment Invitation Links">
+                <field name="appointment_type_ids"/>
+                <field name="resource_ids"/>
+                <field name="staff_user_ids"/>
+                <field name="short_code"/>
+                <filter string="My Links" name="my_book_urls" domain="[('create_uid', '=', uid)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="appointment_invite_view_tree" model="ir.ui.view">
+        <field name="name">appointment.invite.view.list</field>
+        <field name="model">appointment.invite</field>
+        <field name="arch" type="xml">
+            <list string="Invitation Links" edit="0" duplicate="0" sample="1" js_class="appointment_share_link_list">
+                <field name="create_date" optional="hide"/>
+                <field name="create_uid" widget="many2one_avatar_user" optional="hide"/>
+                <field name="appointment_type_count" column_invisible="True"/>
+                <field name="suggested_staff_user_ids" column_invisible="True"/>
+                <field name="suggested_resource_ids" column_invisible="True"/>
+                <field name="appointment_type_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                <field name="staff_user_ids" string="Restrict to User"
+                    widget="many2many_avatar_user" readonly="appointment_type_count &gt; 1"
+                    column_invisible="context.get('schedule_based_on') == 'resources'"
+                    domain="[('id','in',suggested_staff_user_ids)]" options="{'no_create': True}"/>
+                <field name="resource_ids" string="Restrict to Resource"
+                    widget="many2many_tags_avatar" readonly="appointment_type_count &gt; 1"
+                    column_invisible="context.get('schedule_based_on') == 'users'"
+                    domain="[('id','in',suggested_resource_ids)]" options="{'no_create': True}" optional="hide"/>
+                <field name="book_url" readonly="1" widget="CopyClipboardChar"/>
+                <field name="calendar_event_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="appointment_invite_view_form" model="ir.ui.view">
+        <field name="name">appointment.invite.view.form</field>
+        <field name="model">appointment.invite</field>
+        <field name="arch" type="xml">
+            <form string="Link Generator" create="false">
+                <field name="short_code_format_warning" invisible="1"/>
+                <field name="short_code_unique_warning" invisible="1"/>
+                <field name="schedule_based_on" invisible="1"/>
+                <div class="alert alert-warning" role="alert"
+                    invisible="not short_code_format_warning">
+                    Only letters, numbers, underscores and dashes are allowed in your links.
+                </div>
+                <div class="alert alert-warning" role="alert"
+                    invisible="not short_code_unique_warning">
+                    The URL is already taken, please pick another code.
+                </div>
+                <div class="alert alert-warning" role="alert"
+                    invisible="appointment_type_count != 1 or resources_choice != 'current_user' or uid in suggested_staff_user_ids">
+                    <i class="fa fa-warning me-2"/>
+                    <span invisible="schedule_based_on != 'users'">You need to be part of an appointment type to be able to share a personal link.</span>
+                    <span invisible="schedule_based_on != 'resources'">You can't create a personal link for an appointment type based on resources.</span>
+                </div>
+                <div class="alert alert-warning" role="alert"
+                    invisible="suggested_staff_user_ids or appointment_type_count != 1 or suggested_resource_count &gt;= 1">
+                    <i class="fa fa-warning me-2"/>
+                    <span invisible="schedule_based_on != 'users'">Impossible to share a link for an appointment type that has no user assigned.</span>
+                    <span invisible="schedule_based_on != 'resources'">Impossible to share a link for an appointment type that has no resource assigned.</span>
+                </div>
+                <div class="alert alert-info" role="alert"
+                    invisible="not appointment_type_info_msg">
+                    <i class="fa fa-info-circle" title="Info"/><field name="appointment_type_info_msg" nolabel="1"/>
+                </div>
+                <sheet>
+                    <group class="mb-0">
+                        <field name="appointment_type_ids" class="o_input" widget="many2many_tags"
+                            invisible="context.get('default_appointment_type_ids')"
+                            options="{'no_create': True, 'no_edit_color': True}"
+                            placeholder="Select Appointments to share..."/>
+                        <field name="suggested_resource_ids" invisible="1"/>
+                        <field name="suggested_resource_count" invisible="1"/>
+                        <field name="suggested_staff_user_ids" invisible="1"/>
+                        <field name="suggested_staff_user_count" invisible="1"/>
+                        <field name="appointment_type_count" invisible="1"/>
+                        <field name="resources_choice" widget="radio" invisible="appointment_type_count != 1 or (suggested_resource_count &lt;= 1 and suggested_staff_user_count &lt;= 1)"/>
+                        <field name="staff_user_ids" class="o_input" widget="many2many_tags_avatar" options="{'no_create': True}"
+                            invisible="not suggested_staff_user_ids or appointment_type_count != 1 or resources_choice in ['current_user', 'all_assigned_resources']"/>
+                        <field name="resource_ids" class="o_input" widget="many2many_tags_avatar" options="{'no_create': True}"
+                               invisible="not suggested_resource_ids or appointment_type_count != 1 or resources_choice == 'current_user' or resources_choice == 'all_assigned_resources'"/>
+                    </group>
+                    <div invisible="not suggested_staff_user_ids and not suggested_resource_ids">
+                        <label for="base_book_url" string="Link URL" class="opacity-100 fw-bold text-900"/><br/>
+                        <field name="base_book_url" nolabel="1" readonly="1" class="me-1 oe_inline"/>
+                        <field name="short_code" nolabel="1" required="1" class="oe_inline o_input" onchange_on_keydown="True" keydown_debounce_delay="500"/>
+                    </div>
+                    <field name="book_url" class="d-none o_appointment_book_url" readonly="1" nolabel="1"/>
+                </sheet>
+                <footer>
+                    <widget name="appointment_invite_copy_close" class="d-flex w-50 w-md-auto" invisible="appointment_type_count &lt; 1"/>
+                    <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="appointment_invite_view_form_insert_link" model="ir.ui.view">
+        <field name="name">appointment.invite.view.form</field>
+        <field name="model">appointment.invite</field>
+        <field name="mode">primary</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="appointment_invite_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="js_class">appointment_insert_link_form</attribute>
+            </xpath>
+            <xpath expr="//footer" position="replace">
+                <footer>
+                    <button string="Insert link" class="btn btn-primary o_book_url_save" special="save" close="1"/>
+                    <button string="Discard" class="btn btn-secondary o_book_url_discard" special="cancel" close="1"/>
+                </footer>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="appointment_invite_action" model="ir.actions.act_window">
+        <field name="name">Share Links</field>
+        <field name="res_model">appointment.invite</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'search_default_my_book_urls': 1,}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Shared Links yet!
+            </p><p>
+                Configure links that allow booking appointments with custom settings<br/>
+                (e.g. a specific user only, a list of appointment types, ...)
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="stock_barcode.CountScreenRFID">
+        <div class="o_barcode_count_rfid position-fixed h-100 w-100 d-flex justify-content-center align-items-center bg-secondary bg-opacity-50">
+            <div class="bg-light p-3 border rounded bg-opacity-100">
+                <button class="btn-close float-end" type="button" aria-label="Close" t-on-click="props.close"/>
+                <div class="p-3 mt-2 text-center">
+                    <div class="o_rfid_total_read my-2">
+                        <div>Total Reads</div>
+                        <div class="h1 text-danger" t-out="totalRead"/>
+                    </div>
+                    <div class="o_rfid_unique_tags my-2">
+                        <div>Unique Tags</div>
+                        <div class="h1 text-danger" t-out="uniqueTags"/>
+                    </div>
+                    <div class="mt-4">
+                        <div class="o_rfid_read_rate d-inline-block">
+                            <div>Read Rate</div>
+                            <div class="h2">
+                                <t t-out="state.readRate"/>
+                                <span class="ms-1 text-muted">/s</span>
+                            </div>
+                        </div>
+                        <div class="vr mx-3"/>
+                        <div class="o_rfid_read_time d-inline-block">
+                            <div>Read Time</div>
+                            <div class="h2" t-out="state.duration"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

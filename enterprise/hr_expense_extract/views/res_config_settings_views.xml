@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.hr.expense</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="85"/>
+            <field name="inherit_id" ref="hr_expense.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <setting id="expense_extract_settings" position="inside">
+                    <div class="mt16" invisible="not module_hr_expense_extract">
+                        <field name="expense_extract_show_ocr_option_selection" class="o_light_label" widget="radio" required="True"/>
+                        <widget name="iap_buy_more_credits" service_name="invoice_ocr" class="ps-1"/>
+                    </div>
+                </setting>
+            </field>
+        </record>
+    </data>
+</odoo>

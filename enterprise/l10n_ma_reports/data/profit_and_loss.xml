@@ -1,0 +1,1067 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_financial_report_pl" model="account.report">
+        <field name="name">Profit and Loss Statement</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="country_id" ref="base.ma"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_pl_column_cur_op" model="account.report.column">
+                <field name="name">Operations</field>
+                <field name="expression_label">cur_op</field>
+            </record>
+            <record id="account_financial_report_pl_column_prev_op" model="account.report.column">
+                <field name="name">Prev. Years' Operations</field>
+                <field name="expression_label">prev_op</field>
+            </record>
+            <record id="account_financial_report_pl_column_cur_tot" model="account.report.column">
+                <field name="name">Totals</field>
+                <field name="expression_label">cur_tot</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_pl_op" model="account.report.line">
+                <field name="name">OPERATIONS</field>
+                <field name="code">MA_PL_OP</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="account_financial_report_pl_i" model="account.report.line">
+                <field name="name">I - OPERATING INCOME</field>
+                <field name="code">MA_PL_I</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_pl_i_sg" model="account.report.line">
+                        <field name="name">Sales of Goods</field>
+                        <field name="code">MA_PL_I_SG</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_i_sg_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-711 + 7118</field>
+                            </record>
+                            <record id="account_financial_report_pl_i_sg_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7118</field>
+                            </record>
+                            <record id="account_financial_report_pl_i_sg_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-711</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_i_sgsp" model="account.report.line">
+                        <field name="name">Sales of Goods and Services Produced</field>
+                        <field name="code">MA_PL_I_SGSP</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_i_sgsp_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-712 + 7128</field>
+                            </record>
+                            <record id="account_financial_report_pl_i_sgsp_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7128</field>
+                            </record>
+                            <record id="account_financial_report_pl_i_sgsp_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-712</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_i_sr" model="account.report.line">
+                        <field name="name">Sales Revenues</field>
+                        <field name="code">MA_PL_I_SR</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_i_sr_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_I_SG.cur_op + MA_PL_I_SGSP.cur_op</field>
+                            </record>
+                            <record id="account_financial_report_pl_i_sr_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_I_SG.prev_op + MA_PL_I_SGSP.prev_op</field>
+                            </record>
+                            <record id="account_financial_report_pl_i_sr_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_I_SG.cur_tot + MA_PL_I_SGSP.cur_tot</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_i_cip" model="account.report.line">
+                        <field name="name">Change in Inventory of Products (±)</field>
+                        <field name="code">MA_PL_I_CIP</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_i_cip_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-713</field>
+                            </record>
+                            <record id="account_financial_report_pl_i_cip_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-713</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_i_ncapcou" model="account.report.line">
+                        <field name="name">Non-Current Assets Produced by the Company for its Own Use</field>
+                        <field name="code">MA_PL_I_NCAPCOU</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_i_ncapcou_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-714 + 7148</field>
+                            </record>
+                            <record id="account_financial_report_pl_i_ncapcou_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7148</field>
+                            </record>
+                            <record id="account_financial_report_pl_i_ncapcou_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-714</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_i_os" model="account.report.line">
+                        <field name="name">Operating Subsidies</field>
+                        <field name="code">MA_PL_I_OS</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_i_os_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-716 + 7168</field>
+                            </record>
+                            <record id="account_financial_report_pl_i_os_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7168</field>
+                            </record>
+                            <record id="account_financial_report_pl_i_os_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-716</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_i_ooi" model="account.report.line">
+                        <field name="name">Other Operating Income</field>
+                        <field name="code">MA_PL_I_OOI</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_i_ooi_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-718 + 7188</field>
+                            </record>
+                            <record id="account_financial_report_pl_i_ooi_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7188</field>
+                            </record>
+                            <record id="account_financial_report_pl_i_ooi_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-718</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_i_oret" model="account.report.line">
+                        <field name="name">Operating Reversals; Expense Transfers</field>
+                        <field name="code">MA_PL_I_ORET</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_i_oret_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-719 + 7198</field>
+                            </record>
+                            <record id="account_financial_report_pl_i_oret_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7198</field>
+                            </record>
+                            <record id="account_financial_report_pl_i_oret_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-719</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_total_i" model="account.report.line">
+                        <field name="name">TOTAL I</field>
+                        <field name="code">MA_PL_TOTAL_I</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_total_i_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_I_SG.cur_op + MA_PL_I_SGSP.cur_op + MA_PL_I_CIP.cur_op + MA_PL_I_NCAPCOU.cur_op + MA_PL_I_OS.cur_op + MA_PL_I_OOI.cur_op + MA_PL_I_ORET.cur_op</field>
+                            </record>
+                            <record id="account_financial_report_pl_total_i_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_I_SG.prev_op + MA_PL_I_SGSP.prev_op + MA_PL_I_NCAPCOU.prev_op + MA_PL_I_OS.prev_op + MA_PL_I_OOI.prev_op + MA_PL_I_ORET.prev_op</field>
+                            </record>
+                            <record id="account_financial_report_pl_total_i_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_I_SG.cur_tot + MA_PL_I_SGSP.cur_tot + MA_PL_I_CIP.cur_tot + MA_PL_I_NCAPCOU.cur_tot + MA_PL_I_OS.cur_tot + MA_PL_I_OOI.cur_tot + MA_PL_I_ORET.cur_tot</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pl_ii" model="account.report.line">
+                <field name="name">II - OPERATING EXPENSES</field>
+                <field name="code">MA_PL_II</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_pl_ii_pgr" model="account.report.line">
+                        <field name="name">Purchases of Goods Resold</field>
+                        <field name="code">MA_PL_II_PGR</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_ii_pgr_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">611 - 6118</field>
+                            </record>
+                            <record id="account_financial_report_pl_ii_pgr_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6118</field>
+                            </record>
+                            <record id="account_financial_report_pl_ii_pgr_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">611</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_ii_pmsc" model="account.report.line">
+                        <field name="name">Purchases of Materials and Supplies Consumed</field>
+                        <field name="code">MA_PL_II_PMSC</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_ii_pmsc_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">612 - 6128 - 61298</field>
+                            </record>
+                            <record id="account_financial_report_pl_ii_pmsc_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6128 + 61298</field>
+                            </record>
+                            <record id="account_financial_report_pl_ii_pmsc_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">612</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_ii_oee" model="account.report.line">
+                        <field name="name">Other External Expenses</field>
+                        <field name="code">MA_PL_II_OEE</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_ii_oee_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">613 + 614 - 6148</field>
+                            </record>
+                            <record id="account_financial_report_pl_ii_oee_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6148</field>
+                            </record>
+                            <record id="account_financial_report_pl_ii_oee_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">613 + 614</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_ii_td" model="account.report.line">
+                        <field name="name">Taxes and Duties</field>
+                        <field name="code">MA_PL_II_TD</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_ii_td_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">616 - 6168</field>
+                            </record>
+                            <record id="account_financial_report_pl_ii_td_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6168</field>
+                            </record>
+                            <record id="account_financial_report_pl_ii_td_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">616</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_ii_pe" model="account.report.line">
+                        <field name="name">Personnel Expenses</field>
+                        <field name="code">MA_PL_II_PE</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_ii_pe_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">617 - 6178</field>
+                            </record>
+                            <record id="account_financial_report_pl_ii_pe_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6178</field>
+                            </record>
+                            <record id="account_financial_report_pl_ii_pe_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">617</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_ii_ooe" model="account.report.line">
+                        <field name="name">Other Operating Expenses</field>
+                        <field name="code">MA_PL_II_OOE</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_ii_ooe_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">618 - 6188</field>
+                            </record>
+                            <record id="account_financial_report_pl_ii_ooe_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6188</field>
+                            </record>
+                            <record id="account_financial_report_pl_ii_ooe_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">618</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_ii_oa" model="account.report.line">
+                        <field name="name">Operating Allocations</field>
+                        <field name="code">MA_PL_II_OA</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_ii_oa_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">619 - 6198</field>
+                            </record>
+                            <record id="account_financial_report_pl_ii_oa_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6198</field>
+                            </record>
+                            <record id="account_financial_report_pl_ii_oa_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">619</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_total_ii" model="account.report.line">
+                        <field name="name">TOTAL II</field>
+                        <field name="code">MA_PL_TOTAL_II</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_total_ii_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_II_PGR.cur_op + MA_PL_II_PMSC.cur_op + MA_PL_II_OEE.cur_op + MA_PL_II_TD.cur_op + MA_PL_II_PE.cur_op + MA_PL_II_OOE.cur_op + MA_PL_II_OA.cur_op</field>
+                            </record>
+                            <record id="account_financial_report_pl_total_ii_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_II_PGR.prev_op + MA_PL_II_PMSC.prev_op + MA_PL_II_OEE.prev_op + MA_PL_II_TD.prev_op + MA_PL_II_PE.prev_op + MA_PL_II_OOE.prev_op + MA_PL_II_OA.prev_op</field>
+                            </record>
+                            <record id="account_financial_report_pl_total_ii_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_II_PGR.cur_tot + MA_PL_II_PMSC.cur_tot + MA_PL_II_OEE.cur_tot + MA_PL_II_TD.cur_tot + MA_PL_II_PE.cur_tot + MA_PL_II_OOE.cur_tot + MA_PL_II_OA.cur_tot</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pl_iii" model="account.report.line">
+                <field name="name">III - OPERATING RESULT (I - II)</field>
+                <field name="code">MA_PL_III</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_pl_iii_cur_tot" model="account.report.expression">
+                        <field name="label">cur_tot</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">MA_PL_TOTAL_I.cur_tot - MA_PL_TOTAL_II.cur_tot</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pl_fin" model="account.report.line">
+                <field name="name">FINANCIAL</field>
+                <field name="code">MA_PL_FIN</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="account_financial_report_pl_iv" model="account.report.line">
+                <field name="name">IV - FINANCIAL INCOME</field>
+                <field name="code">MA_PL_IV</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_pl_iv_iesonca" model="account.report.line">
+                        <field name="name">Income from Equity Securities and Other Non-Current Assets</field>
+                        <field name="code">MA_PL_IV_IESONCA</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_iv_iesonca_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-732 + 7328</field>
+                            </record>
+                            <record id="account_financial_report_pl_iv_iesonca_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7328</field>
+                            </record>
+                            <record id="account_financial_report_pl_iv_iesonca_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-732</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_iv_feg" model="account.report.line">
+                        <field name="name">Foreign Exchange Gains</field>
+                        <field name="code">MA_PL_IV_FEG</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_iv_feg_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-733 + 7338</field>
+                            </record>
+                            <record id="account_financial_report_pl_iv_feg_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7338</field>
+                            </record>
+                            <record id="account_financial_report_pl_iv_feg_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-733</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_iv_iofi" model="account.report.line">
+                        <field name="name">Interest and Other Financial Income</field>
+                        <field name="code">MA_PL_IV_IOFI</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_iv_iofi_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-738 + 7388</field>
+                            </record>
+                            <record id="account_financial_report_pl_iv_iofi_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7388</field>
+                            </record>
+                            <record id="account_financial_report_pl_iv_iofi_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-738</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_iv_fret" model="account.report.line">
+                        <field name="name">Financial Reversals; Expense Transfers</field>
+                        <field name="code">MA_PL_IV_FRET</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_iv_fret_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-739 + 7398</field>
+                            </record>
+                            <record id="account_financial_report_pl_iv_fret_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7398</field>
+                            </record>
+                            <record id="account_financial_report_pl_iv_fret_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-739</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_total_iv" model="account.report.line">
+                        <field name="name">TOTAL IV</field>
+                        <field name="code">MA_PL_TOTAL_IV</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_total_iv_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_IV_IESONCA.cur_op + MA_PL_IV_FEG.cur_op + MA_PL_IV_IOFI.cur_op + MA_PL_IV_FRET.cur_op</field>
+                            </record>
+                            <record id="account_financial_report_pl_total_iv_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_IV_IESONCA.prev_op + MA_PL_IV_FEG.prev_op + MA_PL_IV_IOFI.prev_op + MA_PL_IV_FRET.prev_op</field>
+                            </record>
+                            <record id="account_financial_report_pl_total_iv_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_IV_IESONCA.cur_tot + MA_PL_IV_FEG.cur_tot + MA_PL_IV_IOFI.cur_tot + MA_PL_IV_FRET.cur_tot</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pl_v" model="account.report.line">
+                <field name="name">V - FINANCIAL EXPENSES</field>
+                <field name="code">MA_PL_V</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_pl_v_ie" model="account.report.line">
+                        <field name="name">Interest Expenses</field>
+                        <field name="code">MA_PL_V_IE</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_v_ie_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">631 - 6318</field>
+                            </record>
+                            <record id="account_financial_report_pl_v_ie_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6318</field>
+                            </record>
+                            <record id="account_financial_report_pl_v_ie_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">631</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_v_fel" model="account.report.line">
+                        <field name="name">Foreign Exchange Losses</field>
+                        <field name="code">MA_PL_V_FEL</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_v_fel_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">633 - 6338</field>
+                            </record>
+                            <record id="account_financial_report_pl_v_fel_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6338</field>
+                            </record>
+                            <record id="account_financial_report_pl_v_fel_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">633</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_v_ofe" model="account.report.line">
+                        <field name="name">Other Financial Expenses</field>
+                        <field name="code">MA_PL_V_OFE</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_v_ofe_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">638 - 6388</field>
+                            </record>
+                            <record id="account_financial_report_pl_v_ofe_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6388</field>
+                            </record>
+                            <record id="account_financial_report_pl_v_ofe_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">638</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_v_fa" model="account.report.line">
+                        <field name="name">Financial Allocations</field>
+                        <field name="code">MA_PL_V_FA</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_v_fa_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">639 - 6398</field>
+                            </record>
+                            <record id="account_financial_report_pl_v_fa_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6398</field>
+                            </record>
+                            <record id="account_financial_report_pl_v_fa_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">639</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_total_v" model="account.report.line">
+                        <field name="name">TOTAL V</field>
+                        <field name="code">MA_PL_TOTAL_V</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_total_v_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_V_IE.cur_op + MA_PL_V_FEL.cur_op + MA_PL_V_OFE.cur_op + MA_PL_V_FA.cur_op</field>
+                            </record>
+                            <record id="account_financial_report_pl_total_v_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_V_IE.prev_op + MA_PL_V_FEL.prev_op + MA_PL_V_OFE.prev_op + MA_PL_V_FA.prev_op</field>
+                            </record>
+                            <record id="account_financial_report_pl_total_v_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_V_IE.cur_tot + MA_PL_V_FEL.cur_tot + MA_PL_V_OFE.cur_tot + MA_PL_V_FA.cur_tot</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pl_vi" model="account.report.line">
+                <field name="name">VI - FINANCIAL RESULT (IV - V)</field>
+                <field name="code">MA_PL_VI</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_pl_vi_cur_tot" model="account.report.expression">
+                        <field name="label">cur_tot</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">MA_PL_TOTAL_IV.cur_tot - MA_PL_TOTAL_V.cur_tot</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pl_cur" model="account.report.line">
+                <field name="name">CURRENT</field>
+                <field name="code">MA_PL_CUR</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="account_financial_report_pl_vii" model="account.report.line">
+                <field name="name">VII - CURRENT RESULT (III + VI)</field>
+                <field name="code">MA_PL_VII</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_pl_vii_cur_tot" model="account.report.expression">
+                        <field name="label">cur_tot</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">MA_PL_III.cur_tot + MA_PL_VI.cur_tot</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pl_noncur" model="account.report.line">
+                <field name="name">NON-CURRENT</field>
+                <field name="code">MA_PL_NONCUR</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="account_financial_report_pl_viii" model="account.report.line">
+                <field name="name">VIII - NON-CURRENT INCOME</field>
+                <field name="code">MA_PL_VIII</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_pl_viii_idnca" model="account.report.line">
+                        <field name="name">Income from Disposal of Non-Current Assets</field>
+                        <field name="code">MA_PL_VIII_IDNCA</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_viii_idnca_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-751 + 7518</field>
+                            </record>
+                            <record id="account_financial_report_pl_viii_idnca_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7518</field>
+                            </record>
+                            <record id="account_financial_report_pl_viii_idnca_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-751</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_viii_bs" model="account.report.line">
+                        <field name="name">Balancing Subsidies</field>
+                        <field name="code">MA_PL_VIII_BS</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_viii_bs_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-756 + 7568</field>
+                            </record>
+                            <record id="account_financial_report_pl_viii_bs_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7568</field>
+                            </record>
+                            <record id="account_financial_report_pl_viii_bs_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-756</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_viii_ris" model="account.report.line">
+                        <field name="name">Reversals of Investment Subsidies</field>
+                        <field name="code">MA_PL_VIII_RIS</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_viii_ris_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-757 + 7578</field>
+                            </record>
+                            <record id="account_financial_report_pl_viii_ris_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7578</field>
+                            </record>
+                            <record id="account_financial_report_pl_viii_ris_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-757</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_viii_onci" model="account.report.line">
+                        <field name="name">Other Non-Current Income</field>
+                        <field name="code">MA_PL_VIII_ONCI</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_viii_onci_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-758 + 7588</field>
+                            </record>
+                            <record id="account_financial_report_pl_viii_onci_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7588</field>
+                            </record>
+                            <record id="account_financial_report_pl_viii_onci_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-758</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_viii_ncret" model="account.report.line">
+                        <field name="name">Non-Current Reversals; Expense Transfers</field>
+                        <field name="code">MA_PL_VIII_NCRET</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_viii_ncret_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-759 + 7598</field>
+                            </record>
+                            <record id="account_financial_report_pl_viii_ncret_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7598</field>
+                            </record>
+                            <record id="account_financial_report_pl_viii_ncret_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-759</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_total_viii" model="account.report.line">
+                        <field name="name">TOTAL VIII</field>
+                        <field name="code">MA_PL_TOTAL_VIII</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_total_viii_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_VIII_IDNCA.cur_op + MA_PL_VIII_BS.cur_op + MA_PL_VIII_RIS.cur_op + MA_PL_VIII_ONCI.cur_op + MA_PL_VIII_NCRET.cur_op</field>
+                            </record>
+                            <record id="account_financial_report_pl_total_viii_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_VIII_IDNCA.prev_op + MA_PL_VIII_BS.prev_op + MA_PL_VIII_RIS.prev_op + MA_PL_VIII_ONCI.prev_op + MA_PL_VIII_NCRET.prev_op</field>
+                            </record>
+                            <record id="account_financial_report_pl_total_viii_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_VIII_IDNCA.cur_tot + MA_PL_VIII_BS.cur_tot + MA_PL_VIII_RIS.cur_tot + MA_PL_VIII_ONCI.cur_tot + MA_PL_VIII_NCRET.cur_tot</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pl_ix" model="account.report.line">
+                <field name="name">IX - NON-CURRENT EXPENSES</field>
+                <field name="code">MA_PL_IX</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_pl_ix_ndvncas" model="account.report.line">
+                        <field name="name">Net Depreciation Value of Non-Current Assets Sold</field>
+                        <field name="code">MA_PL_IX_NDVNCAS</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_ix_ndvncas_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">651 - 6518</field>
+                            </record>
+                            <record id="account_financial_report_pl_ix_ndvncas_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6518</field>
+                            </record>
+                            <record id="account_financial_report_pl_ix_ndvncas_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">651</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_ix_sg" model="account.report.line">
+                        <field name="name">Subsidies Granted</field>
+                        <field name="code">MA_PL_IX_SG</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_ix_sg_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">656 - 6568</field>
+                            </record>
+                            <record id="account_financial_report_pl_ix_sg_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6568</field>
+                            </record>
+                            <record id="account_financial_report_pl_ix_sg_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">656</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_ix_once" model="account.report.line">
+                        <field name="name">Other Non-Current Expenses</field>
+                        <field name="code">MA_PL_IX_ONCE</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_ix_once_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">658 - 6588</field>
+                            </record>
+                            <record id="account_financial_report_pl_ix_once_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6588</field>
+                            </record>
+                            <record id="account_financial_report_pl_ix_once_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">658</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_ix_ncadp" model="account.report.line">
+                        <field name="name">Non-Current Allocations for Depreciations and Provisions</field>
+                        <field name="code">MA_PL_IX_NCADP</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_ix_ncadp_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">659 - 6598</field>
+                            </record>
+                            <record id="account_financial_report_pl_ix_ncadp_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6598</field>
+                            </record>
+                            <record id="account_financial_report_pl_ix_ncadp_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">659</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pl_total_ix" model="account.report.line">
+                        <field name="name">TOTAL IX</field>
+                        <field name="code">MA_PL_TOTAL_IX</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pl_total_ix_cur_op" model="account.report.expression">
+                                <field name="label">cur_op</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_IX_NDVNCAS.cur_op + MA_PL_IX_SG.cur_op + MA_PL_IX_ONCE.cur_op + MA_PL_IX_NCADP.cur_op</field>
+                            </record>
+                            <record id="account_financial_report_pl_total_ix_prev_op" model="account.report.expression">
+                                <field name="label">prev_op</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_IX_NDVNCAS.prev_op + MA_PL_IX_SG.prev_op + MA_PL_IX_ONCE.prev_op + MA_PL_IX_NCADP.prev_op</field>
+                            </record>
+                            <record id="account_financial_report_pl_total_ix_cur_tot" model="account.report.expression">
+                                <field name="label">cur_tot</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MA_PL_IX_NDVNCAS.cur_tot + MA_PL_IX_SG.cur_tot + MA_PL_IX_ONCE.cur_tot + MA_PL_IX_NCADP.cur_tot</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pl_x" model="account.report.line">
+                <field name="name">X - NON-CURRENT RESULT (VIII - IX)</field>
+                <field name="code">MA_PL_X</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_pl_x_cur_tot" model="account.report.expression">
+                        <field name="label">cur_tot</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">MA_PL_TOTAL_VIII.cur_tot - MA_PL_TOTAL_IX.cur_tot</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pl_res" model="account.report.line">
+                <field name="name">RESULTS</field>
+                <field name="code">MA_PL_RES</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="account_financial_report_pl_xi" model="account.report.line">
+                <field name="name">XI - INCOME BEFORE TAXES (VII + X)</field>
+                <field name="code">MA_PL_XI</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_pl_xi_cur_tot" model="account.report.expression">
+                        <field name="label">cur_tot</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">MA_PL_VII.cur_tot + MA_PL_X.cur_tot</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pl_xii" model="account.report.line">
+                <field name="name">XII - INCOME TAXES</field>
+                <field name="code">MA_PL_XII</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_pl_xii_cur_tot" model="account.report.expression">
+                        <field name="label">cur_tot</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">67</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pl_xiii" model="account.report.line">
+                <field name="name">XIII - NET RESULT (XI - XII)</field>
+                <field name="code">MA_PL_XIII</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_pl_xiii_cur_tot" model="account.report.expression">
+                        <field name="label">cur_tot</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">MA_PL_XI.cur_tot - MA_PL_XII.cur_tot</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pl_blank" model="account.report.line">
+                <field name="name"/>
+                <field name="code">MA_PL_BLANK</field>
+            </record>
+            <record id="account_financial_report_pl_xiv" model="account.report.line">
+                <field name="name">XIV - TOTAL INCOME (I + IV + VIII)</field>
+                <field name="code">MA_PL_XIV</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_pl_xiv_cur_tot" model="account.report.expression">
+                        <field name="label">cur_tot</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">MA_PL_TOTAL_I.cur_tot + MA_PL_TOTAL_IV.cur_tot + MA_PL_TOTAL_VIII.cur_tot</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pl_xv" model="account.report.line">
+                <field name="name">XV - TOTAL EXPENSES (II + V + IX + XII)</field>
+                <field name="code">MA_PL_XV</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_pl_xv_cur_tot" model="account.report.expression">
+                        <field name="label">cur_tot</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">MA_PL_TOTAL_II.cur_tot + MA_PL_TOTAL_V.cur_tot + MA_PL_TOTAL_IX.cur_tot + MA_PL_XII.cur_tot</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pl_xvi" model="account.report.line">
+                <field name="name">XVI - NET RESULT (XIV - XV)</field>
+                <field name="code">MA_PL_XVI</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_pl_xvi_cur_tot" model="account.report.expression">
+                        <field name="label">cur_tot</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">MA_PL_XIV.cur_tot - MA_PL_XV.cur_tot</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

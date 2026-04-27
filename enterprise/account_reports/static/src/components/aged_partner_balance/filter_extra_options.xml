@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AgedPartnerBalanceFilterExtraOptions" t-inherit="account_reports.AccountReportFilterExtraOptions">
+        <xpath expr="//DropdownItem[contains(@class, 'filter_show_all_hook')]" position="after">
+            <DropdownItem
+                t-if="controller.options.multi_currency"
+                class="{ 'selected': controller.options.show_currency }"
+                onSelected="() => this.filterClicked({ optionKey: 'show_currency', reload: true})"
+                closingMode="'none'"
+            >
+                Show Currency
+            </DropdownItem>
+            <DropdownItem
+                class="{ 'selected': controller.options.show_account }"
+                onSelected="() => this.filterClicked({ optionKey: 'show_account', reload: true})"
+                closingMode="'none'"
+            >
+                Show Account
+            </DropdownItem>
+        </xpath>
+    </t>
+</templates>

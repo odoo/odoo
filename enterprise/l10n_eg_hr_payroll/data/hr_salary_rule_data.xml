@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="egypt_housing_allowance_salary_rule" model="hr.salary.rule">
+        <field name="name">Transportation Allowance</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="code">TA</field>
+        <field name="sequence">10</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = contract.l10n_eg_transportation_allowance</field>
+        <field name="struct_id" ref="l10n_eg_hr_payroll.hr_payroll_structure_eg_employee_salary"/>
+    </record>
+
+    <record id="egypt_other_allowances_salary_rule" model="hr.salary.rule">
+        <field name="name">Other Allowances</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="code">OA</field>
+        <field name="sequence">20</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = contract.l10n_eg_other_allowances</field>
+        <field name="struct_id" ref="l10n_eg_hr_payroll.hr_payroll_structure_eg_employee_salary"/>
+    </record>
+
+    <record id="egypt_social_insurance_contribution_employee" model="hr.salary.rule">
+        <field name="name">Social Insurance - Employee portion</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="code">SIEMP</field>
+        <field name="sequence">30</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = contract.l10n_eg_social_insurance_reference
+result_rate = -11
+        </field>
+        <field name="struct_id" ref="l10n_eg_hr_payroll.hr_payroll_structure_eg_employee_salary"/>
+    </record>
+
+    <record id="egypt_social_insurance_contribution_company" model="hr.salary.rule">
+        <field name="name">Social Insurance - Company portion</field>
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="code">SICOMP</field>
+        <field name="sequence">40</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = contract.l10n_eg_social_insurance_reference
+result_rate = 18.75
+        </field>
+        <field name="struct_id" ref="l10n_eg_hr_payroll.hr_payroll_structure_eg_employee_salary"/>
+    </record>
+
+    <record id="egypt_social_insurance_contribution_total" model="hr.salary.rule">
+        <field name="name">Total Social Insurance</field>
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="code">SITOT</field>
+        <field name="sequence">50</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = SICOMP - SIEMP</field>
+        <field name="struct_id" ref="l10n_eg_hr_payroll.hr_payroll_structure_eg_employee_salary"/>
+    </record>
+
+    <record id="egypt_end_of_service_provision_salary_rule" model="hr.salary.rule">
+        <field name="name">End of Service Provision</field>
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="code">EOSP</field>
+        <field name="sequence">60</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = employee.departure_date and contract.l10n_eg_number_of_days</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = (contract.l10n_eg_number_of_days / 12) * ((contract._get_contract_wage() + contract.l10n_eg_transportation_allowance + contract.l10n_eg_other_allowances)/ 30)
+        </field>
+        <field name="struct_id" ref="l10n_eg_hr_payroll.hr_payroll_structure_eg_employee_salary"/>
+    </record>
+
+    <record id="egypt_end_of_service_benefit_salary_rule" model="hr.salary.rule">
+        <field name="name">End of Service Benefit</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="code">EOSB</field>
+        <field name="sequence">70</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = employee.departure_date and contract.l10n_eg_total_number_of_days</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+compensation = contract._get_contract_wage() + contract.l10n_eg_transportation_allowance + contract.l10n_eg_other_allowances
+result = (compensation/30) * (contract.l10n_eg_total_number_of_days)
+        </field>
+        <field name="struct_id" ref="l10n_eg_hr_payroll.hr_payroll_structure_eg_employee_salary"/>
+    </record>
+
+    <record id="egypt_yearly_gross" model="hr.salary.rule">
+        <field name="name">Gross Salary Yearly</field>
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="code">GROSSY</field>
+        <field name="sequence">110</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = GROSS * 12</field>
+        <field name="struct_id" ref="l10n_eg_hr_payroll.hr_payroll_structure_eg_employee_salary"/>
+    </record>
+
+    <record id="egypt_taxable_amount" model="hr.salary.rule">
+        <field name="name">Taxable Amount</field>
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="code">TAXBLEAM</field>
+        <field name="sequence">120</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+personal_exemption = payslip._rule_parameter('l10n_eg_lower_boundary')
+result = max(0, GROSSY - personal_exemption)
+        </field>
+        <field name="struct_id" ref="l10n_eg_hr_payroll.hr_payroll_structure_eg_employee_salary"/>
+    </record>
+
+    <record id="egypt_tax_bracket_total" model="hr.salary.rule">
+        <field name="name">Total Income Tax Deduction</field>
+        <field name="category_id" ref="l10n_eg_hr_payroll.hr_salary_rule_category_eg_tax_totals"/>
+        <field name="code">TOTTB</field>
+        <field name="sequence">150</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -payslip._get_eg_tax(TAXBLEAM) / 12
+        </field>
+        <field name="struct_id" ref="l10n_eg_hr_payroll.hr_payroll_structure_eg_employee_salary"/>
+    </record>
+</odoo>

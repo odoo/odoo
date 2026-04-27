@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <function model="ir.default" name="set" eval="('product.template', 'preparation_time', obj().env.company.padding_time)"/>
+
+        <record id="route_rental" model='stock.route'>
+            <field name="name">Rental</field>
+            <field name="company_id"></field>
+            <field name="sequence">10</field>
+            <field name="product_selectable">False</field>
+            <field name="active">False</field>
+        </record>
+    </data>
+
+</odoo>

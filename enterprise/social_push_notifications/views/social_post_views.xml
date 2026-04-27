@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="social_post_view_form" model="ir.ui.view">
+            <field name="name">social.post.view.form.inherit.push_notifications</field>
+            <field name="model">social.post</field>
+            <field name="inherit_id" ref="social.social_post_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='push_notification_image']" position="after">
+                    <field name="use_visitor_timezone"
+                        string="Local Time"
+                        invisible="not has_push_notifications_account or post_method == 'now'"/>
+                </xpath>
+                <xpath expr="//div[@name='notification_request_parameters']" position="attributes">
+                    <attribute name="invisible" add="state in ['posting', 'posted']" separator="or"/>
+                </xpath>
+                <xpath expr="//field[@name='push_notification_title']" position="attributes">
+                    <attribute name="invisible" add="state in ['posting', 'posted']" separator="or"/>
+                </xpath>
+                <xpath expr="//field[@name='push_notification_target_url']" position="attributes">
+                    <attribute name="invisible" add="state in ['posting', 'posted']" separator="or"/>
+                </xpath>
+                <xpath expr="//field[@name='push_notification_image']" position="attributes">
+                    <attribute name="invisible" add="state in ['posting', 'posted']" separator="or"/>
+                </xpath>
+                <xpath expr="//field[@name='visitor_domain']" position="attributes">
+                    <attribute name="invisible" add="state in ['posting', 'posted']" separator="or"/>
+                </xpath>
+                <xpath expr="//group[@name='live_posts']//div[hasclass('o_live_post_content')]//field[@name='message']" position="before">
+                    <field name="push_notification_title"
+                        class="fw-bold"
+                        invisible="media_type != 'push_notifications'"/>
+                </xpath>
+                <xpath expr="//group[@name='live_posts']//div[hasclass('o_live_post_content')]//field[@name='message']" position="after">
+                    <field name="push_notification_target_url"
+                        widget="url"
+                        invisible="media_type != 'push_notifications'"/>
+                </xpath>
+                <xpath expr="//group[@name='live_posts']//field[@name='image_ids']" position="after">
+                    <field name="push_notification_image"
+                        invisible="media_type != 'push_notifications'"
+                        class="oe_avatar" widget="image"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

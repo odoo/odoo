@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="stock_barcode.KanbanRenderer" t-inherit="web.KanbanRenderer">
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="before">
+            <div class="o_kanban_tip_filter w-100 m-0 p-5 py-3 d-flex align-items-center justify-content-center text-bg-800 text-center">
+                <span t-if="displayTransferProtip" t-out="transferTip"/>
+                <button class="o_stock_mobile_barcode btn pe-0" t-on-click="openManualBarcodeDialog">
+                    <i class="fa fa-barcode text-light" role="img"/>
+                </button>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

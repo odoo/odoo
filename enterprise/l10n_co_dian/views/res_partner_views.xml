@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="res_partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="l10n_latam_base.view_partner_latam_form"/>
+        <field name="arch" type="xml">
+            <field name="l10n_latam_identification_type_id" position="after">
+                <button name="button_l10n_co_dian_refresh_data"
+                        type="object"
+                        invisible="not l10n_co_dian_enable_update_data"
+                        class="btn-link w-auto">
+                    <i title="Update data" role="img" aria-label="Update Data"
+                       class="fa fa-fw fa-refresh"/>
+                </button>
+            </field>
+        </field>
+    </record>
+</odoo>

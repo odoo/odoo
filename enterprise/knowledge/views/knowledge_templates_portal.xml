@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="knowledge_portal_view" name="Knowledge Portal View">
+        <t t-call="web.layout">
+            <t t-set="head_knowledge_portal_view">
+                <script type="text/javascript">
+                    odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
+                    odoo.loadMenusPromise = Promise.resolve();
+                </script>
+                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+                <base target="_parent"/>
+                <t t-call-assets="knowledge.webclient"/>
+                <t t-call="web.conditional_assets_tests"/>
+                <t t-call-assets="knowledge.assets_knowledge_print" media="print" t-js="false"/>
+            </t>
+            <t t-set="head" t-value="head_knowledge_portal_view + (head or '')"/>
+            <t t-set="body_classname" t-value="'o_web_client o_knowledge_portal_view'"/>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="bd_corporate_tax_report" model="account.report">
+        <field name="name">Corporate Tax Report</field>
+        <field name="country_id" ref="base.bd"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="default_opening_date_filter">previous_year</field>
+        <field name="custom_handler_model_id" ref="model_l10n_bd_corporate_tax_report_handler"/>
+        <field name="column_ids">
+            <record id="bd_corporate_tax_report_column_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="bd_corporate_tax_report_net_inc" model="account.report.line">
+                <field name="name">NET Income</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="bd_corporate_tax_report_inc" model="account.report.line">
+                        <field name="name">Income</field>
+                        <field name="code">BDCT_INC</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="domain_formula">-sum([('account_id.internal_group', '=', 'income')])</field>
+                    </record>
+                    <record id="bd_corporate_tax_report_e_inc" model="account.report.line">
+                        <field name="name">Exempt Income</field>
+                        <field name="code">BDCT_E_INC</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">tag(l10n_bd.account_tags_tax_c_exempt)</field>
+                    </record>
+                </field>
+            </record>
+            <record id="bd_corporate_tax_report_total_inc" model="account.report.line">
+                <field name="name">Total NET Income</field>
+                <field name="code">BDCT_TOT_NET_INC</field>
+                <field name="hierarchy_level">1</field>
+                <field name="aggregation_formula">BDCT_INC.balance + BDCT_E_INC.balance</field>
+            </record>
+            <record id="bd_corporate_tax_report_gp" model="account.report.line">
+                <field name="name">Gross Profit</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="bd_corporate_tax_report_expenses" model="account.report.line">
+                        <field name="name">Less (Expenses)</field>
+                        <field name="code">BDCT_L_EXP</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">tag(l10n_bd.account_tags_tax_c_exp)</field>
+                    </record>
+                    <record id="bd_corporate_tax_report_cor" model="account.report.line">
+                        <field name="name">Less (Cost Of Revenue)</field>
+                        <field name="code">BDCT_L_COR</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">tag(l10n_bd.account_tags_tax_c_cog)</field>
+                    </record>
+                </field>
+            </record>
+            <record id="bd_corporate_tax_report_total_gp" model="account.report.line">
+                <field name="name">Total Gross Profit</field>
+                <field name="code">BDCT_TOT_GP</field>
+                <field name="hierarchy_level">1</field>
+                <field name="aggregation_formula">BDCT_TOT_NET_INC.balance - BDCT_L_EXP.balance - BDCT_L_COR.balance</field>
+            </record>
+            <record id="bd_corporate_tax_report_taxable" model="account.report.line">
+                <field name="name">Taxable Amount</field>
+                <field name="code">BDCT_TAX_AMO</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="bd_corporate_tax_report_taxable_dp" model="account.report.line">
+                        <field name="name">Disallowed Portion</field>
+                        <field name="code">BDCT_MANUAL_DED</field>
+                        <field name="expression_ids">
+                            <record id="bd_corporate_tax_report_taxable_dp_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="bd_corporate_tax_report_total_taxable" model="account.report.line">
+                <field name="name">Total Taxable Amount</field>
+                <field name="code">BDCT_TOT_TAX_AMO</field>
+                <field name="hierarchy_level">0</field>
+                <field name="aggregation_formula">BDCT_TOT_GP.balance - BDCT_MANUAL_DED.balance</field>
+                <field name="children_ids">
+                    <record id="bd_corporate_tax_report_total_taxable_tp" model="account.report.line">
+                        <field name="name">Tax Percentage</field>
+                        <field name="code">BDCT_TAX_PERC</field>
+                        <field name="expression_ids">
+                            <record id="bd_corporate_tax_report_total_taxable_tp_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="bd_corporate_tax_report_cop_tax_amount" model="account.report.line">
+                <field name="name">Corporate TAX Amount</field>
+                <field name="code">BDCT_COP_TAX_AMO</field>
+                <field name="hierarchy_level">0</field>
+                <field name="aggregation_formula">BDCT_TOT_TAX_AMO.balance * (BDCT_TAX_PERC.balance / 100)</field>
+            </record>
+        </field>
+    </record>
+</odoo>

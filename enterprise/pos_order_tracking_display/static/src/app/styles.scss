@@ -1,0 +1,36 @@
+
+html {
+    @include media-breakpoint-up(md) {
+        font-size: $o-root-font-size * 1.75;
+    }
+
+    @include media-breakpoint-up(lg) {
+        font-size: $o-root-font-size * 3;
+    }
+    
+    @include media-breakpoint-up(xl) {
+        font-size: $o-root-font-size * 5;
+    }
+
+    // 4K 
+    @media (min-width: 3840px) {
+        font-size: $o-root-font-size * 9;
+    }
+}
+
+.o_tracking_display_main {
+    padding: map-get($spacers, 3);
+
+    @media (min-width: 3840px) {
+        padding: map-get($spacers, 5);
+    }
+}
+
+.o_tracking_display_logo {
+    width: 10vw;
+}
+
+.o_tracking_display_fadeOut {
+    height: 10%;
+    background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(55, 65, 81, 1) 100%);
+}

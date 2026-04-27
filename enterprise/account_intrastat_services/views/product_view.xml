@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_inherit_account_intrastat" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.account.intrastat</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="account_intrastat.product_template_form_view_inherit_account_intrastat"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='invoicing']//group[@name='intrastat']/field[@name='intrastat_code_id']" position="replace">
+                <label class="o_form_label" for="intrastat_code_id" invisible="type != 'consu'" string="Commodity Code"/>
+                <div class="o_row" invisible="type != 'consu'">
+                    <field name="intrastat_code_id" nolabel="1" domain="intrastat_code_domain"/>
+                </div>
+                <label class="o_form_label" for="intrastat_code_id" invisible="type != 'service'" string="Service Code"/>
+                <div class="o_row" invisible="type != 'service'">
+                    <field name="intrastat_code_id" nolabel="1" domain="intrastat_code_domain"/>
+                </div>
+            </xpath>
+            <xpath expr="//page[@name='invoicing']//group[@name='intrastat']//label[@for='weight']" position="attributes">
+                <attribute name="invisible">not intrastat_code_id or intrastat_supplementary_unit or type == 'service'</attribute>
+            </xpath>
+            <xpath expr="//page[@name='invoicing']//group[@name='intrastat']//label[@for='weight']/following-sibling::div[1]" position="attributes">
+                <attribute name="invisible">not intrastat_code_id or intrastat_supplementary_unit or type == 'service'</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="product_product_form_view_inherit_account_intrastat" model="ir.ui.view">
+        <field name="name">product.product.form.inherit.account.intrastat</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="account_intrastat.product_product_form_view_inherit_account_intrastat"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='intrastat']//label[@for='weight']" position="attributes">
+                <attribute name="invisible">not intrastat_code_id or intrastat_supplementary_unit or type == 'service'</attribute>
+            </xpath>
+            <xpath expr="//group[@name='intrastat']//label[@for='weight']/following-sibling::div[1]" position="attributes">
+                <attribute name="invisible">not intrastat_code_id or intrastat_supplementary_unit or type == 'service'</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportLineCellEditable" t-inherit="account_reports.AccountReportLineCellCustomizable" t-inherit-mode="primary">
+        <xpath expr="//div[contains(@class, 'wrapper')]" position="replace">
+            <t t-if="hasEditPopupData">
+                <div class="content">
+                    <input type="text"
+                           class="o_input text-end"
+                           t-ref="input"
+                           t-on-change="onChange"
+                           t-on-focus="onFocus"
+                           t-on-blur="onBlur"
+                           t-att-value="inputValue"
+                    />
+                </div>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>

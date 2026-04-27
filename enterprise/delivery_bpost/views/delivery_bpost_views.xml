@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+  <record id="view_delivery_carrier_form_with_provider_bpost" model="ir.ui.view">
+    <field name="name">delivery.carrier.form.provider.bpost</field>
+    <field name="model">delivery.carrier</field>
+    <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//page[@name='destination']" position="before">
+        <page string="bpost Configuration" name="bpost_configuration" invisible="delivery_type != 'bpost'">
+          <group>
+            <group>
+              <field name="bpost_account_number" required="delivery_type == 'bpost'"/>
+              <field name="bpost_developer_password" required="delivery_type == 'bpost'"/>
+              <field name="bpost_delivery_nature" required="delivery_type == 'bpost'"/>
+              <field name="bpost_shipment_type" invisible="bpost_delivery_nature != 'International'" required="bpost_delivery_nature == 'International'"/>
+              <field name="bpost_parcel_return_instructions" invisible="bpost_delivery_nature != 'International'" required="bpost_delivery_nature == 'International'"/>
+            </group>
+            <group>
+              <field name="bpost_domestic_deliver_type" string="Bpost Package Type" invisible="bpost_delivery_nature != 'Domestic'" required="bpost_delivery_nature == 'Domestic'"/>
+              <field name="bpost_international_deliver_type" string="Bpost Package Type" invisible="bpost_delivery_nature != 'International'" required="bpost_delivery_nature == 'International'"/>
+              <field name="bpost_label_stock_type" string="Label Type" required="delivery_type == 'bpost'"/>
+              <field name="bpost_label_format" string="Label Format" required="delivery_type == 'bpost'"/>
+            </group>
+            <field name="can_generate_return" invisible="1"/>
+            <!-- Hide Options group if no visible fields inside it. -->
+            <group string="Options" invisible="not can_generate_return and bpost_delivery_nature != 'Domestic'">
+              <field name="bpost_saturday" invisible="bpost_delivery_nature != 'Domestic'"/>
+              <field name="return_label_on_delivery" invisible="not can_generate_return"/>
+              <field name="get_return_label_from_portal" invisible="not return_label_on_delivery"/>
+            </group>
+          </group>
+        </page>
+      </xpath>
+    </field>
+  </record>
+</odoo>

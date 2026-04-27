@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+
+    <!-- Fedex Product Packagings -->
+    <record id="fedex_packaging_FEDEX_BOX" model="stock.package.type">
+        <field name="name">FEDEX_BOX</field>
+        <field name="shipper_package_code">FEDEX_BOX</field>
+        <field name="package_carrier_type">fedex</field>
+        <field name="max_weight">9.07</field>
+    </record>
+    <record id="fedex_packaging_FEDEX_10KG_BOX" model="stock.package.type">
+        <field name="name">FEDEX_10KG_BOX</field>
+        <field name="shipper_package_code">FEDEX_10KG_BOX</field>
+        <field name="package_carrier_type">fedex</field>
+        <field name="max_weight">10</field>
+    </record>
+    <record id="fedex_packaging_FEDEX_25KG_BOX" model="stock.package.type">
+        <field name="name">FEDEX_25KG_BOX</field>
+        <field name="shipper_package_code">FEDEX_25KG_BOX</field>
+        <field name="package_carrier_type">fedex</field>
+        <field name="max_weight">25</field>
+    </record>
+    <record id="fedex_packaging_FEDEX_ENVELOPE" model="stock.package.type">
+        <field name="name">FEDEX_ENVELOPE</field>
+        <field name="shipper_package_code">FEDEX_ENVELOPE</field>
+        <field name="package_carrier_type">fedex</field>
+        <field name="max_weight">0.5</field>
+    </record>
+    <record id="fedex_packaging_FEDEX_PAK" model="stock.package.type">
+        <field name="name">FEDEX_PAK</field>
+        <field name="shipper_package_code">FEDEX_PAK</field>
+        <field name="package_carrier_type">fedex</field>
+        <field name="max_weight">0</field>
+    </record>
+    <record id="fedex_packaging_FEDEX_TUBE" model="stock.package.type">
+        <field name="name">FEDEX_TUBE</field>
+        <field name="shipper_package_code">FEDEX_TUBE</field>
+        <field name="package_carrier_type">fedex</field>
+        <field name="max_weight">9.07</field>
+    </record>
+    <record id="fedex_packaging_YOUR_PACKAGING" model="stock.package.type">
+        <field name="name">FEDEX_YOUR_PACKAGING</field>
+        <field name="shipper_package_code">YOUR_PACKAGING</field>
+        <field name="package_carrier_type">fedex</field>
+    </record>
+
+    <!-- Fedex Delivery Carriers -->
+    <record id="product_product_delivery_fedex_inter" model="product.product">
+      <field name="name">Fedex International</field>
+      <field name="default_code">Delivery_005</field>
+      <field name="type">service</field>
+      <field name="categ_id" ref="delivery.product_category_deliveries"/>
+      <field name="sale_ok" eval="False"/>
+      <field name="purchase_ok" eval="False"/>
+      <field name="list_price">0.0</field>
+      <field name="invoice_policy">order</field>
+    </record>
+    <record id="delivery_carrier_fedex_inter" model="delivery.carrier">
+        <field name="name">Fedex International</field>
+        <field name="product_id" ref="delivery_fedex.product_product_delivery_fedex_inter"/>
+        <field name="delivery_type">fedex</field>
+        <field name="fedex_weight_unit">KG</field>
+        <field name="fedex_developer_key">JA2mr1yA7NTT8L4i</field>
+        <field name="fedex_developer_password">ZLMVRmbxHE0UnRmjRtQuPnkOM</field>
+        <field name="fedex_account_number">601356805</field>
+        <field name="fedex_meter_number">118679685</field>
+        <field name="fedex_default_package_type_id" ref="fedex_packaging_FEDEX_BOX"/>
+    </record>
+
+    <record id="product_product_delivery_fedex_us" model="product.product">
+      <field name="name">Fedex US</field>
+      <field name="default_code">Delivery_006</field>
+      <field name="type">service</field>
+      <field name="categ_id" ref="delivery.product_category_deliveries"/>
+      <field name="sale_ok" eval="False"/>
+      <field name="purchase_ok" eval="False"/>
+      <field name="list_price">0.0</field>
+      <field name="invoice_policy">order</field>
+    </record>
+    <record id="delivery_carrier_fedex_us" model="delivery.carrier">
+        <field name="name">Fedex US</field>
+        <field name="product_id" ref="delivery_fedex.product_product_delivery_fedex_us"/>
+        <field name="delivery_type">fedex</field>
+        <field name="fedex_weight_unit">LB</field>
+        <field name="fedex_service_type">PRIORITY_OVERNIGHT</field>
+        <field name="fedex_developer_key">JA2mr1yA7NTT8L4i</field>
+        <field name="fedex_developer_password">ZLMVRmbxHE0UnRmjRtQuPnkOM</field>
+        <field name="fedex_account_number">601356805</field>
+        <field name="fedex_meter_number">118679685</field>
+        <field name="fedex_default_package_type_id" ref="fedex_packaging_FEDEX_BOX"/>
+    </record>
+
+</data>
+</odoo>

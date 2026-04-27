@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates xml:space="preserve">
+    <t t-name="whatsapp.WhatsappVariablesTextField" t-inherit="web.TextField" t-inherit-mode="primary">
+        <xpath expr="//textarea" position="after">
+            <div class="position-relative d-inline">
+                <button class="btn position-absolute end-0 text-primary py-0" t-ref="variablesButton" t-on-click="_onClickAddVariables">
+                    <div class="d-flex align-items-center gap-1 lh-1">
+                        <i class="fa fa-plus" role="img" title="Insert variable"/>
+                        <span>variable</span>
+                    </div>
+                </button>
+            </div>
+        </xpath>
+    </t>
+</templates>

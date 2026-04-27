@@ -1,0 +1,84 @@
+<odoo>
+    <record id="view_delivery_carrier_form_with_provider_fedex" model="ir.ui.view">
+        <field name="name">delivery.carrier.form.provider.fedex</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='destination']" position='before'>
+                <page string="Fedex Configuration" name="fedex_configuration" invisible="delivery_type != 'fedex_rest'">
+                    <group>
+                        <group>
+                            <field name="fedex_rest_developer_key" required="delivery_type == 'fedex_rest'"/>
+                            <field name="fedex_rest_developer_password" required="delivery_type == 'fedex_rest'"/>
+                            <field name="fedex_rest_account_number" string="Account Number" required="delivery_type == 'fedex_rest'"/>
+                            <field name="fedex_rest_service_type" required="delivery_type == 'fedex_rest'"/>
+                            <field name="fedex_rest_droppoff_type" required="delivery_type == 'fedex_rest'"/>
+                        </group>
+                        <group>
+                            <field name="fedex_rest_default_package_type_id" required="delivery_type == 'fedex_rest'" domain="[('package_carrier_type', '=', 'fedex_rest')]"/>
+                            <field name="fedex_rest_weight_unit" string="Package Weight Unit" required="delivery_type == 'fedex_rest'"/>
+                            <div class="o_td_label">
+                                <span class="o_form_label">Package Length Unit</span>
+                            </div>
+                            <div class="o_field_widget">
+                                <span invisible="fedex_rest_weight_unit != 'KG'">Centimeters</span>
+                                <span invisible="fedex_rest_weight_unit != 'LB'">Inches</span>
+                            </div>
+                            <field name="fedex_rest_label_stock_type" required="delivery_type == 'fedex_rest'"/>
+                            <field name="fedex_rest_label_file_type" string="Label Format" required="delivery_type == 'fedex_rest'"/>
+                        </group>
+                        <group string="Options">
+                            <field name="return_label_on_delivery" invisible="not can_generate_return"/>
+                            <field name="get_return_label_from_portal" invisible="not return_label_on_delivery"/>
+                            <field name="fedex_rest_email_notifications"/>
+                            <field name="fedex_rest_duty_payment" string="Duties paid by" required="delivery_type == 'fedex_rest'"/>
+                            <field name="fedex_rest_residential_address"/>
+                            <field name="fedex_rest_documentation_type"/>
+                            <field name="fedex_rest_override_shipper_vat"/>
+                        </group>
+                        <group string="Extra Data" name="fedex_extra_data" groups="base.group_no_one">
+                            <field name="fedex_rest_extra_data_rate_request"/>
+                            <field name="fedex_rest_extra_data_ship_request"/>
+                            <field name="fedex_rest_extra_data_return_request"/>
+                        </group>
+                    </group>
+                    <group string='Fedex Tutorial' invisible="delivery_type != 'fedex_rest'">
+                        <ul>
+                            <li>
+                                <b>Go to <a href='https://developer.fedex.com/' target='_blank'>Fedex Developer Website</a> to create a FedEx developer account</b>
+                                <br/><br/> <img src='/delivery_fedex_rest/static/src/img/setup_01.png' alt="Screenshot"/>
+                                <br/><br/>
+                            </li>
+
+                            <li>
+                                <b>Once your account is created, go to the My Projects tab and create a new API project. Make sure to select the options indicated below:</b>
+                                <br/> <img src='/delivery_fedex_rest/static/src/img/setup_02.png' alt="Screenshot"/>
+                                <br/> <img src='/delivery_fedex_rest/static/src/img/setup_03.png' alt="Screenshot"/>
+                                <br/><br/>
+                            </li>
+                            <li>
+                                <b>When asked to select APIs for the project, make sure to enable at least the following APIs:</b>
+                                <br/> <img src='/delivery_fedex_rest/static/src/img/setup_04.png' alt="Screenshot"/>
+                                <br/><br/>
+                            </li>
+                            <li>
+                                <b>After finishing creation of the project, you will see your test API key, secret key and account number:</b>
+                                <br/> <img src='/delivery_fedex_rest/static/src/img/setup_05.png' alt="Screenshot"/>
+                                <br/><br/>
+                            </li>
+                            <li>
+                                <b>To move to production, generate a production key and link it to a FedEx account number (you can add/create one if necessary), you will receive production API and secret keys:</b>
+                                <br/> <img src='/delivery_fedex_rest/static/src/img/setup_06.png' alt="Screenshot"/>
+                                <br/><br/>
+                            </li>
+                            <li>
+                                <b>To enable the creation of FedEx shipping labels, the last step is the Certification Process, click on 'Go to API certification' and follow the required steps to get your account certified for label creation.</b>
+                                <br/>These certifications usually require that you contact the FedEx support team by email.
+                            </li>
+                        </ul>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

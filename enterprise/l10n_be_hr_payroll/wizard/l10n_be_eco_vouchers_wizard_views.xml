@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_eco_vouchers_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n.be.eco.vouchers.wizard.view.form</field>
+        <field name="model">l10n.be.eco.vouchers.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Eco-Vouchers">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="reference_year" class="o_hr_narrow_field" options="{'type': 'number'}"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <field name="reference_period" no_label="1"/>
+                        <field name="line_ids">
+                            <list editable="bottom">
+                                <field name="employee_id" widget="many2one_avatar_user"/>
+                                <field name="niss"/>
+                                <field name="amount"/>
+                                <field name="currency_id" column_invisible="True"/>
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Generate Payslips" name="generate_payslips" type="object" class="btn-primary" data-hotkey="w" confirm="This will add the eco-vouchers amounts on the open payslips in this batch associated with the respective employees, and create new payslips where they don't exist. Are you sure you want to proceed?"/>
+                    <button string="Export XLS" name="action_export_xls" type="object" data-hotkey="q"/>
+                    <button string="Discard" special="cancel" type="object" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_be_eco_vouchers_wizard_action" model="ir.actions.act_window">
+        <field name="name">Eco-Vouchers</field>
+        <field name="res_model">l10n.be.eco.vouchers.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_be_eco_vouchers_wizard"
+        name="Eco-Vouchers"
+        action="l10n_be_eco_vouchers_wizard_action"
+        parent="l10n_be_hr_payroll.menu_reporting_l10n_be"
+        sequence="22"
+    />
+</odoo>

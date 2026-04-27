@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10_mz_bs" model="account.report">
+        <field name="name">Balance Sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.mz"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_mz_bs_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_mz_bs_line_1" model="account.report.line">
+                <field name="name">ASSETS</field>
+                <field name="code">l10n_mz_1</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="aggregation_formula">l10n_mz_11.balance + l10n_mz_12.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_mz_bs_line_11" model="account.report.line">
+                        <field name="name">Non-current assets</field>
+                        <field name="code">l10n_mz_11</field>
+                        <field name="aggregation_formula"> l10n_mz_111.balance + l10n_mz_112.balance + l10n_mz_113.balance + l10n_mz_114.balance + l10n_mz_115.balance + l10n_mz_116.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_mz_bs_line_111" model="account.report.line">
+                                <field name="name">Tangible assets</field>
+                                <field name="code">l10n_mz_111</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">32</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_112" model="account.report.line">
+                                <field name="name">Investment property</field>
+                                <field name="code">l10n_mz_112</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">36</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_113" model="account.report.line">
+                                <field name="name">Intangible assets</field>
+                                <field name="code">l10n_mz_113</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">33</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_114" model="account.report.line">
+                                <field name="name">Biological assets</field>
+                                <field name="code">l10n_mz_114</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">271</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_115" model="account.report.line">
+                                <field name="name">Financial Investments</field>
+                                <field name="code">l10n_mz_115</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">31 + 39</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_116" model="account.report.line">
+                                <field name="name">Other non current assets</field>
+                                <field name="code">l10n_mz_116</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">34 + 38</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_bs_line_12" model="account.report.line">
+                        <field name="name">Current assets</field>
+                        <field name="code">l10n_mz_12</field>
+                        <field name="aggregation_formula"> l10n_mz_121.balance + l10n_mz_122.balance + l10n_mz_123.balance + l10n_mz_124.balance + l10n_mz_125.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_mz_bs_line_121" model="account.report.line">
+                                <field name="name">Inventories</field>
+                                <field name="code">l10n_mz_121</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">2\(27,287,297)</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_122" model="account.report.line">
+                                <field name="name">Biological assets</field>
+                                <field name="code">l10n_mz_122</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">272 + 287 + 297</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_123" model="account.report.line">
+                                <field name="name">Trade receivables</field>
+                                <field name="code">l10n_mz_123</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">41 + 471</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_124" model="account.report.line">
+                                <field name="name">Other current assets</field>
+                                <field name="code">l10n_mz_124</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">4438 + 44341 + 45 + 493 + 494 + 472</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_125" model="account.report.line">
+                                <field name="name">Cash and Bank</field>
+                                <field name="code">l10n_mz_125</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_mz_bs_line_2" model="account.report.line">
+                <field name="name">EQUITY AND LIABILITIES</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="code">l10n_mz_2</field>
+                <field name="aggregation_formula">l10n_mz_21.balance + l10n_mz_22.balance + l10n_mz_23.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_mz_bs_line_21" model="account.report.line">
+                        <field name="name">Equity</field>
+                        <field name="code">l10n_mz_21</field>
+                        <field name="aggregation_formula">l10n_mz_211.balance + l10n_mz_212.balance + l10n_mz_213.balance + l10n_mz_214.balance + l10n_mz_215.balance + l10n_mz_216.balance + l10n_mz_217.balance + l10n_mz_218.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_mz_bs_line_211" model="account.report.line">
+                                <field name="name">Share Capital</field>
+                                <field name="code">l10n_mz_211</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-51</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_212" model="account.report.line">
+                                <field name="name">Reserves</field>
+                                <field name="code">l10n_mz_212</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-55</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_213" model="account.report.line">
+                                <field name="name">Retained earnings</field>
+                                <field name="code">l10n_mz_213</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_mz_bs_line_213_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.internal_group', 'in', ['income', 'expense'])]"/>
+                                        <field name="subformula">-sum</field>
+                                        <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_mz_bs_line_214" model="account.report.line">
+                                <field name="name">Supplementary capital and share premium</field>
+                                <field name="code">l10n_mz_214</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-53-54</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_215" model="account.report.line">
+                                <field name="name">Treasury shares</field>
+                                <field name="code">l10n_mz_215</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-52</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_216" model="account.report.line">
+                                <field name="name">Surplus on revaluation of tangible and intangible assets</field>
+                                <field name="code">l10n_mz_216</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-56</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_217" model="account.report.line">
+                                <field name="name">Other changes in equity</field>
+                                <field name="code">l10n_mz_217</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-58 - 999999</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_218" model="account.report.line">
+                                <field name="name">Net profit or loss for the period</field>
+                                <field name="code">l10n_mz_218</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_mz_bs_line_218_balance_aggregate" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_mz_net_pl.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                        <field name="date_scope">from_fiscalyear</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_bs_line_22" model="account.report.line">
+                        <field name="name">Non-current liabilities</field>
+                        <field name="code">l10n_mz_22</field>
+                        <field name="aggregation_formula">l10n_mz_221.balance + l10n_mz_222.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_mz_bs_line_221" model="account.report.line">
+                                <field name="name">Provisions</field>
+                                <field name="code">l10n_mz_221</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-48\(483)</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_222" model="account.report.line">
+                                <field name="name">Borrowings</field>
+                                <field name="code">l10n_mz_222</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-4312</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_bs_line_23" model="account.report.line">
+                        <field name="name">Current liabilities</field>
+                        <field name="code">l10n_mz_23</field>
+                        <field name="aggregation_formula">l10n_mz_231.balance + l10n_mz_232.balance + l10n_mz_233.balance + l10n_mz_234.balance + l10n_mz_235.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_mz_bs_line_231" model="account.report.line">
+                                <field name="name">Provisions</field>
+                                <field name="code">l10n_mz_231</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-483</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_232" model="account.report.line">
+                                <field name="name">Trade payables</field>
+                                <field name="code">l10n_mz_232</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-42</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_233" model="account.report.line">
+                                <field name="name">Borrowings</field>
+                                <field name="code">l10n_mz_233</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-4311</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_234" model="account.report.line">
+                                <field name="name">Tax payables</field>
+                                <field name="code">l10n_mz_234</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-44\(44341,4438)</field>
+                            </record>
+                            <record id="l10n_mz_bs_line_235" model="account.report.line">
+                                <field name="name">Other current liabilities</field>
+                                <field name="code">l10n_mz_235</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-46-491-492</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

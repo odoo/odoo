@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_edi_form" model="ir.ui.view">
+        <field name="model">stock.picking</field>
+        <field name="name">stock.picking.edi.form</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+
+            <xpath expr="//header" position="after">
+                <div class="alert alert-danger mb-0" role="alert" invisible="not l10n_uy_edi_error">
+                    <div class="p-0 m-0">
+                        <i class="fa fa-warning" role="img" title="EDI (Uruguay)" />
+                        <span class="mx-1">E-invoicing (Uruguay)</span>
+                    </div>
+                    <div class="o_row">
+                        <field name="l10n_uy_edi_error" />
+                        <button name="l10n_uy_edi_action_download_preview_xml" type="object"
+                            string="Download" class="oe_inline oe_link"
+                            invisible="l10n_uy_edi_cfe_state != 'error'" />
+                    </div>
+                </div>
+            </xpath>
+
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="l10n_uy_edi_operation_type" invisible="country_code != 'UY'" />
+                <field name="l10n_latam_document_type_id"
+                    domain="[('id', 'in', l10n_latam_available_document_type_ids)]" readonly="1"
+                    invisible="not l10n_uy_edi_document_id" force_save="1" />
+                <label for="l10n_uy_edi_cfe_state" invisible="not l10n_uy_edi_document_id" />
+                <div invisible="not l10n_uy_edi_document_id">
+                    <field name="l10n_uy_edi_cfe_state" class="oe_inline" />
+                    <field name="l10n_uy_edi_document_id" readonly="1" />
+                </div>
+                <field name="l10n_uy_edi_cfe_uuid" invisible="not l10n_uy_edi_document_id"
+                    readonly="1" groups="base.group_no_one" />
+            </xpath>
+
+            <xpath expr="//header//button[@name='action_cancel']" position="after">
+                <button name="l10n_uy_edi_create_delivery_guide" string="Create Delivery Guide"
+                    type="object"
+                    invisible="not l10n_uy_is_cfe or state != 'done' or l10n_uy_edi_cfe_state in ['accepted', 'rejected', 'received']" />
+                <button name="l10n_uy_edi_action_update_dgi_state" type="object"
+                    string="Update DGI State" invisible="l10n_uy_edi_cfe_state != 'received'"
+                    icon="fa-refresh" />
+            </xpath>
+
+            <notebook position="inside">
+                <page name="uy_edi" string="UY EDI" invisible="not l10n_latam_document_type_id">
+                    <group>
+                        <group>
+                            <field name="l10n_uy_edi_addenda_ids" widget="many2many_tags" />
+                            <field name="l10n_uy_edi_reference" />
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+
+            <xpath expr="//field[@name='move_ids_without_package']/list//field[@name='product_id']"
+                position="after">
+                <field name="l10n_uy_edi_addenda_ids" widget="many2many_tags" optional="hide"
+                    column_invisible="parent.country_code != 'UY'"
+                    context="{
+                        'default_type': 'item',
+                        'form_view_ref': 'l10n_uy_edi.l10n_uy_edi_addenda_view_form_only_item'}" />
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_picking_edi_tree" model="ir.ui.view">
+        <field name="model">stock.picking</field>
+        <field name="name">stock.picking.edi.tree</field>
+        <field name="inherit_id" ref="stock.vpicktree" />
+        <field name="arch" type="xml">
+            <field name="json_popover" position="after">
+                <field name="l10n_uy_edi_cfe_state" />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_picking_edi_search" model="ir.ui.view">
+        <field name="model">stock.picking</field>
+        <field name="name">stock.picking.edi.search</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search" />
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="l10n_latam_document_type_id" />
+            </field>
+            <group position="inside">
+                <filter name="groupby_document_type" string="Document Type" domain="[]"
+                    context="{'group_by': 'l10n_latam_document_type_id'}" />
+            </group>
+        </field>
+    </record>
+
+</odoo>

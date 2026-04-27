@@ -1,0 +1,19 @@
+<templates id="template" xml:space="preserve">
+    <t t-name="account.BankRecListUploadButtons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+            <t t-call="account.AccountViewUploadButton"/>
+        </xpath>
+    </t>
+
+    <t t-name="account.BankRecListUploadRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[@t-ref='root']" position="before">
+            <UploadDropZone
+                visible="dropzoneState.visible"
+                hideZone="() => dropzoneState.visible = false"/>
+        </xpath>
+
+        <xpath expr="//div[@t-ref='root']" position="attributes">
+            <attribute name="t-on-dragenter.stop.prevent">onDragStart</attribute>
+        </xpath>
+    </t>
+</templates>

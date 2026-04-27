@@ -1,0 +1,51 @@
+.o_web_studio_editor_manager .o_web_studio_view_renderer .o_web_studio_search_view_editor {
+    .o-web-studio-search--drop-disable {
+        opacity: 50%;
+    }
+
+    .o-web-studio-editor--element-clickable {
+        &:hover {
+            cursor: pointer;
+            outline: 1px dashed $o-brand-primary;
+        }
+        &.o-web-studio-editor--element-clicked {
+            outline: 2px solid $o-brand-primary;
+        }
+    }
+
+    .o_web_studio_hook {
+        :first-child {
+            line-height: 0px;
+        }
+        span.o_web_studio_hook_separator {
+            display: block;
+            position: relative;
+            padding: 4px 0;
+            border: 0px dashed transparent;
+            transition: all 0.2s cubic-bezier(0.215, 0.610, 0.355, 1.000) 0s;
+        }
+    }
+
+    .o_web_studio_hook.o_web_studio_nearest_hook {
+        cursor: pointer !important;
+        outline: none;
+        span.o_web_studio_hook_separator {
+            background-color: rgba($o-brand-primary, 0.02);
+            border: 1px dashed rgba($o-brand-primary, 0.5);
+            padding: 20px;
+            margin: 4px 0;
+        }
+    }
+
+    .o_web_studio_search_view_container {
+        width: 700px !important;
+
+        .o_web_studio_search_sub_item {
+            min-width: 220px;
+        }
+    }
+
+    .o_web_studio_search_autocompletion_container {
+        max-width: 320px;
+    }
+}

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="l10n_ch_hr_payroll_elm_transmission.SwissdecInteroperabilityClient" class="interoperability-client" owl="1">
+        <div class="o_home_menu_background d-flex flex-column align-items-center justify-content-center h-100 text-center position-relative">
+            <div class="flex-grow-1 flex-md-grow-0 card pb-3 px-0 px-lg-5">
+                <div class="p-4 d-flex flex-column p-0 p-md-4">
+                    <div name="ping_request" class="m-2">
+                        <h2>Ping Endpoint</h2>
+                        <button t-on-click="() => this.PingRequest()" class="btn btn-primary m-2">
+                            <span>Ping</span>
+                        </button>
+                        <div t-if="this.state.ping_response">
+                            <div class="column">
+                                <t t-if="this.state.ping_response.warning">
+                                    <i class="fa fa-close"/> Ping Failed
+                                    <div>
+                                        <t t-esc="this.state.ping_response.warning"/>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <i class="fa fa-check"/> Ping Successful
+                                    <div>
+                                        System Datetime : <t t-esc="this.state.ping_response.SystemDateTime"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div name="interop_request" class="m-2">
+                        <h2>Interoperability Test</h2>
+                        <div class="o_row">
+                            <label for="second_operand">Second Operand: </label>
+                            <input t-on-input="onOperandInput" placeholder="10.00" name="second_operand" class="o_input m-1 w-auto mx-2 mb-2 mb-sm-0"/>
+                        </div>
+                        <button t-on-click="() => this.CheckInteroperabilityRequest()" class="btn btn-primary m-2">
+                            <span>Check Interoperability</span>
+                        </button>
+                        <div t-if="this.state.check_interoperability_response">
+                            <t t-if="this.state.check_interoperability_response.fault">
+                                <table class="table table-sm table-striped">
+                                    <t t-foreach="this.state.check_interoperability_response.fault" t-as="fault" t-key="f">
+                                        <tr>
+                                            <td><t t-esc="fault"/></td>
+                                        </tr>
+                                    </t>
+                                </table>
+                            </t>
+                            <t t-else="">
+                                <table class="table table-sm table-striped">
+                                    <tr>
+                                        <td>UmlautString Is Correct</td>
+                                        <td><t t-esc="this.state.check_interoperability_response.UmlautStringIsCorrect"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>First Operand Is Correct</td>
+                                        <td><t t-esc="this.state.check_interoperability_response.FirstOperandIsCorrect"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>UmlautString</td>
+                                        <td><t t-esc="this.state.check_interoperability_response.UmlautString"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Addition Result</td>
+                                        <td><t t-esc="this.state.check_interoperability_response.AdditionResult"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Subtraction Result</td>
+                                        <td><t t-esc="this.state.check_interoperability_response.SubtractionResult"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>System DateTime</td>
+                                        <td><t t-esc="this.state.check_interoperability_response.SystemDateTime"/></td>
+                                    </tr>
+                                </table>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

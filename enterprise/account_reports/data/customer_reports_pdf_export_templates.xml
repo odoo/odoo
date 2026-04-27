@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="pdf_export_main_customer_report" inherit_id="account_reports.pdf_export_main" primary="True">
+        <xpath expr="//body//header" position="replace">
+            <header>
+                <div class='o_title text-center'>
+                    <t t-if="report.filter_show_draft and options['all_entries']">[Draft]</t>
+                    <t t-out="report_title"/>
+                </div>
+                <div class="row">
+                    <div class="col-8">
+                        <!-- All company information (name, address, vat, ...) -->
+                        <t t-call="account_reports.company_information_customer_report"/>
+                    </div>
+                    <div class="col-4">
+                        <!-- All tax and bank information -->
+                        <t t-call="account_reports.tax_information_customer_report"/>
+                        <t t-call="account_reports.bank_information_customer_report"/>
+                    </div>
+                </div>
+            </header>
+        </xpath>
+    </template>
+
+    <template id="company_information_customer_report">
+        <t t-set="company_names" t-value="[company['name'] for company in options['companies']]"/>
+        <div class="row">
+            <div class="col-10" t-out="', '.join(company_names)"/>
+        </div>
+
+        <address class="mb-0 o_text_muted" t-field="env.company.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
+    </template>
+
+    <template id="tax_information_customer_report">
+        <div class="row">
+            <t t-if="options.get('tax_unit', 'company_only') == 'company_only'">
+                <t t-if="env.company.account_fiscal_country_id.vat_label" t-out="env.company.account_fiscal_country_id.vat_label+':'"/>
+                <t t-else="">
+                    <t t-if="env.company.vat">Tax ID:</t>
+                </t>
+                <t t-out="env.company.vat"/>
+            </t>
+            <t t-else="">
+                <t t-set="tax_unit_vat" t-value="env['account.tax.unit'].browse(options.get('tax_unit')).vat"/>
+                <t t-if="tax_unit_vat">
+                    Tax ID: <t t-out="tax_unit_vat"/>
+                </t>
+            </t>
+        </div>
+    </template>
+
+    <template id="bank_information_customer_report">
+        <t t-set="bank_account" t-value="env.company.partner_id.bank_ids.filtered(lambda bank: bank.allow_out_payment)[:1]"/>
+        <div class="row">
+            <t t-if="bank_account">
+                Bank: <t t-out="bank_account.acc_number"/>
+            </t>
+        </div>
+    </template>
+
+</odoo>

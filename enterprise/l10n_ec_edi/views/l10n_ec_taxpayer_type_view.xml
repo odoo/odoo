@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_taxpayer_type_form" model="ir.ui.view">
+        <field name="name">view.taxpayer.type.form</field>
+        <field name="model">l10n_ec.taxpayer.type</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+        <form string="Taxpayer Type">
+            <sheet>
+                <group>
+                    <group name="group_left" string="Taxpayer Type">
+                        <field name="name"/>
+                        <field name="profit_withhold_tax_id"/>
+                        <field name="vat_goods_withhold_tax_id"/>
+                        <field name="vat_services_withhold_tax_id"/>
+                    </group>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+
+    <record id="view_taxpayer_type_tree" model="ir.ui.view">
+        <field name="name">view.taxpayer.type.list</field>
+        <field name="model">l10n_ec.taxpayer.type</field>
+        <field name="type">list</field>
+        <field name="arch" type="xml">
+            <list string="Taxpayer Type" decoration-muted="(not active)">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="profit_withhold_tax_id"/>
+                <field name="vat_goods_withhold_tax_id"/>
+                <field name="vat_services_withhold_tax_id"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_taxpayer_type" model="ir.actions.act_window">
+        <field name="name">Taxpayer Type</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_ec.taxpayer.type</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'active_test': False}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                  Click to define a new taxpayer type.
+              </p><p>
+                  Define the taxpayer type used by your company.
+              </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_taxpayer_type"
+        name="Taxpayer Type SRI"
+        action="action_taxpayer_type"
+        parent="l10n_ec.sri_menu"
+        sequence="26"
+    />
+
+</odoo>

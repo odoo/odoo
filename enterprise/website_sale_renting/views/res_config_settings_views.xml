@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.sale.renting</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale_renting.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='sale_renting']" position="inside">
+                <block title="Rent Online" id="sale_renting_product_settings">
+                    <setting id="sale_renting_minimal_duration" string="Minimal time of rental" help="Minimal duration between pickup and return.">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label class="pe-2" for="renting_minimal_time_duration"/>
+                                <field class="w-25 me-2" name="renting_minimal_time_duration"/>
+                                <field class="w-25" name="renting_minimal_time_unit"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="sale_renting_minimal_duration" string="Unavailability days" help="Days during which pickup and return are not possible.">
+                        <div class="mt16 col-12">
+                            <div>
+                                <field name="renting_forbidden_mon"/>
+                                <label for="renting_forbidden_mon"/>
+                            </div>
+                            <div>
+                                <field name="renting_forbidden_tue"/>
+                                <label for="renting_forbidden_tue"/>
+                            </div>
+                            <div>
+                                <field name="renting_forbidden_wed"/>
+                                <label for="renting_forbidden_wed"/>
+                            </div>
+                            <div>
+                                <field name="renting_forbidden_thu"/>
+                                <label for="renting_forbidden_thu"/>
+                            </div>
+                            <div>
+                                <field name="renting_forbidden_fri"/>
+                                <label for="renting_forbidden_fri"/>
+                            </div>
+                            <div>
+                                <field name="renting_forbidden_sat"/>
+                                <label for="renting_forbidden_sat"/>
+                            </div>
+                            <div>
+                                <field name="renting_forbidden_sun"/>
+                                <label for="renting_forbidden_sun"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_config_settings_view_form_inherit_website" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block id="sale_product_catalog_settings" position="after">
+                <block title="Rent Online" id="website_sale_Rent_Timezone">
+                    <setting id="sale_renting_timezone">
+                        <div class="row mt16">
+                            <div>
+                                <label string="Timezone" for="tz"/>
+                                <i class="fa fa-globe me-2"/>
+                            </div>
+                            <field class="w-auto" name="tz"/>
+                        </div>
+                    </setting>
+                </block>
+            </block>
+        </field>
+    </record>
+</odoo>

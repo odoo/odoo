@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_salary_rule_view_tree_l10n_ch_wage_types" model="ir.ui.view">
+        <field name="name">hr.salary.rule.view.list.l10n.ch.wage.types</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="l10n_ch_code"/>
+                <field name="name"/>
+                <field name="struct_id" optional="hidden"/>
+                <field name="l10n_ch_gross_included" optional="show"/>
+                <field name="l10n_ch_ac_included" optional="show"/>
+                <field name="l10n_ch_aanp_included" optional="show"/>
+                <field name="l10n_ch_laac_included" optional="show"/>
+                <field name="l10n_ch_ijm_included" optional="show"/>
+                <field name="l10n_ch_lpp_forecast" optional="show"/>
+                <field name="l10n_ch_lpp_factor" optional="show"/>
+                <field name="l10n_ch_lpp_retroactive" optional="show"/>
+                <field name="l10n_ch_source_tax_included" optional="show"/>
+                <field name="l10n_ch_salary_certificate" optional="hidden"/>
+                <field name="l10n_ch_caf_statement" optional="hidden"/>
+                <field name="l10n_ch_wage_statement" optional="hidden"/>
+                <field name="l10n_ch_yearly_statement" optional="hidden"/>
+                <field name="l10n_ch_13th_month_included" optional="hidden"/>
+                <field name="l10n_ch_5_cents_rounding" optional="hidden"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_hr_salary_rule_l10n_ch_wage_types" model="ir.actions.act_window">
+        <field name="name">Wage Types</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.salary.rule</field>
+        <field name="view_mode">list</field>
+        <field name="domain" model="hr.salary.rule" eval="[('struct_id', '=', obj().env.ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary').id)]"/>
+        <field name="context">{}</field>
+        <field name="view_id" ref="hr_salary_rule_view_tree_l10n_ch_wage_types"/>
+    </record>
+
+</odoo>

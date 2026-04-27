@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_pos_urban_piper" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.pos_urban_piper</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='urban_piper_setting']/div" position="inside">
+                <div invisible="not pos_module_pos_urban_piper">
+                    <div>
+                        <label string="Username" for="urbanpiper_username" class="col-lg-3 o_light_label"/>
+                        <field name="urbanpiper_username"/>
+                    </div>
+                    <div>
+                        <label string="Api Key" for="urbanpiper_apikey" class="col-lg-3 o_light_label"/>
+                        <field name="urbanpiper_apikey" password="1"/>
+                        <button name="action_refresh_webhooks" title="Refresh webhooks" groups="base.group_no_one" class="fa fa-refresh oe_inline oe_link" type="object"/>
+                    </div>
+                    <div>
+                        <i class="text-info oi oi-arrow-right mt-2 fs-4"/>  <a href="https://www.odoo.com/survey/start/f13956e4-0104-48a0-967e-e5b6ffedd45d" target="_blank">Fill this form to get Username &amp; Api key</a>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//block[@id='pos_urban_piper_section']/setting" position="after">
+                <setting invisible="not pos_module_pos_urban_piper" string="Urban Piper Location" id="urban_piper" class="col-6">
+                    <div class="o_notification_alert alert alert-warning" role="alert">
+                        Set the POS ID in Urban Piper in Locations.
+                    </div>
+                    <div class="row">
+                        <label string="POS ID" for="pos_urbanpiper_store_identifier" class="col-lg-5 o_light_label"/>
+                        <div class="o_field_widget d-flex gap-1 align-items-center">
+                            <div class="flex-grow-1 overflow-hidden" >
+                                <field name="pos_urbanpiper_store_identifier" readonly="pos_has_active_session" class="w-100" />
+                            </div>
+                            <button name="action_flush_and_sync_menu" title="This action will flush(delete) the entire menu from Atlas for this store and re-sync it if any menu data is available." groups="base.group_no_one" class="fa fa-minus-circle oe_inline oe_link fs-4 px-0" type="object"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label string="Food Delivery Platforms" for="pos_urbanpiper_delivery_provider_ids" class="col-lg-5 o_light_label"/>
+                        <field name="pos_urbanpiper_delivery_provider_ids" readonly="pos_has_active_session" options="{'no_create': True}" widget="many2many_tags"/>
+                    </div>
+                    <div class="row">
+                        <label string="Pricelist" for="pos_urbanpiper_pricelist_id" class="col-lg-5 o_light_label"/>
+                        <field name="pos_urbanpiper_pricelist_id" readonly="pos_has_active_session"/>
+                    </div>
+                    <div class="row">
+                        <label string="Fiscal Position" for="pos_urbanpiper_fiscal_position_id" class="col-lg-5 o_light_label"/>
+                        <field name="pos_urbanpiper_fiscal_position_id" readonly="pos_has_active_session"/>
+                    </div>
+                    <button name="urbanpiper_create_store" string="Create Store" type="object" class="btn btn-primary my-2 mx-1" icon="fa-plus"/>
+                    <button name="urbanpiper_sync_menu" string="Sync Menu" type="object" class="btn btn-secondary my-2 mx-1" icon="fa-upload"/>
+                    <div class="flex gap-2">
+                        <label string="Last Sync on" for="pos_urbanpiper_last_sync_date" class="me-2" invisible="not pos_urbanpiper_last_sync_date"/>
+                        <field name="pos_urbanpiper_last_sync_date" readonly="True"/>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

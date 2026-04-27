@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="appointment_google_calendar.appointment_validated" inherit_id="appointment.appointment_validated">
+        <xpath expr="//t[hasclass('o_appointment_discuss_location')]" position="after">
+            <t t-elif="event.videocall_source == 'google_meet'">Google Meet</t>
+        </xpath>
+        <xpath expr="//t[hasclass('o_appointment_discuss_redirection')]" position="after">
+            <t t-elif="event.videocall_source == 'google_meet'">Google Meet</t>
+        </xpath>
+        <xpath expr="//a[hasclass('o_google_calendar')]" position="attributes">
+            <attribute name="t-if">not event.videocall_location or 'meet.google.com' not in event.videocall_location</attribute>
+        </xpath>
+    </template>
+</odoo>

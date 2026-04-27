@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="auto_reconcile_bank_statement_line" model="ir.cron">
+        <field name="name">Try to reconcile automatically your statement lines</field>
+        <field name="model_id" ref="model_account_bank_statement_line"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_try_auto_reconcile_statement_lines(batch_size=100)</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+    </record>
+</odoo>

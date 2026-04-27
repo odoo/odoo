@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="helpdesk.model_helpdesk_ticket" model="ir.model">
+        <field name="website_form_key">create_ticket</field>
+        <field name="website_form_default_field_id" ref="helpdesk.field_helpdesk_ticket__description"/>
+        <field name="website_form_access">True</field>
+        <field name="website_form_label">Create a Ticket</field>
+    </record>
+    <function model="ir.model.fields" name="formbuilder_whitelist">
+        <value>helpdesk.ticket</value>
+        <value eval="[
+            'partner_name',
+            'partner_phone',
+            'partner_email',
+            'partner_company_name',
+            'name',
+            'description',
+            'team_id',
+            'partner_id',
+            'properties',
+        ]"/>
+    </function>
+</odoo>

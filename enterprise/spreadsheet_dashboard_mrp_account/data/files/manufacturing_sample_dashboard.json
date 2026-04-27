@@ -1,0 +1,954 @@
+{
+    "version": 22,
+    "sheets": [
+        {
+            "id": "sheet1",
+            "name": "Dashboard",
+            "colNumber": 7,
+            "rowNumber": 65,
+            "rows": {
+                "6": {
+                    "size": 40
+                },
+                "22": {
+                    "size": 40
+                },
+                "38": {
+                    "size": 40
+                },
+                "39": {
+                    "size": 40
+                },
+                "40": {
+                    "size": 31
+                },
+                "41": {
+                    "size": 31
+                },
+                "42": {
+                    "size": 31
+                },
+                "43": {
+                    "size": 31
+                },
+                "44": {
+                    "size": 31
+                },
+                "45": {
+                    "size": 31
+                },
+                "46": {
+                    "size": 31
+                },
+                "47": {
+                    "size": 31
+                },
+                "48": {
+                    "size": 31
+                },
+                "49": {
+                    "size": 31
+                },
+                "51": {
+                    "size": 40
+                },
+                "52": {
+                    "size": 40
+                },
+                "53": {
+                    "size": 31
+                },
+                "54": {
+                    "size": 31
+                },
+                "55": {
+                    "size": 31
+                },
+                "56": {
+                    "size": 31
+                },
+                "57": {
+                    "size": 31
+                },
+                "58": {
+                    "size": 31
+                },
+                "59": {
+                    "size": 31
+                },
+                "60": {
+                    "size": 31
+                },
+                "61": {
+                    "size": 31
+                },
+                "62": {
+                    "size": 31
+                }
+            },
+            "cols": {
+                "0": {
+                    "size": 275
+                },
+                "1": {
+                    "size": 100
+                },
+                "2": {
+                    "size": 100
+                },
+                "3": {
+                    "size": 50
+                },
+                "4": {
+                    "size": 275
+                },
+                "5": {
+                    "size": 100
+                },
+                "6": {
+                    "size": 100
+                }
+            },
+            "merges": [],
+            "cells": {
+                "A7": {
+                    "content": "[Weekly Production](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"state\",\"=\",\"done\"]],\"context\":{\"group_by\":[\"date_finished:week\"],\"graph_measure\":\"product_uom_qty\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"date_finished:week\"]},\"modelName\":\"mrp.production\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Weekly Production\"})"
+                },
+                "A23": {
+                    "content": "[Most Produced Products](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[\"|\",[\"state\",\"=\",\"draft\"],\"|\",[\"state\",\"=\",\"confirmed\"],\"|\",\"&\",\"&\",[\"is_planned\",\"=\",true],[\"date_start\",\"!=\",false],[\"date_finished\",\"!=\",false],\"|\",[\"state\",\"=\",\"progress\"],[\"state\",\"=\",\"done\"]],\"context\":{\"group_by\":[\"product_id\",\"state\"],\"graph_measure\":\"product_uom_qty\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"product_id\",\"state\"]},\"modelName\":\"mrp.production\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Most Produced Products\"})"
+                },
+                "A39": {
+                    "content": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"|\",[\"state\",\"=\",\"draft\"],\"|\",[\"state\",\"=\",\"confirmed\"],\"|\",\"&\",\"&\",[\"is_planned\",\"=\",true],[\"date_start\",\"!=\",false],[\"date_finished\",\"!=\",false],\"|\",[\"state\",\"=\",\"progress\"],[\"state\",\"=\",\"done\"]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"__count\",\"product_uom_qty\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"mrp.production\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Products\"})"
+                },
+                "A40": {
+                    "content": "=_t(\"Product\")"
+                },
+                "A52": {
+                    "content": "[Top Responsibles](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",\"|\",[\"state\",\"=\",\"draft\"],\"|\",[\"state\",\"=\",\"confirmed\"],\"|\",\"&\",\"&\",[\"is_planned\",\"=\",true],[\"date_start\",\"!=\",false],[\"date_finished\",\"!=\",false],\"|\",[\"state\",\"=\",\"progress\"],[\"state\",\"=\",\"done\"],[\"user_id\",\"!=\",false]],\"context\":{\"group_by\":[\"user_id\"],\"pivot_measures\":[\"__count\",\"product_uom_qty\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"picking_type_id\"]},\"modelName\":\"mrp.production\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"form\"],[false,\"search\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Responsibles\"})"
+                },
+                "A53": {
+                    "content": "=_t(\"Responsible\")"
+                },
+                "B40": {
+                    "content": "=_t(\"Orders\")"
+                },
+                "B53": {
+                    "content": "=_t(\"Orders\")"
+                },
+                "C40": {
+                    "content": "=_t(\"Qty Produced\")"
+                },
+                "C53": {
+                    "content": "=_t(\"Qty Produced\")"
+                },
+                "E39": {
+                    "content": "[Top Operation Types](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"|\",[\"state\",\"=\",\"draft\"],\"|\",[\"state\",\"=\",\"confirmed\"],\"|\",\"&\",\"&\",[\"is_planned\",\"=\",true],[\"date_start\",\"!=\",false],[\"date_finished\",\"!=\",false],\"|\",[\"state\",\"=\",\"progress\"],[\"state\",\"=\",\"done\"]],\"context\":{\"group_by\":[\"picking_type_id\"],\"pivot_measures\":[\"__count\",\"product_uom_qty\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"picking_type_id\"]},\"modelName\":\"mrp.production\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Operation Types\"})"
+                },
+                "E40": {
+                    "content": "=_t(\"Operation Type\")"
+                },
+                "F40": {
+                    "content": "=_t(\"Orders\")"
+                },
+                "G40": {
+                    "content": "=_t(\"Qty Produced\")"
+                }
+            },
+            "styles": {
+                "A7": 1,
+                "A23": 1,
+                "A39": 1,
+                "A52": 1,
+                "E39": 1,
+                "A40": 2,
+                "A53": 2,
+                "E40": 2,
+                "B40:C40": 3,
+                "B53:C53": 3,
+                "F40:G40": 3
+            },
+            "formats": {},
+            "borders": {
+                "A39:C39": 1,
+                "A52:C52": 1,
+                "A7:G7": 1,
+                "A23:G23": 1,
+                "E39:G39": 1,
+                "A40:C40": 2,
+                "A53:C53": 2,
+                "A8:G8": 2,
+                "A24:G24": 2,
+                "E40:G40": 2,
+                "A41": 3,
+                "A54": 3,
+                "E41": 3,
+                "A42:A49": 4,
+                "A55:A58": 4,
+                "A60:A62": 4,
+                "E42:E49": 4,
+                "A50": 5,
+                "A63": 5,
+                "E50": 5,
+                "A59:C59": 6,
+                "B41": 7,
+                "B54": 7,
+                "F41": 7,
+                "B42:B49": 8,
+                "B55:B58": 8,
+                "B60:B62": 8,
+                "F42:F49": 8,
+                "B50": 9,
+                "B63": 9,
+                "F50": 9,
+                "C41": 10,
+                "C54": 10,
+                "G41": 10,
+                "C42:C49": 11,
+                "C55:C58": 11,
+                "C60:C62": 11,
+                "G42:G49": 11,
+                "C50": 12,
+                "C63": 12,
+                "G50": 12
+            },
+            "conditionalFormats": [],
+            "figures": [
+                {
+                    "id": "992b1b7d-78e0-4b41-b144-3995c16b73be",
+                    "x": 210,
+                    "y": 9,
+                    "width": 200,
+                    "height": 105,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": {
+                            "text": "Quantity Produced",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#EFF6FF",
+                        "baseline": "Data!E3",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D3",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "379d22d2-4cbf-48fb-8fad-e44b9ce00dea",
+                    "x": 0,
+                    "y": 9,
+                    "width": 200,
+                    "height": 105,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": {
+                            "text": "Manufacturing Orders",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#EFF6FF",
+                        "baseline": "Data!E2",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D2",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "683afc26-bbb2-4647-8e80-e3699839ffd5",
+                    "x": 420,
+                    "y": 9,
+                    "width": 200,
+                    "height": 105,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": {
+                            "text": "OEE",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#ECFDF5",
+                        "baseline": "Data!E7",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D7",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "9f95d0f4-ad80-45de-970a-9897eab4d56f",
+                    "x": 630,
+                    "y": 9,
+                    "width": 200,
+                    "height": 105,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": {
+                            "text": "Average Cost / Unit",
+                            "color": "#434343",
+                            "bold": true
+                        },
+                        "type": "scorecard",
+                        "background": "#FFF7ED",
+                        "baseline": "Data!E8",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D8",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "3855fb60-c212-4299-8bf6-37b190758517",
+                    "x": 0,
+                    "y": 563,
+                    "width": 1000,
+                    "height": 346,
+                    "tag": "chart",
+                    "data": {
+                        "type": "bar",
+                        "dataSetsHaveTitle": true,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!B11:B19",
+                                "yAxisId": "y"
+                            },
+                            {
+                                "dataRange": "Data!C11:C19"
+                            },
+                            {
+                                "dataRange": "Data!D11:D19"
+                            }
+                        ],
+                        "legendPosition": "top",
+                        "labelRange": "Data!A11:A19",
+                        "title": {},
+                        "stacked": true,
+                        "aggregated": false,
+                        "horizontal": false
+                    }
+                },
+                {
+                    "id": "f9cf8b74-91d5-412d-9074-e911a9381556",
+                    "x": 0,
+                    "y": 178,
+                    "width": 1000,
+                    "height": 345,
+                    "tag": "chart",
+                    "data": {
+                        "type": "line",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!H22:H27",
+                                "yAxisId": "y"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "labelRange": "Data!G22:G27",
+                        "title": {},
+                        "labelsAsText": false,
+                        "stacked": false,
+                        "aggregated": false,
+                        "cumulative": true,
+                        "fillArea": true
+                    }
+                }
+            ],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        },
+        {
+            "id": "e85b0e6c-d32d-4ab1-a3c7-e5c1ae0e5350",
+            "name": "Data",
+            "colNumber": 26,
+            "rowNumber": 101,
+            "rows": {},
+            "cols": {},
+            "merges": [],
+            "cells": {
+                "A1": {
+                    "content": "=_t(\"KPI\")"
+                },
+                "A2": {
+                    "content": "=_t(\"Manufacturing orders\")"
+                },
+                "A3": {
+                    "content": "=_t(\"Total quantity\")"
+                },
+                "A4": {
+                    "content": "=_t(\"Total time (min)\")"
+                },
+                "A5": {
+                    "content": "=_t(\"Available time (min)\")"
+                },
+                "A6": {
+                    "content": "=_t(\"Productive time (min)\")"
+                },
+                "A7": {
+                    "content": "=_t(\"OEE\")"
+                },
+                "A8": {
+                    "content": "=_t(\"Average cost / unit\")"
+                },
+                "A12": {
+                    "content": "=_t(\"EcoSmart LED Bulb\")"
+                },
+                "A13": {
+                    "content": "=_t(\"Noise-Canceling Headphones\")"
+                },
+                "A14": {
+                    "content": "=_t(\"Reusable Water Bottle\")"
+                },
+                "A15": {
+                    "content": "=_t(\"Organic Green Tea\")"
+                },
+                "A16": {
+                    "content": "=_t(\"Carbon-Fiber Tripod\")"
+                },
+                "A17": {
+                    "content": "=_t(\"Smart Thermostat\")"
+                },
+                "A18": {
+                    "content": "=_t(\"Bamboo Toothbrush\")"
+                },
+                "A19": {
+                    "content": "=_t(\"Vegan Leather Wallet\")"
+                },
+                "A22": {
+                    "content": "=TODAY() - B22"
+                },
+                "A23": {
+                    "content": "=TODAY() - B23"
+                },
+                "A24": {
+                    "content": "=TODAY() - B24"
+                },
+                "A25": {
+                    "content": "=TODAY() - B25"
+                },
+                "A26": {
+                    "content": "=TODAY() - B26"
+                },
+                "A27": {
+                    "content": "=TODAY() - B27"
+                },
+                "B1": {
+                    "content": "=_t(\"Current\")"
+                },
+                "B2": {
+                    "content": "94"
+                },
+                "B3": {
+                    "content": "157"
+                },
+                "B4": {
+                    "content": "7348.5"
+                },
+                "B5": {
+                    "content": "88.5"
+                },
+                "B6": {
+                    "content": "7260"
+                },
+                "B7": {
+                    "content": "0.89"
+                },
+                "B8": {
+                    "content": "165"
+                },
+                "B11": {
+                    "content": "=_t(\"Confirmed\")"
+                },
+                "B12": {
+                    "content": "137"
+                },
+                "B13": {
+                    "content": "56"
+                },
+                "B14": {
+                    "content": "254"
+                },
+                "B15": {
+                    "content": "276"
+                },
+                "B16": {
+                    "content": "56"
+                },
+                "B17": {
+                    "content": "287"
+                },
+                "B18": {
+                    "content": "136"
+                },
+                "B19": {
+                    "content": "222"
+                },
+                "B22": {
+                    "content": "0"
+                },
+                "B23": {
+                    "content": "7"
+                },
+                "B24": {
+                    "content": "14"
+                },
+                "B25": {
+                    "content": "21"
+                },
+                "B26": {
+                    "content": "28"
+                },
+                "B27": {
+                    "content": "35"
+                },
+                "C1": {
+                    "content": "=_t(\"Previous\")"
+                },
+                "C2": {
+                    "content": "86"
+                },
+                "C3": {
+                    "content": "105"
+                },
+                "C4": {
+                    "content": "7348.5"
+                },
+                "C5": {
+                    "content": "88.5"
+                },
+                "C6": {
+                    "content": "7260"
+                },
+                "C7": {
+                    "content": "0.9879567258624209"
+                },
+                "C8": {
+                    "content": "85"
+                },
+                "C11": {
+                    "content": "=_t(\"Done\")"
+                },
+                "C12": {
+                    "content": "226"
+                },
+                "C13": {
+                    "content": "238"
+                },
+                "C14": {
+                    "content": "259"
+                },
+                "C15": {
+                    "content": "270"
+                },
+                "C16": {
+                    "content": "184"
+                },
+                "C17": {
+                    "content": "143"
+                },
+                "C18": {
+                    "content": "152"
+                },
+                "C19": {
+                    "content": "54"
+                },
+                "C22": {
+                    "content": "=WEEKNUM(A22)"
+                },
+                "C23": {
+                    "content": "=WEEKNUM(A23)"
+                },
+                "C24": {
+                    "content": "=WEEKNUM(A24)"
+                },
+                "C25": {
+                    "content": "=WEEKNUM(A25)"
+                },
+                "C26": {
+                    "content": "=WEEKNUM(A26)"
+                },
+                "C27": {
+                    "content": "=WEEKNUM(A27)"
+                },
+                "D1": {
+                    "content": "=_t(\"Current\")"
+                },
+                "D2": {
+                    "content": "94"
+                },
+                "D3": {
+                    "content": "157"
+                },
+                "D7": {
+                    "content": "0.89"
+                },
+                "D8": {
+                    "content": "165"
+                },
+                "D11": {
+                    "content": "=_t(\"To Close\")"
+                },
+                "D12": {
+                    "content": "171"
+                },
+                "D13": {
+                    "content": "166"
+                },
+                "D14": {
+                    "content": "50"
+                },
+                "D15": {
+                    "content": "134"
+                },
+                "D16": {
+                    "content": "153"
+                },
+                "D17": {
+                    "content": "211"
+                },
+                "D18": {
+                    "content": "205"
+                },
+                "D19": {
+                    "content": "55"
+                },
+                "D22": {
+                    "content": "=YEAR(A22)"
+                },
+                "D23": {
+                    "content": "=YEAR(A23)"
+                },
+                "D24": {
+                    "content": "=YEAR(A24)"
+                },
+                "D25": {
+                    "content": "=YEAR(A25)"
+                },
+                "D26": {
+                    "content": "=YEAR(A26)"
+                },
+                "D27": {
+                    "content": "=YEAR(A27)"
+                },
+                "E1": {
+                    "content": "=_t(\"Previous\")"
+                },
+                "E2": {
+                    "content": "86"
+                },
+                "E3": {
+                    "content": "105"
+                },
+                "E7": {
+                    "content": "0.9879567258624209"
+                },
+                "E8": {
+                    "content": "85"
+                },
+                "E22": {
+                    "content": "=CONCAT(\"W\",C22)"
+                },
+                "E23": {
+                    "content": "=CONCAT(\"W\",C23)"
+                },
+                "E24": {
+                    "content": "=CONCAT(\"W\",C24)"
+                },
+                "E25": {
+                    "content": "=CONCAT(\"W\",C25)"
+                },
+                "E26": {
+                    "content": "=CONCAT(\"W\",C26)"
+                },
+                "E27": {
+                    "content": "=CONCAT(\"W\",C27)"
+                },
+                "F22": {
+                    "content": "=CONCAT(E22,\" \")"
+                },
+                "F23": {
+                    "content": "=CONCAT(E23,\" \")"
+                },
+                "F24": {
+                    "content": "=CONCAT(E24,\" \")"
+                },
+                "F25": {
+                    "content": "=CONCAT(E25,\" \")"
+                },
+                "F26": {
+                    "content": "=CONCAT(E26,\" \")"
+                },
+                "F27": {
+                    "content": "=CONCAT(E27,\" \")"
+                },
+                "G22": {
+                    "content": "=CONCAT(F22,D22)"
+                },
+                "G23": {
+                    "content": "=CONCAT(F23,D23)"
+                },
+                "G24": {
+                    "content": "=CONCAT(F24,D24)"
+                },
+                "G25": {
+                    "content": "=CONCAT(F25,D25)"
+                },
+                "G26": {
+                    "content": "=CONCAT(F26,D26)"
+                },
+                "G27": {
+                    "content": "=CONCAT(F27,D27)"
+                },
+                "H22": {
+                    "content": "=RANDBETWEEN(500,1500)"
+                },
+                "H23": {
+                    "content": "=RANDBETWEEN(500,1500)"
+                },
+                "H24": {
+                    "content": "=RANDBETWEEN(500,1500)"
+                },
+                "H25": {
+                    "content": "=RANDBETWEEN(500,1500)"
+                },
+                "H26": {
+                    "content": "=RANDBETWEEN(500,1500)"
+                },
+                "H27": {
+                    "content": "=RANDBETWEEN(500,1500)"
+                }
+            },
+            "styles": {
+                "A1:E1": 4
+            },
+            "formats": {
+                "B2:C2": 1,
+                "B3:B6": 2,
+                "C3:C7": 2,
+                "B8:E8": 3,
+                "D2:E2": 4,
+                "D3:E3": 5,
+                "D7:E7": 6
+            },
+            "borders": {},
+            "conditionalFormats": [],
+            "figures": [],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        }
+    ],
+    "styles": {
+        "1": {
+            "textColor": "#01666b",
+            "bold": true,
+            "fontSize": 16
+        },
+        "2": {
+            "textColor": "#434343",
+            "fontSize": 11,
+            "bold": true
+        },
+        "3": {
+            "textColor": "#434343",
+            "fontSize": 11,
+            "bold": true,
+            "align": "center"
+        },
+        "4": {
+            "bold": true
+        }
+    },
+    "formats": {
+        "1": "0",
+        "2": "#,##0.00",
+        "3": "[$$]#,##0",
+        "4": "0[$]",
+        "5": "#,##0[$]",
+        "6": "0%"
+    },
+    "borders": {
+        "1": {
+            "bottom": {
+                "style": "thin",
+                "color": "#CCCCCC"
+            }
+        },
+        "2": {
+            "top": {
+                "style": "thin",
+                "color": "#CCCCCC"
+            }
+        },
+        "3": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "4": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "5": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "6": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "7": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "8": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "9": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "10": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "11": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "12": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        }
+    },
+    "revisionId": "START_REVISION",
+    "uniqueFigureIds": true,
+    "settings": {
+        "locale": {
+            "name": "English (US)",
+            "code": "en_US",
+            "thousandsSeparator": ",",
+            "decimalSeparator": ".",
+            "dateFormat": "mm/dd/yyyy",
+            "timeFormat": "hh:mm:ss",
+            "formulaArgSeparator": ",",
+            "weekStart": 7
+        }
+    },
+    "pivots": {},
+    "pivotNextId": 11,
+    "customTableStyles": {},
+    "odooVersion": 12,
+    "globalFilters": [],
+    "lists": {},
+    "listNextId": 1
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="mrp_plm.UpdateQty">
+        <span t-if="props.record.data[props.name] > 0">
+            +<t t-call="web.FloatField"/>
+        </span>
+        <t t-else="" t-call="web.FloatField"/>
+    </t>
+</templates>

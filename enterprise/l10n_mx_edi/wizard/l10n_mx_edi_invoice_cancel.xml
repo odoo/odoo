@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_mx_edi_invoice_cancel_form" model="ir.ui.view">
+        <field name="name">l10n_mx_edi.invoice.cancel.form</field>
+        <field name="model">l10n_mx_edi.invoice.cancel</field>
+        <field name="arch" type="xml">
+            <form>
+                <!-- Invisible fields -->
+                <field name="document_id" invisible="1"/>
+                <field name="mode" invisible="1"/>
+                <field name="periodicity" invisible="1"/>
+                <field name="available_cancellation_reasons" invisible="1"/>
+                <field name="need_replacement_invoice_button" invisible="1"/>
+
+                <group>
+                    <group>
+                        <field name="cancellation_reason" widget="l10n_mx_edi_cancellation_reason"/>
+                        <field name="periodicity"
+                               invisible="not need_replacement_invoice_button or mode != 'ginvoice'"/>
+                    </group>
+                </group>
+
+                <footer>
+                    <button string="Create Replacement Invoice"
+                            invisible="not need_replacement_invoice_button"
+                            data-hotkey="r"
+                            name="action_create_replacement_invoice"
+                            type="object"
+                            class="btn btn-primary">
+                    </button>
+                    <button string="Confirm"
+                            invisible="need_replacement_invoice_button"
+                            data-hotkey="q"
+                            name="action_cancel_invoice"
+                            type="object"
+                            class="btn btn-primary">
+                    </button>
+                    <button string="Cancel"
+                            data-hotkey="x"
+                            special="cancel"
+                            class="btn btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

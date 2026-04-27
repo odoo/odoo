@@ -1,0 +1,12 @@
+<templates>
+
+    <t t-name="web_studio.InteractiveEditor">
+        <t
+            t-component="props.editor.Sidebar or defaultSidebar"
+            openViewInForm.bind="openViewInForm"
+            openDefaultValues.bind="openDefaultValues"
+        />
+        <t t-slot="default" autoClick="applyAutoClick"/>
+    </t>
+
+</templates>

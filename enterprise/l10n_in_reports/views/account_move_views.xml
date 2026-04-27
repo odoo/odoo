@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_line_tree_l10n_in" model="ir.ui.view">
+        <field name="name">account.move.line.list.l10n_in</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='credit']" position="after">
+                <field name="l10n_in_hsn_code" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_move_line_form_l10n_in" model="ir.ui.view">
+        <field name="name">account.move.line.form.l10n_in</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="l10n_in_hsn_code"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

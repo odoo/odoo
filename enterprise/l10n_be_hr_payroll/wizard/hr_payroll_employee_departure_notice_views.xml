@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_payroll_employee_departure_notice" model="ir.ui.view">
+        <field name="name">hr_payroll_employee_departure_notice</field>
+        <field name="model">hr.payslip.employee.depature.notice</field>
+        <field name="arch" type="xml">
+            <form string="Employee Departure">
+                <group class="o_label_nowrap">
+                    <group>
+                        <field name="employee_id" widget="many2one_avatar_user"/>
+                        <field name="oldest_contract_id"/>
+                    </group>
+                    <group>
+                        <field name="leaving_type_id" options="{'no_open': True, 'no_create': True}"/>
+                        <field name="departure_description" widget="text"/>
+                        <label for="departure_date" string="Retirement Date" invisible="departure_reason_code != 340"/>
+                        <label for="departure_date" string="Dismissal Date" invisible="departure_reason_code != 342"/>
+                        <label for="departure_date" string="Resignation Date" invisible="departure_reason_code != 343"/>
+                        <label for="departure_date" string="Departure Date" invisible="departure_reason_code not in [350, 351]"/>
+                        <div invisible="not leaving_type_id">
+                            <field name="departure_date" nolabel="1" class="oe_inline"/>
+                        </div>
+                    </group>
+                </group>
+                <group string="Notice Period" invisible="not leaving_type_id or departure_reason_code in [350, 351]">
+                    <group class="o_label_nowrap">
+                        <field name="first_contract"/>
+                        <field name="seniority_description"/>
+                        <field name="start_notice_period" invisible="notice_respect == 'without'"/>
+                        <label for="notice_duration_month_before_2014" string="Notice Duration" invisible="notice_respect != 'with'"/>
+                        <label for="notice_duration_month_before_2014" string="Theoretical Notice Duration" invisible="notice_respect == 'with'"/>
+                        <div>
+                            <field name="notice_duration_month_before_2014" nolabel="1" class="oe_inline" invisible="notice_duration_month_before_2014 == 0"/>
+                            <span invisible="notice_duration_month_before_2014 == 0"> months and </span>
+                            <field name="notice_duration_week_after_2014" nolabel="1" class="oe_inline"/>
+                            <span> weeks</span>
+                        </div>
+                        <label for="actual_notice_duration" invisible="notice_respect != 'partial'"/>
+                        <div invisible="notice_respect != 'partial'">
+                            <field name="actual_notice_duration" nolabel="1" class="oe_inline"/>
+                            <span> weeks</span>
+                        </div>
+                        <field name="end_notice_period" invisible="notice_respect == 'without'" readonly="notice_respect != 'partial'"/>
+                    </group>
+                    <group>
+                        <field name="salary_december_2013" invisible="not salary_visibility"/>
+                    </group>
+                </group>
+                <group class="o_label_nowrap">
+                    <field name="notice_respect" invisible="notice_duration_month_before_2014 == 0 and notice_duration_week_after_2014 == 0"/>
+                </group>
+                <footer>
+                    <button name="validate_termination" string="Validate" type="object" class="oe_highlight" invisible="notice_respect != 'with'" data-hotkey="q"/>
+                    <button name="compute_termination_fee" string="Validate &amp; Compute termination fees" type="object" class="oe_highlight" invisible="notice_respect == 'with'" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="departure_notice_wizard_action" model="ir.actions.act_window">
+        <field name="name">Departure: Notice period and payslip</field>
+        <field name="res_model">hr.payslip.employee.depature.notice</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_view_types">form</field>
+    </record>
+
+    <menuitem
+        id="menu_reporting_l10n_be"
+        name="Belgium"
+        sequence="30"
+        parent="hr_payroll.menu_hr_payroll_report"/>
+
+    <menuitem
+        id="menu_l10n_be_hr_payroll_notice"
+        name="Departure: Notice period"
+        action="departure_notice_wizard_action"
+        parent="l10n_be_hr_payroll.menu_reporting_l10n_be"
+        sequence="50"
+    />
+
+</odoo>

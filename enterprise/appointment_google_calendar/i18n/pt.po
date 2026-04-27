@@ -1,0 +1,89 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * appointment_google_calendar
+#
+# Translators:
+# Wil Odoo, 2025
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2025-11-17 14:07+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-18/"
+"appointment_google_calendar/pt/>\n"
+"Language: pt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: appointment_google_calendar
+#. odoo-python
+#: code:addons/appointment_google_calendar/models/appointment_type.py:0
+msgid ""
+"%(user_names)s did not synchronize their Google Calendar account yet, Google "
+"Meeting links won't be added to their meetings."
+msgstr ""
+"%(user_names)s ainda não sincronizou sua conta do Google Agenda, os links do "
+"Google Meeting não serão adicionados às suas reuniões."
+
+#. module: appointment_google_calendar
+#: model_terms:ir.ui.view,arch_db:appointment_google_calendar.appointment_type_view_form
+msgid "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Settings"
+msgstr "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Definições"
+
+#. module: appointment_google_calendar
+#: model:ir.model,name:appointment_google_calendar.model_appointment_type
+msgid "Appointment Type"
+msgstr "Tipo de Marcação"
+
+#. module: appointment_google_calendar
+#: model:ir.model,name:appointment_google_calendar.model_calendar_event
+msgid "Calendar Event"
+msgstr "Evento do Calendário"
+
+#. module: appointment_google_calendar
+#: model:ir.model.fields,field_description:appointment_google_calendar.field_appointment_type__connector_google
+msgid "Connector Google"
+msgstr "Conector Google"
+
+#. module: appointment_google_calendar
+#: model:ir.model.fields,help:appointment_google_calendar.field_appointment_type__event_videocall_source
+msgid ""
+"Defines the type of video call link that will be used for the generated "
+"events. Keep it empty to prevent generating meeting url."
+msgstr ""
+"Define o tipo de link de chamada de vídeo que será usado para os eventos "
+"gerados. Mantenha-o vazio para evitar a geração de URL de reunião."
+
+#. module: appointment_google_calendar
+#: model:ir.model.fields.selection,name:appointment_google_calendar.selection__appointment_type__event_videocall_source__google_meet
+#: model_terms:ir.ui.view,arch_db:appointment_google_calendar.appointment_validated
+msgid "Google Meet"
+msgstr "Google Meet"
+
+#. module: appointment_google_calendar
+#. odoo-python
+#: code:addons/appointment_google_calendar/models/appointment_type.py:0
+msgid ""
+"Google Sync is either paused or not properly configured. Google Meet links "
+"won't be added to the meetings."
+msgstr ""
+"O Google Sync está pausado ou não está configurado corretamente. Os links do "
+"Google Meet não serão adicionados às reuniões."
+
+#. module: appointment_google_calendar
+#: model:ir.model.fields,field_description:appointment_google_calendar.field_appointment_type__users_wo_google_calendar_msg
+msgid "Users Without Google Calendar Synchronization"
+msgstr "Usuários sem sincronização com o Google Agenda"
+
+#. module: appointment_google_calendar
+#: model:ir.model.fields,field_description:appointment_google_calendar.field_appointment_type__event_videocall_source
+msgid "Videoconference Link"
+msgstr "Link da videoconferência"

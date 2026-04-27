@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_module_module_action_open_job_board_modules" model="ir.actions.act_window">
+        <field name="name">Job Boards</field>
+        <field name="res_model">ir.module.module</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{}</field>
+        <field name="domain">[
+            ('name', '=like', 'hr_recruitment_integration_%'),
+            ('auto_install', '=', False),
+            ('name', '!=', 'hr_recruitment_integration_base'),
+        ]</field>
+        <field name="search_view_id" ref="base.view_module_filter"/>
+    </record>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr.recruitment.extract</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_recruitment.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting id="recruitment_extract_settings" position="inside">
+                <div class="mt16" invisible="not module_hr_recruitment_extract">
+                    <field name="recruitment_extract_show_ocr_option_selection" class="o_light_label" widget="radio" required="True"/>
+                    <widget name="iap_buy_more_credits" service_name="invoice_ocr" class="ps-1"/>
+                </div>
+            </setting>
+            <xpath expr="//block[@name='recruitment_in_app_purchases']//setting[@id='sms']" position="inside">
+                <widget name="iap_buy_more_credits" service_name="sms" hide_service="1"/>
+            </xpath>
+
+            <xpath expr="//block[@name='online_posting_setting_container']//setting[@id='publish_available_jobs_setting']" position="after">
+                 <setting string="Job Board" help="Post jobs on external job boards" id="job_board">
+                    <div class="mt8" id="job_board_text">
+                        <button name="%(ir_module_module_action_open_job_board_modules)d"
+                                icon="oi-arrow-right"
+                                type="action"
+                                string="Choose a Job Board"
+                                class="btn-link"/>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,588 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * delivery_starshipit
+#
+# Translators:
+# Martin Trigaux, 2024
+# Wil Odoo, 2024
+# Jaisal Shah <jaisal13shah@gmail.com>, 2025
+# Manav Shah, 2025
+# Ujjawal Pathak, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-05 18:46+0000\n"
+"PO-Revision-Date: 2026-02-07 18:31+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/"
+"delivery_starshipit/hi/>\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid ""
+"%(order_info)sHowever, the shipping label creation failed with the following "
+"error:\n"
+"%(error)s\n"
+"\n"
+"Please either continue the configuration or delete the order in Starshipit "
+"before trying again."
+msgstr ""
+
+#. module: delivery_starshipit
+#: model_terms:ir.ui.view,arch_db:delivery_starshipit.view_delivery_carrier_form
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/> Do not forget to select a service "
+"for a valid configuration."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/> एक सही कॉन्फ़िगरेशन के लिए, सर्विस चुनना "
+"न भूलें।"
+
+#. module: delivery_starshipit
+#: model_terms:ir.ui.view,arch_db:delivery_starshipit.view_delivery_carrier_form
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/> In <b>Test Environment</b>, your "
+"shippings are automatically <b>archived</b> after the label creation. <br/>\n"
+"                        Please note that charges can still occur for label "
+"creations and some shipping carriers may automatically validate the shipment "
+"when printing labels."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/> <b>टेस्ट एनवायरमेंट</b> में, लेबल बनाने के "
+"बाद आपकी शिपिंग अपने-आप <b>आर्काइव</b> हो जाती है. <br/>\n"
+"                        कृपया ध्यान दें कि लेबल बनाने के लिए शुल्क अभी भी लग सकता है "
+"और कुछ शिपिंग कैरियर, लेबल प्रिंट करते समय शिपमेंट को अपने-आप प्रमाणित कर सकते हैं।"
+
+#. module: delivery_starshipit
+#: model_terms:ir.ui.view,arch_db:delivery_starshipit.view_shipping_method_starshipit
+msgid ""
+"<i class=\"fa fa-info-circle\"/> Available shipping services depend on "
+"enabled carriers in your Starshipit account."
+msgstr ""
+"<i class=\"fa fa-info-circle\"/> उपलब्ध शिपिंग सेवाएं आपके Starshipit खाते में चालू "
+"किए गए कैरियर पर निर्भर करती हैं।"
+
+#. module: delivery_starshipit
+#: model_terms:ir.ui.view,arch_db:delivery_starshipit.choose_delivery_carrier_view_form
+msgid "<i class=\"oi oi-arrow-right me-1\"/>Get more delivery methods"
+msgstr ""
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/wizard/starshipit_shipping_wizard.py:0
+msgid "Add a shipping method"
+msgstr "शिपिंग का कोई तरीका जोड़ें"
+
+#. module: delivery_starshipit
+#: model_terms:ir.ui.view,arch_db:delivery_starshipit.view_shipping_method_starshipit
+msgid "Cancel"
+msgstr "रद्द"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,field_description:delivery_starshipit.field_stock_package_type__package_carrier_type
+msgid "Carrier"
+msgstr "कैरियर"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid "Choose Starshipit Shipping Service"
+msgstr "Starshipit शिपिंग सर्विस चुनें"
+
+#. module: delivery_starshipit
+#: model:ir.model,name:delivery_starshipit.model_starshipit_shipping_wizard
+msgid "Choose from the available starshipit shipping methods"
+msgstr "उपलब्ध Starshipit शिपिंग तरीके चुनें"
+
+#. module: delivery_starshipit
+#: model_terms:ir.ui.view,arch_db:delivery_starshipit.view_shipping_method_starshipit
+msgid "Confirm"
+msgstr "पुष्टि करें"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,help:delivery_starshipit.field_starshipit_shipping_wizard__available_services
+msgid ""
+"Contains the list of available services for the starshipit account to select "
+"from."
+msgstr "Starshipit खाते के लिए उपलब्ध सेवाओं की सूची, जिनमें से चुनना है।"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,field_description:delivery_starshipit.field_starshipit_shipping_wizard__create_uid
+msgid "Created by"
+msgstr "द्वारा निर्मित"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,field_description:delivery_starshipit.field_starshipit_shipping_wizard__create_date
+msgid "Created on"
+msgstr "इस तारीख को बनाया गया"
+
+#. module: delivery_starshipit
+#: model_terms:ir.ui.view,arch_db:delivery_starshipit.view_delivery_carrier_form
+msgid "Default Package Type"
+msgstr "डिफ़ॉल्ट पैकेज टाइप"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,field_description:delivery_starshipit.field_delivery_carrier__starshipit_default_package_type_id
+msgid "Default Package Type for Starshipit"
+msgstr "Starshipit के लिए डिफ़ॉल्ट पैकेज टाइप"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,field_description:delivery_starshipit.field_starshipit_shipping_wizard__carrier_id
+msgid "Delivery"
+msgstr "डिलीवरी"
+
+#. module: delivery_starshipit
+#: model:ir.model,name:delivery_starshipit.model_choose_delivery_carrier
+msgid "Delivery Carrier Selection Wizard"
+msgstr "डिलीवरी कैरियर चुनने के लिए विज़ॉर्ड"
+
+#. module: delivery_starshipit
+#: model_terms:ir.ui.view,arch_db:delivery_starshipit.view_shipping_method_starshipit
+msgid "Delivery Service"
+msgstr "डिलीवरी सर्विस"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,field_description:delivery_starshipit.field_starshipit_shipping_wizard__display_name
+msgid "Display Name"
+msgstr "डिस्प्ले नाम"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid ""
+"Error: %(file_name)s file could not be obtained for order %(order_name)s."
+msgstr "गड़बड़ी: ऑर्डर %(order_name)s के लिए %(file_name)s फ़ाइल नहीं मिल पाई।"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid "Error: this delivery method is not available for this order."
+msgstr "गड़बड़ी: यह डिलीवरी तरीका इस ऑर्डर के लिए उपलब्ध नहीं है।"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,field_description:delivery_starshipit.field_starshipit_shipping_wizard__id
+msgid "ID"
+msgstr "आईडी"
+
+#. module: delivery_starshipit
+#: model_terms:ir.ui.view,arch_db:delivery_starshipit.view_delivery_carrier_form
+msgid "Integration"
+msgstr "इंटिग्रेशन"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/starshipit_service.py:0
+msgid "Invalid Starshipit credentials."
+msgstr "अमान्य Starshipit क्रेडेंशियल।"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid "Labels were generated for the order %s"
+msgstr "ऑर्डर %s के लिए लेबल बन गए"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,field_description:delivery_starshipit.field_starshipit_shipping_wizard__write_uid
+msgid "Last Updated by"
+msgstr "इन्होंने आखिरी बार अपडेट किया"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,field_description:delivery_starshipit.field_starshipit_shipping_wizard__write_date
+msgid "Last Updated on"
+msgstr "आखिरी बार अपडेट हुआ"
+
+#. module: delivery_starshipit
+#: model_terms:ir.ui.view,arch_db:delivery_starshipit.view_delivery_carrier_form
+msgid "Options"
+msgstr "विकल्प"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid ""
+"Order %(order)s was already sent to the carrier during label creation.\n"
+"Manifest number: %(manifest_number)s"
+msgstr ""
+"ऑर्डर %(order)s, लेबल बनाने के दौरान पहले ही कैरियर को भेजा जा चुका था.\n"
+"मेनिफ़ेस्ट नंबर: %(manifest_number)s"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid ""
+"Order %(order)s was sent to the carrier during label creation.As you are in "
+"a test environment, please make sure to cancel the order with your carrier "
+"directly.\n"
+"Manifest number: %(manifest_number)s"
+msgstr ""
+"ऑर्डर %(order)s, लेबल बनाने के दौरान कैरियर को भेजा गया था. क्योंकि आप एक टेस्ट "
+"एन्वायरमेंट में हैं, कृपया कैरियर से सीधे ऑर्डर रद्द करना सुनिश्चित करें.\n"
+"मेनिफ़ेस्ट नंबर: %(manifest_number)s"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid "Order %s was archived."
+msgstr "ऑर्डर %s को आर्काइव किया गया।"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid "Order %s was sent to the carrier."
+msgstr "ऑर्डर %s कैरियर को भेजा गया।"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,field_description:delivery_starshipit.field_delivery_carrier__starshipit_origin_address
+msgid "Origin Address"
+msgstr "मूल पता"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,help:delivery_starshipit.field_delivery_carrier__starshipit_default_package_type_id
+msgid ""
+"Package dimensions are required to get more accurate rates. You can define "
+"these in a package type that you set as default"
+msgstr ""
+"सही कीमत पाने के लिए, पैकेज के आयामों (लंबाई, चौड़ाई और ऊंचाई) की ज़रूरत होती है. आप इन "
+"आकारों को एक डिफ़ॉल्ट पैकेज के प्रकार में तय कर सकते हैं, जिसे आप डिफ़ॉल्ट के तौर पर सेट करते हैं"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/starshipit_service.py:0
+msgid "Please fill in the field %(field)s on the %(partner)s partner."
+msgstr "कृपया %(partner)s पार्टनर पर %(field)s फ़ील्ड में जानकारी भरें।"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,field_description:delivery_starshipit.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "प्रोवाइडर"
+
+#. module: delivery_starshipit
+#: model:ir.model,name:delivery_starshipit.model_stock_return_picking
+msgid "Return Picking"
+msgstr "रिटर्न पिकिंग"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid "Return labels were generated for the order %s"
+msgstr "ऑर्डर %s के लिए रिटर्न लेबल बन गए"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid ""
+"Return order %(order)s was already sent to the carrier during label "
+"creation.\n"
+"Manifest number: %(manifest_number)s"
+msgstr ""
+"रिटर्न ऑर्डर %(order)s, लेबल बनाने के दौरान पहले ही कैरियर को भेजा जा चुका था.\n"
+"मेनिफ़ेस्ट नंबर: %(manifest_number)s"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid ""
+"Return order %(order)s was sent to the carrier during label creation.As you "
+"are in a test environment, please make sure to cancel the order with your "
+"carrier directly.\n"
+"Manifest number: %(manifest_number)s"
+msgstr ""
+"रिटर्न ऑर्डर %(order)s, लेबल बनाने के दौरान कैरियर को भेजा गया था. क्योंकि आप एक टेस्ट "
+"एन्वायरमेंट में हैं, कृपया कैरियर से सीधे ऑर्डर रद्द करना सुनिश्चित करें.\n"
+"मेनिफ़ेस्ट नंबर: %(manifest_number)s"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid "Return order %s was archived."
+msgstr "रिटर्न ऑर्डर %s को आर्काइव किया गया।"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid "Return order %s was sent to the carrier."
+msgstr "रिटर्न ऑर्डर %s कैरियर को भेजा गया।"
+
+#. module: delivery_starshipit
+#: model_terms:ir.ui.view,arch_db:delivery_starshipit.view_delivery_carrier_form
+msgid "Select a service linked to your starshipit account"
+msgstr "अपने Starshipit खाते से जुड़ी सेवा चुनें"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,field_description:delivery_starshipit.field_starshipit_shipping_wizard__selected_service_code
+msgid "Selected Service"
+msgstr "चुनी गई सर्विस"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,field_description:delivery_starshipit.field_delivery_carrier__starshipit_service_code
+msgid "Service Code"
+msgstr "सर्विस कोड"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,field_description:delivery_starshipit.field_delivery_carrier__starshipit_service_name
+msgid "Service Name"
+msgstr "सर्विस का नाम"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid ""
+"Shipping Cost has been updated from Starshipit. The Sales Order can now be "
+"invoiced."
+msgstr ""
+"शिपिंग की कीमत Starshipit से अपडेट हो गई है. अब सेल्स ऑर्डर का बिल बनाया जा सकता है।"
+
+#. module: delivery_starshipit
+#: model:ir.model,name:delivery_starshipit.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "शिपिंग के तरीके"
+
+#. module: delivery_starshipit
+#: model_terms:ir.ui.view,arch_db:delivery_starshipit.view_shipping_method_starshipit
+msgid "Shipping Product"
+msgstr "शिपिंग प्रॉडक्ट"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/starshipit_service.py:0
+msgid "Something went wrong, please try again later: %s"
+msgstr "कोई गड़बड़ी हुई, कृपया बाद में कोशिश करें:%s"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields.selection,name:delivery_starshipit.selection__delivery_carrier__delivery_type__starshipit
+#: model:ir.model.fields.selection,name:delivery_starshipit.selection__stock_package_type__package_carrier_type__starshipit
+msgid "Starshipit"
+msgstr "Starshipit"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,help:delivery_starshipit.field_delivery_carrier__starshipit_api_key
+msgid "Starshipit API Integration key"
+msgstr "Starshipit एपीआई इंटिग्रेशन कुंजी"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,help:delivery_starshipit.field_delivery_carrier__starshipit_subscription_key
+msgid "Starshipit API Subscription key"
+msgstr "Starshipit एपीआई सब्सक्रिप्शन कुंजी"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/starshipit_service.py:0
+msgid "Starshipit API rate exceeded. Please try again later."
+msgstr "Starshipit एपीआई रेट की सीमा पार हो गई. कृपया बाद में फिर कोशिश करें।"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,field_description:delivery_starshipit.field_delivery_carrier__starshipit_api_key
+msgid "Starshipit Api Key"
+msgstr "Starshipit एपीआई कुंजी"
+
+#. module: delivery_starshipit
+#: model_terms:ir.ui.view,arch_db:delivery_starshipit.view_delivery_carrier_form
+msgid "Starshipit Configuration"
+msgstr "Starshipit कॉन्फ़िगरेशन"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,field_description:delivery_starshipit.field_stock_picking__starshipit_parcel_reference
+msgid "Starshipit Parcel Reference"
+msgstr "Starshipit पार्सल रेफ़रेंस"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid "Starshipit Price Update Cron: System Error fetching price: %s"
+msgstr "Starshipit कीमत अपडेट क्रॉन: कीमत लाने में सिस्टम में गड़बड़ी: %s"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,field_description:delivery_starshipit.field_stock_picking__starshipit_return_parcel_reference
+msgid "Starshipit Return Parcel Reference"
+msgstr "Starshipit रिटर्न पार्सल रेफ़रेंस"
+
+#. module: delivery_starshipit
+#: model_terms:ir.ui.view,arch_db:delivery_starshipit.res_config_settings_view_form_sale_starshipit
+#: model_terms:ir.ui.view,arch_db:delivery_starshipit.res_config_settings_view_form_stock_starshipit
+msgid "Starshipit Shipping Methods"
+msgstr "Starshipit शिपिंग के तरीके"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,field_description:delivery_starshipit.field_delivery_carrier__starshipit_subscription_key
+msgid "Starshipit Subscription Key"
+msgstr "Starshipit सब्सक्रिप्शन कुंजी"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid ""
+"Starshipit cannot generate returns for the carrier %s. Please handle this "
+"return with the carrier directly."
+msgstr ""
+"Starshipit, कैरियर %s के लिए रिटर्न जनरेट नहीं कर सकता है. कृपया इस रिटर्न को सीधे "
+"कैरियर से मैनेज करें।"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid ""
+"Starshipit: Delivery cost re-evaluated on Sales Order based on updated exact "
+"price (%(final_carrier_price)s) from transfer %(picking_name)s."
+msgstr ""
+"Starshipit: डिलीवरी के शुल्क का सेल्स ऑर्डर पर, ट्रांसफर %(picking_name)s से मिली सही "
+"कीमत (%(final_carrier_price)s) के आधार पर दोबारा मूल्यांकन किया गया।"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid ""
+"Starshipit: Exact shipping cost for delivery %(picking_name)s is now %"
+"(final_carrier_price)s, but automatic sale order delivery cost re-evaluation "
+"failed: %(e_so)s"
+msgstr ""
+"Starshipit: डिलीवरी %(picking_name)s के लिए शिपिंग की सही कीमत %"
+"(final_carrier_price)s है, लेकिन सेल्स ऑर्डर पर डिलीवरी के शुल्क का अपने-आप दोबारा "
+"मूल्यांकन असफल रहा: %(e_so)s"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid ""
+"Starshipit: Exact shipping cost for delivery %(picking_name)s is now %"
+"(final_carrier_price)s. This sale order is already invoiced, please review "
+"if a manual adjustment to the invoice is needed."
+msgstr ""
+"Starshipit: डिलीवरी %(picking_name)s के लिए शिपिंग का सही शुल्क अब %"
+"(final_carrier_price)s है. इस सेल्स ऑर्डर का बिल पहले ही बन चुका है, कृपया समीक्षा करें "
+"कि क्या इनवॉइस में मैन्युअल बदलाव की ज़रूरत है।"
+
+#. module: delivery_starshipit
+#: model:ir.actions.server,name:delivery_starshipit.ir_cron_starshipit_fetch_pending_prices_ir_actions_server
+msgid "Starshipit: Fetch Pending Shipping Prices"
+msgstr "Starshipit: बाकी शिपिंग की कीमतें लाएं"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid "Starshipit: Shipping Cost updated"
+msgstr "Starshipit: शिपिंग की कीमत अपडेट की गई"
+
+#. module: delivery_starshipit
+#: model:ir.model,name:delivery_starshipit.model_stock_package_type
+msgid "Stock package type"
+msgstr "स्टॉक पैकेज टाइप"
+
+#. module: delivery_starshipit
+#: model_terms:ir.ui.view,arch_db:delivery_starshipit.view_picking_form_inherit_stock
+msgid "The Shipping Cost is being fetched in the background."
+msgstr "शिपिंग का शुल्क बैकग्राउंड में फ़ेच किया जा रहा है।"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,help:delivery_starshipit.field_delivery_carrier__starshipit_carrier_code
+msgid ""
+"The carrier on starshipit used by this carrier. The service code belongs to "
+"it."
+msgstr ""
+"इस कैरियर द्वारा इस्तेमाल किया गया Starshipit कैरियर. सर्विस कोड इससे संबंधित है।"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid ""
+"The exact price could not be retrieved. It will be updated by a scheduled "
+"action."
+msgstr "सही कीमत नहीं मिल सकी. इसे एक तय किए गए ऐक्शन से अपडेट किया जाएगा।"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid "The order '%(order_number)s' has been created!\n"
+msgstr ""
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid "The order has been created!\n"
+msgstr ""
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/starshipit_service.py:0
+msgid ""
+"The picking %(picking_name)s sequence is too long for Starshipit. Please "
+"update your pickings sequence in order to use at most 50 characters."
+msgstr ""
+"पिकिंग %(picking_name)s सीक्वेंस Starshipit के लिए बहुत लंबा है. Starshipit का "
+"इस्तेमाल करने के लिए, कृपया अपनी पिकिंग सीक्वेंस को अपडेट करें, ताकि उसमें ज़्यादा से ज़्यादा "
+"50 अक्षर हों।"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid "The return label creation failed."
+msgstr "रिटर्न लेबल बनाने का काम असफल रहा।"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/starshipit_service.py:0
+msgid ""
+"The service code %(service_code)s is too long for Starshipit. Please update "
+"the code inside starshipit to be at most 100 characters, then update your "
+"shipping carrier %(shipping_carrier)s to the new code."
+msgstr ""
+"सर्विस कोड %(service_code)s Starshipit के लिए बहुत लंबा है. कृपया Starshipit के अंदर "
+"कोड को अपडेट करके ज़्यादा से ज़्यादा 100 अक्षर रखें, फिर अपने शिपिंग कैरियर %"
+"(shipping_carrier)s को नए कोड में अपडेट करें।"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,help:delivery_starshipit.field_delivery_carrier__starshipit_service_code
+#: model:ir.model.fields,help:delivery_starshipit.field_delivery_carrier__starshipit_service_name
+msgid ""
+"The service that will be used for this carrier. This is set when you select "
+"a carrier from the wizard."
+msgstr ""
+"वह सेवा जिसका इस्तेमाल इस कैरियर के लिए किया जाएगा. कैरियर को चुनने वाले विज़ॉर्ड से इसे "
+"सेट किया जाता है।"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid ""
+"There are no shipping services available, please verify the shipping address "
+"or activate suitable carriers in your starshipit account."
+msgstr ""
+"कोई शिपिंग सेवा उपलब्ध नहीं है, कृपया शिपिंग पते की जांच करें या अपने Starshipit खाते में "
+"सही कैरियर को चालू करें।"
+
+#. module: delivery_starshipit
+#. odoo-python
+#: code:addons/delivery_starshipit/models/delivery_carrier.py:0
+msgid "This action requires a Starshipit carrier."
+msgstr "इस कार्रवाई के लिए एक Starshipit कैरियर की ज़रूरत है।"
+
+#. module: delivery_starshipit
+#: model:ir.model.fields,help:delivery_starshipit.field_delivery_carrier__starshipit_origin_address
+msgid ""
+"This address will be used when fetching the available services from "
+"starshipit."
+msgstr "Starshipit से उपलब्ध सेवाएं लाते समय इस पते का इस्तेमाल किया जाएगा।"
+
+#. module: delivery_starshipit
+#: model:ir.model,name:delivery_starshipit.model_stock_picking
+msgid "Transfer"
+msgstr "स्थानांतरण"
+
+#~ msgid "Please delete the order on Starshipit then try again."
+#~ msgstr "कृपया Starshipit पर ऑर्डर मिटाएं, फिर दोबारा कोशिश करें।"
+
+#~ msgid "Starshipit returned an error: %(message)s"
+#~ msgstr "Starshipit में एक गड़बड़ी मिली: %(message)s"
+
+#~ msgid ""
+#~ "The shipping label creation failed with the following error:\n"
+#~ "%(error)s"
+#~ msgstr ""
+#~ "शिपिंग लेबल बनाने का काम इस गड़बड़ी की वजह से असफल रहा:\n"
+#~ "%(error)s"

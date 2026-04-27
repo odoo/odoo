@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_be_codaclean</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='account_vendor_bills']" position="after">
+                <block title="Codaclean" invisible="country_code != 'BE'" id="l10n_be_codaclean" groups="account.group_account_user">
+                    <setting string="Codaclean Connection" id="l10n_be_codaclean_settings"
+                             documentation="/applications/finance/fiscal_localizations/belgium.html#codaclean">
+                        <div class="group-content" id="codaclean_connection_status">
+                            <field name="l10n_be_codaclean_is_connected" invisible="1"/>  <!-- Needed since we show the label for this field -->
+                            <label string="Status" for="l10n_be_codaclean_is_connected" class="col-lg-3 o_light_label"/>
+
+                            <i class="fa fa-check text-success" invisible="not l10n_be_codaclean_is_connected"/>
+                            <span class="text-success" invisible="not l10n_be_codaclean_is_connected">Connected</span>
+
+                            <i class="fa fa-exclamation-triangle text-warning" invisible="l10n_be_codaclean_is_connected"/>
+                            <span class="text-warning" invisible="l10n_be_codaclean_is_connected">Not connected</span>
+
+                            <button name="l10n_be_codaclean_refresh_connection_status" type="object" class="btn-link btn-primary"
+                                    invisible="not l10n_be_codaclean_iap_token">
+                                <i title="Update status" role="img" aria-label="Update status" class="fa fa-fw fa-refresh"/>
+                            </button>
+                        </div>
+                        <div>
+                            <button name="l10n_be_codaclean_open_connection_wizard" type="object" class="btn btn-primary" string="Manage Connection"/>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

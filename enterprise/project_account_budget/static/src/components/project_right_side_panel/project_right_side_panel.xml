@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="project_account_budget.ProjectRightSidePanel" t-inherit="project.ProjectRightSidePanel" t-inherit-mode="extension">
+        <xpath expr="//ProjectRightSidePanelSection[@name=&quot;'profitability'&quot;]" position="after">
+            <t t-set="showBudget" t-value="!!state.data.budget_items and !!state.data.budget_items.data"/>
+            <ProjectRightSidePanelSection
+                name="'budgets'"
+                show="showBudget"
+                showData="showBudget"
+                dataClassName="'py-3'"
+            >
+                <t t-set-slot="title">
+                    Budgets
+                </t>
+                <t t-set-slot="header">
+                    <div class="o_rightpanel_button btn btn-secondary" t-if="state.data.budget_items.can_add_budget">
+                        <a t-on-click="addBudget">Add Budget</a>
+                    </div>
+                </t>
+                <div t-if="!state.data.budget_items.data.length" class="ps-3">
+                    <span class="text-muted fst-italic">
+                        Compare expected and actual revenues and costs.
+                    </span>
+                </div>
+                <table t-else="" class="table table-sm table-striped table-hover mb-0">
+                    <thead class="bg-100 align-middle">
+                        <tr>
+                            <th>Budget</th>
+                            <th class="text-end">Allocated</th>
+                            <th class="text-end">Spent</th>
+                            <th class="text-end">Remaining</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="state.data.budget_items.data" t-as="budget_item" t-key="budget_item.id">
+                            <tr>
+                                <td>
+                                    <a t-if="budget_item.action" class="o_rightpanel_button"
+                                        t-on-click="() => this.onProjectActionClick(budget_item.action)"
+                                    >
+                                        <t t-call="project_account_budget.BudgetName"/>
+                                    </a>
+                                    <t t-else="">
+                                        <t t-call="project_account_budget.BudgetName"/>
+                                    </t>
+                                </td>
+                                <td class="text-end align-middle" t-att-class="budget_item.allocated === 0 ? 'text-500' : ''"><t t-out="formatMonetary(budget_item.allocated)"/></td>
+                                <td class="text-end align-middle" t-att-class="budget_item.spent === 0 ? 'text-500' : ''"><t t-out="formatMonetary(budget_item.spent)"/></td>
+                                <t t-set="budget_remaining" t-value="budget_item.spent - budget_item.allocated"/>
+                                <td class="text-end align-middle" t-attf-class="text-bold text-{{ 
+                                       budget_item.progress &gt;= 0.25 ? 'success' : budget_item.progress &gt;= 0 ? 'warning' : 'danger' }}">
+                                    <t t-out="formatMonetary(budget_remaining)"/>
+                                    <t t-if="budget_item.allocated"> (<t t-out="Math.abs(budget_item.spent / budget_item.allocated * 100).toFixed()"/>%)</t>
+                                </td>
+                            </tr>
+                            <t t-foreach="budget_item['budgets']" t-as="budget" t-key="budget.id">
+                                <tr>
+                                    <td><span class="ms-3"><small t-out="budget.name"/></span></td>
+                                    <td class="text-end align-middle" t-att-class="budget.allocated === 0 ? 'text-500' : ''"><small t-out="formatMonetary(budget.allocated)"/></td>
+                                    <td class="text-end align-middle" t-att-class="budget.spent === 0 ? 'text-500' : ''"><small t-out="formatMonetary(budget.spent)"/></td>
+                                    <t t-set="budget_remaining" t-value="budget.spent - budget.allocated"/>
+                                    <td class="text-end align-middle" t-attf-class="text-bold text-{{
+                                           budget_item.progress &gt;= 0.25 ? 'success' : budget_item.progress &gt;= 0 ? 'warning' : 'danger' }}">
+                                        <small t-out="formatMonetary(budget_remaining)"/>
+                                        <t t-if="budget.allocated"> (<small t-out="Math.abs(budget.spent / budget.allocated * 100).toFixed()"/>%)</t>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                    </tbody>
+                    <tfoot>
+                        <tr class="fw-bolder">
+                            <td>Total</td>
+                            <t t-set="budget_total" t-value="state.data.budget_items.total"/>
+                            <td class="text-end" t-att-class="budget_total.allocated === 0 ? 'text-500' : ''" t-esc="formatMonetary(budget_total.allocated)"/>
+                            <td class="text-end" t-att-class="budget_total.spent === 0 ? 'text-500' : ''" t-esc="formatMonetary(budget_total.spent)" />
+                            <t t-set="budget_total_remaining" t-value="budget_total.spent - budget_total.allocated"/>
+                            <td class="text-end" t-attf-class="text-bold text-{{ budget_total.progress &gt;= 0.25 ? 'success' : budget_total.progress &gt;= 0 ? 'warning' : 'danger' }}">
+                               <t t-out="formatMonetary(budget_total_remaining)"/>
+                               <t t-if="budget_total.allocated"> (<t t-out="Math.abs(budget_total.spent / budget_total.allocated * 100).toFixed()"/>%)</t>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </ProjectRightSidePanelSection>
+        </xpath>
+    </t>
+
+    <t t-name="project_account_budget.BudgetName">
+        <t t-if="budget_item.name">
+            <t t-out="budget_item.name"/>
+        </t>
+        <t t-else="">
+            <i>No Budget</i>
+        </t>
+    </t>
+
+</templates>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="spreadsheet_dashboard_marketing_automation" model="spreadsheet.dashboard">
+        <field name="name">Email Marketing</field>
+        <field name="spreadsheet_binary_data" type="base64" file="spreadsheet_dashboard_marketing_automation/data/files/marketing_automation_dashboard.json"/>
+        <field name="main_data_model_ids" eval="[(4, ref('mass_mailing.model_mailing_mailing'))]"/>
+        <field name="sample_dashboard_file_path">spreadsheet_dashboard_marketing_automation/data/files/marketing_automation_sample_dashboard.json</field>
+        <field name="dashboard_group_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_group_marketing"/>
+        <field name="group_ids" eval="[Command.link(ref('marketing_automation.group_marketing_automation_user'))]"/>
+        <field name="sequence">70</field>
+        <field name="is_published">True</field>
+    </record>
+
+</odoo>

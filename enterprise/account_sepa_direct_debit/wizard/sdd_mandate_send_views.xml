@@ -1,0 +1,52 @@
+<odoo>
+    <data>
+        <record id="account_sepa_direct_debit_mandate_send_form" model="ir.ui.view">
+            <field name="name">sdd.mandate.send.form</field>
+            <field name="model">sdd.mandate.send</field>
+            <field name="arch" type="xml">
+                <form string="Send &amp; Print">
+                    <div class="m-0" name="warnings" invisible="not warnings">
+                        <field name="warnings" class="o_field_html" widget="actionable_errors"/>
+                    </div>
+                    <group col="1">
+                        <field name="author_id" invisible="1"/>
+                        <field name="lang" invisible="1"/>
+                        <field name="render_model" invisible="1"/>
+                        <field name="mandate_id" invisible="1"/>
+                        <field name="template_id" invisible="1"/>
+                    </group>
+                    <group col="2">
+                        <field name="checkbox_download"/>
+                        <field name="checkbox_send_mail"/>
+                        <field name="template_id" can_create="True" invisible="not checkbox_send_mail"/>
+                    </group>
+                    <group col="2" invisible="not checkbox_send_mail">
+                        <field name="recipient_ids"
+                               widget="many2many_tags_email"
+                               options="{'no_quick_create': True}"
+                               context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
+                    </group>
+                    <group col="2" invisible="not checkbox_send_mail">
+                        <field name="subject" placeholder="Subject"/>
+                    </group>
+                    <field name="body"
+                           invisible="not checkbox_send_mail"
+                           class="oe-bordered-editor"
+                           widget="html_mail"/>
+                    <footer>
+                        <button string="Send &amp; Print"
+                                data-hotkey="q"
+                                name="action_send_and_print"
+                                type="object"
+                                class="print btn-primary o_mail_send">
+                        </button>
+                        <button string="Cancel"
+                                data-hotkey="x"
+                                special="cancel"
+                                class="btn-secondary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

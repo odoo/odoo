@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.form.inherit.l10n_au_hr_payroll</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+        <field name="arch" type="xml">
+            <div name="hourly_wage" position="after">
+                <field name="l10n_au_casual_loading"
+                    class="o_hr_narrow_field" widget="percentage"
+                    invisible="country_code != 'AU' or wage_type == 'monthly'"/>
+            </div>
+            <xpath expr="//page[@name='information']//group[@name='yearly_benefits']" position="before">
+                <group>
+                    <field name="l10n_au_yearly_wage"/>
+                </group>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page name="l10n_au" string="Australia" invisible="country_code != 'AU'">
+                    <group>
+                        <group name="l10n_au_general" string="General" invisible="country_code != 'AU'">
+                            <field name="l10n_au_pay_day"/>
+                            <field name="l10n_au_cessation_type_code" invisible="not date_end"/>
+                        </group>
+                        <group name="tax_treatment" string="Tax Treatment" invisible="country_code != 'AU' or l10n_au_tax_treatment_category != 'A'" groups="hr.group_hr_user">
+                            <field name="l10n_au_performances_per_week" />
+                        </group>
+                        <group name="l10n_au_leave_loading" string="Leave Loading / Workplace Giving"
+                            invisible="country_code != 'AU'">
+                            <field name="l10n_au_eligible_for_leave_loading"/>
+                            <field name="l10n_au_leave_loading" invisible="not l10n_au_eligible_for_leave_loading"/>
+                            <field name="l10n_au_leave_loading_leave_types" invisible="not l10n_au_eligible_for_leave_loading or l10n_au_leave_loading != 'once'">
+                                <list editable="bottom">
+                                    <field name="display_name"/>
+                                    <field name="work_entry_type_id"/>
+                                </list>
+                            </field>
+                            <field name="l10n_au_leave_loading_rate" invisible="not l10n_au_eligible_for_leave_loading or not l10n_au_leave_loading"/>
+                            <field name="l10n_au_workplace_giving" />
+                            <field name="l10n_au_workplace_giving_employer" />
+                        </group>
+                        <group name="l10n_au_super_contributions" string="Super Contributions" invisible="country_code != 'AU'">
+                            <field name="l10n_au_extra_negotiated_super" widget="percentage"/>
+                            <field name="l10n_au_extra_compulsory_super" widget="percentage"/>
+                        </group>
+                        <group name="salary_sacrifice" string="Salary Sacrifice" invisible="country_code != 'AU'">
+                            <field name="l10n_au_salary_sacrifice_superannuation"/>
+                            <field name="l10n_au_salary_sacrifice_other"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

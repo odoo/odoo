@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- internal -->
+
+        <record id="documents_meal_expense_document" model="documents.document" forcecreate="0">
+            <field name="name">meal_expense.png</field>
+            <field name="datas" type="base64" file="documents_hr_expense/demo/files/meal_expense.png"/>
+            <field name="folder_id" ref="documents.document_internal_folder"/>
+        </record>
+
+    </data>
+</odoo>

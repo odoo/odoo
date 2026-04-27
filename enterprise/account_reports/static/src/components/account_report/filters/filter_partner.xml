@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportFilterPartner">
+        <Dropdown
+            menuClass="'account_report_filter partner'"
+        >
+            <button class="btn btn-secondary">
+                <i class="fa fa-folder-open me-1"/>Partners
+            </button>
+
+            <t t-set-slot="content">
+                <div class="dropdown-item gap-2 align-items-center">
+                    <label>Partners</label>
+                    <MultiRecordSelector t-props="getMultiRecordSelectorProps('res.partner', 'partner_ids')" domain="['|', ['parent_id', '=', false], ['is_company', '=', true]]"/>
+                </div>
+
+                <div class="dropdown-item gap-2 align-items-center">
+                    <label>Tags</label>
+                    <MultiRecordSelector t-props="getMultiRecordSelectorProps('res.partner.category', 'partner_categories')"/>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

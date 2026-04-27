@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ch_individual_account_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.individual.account.form</field>
+        <field name="model">l10n.ch.individual.account</field>
+        <field name="arch" type="xml">
+            <form string="Individual Accounts">
+                <header>
+                    <button name="action_generate_declarations" string="Populate" type="object" class="btn-primary" invisible="lines_count"/>
+                    <button name="action_generate_declarations" string="Populate" type="object" class="btn-secondary" invisible="not lines_count"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_declarations" type="object" class="oe_stat_button" icon="fa-users" invisible="not lines_count">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="lines_count"/></span>
+                                <span class="o_stat_text">Eligible Employees</span>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="year" class="o_hr_narrow_field"/>
+                            <field name="name"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <p name="save_warning">The files won't be posted in the employee portal if you don't have the Documents app.</p>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_ch_individual_account_action" model="ir.actions.act_window">
+        <field name="name">Individual Accounts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n.ch.individual.account</field>
+        <field name="view_mode">list,form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

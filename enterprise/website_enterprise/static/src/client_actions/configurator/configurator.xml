@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="website_enterprise.Configurator.WelcomeScreen" t-inherit="website.Configurator.WelcomeScreen" t-inherit-mode="extension">
+    <xpath expr="//button[hasclass('o_configurator_show')]" position="after">
+        <span class="mx-2" t-if="showWebsiteGeneratorButton">
+            or <a href="#" t-on-click="goToWebsiteGeneratorRequest">import your website</a>
+        </span>
+    </xpath>
+</t>
+
+</templates>

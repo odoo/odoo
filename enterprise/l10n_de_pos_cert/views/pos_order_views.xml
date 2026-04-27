@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_pos_form" model="ir.ui.view">
+        <field name="name">pos.order.form.view.inherit.fiskaly</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <page name="extra" position="inside">
+                <group string="Fiskaly information" invisible="not l10n_de_fiskaly_transaction_uuid">
+                    <field name="l10n_de_fiskaly_transaction_uuid"/>
+                    <field name="l10n_de_fiskaly_transaction_number"/>
+                    <field name="l10n_de_fiskaly_time_start"/>
+                    <field name="l10n_de_fiskaly_time_end"/>
+                    <field name="l10n_de_fiskaly_timestamp_format"/>
+                    <field name="l10n_de_fiskaly_signature_value" style="word-break: break-all"/>
+                    <field name="l10n_de_fiskaly_signature_algorithm"/>
+                    <field name="l10n_de_fiskaly_signature_public_key" style="word-break: break-all"/>
+                    <field name="l10n_de_fiskaly_client_serial_number"/>
+                </group>
+            </page>
+        </field>
+    </record>
+</odoo>

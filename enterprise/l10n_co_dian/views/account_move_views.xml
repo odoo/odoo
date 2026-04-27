@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_move_form_inherit_l10n_co_dian" model="ir.ui.view">
+        <field name="name">account.move.form.l10n_co_dian</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='button_cancel']" position="after">
+                <field name="l10n_co_dian_show_support_doc_button" invisible="1"/>
+                <button name="l10n_co_dian_action_send_bill_support_document"
+                        string="Send Support Document to DIAN"
+                        type="object"
+                        groups="account.group_account_invoice"
+                        invisible="not l10n_co_dian_show_support_doc_button"/>
+            </xpath>
+            <xpath expr="//page[@id='other_tab_entry']" position="after">
+                <page id="edi_documents"
+                      string="DIAN"
+                      invisible="not l10n_co_dian_document_ids">
+                    <field name="l10n_co_dian_document_ids">
+                        <list create="false" delete="false" edit="false" no_open="1">
+                            <!-- Invisible fields -->
+                            <field name="attachment_id" column_invisible="1"/>
+                            <field name="message" column_invisible="1"/>
+                            <field name="show_button_get_status" column_invisible="1"/>
+
+                            <!-- Visible fields -->
+                            <field name="datetime"/>
+                            <field name="move_id"/>
+                            <field name="state" widget="account_document_state"/>
+                            <field name="test_environment" optional="show"/>
+                            <field name="certification_process" optional="show"/>
+
+                            <button name="action_get_status"
+                                    type="object"
+                                    string="Get Status"
+                                    invisible="not show_button_get_status"/>
+                            <button name="action_download_file"
+                                    type="object"
+                                    string="Download"
+                                    invisible="not attachment_id"/>
+                            <button name="action_get_attached_document"
+                                    type="object"
+                                    string="Fetch Attached Document"
+                                    invisible="not attachment_id"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter_inherit_l10n_co_dian" model="ir.ui.view">
+        <field name="name">account.invoice.select.inherit.l10n_co_dian</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <field name="line_ids" position="after">
+                <field string="CUFE/CUDE/CUDS" name="l10n_co_edi_cufe_cude_ref"/>
+            </field>
+            <filter name="status" position="after">
+                <filter string="DIAN status" name="l10n_co_dian_state" context="{'group_by': 'l10n_co_dian_state'}"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

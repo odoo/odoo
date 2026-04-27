@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="open_payroll_modules" model="ir.actions.act_window">
+            <field name="name">Payroll</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="context">{}</field>
+            <field name="domain">[('name', '=like', 'l10n_%_hr_payroll')]</field>
+            <field name="search_view_id" ref="base.view_module_filter"/>
+        </record>
+
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.hr.payroll</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="45"/>
+            <field name="inherit_id" ref="hr_contract.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <app data-string="Payroll" string="Payroll" name="hr_payroll" groups="hr_payroll.group_hr_payroll_manager">
+                        <field name="module_l10n_fr_hr_payroll" invisible="1"/>
+                        <field name="module_l10n_be_hr_payroll" invisible="1"/>
+                        <field name="module_l10n_in_hr_payroll" invisible="1"/>
+                        <block title="Accounting" id="hr_payroll_accountant">
+                            <setting name="module_hr_payroll_account" string="Payroll Entries" help="Post payroll slips in accounting">
+                                <field name="module_hr_payroll_account"/>
+                            </setting>
+                            <setting name="module_hr_payroll_account_iso20022" invisible="not module_hr_payroll_account" string="Payroll SEPA" help="Create SEPA payment">
+                                <field name="module_hr_payroll_account_iso20022"/>
+                            </setting>
+                        </block>
+                        <block title="Payroll" id="hr_payroll_settings">
+                            <setting string="Payroll Rules" help="Payroll rules that apply to your country"
+                                invisible="module_l10n_fr_hr_payroll or module_l10n_be_hr_payroll or module_l10n_in_hr_payroll">
+                                <div class="mt8" id="localization_text">
+                                    <button name="%(open_payroll_modules)d" icon="oi-arrow-right" type="action" string="Choose a Payroll Localization" class="btn-link"/>
+                                </div>
+                            </setting>
+                            <setting string="Contract Expiration Notice Period" id="contract_notice_period"
+                                title="Number of days prior to the contract end date that a contract expiration warning is triggered.">
+                                <field name="contract_expiration_notice_period" class="w-25"/><span>Days</span>
+                            </setting>
+                            <setting string="Payslip PDF Display" help="Display Payslip PDF File on a payslip form" id="display_payslip">
+                                <field name="group_payslip_display"/>
+                            </setting>
+                            <setting string="Work Permit Expiration Notice Period" id="work_permit_notice_period"
+                                title="Number of days prior to the work permit expiration date that a warning is triggered.">
+                                <field name="work_permit_expiration_notice_period" class="w-25"/><span>Days</span>
+                            </setting>
+                            <setting string="YTD Reset Date" id="ytd_reset_date"
+                                title="Day where the 'Year To Date' will be reset every year.">
+                                <div class="content-group">
+                                    <field name="ytd_reset_day" class="o_light_label" style="width: 3ch;"/>
+                                    <field name="ytd_reset_month" class="o_light_label"/>
+                                </div>
+                            </setting>
+                        </block>
+                    </app>
+                </xpath>
+                <xpath expr="//block[@id='hr_contract']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_hr_payroll_configuration" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'hr_payroll', 'bin_size': False}</field>
+        </record>
+
+</odoo>

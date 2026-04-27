@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit the original wizard view -->
+    <record id="view_l10n_ch_tax_rate_import_wizard_inherit" model="ir.ui.view">
+        <field name="name">l10n_ch_tax_rate_import_wizard_inherit.form</field>
+        <field name="model">l10n.ch.tax.rate.import.wizard</field>
+        <!-- This is the original form in l10n_ch_hr_payroll -->
+        <field name="inherit_id" ref="l10n_ch_hr_payroll.l10n_ch_tax_rate_import_wizard_view_form"/>
+        <field name="arch" type="xml">
+            <sheet position="replace">
+                <sheet>
+                    <group>
+                    <field name="import_mode"/>
+                    </group>
+
+                    <span invisible="import_mode == 'automatic'" class="text-muted">Tax files (.txt format) can be found at https://www.estv.admin.ch/de/quellensteuertarife-import-in-lohnbuchhaltungssysteme</span>
+                    <group string="Manual Import" invisible="import_mode == 'automatic'">
+                        <field name="tax_file_ids" widget="many2many_binary" colspan="2" nolabel="1"/>
+                    </group>
+                    <span invisible="import_mode == 'manual'" class="text-muted">Automatic import might take a few minutes if you chose to import all Cantons at once.</span>
+                    <group invisible="import_mode == 'manual'" string="Automatic Import">
+                        <field name="canton_mode"/>
+                        <field name="canton" invisible="canton_mode == 'all'"/>
+                        <field name="year" options="{'type': 'number'}"/>
+                    </group>
+                </sheet>
+            </sheet>
+            <footer position="replace">
+                <footer>
+                    <button invisible="import_mode == 'automatic'" string="Import Tax Rates" name="action_import_file" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button invisible="import_mode == 'manual'" name="action_import_from_website"
+                            string="Import from Tax Administration"
+                            type="object"
+                            class="btn-primary"
+                            data-hotkey="w"/>
+                    <button special="cancel" data-hotkey="z" string="Close" type="object" class="btn-secondary"/>
+                </footer>
+            </footer>
+            </field>
+    </record>
+</odoo>

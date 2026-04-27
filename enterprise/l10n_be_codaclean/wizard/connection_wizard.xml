@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="connection_wizard_view" model="ir.ui.view">
+        <field name="name">l10n_be_codaclean.connection.wizard.view.form</field>
+        <field name="model">l10n_be_codaclean.connection.wizard</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form string="Codaclean Connection">
+                <div class="alert alert-warning" role="alert" invisible="not warning">
+                    <field class="d-inline-block" name="warning"/>
+                </div>
+
+                <div>
+                    Enter your credentials to set up your Codaclean connection
+                </div>
+
+                <br/>
+
+                <div>
+                    You can access the documentation
+                    <a target="_blank" href="https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/belgium.html#codaclean">
+                        by clicking here
+                        <i class="fa fa-external-link" aria-hidden="true"/>
+                    </a>
+                </div>
+
+                <br/>
+
+                <group>
+                    <field name="username"/>
+                    <field name="password" password="True"/>
+                    <field name="iap_token" string="IAP Token" groups="base.group_no_one"/>
+                </group>
+
+                Status
+                <i class="fa fa-check text-success" invisible="not codaclean_is_connected"/>
+                <span class="text-success" invisible="not codaclean_is_connected">Connected</span>
+
+                <i class="fa fa-exclamation-triangle text-warning" invisible="codaclean_is_connected"/>
+                <span class="text-warning" invisible="codaclean_is_connected">Not connected</span>
+
+                <button name="refresh_connection_status" type="object" class="btn-link btn-primary"
+                        invisible="not iap_connection_exists">
+                    <i title="Update status" role="img" aria-label="Update status" class="fa fa-fw fa-refresh"/>
+                </button>
+
+                <footer>
+                    <button name="l10n_be_codaclean_connect" string="Connect"
+                            type="object" class="btn-primary" invisible="iap_connection_exists"/>
+                    <button name="l10n_be_codaclean_change_credentials" string="Change Credentials"
+                            type="object" class="btn-secondary" invisible="not iap_connection_exists"/>
+                    <button name="l10n_be_codaclean_disconnect" string="Disconnect"
+                            type="object" class="btn-secondary" invisible="not iap_connection_exists"/>
+                    <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

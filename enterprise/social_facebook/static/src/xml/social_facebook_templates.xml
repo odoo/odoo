@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- Enable "Bubble Design" in comments' modal to emulate Facebook  -->
+    <t t-inherit="social.StreamPostComments" t-inherit-mode="extension">
+        <xpath expr="//t[@t-set='bubble_design']" position="replace">
+            <t t-set="bubble_design" t-value="true" t-if="originalPost.media_type.raw_value === 'facebook'"/>
+        </xpath>
+    </t>
+
+    <t t-inherit="social.StreamPostComment" t-inherit-mode="extension">
+        <xpath expr="//t[@t-set='bubble_design']" position="replace">
+            <t t-set="bubble_design" t-value="true" t-if="originalPost.media_type.raw_value === 'facebook'"/>
+        </xpath>
+
+        <xpath expr="//span[hasclass('o_social_comment_likes_total')]" position="after">
+            <span t-if="originalPost.media_type.raw_value === 'facebook'"
+                t-foreach="facebookReactions || []"
+                t-as="reaction"
+                t-key="reaction[0]"
+                class="o_social_likes_count badge rounded-pill bg-white py-1 ms-1">
+                <t t-out="reaction[0]"/>
+                <t t-out="reaction[1]"/>
+            </span>
+        </xpath>
+    </t>
+
+    <t t-inherit="social.StreamPostCommentsOriginalPost" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('o_social_original_post_author_image')]" position="inside">
+            <img t-if="originalPost.facebook_author_id.raw_value" t-attf-src="https://graph.facebook.com/v17.0/{{ originalPost.facebook_author_id.raw_value }}/picture" alt="Author Image" class="rounded"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_social_comments_modal_original_post_content')]" position="inside">
+            <div class="o_social_original_post_facebook_stats d-flex justify-content-around pt-2"
+                t-if="originalPost.media_type.raw_value === 'facebook'">
+                <div class="o_social_facebook_likes px-2 mb-2"
+                     t-att-class="{'o_social_facebook_user_likes': originalPost.facebook_user_likes.raw_value}"
+                     t-on-click="() => this._onFacebookPostLike()">
+                    <t t-if="originalPost.facebook_likes_count.raw_value !== 0">
+                        <t t-foreach="facebookReactions || []" t-as="reaction" t-key="reaction[0]">
+                            <b t-out="reaction[0]"/>
+                            <b class="o_social_likes_count mx-1" t-out="reaction[1]"/>
+                        </t>
+                    </t>
+                    <span t-else="" class="fa fa-thumbs-o-up" title="Like"/>
+                </div>
+                <div class="flex-grow-1 d-flex text-muted justify-content-end">
+                    <div>
+                        <t t-esc="originalPost.facebook_shares_count.value"/>
+                        Shares
+                    </div>
+                    <div class="ms-3">
+                        <t t-esc="originalPost.facebook_reach.value"/>
+                        Views
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

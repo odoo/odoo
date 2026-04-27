@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List View -->
+    <record id="pricer_pricer_tag_view_list" model="ir.ui.view">
+        <field name="name">pricer_tag.list</field>
+        <field name="model">pricer.tag</field>
+        <field name="arch" type="xml">
+            <list string="Pricer tag" create="1" delete="1" editable="bottom">
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="pricer_store_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="pricer_pricer_tag_form_view" model="ir.ui.view">
+        <field name="name">pricer_tag.form</field>
+        <field name="model">pricer.tag</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Menu Actions -->
+    <record model="ir.actions.act_window" id="action_open_pricer_tags">
+        <field name="name">Pricer Tags</field>
+        <field name="res_model">pricer.tag</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

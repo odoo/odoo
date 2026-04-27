@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="swissdec_wage_types_tree" model="ir.ui.view">
+        <field name="name">hr.salary.rule.view.tree.l10n.ch.wage.types</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll_elm_transmission.swissdec_wage_types_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="account_debit"/>
+                <field name="account_credit"/>
+            </field>
+        </field>
+    </record>
+</odoo>

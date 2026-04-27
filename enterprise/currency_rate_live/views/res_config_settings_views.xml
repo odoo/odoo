@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.currency.rate.live</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='update_exchange_rates']" position="inside">
+                <div invisible="not module_currency_rate_live">
+                    <div class="row mt16">
+                        <label string="Service" for="currency_provider" class="col-lg-3 o_light_label"/>
+                        <field name="currency_provider"/>
+                    </div>
+                    <div class="row">
+                        <label string="Interval" for="currency_interval_unit" class="col-lg-3 o_light_label"/>
+                        <field name="currency_interval_unit" required="1"/>
+                    </div>
+                    <div class="mt8 row">
+                        <label string="Next Run" for="currency_next_execution_date" class="col-lg-3 o_light_label"/>
+                        <field name="currency_next_execution_date"/>
+                        <button name="update_currency_rates_manually" type="object" class="btn-link w-auto">
+                            <i title="Update now" role="img" aria-label="Update now" class="fa fa-fw fa-refresh"/>
+                        </button>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

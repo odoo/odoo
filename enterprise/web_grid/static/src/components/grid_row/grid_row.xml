@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web_grid.GridRow">
+        <div t-att-name="props.name" t-att-class="props.classNames" t-att-style="props.style">
+            <span t-if="value" t-esc="value" />
+            <span t-else="" class="o_grid_no_data text-300">None</span>
+        </div>
+    </t>
+
+</templates>

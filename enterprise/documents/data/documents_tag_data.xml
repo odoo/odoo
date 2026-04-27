@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <!-- tags internal -->
+    <record id="documents_tag_draft" model="documents.tag" forcecreate="0">
+        <field name="name">Draft</field>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="documents_tag_inbox" model="documents.tag" forcecreate="0">
+        <field name="name">Inbox</field>
+        <field name="sequence">4</field>
+    </record>
+
+    <record id="documents_tag_to_validate" model="documents.tag" forcecreate="0">
+        <field name="name">To Validate</field>
+        <field name="sequence">6</field>
+    </record>
+
+    <record id="documents_tag_validated" model="documents.tag" forcecreate="0">
+        <field name="name">Validated</field>
+        <field name="sequence">8</field>
+    </record>
+
+    <record id="documents_tag_deprecated" model="documents.tag" forcecreate="0">
+        <field name="name">Deprecated</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="documents_tag_hr" model="documents.tag" forcecreate="0">
+        <field name="name">HR</field>
+        <field name="sequence">9</field>
+    </record>
+
+    <record id="documents_tag_sales" model="documents.tag" forcecreate="0">
+        <field name="name">Sales</field>
+        <field name="sequence">9</field>
+    </record>
+
+    <record id="documents_tag_legal" model="documents.tag" forcecreate="0">
+        <field name="name">Legal</field>
+        <field name="sequence">9</field>
+    </record>
+
+    <record id="documents_tag_other" model="documents.tag" forcecreate="0">
+        <field name="name">Other</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="documents_tag_presentations" model="documents.tag" forcecreate="0">
+        <field name="name">Presentations</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="documents_tag_contracts" model="documents.tag" forcecreate="0">
+        <field name="name">Contracts</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="documents_tag_project" model="documents.tag" forcecreate="0">
+        <field name="name">Project</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="documents_tag_text" model="documents.tag" forcecreate="0">
+        <field name="name">Text</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <!-- tags finance -->
+
+    <record id="documents_tag_bill" model="documents.tag" forcecreate="0">
+        <field name="name">Bill</field>
+        <field name="sequence">4</field>
+    </record>
+
+    <record id="documents_tag_expense" model="documents.tag" forcecreate="0">
+        <field name="name">Expense</field>
+        <field name="sequence">5</field>
+    </record>
+
+    <record id="documents_tag_vat" model="documents.tag" forcecreate="0">
+        <field name="name">VAT</field>
+        <field name="sequence">6</field>
+    </record>
+
+    <record id="documents_tag_fiscal" model="documents.tag" forcecreate="0">
+        <field name="name">Fiscal</field>
+        <field name="sequence">7</field>
+    </record>
+
+    <record id="documents_tag_financial" model="documents.tag" forcecreate="0">
+        <field name="name">Financial</field>
+        <field name="sequence">8</field>
+    </record>
+
+    <record id="documents_tag_year_current" model="documents.tag" forcecreate="0">
+        <field name="name" eval="str(datetime.now().year)"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="documents_tag_year_previous" model="documents.tag" forcecreate="0">
+        <field name="name" eval="str(datetime.now().year-1)"/>
+        <field name="sequence">11</field>
+    </record>
+
+    <!-- tags marketing -->
+
+    <record id="documents_tag_ads" model="documents.tag" forcecreate="0">
+        <field name="name">Ads</field>
+        <field name="sequence">12</field>
+    </record>
+
+    <record id="documents_tag_brochures" model="documents.tag" forcecreate="0">
+        <field name="name">Brochures</field>
+        <field name="sequence">13</field>
+    </record>
+
+    <record id="documents_tag_images" model="documents.tag" forcecreate="0">
+        <field name="name">Images</field>
+        <field name="sequence">14</field>
+    </record>
+
+    <record id="documents_tag_videos" model="documents.tag" forcecreate="0">
+        <field name="name">Videos</field>
+        <field name="sequence">15</field>
+    </record>
+</data></odoo>

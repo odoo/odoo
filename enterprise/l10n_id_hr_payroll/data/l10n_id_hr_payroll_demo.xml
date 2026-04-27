@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="base.demo_company_id" model="res.company" forcecreate="1">
+        <field name="name">My ID Company</field>
+        <field name="country_id" ref="base.id"/>
+        <field name="currency_id" ref="base.IDR"/>
+        <field name="resource_calendar_id" ref="resource_calendar_standard" />
+    </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_id'))]"/>
+    </record>
+
+    <record id="base.user_demo" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_id'))]"/>
+    </record>
+
+    <record id="l10n_id_hr_payroll.structure_type_employee_id" model="hr.payroll.structure.type">
+        <field name="default_resource_calendar_id" ref="resource_calendar_standard" />
+    </record>
+
+    <record id="l10n_id_hr_payroll.resource_calendar_standard" model="resource.calendar">
+        <field name="company_id" ref="base.demo_company_id" />
+    </record>
+</odoo>

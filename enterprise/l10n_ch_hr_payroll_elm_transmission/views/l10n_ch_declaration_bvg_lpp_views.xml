@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_l10n_ch_lpp_basis_report_form" model="ir.ui.view">
+        <field name="name">l10n.ch.lpp.basis.report.form</field>
+        <field name="model">l10n.ch.lpp.basis.report</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll_elm_transmission.l10n_ch_swissdec_transmitter_form"/>
+        <field name="arch" type="xml">
+            <field name="l10n_ch_declare_salary_data" position="before">
+                <field name="lpp_basis_line_ids">
+                    <list editable="bottom" create="0">
+                        <field name="employee_id" />
+                        <field name="lpp_institution" />
+                        <field name="lpp_calculated_basis"/>
+                        <field name="lpp_declared_basis"/>
+                    </list>
+                </field>
+            </field>
+            <field name="l10n_ch_declare_salary_data" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="action_l10n_ch_lpp_basis_report" model="ir.actions.act_window">
+        <field name="name">LPP Basis Reports</field>
+        <field name="res_model">l10n.ch.lpp.basis.report</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('l10n_ch_hr_payroll_elm_transmission.l10n_ch_swissdec_transmitter_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_l10n_ch_lpp_basis_report_form')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
+    </record>
+</odoo>

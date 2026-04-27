@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="knowledge.KnowledgeWysiwyg" t-inherit="html_editor.Wysiwyg" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o-wysiwyg')]" position="inside">
+            <WysiwygArticleHelper record="this.env.model.root" editor="editor"
+                isVisible="articleHelperState.isVisible"/>
+        </xpath>
+    </t>
+</templates>

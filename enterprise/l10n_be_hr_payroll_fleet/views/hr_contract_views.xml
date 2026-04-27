@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.form"</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="l10n_be_hr_payroll.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <label for="transport_mode_car" position="replace">
+                <field name="transport_mode_car" invisible="1"/>
+                <label for="transport_mode_car"
+                    string="Catalog Company Car"
+                    invisible="wage_type == 'hourly' or country_code != 'BE'"
+                    groups="fleet.fleet_group_manager"/>
+            </label>
+            <div name="transport_mode_car" position="replace">
+                <div name="transport_mode_car" invisible="wage_type == 'hourly' or country_code != 'BE'"
+                    class="o_checkbox_optional_field"
+                    groups="fleet.fleet_group_manager">
+                    <field name="transport_mode_car" invisible="wage_type == 'hourly'" nolabel="1"/>
+                    <field name="car_id" nolabel="1" invisible="not transport_mode_car"/>
+                </div>
+            </div>
+            <xpath expr="//label[@for='fuel_card']" position="before">
+                <field name="new_car" invisible="1"/>
+                <label for="new_car" string="New Company Car"
+                    groups="fleet.fleet_group_manager"
+                    invisible="wage_type == 'hourly' or country_code != 'BE'"/>
+                <div name="new_car_model_id_div"
+                    class="o_checkbox_optional_field"
+                    groups="fleet.fleet_group_manager"
+                    invisible="wage_type == 'hourly' or country_code != 'BE'">
+                    <field name="new_car" invisible="wage_type == 'hourly'" nolabel="1"/>
+                    <field name="new_car_model_id" invisible="not new_car" nolabel="1"/>
+                </div>
+                <field name="ordered_car_id" invisible="not ordered_car_id"/>
+            </xpath>
+            <xpath expr="//label[@for='fuel_card']" position="attributes">
+                <attribute name="invisible">(wage_type == 'hourly' or not transport_mode_car) and not new_car</attribute>
+            </xpath>
+            <xpath expr="//div[@name='fuel_card_div']" position="attributes">
+                <attribute name="invisible">(wage_type == 'hourly' or not transport_mode_car) and not new_car</attribute>
+            </xpath>
+            <xpath expr="//div[@name='fuel_card_div']" position="inside">
+                <span invisible="not fuel_type" groups="fleet.fleet_group_manager">(Fuel Type: <field name="fuel_type" class="oe_inline" readonly="1"/>)</span>
+            </xpath>
+            <field name="car_atn" position="attributes">
+                <attribute name="invisible">not transport_mode_car and not new_car</attribute>
+            </field>
+            <field name="car_atn" position="after">
+                <label for="transport_mode_bike" string="Catalog Company Bike"
+                    invisible="wage_type == 'hourly' or country_code != 'BE'"
+                    groups="fleet.fleet_group_manager"/>
+                <div name="bike_id_div"
+                    invisible="wage_type == 'hourly' or country_code != 'BE'"
+                    class="o_checkbox_optional_field"
+                    groups="fleet.fleet_group_manager">
+                    <field name="transport_mode_bike" nolabel="1"/>
+                    <field name="bike_id" nolabel="1" invisible="not transport_mode_bike" required="transport_mode_bike"/>
+                </div>
+                <label for="new_bike" string="New Company Bike"
+                    groups="fleet.fleet_group_manager"
+                    invisible="wage_type == 'hourly' or country_code != 'BE'"/>
+                <div name="new_bike_model_id_div"
+                    class="o_checkbox_optional_field"
+                    groups="fleet.fleet_group_manager"
+                    invisible="country_code != 'BE'">
+                    <field name="new_bike" invisible="wage_type == 'hourly'" nolabel="1"/>
+                    <field name="new_bike_model_id" invisible="not new_bike" required="new_bike" nolabel="1"/>
+                </div>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_contract_view_tree" model="ir.ui.view">
+        <field name="name">hr.contract.list</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="car_id" optional="hidden"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

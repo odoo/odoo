@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">hr.user.preferences.view.form.l10n.be.payroll.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+        <field name="arch" type="xml">
+            <field name="address_id" position="after">
+                <field name="l10n_ch_canton" readonly="not can_edit"/>
+            </field>
+            <group name="active_group" position="after">
+                <group name="l10n_ch_withholding" string="Withholding Taxes">
+                    <field name="l10n_ch_tax_scale" readonly="not can_edit"/>
+                    <field name="l10n_ch_municipality" readonly="not can_edit"/>
+                </group>
+            </group>
+            <field name="marital" position="after">
+                <field name="l10n_ch_marital_from" readonly="not can_edit"/>
+                <field name="l10n_ch_church_tax" readonly="not can_edit"/>
+                <field name="l10n_ch_religious_denomination" readonly="not can_edit"/>
+            </field>
+            <field name="identification_id" position="after">
+                <field name="l10n_ch_sv_as_number" readonly="not can_edit"/>
+                <field name="l10n_ch_has_withholding_tax" readonly="not can_edit"/>
+                <field name="l10n_ch_residence_category" invisible="not l10n_ch_has_withholding_tax" readonly="not can_edit"/>
+            </field>
+            <field name="spouse_birthdate" position="after">
+                <field name="l10n_ch_spouse_sv_as_number" readonly="not can_edit"/>
+                <field name="l10n_ch_spouse_work_start_date" readonly="not can_edit"/>
+                <field name="l10n_ch_spouse_work_canton" readonly="not can_edit"/>
+            </field>
+        </field>
+    </record>
+</odoo>

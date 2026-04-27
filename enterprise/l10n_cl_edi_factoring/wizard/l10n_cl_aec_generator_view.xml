@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_aec_creation_control" model="ir.ui.view">
+            <field name="name">view_aec_creation_control.form</field>
+            <field name="model">l10n_cl.aec.generator</field>
+            <field name="arch" type="xml">
+                <form string="AEC Creation Wizard">
+                    <group>
+                        <group>
+                            <field name="partner_id" required="1"/>
+                            <field name="invoice_date_due"/>
+                        </group>
+                    </group>
+
+                    <footer>
+                        <button string="Create AEC" name="create_aec" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_create_aec_wizard" model="ir.actions.act_window">
+            <field name="name">Create AEC</field>
+            <field name="res_model">l10n_cl.aec.generator</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_aec_creation_control"/>
+            <field name="target">new</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+        </record>
+    </data>
+</odoo>

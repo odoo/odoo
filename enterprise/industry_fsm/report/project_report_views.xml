@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_task_user_view_pivot" model="ir.ui.view">
+        <field name="name">report.project.task.user.pivot</field>
+        <field name="model">report.project.task.user.fsm</field>
+        <field name="inherit_id" ref="project.view_task_project_user_fsm_pivot_base"/>
+        <field name="mode">primary</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <field name="project_id" position="after">
+                <field name="create_date" type="row"/>
+            </field>
+            <field name="project_id" position="attributes">
+                <attribute name="type"/>
+            </field>
+            <field name="allocated_hours" position="attributes">
+                <attribute name="type"/>
+            </field>
+            <field name="total_hours_spent" position="attributes">
+                <attribute name="type"/>
+            </field>
+            <field name="remaining_hours" position="attributes">
+                <attribute name="type"/>
+            </field>
+            <field name="overtime" position="attributes">
+                <attribute name="type"/>
+            </field>
+            <field name="working_hours_open" position="attributes">
+                <attribute name="type">measure</attribute>
+            </field>
+            <field name="working_hours_close" position="attributes">
+                <attribute name="type">measure</attribute>
+            </field>
+            <field name="total_hours_spent" position="attributes">
+                <attribute name="type">measure</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="project_task_user_view_graph" model="ir.ui.view">
+        <field name="name">report.project.task.user.graph</field>
+        <field name="model">report.project.task.user.fsm</field>
+        <field name="inherit_id" ref="project.view_task_project_user_fsm_graph_base"/>
+        <field name="mode">primary</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <field name="project_id" position="before">
+                <field name="create_date"/>
+            </field>
+            <field name="stage_id" position="replace"/>
+            <field name="allocated_hours" position="attributes">
+                <attribute name="type"/>
+            </field>
+            <field name="effective_hours" position="attributes">
+                <attribute name="type"/>
+            </field>
+            <field name="remaining_hours" position="attributes">
+                <attribute name="type"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="report_project_task_user_fsm_view_tree" model="ir.ui.view">
+        <field name="name">report.project.task.user.fsm.view.list</field>
+        <field name="model">report.project.task.user.fsm</field>
+        <field name="arch" type="xml">
+            <list string="Tasks Analysis" editable="top" delete="false">
+                <field name="name"/>
+                <field name="partner_id" optional="hide"/>
+                <field name="project_id" optional="show"/>
+                <field name="user_ids" optional="show" widget="many2many_avatar_user"/>
+                <field name="effective_hours" optional="show" widget="float_time" sum="Sum of Effective Hours"/>
+                <field name="company_id" optional="show" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="report_project_task_user_fsm_view_search" model="ir.ui.view">
+        <field name="name">report.project.task.user.fsm.search</field>
+        <field name="model">report.project.task.user.fsm</field>
+        <field name="inherit_id" ref="industry_fsm.project_task_view_search_fsm_base"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <search position="attributes">
+                <attribute name="string">Search Planning</attribute>
+            </search>
+            <field name="partner_id" position="after">
+                <field name="partner_zip" filter_domain="['|', ('partner_zip', 'ilike', self), ('partner_city', 'ilike', self)]"/>
+            </field>
+            <xpath expr="//group/filter[@name='customer']" position="after">
+                <filter name="partner_zip" context="{'group_by': 'partner_zip'}"/>
+                <filter name="partner_city" context="{'group_by': 'partner_city'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_task_user_action_report_fsm" model="ir.actions.act_window">
+        <field name="name">Tasks Analysis</field>
+        <field name="res_model">report.project.task.user.fsm</field>
+        <field name="path">field-service-tasks-analysis</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="search_view_id" ref="industry_fsm.report_project_task_user_fsm_view_search"/>
+        <field name="context">{
+            'group_by': [],
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No data yet!
+            </p><p>
+                Analyze the progress of your tasks and the performance of your workers.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="fsm_menu_reporting_task_analysis"
+        name="Tasks Analysis"
+        sequence="10"
+        action="project_task_user_action_report_fsm"
+        parent="industry_fsm.fsm_menu_reporting"/>
+
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_applicant_sign_view_form" model="ir.ui.view">
+        <field name="name">hr.applicant.form</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="open_applicant_sign_requests"
+                    type="object" class="oe_stat_button"
+                    icon="fa-pencil" invisible="sign_request_count == 0">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="sign_request_count"/></span>
+                        <span class="o_stat_text">Signature Requests</span>
+                    </div>
+                </button>
+            </div>
+        </field>
+    </record>
+
+
+    <record model="ir.actions.server" id="action_request_signature">
+        <field name="name">Request Signature</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="binding_model_id" ref="hr_recruitment.model_hr_applicant" />
+        <field name="groups_id" eval="[Command.link(ref('sign.group_sign_user')), Command.link(ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+        <field name="state">code</field>
+        <field name="binding_view_types">form</field>
+        <field name="code">
+action = records._send_applicant_sign_request()
+        </field>
+    </record>
+</odoo>

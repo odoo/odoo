@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Eco type by default -->
+        <record id="ecotype0" model="mrp.eco.type">
+            <field name="name">New Product Introduction</field>
+        </record>
+        <record id="ecotype_bom_update" model="mrp.eco.type">
+            <field name="name">BOM Updates</field>
+        </record>
+
+        <!-- ECO Stage records -->
+        <record id="ecostage_new" model="mrp.eco.stage">
+            <field name="name">New</field>
+            <field name="type_ids" eval="[(4, ref('ecotype0'))]"/>
+            <field name="folded" eval="False"/>
+        </record>
+        <record id="ecostage_progress" model="mrp.eco.stage">
+            <field name="name">In Progress</field>
+            <field name="type_ids" eval="[(4, ref('ecotype0'))]"/>
+            <field name="folded" eval="False"/>
+        </record>
+        <record id="ecostage_validated" model="mrp.eco.stage">
+            <field name="name">Validated</field>
+            <field name="type_ids" eval="[(4, ref('ecotype0'))]"/>
+            <field name="folded" eval="False"/>
+            <field name="allow_apply_change" eval="True"/>
+        </record>
+        <record id="ecostage_effective" model="mrp.eco.stage">
+            <field name="name">Effective</field>
+            <field name="type_ids" eval="[(4, ref('ecotype0'))]"/>
+            <field name="folded" eval="True"/>
+            <field name="allow_apply_change" eval="True"/>
+            <field name="final_stage" eval="True"/>
+        </record>
+
+        <record id="ecostage_bom_update_new" model="mrp.eco.stage">
+            <field name="name">New</field>
+            <field name="type_ids" eval="[(4, ref('ecotype_bom_update'))]"/>
+            <field name="folded" eval="False"/>
+        </record>
+        <record id="ecostage_bom_update_progress" model="mrp.eco.stage">
+            <field name="name">In Progress</field>
+            <field name="type_ids" eval="[(4, ref('ecotype_bom_update'))]"/>
+            <field name="folded" eval="False"/>
+        </record>
+        <record id="ecostage_bom_update_validated" model="mrp.eco.stage">
+            <field name="name">Validated</field>
+            <field name="type_ids" eval="[(4, ref('ecotype_bom_update'))]"/>
+            <field name="folded" eval="False"/>
+            <field name="allow_apply_change" eval="True"/>
+        </record>
+        <record id="ecostage_bom_update_effective" model="mrp.eco.stage">
+            <field name="name">Effective</field>
+            <field name="type_ids" eval="[(4, ref('ecotype_bom_update'))]"/>
+            <field name="folded" eval="True"/>
+            <field name="allow_apply_change" eval="True"/>
+            <field name="final_stage" eval="True"/>
+        </record>
+
+        <!-- ECO sequence -->
+        <record id="seq_eco" model="ir.sequence">
+            <field name="name">Engineering Change Order</field>
+            <field name="code">mrp.eco</field>
+            <field name="prefix">ECO</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

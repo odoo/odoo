@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Activity types config -->
+    <record id="mail_activity_type_action_config_subscription" model="ir.actions.act_window">
+        <field name="name">Activity Types</field>
+        <field name="res_model">mail.activity.type</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">['|', ('res_model', '=', False), ('res_model', '=', 'sale.order')]</field>
+        <field name="context">{'default_res_model': 'sale.order'}</field>
+    </record>
+
+    <menuitem id="subscription_menu_config_activity_type"
+        name="Activity Types"
+        action="mail_activity_type_action_config_subscription"
+        parent="sale_subscription.menu_sale_subscription_config"
+        sequence="100"
+        groups="sales_team.group_sale_manager"/>
+
+</odoo>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="analytic_renovation_architect" model="account.analytic.account">
+            <field name="name">Renovation Architect</field>
+            <field name="plan_id" ref="analytic.analytic_plan_projects"/>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="project_project_renovation_architect" model="project.project">
+            <field name="name">Renovation Architect</field>
+            <field name="color">6</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="type_ids" eval="[Command.set([
+                ref('project.project_stage_0'),
+                ref('project.project_stage_1'),
+                ref('project.project_stage_2'),
+                ref('project.project_stage_3'),
+            ])]"/>
+            <field name="partner_id" ref="base.partner_demo_portal"/>
+            <field name="privacy_visibility">portal</field>
+            <field name="allow_billable">True</field>
+            <field name="stage_id" ref="project.project_project_stage_1"/>
+            <field name="account_id" ref="analytic_renovation_architect"/>
+            <field name="documents_folder_id" ref="documents_renovations_projects"/>
+            <field name="documents_tag_ids" eval="[Command.link(ref('documents_folder_tag_unsorted'))]"/>
+        </record>
+
+        <record id="project_task_visit_customer" model="project.task">
+            <field name="name">Visit with the customer</field>
+            <field name="project_id" ref="project_project_renovation_architect"/>
+        </record>
+
+        <record id="project_project_renovation_architect_document_1" model="documents.document">
+            <field name="name">plan.jpg</field>
+            <field name="datas" type="base64" file="documents_project_sale/data/files/plan.jpg"/>
+            <field name="folder_id" model="documents.document" eval="obj().search([('name', '=', 'Plans')], order='id desc', limit=1)"/>
+            <field name="res_model">project.project</field>
+            <field name="res_id" ref="project_project_renovation_architect"/>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="tag_ids" eval="[Command.link(ref('documents_folder_tag_in_use'))]"/>
+        </record>
+
+        <record id="project_task_visit_customer_document_1" model="documents.document">
+            <field name="name">welcome.jpg</field>
+            <field name="datas" type="base64" file="documents_project_sale/data/files/welcome.jpg"/>
+            <field name="folder_id" ref="documents_renovations_projects"/>
+            <field name="res_model">project.task</field>
+            <field name="res_id" ref="project_task_visit_customer"/>
+            <field name="owner_id" ref="base.public_user"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="tag_ids" eval="[Command.link(ref('documents_folder_tag_unsorted'))]"/>
+        </record>
+
+        <record id="project_project_renovation_architect_follower_portal" model="mail.followers">
+            <field name="res_model">project.project</field>
+            <field name="res_id" ref="project_project_renovation_architect"/>
+            <field name="partner_id" ref="base.partner_demo_portal"/>
+        </record>
+
+        <record id="product_1" model="product.template">
+            <field name="name">Renovation Architect (Workspace Template)</field>
+            <field name="standard_price">30</field>
+            <field name="list_price">45</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+            <field name="service_tracking">project_only</field>
+            <field name="project_template_id" ref="project_project_renovation_architect"/>
+        </record>
+  
+        <record id="sale_order_1" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="client_order_ref">DOC</field>
+        </record>
+    
+        <record id="sale_order_1_sale_line_1" model="sale.order.line">
+            <field name="order_id" ref="sale_order_1"/>
+            <field name="sequence" eval="1"/>
+            <field name="product_id" search="[('product_tmpl_id', '=', ref('product_1'))]"/>
+            <field name="product_uom_qty">30</field>
+        </record>
+    
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_1')]]" context="{'action_no_send_mail': True}"/>
+    </data>
+</odoo>

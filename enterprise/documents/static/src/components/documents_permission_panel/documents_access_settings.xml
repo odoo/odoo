@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.AccessSettings">
+        <h4 class="o_documents_permission_panel_access_settings_title">General access</h4>
+        <div class="o_documents_permission_panel_internal_access d-flex align-items-center justify-content-between px-3 py-1">
+            <DocumentsPermissionSelect
+                ariaLabel.translate="Document Access Internal"
+                disabled="props.disabled"
+                label.translate="Internal Users"
+                labelHelper="accessInternalHelper"
+                onChange.bind="props.onChangeAccessInternal"
+                options="props.selections.access_internal"
+                selectClass="'w-25'"
+                showFeedbackChange="props.access.access_internal !== props.baseAccess.access_internal"
+                value="props.access.access_internal"
+                noEditorMessage="errorAccessInternalEdit"/>
+        </div>
+        <div class="d-flex align-items-center justify-content-between px-3 pt-1">
+            <DocumentsPermissionSelect
+                ariaLabel.translate="Document Access Link"
+                disabled="props.disabled"
+                label.translate="Anyone with the link"
+                labelHelper="accessLinkHelper"
+                onChange.bind="props.onChangeAccessLink"
+                options="props.selections.access_via_link"
+                selectClass="'w-25'"
+                showFeedbackChange="props.access.access_via_link !== props.baseAccess.access_via_link"
+                value="props.access.access_via_link"
+                noEditorMessage="errorAccessLinkEdit"/>
+        </div>
+        <div t-if="props.access.access_via_link !== 'none'" class="d-flex align-items-center justify-content-between px-3 py-0">
+            <div class="flex-grow-1"/>
+            <DocumentsPermissionSelect
+                ariaLabel.translate="Document Access Link"
+                disabled="props.disabled"
+                onChange.bind="props.onChangeIsAccessLinkHidden"
+                options="props.selections.access_via_link_options"
+                selectClass="'w-auto'"
+                showFeedbackChange="props.access.is_access_via_link_hidden !== props.baseAccess.is_access_via_link_hidden"
+                value="props.access.is_access_via_link_hidden ? '1' : '0'"/>
+        </div>
+    </t>
+</templates>

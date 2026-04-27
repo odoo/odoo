@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_au_salary_expense_refund_structure_1" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Expenses Reimbursement</field>
+        <field name="code">EXPENSES</field>
+        <field name="sequence" eval="190"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = inputs['EXPENSES'].amount > 0.0 if 'EXPENSES' in inputs else False</field>
+        <field name="amount_select">code</field>
+        <field name="not_computed_in_net" eval="True"/>
+        <field name="amount_python_compute">
+result = inputs['EXPENSES'].amount
+result_name = inputs['EXPENSES'].name
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_regular"/>
+    </record>
+
+</odoo>

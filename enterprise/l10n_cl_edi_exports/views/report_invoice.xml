@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="informations" inherit_id="l10n_cl_edi.informations">
+            <xpath expr="//div[@id='informations']" position="after">
+                <t t-if="o.l10n_latam_document_type_id._is_doc_type_export()">
+                    <t t-set="inv_rate" t-value="o._get_inverse_currency_rate()"/>
+                    <table class="table table-sm o_main_table small" name="invoice_references">
+                        <thead>
+                            <tr class="exports_thead">
+                                <th name="th_l10n_cl_port_origin_id" class="text-start"><span>Origin Port</span></th>
+                                <th name="th_l10n_cl_port_destination_id" class="text-start"><span>Destination Port</span></th>
+                                <th name="th_l10n_cl_customs_quantity_of_packages" class="text-center"><span>Qty of Packages</span></th>
+                                <th name="th_l10n_cl_customs_service_indicator" class="text-start"><span>Customs Service Indicator</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="exports_body">
+                                <td t-out="o.l10n_cl_port_origin_id.name" class="text-start"/>
+                                <td t-out="o.l10n_cl_port_destination_id.name" class="text-start"/>
+                                <td t-out="o.l10n_cl_customs_quantity_of_packages" class="text-center"/>
+                                <td>
+                                    <span t-if="o.l10n_cl_customs_service_indicator" class="text-start"
+                                        t-out="dict(o.fields_get(allfields=['l10n_cl_customs_service_indicator'])['l10n_cl_customs_service_indicator']['selection'])[o.l10n_cl_customs_service_indicator]"/>
+                                </td>
+
+                            </tr>
+                        </tbody>
+                        <thead>
+                            <tr class="exports_thead">
+                                <th name="th_l10n_cl_customs_sale_mode" class="text-start">
+                                    <span>Customs sale mode</span>
+                                </th>
+                                <th name="th_l10n_cl_customs_transport_type" class="text-start">
+                                    <span>Customs Transport Method</span>
+                                </th>
+                                <th name="th_currency" class="text-start">
+                                    <span>Currency / Parity</span>
+                                </th>
+                                <th name="th_incoterm" class="text-start">
+                                    <span>Sale Clause</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="exports_body">
+                                <td>
+                                    <span t-if="o.l10n_cl_customs_sale_mode" class="text-start"
+                                    t-out="dict(o.fields_get(allfields=['l10n_cl_customs_sale_mode'])['l10n_cl_customs_sale_mode']['selection'])[o.l10n_cl_customs_sale_mode]"/>
+                                </td>
+                                <td>
+                                    <span t-if="o.l10n_cl_customs_transport_type" class="text-start"
+                                    t-out="dict(o.fields_get(allfields=['l10n_cl_customs_transport_type'])['l10n_cl_customs_transport_type']['selection'])[o.l10n_cl_customs_transport_type]"/>
+                                </td>
+
+                                <td>
+                                    <t t-if="inv_rate">
+                                        <span t-esc="'%s %.2f CLP' % (o.currency_id.l10n_cl_short_name, inv_rate)" class="text-start"/>
+                                    </t>
+                                </td>
+                                <td>
+                                    <span t-if="o.invoice_incoterm_id"
+                                        t-out="'%s - %s' % (o._l10n_cl_customs_incoterm(o.invoice_incoterm_id.code), o.invoice_incoterm_id.name)"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

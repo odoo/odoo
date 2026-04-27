@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<templates>
+    <t t-name="pos_iot.ScaleCertificationDialog">
+        <Dialog size="props.errors.length > 0 ? 'lg' : 'sm'">
+            <t t-set-slot="header">
+                <h4 class="modal-title text-break w-100 fw-bolder">
+                    <t t-if="props.errors.length > 0">Warning</t>
+                    <t t-else="">Certified Odoo Point of Sale</t>
+                </h4>
+                <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="props.close"/>
+            </t>
+
+            <t t-if="props.errors.length > 0">
+                <p class="fw-bolder">Your configurations are not compliant with the European regulation. In order to use a certified POS with your scale, you should address the following:</p>
+                <ul class="m-4 mt-3">
+                    <li style="list-style-type: disc;" t-foreach="props.errors" t-as="error" t-key="error" t-out="error"/>
+                </ul>
+
+                <t t-if="props.autoFix">
+                    <p>
+                        Odoo can automatically apply the right modification for you.
+                        Be aware that the modification will change global rounding settings, and can affect more than just this Point of Sale.
+                    </p>
+                </t>
+            </t>
+            <t t-else="">
+                <h3 class="fw-bolder">Odoo SA</h3>
+
+                <ul class="d-flex flex-column gap-1">
+                    <li class="d-flex justify-content-between"><b>POS name:</b><t t-out="props.details.pos_name"/></li>
+                    <li class="d-flex justify-content-between"><b>Certificate number:</b><t t-out="props.details.certificate_number"/></li>
+                    <li class="d-flex justify-content-between"><b>Odoo version:</b><t t-out="props.details.odoo_version"/></li>
+                    <li class="d-flex justify-content-between"><b>PoS version:</b><t t-out="props.details.iot_app_version"/></li>
+                    <li class="d-flex justify-content-between"><b>IoT image:</b><t t-out="props.details.iot_image"/></li>
+
+                    <li class="d-flex justify-content-between mt-2 flex-wrap">
+                        <b>Checksum:</b><span style="overflow-wrap: anywhere;" t-out="props.checksum"/>
+                    </li>
+                </ul>
+            </t>
+
+            <t t-if="props.errors.length > 0" t-set-slot="footer">
+                <button t-if="props.autoFix" class="btn btn-primary" t-on-click="onClickTracked.call" t-att-disabled="onClickTracked.status === 'loading'">
+                    Apply changes
+                </button>
+                <button class="btn btn-secondary" t-on-click="props.close" t-att-disabled="onClickTracked.status === 'loading'">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

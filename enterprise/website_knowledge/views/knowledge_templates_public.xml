@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <!-- Article layout -->
+    <template id="website_knowledge.layout" name="Knowledge Public Layout" inherit_id="web.frontend_layout" primary="True">
+        <xpath expr="//header" position="before">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="no_livechat" t-value="True"/>
+        </xpath>
+        <xpath expr="//body" position="replace">
+            <body>
+                <t t-out="0"/>
+            </body>
+        </xpath>
+    </template>
+
+    <template id="website_knowledge.article_view_public" name="Knowledge Public">
+        <t t-call="website_knowledge.layout">
+            <t t-set="head">
+                <t t-call-assets="website_knowledge.assets_knowledge_print" media="print" t-js="false"/>
+                <t t-out="head or ''"/>
+            </t>
+            <t t-set="sidebar_props" t-value="{ 'resId': res_id, 'showSidebar': show_sidebar }"/>
+            <div class="container-fluid h-100 o_knowledge_public_view o_knowledge_public_view_static p-0" t-att-data-res_id="str(res_id)">
+                <div class="d-sm-flex h-100">
+                    <owl-component name="knowledge.public_view" t-att-props="json.dumps(sidebar_props)"
+                        t-att-class="'o_knowledge_sidebar_owl_component' if show_sidebar else ''"/>
+                    <div class="flex-grow-1 position-relative min-w-0">
+                        <div class="d-flex flex-column h-100">
+                            <!-- Article header -->
+                            <header class="o_knowledge_header justify-content-between border-bottom flex-shrink-1 d-print-none">
+                                <div class="d-flex align-items-center p-3 flex-grow-1">
+                                    <a t-if="show_sidebar" role="button" class="o_header_toggle_aside_button d-md-none btn align-self-start px-2 me-2 py-1">
+                                        <i class="fa fa-lg fa-bars" title="Toggle aside menu"/>
+                                    </a>
+                                    <!-- Title -->
+                                    <div class="min-w-0 text-truncate" t-if="res_id">
+                                        <span t-if="article_data.get('display_name')" t-out="article_data.get('display_name')"/>
+                                        <span t-else="">Untitled</span>
+                                    </div>
+                                    <!-- Log In -->
+                                    <div class="d-flex my-auto mx-3 o_knowledge_public_virality flex-grow-1 flex-shrink-1 justify-content-end">
+                                        <div class="nav-item text-center o_no_autohide_item">
+                                            <a t-att-href="'/web/login?redirect=/knowledge' + (('/article/' + str(res_id)) if res_id else '/home')"
+                                                class="nav-link fw-bold text-nowrap">Sign in</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </header>
+                            <div class="p-3 text-center" t-if="not res_id">
+                                <p class="o_view_nocontent_empty_folder">
+                                    <h2>Article not found</h2>
+                                    <br />
+                                    <p>The article you are trying the read has either been removed or you do not have access to it.</p>
+                                </p>
+                            </div>
+                            <main t-else="" class="flex-grow-1 position-relative">
+                                <div class="o_scroll_view">
+                                    <!-- Article Cover -->
+                                    <div t-if="article_data.get('cover_image_id')" class="o_knowledge_cover">
+                                        <img t-att-src="article_data.get('cover_image_url')" t-attf-style="object-position: 50% #{article_data.get('cover_image_position') or 50}%;"/>
+                                    </div>
+                                    <!-- Article Icon -->
+                                    <div t-if="article_data.get('icon')" t-attf-class="o_knowledge_icon px-3 #{'o_full_width' if article_data.get('full_width') else ''}">
+                                        <t t-out="article_data.get('icon')" />
+                                    </div>
+                                    <!-- Article Body -->
+                                    <div t-attf-class="o_knowledge_article px-3 #{'pt-3' if not article_data.get('icon') else ''} #{'o_full_width' if article_data.get('full_width') else ''}">
+                                        <div class="o_readonly" t-out="article_data.get('body')"/>
+                                    </div>
+                                </div>
+                            </main>
+                        </div>
+                        <owl-component name="website_knowledge.public_form_resizer"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="website_knowledge.public_sidebar" name="Public Articles Sidebar">
+        <!-- Search tree -->
+        <t t-if="search_tree">
+            <t t-if="articles">
+                <ul class="o_search_tree m-0 px-0 py-2">
+                    <t t-call="website_knowledge.articles_template" />
+                </ul>
+            </t>
+            <t t-else="">
+                <div class="text-muted text-center">No article found</div>
+            </t>
+        </t>
+        <!-- Section tree -->
+        <t t-else="">
+            <section t-if="all_visible_articles">
+                <ul class="o_tree o_tree_workspace m-0 px-0 py-2">
+                    <t t-call="website_knowledge.articles_template">
+                        <t t-set="articles" t-value="root_articles"/>
+                    </t>
+                </ul>
+            </section>
+        </t>
+    </template>
+
+    <template id="website_knowledge.articles_template">
+        <t t-set="unfolded_articles_ids" t-value="unfolded_articles_ids or []"/>
+
+        <!--
+            Limit shown articles to 'articles_displayed_limit' for every sub-tree (defaults to 50).
+            This is done here as we use a single search query to load the entire article tree and
+            sub-trees, and thus cannot use a "limit" on the base query.
+
+            Sub-sequent calls to this template using the '/knowledge/tree_panel/load_more' route
+            will however only fetch the correct amount of articles (as we are already in a sub-tree).
+            And will in addition pass the correct articles to "force_show" (see below).
+
+            In addition, as we *always* want the 'active_article_id' to be in the tree, even if it
+            is not present in the articles subset we display, we add a small trick to show it "at the end"
+            using the "force_show_active_article" variable.
+        -->
+
+        <!-- When called from 'load more' route, we only pass the displayed articles and not all of them -->
+        <t t-set="articles_count" t-value="articles_count if articles_count else len(articles)"/>
+
+        <t t-if="articles_count > articles_displayed_limit">
+            <!-- Try to determine if we need to "force" the display of the active article
+                 OR one of its ancestors.
+                 If there is an ancestor to force display, there can only be one (we are in a sub-tree).
+
+                 e.g: Active article is child 153, under root 78
+                 We need to make sure root 78 and child 153 are displayed, even if outside first 50.
+                 
+                 This is only done in the template for the initial call of the tree.
+                 When called through the '/knowledge/tree_panel/load_more' route, the template already
+                 receices the correct articles to "force_show".-->
+            <t t-if="active_article_ancestor_ids" t-set="active_article_ancestor"
+                t-value="articles.filtered(lambda article: article.id in active_article_ancestor_ids)"/>
+            <t t-if="not force_show_active_article
+                    and active_article_id in articles.ids
+                    and active_article_id not in articles[:articles_displayed_limit].ids"
+                t-set="force_show_active_article"
+                t-value="articles.filtered(lambda article: article.id == active_article_id)"/>
+            <t t-elif="not force_show_active_article
+                       and active_article_ancestor
+                       and active_article_ancestor not in articles[:articles_displayed_limit]"
+                t-set="force_show_active_article" t-value="active_article_ancestor"/>
+        </t>
+
+        <t t-set="all_articles" t-value="articles"/>
+        <t t-set="articles" t-value="articles[:articles_displayed_limit]"/>
+
+        <t t-foreach="articles" t-as="article">
+            <t t-set="children"
+                t-value="all_visible_articles.filtered(lambda child: child.parent_id == article and not child.is_article_item)
+                        if all_visible_articles else article.child_ids.filtered(lambda child: not child.is_article_item)"/>
+            <t t-set="unfold_children" t-value="bool(children and article.id in unfolded_articles_ids)"/>
+            <t t-set="is_active" t-value="article.id == active_article_id if active_article_id else False"/>
+            <li t-attf-class="o_article position-relative
+                              #{ 'o_article_tree_child' if has_parent else ''}
+                              #{ 'o_article_has_children' if article.has_article_children else ''}
+                              #{ 'o_knowledge_article_force_show_active_article' if is_force_show_active_article else ''}"
+                t-att-data-article-id="article.id">
+                <div t-attf-class="o_article_handle d-flex align-items-center #{ 'o_article_active' if is_active else 'text-muted' }">
+                    <button type="button"
+                            class="o_article_caret btn btn-link text-muted p-0">
+                        <i t-att-class="'align-self-center fa fa-fw fa-caret-' + ('down' if unfold_children else 'right')"/>
+                    </button>
+                    <a t-out="article.display_name"
+                       t-attf-href="/knowledge/article/{{article.id}}"
+                       t-attf-class="o_article_name p-1 flex-grow-1 text-truncate text-decoration-none #{ 'fw-bold text-900' if is_active else 'text-muted' }"/>
+                </div>
+                <ul t-if="unfold_children">
+                    <t t-call="website_knowledge.articles_template">
+                        <t t-set="articles" t-value="children.sorted('sequence')"/>
+                        <t t-set="articles_count" t-value="len(children)"/>
+                        <t t-set="articles_displayed_offset" t-value="0"/>
+                        <t t-set="has_parent" t-value="True"/>
+                        <t t-set="is_force_show_active_article" t-value="False"/>
+                    </t>
+                </ul>
+            </li>
+        </t>
+        <t t-if="articles_count > articles_displayed_limit">
+            <t t-set="show_load_more_ellipsis"
+                t-value="force_show_active_article
+                         and (force_show_active_article not in all_articles
+                              or all_articles.ids.index(force_show_active_article.id) > articles_displayed_limit)"/>
+            <t t-if="force_show_active_article and not show_load_more_ellipsis"
+                t-call="website_knowledge.articles_template">
+                <!-- Happens when the article to "force show" (the active article) is EXACTLY
+                     the next one in line (so Article 51 and we would normally show only the first 50).
+                     In other cases, we show an "ellipsis", so a "..." link in between the displayed article
+                     and the "force shown" (active) one. -->
+                <t t-set="articles" t-value="force_show_active_article"/>
+                <t t-set="is_force_show_active_article" t-value="True"/>
+                <t t-set="force_show_active_article" t-value="False"/>
+                <t t-set="articles_count" t-value="1"/>
+            </t>
+            <a t-if="articles_count > (articles_displayed_limit + 1 if force_show_active_article else articles_displayed_limit)"
+                href="#"
+                t-attf-class="o_knowledge_article_load_more position-relative d-inline-block py-1
+                    #{'ps-4' if not has_parent else ''}
+                    #{'o_knowledge_article_load_more_ellipsis' if show_load_more_ellipsis else ''}"
+                t-att-data-parent-id="articles[0].parent_id.id if has_parent and articles else False"
+                t-att-data-limit="articles_displayed_limit"
+                t-att-data-offset="articles_displayed_offset + articles_displayed_limit">
+                <t t-if="show_load_more_ellipsis">
+                    (...)
+                </t>
+                <t t-else="">
+                    Load more
+                </t>
+            </a>
+            <t t-if="show_load_more_ellipsis"
+                t-call="website_knowledge.articles_template">
+                <t t-set="articles" t-value="force_show_active_article"/>
+                <t t-set="is_force_show_active_article" t-value="True"/>
+                <t t-set="force_show_active_article" t-value="False"/>
+                <t t-set="articles_count" t-value="1"/>
+            </t>
+        </t>
+    </template>
+</data>
+</odoo>

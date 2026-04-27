@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="cfe_template">
+        <Encabezado>
+            <IdDoc t-if="IdDoc">
+                <TipoCFE t-out="int(cfe.l10n_latam_document_type_id.code)"/>
+                <FchEmis t-out="IdDoc['FchEmis']"/>
+                <MntBruto t-out="IdDoc['MntBruto']"/>
+                <FmaPago t-out="IdDoc['FmaPago']"/>
+                <FchVenc t-out="IdDoc['FchVenc']"/>
+                <ClauVenta t-out="IdDoc['ClauVenta']"/>
+                <ModVenta t-out="IdDoc['ModVenta']"/>
+                <ViaTransp t-out="IdDoc['ViaTransp']"/>
+                <InfoAdicionalDoc t-out="IdDoc['InfoAdicionalDoc']"/>
+            </IdDoc>
+            <Emisor t-if="emisor">
+                <RUCEmisor t-out="emisor['RUCEmisor']"/>
+                <RznSoc t-out="emisor['RznSoc']"/>
+                <CdgDGISucur t-out="emisor['CdgDGISucur']"/>
+                <DomFiscal t-out="emisor['DomFiscal']"/>
+                <Ciudad t-out="emisor['Ciudad']"/>
+                <Departamento t-out="emisor['Departamento']"/>
+                <InfoAdicionalEmisor t-out="emisor['InfoAdicionalEmisor']"/>
+            </Emisor>
+            <Receptor t-if="receptor">
+                <TipoDocRecep t-out="receptor['TipoDocRecep']"/>
+                <CodPaisRecep t-out="receptor['CodPaisRecep']"/>
+                <DocRecep t-out="receptor['DocRecep']"/>
+                <DocRecepExt t-out="receptor['DocRecepExt']"/>
+                <RznSocRecep t-out="receptor['RznSocRecep']"/>
+                <DirRecep t-out="receptor['DirRecep']"/>
+                <CiudadRecep t-out="receptor['CiudadRecep']"/>
+                <DeptoRecep t-out="receptor['DeptoRecep']"/>
+                <PaisRecep t-out="receptor['PaisRecep']"/>
+                <InfoAdicional  t-out="receptor['InfoAdicional']"/>
+                <CompraID t-out="receptor['CompraID']"/>
+            </Receptor>
+            <Totales t-if="totals_detail">
+                <TpoMoneda t-out="totals_detail['TpoMoneda']"/>
+                <TpoCambio t-out="format_float(totals_detail['TpoCambio'], 3)"/>
+                <MntNoGrv t-out="format_float(totals_detail['MntNoGrv'], 2)"/>
+                <MntExpoyAsim t-out="format_float(totals_detail['MntExpoyAsim'], 2)"/>
+                <MntNetoIvaTasaMin t-out="format_float(totals_detail['MntNetoIvaTasaMin'], 2)"/>
+                <MntNetoIVATasaBasica t-out="format_float(totals_detail['MntNetoIVATasaBasica'], 2)"/>
+                <MntNetoIVAOtra t-out="format_float(totals_detail['MntNetoIVAOtra'], 2)"/>
+
+                <IVATasaMin t-out="totals_detail['IVATasaMin']"/>
+                <IVATasaBasica t-out="totals_detail['IVATasaBasica']"/>
+
+                <MntIVATasaMin t-out="format_float(totals_detail['MntIVATasaMin'], 2)"/>
+                <MntIVATasaBasica t-out="format_float(totals_detail['MntIVATasaBasica'], 2)"/>
+                <MntIVAOtra t-out="format_float(totals_detail['MntIVAOtra'], 2)"/>
+
+                <MntTotal t-out="format_float(totals_detail['MntTotal'], 2, valid_zero=1)"/>
+                <CantLinDet t-out="totals_detail['CantLinDet']"/>
+                <MontoNF t-out="format_float(totals_detail['MontoNF'], 2)"></MontoNF>
+                <MntPagar t-out="format_float(totals_detail['MntPagar'], 2, valid_zero=1)"/>
+            </Totales>
+        </Encabezado>
+        <Detalle>
+            <Item t-foreach="item_detail" t-as="item_line">
+                <NroLinDet t-out="item_line['NroLinDet']"/>
+                <IndFact t-out="item_line['IndFact']"/>
+                <NomItem t-out="item_line['NomItem']"/>
+                <DscItem t-out="item_line['DscItem']"/>
+                <Cantidad t-out="format_float(item_line['Cantidad'], 3)"/>
+                <UniMed t-out="item_line['UniMed']"/>
+                <PrecioUnitario t-out="format_float(item_line['PrecioUnitario'], 6, valid_zero=1)"/>
+                <DescuentoPct t-out="format_float(item_line['DescuentoPct'], 3)"/>
+                <DescuentoMonto t-out="format_float(item_line['DescuentoMonto'], 2) "/>
+                <MontoItem t-out="format_float(item_line['MontoItem'], 2, valid_zero=1)"/>
+            </Item>
+        </Detalle>
+        <DscRcgGlobal t-if="global_discounts">
+            <DRG_Item t-foreach="global_discounts" t-as="discount">
+                <NroLinDR t-out="discount['NroLinDR']"/>
+                <TpoMovDR t-out="discount['TpoMovDR']"/>
+                <TpoDR t-out="discount['TpoDR']"/>
+                <GlosaDR t-out="discount['GlosaDR']"/>
+                <ValorDR t-out="format_float(discount['ValorDR'], 2)"/>
+                <IndFactDR t-out="discount['IndFactDR']"/>
+            </DRG_Item>
+        </DscRcgGlobal>
+        <Referencia t-if="referencia_lines">
+            <Referencia t-foreach="referencia_lines" t-as="referencia">
+                <NroLinRef t-out="referencia['NroLinRef']"/>
+                <TpoDocRef t-out="referencia['TpoDocRef']"/>
+                <Serie t-out="referencia['Serie']"/>
+                <NroCFERef t-out="referencia['NroCFERef']"/>
+                <FechaCFEref t-out="referencia.get('FechaCFEref')"/>
+                <MntCFEref t-out="format_float(referencia.get('MntCFEref'), 2)"/>
+                <TpoMonedaRef t-out="referencia.get('TpoMonedaRef')"/>
+                <TpoCambioRef t-out="format_float(referencia.get('TpoCambioRef'), 3)"/>
+            </Referencia>
+        </Referencia>
+    </template>
+
+    <template id="eTck_template">
+        <CFE xmlns="http://cfe.dgi.gub.uy" version="1.0">
+            <eTck>
+                <t t-call="l10n_uy_edi.cfe_template"/>
+            </eTck>
+        </CFE>
+    </template>
+
+    <template id="eFact_template">
+        <CFE xmlns="http://cfe.dgi.gub.uy" version="1.0">
+            <eFact>
+                <t t-call="l10n_uy_edi.cfe_template"/>
+            </eFact>
+        </CFE>
+    </template>
+
+    <template id="eFact_Exp_template">
+        <CFE xmlns="http://cfe.dgi.gub.uy" version="1.0">
+            <eFact_Exp>
+                <t t-call="l10n_uy_edi.cfe_template"/>
+            </eFact_Exp>
+        </CFE>
+    </template>
+
+</odoo>

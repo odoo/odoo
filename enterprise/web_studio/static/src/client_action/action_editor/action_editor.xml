@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.ActionEditor">
+  <div class="o_web_studio_action_editor d-flex flex-row justify-content-center h-100 w-100 overflow-auto">
+      <t t-call="web_studio.ActionEditor.Sidebar" />
+      <t t-call="web_studio.ActionEditor.ViewsDashboard" />
+  </div>
+</t>
+
+<t t-name="web_studio.ActionEditor.Sidebar">
+  <div class="o_web_studio_sidebar flex-grow-0 flex-shrink-0 overflow-auto h-100">
+      <div class="o_web_studio_sidebar_content d-flex flex-column gap-3 mt-3">
+        <Record t-props="actionRecordProps" t-slot-scope="data" >
+          <t t-set="record" t-value="data.record" />
+          <div class="w-100">
+            <label for="name" class="mb-1">Action's title</label>
+            <CharField name="'name'" record="record" id="'name'"/>
+          </div>
+          <div class="w-100">
+            <label for="help" class="mb-1">Empty List Message</label>
+            <div class="o_web_studio_field_code">
+              <TextField name="'help'" record="record" id="'help'"/>
+            </div>
+          </div>
+          <div class="w-100">
+            <label for="groups_id" class="mb-1">Limit visibility to groups</label>
+            <div class="o_field_widget o_field_many2many_tags" name="groups_id">
+              <Many2ManyTagsField id="'groups_id'" name="'groups_id'" record="record"/>
+            </div>
+          </div>
+        </Record>
+        <div t-if="env.debug" class="o_web_studio_sidebar_toolbox w-100">
+          <button class="btn btn-secondary btn-lg o_web_studio_parameters" t-on-click="openFormAction"><i class="fa fa-cog me-1"/>More</button>
+        </div>
+      </div>
+    </div>
+</t>
+
+<t t-name="web_studio.ActionEditor.ViewsDashboard">
+  <div class="o_web_studio_views d-flex overflow-auto gap-3 p-5" >
+    <div class="grid w-75 justify-content-center" style="grid-template-columns: repeat(auto-fit, minmax(400px, 35%)); gap: 40px;">
+      <t t-foreach="viewCategories" t-as="category" t-key="category" >
+        <div class="o_web_studio_view_category" t-att-name="category">
+            <h6 class="mb-3 fw-bolder" t-esc="category_value.title" />
+            <div class="grid" style="grid-template-columns: repeat(3, 115px); gap: 20px;">
+              <t t-foreach="getOrderedViewTypes(category_value.viewTypes)" t-as="viewInfo" t-key="viewInfo.name">
+                <ThumbnailItem onClick="() => this.onThumbnailClicked(viewInfo.name)" icon="{src: viewInfo.imgUrl, alt:'View ' + viewInfo.title }" showMoreMenu="viewInfo.isActive and (viewInfo.canBeDefault or viewInfo.canBeDisabled)" className="`o_web_studio_thumbnail_${viewInfo.name} overflow-hidden ${viewInfo.isActive ? '' : 'disabled'}`">
+                  <t t-set-slot="default">
+                    <t t-out="viewInfo.title" />
+                    <span t-if="viewInfo.isDefault" class="o_web_studio_default_view fa-stack fa-sm position-absolute top-0 end-0 text-primary m-1" role="img" aria-label="Default view" title="Default view">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-home fa-stack-1x text-white"></i>
+                    </span>
+                    <span t-if="!viewInfo.isActive" class="o_web_studio_view_label bg-black text-white bg-opacity-50 rounded-start position-absolute top-0 start-100 my-1 py-1 px-2 fw-normal text-nowrap">Activate View</span>
+                  </t>
+                  <t t-set-slot="dropdown">
+                    <DropdownItem t-if="viewInfo.canBeDefault" onSelected="() => this.setDefaultView(viewInfo.name)" attrs="{ href: '#', 'data-action': 'set_default_view' }" class="viewInfo.isDefault ? 'pe-none opacity-50' : ''">
+                      <i t-if="viewInfo.isDefault" class="fa fa-check" role="img" aria-label="Is default view" title="Is default view"/>
+                      Set As Default
+                    </DropdownItem>
+                    <div t-if="viewInfo.canBeDefault and viewInfo.canBeDisabled" class="dropdown-divider" role="separator"/>
+                    <DropdownItem t-if="env.debug" onSelected="() => this.restoreDefaultView(viewInfo.name)" attrs="{ href: '#', 'data-action': 'restore_default_view' }">
+                      Restore Default View
+                    </DropdownItem>
+                    <DropdownItem t-if="viewInfo.canBeDisabled" onSelected="() => this.disableView(viewInfo.name)" attrs="{ 'data-action': 'disable_view' }">
+                      Disable View
+                    </DropdownItem>
+                  </t>
+                </ThumbnailItem>
+              </t>
+            </div>
+        </div>
+      </t>
+    </div>
+  </div>
+</t>
+
+</templates>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_open_load_sie4" model="ir.actions.act_window">
+            <field name="name">Load SIE 4 file</field>
+            <field name="res_model">l10n_se_sie4_import.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="sie4_import_view_form" model="ir.ui.view">
+            <field name="name">l10n_se_sie4_import.wizard.form</field>
+            <field name="model">l10n_se_sie4_import.wizard</field>
+            <field name="arch" type="xml">
+                <form string="SIE 4 Import">
+                    <sheet>
+                        <div class="d-flex flex-column gap-3">
+                            <div class="oe_title">
+                                <h4>Import your accounting data from a SIE 4 file</h4>
+                            </div>
+                            <div class="d-flex flex-column gap-1">
+                                <div>
+                                    <field name="import_opening_balance"/>
+                                    <label for="import_opening_balance" class="fw-normal"/>
+                                </div>
+                                <div>
+                                    <field name="update_account_data"/>
+                                    <label for="update_account_data" class="fw-normal"/>
+                                </div>
+                                <div>
+                                    <field name="attachment_file"
+                                           string="Select File"
+                                           aria-label="Select File"
+                                           nolabel="1"
+                                           widget="binary"
+                                           filename="attachment_name"/>
+                                    <field name="attachment_name" invisible="1"/>
+                                </div>
+                            </div>
+                        </div>
+                    </sheet>
+                    <footer>
+                        <button name="action_import_sie4" string="Import SIE 4 file" type="object"
+                                class="btn-primary" data-hotkey="q"/>
+                        <button string="Close" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

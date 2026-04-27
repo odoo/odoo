@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="hmrc_cis_monthly_return_body" name="HMRC Monthly Return Request Body"> 
+        <Body t-att="{'xmlns': 'http://www.govtalk.gov.uk/CM/envelope' if not ir_mark else None}">
+            <IRenvelope xmlns="http://www.govtalk.gov.uk/taxation/CISreturn">
+                <IRheader>
+                    <Keys>
+                        <Key Type="TaxOfficeNumber" t-out="credentials.get('tax_office_number', '*****')"/>
+                        <Key Type="TaxOfficeReference" t-out="credentials.get('tax_office_reference', '*****')"/>
+                    </Keys>
+                    <PeriodEnd t-out="document['period_end'] or period_end"/>
+                    <DefaultCurrency>GBP</DefaultCurrency>
+                    <IRmark Type="generic" t-out="ir_mark or ''"/>
+                    <Sender t-out="'Company' if document['contractor']['type'] == 'company' else 'Individual'"/>
+                </IRheader>
+                <CISreturn>
+                    <Contractor>
+                        <UTR t-out="document['contractor']['unique_taxpayer_reference']"/>
+                        <AOref t-out="document['contractor']['account_office_reference']"/>
+                    </Contractor>
+                    <NilReturn t-if="len(document['subcontractors']) == 0">yes</NilReturn>
+                    <t t-foreach="document['subcontractors']" t-as="subcontractor">
+                        <Subcontractor>
+                            <t t-if="subcontractor['type'] == 'company' or not subcontractor['forename']">
+                                <TradingName t-out="subcontractor['trading_name']"/>
+                            </t>    
+                            <t t-else="">
+                                <Name>
+                                    <Fore t-out="subcontractor['forename']"/>
+                                    <Fore t-out="subcontractor['second_forename']"/>
+                                    <Sur t-out="subcontractor['surname']"/>
+                                </Name>
+                            </t>
+                            <WorksRef t-out="subcontractor['id']"/>
+                            <UnmatchedRate t-if="subcontractor['deduction_rate'] == 'unmatched'">yes</UnmatchedRate>
+                            <UTR t-if="subcontractor.get('unique_taxpayer_reference')" t-out="subcontractor['unique_taxpayer_reference']"/>
+                            <CRN t-if="subcontractor.get('company_registration_number')" t-out="subcontractor['company_registration_number']"/>
+                            <NINO t-if="subcontractor.get('national_insurance_number')" t-out="subcontractor['national_insurance_number']"/>
+                            <VerificationNumber t-if="subcontractor.get('cis_verification_number')" t-out="subcontractor['cis_verification_number']"/>
+                            <TotalPayments t-out="subcontractor['total_payment_made']"/>
+                            <CostOfMaterials t-out="subcontractor['direct_cost_of_materials']"/>
+                            <TotalDeducted t-out="subcontractor['total_amount_deducted']"/>
+                        </Subcontractor>
+                    </t>
+                    <Declarations>
+                        <t t-if="len(document['subcontractors']) > 0">
+                            <EmploymentStatus t-if="document['employment_status']">yes</EmploymentStatus>
+                            <EmploymentStatus t-else="">no</EmploymentStatus>
+                            <Verification t-if="document['subcontractor_verification']">yes</Verification>
+                            <Verification t-else="">no</Verification>
+                        </t>
+                        <InformationCorrect>yes</InformationCorrect>
+                        <Inactivity t-if="document['inactivity_indicator']">yes</Inactivity>
+                    </Declarations>
+                </CISreturn>
+            </IRenvelope> 
+        </Body>
+    </template>
+</odoo>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="account_view_invoice_form" model="ir.ui.view">
+            <field name="model">account.move</field>
+            <field name="name">account.move.aec.button.form</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box'][1]" position="inside">
+                    <button invisible="not l10n_cl_aec_entry_ids" class="oe_stat_button" icon="fa-mail-forward" type="object" name="l10n_cl_button_yield_entry" title="Yield Entry">
+                        <div>
+                            <span>Yield Entry</span>
+                        </div>
+                    </button>
+                    <button invisible="not l10n_cl_yielded_invoice_id" class="oe_stat_button" icon="fa-mail-forward" type="object" name="l10n_cl_yield_invoice" title="Yield Invoice">
+                        <div>
+                            <span>Yielded Invoice</span>
+                        </div>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_invoice_form" model="ir.ui.view">
+            <field name="model">account.move</field>
+            <field name="name">account.move.aec.form</field>
+            <field name="inherit_id" ref="l10n_cl_edi.view_invoice_form"/>
+            <field name="arch" type="xml">
+                <button name="l10n_cl_verify_dte_status" position="after">
+                    <button name="action_l10n_cl_create_aec" type="object" invisible="l10n_latam_document_type_id_code not in ['33', '34', '46', '43'] or l10n_cl_dte_status != 'accepted' or payment_state == 'paid'"
+                            string="⇒ Create AEC" class="oe_inline oe_link" groups="base.group_user"/>
+                </button>
+                <xpath expr="//header" position="before">
+                    <div class="alert alert-warning w-100" role="alert" invisible="l10n_cl_aec_yielded != 'to_yield'">
+                        This invoice has an account entry to be yielded, but has not been accepted by SII yet.
+                    </div>
+                    <div class="alert alert-info w-100" role="alert" invisible="l10n_cl_aec_yielded != 'yielded'">
+                        This invoice has been yielded. (accepted by SII)
+                    </div>
+                </xpath>
+
+                <xpath expr="//sheet//group//group//label[@for='l10n_cl_dte_status']" position="attributes">
+                    <attribute name="invisible" add="not l10n_cl_aec_attachment_file" separator="and"/>
+                </xpath>
+
+                <xpath expr="//sheet//group//group//div//field[@name='l10n_cl_dte_status']" position="attributes">
+                    <attribute name="readonly">True</attribute>
+                    <attribute name="invisible" add="not l10n_cl_aec_attachment_file" separator="and"/>
+                </xpath>
+                <xpath expr="//sheet//group//group//div[.//field[@name='l10n_cl_dte_status']]" position="attributes">
+                    <attribute name="invisible" add="not l10n_cl_aec_attachment_file" separator="and"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="intrastat_services_report_export_xml">
+            <DeclarationReport xmlns="http://www.onegate.eu/2010-01-01">
+                <Administration>
+                    <From declarerType="KBO" t-out="company.company_registry"/>
+                    <To>NBB</To>
+                    <Domain>BBP</Domain>
+                </Administration>
+                <Report
+                    t-att-action="'nihil' if len(items) == 0 else 'replace'"
+                    t-att-code="code"
+                    t-att-date="date"
+                >
+                    <Data close="true" t-att-form="form">
+                        <t t-foreach="items" t-as="item">
+                            <Item>
+                                <Dim prop="TXRUB" t-out="item['commodity_code']"/>
+                                <Dim prop="TXCNT" t-out="item['country_code']"/>
+                                <Dim prop="TXCUR" t-out="item['invoice_currency_name']"/>
+                                <Dim prop="TXDVAL" t-out="item['income']"/>
+                                <Dim prop="TXCVAL" t-out="item['expense']"/>
+                            </Item>
+                        </t>
+                    </Data>
+                </Report>
+            </DeclarationReport>
+        </template>
+    </data>
+</odoo>

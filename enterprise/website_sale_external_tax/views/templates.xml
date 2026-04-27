@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="total" inherit_id="website_sale.total">
+        <tr id="order_total_taxes" position="attributes">
+            <attribute name="t-att-style">'display: none;' if not on_payment_step and website_sale_order.is_tax_computed_externally else ''</attribute>
+        </tr>
+        <tr id="order_total" position="attributes">
+            <attribute name="t-att-style">'display: none;' if not on_payment_step and website_sale_order.is_tax_computed_externally else ''</attribute>
+        </tr>
+    </template>
+</odoo>

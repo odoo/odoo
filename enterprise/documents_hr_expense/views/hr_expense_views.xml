@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id='hr_expense_view_form_inherit_documents_hr_expense' model='ir.ui.view'>
+        <field name="name">hr.expense.view.form.inherit.documents.hr.expense</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/div" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button groups="documents.group_documents_user" name="action_open_attachments" type="object" class="oe_stat_button"
+                        icon="fa-file-text-o" invisible="document_count == 0">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value"><field name="document_count"/></span>
+                            <span class="o_stat_text">Documents</span>
+                        </div>
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

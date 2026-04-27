@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 92% of monthly gross salary -->
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_double_holiday')),
+            ('code', '=', 'BASIC')]"/>
+        <value eval="{
+            'name': 'Double Holiday Pay',
+            'amount_python_compute': 'result = payslip.paid_amount\nresult_rate = 92'}"/>
+    </function>
+
+    <record id="cp200_employees_double_holiday_european_leaves_deduction" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_dp"/>
+        <field name="name">European Leaves Deduction</field>
+        <field name="code">EU.LEAVE.DEDUC</field>
+        <field name="sequence">4</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'EULEAVEDEDUC' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -min(result_rules['BASIC']['total'] + result_rules['DOUBLERECOVERY']['total'], inputs['EULEAVEDEDUC'].amount)
+if result > 0:
+    result = 0</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+    </record>
+
+    <record id="cp200_employees_double_holiday_pay_recovery" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_dp"/>
+        <field name="name">Double Holiday Pay Recovery</field>
+        <field name="code">DOUBLERECOVERY</field>
+        <field name="sequence">3</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'DOUBLERECOVERY' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = -min(result_rules['BASIC']['total'], inputs['DOUBLERECOVERY'].amount)</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+    </record>
+
+    <!-- 85% of monthly gross salary is used to compute social contributions -->
+    <record id="cp200_employees_double_holiday_gross_salary" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_salary"/>
+        <field name="name">Gross Salary</field>
+        <field name="code">SALARY</field>
+        <field name="sequence">20</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['BASIC'] + result_rules['EU.LEAVE.DEDUC']['total'] + result_rules['DOUBLERECOVERY']['total']
+result = max(0, result / 0.92 * 0.85)
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+    </record>
+
+    <record id="cp200_employees_double_holiday_onss_rule" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_onss"/>
+        <field name="name">Social contribution</field>
+        <field name="code">ONSS</field>
+        <field name="sequence">41</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result=not contract.no_onss</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">SALARY</field>
+        <field name="amount_percentage">-13.07</field>
+        <field name="partner_id" ref="res_partner_onss"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+    </record>
+
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_double_holiday')),
+            ('code', '=', 'GROSS')]"/>
+        <value eval="{'amount_python_compute': &quot;result = max(0, categories['BASIC'] + categories['ALW'] + result_rules['EU.LEAVE.DEDUC']['total'] + result_rules['DOUBLERECOVERY']['total'])&quot;, 'sequence': '101'}"/>
+    </function>
+
+    <record id="cp200_employees_double_holiday_pay_p_p" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_pp"/>
+        <field name="name">Withholding Tax</field>
+        <field name="code">P.P</field>
+        <field name="sequence">102</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = payslip._get_be_double_holiday_withholding_taxes(localdict)</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+    </record>
+
+    <record id="cp200_employees_double_holiday_pay_pp_total" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_withholding_taxes_total"/>
+        <field name="name">Withholding Taxes (Total)</field>
+        <field name="code">PPTOTAL</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">110</field>
+        <field name="condition_select">none</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -categories['PP']
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+    </record>
+
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_double_holiday')),
+            ('code', '=', 'NET')]"/>
+        <value eval="{'amount_python_compute': &quot;result = max(0, BASIC + categories['ALW'] + categories['DED'] + result_rules['EU.LEAVE.DEDUC']['total'] + result_rules['DOUBLERECOVERY']['total'])&quot;, 'sequence': '201', 'appears_on_employee_cost_dashboard': True}"/>
+    </function>
+</odoo>

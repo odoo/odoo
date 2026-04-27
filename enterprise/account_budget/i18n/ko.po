@@ -1,0 +1,774 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_budget
+#
+# Translators:
+# Wil Odoo, 2024
+# Daye Jeong, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2024-09-25 09:43+0000\n"
+"Last-Translator: Daye Jeong, 2025\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_kanban
+msgid ""
+"<i class=\"fa fa-clock-o me-1\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/>"
+msgstr ""
+"<i class=\"fa fa-clock-o me-1\" role=\"img\" aria-label=\"기간\" title=\"기간"
+"\"/>"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_split_wizard_form_view
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"to\" title=\"to\"/>"
+msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"to\" title=\"to\"/>"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+msgid "Account"
+msgstr "계정"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__achieved_amount
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__achieved
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_report__line_type__achieved
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_pivot
+msgid "Achieved"
+msgstr "달성"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__achieved_percentage
+msgid "Achieved (%)"
+msgstr "달성 (%)"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_needaction
+msgid "Action Needed"
+msgstr "조치 필요"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_ids
+msgid "Activities"
+msgstr "활동"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "활동 예외 장식"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_state
+msgid "Activity State"
+msgstr "활동 상태"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "활동 유형 아이콘"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_line__committed_amount
+msgid "Already Billed amount + Confirmed purchase orders."
+msgstr "이미 청구된 금액 + 확정된 구매 주문."
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_line__achieved_amount
+msgid "Amount Billed/Invoiced."
+msgstr "청구/청구 금액"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_line__theoritical_amount
+msgid ""
+"Amount supposed to be Billed/Invoiced, formula = (Budget Amount / Budget "
+"Days) x Budget Days Completed"
+msgstr ""
+"청구/청구서 발행 예정 금액, 공식 = (예산 금액/예산 일수) x 완료된 예산 일수"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_account_analytic_account
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__auto_account_id
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__auto_account_id
+msgid "Analytic Account"
+msgstr "분석 계정"
+
+#. module: account_budget
+#: model:ir.ui.menu,name:account_budget.menu_act_budget_analytic_view
+msgid "Analytic Budget"
+msgstr "분석 예산"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_purchase_order_line__analytic_json
+msgid "Analytic JSON"
+msgstr "JSON 분석"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__analytical_plan_ids
+msgid "Analytic Plans"
+msgstr "계획 분석"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_attachment_count
+msgid "Attachment Count"
+msgstr "첨부 파일 수"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__budget_type__both
+msgid "Both"
+msgstr "모두"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_budget_analytic
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_report__line_type__budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+#: model_terms:ir.ui.view,arch_db:account_budget.purchase_order_form_account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_tree
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_pivot
+msgid "Budget"
+msgstr "예산"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/wizards/budget_split_wizard.py:0
+msgid "Budget %s"
+msgstr "예산 %s"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__budget_analytic_id
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__budget_analytic_id
+msgid "Budget Analytic"
+msgstr "예산 분석"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_budget_line
+#: model:ir.model.fields,field_description:account_budget.field_account_analytic_account__budget_line_ids
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__budget_line_id
+msgid "Budget Line"
+msgstr "예산 명세"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/budget_analytic.py:0
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__budget_line_ids
+#: model:ir.model.fields,field_description:account_budget.field_purchase_order_line__budget_line_ids
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_tree
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_pivot
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_tree
+msgid "Budget Lines"
+msgstr "예산 명세"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__name
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__name
+msgid "Budget Name"
+msgstr "예산명"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.budget_report_action
+#: model:ir.model,name:account_budget.model_budget_report
+#: model:ir.ui.menu,name:account_budget.budget_report_menu
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_pivot
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_tree
+msgid "Budget Report"
+msgstr "예산 보고서"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_budget_split_wizard
+msgid "Budget Split Wizard"
+msgstr "예산 분할 마법사"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__budget_analytic_state
+msgid "Budget State"
+msgstr "예산 상태"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__budget_type
+msgid "Budget Type"
+msgstr "예산 유형"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__budget_amount
+msgid "Budgeted"
+msgstr "예산"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/wizards/budget_split_wizard.py:0
+#: model:ir.actions.act_window,name:account_budget.act_budget_analytic_view
+#: model_terms:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_search
+msgid "Budgets"
+msgstr "예산"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.act_budget_lines_view
+msgid "Budgets Analysis"
+msgstr "예산 분석"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_split_wizard_form_view
+msgid "Cancel"
+msgstr "취소"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "Cancel Budget"
+msgstr "예산 취소"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__state__canceled
+msgid "Canceled"
+msgstr "취소됨"
+
+#. module: account_budget
+#: model_terms:ir.actions.act_window,help:account_budget.act_budget_analytic_view
+msgid "Click to create a new budget."
+msgstr "클릭해서 새 예산을 작성합니다."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__committed_amount
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__committed
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_report__line_type__committed
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "Committed"
+msgstr "커밋됨"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__committed_percentage
+msgid "Committed (%)"
+msgstr "커밋됨 (%)"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__company_id
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__company_id
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__company_id
+msgid "Company"
+msgstr "회사"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__create_uid
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__create_uid
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__create_date
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__create_date
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__currency_id
+msgid "Currency"
+msgstr "통화"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__date
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_search
+msgid "Date"
+msgstr "날짜"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/budget_analytic.py:0
+msgid "Deletion is only allowed in the Draft and Canceled stages."
+msgstr "삭제는 임시 보관 및 취소 단계에서만 허용됩니다."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__description
+msgid "Description"
+msgstr "설명"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "Details..."
+msgstr "세부 정보..."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__display_name
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__display_name
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__display_name
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__res_id
+msgid "Document"
+msgstr "문서"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__state__done
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "Done"
+msgstr "완료"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__state__draft
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_search
+msgid "Draft"
+msgstr "미결"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_search
+msgid "Draft Budgets"
+msgstr "예산안"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__date_to
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__date_to
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__date_to
+msgid "End Date"
+msgstr "종료일"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__budget_type__expense
+msgid "Expense"
+msgstr "경비"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_follower_ids
+msgid "Followers"
+msgstr "팔로워"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "팔로워 (협력사)"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "멋진 아이콘 폰트 예: fa-tasks"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_split_wizard_form_view
+msgid "From"
+msgstr "시작"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_search
+msgid "Future Activities"
+msgstr "향후 활동"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_tree
+msgid "Generate"
+msgstr "생성"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.budget_split_wizard_action
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_split_wizard_form_view
+msgid "Generate Budget"
+msgstr "예산 생성"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_search
+msgid "Group By"
+msgstr "그룹별"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__has_message
+msgid "Has Message"
+msgstr "메시지가 있습니다"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__id
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__id
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__id
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_exception_icon
+msgid "Icon"
+msgstr "아이콘"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "예외 활동을 표시하기 위한 아이콘"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "만약 선택하였으면, 신규 메시지에 주의를 기울여야 합니다."
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__message_has_error
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합니다."
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+msgid "In a Budget"
+msgstr "예산 범위 내"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__is_above_budget
+#: model:ir.model.fields,field_description:account_budget.field_purchase_order__is_above_budget
+#: model:ir.model.fields,field_description:account_budget.field_purchase_order_line__is_above_budget
+msgid "Is Above Budget"
+msgstr "예산 초과인가요?"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_purchase_order__is_analytic
+msgid "Is Analytic"
+msgstr "분석"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_is_follower
+msgid "Is Follower"
+msgstr "팔로워임"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__write_uid
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__write_uid
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__write_date
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__write_date
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_search
+msgid "Late Activities"
+msgstr "지연된 활동"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_has_error
+msgid "Message Delivery error"
+msgstr "메시지 전송 오류"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_ids
+msgid "Messages"
+msgstr "메시지"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__res_model
+msgid "Model"
+msgstr "모델"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_split_wizard__period__month
+msgid "Month"
+msgstr "월"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "내 활동 마감일"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/budget_analytic.py:0
+msgid "New revision"
+msgstr "새 개정"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "다음 활동 캘린더 행사"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "다음 활동 마감일"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_summary
+msgid "Next Activity Summary"
+msgstr "다음 활동 요약"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_type_id
+msgid "Next Activity Type"
+msgstr "다음 활동 유형"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_search
+msgid "Not Cancelled"
+msgstr "취소되지 않음"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_needaction_counter
+msgid "Number of Actions"
+msgstr "작업 수"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_has_error_counter
+msgid "Number of errors"
+msgstr "오류 횟수"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "조치가 필요한 메시지 수"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "전송 오류가 발생한 메시지 수입니다."
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__state__confirmed
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "Open"
+msgstr "열기"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+msgid "Open Budget"
+msgstr "예산 열기"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__period
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "Period"
+msgstr "기간"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_line_graph
+msgid "Practical amount"
+msgstr "실제 금액"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__account_id
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__account_id
+msgid "Project Account"
+msgstr "프로젝트 계정"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_purchase_order
+msgid "Purchase Order"
+msgstr "구매주문서"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "구매 주문 내역"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_split_wizard__period__quarter
+msgid "Quarter"
+msgstr "분기"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/budget_analytic.py:0
+msgid "REV %s"
+msgstr "REV %s"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__rating_ids
+msgid "Ratings"
+msgstr "평가"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "Reset to Draft"
+msgstr "미결로 초기화"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__user_id
+msgid "Responsible"
+msgstr "담당자"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__activity_user_id
+msgid "Responsible User"
+msgstr "담당 사용자"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__budget_type__revenue
+msgid "Revenue"
+msgstr "수익"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "Revise"
+msgstr "수정"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_analytic__state__revised
+msgid "Revised"
+msgstr "개정됨"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__parent_id
+msgid "Revision Of"
+msgstr "개정 사항"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__children_ids
+msgid "Revisions"
+msgstr "개정 사항"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS 전송 에러"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__sequence
+msgid "Sequence"
+msgstr "순서"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_search
+msgid "Show all records which has next action date is before today"
+msgstr "다음 행동 날짜가 오늘 이전 인 모든 기록보기"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_split_wizard_form_view
+msgid "Split"
+msgstr "분할"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__date_from
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__date_from
+#: model:ir.model.fields,field_description:account_budget.field_budget_split_wizard__date_from
+msgid "Start Date"
+msgstr "시작일"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__state
+msgid "Status"
+msgstr "상태"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"활동 기준 상태\n"
+"기한 초과: 기한이 이미 지났습니다.\n"
+"오늘: 활동 날짜가 오늘입니다.\n"
+"예정: 향후 계획된 활동입니다."
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/budget_line.py:0
+msgid "The 'End Date' must be greater than or equal to 'Start Date'."
+msgstr "'종료 날짜'는 '시작 날짜'보다 크거나 같아야 합니다."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__theoritical_amount
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "Theoretical"
+msgstr "이론적"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_line__theoritical_percentage
+msgid "Theoretical (%)"
+msgstr "이론적 (%)"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_search
+msgid "Today Activities"
+msgstr "오늘 활동"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_tree
+msgid "Total Achieved"
+msgstr "전체 실적"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_tree
+msgid "Total Budget"
+msgstr "전체 예산"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_tree
+msgid "Total Committed"
+msgstr "전체 집행"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__line_type
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+msgid "Type"
+msgstr "유형"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "레코드에 있는 예외 활동의 유형입니다."
+
+#. module: account_budget
+#: model_terms:ir.actions.act_window,help:account_budget.act_budget_analytic_view
+msgid "Use budgets to compare actual with expected revenues and costs"
+msgstr "예산 항목을 통해 수익 비용 예측치와 실제를 비교합니다."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_report__user_id
+#: model_terms:ir.ui.view,arch_db:account_budget.budget_report_view_search
+msgid "User"
+msgstr "사용자"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_budget_analytic__website_message_ids
+msgid "Website Messages"
+msgstr "웹사이트 메시지"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_budget_analytic__website_message_ids
+msgid "Website communication history"
+msgstr "웹사이트 대화 이력"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__budget_split_wizard__period__year
+msgid "Year"
+msgstr "년"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/budget_analytic.py:0
+msgid "You cannot create recursive revision of budget."
+msgstr "예산의 재귀 수정은 만들 수 없습니다."
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_analytic_form
+msgid "e.g. Budget 2023"
+msgstr "예: 2023년 예산"

@@ -1,0 +1,10 @@
+<templates>
+    <t t-name="web_studio.ViewStructures">
+        <div class="o_web_studio_field_type_container o_web_studio_new_components d-flex flex-row">
+            <h3 t-if="isVisible" class="w-100">Components</h3>
+            <t t-foreach="props.structures" t-as="struct" t-key="struct_index">
+                <SidebarDraggableItem t-if="!struct_value.isVisible || struct_value.isVisible(env.viewEditorModel)" string="struct_value.name" className="struct_value.class" structure="struct" />
+            </t>
+        </div>
+    </t>
+</templates>

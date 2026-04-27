@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="whatsapp.ChannelMemberList" t-inherit="discuss.ChannelMemberList" t-inherit-mode="extension">
+        <xpath expr="//t[@name='offlineMembers']" position="after">
+            <t t-if="props.thread.whatsappMember">
+                <t t-call="discuss.ChannelMemberList.section">
+                    <t t-set="sectionName">WhatsApp User</t>
+                </t>
+                <t t-set="member" t-value="props.thread.whatsappMember" />
+                <t t-call="discuss.channel_member" />
+            </t>
+        </xpath>
+    </t>
+
+</templates>

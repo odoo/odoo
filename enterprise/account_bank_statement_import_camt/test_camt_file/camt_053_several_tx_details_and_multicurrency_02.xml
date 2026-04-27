@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.04">
+  <BkToCstmrStmt>
+    <GrpHdr>
+      <MsgId>2514988305.2019-02-13</MsgId>
+      <CreDtTm>2019-02-13T15:27:15.66+02:00</CreDtTm>
+    </GrpHdr>
+    <Stmt>
+      <Id>2514988305.2019-02-13</Id>
+      <CreDtTm>2019-02-13T15:27:15.66+02:00</CreDtTm>
+      <Acct>
+        <Id>
+          <IBAN></IBAN>
+          <Othr>
+            <Id>112233</Id>
+          </Othr>
+        </Id>
+      </Acct>
+      <Bal>
+        <Tp>
+          <CdOrPrtry>
+            <Cd>OPBD</Cd>
+          </CdOrPrtry>
+        </Tp>
+        <Amt Ccy="USD">1000.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt>
+          <Dt>2019-02-12</Dt>
+        </Dt>
+      </Bal>
+      <Bal>
+        <Tp>
+          <CdOrPrtry>
+            <Cd>CLBD</Cd>
+          </CdOrPrtry>
+        </Tp>
+        <Amt Ccy="USD">1500.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt>
+          <Dt>2019-02-13</Dt>
+        </Dt>
+      </Bal>
+      <Ntry>
+        <Amt Ccy="USD">500.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BkTxCd>
+          <Prtry>
+            <Cd>ABCD</Cd>
+          </Prtry>
+        </BkTxCd>
+        <AmtDtls>
+            <CntrValAmt>
+              <Amt Ccy="USD">500</Amt>
+              <CcyXchg>
+                <SrcCcy>EUR</SrcCcy>
+                <TrgtCcy>USD</TrgtCcy>
+                <XchgRate>0.5</XchgRate>
+              </CcyXchg>
+            </CntrValAmt>
+          </AmtDtls>
+        <NtryDtls>
+          <Btch>
+            <MsgId>MSGSALA0001</MsgId>
+            <PmtInfId>CustRefForSalaBatch</PmtInfId>
+            <NbOfTxs>3</NbOfTxs>
+            <TtlAmt Ccy="EUR">250.0</TtlAmt>
+            <CdtDbtInd>CRDT</CdtDbtInd>
+          </Btch>
+          <TxDtls>
+            <AmtDtls>
+              <TxAmt>
+                <Amt Ccy="EUR">50</Amt>
+              </TxAmt>
+            </AmtDtls>
+            <RmtInf>
+              <Ustrd>label01</Ustrd>
+            </RmtInf>
+          </TxDtls>
+          <TxDtls>
+            <AmtDtls>
+              <TxAmt>
+                <Amt Ccy="EUR">75</Amt>
+              </TxAmt>
+            </AmtDtls>
+            <RmtInf>
+              <Ustrd>label02</Ustrd>
+            </RmtInf>
+          </TxDtls>
+          <TxDtls>
+            <AmtDtls>
+              <TxAmt>
+                <Amt Ccy="EUR">125</Amt>
+              </TxAmt>
+            </AmtDtls>
+            <RmtInf>
+              <Ustrd>label03</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+    </Stmt>
+  </BkToCstmrStmt>
+</Document>

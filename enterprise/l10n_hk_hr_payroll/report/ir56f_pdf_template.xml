@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_ir56f">
+        <t t-call="web.basic_layout" t-if="report_data">
+            <t t-foreach="docs" t-as="employee">
+                <t t-set="emp_start_date" t-value="report_data.get('StartDateOfEmp', datetime.date.today())"/>
+                <t t-set="emp_end_date" t-value="report_data.get('EndDateOfEmp', datetime.date.today())"/>
+                <t t-set="emp_period_str" t-value="'{} - {}'.format(emp_start_date.strftime('%d/%m/%Y'), emp_end_date.strftime('%d/%m/%Y'))"/>
+                <div class="page position-relative report-ird ir56f mx-2">
+                    <div class="row">
+                        <div class="col position-relative text-center" style="margin-top: 2.7rem">
+                            <span class="text-uppercase fw-bold">
+                                Inland Revenue Department <br/>
+                                Notification <br/>
+                                By an Employer of an Employee who is about to cease to be employed <br/>
+                            </span>
+                            (Under section 52(5) of the Inland Revenue Ordinance, Cap. 112)
+                            <div class="position-absolute" style="right: 6rem; top: -1rem; font-size: 1.1rem;">Additional / Replacement</div>
+                            <div class="position-absolute border border-dark px-3 py-2 fs-4" style="right: 0; bottom: 0; font-size: 1.7rem;"><strong>56F</strong></div>
+                        </div>
+                    </div>
+                    <div class="row mt-2 mx-2">
+                        <div class="col">
+                            <table>
+                                <tr>
+                                    <td style="width: 6.5mm;">1.</td>
+                                    <td style="width: 150mm;">
+                                        Employer's File No. : <span class="ps-2" t-esc="report_data.get('FileNo')" />
+                                    </td>
+                                    <td class="text-end fw-bold fs-5"><span t-esc="report_data.get('ERN')" /></td>
+                                    <td class="text-end" style="width: 11mm;">****</td>
+                                </tr>
+                                <tr>
+                                    <td/>
+                                    <td colspan="2">
+                                        Name of Employer: <span class="ps-2" t-esc="report_data.get('ErName')" />
+                                    </td>
+                                    <td/>
+                                    <td/>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <strong style="line-height:1">
+                                            To the best of my knowledge, the employee will NOT be leaving Hong Kong after cessation of employment.<br/>
+                                            following are the particulars of the employee :-
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2.</td>
+                                    <td>
+                                        Name of Employee or Pensioner : <span class="ps-2 text-uppercase" t-esc="report_data.get('Surname')" />, <span class="text-uppercase" t-esc="report_data.get('GivenName')"/>
+                                    </td>
+                                    <td rowspan="2" class="text-end fw-bold fs-5"><span class="text-uppercase" t-esc="report_data.get('Surname')" /></td>
+                                    <td class="text-end">****</td>
+                                </tr>
+                                <tr>
+                                    <td/>
+                                    <td>
+                                        Full name in Chinese : <span class="ps-2" t-esc="report_data.get('NameInChinese')" />
+                                    </td>
+                                    <td/>
+                                </tr>
+                                <tr>
+                                    <td>3.</td>
+                                    <td>
+                                        (a) H.K. Identity Card Number :
+                                    </td>
+                                    <td rowspan="2" class="text-end fw-bold fs-5"><span t-esc="report_data.get('HKID') or report_data.get('PpNum')" /></td>
+                                    <td class="text-end">****</td>
+                                </tr>
+                                <tr>
+                                    <td/>
+                                    <td>
+                                        (b) Passport Number and place of issue (if Employee has no H.K. Identity Card) :
+                                    </td>
+                                    <td/>
+                                    <td/>
+                                </tr>
+                                <tr>
+                                    <td>4.</td>
+                                    <td>
+                                        Sex (M = Male, F = Female) :
+                                    </td>
+                                    <td class="text-end fw-bold fs-5"><span t-esc="report_data.get('Sex')" /></td>
+                                    <td class="text-end">****</td>
+                                </tr>
+                                <tr>
+                                    <td>5.</td>
+                                    <td>
+                                        Marital Status (1 = Single / Widowed / Divorced / Living Apart, 2 = Married) :
+                                    </td>
+                                    <td class="text-end fw-bold fs-5"><span t-esc="report_data.get('MaritalStatus')" /></td>
+                                    <td class="text-end">****</td>
+                                </tr>
+                                <tr>
+                                    <td>6.</td>
+                                    <td colspan="3">
+                                        (a) If married, full name of spouse : <span class="ps-2" t-esc="report_data.get('SpouseName', 'WONG, MEI ME')" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td/>
+                                    <td colspan="3">
+                                        (b) Spouse's H.K. Identity Card Number / Passport Number and place of issue (if known) :
+                                        <span class="ps-2" t-esc="report_data.get('SpouseHKID') or report_data.get('SpousePpNum')" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>7.</td>
+                                    <td colspan="3">
+                                        Residential Address :
+                                        <span class="ps-2" t-esc="report_data.get('employee_address')" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>8.</td>
+                                    <td colspan="3">
+                                        Postal Address (if different from item 7 above) :
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>9.</td>
+                                    <td colspan="3">
+                                        Capacity in which employed : <span class="ps-2" t-esc="report_data.get('Capacity')" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>10.</td>
+                                    <td colspan="3">
+                                        Reason for cessation (e.g. resignation, retirement, dismissal, death etc.) :
+                                        <span class="ps-2" t-esc="report_data.get('cessation_reason_str')" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>11.</td>
+                                    <td>
+                                        Period of employment from 1 April to the date of cessation of employment :
+                                    </td>
+                                    <td class="text-end">
+                                        <span class="fw-bold fs-5" t-esc="emp_start_date" t-options="{'widget': 'date', 'format': 'dd/MM/YYYY'}" />
+                                        <span class="fs-4 px-1">to</span>
+                                        <span class="fw-bold fs-5" t-esc="emp_end_date" t-options="{'widget': 'date', 'format': 'dd/MM/YYYY'}" />
+                                    </td>
+                                    <td class="text-end">****</td>
+                                </tr>
+                                <tr>
+                                    <td>12.</td>
+                                    <td colspan="3">
+                                        Details of income from 1 April to the date of cessation of employment :
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" style="padding-left: 1.8rem; padding-right: 2.5rem;">
+                            <table style="font-size: 15px; border-collapse: separate; border-spacing: 5px 2px;">
+                                <tr>
+                                    <td class="text-center">Particulars</td>
+                                    <td class="text-center" style="width: 50mm;">Period</td>
+                                    <td class="text-center" style="width: 38.5mm;">Amount (HK$)</td>
+                                </tr>
+                                <tr>
+                                    <td class="border-bottom border-dark" />
+                                    <td class="border-bottom border-dark" />
+                                    <td class="text-center border-bottom border-dark">(EXCLUDE CENTS)</td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-1"><span class="d-inline-block" style="width:6.5mm;">(a)</span> Salary/Wages</td>
+                                    <td class="text-center">
+                                        <span t-if="report_data.get('AmtOfSalary')" t-esc="emp_period_str" />
+                                    </td>
+                                    <td class="text-end px-5">
+                                        <span t-if="report_data.get('AmtOfSalary')" t-esc="'{:,}'.format(report_data['AmtOfSalary'])" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-1"><span class="d-inline-block" style="width:6.5mm;">(b)</span> Leave Pay</td>
+                                    <td class="text-center"></td>
+                                    <td class="text-end px-5"></td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-1"><span class="d-inline-block" style="width:6.5mm;">(c)</span> Director's Fee</td>
+                                    <td class="text-center"></td>
+                                    <td class="text-end px-5"></td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-1"><span class="d-inline-block" style="width:6.5mm;">(d)</span> Commission / Fees</td>
+                                    <td class="text-center">
+                                        <span t-if="report_data.get('AmtOfCommFee')" t-esc="emp_period_str" />
+                                    </td>
+                                    <td class="text-end px-5">
+                                        <span t-if="report_data.get('AmtOfCommFee')" t-esc="'{:,}'.format(report_data['AmtOfCommFee'])" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-1"><span class="d-inline-block" style="width:6.5mm;">(e)</span> Bonus</td>
+                                    <td class="text-center">
+                                        <span t-if="report_data.get('AmtOfBonus')" t-esc="emp_period_str" />
+                                    </td>
+                                    <td class="text-end px-5">
+                                        <span t-if="report_data.get('AmtOfBonus')" t-esc="'{:,}'.format(report_data['AmtOfBonus'])" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-1"><span class="d-inline-block" style="width:6.5mm;">(f)</span> Back Pay, Payment in Lieu of Notice, Terminal Awards or Gratuities</td>
+                                    <td class="text-center">
+                                        <span t-if="report_data.get('AmtOfBpEtc')" t-esc="emp_period_str" />
+                                    </td>
+                                    <td class="text-end px-5">
+                                        <span t-if="report_data.get('AmtOfBpEtc')" t-esc="'{:,}'.format(report_data['AmtOfBpEtc'])" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-1"><span class="d-inline-block" style="width:6.5mm;">(g)</span> Certain Payments from Retirement Schemes</td>
+                                    <td class="text-center"></td>
+                                    <td class="text-end px-5"></td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-1"><span class="d-inline-block" style="width:6.5mm;">(h)</span> Salaries Tax paid by Employer</td>
+                                    <td class="text-center"></td>
+                                    <td class="text-end px-5"></td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-1"><span class="d-inline-block" style="width:6.5mm;">(i)</span> Education Benefits</td>
+                                    <td class="text-center"></td>
+                                    <td class="text-end px-5"></td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-1"><span class="d-inline-block" style="width:6.5mm;">(j)</span> Gain realized under Share Option Scheme</td>
+                                    <td class="text-center"></td>
+                                    <td class="text-end px-5"></td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-1" colspan="3"><span class="d-inline-block" style="width:6.5mm;">(k)</span> Any other Rewards, Allowances or Perquisites</td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-1"><span class="d-inline-block" style="width:6.5mm;" /> (1) Nature :
+                                        <span class="ps-2" t-if="report_data.get('AmtOfOtherRAP1')" t-esc="report_data['NatureOtherRAP1']"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-if="report_data.get('AmtOfOtherRAP1')" t-esc="emp_period_str" />
+                                    </td>
+                                    <td class="text-end px-5">
+                                        <span t-if="report_data.get('AmtOfOtherRAP1')" t-esc="'{:,}'.format(report_data['AmtOfOtherRAP1'])" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-1"><span class="d-inline-block" style="width:6.5mm;" /> (2) Nature :</td>
+                                    <td class="text-center"></td>
+                                    <td class="text-end px-5"></td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-1"><span class="d-inline-block" style="width:6.5mm;" /> (3) Nature :</td>
+                                    <td class="text-center"></td>
+                                    <td class="text-end px-5"></td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-1"><span class="d-inline-block" style="width:6.5mm;">(l)</span> Payments that have not been declared above but will be made</td>
+                                    <td class="text-center"></td>
+                                    <td class="text-end px-5"></td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-1"><span class="d-inline-block" style="width:6.5mm;" /> AFTER the employee has left employment</td>
+                                    <td class="text-center"></td>
+                                    <td class="text-end px-5"></td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-1"><span class="d-inline-block" style="width:6.5mm;" /> Nature : <span  class="d-inline-block border-bottom border-dark" style="width:65mm;"></span></td>
+                                    <td class="text-center"></td>
+                                    <td class="text-end px-5"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row mx-2">
+                        <div class="col text-end">
+                            <span class="pe-1">Total :</span>
+                            <span class="d-inline-block text-end pe-2 fw-bold fs-5 border-top border-dark" style="width: 7rem; border-bottom:3px double;"><t t-esc="'{:,}'.format(report_data.get('TotalIncome', 0))" /></span>
+                            <span class="d-inline-block ps-1">****</span>
+                        </div>
+                    </div>
+                    <div class="row mt-3 mx-2">
+                        <div class="col">
+                            <table>
+                                <tr>
+                                    <td style="width: 6.5mm;">13.</td>
+                                    <td>Particulars of Place of Residence provided (0 = Not provided, 1 = Provided) :</td>
+                                    <td class="text-end fw-bold fs-5"><span t-esc="report_data.get('PlaceOfResInd')"></span></td>
+                                     <td class="text-end" style="width: 11mm;">****</td>
+                                </tr>
+                                <tr>
+                                    <td />
+                                    <td colspan="3">
+                                        Address 1 : <span class="ps-2" t-esc="report_data.get('AddrOfPlace1')"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td />
+                                    <td colspan="3">
+                                        Address 2 : <span class="ps-2" t-esc="report_data.get('AddrOfPlace2')"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row mx-2">
+                        <div class="col">
+                            <table>
+                                <tr>
+                                    <td style="width: 6.5mm;" />
+                                    <td />
+                                    <td class="text-center" style="width: 57mm"><span class="border-bottom border-dark px-2">Place of Residence 1</span></td>
+                                    <td class="text-center" style="width: 57mm"><span class="border-bottom border-dark px-2">Place of Residence 2</span></td>
+                                </tr>
+                                <tr>
+                                    <td />
+                                    <td>Nature :</td>
+                                    <td class="text-center"><span t-esc="report_data.get('NatureOfPlace1')"/></td>
+                                    <td class="text-center"><span t-esc="report_data.get('NatureOfPlace2')"/></td>
+                                </tr>
+                                <tr>
+                                    <td />
+                                    <td>Period Provided :</td>
+                                    <td class="text-center"><span t-esc="report_data.get('PerOfPlace1')"/></td>
+                                    <td class="text-center"><span t-esc="report_data.get('PerOfPlace2')"/></td>
+                                </tr>
+                                <tr>
+                                    <td />
+                                    <td>Rent Paid to Landlord by Employer :</td>
+                                    <td class="text-center"></td>
+                                    <td class="text-center"></td>
+                                </tr>
+                                <tr>
+                                    <td />
+                                    <td>Rent Paid to Landlord by Employee :</td>
+                                    <td class="text-center"><span t-if="report_data.get('RentPaidEe1')" t-esc="'{:,}'.format(report_data['RentPaidEe1'])"/></td>
+                                    <td class="text-center"><span t-if="report_data.get('RentPaidEe2')" t-esc="'{:,}'.format(report_data['RentPaidEe2'])"/></td>
+                                </tr>
+                                <tr>
+                                    <td />
+                                    <td>Rent Refunded to Employee by Employer :</td>
+                                    <td class="text-center"><span t-if="report_data.get('RentRefund1')" t-esc="'{:,}'.format(report_data['RentRefund1'])"/></td>
+                                    <td class="text-center"><span t-if="report_data.get('RentRefund2')" t-esc="'{:,}'.format(report_data['RentRefund2'])"/></td>
+                                </tr>
+                                <tr>
+                                    <td />
+                                    <td>Rent Paid to Employer by Employee :</td>
+                                    <td class="text-center"></td>
+                                    <td class="text-center"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row mx-2">
+                        <div class="col">
+                            <table>
+                                <tr>
+                                    <td style="width: 6.5mm;">14.</td>
+                                    <td style="width: 150mm;">
+                                        Whether the employee was wholly or partly paid either in Hong Kong or elsewhere
+                                    </td>
+                                    <td/>
+                                    <td style="width: 11mm;" />
+                                </tr>
+                                <tr>
+                                    <td />
+                                    <td>by a non-Hong Kong company (0 = No, 1 = Yes) :</td>
+                                    <td class="text-end fw-bold fs-5">0</td>
+                                    <td class="text-end">****</td>
+                                </tr>
+                                <tr>
+                                    <td />
+                                    <td colspan="3">If yes, please state :</td>
+                                </tr>
+                                <tr>
+                                    <td />
+                                    <td colspan="3">Name of the non-Hong Kong company :</td>
+                                </tr>
+                                <tr>
+                                    <td />
+                                    <td colspan="3">Address :</td>
+                                </tr>
+                                <tr>
+                                    <td />
+                                    <td colspan="3">Amount (if known) (This amount must also be included in item 12) :</td>
+                                </tr>
+
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row mt-3 mx-2">
+                        <div class="col-9">
+                            <table>
+                                <tr>
+                                    <td style="width: 6.5mm;" />
+                                    <td style="width: 54mm;">
+                                        <div class="border border-dark text-center position-relative mt-1" style="height: 35mm;">
+                                            <span class="position-absolute fixed-bottom fst-italic" style="font-size: 0.8rem;">Space for Employer's official chop</span>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle" style="padding-left: 23mm;">
+                                        <div>
+                                            Signature :<br/>
+                                            Name : <span t-esc="report_data.get('NAME_OF_SIGNER')" /><br/>
+                                            Designation : <span t-esc="report_data.get('Designation')" /><br/>
+                                            Date : <span t-esc="report_data.get('SubDate')" t-options="{'widget': 'date', 'format': 'dd/MM/YYYY'}" /><br/>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="pt-3" colspan="3" style="font-size: 0.9rem;">IR56F</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-3" style="width:22%; margin-top: -2rem;">
+                            <div class="border border-dark" style="width: 53mm;">
+                                <div style="height: 38mm;" />
+                                <div class="border-top border-dark text-center py-1" style="font-size: 0.8rem;">For Official Use</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

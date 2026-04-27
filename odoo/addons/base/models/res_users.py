@@ -233,15 +233,26 @@ class Groups(models.Model):
             operand = [operand]
         where_domains = []
         for group in operand:
+            search_category_only = isinstance(group, str) and group.rstrip().endswith('/')
             values = [v for v in group.split('/') if v]
-            group_name = values.pop().strip() if values else ''
+            group_name = '' if search_category_only else values.pop().strip() if values else ''
             category_name = values and '/'.join(values).strip() or group_name
-            group_domain = [('name', operator, lst and [group_name] or group_name)]
             category_ids = self.env['ir.module.category'].sudo()._search(
                 [('name', operator, [category_name] if lst else category_name)])
             category_domain = [('category_id', 'in', category_ids)]
             if operator in expression.NEGATIVE_TERM_OPERATORS and not values:
                 category_domain = expression.OR([category_domain, [('category_id', '=', False)]])
+            if search_category_only:
+                where = category_domain
+            else:
+                group_domain = [('name', operator, lst and [group_name] or group_name)]
+                if (operator in expression.NEGATIVE_TERM_OPERATORS) == (not values):
+                    where = expression.AND([group_domain, category_domain])
+                else:
+                    where = expression.OR([group_domain, category_domain])
+            if search_category_only:
+                where_domains.append(where)
+                continue
             if (operator in expression.NEGATIVE_TERM_OPERATORS) == (not values):
                 where = expression.AND([group_domain, category_domain])
             else:

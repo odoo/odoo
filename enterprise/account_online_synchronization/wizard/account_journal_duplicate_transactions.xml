@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_duplicate_transaction_wizard_view_form" model="ir.ui.view">
+        <field name="name">account.duplicate.transaction.wizard.form</field>
+        <field name="model">account.duplicate.transaction.wizard</field>
+        <field name="arch" type="xml">
+            <form
+                string="Fetch Missing Bank Statements Wizard"
+                create="false"
+                js_class="account_duplicate_transactions_form"
+            >
+                <h3>Choose a date and a journal from which you want to check the transactions.</h3>
+                <group class="oe_form_field">
+                    <field name="date" required="1"/>
+                </group>
+                <field name="first_ids_in_group" invisible="1"/> <!-- Needed for account_duplicate_transactions_lines_list_x2many -->
+                <button
+                    confirm="This action will delete all selected transactions. Are you sure you want to proceed?"
+                    name="delete_selected_transactions"
+                    ref="delete_button" class="btn-primary"
+                >
+                    <i class="fa fa-trash me-1" /> Delete Selected
+                </button>
+                <notebook>
+                    <page string="Transactions">
+                        <field
+                            name="transaction_ids"
+                            widget="account_duplicate_transactions_lines_list_x2many"
+                            nolabel="1"
+                            context="{
+                                'form_view_ref': 'account_online_synchronization.view_bank_statement_line_form_bank_rec_widget_inherit',
+                            }"
+                        >
+                            <list>
+                                <field name="id" column_invisible="1"/>
+                                <field name="payment_ref"/>
+                                <field name="date"/>
+                                <field name="amount"/>
+                                <field name="online_transaction_identifier"/>
+                                <field name="account_number"/>
+                                <field name="partner_id"/>
+                                <field name="is_reconciled"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+</odoo>

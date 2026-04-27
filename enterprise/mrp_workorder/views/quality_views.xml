@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="quality_point_view_form_inherit_mrp" model="ir.ui.view">
+        <field name="name">quality.point.view.form.inherit.mrp</field>
+        <field name="model">quality.point</field>
+        <field name="inherit_id" ref="quality.quality_point_view_form"/>
+        <field name="arch" type="xml">
+            <field name="test_type_id" position="after">
+                <field name="component_ids" invisible="1"/>
+                <field name="bom_product_ids" invisible="1"/>
+                <field name="component_id" invisible="not is_workorder_step or not operation_id or test_type not in ('register_byproducts', 'register_consumed_materials')" required="test_type in ('register_byproducts', 'register_consumed_materials')" domain="[('id', 'in', component_ids), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+                <field name="test_report_type" widget="selection" invisible="test_type != 'print_label'"/>
+            </field>
+            <field name="picking_type_ids" position="after">
+                <field string="Work Order Operation" name="operation_id" invisible="not is_workorder_step" groups="mrp.group_mrp_routings" options="{'no_create': True}"/>
+                <field name="is_workorder_step" invisible="1"/>
+            </field>
+            <field name="user_id" position="after">
+                <field name="operation_id" invisible="1"/>
+                <field name="source_document" widget="radio" invisible="not operation_id"/>
+                <field name="worksheet_page" invisible="not is_workorder_step or not operation_id or source_document == 'step'"/>
+            </field>
+            <field name="product_category_ids" position="attributes">
+                <attribute name="invisible">is_workorder_step and operation_id</attribute>
+            </field>
+            <xpath expr="//field[@name='note']" position="after">
+                <field name="worksheet_document" help="Upload your PDF file." widget="pdf_viewer" invisible="source_document == 'operation'"/>
+                <field name="worksheet_url" placeholder="Google Slide Link" widget="embed_viewer" invisible="source_document == 'operation'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="step_view_form" model="ir.ui.view">
+        <field name="name">quality.point.view.form.inherit.mrp</field>
+        <field name="model">quality.point</field>
+        <field name="inherit_id" ref="mrp_workorder.quality_point_view_form_inherit_mrp"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="picking_type_ids" position="replace">
+                <field name="picking_type_ids" widget="many2many_tags" domain="[('code', '=', 'mrp_operation'), ('company_id', '=', company_id)]"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="quality_check_view_form_tablet" model="ir.ui.view">
+        <field name="name">quality.check.view.form.tablet</field>
+        <field name="model">quality.check</field>
+        <field name="priority">200</field>
+        <field name="arch" type="xml">
+            <form class="o_workorder_tablet_form">
+                <field name="test_type" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="component_tracking" invisible="1"/>
+                <field name="is_user_working" invisible="1"/>
+                <field name="quality_state" invisible="1"/>
+                <field name="test_type" invisible="1"/>
+                <field name="working_state" invisible="1"/>
+                <field name="consumption" invisible="1"/>
+                <field name="component_qty_to_do" invisible="1"/>
+                <field name="additional" invisible="1"/>
+                <field name="production_id" invisible="1"/>
+                <div class="o_workorder_bar">
+                    <div class="o_workorder_bar_left">
+                        <div class="o_workorder_bar_content" invisible="test_type not in ('register_byproducts', 'register_consumed_materials')">
+                            <div>
+                                <field name="component_id" options="{'no_open': True}" readonly="1"/>
+                            </div>
+                        </div>
+                        <div class="o_workorder_bar_content" invisible="test_type not in ('register_byproducts', 'register_consumed_materials')">
+                            <label for="qty_done" string="Quantity"/>
+                            <field name="qty_done" readonly="component_tracking == 'serial'" string="Quantity" class="oe_inline"/>
+                            <div invisible="additional">
+                                / <field name="component_remaining_qty" readonly="1"/>
+                            </div>
+                            <label for="component_uom_id" string=" "/>
+                            <field name="component_uom_id" options="{'no_open': True}" readonly="1"/>
+                            <div class="o_workorder_lot">
+                                <div class="o_form_label ps-5" invisible="component_tracking != 'serial'">Serial</div>
+                                <div class="o_form_label ps-5" invisible="component_tracking != 'lot'">Lot</div>
+                                <field name="lot_id" class="text-center" context="{'default_product_id': component_id, 'active_mo_id': test_type == 'register_consumed_materials' and production_id or False}" invisible="component_tracking == 'none'" domain="[('product_id', '=', component_id), ('company_id', '=', component_id.company_id)]"/>
+                            </div>
+                        </div>
+                        <div class="d-block">
+                            <field name="note" readonly="1"/>
+                        </div>
+                        <div class="o_workorder_bar_content">
+                            <field name="additional_note" readonly="1"/>
+                        </div>
+                        <div class="o_workorder_bar_content">
+                            <div class="workorder_picture" invisible="test_type != 'picture'">
+                                <field name="picture" widget="image"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="o_workorder_bar_center">
+                    </div>
+                    <div class="o_workorder_bar_right o_workorder_bar_content o_workorder_action" invisible="working_state == 'blocked'">
+                        <button
+                            name="action_next"
+                            type="object"
+                            class="btn-primary"
+                            invisible="not is_user_working or (quality_state == 'none' or test_type != 'passfail') and test_type != 'instructions'"
+                            barcode_trigger="NEXT"
+                            string="Next"/>
+                        <button
+                            name="action_next"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="not is_user_working or test_type not in ['register_consumed_materials', 'register_byproducts', 'picture'] or consumption == 'strict' or consumption in ['flexible', 'warning'] and component_qty_to_do &gt;= 0"
+                            barcode_trigger="NEXT"
+                            string="Validate"/>
+                        <button
+                            name="action_next"
+                            type="object"
+                            class="btn-primary"
+                            invisible="test_type not in ['register_consumed_materials', 'register_byproducts', 'picture'] or component_qty_to_do &lt; 0"
+                            barcode_trigger="NEXT"
+                            string="Validate"/>
+                        <button name="action_continue"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="not is_user_working or test_type not in ('register_consumed_materials', 'register_byproducts') or component_qty_to_do &gt;= 0"
+                            barcode_trigger="CONT"
+                            string="Continue Consumption"/>
+                        <button name="action_continue"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="test_type not in ('register_consumed_materials', 'register_byproducts') or consumption == 'strict' or consumption in ['flexible', 'warning'] and component_qty_to_do &lt; 0"
+                            barcode_trigger="CONT"
+                            string="Continue Consumption"/>
+                        <button name="action_print" type="object" class="btn-primary" invisible="test_type != 'print_label'" barcode_trigger="PRPL" string="Print Labels"/>
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="quality_check_workorder_form" model="ir.ui.view">
+        <field name="name">quality.check.workorder.form</field>
+        <field name="model">quality.check</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="product_id" force_save="1"/>
+                    <field name="production_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="component_id" invisible="1"/>
+                    <field name="test_type" invisible="1" force_save="1"/>
+                    <field name="team_id" invisible="1" force_save="1"/>
+                    <field name="workorder_id" invisible="1" force_save="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field string="Type" name="test_type_id" options="{'no_open': True, 'no_create': True}"/>
+                    <field name="point_id"/>
+                    <field name="picture" widget="image" invisible="test_type != 'picture'"/>
+                    <field name="product_id" invisible="test_type not in ('register_consumed_materials', 'register_byproducts')"/>
+                    <field name="lot_id" context="{'default_product_id': component_id, 'default_company_id': company_id, 'active_mo_id': production_id}" invisible="test_type not in ('register_consumed_materials', 'register_byproducts')"/>
+                    <field name="qty_done" invisible="test_type not in ('register_consumed_materials', 'register_byproducts')"/>
+                </group>
+                <group>
+                    <field name="note"/>
+                    <field name="worksheet_document"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="add_quality_check_from_tablet" model="ir.ui.view">
+        <field name="name">add.quality.check.from.tablet</field>
+        <field name="model">quality.check</field>
+        <field name="priority">200</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="company_id" invisible="1"/>
+                    <field name="product_id" invisible="1"/>
+                    <field name="workorder_id" invisible="1"/>
+                    <field name="test_type_id" domain="[('technical_name', 'not in', ['register_consumed_materials', 'register_byproducts'])]"/>
+                    <field name="title" string="Title"/>
+                    <field name="note" string="Instruction"/>
+                    <field name="worksheet_document" string="Document" options="{'accepted_file_extensions': '.pdf'}"/>
+                </group>
+                <footer>
+                    <button class="btn btn-primary" type="object" name="add_check_in_chain" string="Propose Change"/>
+                    <button class="btn btn-secondary" type="object" special="cancel" string="Discard"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="quality_alert_view_tree" model="ir.ui.view">
+        <field name="name">quality.alert.view.list.inherit.mrp.workorder</field>
+        <field name="model">quality.alert</field>
+        <field name="inherit_id" ref="quality.quality_alert_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lot_id']" position="after">
+                <field name="workcenter_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="quality_point_view_tree" model="ir.ui.view">
+        <field name="name">quality.point.view.list.inherit.mrp.workorder</field>
+        <field name="model">quality.point</field>
+        <field name="inherit_id" ref="quality.quality_point_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="picking_type_ids" position="after">
+                <field name="operation_id" optional="hide" string="Work Order Operation"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="quality_alert_view_search_inherit_mrp_workorder" model="ir.ui.view">
+            <field name="name">quality.alert.view.search.inherit.mrp.workorder</field>
+            <field name="model">quality.alert</field>
+            <field name="inherit_id" ref="quality.quality_alert_view_search"/>
+            <field name="arch" type="xml">
+                <field name="tag_ids" position="before">
+                    <field name="workcenter_id" string="Work Center"/>
+                </field>
+            </field>
+    </record>
+</odoo>

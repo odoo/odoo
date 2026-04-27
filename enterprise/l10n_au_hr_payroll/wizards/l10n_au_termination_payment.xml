@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_au_termination_payment_view_form" model="ir.ui.view">
+        <field name="name">l10n_au.termination.payment.view.form</field>
+        <field name="model">l10n_au.termination.payment</field>
+        <field name="arch" type="xml">
+            <form string="Termination">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="employee_id" />
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="contract_id" />
+                        <field name="contract_end_date" />
+                        <field name="cessation_type_code" />
+                        <field name="termination_type" />
+                    </group>
+                    <group string="Unused Leaves">
+                        <field name="unused_annual_leaves" />
+                        <field name="unused_long_service_leaves" />
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Confirm Termination" name="button_terminate" type="object"
+                        class="btn-primary" />
+                    <button string="Cancel" special="cancel" class="btn-secondary" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_au_termination_payment_action" model="ir.actions.act_window">
+        <field name="name">Terminate Employee</field>
+        <field name="res_model">l10n_au.termination.payment</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="l10n_au_termination_payment_view_form" />
+    </record>
+
+</odoo>

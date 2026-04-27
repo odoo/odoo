@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="email_template_cis_response_success" model="mail.template">
+            <field name="name">CIS Return Response</field>
+            <field name="model_id" ref="l10n_uk_reports_cis.model_l10n_uk_hmrc_transaction"/>
+            <field name="email_from">{{ object.company_id.email_formatted }}</field>
+            <field name="partner_to">{{ object.sender_user_id.partner_id.id }}</field>
+            <field name="subject">CIS Return Response</field>
+            <field name="description">Sent to users who sent a CIS return to HMRC to notify that it resulted in either an error or a success</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear <t t-out="object.sender_user_id.name"/>,
+                        <br /><br />
+                        Your CIS return response for <t t-out="format_date(object.period_end)"/> is now available on the Chatter section of your company page.
+                        <br /><br />
+                        Please log in to review the details at your convenience.
+                        <br /><br />
+                        Best regards,
+                    </p>
+                </div>
+            </field>
+            <field name="lang">{{ object.sender_user_id.partner_id.lang }}</field>
+        </record>
+
+        <record id="email_template_cis_response_failure" model="mail.template">
+            <field name="name">CIS Return Response</field>
+            <field name="model_id" ref="l10n_uk_reports_cis.model_l10n_uk_hmrc_transaction"/>
+            <field name="email_from">{{ object.company_id.email_formatted }}</field>
+            <field name="partner_to">{{ object.sender_user_id.partner_id.id }}</field>
+            <field name="subject">CIS Return Response</field>
+            <field name="description">Sent to users who sent a CIS return to HMRC to notify that it resulted in either an error or a success</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear <t t-out="object.sender_user_id.name"/>,
+                        <br /><br />
+                        Your CIS return response for <t t-out="format_date(object.period_end)"/> is now available on the Chatter section of your company page. Please note that an error was detected in the initial submission.
+                        <br /><br />
+                        A new submission may be necessary to ensure compliance with HMRC requirements.
+                        <br /><br />
+                        Best regards,
+                    </p>
+                </div>
+            </field>
+            <field name="lang">{{ object.sender_user_id.partner_id.lang }}</field>
+        </record>
+
+        <record id="email_template_cis_notification" model="mail.template">
+            <field name="name">CIS Deduction Report Submission Due</field>
+            <field name="model_id" ref="base.model_res_company"/>
+            <field name="email_from">{{ object.partner_id.email_formatted }}</field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="subject">CIS Deduction Report Submission Due</field>
+            <field name="description">Sent to companies to inform that they need to return they CIS deductions to HMRC</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+        </record>
+
+        <template id="email_body_template_cis_notification">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Dear <t t-out="partner_name"/>,
+                    <br /><br />
+                    We would like to remind you that your CIS Deduction report for the period ending <t t-out="period_end"/> is due to be submitted to HMRC by <t t-out="period_due"/>.
+                    <br /><br />
+                    Please ensure that the report is sent on time to avoid any potential penalties.
+                    <br /><br />
+                    Best regards,
+                </p>
+            </div>
+        </template>
+    </data>
+</odoo>

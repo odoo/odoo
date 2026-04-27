@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.PartnerLedgerReportFilterExtraOptions" t-inherit="account_reports.AccountReportFilterExtraOptions">
+        <!-- Deprecated options, will be removed in master-->
+        <xpath expr="//DropdownItem[contains(@class, 'filter_show_all_hook')]" position="after">
+            <DropdownItem
+                t-if="'hide_account' in controller.options"
+                class="{ 'selected': controller.options.hide_account }"
+                onSelected="() => this.filterClicked({ optionKey: 'hide_account', reload: true})"
+                closingMode="'none'"
+            >
+                Hide Account
+            </DropdownItem>
+            <DropdownItem
+                t-if="'hide_debit_credit' in controller.options"
+                class="{ 'selected': controller.options.hide_debit_credit }"
+                onSelected="() => this.filterClicked({ optionKey: 'hide_debit_credit', reload: true})"
+                closingMode="'none'"
+            >
+                Hide Debit/Credit
+            </DropdownItem>
+        </xpath>
+    </t>
+</templates>

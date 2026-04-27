@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="forum_forum_view_form_inherited" model="ir.ui.view">
+        <field name="name">forum.forum.view.form.inherit</field>
+        <field name="model">forum.forum</field>
+        <field name="inherit_id" ref="website_forum.forum_forum_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_helpdesk_team" type="object" class="oe_stat_button" icon="fa-life-ring" invisible="not helpdesk_team_count">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="helpdesk_team_count" />
+                        </span>
+                        <span class="o_stat_text">Helpdesk Teams</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

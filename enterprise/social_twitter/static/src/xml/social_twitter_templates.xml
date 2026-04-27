@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-inherit="social.StreamPostCommentsOriginalPost" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('o_social_original_post_author_image')]" position="inside">
+            <img t-if="originalPost.twitter_profile_image_url.value" t-att-src="originalPost.twitter_profile_image_url.value" alt="Author Image" class="rounded"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_social_comments_modal_original_post_content')]" position="inside">
+            <div class="o_social_original_post_twitter_stats d-flex justify-content-around"
+                t-if="originalPost.media_type.raw_value === 'twitter'">
+                <div class="o_social_twitter_likes ps-2 pe-3"
+                     t-att-class="{'o_social_twitter_user_likes': originalPost.twitter_user_likes.raw_value}"
+                    t-att-data-user-likes="originalPost.twitter_user_likes.raw_value"
+                    t-att-data-post-id="originalPost.id.raw_value">
+                    <t t-if="originalPost.twitter_likes_count.raw_value !== 0">
+                        <i class="fa fa-heart me-1" title="Likes"/>
+                        <b class="o_social_likes_count" t-esc="originalPost.twitter_likes_count.value"/>
+                    </t>
+                </div>
+                <div class="flex-grow-1 d-flex text-muted justify-content-end">
+                    <div t-if="originalPost.twitter_retweet_count.raw_value > 0">
+                        <t t-esc="originalPost.twitter_retweet_count.value"/>
+                        Reposts
+                    </div>
+                </div>
+            </div>
+            <t t-if="originalPost.twitter_quoted_tweet_id_str?.raw_value"
+                t-call="social_twitter.StreamPostQuotedTweet">
+                <t t-set="post" t-value="originalPost"/>
+                <t t-set="formattedMessage">
+                    <t t-out="_formatCommentStreamPost(post.twitter_quoted_tweet_message.raw_value)"/>
+                </t>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="social_twitter.StreamPostQuotedTweet">
+        <t t-set="unknown_author_name_label">Unknown</t>
+        <div class="border rounded p-2 my-2">
+            <t t-set="author_info">
+                <span t-if="post.twitter_profile_image_url.raw_value"
+                    class="o_social_stream_post_author_image o_social_author_image o_avatar position-relative rounded overflow-hidden">
+                    <img t-att-src="post.twitter_quoted_tweet_profile_image_url.raw_value
+                        or '/base/static/img/avatar_grey.png'"
+                        alt="Author Image" class="rounded"/>
+                </span>
+                <span class="o_social_stream_post_author_image o_social_author_image o_avatar position-relative rounded overflow-hidden"/>
+                <span class="o_social_stream_post_author_name text-truncate ms-2"
+                    t-esc="post.twitter_quoted_tweet_author_name.value or unknown_author_name_label"
+                    t-att-title="post.twitter_quoted_tweet_author_name.value or unknown_author_name_label"/>
+            </t>
+            <a t-if="post.twitter_quoted_tweet_author_link.value"
+                class="o_social_stream_post_author d-inline-flex align-items-center"
+                t-att-href="post.twitter_quoted_tweet_author_link.value"
+                t-att-title="post.twitter_quoted_tweet_author_name.value or unknown_author_name_label"
+                t-out="author_info"
+                target="_blank"/>
+            <div t-else=""
+                class="o_social_stream_post_author d-inline-flex align-items-center"
+                t-out="author_info"/>
+            <div name="o_social_stream_post_message_text" class="o_social_stream_post_message_text overflow-hidden">
+                <span t-if="formattedMessage" t-out="formattedMessage"/>
+                <span t-else="" class="fst-italic">Empty post</span>
+            </div>
+        </div>
+    </t>
+
+    <t t-inherit="social.StreamPostCommentsReply" t-inherit-mode="extension">
+        <xpath expr="//form" position="inside">
+            <input t-if="comment &amp;&amp; comment.from &amp;&amp; comment.from.screen_name"
+                type="hidden" name="answering_to"
+                t-att-value="isCommentReply ? comment.from.screen_name : ''"/>
+        </xpath>
+    </t>
+
+    <t t-name="social_twitter.TwitterQuoteDialog">
+        <Dialog title="props.title" size="'md'" bodyClass="'o_social_quote_modal o_social_comments_modal'">
+            <StreamPostCommentsReplyTwitterQuote
+                    mediaSpecificProps="props.mediaSpecificProps"
+                    originalPost="props.originalPost"
+                    onAddComment="() => {}"
+                    preventAddComment="() => {}"/>
+            <t t-call="social_twitter.StreamPostCommentsOriginalPostQuote"/>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="_confirmQuoteTweet">Post</button>
+                <button class="btn btn-secondary" t-on-click="() => props.close()">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+
+    <t t-name="social_twitter.StreamPostCommentsReplyQuote" t-inherit="social.StreamPostCommentsReply" t-inherit-mode="primary">
+        <xpath expr="//textarea[@name='message']" position="attributes">
+            <attribute name="t-on-keydown"/>
+        </xpath>
+        <xpath expr="//div[@name='o_social_textarea_helper']" position="replace"/>
+    </t>
+
+    <t t-name="social_twitter.StreamPostCommentsOriginalPostQuote" t-inherit="social.StreamPostCommentsOriginalPost" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_social_comments_modal_original_post')]" position="attributes">
+            <attribute name="class">d-flex bg-white p-3 mt-3 border rounded</attribute>
+        </xpath>
+    </t>
+
+    <!--Old-->
+
+    <t t-name="social_twitter.users_autocomplete_element">
+        <div t-attf-class="o_social_twitter_users_autocomplete_suggestion clearfix#{suggestion_index == 0 and ' active' or ''}">
+            <img t-att-src="option['profile_image_url']" alt="X Profile Image"/>
+            <div class="o_twitter_users_autocomplete_info">
+                <strong><span class="o_twitter_users_autocomplete_info_name">
+                    <t t-esc="option['name']" /> - @<t t-esc="option['username']" />
+                </span></strong>
+                <br/>
+                <span><small t-esc="option['description']" /></span>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="social_twitter.TwitterUsersAutocompleteField" t-inherit="web.CharField">
+        <xpath expr="//t[@t-else='']" position="replace">
+            <AutoComplete
+                autofocus="true"
+                value="value"
+                sources="sources"
+                onSelect.bind="selectTwitterUser"
+            />
+        </xpath>
+    </t>
+</odoo>

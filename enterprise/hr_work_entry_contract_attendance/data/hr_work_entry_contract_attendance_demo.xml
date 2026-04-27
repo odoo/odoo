@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_hne" model="hr.contract">
+        <field name="name">Abigail Peterson Contract</field>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(months=-1, day=1))"/>
+        <field name="date_end" eval="(DateTime.today() + relativedelta(months=2))"/>
+        <field name="employee_id" ref="hr.employee_hne"/>
+        <field name="job_id" model="hr.job"
+            eval="obj().env.ref('hr.employee_hne').job_id.id"/>
+        <field name="department_id" model="hr.department"
+            eval="obj().env.ref('hr.employee_hne').department_id.id"/>
+        <field name="wage" eval="6500"/>
+        <field name="state">open</field>
+        <field name="work_entry_source">attendance</field>
+        <field name="structure_type_id" ref="hr_contract.structure_type_worker"/>
+    </record>
+</odoo>

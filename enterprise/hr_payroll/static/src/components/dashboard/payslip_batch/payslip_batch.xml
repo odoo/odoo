@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="hr_payroll.PayslipBatch">
+        <div class="o_hr_payroll_dashboard_block o_hr_payroll_dashboard_batches h-100 card m-auto">
+            <div class="card-header border-0 d-flex justify-content-between align-items-center bg-view">
+                <h2 class="card-title">
+                    Batches
+                </h2>
+                <a class="btn btn-link" t-on-click="onClickTitle">
+                    All
+                </a>
+            </div>
+            <ul class="list-group list-group-flush">
+                <a t-foreach="props.batches" t-as="batch" t-key="batch.id" class="list-group-item list-group-item-action d-flex justify-content-start align-items-center" href="#" t-on-click="() => this.onClickLine(batch.id, batch.name)">
+                    <div t-att-class="'badge rounded-pill o_readonly_modifier o_required_modifier o_field_widget fs-6 ' + this.getColorFromState(batch.state)">
+                        <t t-out="batch.state"/>
+                    </div>
+                    <div class="o_hr_payroll_dashboard_batch text-end mw-75 ms-auto p-0" >
+                        <t t-esc="batch.name" class="mw-100"/> <br/> <span t-esc="batch.payslip_count" class="text-nowrap"/>
+                    </div>
+                </a>
+            </ul>
+        </div>
+        </t>
+</templates>

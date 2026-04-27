@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_form_inherit_helpdesk_sale" model="ir.ui.view">
+        <field name='name'>sale.order.form.inherit.helpdesk.sale</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_project.view_order_form_inherit_sale_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_task']" position="after">
+                <field name="ticket_count" invisible="1"/>
+                <button name="action_view_tickets" type="object" class="oe_stat_button" icon="fa-life-ring" groups="helpdesk.group_helpdesk_user" invisible="ticket_count == 0">
+                     <field name="ticket_count" widget="statinfo" string="Tickets"/>
+                </button>
+            </xpath>
+        </field>
+    </record> 
+</odoo>

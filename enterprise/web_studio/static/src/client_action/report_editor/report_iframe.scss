@@ -1,0 +1,290 @@
+/**
+ * This is CSS used inside the report iframe, which is included in another
+ * bundle (web_studio.report_assets).
+ */
+:root {
+    font-size: 14px;
+}
+
+div.page {
+    position: relative;
+}
+
+// TODO: to be removed when the crap done in web_editor.common.scss will be
+// removed ; these rules are here to reverse them
+#wrapwrap table.table.table-bordered {
+    td {
+        min-width: auto;
+    }
+}
+
+// ignore bootstrap media query in iframe since it is not applied when printing
+@media (min-width: 576px) {
+    .container {
+        max-width: none;
+    }
+}
+
+// OdooEditor and QWeb style
+.o-we-hint:not([oe-expression-readable]) {
+    position: relative;
+
+    &:before {
+        content: attr(placeholder);
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        color: inherit;
+        opacity: 0.4;
+        pointer-events: none;
+        text-align: inherit;
+        width: 100%;
+    }
+}
+*[contenteditable=true] {
+    outline: none;
+}
+[contenteditable] {
+    overflow-wrap: unset !important;
+}
+
+.oe-qweb-select {
+    position: absolute;
+    // Bootstrap sets .modal z-index at 1055.
+    // Ensure qweb-select is visible in modals.
+    z-index: 1056;
+    background-color: white;
+}
+
+.text-nowrap {
+    white-space: break-spaces !important;
+}
+
+.oe_structure:empty {
+    min-height: 1lh;
+}
+
+[t-field],
+[t-esc],
+[t-out],
+[t-raw] {
+    background-color: rgba(36, 154, 255, 0.16) !important;
+}
+
+[t-field] {
+    &:empty::before {
+        content: attr(oe-expression-readable);
+    }
+}
+
+/**
+  * When a `[t-field]` or `[t-out]` element has the `data-oe-demo` attribute, it will render that value
+  * as placeholder text inside the report editor.
+  */
+[t-field],
+[t-out] {
+    &[data-oe-demo]:empty::before {
+        content: attr(data-oe-demo);
+    }
+}
+
+[t-esc]:empty::before {
+    content: "Expr";
+}
+[t-raw]:empty::before {
+    content: "Expr";
+}
+[t-out]:empty::before {
+    content: attr(oe-expression-readable);
+}
+t[t-set] {
+  display: none !important;
+}
+
+t {
+    display: contents;
+}
+
+t[data-oe-t-inline]:not([data-oe-t-group-active]) {
+    display: unset;
+}
+[data-oe-t-group]:not([data-oe-t-group-active]) {
+    display: none !important;
+}
+[data-oe-t-group][data-oe-t-selectable] {
+    outline: 1px dashed rgba(0, 0, 102, 0.4) !important;
+}
+
+
+.table-sm {
+    > thead > tr > th {
+        border-bottom: none !important;
+    }
+    > tbody > tr {
+        page-break-inside: avoid !important;
+        border-top: none !important;
+    }
+}
+
+div#total {
+    page-break-inside: avoid;
+    q-table {
+        q-tr {
+            &.o_subtotal,
+            &.o_total {
+                q-td {
+                    border-top: 1px solid black !important;
+                }
+                &.o_border_bottom {
+                    q-td {
+                        border-bottom: 1px solid black !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+q-table {
+    q-thead {
+        &.o_black_border {
+            q-tr {
+                q-th {
+                    border-bottom: 2px solid black !important;
+                }
+            }
+        }
+    }
+}
+
+
+.table-borderless {
+    q-tbody, q-thead, q-tfoot, q-tr, q-td, q-th {
+        border: 0 none;
+    }
+}
+
+table.table-borderless {
+    outline: 1px dashed rgba(0, 0, 102, 0.4);
+}
+
+.row > t > * {
+    padding-right: calc(var(--bs-gutter-x) * .5);
+    padding-left: calc(var(--bs-gutter-x) * .5);
+    margin-top: var(--bs-gutter-y);
+}
+
+// LAYOUTS
+.o_report_layout_standard {
+
+    q-table {
+        q-thead {
+            color: $o-default-report-secondary-color;
+        }
+    }
+}
+
+.o_report_layout_boxed {
+    q-table {
+        border: 1px solid map-get($grays, '700');
+        q-thead {
+            border-bottom: 2px solid map-get($grays, '700');
+            q-tr q-th {
+                text-transform: uppercase;
+                border: 1px solid map-get($grays, '700');
+                color: $o-default-report-secondary-color;
+            }
+        }
+        q-tbody {
+            color: map-get($grays, '700');
+            q-tr {
+                q-td {
+                    // remove border-top from standard layout
+                    border-top: none;
+                    border-right: 1px solid map-get($grays, '700');
+                }
+                &.o_line_section q-td,
+                &.o_line_note q-td,
+                &.is-subtotal q-td {
+                    border-top: 1px solid map-get($grays, '700');
+                    border-bottom: 1px solid map-get($grays, '700');
+                }
+                &.o_line_section q-td {
+                    background-color: rgba($o-default-report-primary-color, 0.7);
+                    color: #fff;
+                }
+                &.is-subtotal,
+                q-td.o_price_total {
+                    background-color: rgba($o-default-report-secondary-color, 0.1);
+                }
+            }
+        }
+    }
+}
+
+
+.o_report_layout_bold {
+    q-table {
+        &.o_main_table {
+            margin-bottom: 0;
+        }
+
+        q-thead {
+            color: $o-default-report-secondary-color;
+            q-tr q-th {
+                border-top: 3px solid $o-default-report-secondary-color !important;
+                text-transform: uppercase;
+            }
+        }
+        q-tbody {
+            color: #000;
+            q-tr:first-child q-td {
+                border-top: none;
+            }
+            q-tr:last-child q-td {
+                border-bottom: 3px solid $o-default-report-secondary-color;
+            }
+            q-tr {
+                q-td {
+                    padding: 15px 5px;
+                }
+                q-td:last-child {
+                }
+            }
+        }
+    }
+}
+
+.o_report_layout_striped {
+    .table q-td, .table q-th {
+        border-top: none;
+    }
+    q-thead q-tr q-th {
+        color: $o-default-report-secondary-color
+    }
+    q-tbody {
+        color: map-get($grays, '700');
+        q-tr {
+            &:nth-child(odd) {
+                background-color: rgba(220, 205, 216, 0.2);
+            }
+            &.o_line_section {
+                color: $o-brand-odoo;
+                background-color: rgba(73, 80, 87, 0.2) !important;
+            }
+        }
+    }
+}
+svg {
+    pointer-events: none;
+}
+
+main:has(> .footer), t[t-name^='web.external_layout_']:has(> .footer) {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    & > .footer {
+        margin-top: auto;
+    }
+}

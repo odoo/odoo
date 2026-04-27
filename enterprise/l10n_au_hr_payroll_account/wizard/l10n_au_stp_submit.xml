@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_au_stp_submit_view_form" model="ir.ui.view">
+        <field name="name">l10n_au.stp.submit.view.form</field>
+        <field name="model">l10n_au.stp.submit</field>
+        <field name="arch" type="xml">
+            <form string="Submit STP Report">
+                <sheet>
+                    <div class="px-5">
+                        <field class="pb-2" name="terms_header" />
+                        <field name="terms" nolabel="1"/>
+                        <field name="l10n_au_stp_id" invisible="1"/>
+                    </div>
+                    <div class="text-center">
+                        <field name="stp_terms" class="text-end" nolabel="1" />
+                        <label for="stp_terms" class="o_form_label text-start" />
+                    </div>
+
+                </sheet>
+                <footer>
+                    <button name="action_submit" string="Sign &amp; Submit to ATO" type="object" class="btn-primary" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

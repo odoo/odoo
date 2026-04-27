@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="departure_freelance" model="hr.departure.reason">
+            <field name="sequence">5</field>
+            <field name="name">Became Freelance</field>
+            <field name="reason_code">350</field>
+        </record>
+
+        <record id="departure_mutual_agreement" model="hr.departure.reason">
+            <field name="sequence">5</field>
+            <field name="name">Mutual Agreement</field>
+            <field name="reason_code">351</field>
+        </record>
+
+        <function model="hr.departure.reason" name="write">
+            <value model="hr.departure.reason" eval="ref('hr.departure_retired')"/>
+            <value eval="{'name': 'Resigned: Retired'}"/>
+        </function>
+    </data>
+</odoo>

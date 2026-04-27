@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="hrContractSalary.SelectMenu" t-inherit="web.SelectMenu" t-mode="primary">
+        <xpath expr="//button" position="attributes">
+            <attribute name="class" remove="bg-light" add="bg-white" separator=" "/>
+        </xpath>
+        <xpath expr="//div" position="attributes">
+            <attribute name="class" add="mb8" separator=" "/>
+        </xpath>
+        <xpath expr="//t[@t-if='state.choices.length === 0']" position="replace"/>
+    </t>
+</templates>

@@ -1,0 +1,109 @@
+$o-barcode-completed-color: #befdcc;
+
+.o_barcode_client_action .o_barcode_lines .o_barcode_line {
+    flex: 0 0 auto;
+    border-width: 0 0 1px;
+
+    --list-group-bg: var(--bg, #{$o-view-background-color});
+    --list-group-color: #{color-contrast($o-view-background-color)};
+
+    &.o_barcode_line_package {
+        .o_barcode_line_details > * {
+            flex: 1 0 auto;
+        }
+
+        .o_barcode_line_details > .o_barcode_package_name {
+            flex: 0 1 auto;
+            overflow: hidden;
+
+            > span {
+                max-width: 100%;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+        }
+    }
+
+    &.o_selected {
+        --bg: #{mix($o-view-background-color, $o-action, 90%)};
+        --border: #{$o-component-active-border};
+        box-shadow: inset 0 0 0 3px var(--border);
+    }
+
+    &.o_faulty {
+        --bg: #{mix($o-view-background-color, $danger, 90%)};
+
+        &.o_selected {
+            --border: #{$danger};
+        }
+    }
+
+    &.o_line_completed {
+        --bg: #{mix($o-view-background-color, $success, 90%)};
+
+        &.o_selected {
+            --border: #{$success};
+        }
+    }
+
+    .o_barcode_scanner_qty {
+        .qty-done, .inventory_quantity {
+            &.o_flash {
+                animation-name: highlighting-flash-primary;
+                animation-duration: 0.5s;
+            }
+        }
+    }
+
+    @keyframes o-barcode-btn-click {
+        from {
+            background-color: $o-component-active-border;
+            color: color-contrast($o-component-active-border);
+        }
+    }
+
+    .o_line_button {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-transform: none;
+
+        &[disabled] {
+            background-color: gray;
+            border-color: gray;
+        }
+
+        &.o_edit {
+            font-size: $font-size-lg;
+        }
+
+        &.o_picture img {
+            max-width: 42px;
+            max-height: 42px;
+        }
+
+        &.btn-light {
+            --btn-border-color: #{$gray-400};
+            --btn-hover-bg: #{$o-white};
+            --btn-hover-border-color: #{$o-component-active-border};
+            --btn-active-bg:  #{$o-white};
+            --btn-active-border-color: #{$o-component-active-border};
+        }
+
+        &.btn-danger {
+            --btn-border-color: #{darken($danger, 50%)};
+            --btn-hover-border-color: #{darken($danger, 50%)};
+            --btn-active-border-color: #{darken($danger, 50%)};
+        }
+
+        &:active {
+            animation-duration: 1s;
+            animation-name: o-barcode-btn-click;
+        }
+    }
+
+    .o_next_expected {
+        color: #00A09D;
+        opacity: 1 !important;
+    }
+}

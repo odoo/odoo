@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <div t-name="spreadsheet_edition.CollaborativeStatus" class="user-select-none d-flex align-items-center h-100">
+        <div class="o_spreadsheet_sync_status">
+            <t t-if="isSynced">
+                <i class="fa fa-check"/> Saved
+            </t>
+            <t t-else="">
+                <i class="fa fa-spin fa-spinner"/> Saving
+            </t>
+        </div>
+        <div t-if="connectedUsers.length > 0"
+            class="o_spreadsheet_number_users ps-2"
+            t-att-class="connectedUsers.length > 1 ? 'text-info' : ''"
+            t-att-data-tooltip-template="connectedUsers.length > 1 and 'spreadsheet_edition.SpreadsheetUsersTooltip'"
+            t-att-data-tooltip-info="tooltipInfo"
+        >
+            <t t-if="connectedUsers.length === 1">
+                <i class="fa fa-user"/> 1
+            </t>
+            <t t-else="">
+                <i class="fa fa-users"/> <t t-esc="connectedUsers.length"/>
+            </t>
+        </div>
+    </div>
+
+    <t t-name="spreadsheet_edition.SpreadsheetUsersTooltip">
+        <div t-foreach="users" t-as="user" t-key="user_index">
+            <span class="o_spreadsheet_user d-inline-flex">
+                <img t-att-src="user.avatar" class="p-1 rounded" />
+                <span class="pt-1">
+                    <t t-esc="user.name" />
+                </span>
+            </span>
+        </div>
+    </t>
+
+</templates>

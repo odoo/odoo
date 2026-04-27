@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name="spreadsheet_edition.SpreadsheetName"
+        t-attf-style="max-width: {{state.inputSize}}px"
+        class="o_sp_name d-flex flex-grow-1">
+        <input type="text" title="Rename"
+            t-ref='speadsheetNameInput'
+            t-att-value="state.name"
+            t-on-focus="_onFocus"
+            t-att-placeholder="placeholder"
+            t-on-input="_onInput"
+            t-att-class="state.isUntitled ? 'o-sp-untitled' : ''"
+            class="o_input"
+            t-on-change="_onNameChanged"
+            t-att-disabled="props.isReadonly" />
+    </div>
+</templates>

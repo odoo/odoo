@@ -1,0 +1,206 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_bank_statement_import
+#
+# Translators:
+# Wil Odoo, 2024
+# Larisa_nexterp, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2024-09-25 09:43+0000\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "%d transactions had already been imported and were ignored."
+msgstr "%d tranzacții au fost deja importate și au fost ignorate."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "1 transaction had already been imported and was ignored."
+msgstr "1 tranzacție a fost deja importată și a fost ignorată."
+
+#. module: account_bank_statement_import
+#: model:ir.model.constraint,message:account_bank_statement_import.constraint_account_bank_statement_line_unique_import_id
+msgid "A bank account transactions can be imported only once!"
+msgstr "Tranzacțiile unui cont bancar pot fi importate o singură dată!"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Linie extras bancar"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_setup_bank_manual_config
+msgid "Bank setup manual config"
+msgstr "Configurare manuală bancă"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"Cannot find in which journal import this statement. Please manually select a "
+"journal."
+msgstr ""
+"Nu se poate găsi jurnalul în care să se importe acest extras. Vă rugăm să "
+"selectați manual un jurnal."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "Click \"New\" or upload a %s."
+msgstr "Apăsați „Nou” sau încărcați un %s."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"Could not make sense of the given file.\n"
+"Did you install the module to support this type of file?"
+msgstr ""
+"Nu s-a putut interpreta fișierul furnizat.\n"
+"Ați instalat modulul pentru a suporta acest tip de fișier?"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "Go to Apps"
+msgstr "Mergi la Aplicații"
+
+#. module: account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
+msgid "Import File"
+msgstr "Importă fișier"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__unique_import_id
+msgid "Import ID"
+msgstr "ID Import"
+
+#. module: account_bank_statement_import
+#. odoo-javascript
+#: code:addons/account_bank_statement_import/static/src/account_bank_statement_import_model.js:0
+msgid "Import Template for Bank Statements"
+msgstr "Șablon de import pentru extrase bancare"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_journal
+msgid "Journal"
+msgstr "Jurnal"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "Manual (or import %(import_formats)s)"
+msgstr "Manual (sau import %(import_formats)s)"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "No attachment was provided"
+msgstr "Nu a fost furnizat niciun atașament"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "No currency found matching '%s'."
+msgstr "Nu s-a găsit nicio monedă care să corespundă cu '%s'."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "No transactions matching your filters were found."
+msgstr "Nu au fost găsite tranzacții care să corespundă filtrelor dvs."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "Nothing to do here!"
+msgstr "Nimic de făcut aici!"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"The account of this statement (%(account)s) is not the same as the journal (%"
+"(journal)s)."
+msgstr ""
+"Contul acestui extras (%(account)s) nu este același cu cel al jurnalului (%"
+"(journal)s)."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"The currency of the bank statement (%(code)s) is not the same as the "
+"currency of the journal (%(journal)s)."
+msgstr ""
+"Moneda extrasului bancar (%(code)s) nu este aceeași cu moneda jurnalului (%"
+"(journal)s)."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "The following files could not be imported:\n"
+msgstr "Următoarele fișiere nu au putut fi importate:\n"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"This file doesn't contain any statement for account %s.\n"
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
+msgstr ""
+"Acest fișier nu conține niciun extras pentru contul %s.\n"
+"Dacă conține tranzacții pentru mai multe conturi, trebuie importat pentru "
+"fiecare dintre ele."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"This file doesn't contain any transaction for account %s.\n"
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
+msgstr ""
+"Acest fișier nu conține nicio tranzacție pentru contul %s.\n"
+"Dacă conține tranzacții pentru mai multe conturi, trebuie importat pentru "
+"fiecare dintre ele."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "View successfully imported statements"
+msgstr "Vezi extrasele importate cu succes"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "You already have imported that file."
+msgstr "Ați importat deja acel fișier."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "You have to set a Default Account for the journal: %s"
+msgstr "Trebuie să setați un cont implicit pentru jurnal: %s"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "You uploaded an invalid or empty file."
+msgstr "Ați încărcat un fișier invalid sau gol."

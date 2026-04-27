@@ -1,0 +1,72 @@
+<odoo>
+    <record id="l10n_ch_hr_contract_wage_tree_view" model="ir.ui.view">
+        <field name="name">l10n.ch.hr.contract.wage.list</field>
+        <field name="model">l10n.ch.hr.contract.wage</field>
+        <field name="arch" type="xml">
+            <list string="Monthly Wage Types" create="1" edit="1">
+                <field name="employee_id"/>
+                <field name="input_type_id"/>
+                <field name="description"/>
+                <field name="amount"/>
+                <field name="uom"/>
+                <field name="type"/>
+                <field name="date_start" optional="hide"/>
+                <field name="contract_id" optional="hide"/>
+                <field name="contract_state" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_ch_hr_contract_wage_pivot_view" model="ir.ui.view">
+        <field name="name">l10n.ch.hr.contract.wage.pivot</field>
+        <field name="model">l10n.ch.hr.contract.wage</field>
+        <field name="arch" type="xml">
+            <pivot string="Monthly Wages Analysis">
+                <field name="employee_id" type="row"/>
+                <field name="input_type_id" type="col"/>
+                <field name="amount" type="measure"/>
+                <field name="type" type="row"/>
+                <field name="date_start" type="col" interval="month"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="l10n_ch_hr_contract_wage_search_view" model="ir.ui.view">
+        <field name="name">l10n.ch.hr.contract.wage.search</field>
+        <field name="model">l10n.ch.hr.contract.wage</field>
+        <field name="arch" type="xml">
+            <search string="Search Monthly Wages">
+                <field name="employee_id"/>
+                <field name="input_type_id"/>
+                <field name="description"/>
+                <field name="contract_id"/>
+                <field name="type"/>
+                <field name="uom"/>
+                <field name="date_start"/>
+                <filter string="One-Time Payments" name="one_time" domain="[('type', '=', 'one_time')]"/>
+                <filter string="Recurrent Payments" name="recurrent" domain="[('type', '=', 'recurrent')]"/>
+                <group expand="1" string="Group By">
+                    <filter name="employee" string="Employee" context="{'group_by': 'employee_id'}"/>
+                    <filter name="input_type" string="Wage Type" context="{'group_by': 'input_type_id'}"/>
+                    <filter name="type" string="Payment Type" context="{'group_by': 'type'}"/>
+                    <filter name="date_start" string="Pay Period" context="{'group_by': 'date_start:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="l10n_ch_hr_contract_wage_action" model="ir.actions.act_window">
+        <field name="name">Monthly Recurring Wages</field>
+        <field name="res_model">l10n.ch.hr.contract.wage</field>
+        <field name="view_mode">list,pivot</field>
+        <field name="search_view_id" ref="l10n_ch_hr_contract_wage_search_view"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+    (0, 0, {'view_mode': 'list', 'view_id': ref('l10n_ch_hr_payroll_elm_transmission_5_3.l10n_ch_hr_contract_wage_tree_view')})]"/>
+    </record>
+
+    <menuitem id="l10n_ch_hr_global_contract_wage_menu"
+              name="Monthly Wage Types"
+              parent="l10n_ch_hr_payroll_elm_transmission.l10n_ch_hr_payroll_elm_payroll_reporting"
+              action="l10n_ch_hr_contract_wage_action"
+              sequence="5"/>
+</odoo>

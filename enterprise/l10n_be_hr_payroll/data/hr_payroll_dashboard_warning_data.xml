@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="hr_payroll_dashboard_warning_invalid_niss" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees With Invalid NISS Numbers</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="evaluation_code">
+invalid_niss_employee_ids = self.env['hr.employee']._get_invalid_niss_employee_ids()
+if invalid_niss_employee_ids:
+    warning_count = len(invalid_niss_employee_ids)
+    warning_records = self.env['hr.employee'].browse(invalid_niss_employee_ids)
+            </field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_invalid_gender" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees With Invalid Configured Gender</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="evaluation_code">
+belgian_companies = self.env.companies.filtered(lambda c: c.country_id.code == 'BE')
+invalid_gender_employees = self.env['hr.employee'].search([
+    ('gender', 'not in', ['male', 'female']),
+    ('company_id', 'in', belgian_companies.ids)
+])
+if invalid_gender_employees:
+    warning_count = len(invalid_gender_employees)
+    warning_records = invalid_gender_employees
+            </field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_invalid_lang" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees With Invalid Configured Language</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="evaluation_code">
+belgian_companies = self.env.companies.filtered(lambda c: c.country_id.code == 'BE')
+active_languages = self._is_active_belgian_languages()
+if active_languages:
+    invalid_language_employees = self.env['hr.employee'].search([
+        ('company_id', 'in', belgian_companies.ids)
+    ]).filtered(lambda e: e.lang not in ["fr_BE", "fr_FR", "nl_BE", "nl_NL", "de_BE", "de_DE"])
+else:
+    invalid_language_employees = self.env['hr.employee']
+if invalid_language_employees:
+    warning_count = len(invalid_language_employees)
+    warning_records = invalid_language_employees
+            </field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_invalid_work_address" model="hr.payroll.dashboard.warning">
+            <field name="name">Work addresses without ONSS identification code</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="evaluation_code">
+belgian_companies = self.env.companies.filtered(lambda c: c.country_id.code == 'BE')
+address_employees = self.env['hr.employee'].search([
+    ('company_id', 'in', belgian_companies.ids),
+    ('employee_type', 'in', ['employee', 'student']),
+    ('contract_id.state', 'in', ['open', 'close']),
+])
+work_addresses = address_employees.mapped('address_id')
+location_units = self.env['l10n_be.dmfa.location.unit'].search([('partner_id', 'in', work_addresses.ids)])
+invalid_addresses = work_addresses - location_units.mapped('partner_id')
+if invalid_addresses:
+    warning_count = len(invalid_addresses)
+    warning_records = invalid_addresses
+            </field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_sick_more_than_30_days" model="hr.payroll.dashboard.warning">
+            <field name="name">Employee on Mutual Health (> 30 days Illness)</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="evaluation_code">
+belgian_companies = self.env.companies.filtered(lambda c: c.country_id.code == 'BE')
+sick_work_entry_type = self.env.ref('hr_work_entry_contract.work_entry_type_sick_leave')
+partial_sick_work_entry_type = self.env.ref('l10n_be_hr_payroll.work_entry_type_part_sick')
+long_sick_work_entry_type = self.env.ref('l10n_be_hr_payroll.work_entry_type_long_sick')
+sick_work_entry_types = sick_work_entry_type + partial_sick_work_entry_type + long_sick_work_entry_type
+
+sick_more_than_30days_leave = self.env['hr.leave'].search([
+    ('employee_company_id', 'in', belgian_companies.ids),
+    ('date_from', '&lt;=', date.today() + relativedelta(days=-31)),
+    ('date_to', '&gt;=', date.today()),
+    ('holiday_status_id.work_entry_type_id', 'in', sick_work_entry_types.ids),
+    ('state', '=', 'validate'),
+])
+
+employee_duration = defaultdict(int)
+for leave in sick_more_than_30days_leave:
+    duration = (leave.date_to - leave.date_from).days
+    employee_duration[leave.employee_id] += duration
+
+warning_count = 0
+warning_records = self.env['hr.employee']
+for employee, total_duration in employee_duration.items():
+    if employee.active and total_duration > 30:
+        warning_count += 1
+        warning_records |= employee
+            </field>
+        </record>
+    </data>
+</odoo>

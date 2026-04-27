@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="fec_import_template" t-inherit="account_base_import.accountImportTemplate" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('fec-import')]" position="inside">
+            <button class="btn btn-primary mb-3" t-on-click="() => this._importAccountGuideAction('l10n_fr_fec_import.import_action')">Import FEC</button>
+        </xpath>
+    </t>
+</templates>

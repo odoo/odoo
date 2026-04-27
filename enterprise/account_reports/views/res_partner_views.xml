@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_account_reports_customer_statements" model="ir.actions.server">
+        <field name="name">Open Customer Statements</field>
+        <field name="groups_id" eval="[Command.link(ref('account.group_account_invoice'))]"/>
+        <field name="model_id" ref="model_res_partner"/>
+        <field name="binding_model_id" ref="model_res_partner"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.open_customer_statement()
+        </field>
+    </record>
+
+    <record id="duplicated_vat_partner_tree_view" model="ir.ui.view">
+        <field name="name">duplicated.vat.res.partner.list</field>
+        <field name="model">res.partner</field>
+        <field eval="18" name="priority"/>
+        <field name="arch" type="xml">
+            <list string="Contacts" sample="1" multi_edit="1" expand="1" >
+                <field name="complete_name" string="Name"/>
+                <field name="is_company"/>
+                <field name="parent_id"/>
+                <button name="set_commercial_partner_main"
+                    type="object"
+                    string="Set as main"
+                    class="btn-primary"
+                    invisible="not context.get('duplicated_partners_vat') or parent_id"
+                />
+                <field name="email"/>
+                <field name="phone" class="o_force_ltr" optional="show"/>
+                <field name="mobile" optional="hide"/>
+                <field name="user_id" optional="show" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
+                <field name="user_ids"/>
+                <field name="total_invoiced"/>
+                <field name="street" optional="hide"/>
+                <field name="city" optional="show"/>
+                <field name="state_id" optional="hide" readonly="1"/>
+                <field name="country_id" optional="show" readonly="1"/>
+                <field name="category_id" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+            </list>
+        </field>
+    </record>
+</odoo>

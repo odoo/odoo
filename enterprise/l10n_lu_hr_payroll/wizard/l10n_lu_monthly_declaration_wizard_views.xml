@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_lu_monthly_declaration_view_form" model="ir.ui.view">
+        <field name="model">l10n.lu.monthly.declaration.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Monthly Declaration">
+                <sheet>
+                    <group>
+                        <group>
+                            <label for="month" string="Period"/>
+                            <div class="o_row">
+                                <field name="month"/>
+                                <field name="year"/>
+                            </div>
+                        </group>
+                    </group>
+                    <p class="alert alert-warning" role="alert" invisible="batch_ids">
+                        There are no payslip batches for the selected period.
+                    </p>
+                    <group invisible="not situational_unemployment_ids">
+                        <notebook>
+                            <page string="Situational Unemployment" name="page_situational_unemployment">
+                                <field name="situational_unemployment_ids" nolabel="1" force_save="1">
+                                    <list editable="bottom" create="0" delete="0">
+                                        <field name="currency_id" column_invisible="True"/>
+                                        <field name="payslip_id" column_invisible="True"/>
+                                        <field name="employee_id" widget="many2one_avatar_employee"/>
+                                        <field name="hours" widget="float_time" force_save="1"/>
+                                        <field name="amount" force_save="1"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </group>
+                    <field name="decsal_name" invisible="1"/>
+                    <p invisible="not decsal_file">
+                        Your DECSAL file has been generated: <field name="decsal_file" readonly="1" filename="decsal_name"/>
+                    </p>
+                </sheet>
+                <footer>
+                    <button string="Generate Declaration" name="action_generate_declaration" type="object" class="btn btn-primary"
+                        invisible="not can_generate or decsal_file"/>
+                    <button special="cancel" string="Close" type="object" class="btn btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_lu_hr_payroll_monthly_declaration_action" model="ir.actions.act_window">
+        <field name="name">Monthly Salary Declaration (DECSAL)</field>
+        <field name="res_model">l10n.lu.monthly.declaration.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_lu_hr_payroll_monthly_declaration"
+        parent="menu_l10n_lu_hr_payroll_report"
+        action="l10n_lu_hr_payroll_monthly_declaration_action"
+        sequence="10"
+        groups="hr_payroll.group_hr_payroll_user"/>
+</odoo>

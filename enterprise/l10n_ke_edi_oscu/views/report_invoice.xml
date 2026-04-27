@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+        <xpath expr="//div/t/span[@t-field='o.name']" position="replace">
+            <span t-if="not o.l10n_ke_oscu_invoice_number and o.name != '/'" t-field="o.name">INV/2023/0001</span>
+            <span t-elif="o.l10n_ke_oscu_invoice_number" >
+                <t t-out="(o.l10n_ke_control_unit or '') + '/' + str(o.l10n_ke_oscu_invoice_number)"/>
+            </span>
+        </xpath>
+
+        <xpath expr="//div[@id='right-elements']/parent::div" position="attributes">
+            <attribute name="style">display: table; width: 100%; direction: rtl;</attribute>
+        </xpath>
+
+        <xpath expr="//div[@id='right-elements']" position="attributes">
+            <attribute name="t-attf-style">display: table-cell; width: auto; white-space: nowrap; vertical-align: top; direction: ltr; #{'margin-top: 3rem;' if report_type == 'pdf' else ''}</attribute>
+        </xpath>
+
+        <xpath expr="//div[@id='payment_term']" position="attributes">
+            <attribute name="style">display: table-cell; width: 100%; vertical-align: top; direction: ltr;</attribute>
+        </xpath>
+
+        <xpath expr="//div[@id='qrcode']" position="before">
+            <div t-if="o.l10n_ke_oscu_invoice_number" id="l10n_ke_control_unit_information" style="page-break-inside:avoid;">
+                <b>SCU Information</b>
+                <div class="d-block w-100 mt-2 mb-4">
+                    <div class="d-inline-block align-top text-nowrap mb-2">
+                        <p class="small mt-1 mb-1">
+                            <b>Date: </b><span t-out="o.l10n_ke_oscu_datetime and o.l10n_ke_oscu_datetime.strftime('%Y-%m-%d') or ''"/>
+                            <b>Time: </b><span t-out="o.l10n_ke_oscu_datetime and o.l10n_ke_oscu_datetime.strftime('%H:%M:%S') or ''"/>
+                        </p>
+                        <p class="small mt-1 mb-1">
+                            <b>SCU ID: </b> <span t-out="o.l10n_ke_control_unit or ''"/>
+                        </p>
+                        <t t-if="o.reversed_entry_id.l10n_ke_oscu_invoice_number">
+                            <p class="small mt-1 mb-1">
+                                <b>Original CU Invoice Number: </b> <span> <t t-out="(o.l10n_ke_control_unit or '') + '/' + str(o.reversed_entry_id.l10n_ke_oscu_invoice_number)"/> </span>
+                            </p>
+                        </t>
+                        <p class="small mt-1 mb-1">
+                            <b>Receipt Number: </b> <span t-out="o.l10n_ke_oscu_receipt_number or ''"/>
+                        </p>
+                        <p t-if="o.l10n_ke_payment_method_id" class="small mt-1 mb-1">
+                            <b>Payment Method: </b> <span t-field="o.l10n_ke_payment_method_id.name"/>
+                        </p>
+                        <p class="small mt-1 mb-1">
+                            <b>Item Count: </b> <span t-out="move_json['totItemCnt'] or ''"/>
+                        </p>
+                        <p class="small mt-1 mb-1">
+                            <b>Internal Data: </b><br></br>
+                            <span t-out="o._l10n_ke_hyphenate_invoice_field(o.l10n_ke_oscu_internal_data or '')"/>
+                        </p>
+                        <p class="small mt-1 mb-1">
+                            <b>Receipt Signature: </b>
+                            <span t-out="o._l10n_ke_hyphenate_invoice_field(o.l10n_ke_oscu_signature or '')"/>
+                        </p>
+                    </div>
+                    <div class="d-inline-block align-bottom m-2">
+                        <p t-if="o.l10n_ke_oscu_signature" class="small mt-1 mb-e">
+                            <img style="display:block;"  t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('QR', quote_plus(o._l10n_ke_oscu_get_receipt_url()), 130, 130)" alt="QR Code"/>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@id='total']" position="replace">
+            <div id="total" class="row">
+                <div class="ms-auto">
+                    <!--Tax totals-->
+                    <div class="col-auto mb-2">
+                        <table class="ms-auto table-sm table-borderless" name="l10n_ke_tax_table">
+                            <thead>
+                                <tr style="border-bottom: 1px solid black">
+                                    <th name="th_tax_rate" class="text-start"><span>Tax<br></br>Rate</span></th>
+                                    <th name="th_taxable_amount" class="text-end"><span>Taxable<br></br>Amount<br></br>(KSh)</span></th>
+                                    <th name="th_tax_amount" class="text-end"><span>Tax<br></br>Amount<br></br>(KSh)</span></th>
+                                    <th name="th_total_amount" class="text-end"><span>Total<br></br>Amount<br></br>(KSh)</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="tax_types" t-value="{'B': '16%', 'E': '8%', 'C': '0%', 'D': 'Non-VAT', 'A': 'Exempt'}"/>
+                                <t t-foreach="tax_types" t-as="tax_rate">
+                                    <tr>
+                                        <t t-set="taxable_amount" t-value="move_json['taxblAmt%s' % (tax_rate)]"/>
+                                        <t t-set="tax_amount" t-value="move_json['taxAmt%s' % (tax_rate)]"/>
+                                        <td name="td_tax_rate" class="text-nowrap col-2">
+                                            <span t-out="tax_types[tax_rate]"/>
+                                        </td>
+                                        <td name="td_taxable_amount" class="col-2 text-end">
+                                            <span t-out="correct_sign(taxable_amount)" t-options='{"widget": "float", "precision": 2}'/>
+                                        </td>
+                                        <td name="td_tax_amount" class="col-2 text-end">
+                                            <span t-out="correct_sign(tax_amount)" t-options='{"widget": "float", "precision": 2}'/>
+                                        </td>
+                                        <td name="td_total_amount" class="col-2 text-end">
+                                            <span t-out="correct_sign(taxable_amount + tax_amount)" t-options='{"widget": "float", "precision": 2}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr class="border-black">
+                                    <td name="td_total_tax_rate" class="text-start"><span>Total</span></td>
+                                    <td name="td_total_taxable_amount" class="text-end"><span t-out="correct_sign(move_json['totTaxblAmt'])" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    <td name="td_total_tax_amount" class="text-end"><span t-out="correct_sign(move_json['totTaxAmt'])" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    <td name="td_total_total_amount" class="text-end"><span t-out="correct_sign(move_json['totAmt'])" t-options='{"widget": "float", "precision": 2}'/></td>
+                                </tr>
+                            </tbody>
+
+                            <!--Payments-->
+                            <t t-if="print_with_payments">
+                                <t t-if="o.payment_state != 'invoicing_legacy'">
+                                    <t t-set="payments_vals" t-value="o.sudo().invoice_payments_widget and o.sudo().invoice_payments_widget['content'] or []"/>
+                                    <t t-foreach="payments_vals" t-as="payment_vals">
+                                        <tr t-if="payment_vals['is_exchange'] == 0">
+                                            <td>
+                                                <i class="oe_form_field text-end oe_payment_label">Paid on <t t-out="payment_vals['date']" t-options='{"widget": "date"}'>2021-09-19</t></i>
+                                            </td>
+                                            <td/>
+                                            <td/>
+                                            <td class="text-end">
+                                                <span t-out="correct_sign(payment_vals['amount'])" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>20.00</span>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="len(payments_vals) > 0">
+                                        <tr>
+                                            <td>Amount Due</td>
+                                            <td/>
+                                            <td/>
+                                            <td class="text-end border-black fw-bold">
+                                                <span t-out="correct_sign(o.amount_residual)">11.05</span>
+                                                <span t-field="o.currency_id.symbol"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                            </t>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+
+        <xpath expr="//th[@name='th_subtotal']" position="replace">
+            <th name="th_subtotal" class="text-end">
+                <span>Taxable Amount</span>
+            </th>
+            <th name="th_total" class="text-end">
+                <span>Total Amount</span>
+            </th>
+        </xpath>
+
+        <!-- Make quantity, taxable amount and total amount negative for credit notes -->
+        <xpath expr="//td[@name='td_quantity']/span[1]" position="attributes">
+            <attribute name="t-field"/>
+            <attribute name="t-out">correct_sign(line.quantity)</attribute>
+            <attribute name="t-options">{"widget": "float", "precision": 2}</attribute>
+        </xpath>
+        <xpath expr="//td[@name='td_subtotal']/span" position="attributes">
+            <attribute name="t-field"/>
+            <attribute name="t-out">correct_sign(line.price_subtotal)</attribute>
+            <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
+        </xpath>
+        <xpath expr="//td[@name='td_subtotal']" position="after">
+            <td name="td_total" class="text-end o_price_total">
+                <span class="text-nowrap" t-out="correct_sign(line.price_total)" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>27.00</span>
+            </td>
+        </xpath>
+    </template>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_ke_edi_oscu.report_invoice_document'"
+               t-call="l10n_ke_edi_oscu.report_invoice_document"
+               t-lang="lang">
+                <t t-set="move_json" t-value="o._l10n_ke_oscu_json_from_move()"/>
+                <t t-set="correct_sign" t-value="lambda x: ((-1 if 'refund' in o.move_type else 1) * x if x else 0)"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

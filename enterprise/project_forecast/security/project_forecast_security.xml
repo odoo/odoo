@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="planning_slot_template_rule_multi_company" model="ir.rule">
+            <field name="name">Planning Shift Template multi-company</field>
+            <field name="model_id" ref="planning.model_planning_slot_template"/>
+            <field name="domain_force">[('company_id', 'in', [*company_ids, False])]</field>
+        </record>
+
+        <record id="planning_slot_template_rule_admin" model="ir.rule">
+            <field name="name">manager can see all project shifts</field>
+            <field name="model_id" ref="planning.model_planning_slot_template"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('project.group_project_manager'))]"/>
+        </record>
+
+        <record id="planning_slot_template_rule_user" model="ir.rule">
+            <field name="name">follow required for follower only projects</field>
+            <field name="model_id" ref="planning.model_planning_slot_template"/>
+            <field name="domain_force">[
+            '|',
+                ('project_id', '=', False),
+                '|', '|',
+                    ('project_id.privacy_visibility', '!=', 'followers'),
+                    ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                    ('project_id.user_id', '=', user.id),
+            ]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+    </data>
+</odoo>

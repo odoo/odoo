@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="account.generic_tax_report" model="account.report">
+        <field name="custom_handler_model_id" ref="model_account_generic_tax_report_handler"/>
+    </record>
+
+    <record id="account.generic_tax_report_account_tax" model="account.report">
+        <field name="custom_handler_model_id" ref="model_account_generic_tax_report_handler_account_tax"/>
+    </record>
+
+    <record id="account.generic_tax_report_tax_account" model="account.report">
+        <field name="custom_handler_model_id" ref="model_account_generic_tax_report_handler_tax_account"/>
+    </record>
+</odoo>

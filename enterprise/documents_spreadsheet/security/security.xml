@@ -1,0 +1,76 @@
+<odoo>
+    <data noupdate="1">
+
+        <!-- duplicated for spreadsheetCellThreads in rule documents_spreadsheet.spreadsheet_manager_template_threads
+        Please update aforemetioned the rule accordingly -->
+        <record id="spreadsheet_manager_templates" model="ir.rule">
+            <field name="name">Spreadsheet_template: manager</field>
+            <field name="model_id" ref="model_spreadsheet_template"/>
+            <field name="groups" eval="[(4, ref('documents.group_documents_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- duplicated for spreadsheetCellThreads in rule documents_spreadsheet.spreadsheet_own_template_threads
+        Please update aforemetioned the rule accordingly -->
+        <record id="spreadsheet_own_templates" model="ir.rule">
+            <field name="name">Spreadsheet_template: manage own</field>
+            <field name="model_id" ref="model_spreadsheet_template"/>
+            <field name="groups" eval="[(4, ref('documents.group_documents_user'))]"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- spreadsheet.cell.thread rules -->
+
+        <record id="spreadsheet_cell_thread_write_rule" model="ir.rule">
+            <field name="name">Documents Spreadsheet: thread folder write groups</field>
+            <field name="model_id" ref="model_spreadsheet_cell_thread"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="domain_force">
+                [('document_id.user_permission', '=', 'edit')]
+            </field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="documents_document_thread_global_rule" model="ir.rule">
+            <field name="name">Documents.document thread: global</field>
+            <field name="model_id" ref="model_spreadsheet_cell_thread"/>
+            <field name="domain_force">[
+                '|',
+                    ('document_id', '=', False),
+                    ('document_id.user_permission', '!=', 'none'),
+            ]</field>
+        </record>
+
+        <record id="spreadsheet_manager_document_threads" model="ir.rule">
+            <field name="name">Spreadsheet document threads: manager</field>
+            <field name="model_id" ref="model_spreadsheet_cell_thread"/>
+            <field name="groups" eval="[(4, ref('documents.group_documents_manager'))]"/>
+            <field name="domain_force">[('document_id', '!=', False)]</field>
+        </record>
+
+        <record id="spreadsheet_manager_template_threads" model="ir.rule">
+            <field name="name">Spreadsheet template threads: manager</field>
+            <field name="model_id" ref="model_spreadsheet_cell_thread"/>
+            <field name="groups" eval="[(4, ref('documents.group_documents_manager'))]"/>
+            <field name="domain_force">[('template_id', '!=', False)]</field>
+        </record>
+
+        <record id="spreadsheet_own_template_threads" model="ir.rule">
+            <field name="name">Spreadsheet template threads: manage own</field>
+            <field name="model_id" ref="model_spreadsheet_cell_thread"/>
+            <field name="groups" eval="[(4, ref('documents.group_documents_user'))]"/>
+            <field name="domain_force">[('template_id.create_uid', '=', user.id)]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+    </data>
+</odoo>

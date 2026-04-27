@@ -1,0 +1,34 @@
+<odoo>
+    <data>
+        <record id="invoice_form_inherit_l10n_ke_oscu_stock" model="ir.ui.view">
+            <field name="name">invoice.form.inherit.l10n.ke.edi.oscu.stock</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <field name="l10n_ke_oscu_invoice_number" invisible="1"/>
+                    <field name="l10n_ke_oscu_attachment_file" invisible="1"/>
+                    <field name="l10n_ke_oscu_show_create_purchase_order_button" invisible="1"/>
+                    <field name="l10n_ke_oscu_show_create_sale_order_button" invisible="1"/>
+                    <button
+                        name="action_l10n_ke_create_purchase_order" type="object" string="Create Purchase Order"
+                        invisible="not l10n_ke_oscu_show_create_purchase_order_button"/>
+                    <button
+                        name="action_l10n_ke_create_sale_order" type="object" string="Create Sale Order"
+                        invisible="not l10n_ke_oscu_show_create_sale_order_button"/>
+                </xpath>
+                <field name="purchase_line_id" position="replace">
+                    <field name="purchase_line_id"
+                           column_invisible="parent.move_type not in ('in_invoice', 'in_refund') or not parent.l10n_ke_oscu_attachment_file"
+                           domain="[('partner_id', '=', partner_id), ('product_id', '=?', product_id)]"
+                           options="{'no_open': True, 'no_create': True}"/>
+                    <field name="purchase_line_id"
+                           column_invisible="parent.move_type not in ('in_invoice', 'in_refund') or parent.l10n_ke_oscu_attachment_file"
+                           domain="[('partner_id', '=', partner_id), ('product_id', '=?', product_id)]"
+                           options="{'no_open': True, 'no_create': True}"
+                           optional="hide"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

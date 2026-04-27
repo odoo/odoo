@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_ke_edi_oscu_pos.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-receipt-taxes')]" position="replace">
+            <t t-if="props.data.l10n_ke_edi_oscu_pos_order_json">
+                <br/>
+                <div class="ms-auto">
+                    <table class="table table-sm table-borderless avoid-page-break-inside">
+                        <!--Tax totals-->
+                        <div class="col-auto col-5 mw-100 mb-2">
+                            <table class="table table-sm o_main_table table-borderless" name="l10n_ke_receipt_tax_table">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid black">
+                                        <th name="th_tax_rate" class="text-start"><span>Tax Rate</span></th>
+                                        <th name="th_taxable_amount" class="text-end"><span>Taxable Amount (KSh)</span></th>
+                                        <th name="th_tax_amount" class="text-end"><span>Tax Amount (KSh)</span></th>
+                                        <th name="th_total_amount" class="text-end"><span>Total Amount (KSh)</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="tax_types" t-value="{'B': '16%', 'E': '8%', 'C': '0%', 'D': 'Non-VAT', 'A': 'Exempt'}"/>
+                                    <t t-set="sign" t-value="props.data.l10n_ke_edi_oscu_pos_is_refund"/>
+                                    <t t-foreach="tax_types" t-as="tax_rate" t-key="tax_rate">
+                                        <tr>
+                                            <t t-set="taxable_amount" t-value="props.data.l10n_ke_edi_oscu_pos_order_json[`taxblAmt${tax_rate}`] * sign"/>
+                                            <t t-set="tax_amount" t-value="props.data.l10n_ke_edi_oscu_pos_order_json[`taxAmt${tax_rate}`] * sign"/>
+                                            <td name="td_tax_rate" class="text-nowrap col-2">
+                                                <span t-out="tax_types[tax_rate]"/>
+                                            </td>
+                                            <td name="td_taxable_amount" class="col-2 text-end">
+                                                <span t-out="props.formatCurrency(taxable_amount)"/>
+                                            </td>
+                                            <td name="td_tax_amount" class="col-2 text-end">
+                                                <span t-out="props.formatCurrency(tax_amount)"/>
+                                            </td>
+                                            <td name="td_total_amount" class="col-2 text-end">
+                                                <span t-out="props.formatCurrency(taxable_amount + tax_amount)"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr class="border-black">
+                                        <td name="td_total_tax_rate" class="text-start"><span>Total</span></td>
+                                        <td name="td_total_taxable_amount" class="text-end"><span t-out="props.formatCurrency(props.data.l10n_ke_edi_oscu_pos_order_json['totTaxblAmt'] * sign)"/></td>
+                                        <td name="td_total_tax_amount" class="text-end"><span t-out="props.formatCurrency(props.data.l10n_ke_edi_oscu_pos_order_json['totTaxAmt'] * sign)"/></td>
+                                        <td name="td_total_total_amount" class="text-end"><span t-out="props.formatCurrency(props.data.l10n_ke_edi_oscu_pos_order_json['totAmt'] * sign)"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </table>
+                </div>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//div[hasclass('before-footer')]" position="after">
+            <t t-if="props.data.l10n_ke_edi_oscu_pos_qrsrc">
+                <br/>
+                <div class="pos-receipt-amount">
+                    SCU INFORMATION
+                </div>
+                <div class="pos-receipt-order-data mb-2">Date:
+                    <t t-esc="props.data.l10n_ke_edi_oscu_pos_date"/>
+                </div>
+                <div class="pos-receipt-order-data mb-2">Serial Number:
+                    <t t-esc="props.data.l10n_ke_edi_oscu_pos_serial_number"/>
+                </div>
+                <div class="pos-receipt-order-data mb-2">Receipt Number:
+                    <t t-esc="props.data.l10n_ke_edi_oscu_pos_receipt_number"/>
+                </div>
+                <div class="pos-receipt-order-data mb-2">Internal Data:
+                    <t t-esc="props.data.l10n_ke_edi_oscu_pos_internal_data"/>
+                </div>
+                <div class="pos-receipt-order-data mb-2">Signature:
+                    <t t-esc="props.data.l10n_ke_edi_oscu_pos_signature"/>
+                </div>
+                <div class="pos-receipt-order-data mb-2">eTIMS QR Code</div>
+                <img t-att-src="props.data.l10n_ke_edi_oscu_pos_qrsrc" class="pos-receipt-qrcode"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

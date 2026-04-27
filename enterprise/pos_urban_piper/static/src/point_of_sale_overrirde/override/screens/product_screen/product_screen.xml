@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_urban_piper.ProductScreen" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('pay-button')]" position="before">
+            <t t-if="ui.isSmall and currentOrder?.delivery_identifier">
+                <button class="btn-switchpane btn w-50 rounded-0 fw-bolder btn-primary" t-on-click="()=>this.pos.goToBack()">
+                    <span class="fs-1 d-block">Back</span>
+                </button>
+            </t>
+        </xpath>
+        <xpath expr="//button[hasclass('pay-button')]" position="attributes">
+            <attribute name="t-if">!currentOrder?.delivery_identifier</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('subpads')]/ActionpadWidget" position="attributes">
+            <attribute name="t-if">!currentOrder?.delivery_identifier</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('subpads')]/ActionpadWidget" position="before">
+            <t t-if="currentOrder?.delivery_identifier">
+                <button
+                t-on-click="() => this.pos.goToBack()"
+                class="button pay-order-button btn btn-lg w-100 highlight btn-primary"
+                >
+                    Back
+                </button>
+            </t>
+        </xpath>
+    </t>
+</templates>

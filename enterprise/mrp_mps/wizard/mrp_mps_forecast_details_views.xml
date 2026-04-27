@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_mps_forecast_details_form_view" model="ir.ui.view">
+        <field name="name">mrp.mps.forecast.details.form</field>
+        <field name="model">mrp.mps.forecast.details</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="move_ids" invisible="1"/>
+                <field name="purchase_order_line_ids" invisible="1"/>
+                <field name="rfq_qty" invisible="1"/>
+                <field name="moves_qty" invisible="1"/>
+                <field name="manufacture_qty" invisible="1"/>
+                <div class="row">
+                    <div class="d-grid col-md-4">
+                        <button type="object" name="action_open_rfq_details" class="btn btn-primary" invisible="not rfq_qty">
+                            <field name="rfq_string"/>
+                        </button>
+                        <button type="object" name="action_open_rfq_details" class="btn btn-secondary"
+                            string="Requests for quotation" invisible="rfq_qty"/>
+                    </div>
+                    <div class="d-grid col-md-4">
+                        <button type="object" name="action_open_incoming_moves_details" class="btn btn-primary" invisible="not moves_qty">
+                            <field name="moves_string"/>
+                        </button>
+                        <button type="object" name="action_open_incoming_moves_details" class="btn btn-secondary"
+                            string="Receipts" invisible="moves_qty"/>
+                    </div>
+                    <div class="d-grid col-md-4">
+                        <button type="object" name="action_open_mo_details" class="btn btn-primary" invisible="not manufacture_qty">
+                            <field name="manufacture_string"/>
+                        </button>
+                        <button type="object" name="action_open_mo_details" class="btn btn-secondary"
+                            string="Manufacturing Orders" invisible="manufacture_qty"/>
+                    </div>
+                </div>
+                <footer>
+                    <button string="Close" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

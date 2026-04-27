@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="product_pricelist_view" model="ir.ui.view">
+        <field name="name">product.pricelist.form.inherit.sale_renting</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view"/>
+        <field name="arch" type="xml">
+            <page name="pricelist_rules" position="after">
+                <page name="product_pricing_ids" string="Rental rules">
+                    <field name="product_pricing_ids" nolabel="1" colspan="2" context="{'default_base': 'list_price'}">
+                        <list string="Rental Pricelist Rules" editable="bottom">
+                            <field name="product_template_id" string="Products"
+                                   options="{'no_create': 1}" required="1"/>
+                            <field name="product_variant_ids" widget="many2many_tags" string="Variants"
+                                   groups="product.group_product_variant"
+                                   domain="[('product_tmpl_id', '=', product_template_id)]"
+                                   options="{'no_create': 1}"/>
+                            <field name="recurrence_id" string="Period"/>
+                            <field name="currency_id" column_invisible="True"/>
+                            <field name="price" widget="monetary"/>
+                            <field name="company_id" optional="hide"/>
+                        </list>
+                    </field>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>

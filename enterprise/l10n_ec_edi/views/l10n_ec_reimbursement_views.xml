@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_l10n_ec_reimbursement_client_form" model="ir.ui.view">
+        <field name="name">view.l10n_ec.reimbursement.form</field>
+        <field name="model">l10n_ec.reimbursement</field>
+        <field name="arch" type="xml">
+            <form string="Reimbursement Lines">
+                <sheet>
+                    <div class="alert alert-warning text-center" role="alert" invisible="not partner_country_code or not (partner_country_code != 'EC' and tax_amount != 0.00)">
+                      <i class="fa fa-info-circle" />
+                      Tip: When registering reimbursements from foreign partners it is common to include the
+                      foreign tax into the tax base (adding both amounts into one) and selecting as tax the VAT 0%
+                    </div>
+                    <div class="alert alert-warning text-center" role="alert" invisible="not (partner_id or partner_vat_type_id) or partner_vat_type_id">
+                      <i class="fa fa-info-circle" />
+                      The selected partner has a different type of identification than RUC and VAT.
+                    </div>
+                    <group string="Document info">
+                        <group>
+                            <field name="authorization_number" placeholder="If no value is entered, 999999999 will be assigned." widget="text"/>
+                            <field name="partner_id"/>
+                            <field name="date"/>
+                        </group>
+                        <group>
+                            <field name="l10n_latam_document_type_id"/>
+                            <field name="document_number" placeholder="001-001-000012345"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="partner_country_id"/>
+                            <field name="partner_vat_type_id"/>
+                            <field name="partner_vat_number"/>
+                        </group>
+                    </group>
+                    <group string="Amounts">
+                        <group>
+                            <field name="tax_base"/>
+                            <field name="tax_id" string="Tax"/>
+                            <field name="tax_amount"/>
+                            <field name="total"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

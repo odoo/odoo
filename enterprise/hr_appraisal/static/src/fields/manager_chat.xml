@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_appraisal.ManagerChat">
+        <t t-foreach="this.props.record.data.manager_ids.records" t-as="manager" t-key="manager.id">
+            <a t-on-click.prevent="() => openChat(manager.resId)">
+                <img class="oe_kanban_avatar o_avatar rounded" t-attf-src="/web/image/hr.employee.public/#{manager.resId}/avatar_128" t-att-title="manager.data.display_name" t-att-alt="manager.data.display_name"/>
+            </a>
+        </t>
+    </t>
+</templates>

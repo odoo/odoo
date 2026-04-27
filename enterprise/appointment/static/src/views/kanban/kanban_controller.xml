@@ -1,0 +1,7 @@
+<templates>
+    <t t-name="AppointmentTypeKanbanView.buttons" t-inherit="web.KanbanView.Buttons" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_cp_buttons')]" position="inside">
+            <button t-on-click="onClickShareAppointmentLink" class="btn btn-secondary">Share</button>
+        </xpath>
+    </t>
+</templates>

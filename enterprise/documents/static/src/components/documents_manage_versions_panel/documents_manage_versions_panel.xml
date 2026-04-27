@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.ManageVersions">
+        <Dialog size="'md'" title="panelTitle">
+            <t t-set-slot="footer">
+                <button class="btn btn-secondary" t-on-click="() => this.props.close()">Close</button>
+            </t>
+            <section t-if="this.state.userPermission === 'edit'">
+                <p>
+                    Versions are displayed in the order they were uploaded to Documents.
+                    If you delete the most recent version, the previous one is automatically restored as the current one.
+                </p>
+                <input type="file" t-ref="uploadFileInput" class="o_hidden" t-on-change.stop="onReplace"/>
+                <button type="button" class="btn btn-secondary" t-on-click="onUploadNewVersion">Upload New Version</button>
+            </section>
+            <section>
+                <div t-foreach="state.versions" t-as="version" t-key="version.id" class="d-flex flex-row flex-wrap justify-content-between w-100">
+                    <hr class="w-100"/>
+                    <div>
+                        <div class="d-flex flex-row">
+                            <i class="o_documents_mimetype_icon o_image me-2"
+                                t-att-data-mimetype="version.mimetype"
+                                t-att-title="mimetype"/>
+                            <div class="fs-5">
+                                <span t-if="version_index === 0" class="me-1">Current Version</span>
+                                <span t-out="version.name"/>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-row mb-1">
+                            <b t-out="formatDate(version.create_date)" class="me-1"/>
+                            <span t-out="version.create_uid.name"/>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-secondary mx-1"
+                            t-on-click="() => this.onDownload(version.id)"><i class="fa fa-download me-1"/>Download</button>
+                        <button t-if="this.state.userPermission === 'edit' and (version_index &gt; 0 || state.versions.length &gt; 1)"
+                            type="button" class="btn btn-secondary mx-1"
+                            t-on-click="() => this.onDelete(version.id)"><i class="fa fa-trash me-1"/>Delete</button>
+                    </div>
+                </div>
+            </section>
+        </Dialog>
+    </t>
+</templates>

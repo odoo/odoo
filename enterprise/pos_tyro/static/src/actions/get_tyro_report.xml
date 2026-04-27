@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="pos_tyro.GetTyroReport">
+        <div class="d-flex flex-column align-items-center m-4">
+            <h2 t-if="state.result !== 'success'">
+                <t t-if="state.result" t-out="state.result.toUpperCase() + ': '"/>
+                <t t-out="state.message"/>
+            </h2>
+            <t t-if="!state.loading">
+                <select class="o_input w-25 mt-2" t-model="state.selectedType" t-on-change="requestReport">
+                    <option value="" disabled="true">Select a report type...</option>
+                    <option value="summary">Summary</option>
+                    <option value="detail">Detailed</option>
+                </select>
+                <input class="o_input my-4" type="date" placeholder="Select date" t-model="state.selectedDate" t-on-change="requestReport"/>
+            </t>
+            <div style="height: 10px">
+                <i t-if="state.loading" class="fa fa-spinner fa-spin"></i>
+            </div>
+            <div class="d-flex flex-column font-monospace" t-attf-style="white-space: pre; width: 27ch">
+                <t t-foreach="state.reportLines" t-as="lineAndClasses" t-key="lineAndClasses_index">
+                    <span t-if="lineAndClasses[0].length > 0" t-out="lineAndClasses[0]" t-att-class="lineAndClasses[1]"/>
+                    <br t-else=""/>
+                </t>
+            </div>
+        </div>
+        <footer class="modal-footer justify-content-around justify-content-md-start flex-wrap gap-1 w-100">
+            <button class="btn btn-primary" t-on-click="dialog.closeAll" t-att-disabled="state.loading">Close</button>
+        </footer>
+    </t>
+
+</templates>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="hr_employee_form_view" model="ir.ui.view">
+            <field name="name">hr.employee.form.view</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='pin']" position="before">
+                    <field name="insz_or_bis_number"/>
+                </xpath>
+            </field>
+        </record>²
+
+        <record id="hr_right_employee_insz_number" model="ir.ui.view">
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_employee_form_view" />
+            <field name="arch" type="xml">
+                <field name="insz_or_bis_number" position="attributes">
+                    <attribute name="readonly">False</attribute>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="quality_iot.IoTMeasureRealTimeValue" t-inherit="web.FloatField" t-inherit-mode="primary">
+        <xpath expr="//input" position="after">
+            <button t-if="hasDevice" class="btn btn-primary" t-on-click="onTakeMeasure">
+                Get Measurement
+            </button>
+        </xpath>
+    </t>
+
+</templates>

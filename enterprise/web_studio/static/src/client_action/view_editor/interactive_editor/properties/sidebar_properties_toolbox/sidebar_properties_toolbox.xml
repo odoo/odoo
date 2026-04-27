@@ -1,0 +1,13 @@
+<templates>
+    <t t-name="web_studio.ViewEditor.InteractiveEditorProperties.Toolbox">
+        <t t-set="hasMoreButton" t-value="env.debug and nodeType === 'field'" />
+
+        <div class="o_web_studio_sidebar_toolbox d-flex flex-wrap border-top pt-3 mt-4 gap-2 border-secondary">
+            <button t-if="hasMoreButton" t-on-click="openFormAction" class="btn btn-secondary btn-lg o_web_studio_parameters me-1">
+                <i class="fa fa-cog me-2" />
+                    More
+            </button>
+            <button t-on-click="onRemoveFromView" class="btn btn-danger btn-lg o_web_studio_remove">Remove from View</button>
+        </div>
+    </t>
+</templates>

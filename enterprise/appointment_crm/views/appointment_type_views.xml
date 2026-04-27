@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="appointment_type_view_form" model="ir.ui.view">
+        <field name="name">appointment.type.view.form.inherit.crm</field>
+        <field name="model">appointment.type</field>
+        <field name="inherit_id" ref="appointment.appointment_type_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_calendar_meetings']" position="before">
+                <button name="action_appointment_leads" invisible="lead_count == 0"
+                    groups="sales_team.group_sale_salesman"
+                    type="object" class="oe_stat_button" icon="fa-star">
+                    <field string="Leads" name="lead_count" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='reminder_ids']" position="before">
+                <field name="lead_create" groups="sales_team.group_sale_manager"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

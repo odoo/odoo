@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="choose_delivery_carrier_view_form" model="ir.ui.view">
+        <field name="name">choose.delivery.carrier.form</field>
+        <field name="model">choose.delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.choose_delivery_carrier_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='carrier_id']" position="after">
+                <div class="o_row" colspan="2">
+                    <button class="btn btn-secondary mb-2" invisible="delivery_type != 'starshipit'" name="create_new_starshipit_delivery_method" type="object">
+                        <i class="oi oi-arrow-right me-1"/>Get more delivery methods</button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

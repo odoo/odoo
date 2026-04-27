@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+
+    <record id="iot_box_kiosk" model="iot.box">
+        <field name="name">PoS Kiosk</field>
+        <field name="identifier">22:22:22:22:22:22</field>
+        <field name="ip">2.2.2.2</field>
+        <field name="version">24.08</field>
+        <field name="screen_orientation">right</field>
+    </record>
+
+    <record id="iot_display" model="iot.device">
+        <field name="name">Display - HDMI-1</field>
+        <field name="iot_id" ref="iot_box_kiosk"/>
+        <field name="identifier">display_identifier</field>
+        <field name="type">display</field>
+        <field name="manufacturer"></field>
+        <field name="connection">hdmi</field>
+        <field name="connected">False</field>
+    </record>
+
+    <record id="iot_keyboard" model="iot.device">
+        <field name="name">Touch Screen</field>
+        <field name="iot_id" ref="iot_box_kiosk"/>
+        <field name="identifier">keyboard_identifier</field>
+        <field name="type">keyboard</field>
+        <field name="manufacturer"></field>
+        <field name="connection">direct</field>
+        <field name="connected">False</field>
+    </record>
+
+    <record id="iot_printer" model="iot.device">
+        <field name="name">Receipt Printer</field>
+        <field name="iot_id" ref="iot_box_kiosk"/>
+        <field name="identifier">printer_identifier</field>
+        <field name="type">printer</field>
+        <field name="manufacturer"></field>
+        <field name="connection">network</field>
+        <field name="connected">False</field>
+    </record>
+
+    <record id="iot_payment" model="iot.device">
+        <field name="name">Payment Terminal</field>
+        <field name="iot_id" ref="iot_box_kiosk"/>
+        <field name="identifier">payment_identifier</field>
+        <field name="type">payment</field>
+        <field name="manufacturer"></field>
+        <field name="connection">network</field>
+        <field name="connected">False</field>
+    </record>
+
+    </data>
+</odoo>

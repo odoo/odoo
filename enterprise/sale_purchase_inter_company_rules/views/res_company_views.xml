@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_company_inter_change_inherit_form">
+        <field name="name">res.company.form.inherit</field>
+        <field name="inherit_id" ref="account_inter_company_rules.view_company_inter_change_inherit_form"/>
+        <field name="model">res.company</field>
+        <field name="arch" type="xml">
+            <field name="intercompany_generate_bills_refund" position="after">
+                <label string="Generate Sales Orders" for="intercompany_generate_sales_orders" class="text-nowrap col-lg-6 o_light_label"/>
+                <field name="intercompany_generate_sales_orders" nolabel="1"/>
+                <label string="Generate Purchases Orders" for="intercompany_generate_purchase_orders" class="text-nowrap col-lg-6 o_light_label"/>
+                <field name="intercompany_generate_purchase_orders" nolabel="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

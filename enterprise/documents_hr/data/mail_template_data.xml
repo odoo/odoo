@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mail_template_document_folder_link" model="mail.template">
+            <field name="name">HR: Document Access Link</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <field name="subject">{{ object.name }}, your personal documents access link is available</field>
+            <field name="email_from">{{ user.email_formatted }}</field>
+            <field name="partner_to"></field>
+            <field name="email_to">{{ object.private_email }}</field>
+            <field name="description">Sent manually when recording an employee departure</field>
+            <field name="body_html" type="html">
+    <table border="0" cellpadding="0" cellspacing="0" style="width:100%; margin:0px auto;"><tbody>
+        <tr><td valign="top" style="text-align: left; font-size: 14px;">
+            Dear <t t-esc="object.name"></t>, your personal documents access link is available for you.<br/><br/>
+            You'll find all your personal HR documents in this folder.<br/><br/>
+            Please keep this link secure.<br/><br/>
+            <div style="text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;">
+                <a t-attf-href="{{ object._get_documents_link_url() }}"
+                    target="_blank"
+                    style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                    Your Documents
+                </a>
+            </div>
+            Have a nice day,<br/>
+            The HR Team
+        </td></tr>
+    </tbody></table>
+                </field>
+                <field name="lang">{{ object.lang }}</field>
+                <field name="auto_delete" eval="True"/>
+          </record>
+    </data>
+</odoo>

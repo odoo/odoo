@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<div t-name="spreadsheet_edition.VersionHistoryAction" class="o_spreadsheet_action">
+    <SpreadsheetNavbar spreadsheetName="spreadsheetName" isReadonly="true" />
+    <div class="o_spreadsheet_container d-flex">
+        <SpreadsheetComponent model="model" t-key="state.currentRevisionId" />
+        <VersionHistorySidePanel t-props="this.historyPanelProps"/>
+    </div>
+</div>
+
+</templates>

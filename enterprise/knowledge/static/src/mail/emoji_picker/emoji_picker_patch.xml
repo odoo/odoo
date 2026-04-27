@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="web.EmojiPicker" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o-EmojiPicker-navbar')]" position="inside">
+            <button t-if="props.hasRemoveFeature" class="btn fa fa-times-circle btn-outline-danger justify-self-end flex-grow-1 h-100" title="Remove Icon" t-on-click="removeEmoji"/>
+        </xpath>
+    </t>
+</templates>

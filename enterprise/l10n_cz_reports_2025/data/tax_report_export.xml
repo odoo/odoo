@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id='cz_tax_report_template'>
+        <Pisemnost nazevSW="Odoo SA" t-att-verzeSW="odoo_version">
+            <DPHDP3 verzePis="02.01">
+                <t t-call="l10n_cz_reports_2025.veta_d"/>
+                <t t-call="l10n_cz_reports_2025.veta_p"/>
+                <Veta1
+                    t-att-dan23="R1['output_tax']"
+                    t-att-dan5="R2['output_tax']"
+                    t-att-dan_dzb23="R7['output_tax']"
+                    t-att-dan_dzb5="R8['output_tax']"
+                    t-att-dan_pdop_nrg="R9['output_tax']"
+                    t-att-dan_psl23_e="R5['output_tax']"
+                    t-att-dan_psl23_z="R12['output_tax']"
+                    t-att-dan_psl5_e="R6['output_tax']"
+                    t-att-dan_psl5_z="R13['output_tax']"
+                    t-att-dan_pzb23="R3['output_tax']"
+                    t-att-dan_pzb5="R4['output_tax']"
+                    t-att-dan_rpren23="R10['output_tax']"
+                    t-att-dan_rpren5="R11['output_tax']"
+                    t-att-dov_zb23="R7['tax_base']"
+                    t-att-dov_zb5="R8['tax_base']"
+                    t-att-obrat23="R1['tax_base']"
+                    t-att-obrat5="R2['tax_base']"
+                    t-att-p_dop_nrg="R9['tax_base']"
+                    t-att-p_sl23_e="R5['tax_base']"
+                    t-att-p_sl23_z="R12['tax_base']"
+                    t-att-p_sl5_e="R6['tax_base']"
+                    t-att-p_sl5_z="R13['tax_base']"
+                    t-att-p_zb23="R3['tax_base']"
+                    t-att-p_zb5="R4['tax_base']"
+                    t-att-rez_pren23="R10['tax_base']"
+                    t-att-rez_pren5="R11['tax_base']"/>
+                <Veta2
+                    t-att-dod_dop_nrg="R23['value']"
+                    t-att-dod_zb="R20['value']"
+                    t-att-pln_ost="R26['value']"
+                    t-att-pln_rez_pren="R25['value']"
+                    t-att-pln_sluzby="R21['value']"
+                    t-att-pln_vyvoz="R22['value']"
+                    t-att-pln_zaslani="R24['value']"/>
+                <Veta3
+                    t-att-dov_osv="R32['value']"
+                    t-att-opr_dluz="R34['value']"
+                    t-att-opr_verit="R33['value']"
+                    t-att-tri_dozb="R31['value']"
+                    t-att-tri_pozb="R30['value']"/>
+                <Veta4
+                    t-att-dov_cu="R42['tax_base']"
+                    t-att-nar_maj="R47['tax_base']"
+                    t-att-nar_zdp23="R43['tax_base']"
+                    t-att-nar_zdp5="R44['tax_base']"
+                    t-att-od_maj="R47['in_full_amount']"
+                    t-att-od_zdp23="R43['in_full_amount']"
+                    t-att-od_zdp5="R44['in_full_amount']"
+                    t-att-odkr_maj="R47['reduced_claim']"
+                    t-att-odkr_zdp23="R43['reduced_claim']"
+                    t-att-odkr_zdp5="R44['reduced_claim']"
+                    t-att-odp_cu="R42['reduced_claim']"
+                    t-att-odp_cu_nar="R42['in_full_amount']"
+                    t-att-odp_rez_nar="R45['in_full_amount']"
+                    t-att-odp_rezim="R45['reduced_claim']"
+                    t-att-odp_sum_kr="R46['reduced_claim']"
+                    t-att-odp_sum_nar="R46['in_full_amount']"
+                    t-att-odp_tuz23="R40['reduced_claim']"
+                    t-att-odp_tuz23_nar="R40['in_full_amount']"
+                    t-att-odp_tuz5="R41['reduced_claim']"
+                    t-att-odp_tuz5_nar="R41['in_full_amount']"
+                    t-att-pln23="R40['tax_base']"
+                    t-att-pln5="R41['tax_base']"/>
+                <Veta5
+                    t-att-koef_p20_nov="R52A['coefficient']"
+                    t-att-koef_p20_vypor="R53A['coefficient']"
+                    t-att-odp_uprav_kf="R52B['value']"
+                    t-att-pln_nkf="R51A['value']"
+                    t-att-plnosv_kf="R50['value']"
+                    t-att-plnosv_nkf="R51B['value']"
+                    t-att-vypor_odp="R53B['value']"/>
+                <Veta6
+                    t-att-dan_vrac="R61['value']"
+                    t-att-dan_zocelk="R62['value']"
+                    t-att-dano="R66['value']"
+                    t-att-dano_da="R64['value']"
+                    t-att-dano_no="R65['value']"
+                    t-att-odp_zocelk="R63['value']"
+                    t-att-uprav_odp="R60['value']"/>
+            </DPHDP3>
+        </Pisemnost>
+    </template>
+</odoo>

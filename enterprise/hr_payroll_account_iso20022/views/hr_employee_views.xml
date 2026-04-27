@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.hr_payroll_account_iso20022</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='bank_account_id']" position="replace">
+                <label for="bank_account_id" string="Bank Account"/>
+                <div class="o_row" name="div_bank_account">
+                    <field name="bank_account_id" context="{'default_partner_id': work_contact_id}" options="{'no_quick_create': True}" readonly="not id"/>
+                    <div class="d-flex" invisible="not bank_account_id">
+                        <span class="d-flex gap-2 w-50">
+                            <span invisible="is_trusted_bank_account" class="text-muted">Untrusted</span>
+                            <span invisible="not is_trusted_bank_account" class="text-success">Trusted</span>
+                        </span>
+                        <button
+                            title="Trust Bank Account"
+                            class="icon-button" 
+                            icon="fa-solid fa-toggle-off fa-lg"  
+                            type="object" 
+                            name="action_trust_bank_accounts" 
+                            invisible="is_trusted_bank_account"/>
+                        <button 
+                            title="Untrust Bank Account"
+                            class="icon-button button-on" 
+                            icon="fa-solid fa-toggle-on fa-lg"   
+                            type="object" 
+                            name="action_untrust_bank_accounts" 
+                            invisible="not is_trusted_bank_account"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="hr_recruitment_report_multi_company" model="ir.rule">
+        <field name="name">Recruitment Analysis: Multi-Company</field>
+        <field name="model_id" ref="model_hr_recruitment_report"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
+    <record id="hr_recruitment_stage_report_multi_company" model="ir.rule">
+        <field name="name">Recruitment Stage Analysis: Multi-Company</field>
+        <field name="model_id" ref="model_hr_recruitment_stage_report"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+</odoo>

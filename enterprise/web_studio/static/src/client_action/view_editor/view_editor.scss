@@ -1,0 +1,66 @@
+.o_web_studio_editor {
+    .o_web_studio_editor_manager {
+        .o-draggable {
+            &, * {
+                cursor: move !important;
+            }
+
+            &.o_dragged {
+                transform: rotate(-5deg);
+                box-shadow: 0 5px 25px -10px black;
+                transition: transform 0.6s, box-shadow 0.3s;
+
+                &.o-draggable--drop-ready {
+                    opacity: 1!important;
+                    line-height: 2;
+                    border: 2px solid $o-brand-primary;
+                }
+            }
+        }
+
+        .o_web_studio_view_renderer {
+            flex: 1 1 auto;
+            min-width: 0;
+
+            .o_view_nocontent {
+                left: $o-web-studio-sidebar-width;
+            }
+            .o_web_studio_widget_empty {
+                background-color: $o-web-studio-bg-lighter;
+            }
+
+            div.o_td_label:empty {
+                &::before {
+                    content: '\00a0';
+                }
+            }
+
+            .o_web_studio_show_invisible, .o_web_studio_show_invisible + .o-web-studio-element-ghost, div.o_td_label:empty {
+                outline: 1px solid #00000010;
+                background-image: repeating-linear-gradient(
+                    45deg,
+                    #FFFFFF60,
+                    #FFFFFF60 5px,
+                    #00000010 5px,
+                    #00000010 10px
+                );
+                background-attachment: fixed;
+            }
+            .o_list_view > .o_content {
+                padding: 0 12px;
+            }
+            .o-web-studio-editor--element-clickable {
+                &:hover {
+                    cursor: pointer;
+                    outline: 1px dashed $o-brand-primary;
+                }
+            }
+            .o-web-studio-editor--element-clicked:not(.o_dragged) {
+                outline: 2px solid $o-brand-primary !important;
+            }
+            .o_web_studio_hook {
+                padding: .5px;
+            }
+        }
+    }
+}

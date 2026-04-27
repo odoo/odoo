@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="paperformat_check_ph" model="report.paperformat">
+            <field name="name">PH check Letter</field>
+            <field name="default" eval="False" />
+            <field name="format">Letter</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="action_print_check" model="ir.actions.report">
+            <field name="name">Print check</field>
+            <field name="model">account.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_ph_check_printing.print_check</field>
+            <field name="report_file">l10n_ph_check_printing.print_check</field>
+            <field name="print_report_name">'PH Check - %s' % (object.partner_id.name or '',)</field>
+            <field name="paperformat_id" ref="l10n_ph_check_printing.paperformat_check_ph"/>
+            <field name="attachment">'check_'+(object.partner_id.name or '')+'_'+(object.name)+'.pdf'</field>
+            <field name="attachment_use">True</field>
+        </record>
+
+    </data>
+</odoo>

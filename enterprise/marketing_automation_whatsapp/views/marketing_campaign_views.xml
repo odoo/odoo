@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="marketing_campaign_view_form" model="ir.ui.view">
+        <field name="name">marketing.campaign.view.form</field>
+        <field name="model">marketing.campaign</field>
+        <field name="inherit_id" ref="marketing_automation.marketing_campaign_view_form"/>
+        <field name="arch" type="xml">        
+            <xpath expr="//kanban" position="inside">
+                <field name="total_sent"/>
+                <field name="total_open"/>
+                <field name="total_reply"/>
+                <field name="total_click"/>
+            </xpath>
+
+            <xpath expr="//div[@name='mail_details']" position="after">
+                <div t-if="record.activity_type.raw_value == 'whatsapp'" name="whatsapp_details" class="row o_ma_email_details text-center">
+                    <div class="col text-uppercase">
+                        <i class="fa fa-pie-chart" /> Details
+                    </div>
+                    <div class="col" title="Message Sent">
+                        <a name="action_view_sent_wa" type="object" role="button">
+                            <strong><t t-esc="record.total_sent.raw_value or 0" /></strong> Sent
+                        </a>
+                    </div>
+                    <div class="col" title="Message Opened">
+                        <a name="action_view_read_wa" type="object" role="button">
+                            <strong><t t-esc="Math.round((record.total_open.raw_value/(record.total_sent.raw_value or 1)) * 100) or 0" />%</strong> Opened 
+                        </a>
+                    </div>
+                    <div class="col" title="Message Clicked">
+                        <a name="action_view_clicked_wa" type="object" role="button">
+                            <strong><t t-esc="Math.round((record.total_click.raw_value/(record.total_sent.raw_value or 1)) * 100) or 0" />%</strong> Clicked 
+                        </a>
+                    </div>
+                    <div class="col" title="Message Replied">
+                        <a name="action_view_replied_wa" type="object" role="button">
+                            <strong><t t-esc="Math.round((record.total_reply.raw_value/(record.total_sent.raw_value or 1)) * 100) or 0" />%</strong> Replied
+                        </a>
+                    </div>
+                </div>
+            </xpath>
+
+        <xpath expr="//div[hasclass('o_ma_child_activity_buttons')]" position="inside">
+            <t t-if="record.activity_type.raw_value == 'whatsapp'">
+                <i data-trigger-type="whatsapp_read" class="fa fa-check-circle o_ma_text_read o_add_child_activity text-info"
+                title="Opened" role="img" aria-label="Opened" />
+                <i data-trigger-type="whatsapp_not_read" class="fa fa-check-circle o_ma_text_read o_add_child_activity text-danger"
+                title="Not Opened" role="img" aria-label="Not Opened" />
+                <i data-trigger-type="whatsapp_replied" class="fa fa-reply o_ma_text_replied o_add_child_activity text-success"
+                title="replied" role="img" aria-label="replied" />
+                <i data-trigger-type="whatsapp_not_replied" class="fa fa-reply o_ma_text_replied o_add_child_activity text-danger"
+                title="not replied" role="img" aria-label="not replied" />
+                <i data-trigger-type="whatsapp_click" class="fa fa-hand-pointer-o o_ma_text_processed o_add_child_activity text-success"
+                    title="Clicked" role="img" aria-label="Clicked" />
+                <i data-trigger-type="whatsapp_not_click" class="fa fa-hand-pointer-o o_ma_text_rejected o_add_child_activity text-danger"
+                    title="Not Clicked" role="img" aria-label="Not Clicked" />
+                <i data-trigger-type="whatsapp_bounced" class="fa fa-exclamation-circle o_ma_text_error o_add_child_activity text-danger"
+                title="Bounced" role="img" aria-label="Error" />
+            </t>
+        </xpath>
+
+        <xpath expr="//div[hasclass('o_ma_interval') and hasclass('fw-bolder')]" position="before">
+                <div t-if="record.trigger_type.raw_value == 'whatsapp_read'" class="o_ma_text_rejected text-success">
+                    <i class="fa fa-exclamation-circle" /> Opened after
+                </div>
+                <div t-elif="record.trigger_type.raw_value == 'whatsapp_not_read'" class="o_ma_text_rejected text-danger">
+                    <i class="fa fa-exclamation-circle" /> Not Opened after
+                </div>
+                <div t-elif="record.trigger_type.raw_value == 'whatsapp_replied'" class="o_ma_text_rejected text-success">
+                    <i class="fa fa-exclamation-circle" /> Replied within
+                </div>
+                <div t-elif="record.trigger_type.raw_value == 'whatsapp_not_replied'" class="o_ma_text_rejected text-danger">
+                    <i class="fa fa-exclamation-circle" /> Not Replied within
+                </div>
+                <div t-elif="record.trigger_type.raw_value == 'whatsapp_click'" class="o_ma_text_rejected text-success">
+                    <i class="fa fa-exclamation-circle" /> Clicked within
+                </div>
+                <div t-elif="record.trigger_type.raw_value == 'whatsapp_not_click'" class="o_ma_text_rejected text-danger">
+                    <i class="fa fa-exclamation-circle" /> Not Clicked within
+                </div>
+                <div t-elif="record.trigger_type.raw_value == 'whatsapp_bounced'" class="o_ma_text_rejected text-danger">
+                    <i class="fa fa-exclamation-circle" /> Bounced after
+                </div>
+        </xpath>
+
+            <xpath expr="//div[hasclass('o_ma_icon')]/span" position="after">
+                <span class="fa fa-whatsapp" t-elif="record.activity_type.raw_value == 'whatsapp'" title="WhatsApp" role="img" aria-label="WhatsApp"/>
+            </xpath>
+
+            <xpath expr="//button[@name='action_view_mailings']" position="after">
+                <button name="action_view_whatsapp_templates" type="object" icon="fa-whatsapp" class="oe_stat_button"
+                    invisible="whatsapp_template_count == 0">
+                    <field name="whatsapp_template_count" widget="statinfo" string="WhatsApp"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

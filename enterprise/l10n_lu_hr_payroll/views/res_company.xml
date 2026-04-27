@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="res_company_form_inherit" model="ir.ui.view">
+        <field name="name">res.company.form.inherit</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <page name="general_info" position="after">
+                <page name="l10n_lu_company_info" string="Luxembourg Information" invisible="country_code != 'LU'">
+                    <group>
+                        <group>
+                            <field name="l10n_lu_official_social_security"/>
+                            <field name="l10n_lu_seculine"/>
+                        </group>
+
+                        <group/>
+
+                        <group string="Accident Insurance">
+                            <field name="l10n_lu_accident_insurance_factor" string="Bonus-Malus Factor"/>
+                            <label for="l10n_lu_accident_insurance_rate"/>
+                            <div class="o_row mw-50">
+                                <field name="l10n_lu_accident_insurance_rate" string="Rate"/>
+                                <div>%</div>
+                            </div>
+                        </group>
+
+                        <group string="Mutuality Employer">
+                            <field name="l10n_lu_mutuality_class" string="Class"/>
+                            <label for="l10n_lu_mutuality_rate"/>
+                            <div class="o_row mw-50">
+                                <field name="l10n_lu_mutuality_rate" string="Rate"/>
+                                <div>%</div>
+                            </div>
+                        </group>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates>
+    <t t-name="web_grid.FloatToggleGridCell" t-inherit="web_grid.Cell">
+        <xpath expr="//input" position="replace">
+            <button t-if="state.edit"
+                    class="o_field_float_toggle"
+                    t-on-click="onChange"
+                    t-on-keydown="onKeyDown"
+                    t-ref="toggleButton"
+            >
+                <t t-out="formattedValue" />
+            </button>
+        </xpath>
+    </t>
+</templates>

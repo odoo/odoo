@@ -1,0 +1,184 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_payroll_account_iso20022
+#
+# Translators:
+# Martin Trigaux, 2024
+# gezza <geza.nagy@oregional.hu>, 2024
+# Tamás Németh <ntomasz81@gmail.com>, 2024
+# krnkris, 2024
+# Valics Lehel, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:47+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Valics Lehel, 2025\n"
+"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.view_employee_form
+msgid ""
+"<span class=\"d-flex gap-2 w-50\">\n"
+"                            <span invisible=\"is_trusted_bank_account\" "
+"class=\"text-muted\">Untrusted</span>\n"
+"                            <span invisible=\"not is_trusted_bank_account\" "
+"class=\"text-success\">Trusted</span>\n"
+"                        </span>"
+msgstr ""
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.view_employee_form
+msgid "Bank Account"
+msgstr "Bankszámla"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,field_description:hr_payroll_account_iso20022.field_hr_payroll_payment_report_wizard__journal_id
+msgid "Bank Journal"
+msgstr "Banki napló"
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.hr_payslip_view_form
+msgid "Create Payment Report"
+msgstr ""
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model,name:hr_payroll_account_iso20022.model_hr_employee
+msgid "Employee"
+msgstr "Munkavállaló"
+
+#. module: hr_payroll_account_iso20022
+#: model:hr.payroll.dashboard.warning,name:hr_payroll_account_iso20022.hr_payroll_dashboard_warning_employee_invalid_bank_account
+msgid "Employees With Invalid Bank Accounts"
+msgstr ""
+
+#. module: hr_payroll_account_iso20022
+#: model:hr.payroll.dashboard.warning,name:hr_payroll_account_iso20022.hr_payroll_dashboard_warning_employee_no_country
+msgid "Employees Without Any Country"
+msgstr ""
+
+#. module: hr_payroll_account_iso20022
+#: model:hr.payroll.dashboard.warning,name:hr_payroll_account_iso20022.hr_payroll_dashboard_warning_untrusted_bank_accounts
+msgid "Employees with untrusted Bank Account numbers"
+msgstr ""
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,field_description:hr_payroll_account_iso20022.field_hr_payroll_payment_report_wizard__export_format
+msgid "Export Format"
+msgstr ""
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model,name:hr_payroll_account_iso20022.model_hr_payroll_payment_report_wizard
+msgid "HR Payroll Payment Report Wizard"
+msgstr ""
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.hr_payslip_view_form
+msgid "Mark as paid"
+msgstr ""
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model,name:hr_payroll_account_iso20022.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Bérjegyzék"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model,name:hr_payroll_account_iso20022.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "Bérjegyzék kötegek"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields.selection,name:hr_payroll_account_iso20022.selection__hr_payroll_payment_report_wizard__export_format__sepa
+msgid "SEPA"
+msgstr ""
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,field_description:hr_payroll_account_iso20022.field_hr_employee__is_trusted_bank_account
+msgid "Send Money"
+msgstr "Pénz küldés"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,help:hr_payroll_account_iso20022.field_hr_employee__is_trusted_bank_account
+msgid ""
+"Sending fake invoices with a fraudulent account number is a common phishing "
+"practice. To protect yourself, always verify new bank account numbers, "
+"preferably by calling the vendor, as phishing usually happens when their "
+"emails are compromised. Once verified, you can activate the ability to send "
+"money."
+msgstr ""
+"A hamis számlák küldése csalárd bankszámlaszámmal gyakori adathalászati "
+"gyakorlat. A védelem érdekében mindig ellenőrizze az új bankszámlaszámokat, "
+"lehetőleg a szolgáltató felhívásával, mivel az adathalászat általában akkor "
+"történik, amikor az e-mailjeik veszélybe kerülnek. Miután ellenőrizte, "
+"aktiválhatja a pénzküldés lehetőségét"
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/wizard/hr_payroll_payment_report_wizard.py:0
+msgid "Some employees (%s) don't have a valid name on the work contact."
+msgstr ""
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/wizard/hr_payroll_payment_report_wizard.py:0
+msgid "Some employees (%s) don't have a work contact."
+msgstr ""
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields.selection,name:hr_payroll_account_iso20022.selection__hr_payroll_payment_report_wizard__export_format__iso20022_ch
+msgid "Swiss ISO20022"
+msgstr ""
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/models/hr_employee.py:0
+msgid ""
+"The following employees have invalid bank accounts and could not be "
+"trusted:\n"
+"%s"
+msgstr ""
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/wizard/hr_payroll_payment_report_wizard.py:0
+msgid ""
+"The journal '%s' requires a proper IBAN account to pay via SEPA. Please "
+"configure it first."
+msgstr ""
+"A '%s' naplóhoz szükséges egy megfelelő IBAN számlaszám a SEPA utaláshoz. "
+"Kérem, először állítsa be."
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.view_employee_form
+msgid "Trust Bank Account"
+msgstr ""
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,field_description:hr_payroll_account_iso20022.field_hr_payslip__iso20022_uetr
+msgid "UETR"
+msgstr ""
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,help:hr_payroll_account_iso20022.field_hr_payslip__iso20022_uetr
+msgid "Unique end-to-end transaction reference"
+msgstr ""
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.view_employee_form
+msgid "Untrust Bank Account"
+msgstr ""
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/models/hr_employee.py:0
+msgid "You do not have the right to trust or un-trust a bank account."
+msgstr "Nincs jogod bízni vagy nem bízni egy bankszámlában."

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_view_customer_invoices" model="ir.actions.act_window">
+        <field name="name">Customer Invoices</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_account_customer_invoice_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="account.view_move_tree"/>
+        <field name="act_window_id" ref="partner_commission.action_view_customer_invoices"/>
+    </record>
+
+    <record id="action_account_customer_invoice_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account.view_move_form"/>
+        <field name="act_window_id" ref="partner_commission.action_view_customer_invoices"/>
+    </record>
+
+    <record id="purchase_order_form_inherit_partner_commission" model="ir.ui.view">
+        <field name="name">purchase.order.form.partner.commission</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" name="action_view_customer_invoices" type="object"
+                    invisible="invoice_commission_count == 0" icon="fa-pencil-square-o">
+                    <field string="Source Invoices" name="invoice_commission_count" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//page[@name='purchase_delivery_invoice']//group[@name='other_info']" position="inside">
+                <field name="purchase_type" groups="base.group_no_one"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

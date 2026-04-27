@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_saft_import_form" model="ir.ui.view">
+        <field name="name">account_saft.import.form</field>
+        <field name="model">account.saft.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="SAF-T Import">
+                <sheet>
+                    <div class="d-flex flex-column gap-3">
+                        <div class="oe_title">
+                            <h3>Import your accounting data from SAF-T file formats</h3>
+                        </div>
+                        <div class="d-flex flex-column gap-1">
+                            <div>
+                                <field name="import_opening_balance"/>
+                                <label for="import_opening_balance" class="fw-normal"/>
+                            </div>
+                            <div>
+                                <field name="attachment_id"
+                                       string="Select File"
+                                       aria-label="Select File"
+                                       nolabel="1"
+                                       widget="binary"
+                                       filename="attachment_name"/>
+                                <field name="attachment_name" invisible="1"/>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_import" string="Import" data-hotkey="q" type="object" class="btn-primary"/>
+                    <button special="cancel" data-hotkey="x" string="Cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="open_saft_import_wizard" model="ir.actions.act_window">
+        <field name="name">SAF-T Import</field>
+        <field name="res_model">account.saft.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Open Wizard -->
+    <record model="ir.actions.server" id="account_saft_import_action">
+        <field name="name">SAF-T Import</field>
+        <field name="model_id" ref="model_res_company"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = env.company.account_saft_import_action()
+        </field>
+    </record>
+
+</odoo>

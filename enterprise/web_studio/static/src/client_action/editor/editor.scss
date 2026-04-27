@@ -1,0 +1,36 @@
+.o_web_studio_editor {
+  height: calc(100% - 46px); // 46px is the main navbar height
+
+  .o_web_studio_client_action {
+    position: relative;
+    height: 100%;
+  }
+
+  > .o_action_manager {
+    direction: ltr; //Define direction attribute here so when rtlcss preprocessor run, it converts it to rtl
+    flex: 1 1 auto;
+    height: calc(100% - #{$o-web-studio-menu-height}); // $o-web-studio-menu-height is the web_studio_menu navbar
+    overflow: hidden;
+
+    > .o_action {
+      height: 100%;
+      display: flex;
+      flex-flow: column nowrap;
+
+      > .o_control_panel {
+        flex: 0 0 auto;
+      }
+
+      .o_content {
+        flex: 1 1 auto;
+        position: relative;  // Allow to redistribute the 100% height to its child
+        overflow: auto;
+        height: 100%;
+      }
+    }
+  }
+
+  .o_web_studio_sidebar {
+    flex: 0 0 $o-web-studio-sidebar-width;
+  }
+}

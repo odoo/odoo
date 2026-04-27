@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="print_visitor_badge">
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <div class="oe_structure">
+                    <t t-foreach="docs" t-as="visitor">
+                        <div style="display: inline-block; page-break-inside: avoid; width: 243pt; height: 350pt; border: 1pt solid black; border-radius:8pt;">
+                            <table class="table-borderless w-100 h-100">
+                                <thead>
+                                    <td class="border-1 border-bottom border-dark text-center fw-bold fs-3 pt-2">
+                                        Visitor
+                                    </td>
+                                </thead>
+                                <tbody>
+                                    <tr t-if="visitor.check_in">
+                                        <td class="ps-2 pt-2">
+                                            <span t-field="visitor.check_in" t-options='{"format": "d MMM yy HH:mm:SS"}'>22 Oct 24 14:20:10</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="text-center">
+                                        <td t-att-class="'align-bottom' if visitor.company else ''">
+                                            <span class="fs-3" t-field="visitor.name">Karen</span>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="visitor.company">
+                                        <td class="text-center"><span t-field="visitor.company">MY PVT LTD</span></td>
+                                    </tr>
+                                    <tr t-if="visitor.host_ids.ids">
+                                        <td class="ps-2 pb-1 align-bottom">
+                                            <strong>Visiting:</strong>
+                                            <span t-out="visitor._get_host_name()">Henry</span>,
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot t-if="visitor.company_id.logo">
+                                    <td align="center" class="border-1 border-top border-dark">
+                                        <img class="pt2" t-att-src="image_data_uri(visitor.company_id.logo)" style="max-height: 30pt; max-width: 50%;" alt="Company Logo"/>
+                                    </td>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

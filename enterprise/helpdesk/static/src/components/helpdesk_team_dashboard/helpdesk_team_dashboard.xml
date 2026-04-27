@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="helpdesk.HelpdeskTeamDashboard">
+        <!-- Fake Data for Demo-->
+        <div t-if="state.dashboardValues" class="o_helpdesk_banner align-items-start flex-column flex-lg-row flex-shrink-0 d-flex py-4 border-bottom bg-view">
+            <div class="w-100">
+                <table class="o_helpdesk_banner_table table table-sm table-borderless h-100 px-3 mb-0 text-center">
+                    <tbody>
+                        <tr t-if="env.isSmall">
+                            <td colspan="2">
+                                <h3 class="o_highlight float-start">My Tickets</h3>
+                            </td>
+                        </tr>
+                        <tr class="h-100">
+                            <td class="o_text py-2 text-start align-middle">
+                                <h3 t-if="!env.isSmall" class="o_highlight">My Tickets</h3>
+                                Open Tickets
+                            </td>
+                            <td t-attf-class="{{demoClass}} p-0">
+                                <a name="helpdesk.helpdesk_my_ticket_action_no_create"
+                                   title="My Tickets"
+                                   data-hotkey="t"
+                                   t-on-click="onActionClicked"
+                                   t-attf-class="btn w-100 h-100 p-2 border-0 text-capitalize fw-normal {{state.dashboardValues.my_all.count > 0 ? 'btn-primary': 'btn-light bg-100'}} {{showDemo ? 'o_cursor_default' : ''}}"
+                                >
+                                    <span class="d-block mb-0 fs-2" t-out="state.dashboardValues.my_all.count"/>
+                                    Tickets
+                                </a>
+                            </td>
+                            <td t-attf-class="{{demoClass}} p-0">
+                                <a name="helpdesk.helpdesk_my_ticket_action_no_create"
+                                   title="My Tickets"
+                                   context="{'search_default_high_priority': True}"
+                                   data-hotkey="p" t-on-click="onActionClicked"
+                                   t-attf-class="position-relative btn w-100 h-100 p-2 border-0 text-capitalize fw-normal {{state.dashboardValues.my_high.count > 0 ? 'btn-primary': 'btn-light bg-100'}} {{showDemo ? 'o_cursor_default' : ''}}"
+                                >
+                                    <span class="d-block mb-0 fs-2" t-out="state.dashboardValues.my_high.count"/>
+                                    High Priority
+                                    <small
+                                        class="position-absolute top-0 end-0 justify-content-end flex-lg-column flex-xl-row d-none d-sm-flex p-2"
+                                        title="Two stars, with a maximum of three"
+                                        role="img"
+                                        aria-label="Two stars, with a maximum of three"
+                                    >
+                                        <i class="o_star fa fa-star"/>
+                                        <i class="o_star fa fa-star"/>
+                                    </small>
+                                </a>
+                            </td>
+                            <td t-attf-class="{{demoClass}} p-0">
+                                <a name="helpdesk.helpdesk_my_ticket_action_no_create"
+                                   t-attf-class="position-relative btn w-100 h-100 p-2 border-0 text-capitalize fw-normal {{state.dashboardValues.my_urgent.count > 0 ? 'btn-primary': 'btn-light bg-100'}} {{showDemo ? 'o_cursor_default' : ''}}"
+                                   title="My Tickets"
+                                   context="{'search_default_urgent_priority': True}"
+                                   t-on-click="onActionClicked"
+                                   data-hotkey="o"
+                                >
+                                    <span class="d-block mb-0 fs-2" t-out="state.dashboardValues.my_urgent.count"/>
+                                    Urgent
+                                    <small
+                                        class="position-absolute top-0 end-0 justify-content-end flex-lg-column flex-xl-row d-none d-sm-flex p-2 small"
+                                        title="Three stars, maximum score"
+                                        role="img"
+                                        aria-label="Three stars, maximum score"
+                                    >
+                                        <i class="o_star fa fa-star"/>
+                                        <i class="o_star fa fa-star"/>
+                                        <i class="o_star fa fa-star"/>
+                                    </small>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="h-100">
+                            <td class="o_text py-2 text-start align-middle">Avg Open Hours</td>
+                            <td t-attf-class="{{demoClass}} p-0">
+                                <a name="helpdesk.helpdesk_ticket_action_dashboard"
+                                   t-attf-class="btn btn-light align-items-center d-flex w-100 h-100 p-0 border-0 bg-100 fw-normal align-middle {{showDemo ? 'o_cursor_default' : ''}}"
+                                   title="Tickets Analysis"
+                                   t-on-click="onActionClicked"
+                                   data-hotkey="a"
+                                >
+                                    <div class="w-100 p-2" t-out="formatTime(state.dashboardValues.my_all.hours)"/>
+                                </a>
+                            </td>
+                            <td t-attf-class="{{demoClass}} p-0">
+                                <a name="helpdesk.helpdesk_ticket_action_dashboard"
+                                   t-attf-class="btn btn-light align-items-center d-flex w-100 h-100 p-0 border-0 bg-100 fw-normal {{showDemo ? 'o_cursor_default' : ''}}"
+                                   title="Tickets Analysis"
+                                   t-on-click="onActionClicked"
+                                   context="{'search_default_high_priority': True}"
+                                   data-hotkey="b"
+                                >
+                                    <div class="w-100 p-2" t-out="formatTime(state.dashboardValues.my_high.hours)"/>
+                                </a>
+                            </td>
+                            <td t-attf-class="{{demoClass}} p-0">
+                                <a name="helpdesk.helpdesk_ticket_action_dashboard"
+                                   t-attf-class="btn btn-light align-items-center d-flex w-100 h-100 bg-100 p-0 border-0 fw-normal {{showDemo ? 'o_cursor_default' : ''}}"
+                                   title="Tickets Analysis"
+                                   context="{'search_default_urgent_priority': True}"
+                                   t-on-click="onActionClicked"
+                                   data-hotkey="y"
+                                >
+                                    <div class="w-100 p-2" t-out="formatTime(state.dashboardValues.my_urgent.hours)"/>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="h-100">
+                            <td class="o_text py-2 text-start align-middle" t-if="state.dashboardValues.success_rate_enable">Failed Tickets</td>
+                            <td t-if="state.dashboardValues.success_rate_enable" t-attf-class="{{demoClass}} p-0">
+                                <a name="helpdesk.helpdesk_ticket_action_sla"
+                                   title="My Tickets"
+                                   t-attf-class="btn align-items-center d-flex w-100 h-100 p-0 border-0 fw-normal {{state.dashboardValues.my_all.failed ? 'btn-warning' : 'btn-light bg-100'}} {{showDemo ? 'o_cursor_default' : ''}}"
+                                   t-on-click="onActionClicked"
+                                   data-hotkey="d"
+                                >
+                                    <div class="w-100 p-2" t-out="state.dashboardValues.my_all.failed"/>
+                                </a>
+                            </td>
+                            <td t-if="state.dashboardValues.success_rate_enable" t-attf-class="{{demoClass}} p-0">
+                                <a name="helpdesk.helpdesk_ticket_action_sla"
+                                   t-attf-class="btn align-items-center d-flex w-100 h-100 p-0 border-0 fw-normal {{state.dashboardValues.my_high.failed ? 'btn-warning' : 'btn-light bg-100'}} {{showDemo ? 'o_cursor_default' : ''}}"
+                                   title="My Tickets"
+                                   t-on-click="onActionClicked"
+                                   context="{'search_default_high_priority': True}"
+                                   data-hotkey="e"
+                                >
+                                    <div class="w-100 p-2" t-out="state.dashboardValues.my_high.failed"/>
+                                </a>
+                            </td>
+                            <td t-if="state.dashboardValues.success_rate_enable" t-attf-class="{{demoClass}} p-0">
+                                <a name="helpdesk.helpdesk_ticket_action_sla"
+                                   t-attf-class="btn align-items-center d-flex w-100 h-100 p-0 border-0 fw-normal {{state.dashboardValues.my_urgent.failed ? 'btn-warning' : 'btn-light bg-100'}} {{showDemo ? 'o_cursor_default' : ''}}"
+                                   title="My Tickets"
+                                   t-on-click="onActionClicked"
+                                   context="{'search_default_urgent_priority': True}"
+                                   data-hotkey="f"
+                                >
+                                    <div class="w-100 p-2" t-out="state.dashboardValues.my_urgent.failed"/>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="w-100 mt-3 mt-lg-0">
+                <table class="o_helpdesk_banner_table table table-sm table-borderless h-100 px-3 mb-0 text-center">
+                    <tbody>
+                        <tr t-if="env.isSmall">
+                            <td colspan="2">
+                                <h3 class="o_highlight float-start">My Performance</h3>
+                            </td>
+                        </tr>
+                        <tr class="h-100">
+                            <td class="o_text py-2 text-start align-middle">
+                                <h3 t-if="!env.isSmall" class="o_highlight">My Performance</h3>
+                                Today
+                            </td>
+                            <td t-attf-class="{{demoClass}} p-0">
+                                <a name="helpdesk.helpdesk_ticket_action_close_analysis"
+                                   t-attf-class="btn w-100 h-100 p-0 border-0 text-capitalize fw-normal {{state.dashboardValues.today.count >= state.dashboardValues.helpdesk_target_closed ? 'btn-success': 'btn-light bg-100'}} {{showDemo ? 'o_cursor_default' : ''}}"
+                                   title="My Tickets"
+                                   t-on-click="onActionClicked"
+                                   data-hotkey="i"
+                                >
+                                    <div class="p-2">
+                                        <h2 class="mb-0 text-reset" t-out="state.dashboardValues.today.count"/>
+                                        Closed Tickets
+                                    </div>
+                                </a>
+                            </td>
+                            <t t-set="success_rate_percentage" t-value="`/ %`"/>
+                            <td t-if="state.dashboardValues.success_rate_enable" t-attf-class="{{demoClass}} p-0">
+                                <t t-if="state.dashboardValues.today.sla_ticket_count > 0" t-set="success_rate_percentage" t-value="`${formatFloat(state.dashboardValues.today.success)} %`"/>
+                                <a name="helpdesk.helpdesk_ticket_action_success"
+                                   title="Percentage of tickets that were closed without failing any SLAs."
+                                   t-attf-class="btn w-100 h-100 p-0 border-0 text-capitalize fw-normal {{(state.dashboardValues.helpdesk_target_success &lt;= state.dashboardValues.today.success) ? 'btn-success': 'btn-light bg-100' }} {{showDemo ? 'o_cursor_default' : ''}}"
+                                   t-on-click="onActionClicked"
+                                   data-action-title="My Tickets"
+                                   data-hotkey="k"
+                                >
+                                    <div class="p-2">
+                                        <h2 class="mb-0 text-reset" t-out="success_rate_percentage"/>
+                                        SLA Success Rate
+                                    </div>
+                                </a>
+                            </td>
+                            <td t-if="state.dashboardValues.rating_enable" t-attf-class="{{demoClass}} p-0">
+                                <t t-set="success_rate_rating" t-value="`/`"/>
+                                <t t-if="state.dashboardValues.today.rating > 0" t-set="success_rate_rating" t-value="`${formatFloat(state.dashboardValues.today.rating, {'digits': [1, 1]})} / 5`"/>
+                                <a name="action_view_rating_today"
+                                   t-attf-class="btn w-100 h-100 p-0 border-0 text-capitalize fw-normal {{(state.dashboardValues.helpdesk_target_rating &lt;= state.dashboardValues.today.rating) ? 'btn-success': 'btn-light bg-100'}} {{showDemo ? 'o_cursor_default' : ''}}"
+                                   title="Today's Average Rating"
+                                   type="object"
+                                   t-on-click="onActionClicked"
+                                   data-hotkey="j"
+                                >
+                                    <div class="p-2">
+                                        <h2 class="mb-0 text-reset" t-out="success_rate_rating"/>
+                                        Average Rating
+                                    </div>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="h-100">
+                            <td class="o_text py-2 text-start align-middle">Avg Last 7 days</td>
+                            <td t-attf-class="{{demoClass}} p-0">
+                                <a name="helpdesk.helpdesk_ticket_action_7days_tickets"
+                                   data-hotkey="l"
+                                   t-on-click="onActionClicked"
+                                   title="Tickets"
+                                   t-attf-class="btn align-items-center d-flex w-100 h-100 p-0 border-0 fw-normal {{state.dashboardValues['7days'].count >= state.dashboardValues.helpdesk_target_closed ? 'btn-success': state.dashboardValues['7days'].count &lt;= 0 ? 'btn-light bg-100' : 'btn-warning'}} {{showDemo ? 'o_cursor_default' : ''}}"
+                                >
+                                    <div class="w-100 p-2" t-out="state.dashboardValues['7days'].count"/>
+                                </a>
+                            </td>
+                            <td t-if="state.dashboardValues.success_rate_enable" t-attf-class="{{demoClass}} p-0">
+                                <t t-if="state.dashboardValues['7days'].sla_ticket_count > 0" t-set="success_rate_percentage" t-value="`${formatFloat(state.dashboardValues['7days'].success)} %`"/>
+                                <a name="helpdesk.helpdesk_ticket_action_7days_success"
+                                   t-attf-class="btn align-items-center d-flex w-100 h-100 p-0 border-0 fw-normal {{(state.dashboardValues.helpdesk_target_success &lt;= state.dashboardValues['7days'].success) ? 'btn-success': state.dashboardValues['7days'].success &lt;= 0 ? 'btn-light bg-100' :  'btn-warning' }} {{showDemo ? 'o_cursor_default' : ''}}"
+                                   title="Percentage of tickets that were closed without failing any SLAs."
+                                   t-on-click="onActionClicked"
+                                   data-action-title="Tickets"
+                                   data-hotkey="n"
+                                >
+                                    <div class="w-100 p-2" t-out="success_rate_percentage"/>
+                                </a>
+                            </td>
+                            <td t-if="state.dashboardValues.rating_enable" t-attf-class="{{demoClass}} p-0">
+                                <t t-if="state.dashboardValues['7days'].rating > 0" t-set="success_rate_rating" t-value="`${formatFloat(state.dashboardValues['7days'].rating)} %`"/>
+                                <a name="action_view_rating_7days"
+                                   t-attf-class="btn align-items-center d-flex w-100 h-100 p-0 border-0 fw-normal {{(state.dashboardValues.helpdesk_target_rating &lt;= state.dashboardValues['7days'].rating) ? 'btn-success': state.dashboardValues['7days'].rating &lt;= 0 ? 'btn-light bg-100' : 'btn-warning'}} {{showDemo ? 'o_cursor_default' : ''}}"
+                                   title="Average Rating for the Past 7 Days"
+                                   t-on-click="onActionClicked"
+                                   data-hotkey="m"
+                                >
+                                    <div class="w-100 p-2" t-out="success_rate_rating"/>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="h-100">
+                            <td class="o_text py-2 text-start align-middle">Daily Target</td>
+                            <HelpdeskTeamTarget update="(value) => this.updateHelpdeskTarget('helpdesk_target_closed', value)" hotkey="v" showDemo="showDemo" demoClass="demoClass" value="parseInteger(state.dashboardValues.helpdesk_target_closed)"/>
+                            <HelpdeskTeamTarget t-if="state.dashboardValues.success_rate_enable" update="(value) => this.updateHelpdeskTarget('helpdesk_target_success', value)" hotkey="x" showDemo="showDemo" demoClass="demoClass" value="parseInteger(state.dashboardValues.helpdesk_target_success)" percentage="true"/>
+                            <HelpdeskTeamTarget t-if="state.dashboardValues.rating_enable" update="(value) => this.updateHelpdeskTarget('helpdesk_target_rating', value)" hotkey="w" showDemo="showDemo" demoClass="demoClass" value="state.dashboardValues.helpdesk_target_rating" rating="true"/>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <t t-if="showDemo and state.dashboardValues">
+            <div class="ribbon ribbon-top-right">
+                <span class="text-bg-primary">Sample</span>
+            </div>
+        </t>
+    </t>
+
+</templates>

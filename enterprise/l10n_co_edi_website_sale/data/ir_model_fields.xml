@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <function model="ir.model.fields" name="formbuilder_whitelist">
+        <value>res.partner</value>
+        <value eval="[
+            'city_id',
+            'l10n_latam_identification_type_id',
+            'l10n_co_edi_fiscal_regimen',
+            'l10n_co_edi_obligation_type_ids',
+        ]"/>
+    </function>
+
+</odoo>

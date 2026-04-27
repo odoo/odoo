@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Equipment categories -->
+    <record id="equipment_furniture_tools" model="maintenance.equipment.category">
+        <field name="name">Furniture Tools</field>
+        <field name="technician_user_id" ref="base.user_admin"/>
+        <field name="color">4</field>
+    </record>
+
+    <!-- Equipment -->
+    <record id="equipment_furniture1" model="maintenance.equipment">
+        <field name="name">Crosscut Saw: 8 ppi.</field>
+        <field name="category_id" ref="equipment_furniture_tools"/>
+        <field name="technician_user_id" ref="base.user_admin"/>
+        <field name="serial_no">FT/411/11112222</field>
+        <field name="expected_mtbf" eval="2"/>
+        <field name="workcenter_id" ref="mrp.mrp_workcenter_3"/>
+    </record>
+
+    <record id="equipment_furniture2" model="maintenance.equipment">
+        <field name="name">Scrub Plane</field>
+        <field name="category_id" ref="equipment_furniture_tools"/>
+        <field name="technician_user_id" ref="base.user_admin"/>
+        <field name="serial_no">FT/411/11112223</field>
+        <field name="expected_mtbf" eval="1"/>
+        <field name="workcenter_id" ref="mrp.mrp_workcenter_3"/>
+    </record>
+
+    <record id="equipment_furniture3" model="maintenance.equipment">
+        <field name="name">Drill Machine</field>
+        <field name="category_id" ref="equipment_furniture_tools"/>
+        <field name="technician_user_id" ref="base.user_admin"/>
+        <field name="serial_no">FT/421/33334444</field>
+        <field name="expected_mtbf" eval="1"/>
+        <field name="workcenter_id" ref="mrp.mrp_workcenter_1"/>
+    </record>
+
+    <record id="maintenance.equipment_monitor1" model="maintenance.equipment">
+        <field name="expected_mtbf" eval="1"/>
+        <field name="workcenter_id" ref="mrp.mrp_workcenter_3"/>
+    </record>
+
+    <record id="maintenance.equipment_computer3" model="maintenance.equipment">
+        <field name="expected_mtbf" eval="1"/>
+        <field name="workcenter_id" ref="mrp.mrp_workcenter_2"/>
+    </record>
+
+</odoo>

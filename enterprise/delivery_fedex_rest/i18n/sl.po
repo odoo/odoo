@@ -1,0 +1,830 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * delivery_fedex_rest
+#
+# Translators:
+# Wil Odoo, 2024
+# Aleš Pipan, 2025
+#
+# Jan Zorko <jan.zorko@implex.si>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-20 18:48+0000\n"
+"PO-Revision-Date: 2025-11-17 16:30+0000\n"
+"Last-Translator: Jan Zorko <jan.zorko@implex.si>\n"
+"Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-18/"
+"delivery_fedex_rest/sl/>\n"
+"Language: sl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid ""
+"<b>After finishing creation of the project, you will see your test API key, "
+"secret key and account number:</b>\n"
+"                                <br/>"
+msgstr ""
+"<b>Po končanem ustvarjanju projekta boste videli svoj testni API ključ, "
+"tajni ključ in številko računa:</b>\n"
+"                                <br/>"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid ""
+"<b>Once your account is created, go to the My Projects tab and create a new "
+"API project. Make sure to select the options indicated below:</b>\n"
+"                                <br/>"
+msgstr ""
+"<b>Ko je vaš račun ustvarjen, pojdite na zavihek Moji projekti in ustvarite "
+"nov projekt API. Izberite spodnje možnosti:</b>\n"
+"                                <br/>"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid ""
+"<b>To enable the creation of FedEx shipping labels, the last step is the "
+"Certification Process, click on 'Go to API certification' and follow the "
+"required steps to get your account certified for label creation.</b>\n"
+"                                <br/>These certifications usually require "
+"that you contact the FedEx support team by email."
+msgstr ""
+"<b>Če želite omogočiti ustvarjanje etiket za pošiljanje FedEx, je zadnji "
+"korak postopek certificiranja. Kliknite »Pojdi na certificiranje API« in "
+"sledite zahtevanim korakom, da bo vaš račun certificiran za ustvarjanje "
+"etiket.</b>\n"
+"                                <br/>Za te certifikate se običajno morate "
+"obrniti na e-poštno skupino za podporo FedEx."
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid ""
+"<b>To move to production, generate a production key and link it to a FedEx "
+"account number (you can add/create one if necessary), you will receive "
+"production API and secret keys:</b>\n"
+"                                <br/>"
+msgstr ""
+"<b>Za prehod na produkcijo ustvarite produkcijski ključ in ga povežite s "
+"številko računa FedEx (po potrebi jo lahko dodate/ustvarite). Prejeli boste "
+"produkcijski API in tajne ključe:</b>\n"
+"                                <br/>"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid ""
+"<b>When asked to select APIs for the project, make sure to enable at least "
+"the following APIs:</b>\n"
+"                                <br/>"
+msgstr ""
+"<b>Ko boste pozvani k izbiri API-jev za projekt, poskrbite, da boste "
+"omogočili vsaj naslednje API-je:</b>\n"
+"                                <br/>"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "<span class=\"o_form_label\">Package Length Unit</span>"
+msgstr "<span class=\"o_form_label\">Enota dolžine paketa</span>"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid ""
+"<span invisible=\"fedex_rest_weight_unit != 'KG'\">Centimeters</span>\n"
+"                                <span invisible=\"fedex_rest_weight_unit != "
+"'LB'\">Inches</span>"
+msgstr ""
+"<span invisible=\"fedex_rest_weight_unit != 'KG'\">Centimetri</span>\n"
+"                                <span invisible=\"fedex_rest_weight_unit != "
+"'LB'\">Inči</span>"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_developer_key
+msgid "API Key"
+msgstr "API ključ"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Account Number"
+msgstr "Številka računa"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_residential_address__always
+msgid "Always"
+msgstr "Vedno"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid ""
+"Automated return label generation is not supported by FedEx for multi-"
+"package shipments. Please generate the return labels manually."
+msgstr ""
+"FedEx ne podpira samodejnega ustvarjanja nalepk za vračilo pošiljk z več "
+"paketi. Prosimo, da nalepke za vračilo ustvarite ročno."
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_stock_package_type__package_carrier_type
+msgid "Carrier"
+msgstr "Prevoznik"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_residential_address__check
+msgid "Check using FedEx Address API"
+msgstr "Preveri z uporabo FedEx Address API-ja"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_droppoff_type__contact_fedex_to_schedule
+msgid "Contact FedEx for pickup"
+msgstr "Za prevzem se obrnite na FedEx"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/fedex_request.py:0
+msgid "Could not decode response"
+msgstr "Odgovora ni bilo mogoče dekodirati"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,help:delivery_fedex_rest.field_delivery_carrier__fedex_rest_residential_address
+msgid ""
+"Determines whether to mark the recipient address as residential (to "
+"correctly calculate any possible surcharges). Please note: when retrieving "
+"this information using the FedEx Address API, we assume that the address is "
+"residential unless it is marked explicitly as a BUSINESS address."
+msgstr ""
+"Določa, ali naj se naslov prejemnika označi kot stanovanjski (za pravilen "
+"izračun morebitnih doplačil). Opomba: pri pridobivanju teh podatkov z "
+"uporabo FedEx Address API predpostavljamo, da je naslov stanovanjski, razen "
+"če je izrecno označen kot POSLOVNI naslov."
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_droppoff_type__dropoff_at_fedex_location
+msgid "Drop off at FedEx location"
+msgstr "Oddajte na lokaciji FedEx"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Duties paid by"
+msgstr "Dajatve plača"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_file_type__epl2
+msgid "EPL2"
+msgstr "EPL2"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_documentation_type__etd
+msgid "Electronic Trade Documents"
+msgstr "Elektronski trgovinski dokumenti"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_email_notifications
+msgid "Email Notifications"
+msgstr "Obvestila po e-pošti"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid ""
+"Error(s) from FedEx:\n"
+"%s"
+msgstr ""
+"Napaka(e) FedExa:\n"
+"%s"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Extra Data"
+msgstr "Dodatni podatki"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_extra_data_rate_request
+msgid "Extra data for rate"
+msgstr "Dodatni podatki za stopnjo"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_extra_data_return_request
+msgid "Extra data for return"
+msgstr "Dodatni podatki za vračilo"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_extra_data_ship_request
+msgid "Extra data for ship"
+msgstr "Dodatni podatki za ladjo"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__delivery_type__fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__stock_package_type__package_carrier_type__fedex_rest
+msgid "FedEx"
+msgstr "FedEx"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_1_day_freight
+msgid "FedEx 1Day® Freight"
+msgstr "FedEx 1Dan® Tovor"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_2_day
+msgid "FedEx 2Day®"
+msgstr "FedEx 2Dni®"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_2_day_am
+msgid "FedEx 2Day® AM"
+msgstr "FedEx 2dni® AM"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_2_day_freight
+msgid "FedEx 2Day® Freight"
+msgstr "FedEx 2Dni® Freight"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_3_day_freight
+msgid "FedEx 3Day® Freight"
+msgstr "FedEx 3Dni® Tovor"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_access_token
+msgid "FedEx Access Token"
+msgstr "FedEx Žeton za dostop"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_account_number
+msgid "FedEx Account Number"
+msgstr "FedEx Številka računa"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_droppoff_type
+msgid "FedEx Drop-Off Type"
+msgstr "FedEx Vrsta oddaje"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_economy
+msgid "FedEx Economy"
+msgstr "FedEx Gospodarstvo"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_economy_select
+msgid "FedEx Economy (Only U.K.)"
+msgstr "FedEx Gospodarstvo (Samo Združeno kraljestvo)"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_economy_freight
+msgid "FedEx Economy Freight"
+msgstr "FedEx Ekonomski tovorni promet"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__europe_first_international_priority
+msgid "FedEx Europe First®"
+msgstr "FedEx Evropa na prvem mestu®"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_express_saver
+msgid "FedEx Express Saver®"
+msgstr "FedEx Express Saver®"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_first
+msgid "FedEx First"
+msgstr "FedEx Prvi"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__first_overnight
+msgid "FedEx First Overnight®"
+msgstr "FedEx First Čez noč®"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_first_freight
+msgid "FedEx First Overnight® Freight"
+msgstr "FedEx Prvi Čez noč® Tovor"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__smart_post
+msgid "FedEx Ground® Economy (Formerly known as FedEx SmartPost®)"
+msgstr "FedEx Zemlja® Gospodarstvo (prej znano kot FedEx SmartPost®)"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__ground_home_delivery
+msgid "FedEx Home Delivery® "
+msgstr "FedEx Dostava na dom®"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_international_connect_plus
+msgid "FedEx International Connect Plus®"
+msgstr "FedEx Mednarodna povezava Plus®"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__international_economy_distribution
+msgid "FedEx International Economy DirectDistribution"
+msgstr "FedEx Neposredna distribucija v mednarodnem gospodarstvu"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__international_economy_freight
+msgid "FedEx International Economy® Freight"
+msgstr "FedEx Mednarodni Gospodarski®Tovor"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__international_first
+msgid "FedEx International First®"
+msgstr "FedEx Mednarodno Prvo®"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_ground
+msgid "FedEx International Ground® and FedEx Domestic Ground®"
+msgstr "FedEx Mednarodna tla® in FedEx Domača tla®"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__international_priority_distribution
+msgid "FedEx International Priority DirectDistribution®"
+msgstr "FedEx Mednarodna prednost Neposredna distribucija®"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__international_distribution_freight
+msgid "FedEx International Priority DirectDistribution® Freight"
+msgstr "FedEx Mednarodna prednostna neposredna distribucija® Tovor"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_international_priority
+msgid "FedEx International Priority®"
+msgstr "FedEx Mednarodna prednost®"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_international_priority_express
+msgid "FedEx International Priority® Express"
+msgstr "FedEx Mednarodna prednost® Express"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__international_priority_freight
+msgid "FedEx International Priority® Freight"
+msgstr "FedEx Mednarodni prioritetni tovorni promet®"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_default_package_type_id
+msgid "FedEx Package Type"
+msgstr "FedEx Vrsta paketa"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_priority
+msgid "FedEx Priority"
+msgstr "FedEx Prednost"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_priority_express
+msgid "FedEx Priority Express"
+msgstr "FedEx Prioritetni ekspres"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_priority_express_freight
+msgid "FedEx Priority Express Freight"
+msgstr "FedEx Prioritetni ekspresni tovor"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_priority_freight
+msgid "FedEx Priority Freight"
+msgstr "FedEx Prednostni Tovor"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__priority_overnight
+msgid "FedEx Priority Overnight®"
+msgstr "FedEx Prednostno Čez noč®"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__same_day
+msgid "FedEx SameDay®"
+msgstr "FedEx Isti dan®"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__same_day_city
+msgid "FedEx SameDay® City"
+msgstr "FedEx Isti dan® Mesto"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_service_type
+msgid "FedEx Service Type"
+msgstr "FedEx Vrsta storitve"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__standard_overnight
+msgid "FedEx Standard Overnight®"
+msgstr "FedEx Standardna nočitev®"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_international_deferred_freight
+msgid "FedEx® International Deferred Freight"
+msgstr "FedEx® Mednarodni odloženi tovorni prevoz"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__international_economy
+msgid "FedEx® International Economy"
+msgstr "FedEx® Mednarodno gospodarstvo"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_regional_economy
+msgid "FedEx® Regional Economy"
+msgstr "FedEx® Regionalno gospodarstvo"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_regional_economy_freight
+msgid "FedEx® Regional Economy Freight"
+msgstr "FedEx® Regionalni gospodarski tovorni promet"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_uom_uom__fedex_code
+msgid "Fedex Code"
+msgstr "Fedex Koda"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Fedex Configuration"
+msgstr "Fedex Konfiguracija"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Fedex Developer Website"
+msgstr "Fedex Spletna stran razvijalca"
+
+#. module: delivery_fedex_rest
+#: model:delivery.carrier,name:delivery_fedex_rest.delivery_carrier_fedex_inter
+#: model:product.template,name:delivery_fedex_rest.product_product_delivery_fedex_inter_product_template
+msgid "Fedex International"
+msgstr "Fedex Mednarodno"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_duty_payment
+msgid "Fedex Rest Duty Payment"
+msgstr "Fedex Plačilo dajatve za preostanek"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_weight_unit
+msgid "Fedex Rest Weight Unit"
+msgstr "Fedex Enota za težo v mirovanju"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Fedex Tutorial"
+msgstr "Fedex Navodila"
+
+#. module: delivery_fedex_rest
+#: model:delivery.carrier,name:delivery_fedex_rest.delivery_carrier_fedex_us
+#: model:product.template,name:delivery_fedex_rest.product_product_delivery_fedex_us_product_template
+msgid "Fedex US"
+msgstr "Fedex US"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,help:delivery_fedex_rest.field_delivery_carrier__fedex_rest_documentation_type
+msgid ""
+"For international shipments (or some intra-country shipments), a commercial "
+"invoice might be required for customs clearance. This commercial invoice can "
+"be generated by FedEx based on shipment data and returned as PDF for "
+"printing and attaching to the shipment or manual electronic submission to "
+"FedEx. It can also be submitted directly as ETD information to FedEx upon "
+"shipment validation."
+msgstr ""
+"Za mednarodne pošiljke (ali nekatere pošiljke znotraj države) je za "
+"carinjenje morda potreben komercialni račun. Ta komercialni račun lahko "
+"FedEx ustvari na podlagi podatkov o pošiljki in ga vrne kot PDF za tiskanje "
+"in prilaganje pošiljki ali ročno elektronsko oddajo FedExu. Po potrditvi "
+"pošiljke ga je mogoče FedExu predložiti tudi neposredno kot podatke o ETD."
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid "Freight services for Fedex are not implemented."
+msgstr ""
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_documentation_type
+msgid "Generate invoice"
+msgstr "Ustvari račun"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Go to"
+msgstr "Pojdi na"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__intl_ground_distribution
+msgid "International Ground® Distribution (IGD)"
+msgstr "Mednarodna distribucija Ground® (IGD)"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/fedex_request.py:0
+msgid "Invalid syntax for FedEx extra data."
+msgstr "Neveljavna sintaksa za dodatne podatke FedEx."
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_weight_unit__kg
+msgid "Kilograms"
+msgstr "Kilogrami"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_label_file_type
+msgid "Label File Type"
+msgstr "Vrsta datoteke z oznako"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Label Format"
+msgstr "Oblika oznake"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_label_stock_type
+msgid "Label Size"
+msgstr "Velikost nalepke"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_residential_address__never
+msgid "Never"
+msgstr "Nikoli"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_documentation_type__none
+msgid "No"
+msgstr "Ne"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Options"
+msgstr "Možnosti"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__paper_4x6
+msgid "PAPER_4X6"
+msgstr "PAPIR_4X6"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__paper_4x6_75
+msgid "PAPER_4X6.75"
+msgstr "PAPIR_4X6.75"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__paper_4x8
+msgid "PAPER_4X8"
+msgstr "PAPIR_4X8"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__paper_4x9
+msgid "PAPER_4X9"
+msgstr "PAPIR_4X9"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__paper_7x4_75
+msgid "PAPER_7X4.75"
+msgstr "PAPIR_7X4.75"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__paper_8_5x11_bottom_half_label
+msgid "PAPER_8.5X11_BOTTOM_HALF_LABEL"
+msgstr "PAPIR_8.5X11_SPODNJA_POLOVICA_OZNAKE"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__paper_8_5x11_top_half_label
+msgid "PAPER_8.5X11_TOP_HALF_LABEL"
+msgstr "PAPIR_8.5X11_ZGORNJA_POLOVIČNA_OZNAKA"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__paper_letter
+msgid "PAPER_LETTER"
+msgstr "PAPIR_PISMO"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_file_type__pdf
+msgid "PDF"
+msgstr "PDF"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_file_type__png
+msgid "PNG"
+msgstr "PNG"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Package Weight Unit"
+msgstr "Teža paketa Enota"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid "Packages:"
+msgstr "Paketi:"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_droppoff_type__use_scheduled_pickup
+msgid "Part of regular scheduled pickup"
+msgstr "Del rednega načrtovanega prevzema"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_weight_unit__lb
+msgid "Pounds"
+msgstr "Funti"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_documentation_type__invoice
+msgid "Print PDF"
+msgstr "Natisni PDF"
+
+#. module: delivery_fedex_rest
+#: model:ir.model,name:delivery_fedex_rest.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Merska enota izdelka"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "Ponudnik"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_duty_payment__recipient
+msgid "Recipient"
+msgstr "Prejemnik"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid "Required documents:"
+msgstr "Zahtevani dokumenti:"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_residential_address
+msgid "Residential delivery"
+msgstr "Dostava na dom"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid "Return Label"
+msgstr "Nalepka za vračilo"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__stock_4x6
+msgid "STOCK_4X6"
+msgstr "ZALOGA_4X6"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__stock_4x6_75
+msgid "STOCK_4X6.75"
+msgstr "ZALOGA_4X6.75"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__stock_4x6_75_leading_doc_tab
+msgid "STOCK_4X6.75_LEADING_DOC_TAB"
+msgstr "ZALOGA_4X6.75_LEADING_DOC_TAB"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__stock_4x6_75_trailing_doc_tab
+msgid "STOCK_4X6.75_TRAILING_DOC_TAB"
+msgstr "ZALOGA_4X6.75_VLEČNO_DOC_TAB"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__stock_4x8
+msgid "STOCK_4X8"
+msgstr "ZALOGA_4X8"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__stock_4x9
+msgid "STOCK_4X9"
+msgstr "ZALOGA_4X9"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__stock_4x9_leading_doc_tab
+msgid "STOCK_4X9_LEADING_DOC_TAB"
+msgstr "ZALOGA_4X9_LEADING_DOC_TAB"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__stock_4x9_trailing_doc_tab
+msgid "STOCK_4X9_TRAILING_DOC_TAB"
+msgstr "ZALOGA_4X9_TRAILING_DOC_TAB"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Screenshot"
+msgstr "Posnetek zaslona"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_developer_password
+msgid "Secret Key"
+msgstr "Skrivni ključ"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_duty_payment__sender
+msgid "Sender"
+msgstr "Pošiljatelj"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid "Shipment %s has been cancelled"
+msgstr "Pošiljka%s je bila preklicana"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid "Shipment created into Fedex"
+msgstr "Pošiljka ustvarjena v FedEx-u"
+
+#. module: delivery_fedex_rest
+#: model:ir.model,name:delivery_fedex_rest.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "Metode odpreme"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/fedex_request.py:0
+msgid "Something went wrong, please try again later!!"
+msgstr "Nekaj ​​je šlo narobe, poskusite znova pozneje!!"
+
+#. module: delivery_fedex_rest
+#: model:ir.model,name:delivery_fedex_rest.model_stock_package_type
+msgid "Stock package type"
+msgstr "Tip paketa zaloge"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,help:delivery_fedex_rest.field_delivery_carrier__fedex_rest_extra_data_rate_request
+#: model:ir.model.fields,help:delivery_fedex_rest.field_delivery_carrier__fedex_rest_extra_data_return_request
+#: model:ir.model.fields,help:delivery_fedex_rest.field_delivery_carrier__fedex_rest_extra_data_ship_request
+msgid ""
+"The extra data in FedEx is organized like the inside of a json file.\n"
+"This functionality is advanced/technical and should only be used if you know "
+"what you are doing.\n"
+"More info on https://www.developer.fedex.com"
+msgstr ""
+"Dodatni podatki v FedExu so organizirani kot notranjost datoteke json.\n"
+"Ta funkcionalnost je napredna/tehnična in jo je treba uporabljati le, če "
+"veste, kaj počnete.\n"
+"Več informacij na: https://www.developer.fedex.com"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid "Tracking Numbers:"
+msgstr "Številke za sledenje:"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__transborder_distribution
+msgid "Transborder distribution"
+msgstr "Čezmejna distribucija"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_override_shipper_vat
+msgid "Union tax id (EORI/IOSS)"
+msgstr "Davčna številka Unije (EORI/IOSS)"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,help:delivery_fedex_rest.field_uom_uom__fedex_code
+msgid "UoM Code sent to FedEx"
+msgstr "Koda enote mase, poslana FedExu"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid ""
+"Warning(s) from FedEx:\n"
+"%s"
+msgstr ""
+"Opozorilo(-a) podjetja FedEx:\n"
+"%s"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,help:delivery_fedex_rest.field_delivery_carrier__fedex_rest_email_notifications
+msgid ""
+"When enabled, the customer will receive email notifications from FedEx about "
+"this shipment (when an email address is configured on the customer)"
+msgstr ""
+"Ko je omogočeno, bo stranka od FedExa prejemala e-poštna obvestila o tej "
+"pošiljki (če je pri stranki konfiguriran e-poštni naslov)."
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,help:delivery_fedex_rest.field_delivery_carrier__fedex_rest_override_shipper_vat
+msgid ""
+"Will be provided to Fedex as primary company tax identifier of type "
+"BUSINESS_UNION to put on the generated invoice. Use this when you need to "
+"use an IOSS or EORI number in addition to the national tax number. When not "
+"provided the regular tax id on the company will be used with type "
+"BUSINESS_NATIONAL."
+msgstr ""
+"Fedexu bo posredovan kot primarni davčni identifikator podjetja tipa "
+"BUSINESS_UNION, ki ga bo uporabil na ustvarjenem računu. Uporabite ga, kadar "
+"morate poleg nacionalne davčne številke uporabiti tudi številko IOSS ali "
+"EORI. Če ni naveden, bo uporabljen običajni davčni identifikator podjetja "
+"tipa BUSINESS_NATIONAL."
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/fedex_request.py:0
+msgid "You must setup a client ID and secret on the carrier first"
+msgstr "Najprej morate nastaviti ID stranke in skrivnost pri operaterju."
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_file_type__zplii
+msgid "ZPLII"
+msgstr "ZPLII"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "to create a FedEx developer account"
+msgstr "ustvariti razvijalski račun FedEx"

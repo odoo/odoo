@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.pos_restaurant</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="pos_table_booking" position="replace">
+                <field name="pos_module_pos_restaurant_appointment" invisible="True" />
+                <div class="mt16" invisible="not pos_module_pos_restaurant_appointment">
+                    <label string="Appointment type" for="pos_appointment_type_id" class="o_light_label me-2"/>
+                    <field name="pos_appointment_type_id" readonly="pos_has_active_session" />
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

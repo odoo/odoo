@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_order_tracking_display.OrderStatusDisplay">
+        <div class="o_tracking_display_main vh-100 text-bg-700 overflow-y-auto">
+            <Orders categoryName.translate="Ready" ready="true" class="'mb-5'" orders="orders.done or []" />
+            <Orders categoryName.translate="Almost there" orders="orders.notDone or []" />
+        </div>
+        <div class="o_tracking_display_fadeOut position-absolute bottom-0 w-100 pe-none">
+            <OdooLogo class="'o_tracking_display_logo position-absolute bottom-0 end-0'" monochrome="true" />
+        </div>
+    </t>
+</templates>

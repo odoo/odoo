@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="commission_plan_form_view" model="ir.ui.view">
+        <field name="name">commission.plan.form.view</field>
+        <field name="model">commission.plan</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="product_id"/>
+                        <field name="company_id" />
+                    </group>
+                    <notebook>
+                        <page string="Rules" name="commission_rules">
+                            <field name="commission_rule_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="commission_plan_tree_view" model="ir.ui.view">
+        <field name="name">commission.plan.list.view</field>
+        <field name="model">commission.plan</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="product_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="commission_plan_search_view" model="ir.ui.view">
+        <field name="name">commission.plan.search.view</field>
+        <field name="model">commission.plan</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="company_id"/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="commission_rule_tree_view" model="ir.ui.view">
+        <field name="name">commission.rule.list.view</field>
+        <field name="model">commission.rule</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="category_id"/>
+                <field name="product_id" domain="[('categ_id', '=', category_id)]"/>
+                <field name="template_id"/>
+                <field name="pricelist_id"/>
+                <field name="rate"/>
+                <field name="is_capped"/>
+                <field name="max_commission" readonly="not is_capped"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_commission_plans" model="ir.actions.act_window">
+        <field name="name">Commission Plans</field>
+        <field name="res_model">commission.plan</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="menu_commission_plans"
+        name="Commission Plans"
+        action="action_commission_plans"
+        parent="website_crm_partner_assign.crm_menu_resellers"
+        sequence="10"/>
+</odoo>

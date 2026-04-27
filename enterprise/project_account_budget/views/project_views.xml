@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_project_kanban_view_inherited" model="ir.ui.view">
+        <field name="name">project.project.kanban.inherited</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="arch" type="xml">
+            <field name="activity_ids" position="before">
+                <field name="account_id" invisible="1"/>
+                <field name="total_budget_amount" invisible="1"/>
+                <field name="total_budget_progress" invisible="1"/>
+                <t t-if="record.account_id and record.total_budget_amount.raw_value">
+                    <t t-set="budget_progress" t-value="record.total_budget_progress.raw_value"/>
+                    <i role="img" aria-label="Budget"
+                        t-attf-class="ms-1 fa fa-usd text-{{ budget_progress &gt;= 0.25 ? 'success' : budget_progress &gt;= 0 ? 'warning' : 'danger' }}"
+                        t-attf-title="Budget {{ budget_progress &gt;= 0.25 ? 'on track' : budget_progress &gt;= 0 ? 'soon overspent' : 'overspent' }}"
+                    />
+                </t>
+            </field>
+        </field>
+    </record>
+</odoo>

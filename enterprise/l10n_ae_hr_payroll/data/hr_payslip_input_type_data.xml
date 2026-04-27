@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="input_salary_arrears" model="hr.payslip.input.type">
+        <field name="name">Salary Arrears</field>
+        <field name="code">SALARY_ARREARS</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ae_hr_payroll.uae_employee_payroll_structure'))]"/>
+    </record>
+
+    <record id="input_other_earnings" model="hr.payslip.input.type">
+        <field name="name">Other Earnings</field>
+        <field name="code">OTHER_EARNINGS</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ae_hr_payroll.uae_employee_payroll_structure'))]"/>
+    </record>
+
+    <record id="input_salary_deduction" model="hr.payslip.input.type">
+        <field name="name">Salary Deductions</field>
+        <field name="code">SALARY_DEDUCTIONS</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ae_hr_payroll.uae_employee_payroll_structure'))]"/>
+    </record>
+
+    <record id="input_bonus_earnings" model="hr.payslip.input.type">
+        <field name="name">Bonus</field>
+        <field name="code">BONUS</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ae_hr_payroll.uae_employee_payroll_structure'))]"/>
+    </record>
+
+    <record id="input_airfare_allowance_earnings" model="hr.payslip.input.type">
+        <field name="name">Airfare Allowance</field>
+        <field name="code">AIRFARE_ALLOWANCE</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ae_hr_payroll.uae_employee_payroll_structure'))]"/>
+    </record>
+
+    <!-- Other inputs for WPS report -->
+    <record id="input_other_deduction" model="hr.payslip.input.type">
+        <field name="name">Other Deductions</field>
+        <field name="code">OTHER_DEDUCTIONS</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ae_hr_payroll.uae_employee_payroll_structure'))]"/>
+    </record>
+
+    <record id="l10n_ae_input_housing_allowance" model="hr.payslip.input.type">
+        <field name="name">Housing Allowance</field>
+        <field name="code">HOUALLOW</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ae_hr_payroll.uae_employee_payroll_structure'))]"/>
+    </record>
+
+    <record id="l10n_ae_input_conveyance_allowance" model="hr.payslip.input.type">
+        <field name="name">Conveyance Allowance</field>
+        <field name="code">CONVALLOW</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ae_hr_payroll.uae_employee_payroll_structure'))]"/>
+    </record>
+
+    <record id="l10n_ae_input_medical_allowance" model="hr.payslip.input.type">
+        <field name="name">Medical Allowance</field>
+        <field name="code">MEDALLOW</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ae_hr_payroll.uae_employee_payroll_structure'))]"/>
+    </record>
+
+    <record id="l10n_ae_input_annual_passage_allowance" model="hr.payslip.input.type">
+        <field name="name">Annual Passage Allowance</field>
+        <field name="code">ANNUALPASSALLOW</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ae_hr_payroll.uae_employee_payroll_structure'))]"/>
+    </record>
+
+    <record id="l10n_ae_input_overtime_allowance" model="hr.payslip.input.type">
+        <field name="name">Overtime Allowance</field>
+        <field name="code">OVERTIMEALLOW</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ae_hr_payroll.uae_employee_payroll_structure'))]"/>
+    </record>
+
+    <record id="l10n_ae_input_other_allowance" model="hr.payslip.input.type">
+        <field name="name">Other Allowance</field>
+        <field name="code">OTALLOW</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ae_hr_payroll.uae_employee_payroll_structure'))]"/>
+    </record>
+
+    <record id="l10n_ae_input_leave_encashment" model="hr.payslip.input.type">
+        <field name="name">Leave Encashment</field>
+        <field name="code">LEAVEENCASH</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ae_hr_payroll.uae_employee_payroll_structure'))]"/>
+    </record>
+</odoo>

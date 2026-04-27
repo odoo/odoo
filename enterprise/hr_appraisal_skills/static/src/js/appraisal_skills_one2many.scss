@@ -1,0 +1,36 @@
+.o_field_appraisal_skills_one2many {
+    .o_appraisal_overlay {
+        z-index: 100;
+    }
+
+    .o_appraisal_blur {
+        margin-top: unset;
+        overflow: hidden;
+    }
+
+    .o_skill_sample_row {
+        opacity: 0.5;
+        overflow: hidden;
+
+        .o_skill_sample_text {
+            display: inline-block;
+            background-color: #ccc;
+            height: 1em;
+        }
+
+        .o_skill_sample_progress {
+            display: inline-block;
+            background-color: $o-enterprise-action-color;
+            height: 1em;
+        }
+    }
+    .o_progressbar {
+        justify-content: start !important;
+    }
+    .o_list_renderer .o_list_table thead .o_list_number_th{
+        text-align: start !important;
+    }
+}
+.o_field_appraisal_skills_one2many:last-child{
+    width: 100%;
+}

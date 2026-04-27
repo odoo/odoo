@@ -1,0 +1,103 @@
+// These variables should be moved to a seperate file `grid_renderer.variables.scss`
+// These values are hard coded in grid_renderer.js
+$o-web-grid-first-column-width: 3rem;
+$o-web-grid-cell-minwidth: 10ch;
+
+@mixin o-grid-zindex($level) {
+    z-index: map-get(
+        (
+            interact: 20,
+            // Top-most elements
+            top: 30,
+        ),
+        $level
+    );
+}
+
+.o_grid_renderer {
+    height: inherit;
+
+    .o_grid_grid {
+        min-width: fit-content;
+    }
+
+    .o_grid_row, .o_grid_section, .o_grid_column_title {
+        &:not(.o_grid_highlighted) {
+            > .o_grid_cell_overlay:not(.o_grid_unavailable), > .o_grid_cell_overlay_total {
+                --bg-opacity: 0;
+            }
+
+            > .o_grid_cell_overlay.o_grid_unavailable {
+                --bg-opacity: .05;
+            }
+        }
+    }
+
+    .o_grid_column_title {
+        @include o-grid-zindex(interact);
+
+        > .o_grid_cell_overlay_today {
+            --bg-opacity: .5;
+        }
+
+        span {
+            white-space: pre-line;
+        }
+    }
+
+    .o_grid_row_title, .o_grid_section_title {
+        @include o-grid-zindex(interact);
+    }
+
+    .o_grid_highlighted, .o_grid_row_highlighted {
+        > .o_grid_cell_overlay {
+            --bg-opacity: .1;
+        }
+
+        > .o_grid_cell_overlay_today, > .o_grid_cell_overlay_total {
+            --bg-opacity: .4;
+        }
+    }
+
+    .o_grid_cell_highlighted:not(.o_grid_row_title):not(.o_grid_section_title):not(.o_grid_column_total) {
+        > .o_grid_cell_overlay {
+            --bg-opacity: .15;
+        }
+
+        > .o_grid_cell_overlay_today, > .o_grid_cell_overlay_total {
+            --bg-opacity: .5;
+        }
+    }
+
+    .o_grid_section .o_grid_cell_overlay_today {
+        --bg-opacity: .25;
+    }
+
+    .o_grid_section ~ .o_grid_row.o_grid_row_title {
+        padding-left: calc(#{map-get($spacers, 3)} + #{$o-avatar-size} + #{map-get($spacers, 1)}) !important;
+    }
+
+    .o_grid_row_title {
+        .o_form_uri {
+            @include text-truncate();
+            @include o-hover-text-color($body-color, $o-action);
+            max-width: 300px;
+        }
+    }
+
+    // To have at least one day shown in My Timesheets on mobile
+    .o_grid_row_timer + .o_grid_row_title {
+        @include media-breakpoint-down(md) {
+            max-width: calc(100vw - #{$o-web-grid-cell-minwidth} - #{$o-web-grid-first-column-width})
+        }
+    }
+
+    .o_grid_grid .o_input {
+        text-align: center;
+        padding: 0;
+    }
+
+    .o_grid_navigation_wrap {
+        @include o-grid-zindex(top);
+    }
+}

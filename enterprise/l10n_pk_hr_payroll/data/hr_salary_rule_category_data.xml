@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pk_tax_deduction_salary_rule_category" model="hr.salary.rule.category">
+        <field name="name">Tax Deduction</field>
+        <field name="code">TAX</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="pk_tax_bracket_salary_rule_category" model="hr.salary.rule.category">
+        <field name="name">Tax Bracket</field>
+        <field name="code">TB</field>
+    </record>
+</odoo>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportDebugPopover">
+        <div class="account_report_popover_debug">
+            <t t-foreach="props.expressionsDetail" t-as="expressionEngineAndTotals" t-key="expressionEngineAndTotals_index">
+                <t t-set="expressionEngine" t-value="expressionEngineAndTotals[0]"/>
+                <t t-set="expressionTotals" t-value="expressionEngineAndTotals[1]"/>
+
+                <div class="line_debug">
+                    <span>Engine</span>
+                    <span class="fw-bold" t-out="expressionEngine"/>
+                </div>
+
+                <t t-foreach="expressionTotals" t-as="labelAndInfo" t-key="labelAndInfo_index">
+                    <t t-set="expressionLabel" t-value="labelAndInfo[0]"/>
+                    <t t-set="expressionInfo" t-value="labelAndInfo[1]"/>
+
+                    <div class="line_debug">
+                        <span>Label</span>
+                        <span t-out="expressionLabel"/>
+                    </div>
+
+                    <div class="line_debug">
+                        <span>Formula</span>
+                        <code t-out="expressionInfo.formula"/>
+                    </div>
+
+                    <t t-if="expressionInfo.subformula">
+                        <div class="line_debug">
+                            <span>Subformula</span>
+                            <code t-out="expressionInfo.subformula"/>
+                        </div>
+                    </t>
+
+                    <div class="line_debug">
+                        <span>Value</span>
+                        <span t-out="expressionInfo.value"/>
+                    </div>
+
+                    <t t-if="!labelAndInfo_last">
+                        <div class="totals_separator"/>
+                    </t>
+                </t>
+
+                <t t-if="!expressionEngineAndTotals_last">
+                    <div class="engine_separator"/>
+                </t>
+            </t>
+        </div>
+    </t>
+</templates>

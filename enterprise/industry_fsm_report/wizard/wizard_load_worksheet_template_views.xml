@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_worksheet_template_load_form" model="ir.ui.view">
+        <field name="name">view.worksheet.template.load.wizard.form</field>
+        <field name="model">worksheet.template.load.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <p>
+                        Tailor worksheet templates to your specific needs. Easily share worksheet content with customers and request their signatures to validate the completed work.
+                    </p>
+                    <p>
+                        Give it a try using one of our example templates. You can remove them at any time.
+                    </p>
+                </sheet>
+                <footer>
+                    <button string="Load Template" name="action_generate_new_template" type="object" class="btn-primary"/>
+                    <button string="Start Blank" name="action_open_template" type="object" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="room.RoomBookingView" t-inherit-mode="extension">
+        <!-- remove background url to not trigger 404 error during tests -->
+        <xpath expr="//div[@t-attf-style]" position="attributes">
+            <attribute name="t-attf-style" remove="url('#{manageRoomUrl}/background')" separator=", "/>
+        </xpath>
+    </t>
+</templates>

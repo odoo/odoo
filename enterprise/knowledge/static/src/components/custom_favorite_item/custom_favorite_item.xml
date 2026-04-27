@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="web.CustomFavoriteItem" t-inherit-mode="extension">
+        <xpath expr="//CheckBox[@value='state.isShared']" position="attributes">
+            <attribute name="t-if">!this.isKnowledgeEmbeddedView()</attribute>
+        </xpath>
+    </t>
+</templates>

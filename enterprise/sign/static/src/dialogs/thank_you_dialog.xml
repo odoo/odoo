@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="sign.ThankYouDialog">
+        <Dialog t-props="dialogProps">
+            <t t-set-slot="header" t-slot-scope="scope">
+                <h4 class="modal-title text-break text-center" t-att-class="{ 'me-auto': scope.isFullscreen }">
+                    It's signed!
+                </h4>
+            </t>
+            <h5 t-if="props.subtitle" id="thank-you-subtitle"><t t-esc="props.subtitle"/></h5>
+            <div t-attf-class="d-flex flex-column align-items-center gap-2">
+                <i class="fa fa-check fa-2x p-2 rounded-circle text-success bg-success-subtle" role="img"/>
+                <div id="thank-you-message" class="o_thankyou_message">
+                    <t t-esc="message"/>
+                </div>
+            </div>
+            <t t-if="state.nextDocuments.find((doc) => !doc.canceled)">
+                <hr/>
+                <t t-if="isMobileOS">
+                    <br/>
+                </t>
+                <div class="o_thankyou_message">There are other documents waiting for your signature:</div>
+                <table class="table table-sm">
+                    <colgroup>
+                        <col span="1" class="o_thank_you_table_first_col"/>
+                        <col span="1" class="o_thank_you_table_second_col"/>
+                    </colgroup>
+                    <tbody>
+                        <t t-foreach="state.nextDocuments.filter((doc) => !doc.canceled)" t-as="doc" t-key="doc.id">
+                            <tr t-attf-class="next-document">
+                                <th t-attf-class="{{doc_last and 'border-0'}}">
+                                    <div><strong t-out="doc.name"></strong></div>
+                                    <span>Sent by <span t-out="doc.user"></span> on <span t-out="doc.date"></span></span>
+                                </th>
+                                <th t-attf-class="{{doc_last and 'border-0'}}">
+                                    <div t-attf-class="{{ isMobileOS ? 'd-flex flex-column gap-2' : 'text-end d-flex flex-row gap-1' }}">
+                                        <button class="btn btn-sm btn-primary o_thankyou_next_sign w-100" t-on-click="() => this.clickNextSign(doc.requestId, doc.accessToken)">Sign now</button>
+                                        <button class="btn btn-sm btn-secondary o_thankyou_next_cancel w-100" t-on-click="() => this.clickNextCancel(doc)">Refuse</button>
+                                    </div>
+                                </th>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </t>
+            <div t-if="suggestSignUp" class="o_thankyou_message d-flex gap-2 border-top mt-3 pt-3">
+                <img class="img" height="48" width="48" src="/base/static/img/icons/sign.png"></img>
+                <div>
+                    <h6 class="mb-1">Need to sign documents?</h6>
+                    <p class="mb-0"><a class="fw-bold" href="https://www.odoo.com/trial?selected_app=sign&amp;utm_source=db&amp;utm_medium=sign" target="_blank">Odoo Sign</a> is free, forever, with unlimited users - and it's fun to use!</p>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-if="signRequestState === 'signed'" t-on-click="() => this.downloadDocument()">Download</button>
+                <t t-foreach="state.buttons" t-as="button" t-key="button.name">
+                    <button t-att-class="button.classes" t-on-click="button.click" t-att-disabled="button.disabled"><t t-out="button.name"/></button>
+                </t>
+            </t>
+        </Dialog>
+    </t>
+</templates>

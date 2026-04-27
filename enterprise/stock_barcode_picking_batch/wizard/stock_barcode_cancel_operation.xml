@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="stock_barcode_picking_batch_cancel_operation_view" model="ir.ui.view">
+        <field name="name">stock_barcode_picking_batch_cancel_operation</field>
+        <field name="model">stock_barcode.cancel.operation</field>
+        <field name="inherit_id" ref="stock_barcode.stock_barcode_cancel_operation_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='picking_id']" position="after">
+                <field name="batch_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='picking_name']" position="after">
+                <field name="batch_name" invisible="not batch_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

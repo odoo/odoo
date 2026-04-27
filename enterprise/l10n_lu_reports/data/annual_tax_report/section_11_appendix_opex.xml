@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_lu_annual_tax_report_section_appendix_opex" model="account.report">
+        <field name="name">Appendix to Operational Expenditures</field>
+        <field name="sequence">9</field>
+        <field name="country_id" ref="base.lu"/>
+        <field name="availability_condition">country</field>
+        <field name="custom_handler_model_id" ref="model_l10n_lu_appendix_opex_tax_report_handler"/>
+        <field name="column_ids">
+            <record id="l10n_lu_annual_tax_report_appendix_opex_vat_excluded" model="account.report.column">
+                <field name="name">Expenditures VAT excluded</field>
+                <field name="expression_label">vat_excluded</field>
+            </record>
+            <record id="l10n_lu_annual_tax_report_appendix_opex_balance_invoiced" model="account.report.column">
+                <field name="name">of VAT invoiced</field>
+                <field name="expression_label">vat_invoiced</field>
+            </record>
+        </field>
+    </record>
+</odoo>

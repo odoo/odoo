@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="action_social_account" model="ir.actions.act_window">
+        <field name="name">Social Accounts</field>
+        <field name="res_model">social.account</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Social Account yet!
+            </p><p>
+                <a href="/odoo/action-social.action_social_media">Link an Account</a> to start posting from Odoo.
+            </p>
+        </field>
+    </record>
+
+    <record id="menu_social_account" model="ir.ui.menu">
+        <field name="action" ref="action_social_account" />
+    </record>
+
+    <record id="social_account_view_list" model="ir.ui.view">
+        <field name="name">social.account.view.list</field>
+        <field name="model">social.account</field>
+        <field name="arch" type="xml">
+            <list string="Social Accounts" create="0">
+                <field name="name" />
+                <field name="social_account_handle"/>
+                <field name="media_id" />
+                <field name="create_uid" widget="many2one_avatar_user"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="social_account_view_form" model="ir.ui.view">
+        <field name="name">social.account.view.form</field>
+        <field name="model">social.account</field>
+        <field name="arch" type="xml">
+            <form string="Social Account" create="0">
+                <header></header>
+                <sheet>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field class="text-break" name="display_name" placeholder="Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="social_account_global">
+                            <field name="active" invisible="1"/>
+                            <field name="name" string="Name"/>
+                            <field name="social_account_handle"/>
+                            <field name="media_id" options="{'no_open': True}" />
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="social_account_view_search" model="ir.ui.view">
+        <field name="name">social.account.view.search</field>
+        <field name="model">social.account</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <filter name="filter_active" string="Archived" domain="[('active', '=', False)]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Company" name="filter_company_id" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+</data>
+</odoo>

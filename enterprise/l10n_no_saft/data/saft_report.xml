@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="address_inherit_l10n_no_saft" inherit_id="account_saft.address">
+        <xpath expr="//City" position="attributes">
+            <attribute name="t-out" separator=" or " add="company.account_fiscal_country_id.code == 'NO' and 'N/A'"/>
+        </xpath>
+        <xpath expr="//PostalCode" position="attributes">
+            <attribute name="t-out" separator=" or " add="company.account_fiscal_country_id.code == 'NO' and 'N/A'"/>
+        </xpath>
+    </template>
+
+    <template id="saft_template_inherit_l10n_no_saft" inherit_id="account_saft.saft_template" primary="True">
+        <xpath expr="//StandardAccountID" position="replace">
+            <GroupingCategory>RF-1167</GroupingCategory>
+            <GroupingCode t-out="account.code[-4:]"/>
+        </xpath>
+        <xpath expr="//TaxCodeDetails" position="before">
+            <TaxType>MVA</TaxType>
+            <Description>Merverdiavgift</Description>
+        </xpath>
+        <xpath expr="//TaxCodeDetails" position="inside">
+            <StandardTaxCode t-out="tax_vals['standard_code']"/>
+            <!-- TODO: 100 depicts the whole amount is tax deductible, need to check if there can be any other value -->
+            <BaseRate>100</BaseRate>
+        </xpath>
+        <xpath expr="//Customer" position="replace">
+            <Customer t-foreach="customer_vals_list" t-as="partner_vals">
+                <t t-call="account_saft.addresses_contacts">
+                    <t t-set="partner_id" t-value="partner_vals['partner'].id"/>
+                </t>
+                <CustomerID t-out="partner_vals['partner'].id"/>
+                <BalanceAccount t-foreach="partner_vals['accounts']" t-as="partner_account">
+                    <t t-call="l10n_no_saft.balance_account"/>
+                </BalanceAccount>
+            </Customer>
+        </xpath>
+        <xpath expr="//Supplier" position="replace">
+            <Supplier t-foreach="supplier_vals_list" t-as="partner_vals">
+                <t t-call="account_saft.addresses_contacts">
+                    <t t-set="partner_id" t-value="partner_vals['partner'].id"/>
+                </t>
+                <SupplierID t-out="partner_vals['partner'].id"/>
+                <BalanceAccount t-foreach="partner_vals['accounts']" t-as="partner_account">
+                    <t t-call="l10n_no_saft.balance_account"/>
+                </BalanceAccount>
+            </Supplier>
+        </xpath>
+        <xpath expr="//TaxInformation/t[@t-call]" position="attributes">
+            <attribute name="t-call">l10n_no_saft.l10n_no_tax_information</attribute>
+        </xpath>
+    </template>
+
+
+    <template id="l10n_no_tax_information" inherit_id="account_saft.tax_information" primary="True">
+        <xpath expr="//TaxCode" position="before">
+            <TaxType>MVA</TaxType>
+        </xpath>
+        <xpath expr="//TaxAmount" position="replace">
+            <t t-if="line_vals['credit']">
+                <CreditTaxAmount>
+                    <t t-call="l10n_no_saft.tax_amount_structure"/>
+                </CreditTaxAmount>
+            </t>
+            <t t-else="">
+                <DebitTaxAmount>
+                    <t t-call="l10n_no_saft.tax_amount_structure"/>
+                </DebitTaxAmount>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="balance_account">
+        <AccountID t-out="partner_account['code']"/>
+        <t t-set="opening_balance" t-value="partner_account['opening_balance']"/>
+        <t t-set="closing_balance" t-value="partner_account['closing_balance']"/>
+        <t t-if="opening_balance &lt; 0.0">
+            <OpeningCreditBalance t-out="format_float(-opening_balance)"/>
+        </t>
+        <t t-else="">
+            <OpeningDebitBalance t-out="format_float(opening_balance)"/>
+        </t>
+        <t t-if="closing_balance &lt; 0.0">
+            <ClosingCreditBalance t-out="format_float(-closing_balance)"/>
+        </t>
+        <t t-else="">
+            <ClosingDebitBalance t-out="format_float(closing_balance)"/>
+        </t>
+    </template>
+
+    <template id="tax_amount_structure">
+        <Amount t-out="format_float(sign * tax_vals['amount'])"/>
+        <t t-if="tax_vals['currency_id'] != company.currency_id.id">
+            <CurrencyCode t-out="tax_vals['currency_code']"/>
+            <CurrencyAmount t-out="format_float(sign * tax_vals['amount_currency'])"/>
+            <ExchangeRate t-out="format_float(tax_vals['rate'], digits=8)"/>
+        </t>
+    </template>
+
+</odoo>

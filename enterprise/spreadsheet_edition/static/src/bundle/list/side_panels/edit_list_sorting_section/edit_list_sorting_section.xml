@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="spreadsheet_edition.EditListSortingSection">
+        <Section class="'o-section'">
+            <div class="d-flex justify-content-between">
+                <div class="o-section-title mb-2">
+                    Sorting
+                </div>
+                <AddDimensionButton
+                    onFieldPicked.bind="this.onAddSortingRule"
+                    fields="this.getAllowedFields()"
+                />
+            </div>
+            <div t-ref="main">
+                <t t-foreach="props.orderBy" t-as="rule" t-key="rule_index">
+                    <t t-set="field" t-value="props.fields[rule.name]"/>
+                    <div
+                        class="d-flex border py-1 px-2 d-flex flex-column shadow-sm pivot-dimension mt-2 o_draggable o_draggable_item"
+                        t-att-class="{'pivot-dimension-invalid': !field}"
+                        t-att-data-id="rule.name"
+                    >
+                    <div class="d-flex flex-row justify-content-between align-items-center o_sorting_rule_column">
+                            <span t-if="field" class="o-fw-bold" t-esc="field.string"/>
+                            <t t-else="">
+                                <span class="o-fw-bold me-auto" t-esc="rule.name"/>
+                                <span class="text-danger me-1">
+                                    <t t-call="o-spreadsheet-Icon.TRIANGLE_EXCLAMATION"/>
+                                </span>
+                            </t>
+                            <i class="btn fa fa-times pe-0 o-delete-rule" t-on-click="(ev) => this.onDeleteSortingRule(rule_index)"/>
+                        </div>
+                        <div class="d-flex">
+                            <div class="d-flex py-1 px-2 w-100 small">
+                                <div class="pivot-dim-operator-label">Order</div>
+                                <select class="o_input flex-grow-1 o-select-order" t-on-change="(ev) => this.toggleAscending(rule_index)">
+                                    <option value="true" t-att-selected="rule.asc === true" class="o-select-option">Ascending</option>
+                                    <option value="false" t-att-selected="rule.asc === false" class="o-select-option">Descending</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </Section>
+    </t>
+</templates>

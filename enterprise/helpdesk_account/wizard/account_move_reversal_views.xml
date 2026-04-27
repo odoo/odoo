@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_move_reversal_inherit_helpdesk_account" model="ir.ui.view">
+            <field name="name">account.move.reversal.inherit.helpdesk.account</field>
+            <field name="model">account.move.reversal</field>
+            <field name="inherit_id" ref="account.view_account_move_reversal"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='move_type']" position="after">
+                        <group>
+                            <field name="suitable_sale_order_ids" invisible="1"/>
+                            <field name="suitable_move_ids" invisible="1"/>
+                            <field name="helpdesk_ticket_id" invisible="1"/>
+                            <field name="helpdesk_sale_order_id" options="{'no_create': True}"/>
+                            <field name="move_ids" string="Invoices to Refund" options="{'create': False}" widget="many2many_tags" domain="[('id', 'in', suitable_move_ids)]"/>
+                        </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="helpdesk_ticket_action_refund" model="ir.actions.act_window">
+            <field name="name">Refund</field>
+            <field name="res_model">account.move.reversal</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'dialog_size': 'medium'}</field>
+        </record>
+
+        <record id="helpdesk_ticket_action_refund_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_move_reversal_inherit_helpdesk_account"/>
+            <field name="act_window_id" ref="helpdesk_ticket_action_refund"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_view_form" model="ir.ui.view">
+        <field name="name">l10n.ke.edi.oscu.inherit.res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <group name="accounting_entries" position="after">
+                <group string="Kenya Accounting Details" name="l10n_ke_details">
+                    <field name="l10n_ke_branch_code"/>
+                    <div class="cell"/>
+                    <button name="action_l10n_ke_oscu_register_bhf_customer"
+                            string="Send to eTIMS"
+                            type="object"
+                            groups="base.group_no_one"/>
+                    <div class="cell"/>
+                    <button name="action_l10n_ke_oscu_fetch_bhf_customer"
+                            string="Fetch Data from eTIMS"
+                            type="object"
+                            groups="base.group_no_one"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

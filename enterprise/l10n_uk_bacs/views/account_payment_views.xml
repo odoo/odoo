@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sdd_account_payment_form" model="ir.ui.view">
+            <field name="name">sdd.account.payment.form</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='payment_method_line_id']" position="after">
+                    <field name="bacs_ddi_id"
+                           string="Originating BACS Direct Debit Instruction"
+                           invisible="not bacs_ddi_id"
+                           readonly="state != 'draft'"/>
+                    <field name="bacs_payment_type"
+                           invisible="payment_method_code != 'bacs_dd'"
+                            readonly="state != 'draft'"/>
+                </xpath>
+                <xpath expr="//header" position="after">
+                    <field name="bacs_ddi_usable" invisible="1"/>
+                    <div class="alert alert-info text-center"
+                         invisible="not bacs_ddi_usable or state != 'draft' or payment_method_code != 'bacs_dd'"
+                         role="status">Good news! A valid BACS Direct Debit Instruction is available.</div>
+                    <div class="alert alert-warning text-center"
+                         invisible="bacs_ddi_usable or state != 'draft' or payment_method_code != 'bacs_dd'"
+                         role="alert">Oops! No valid BACS Direct Debit Instruction for this customer. <a type="action" name="%(l10n_uk_bacs.account_bacs_direct_debit_instruction_tree_act)d">Create it.</a></div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

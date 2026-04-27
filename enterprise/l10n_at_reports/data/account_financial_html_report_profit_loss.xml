@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_financial_report_l10n_at_paragraph_231_ugb" model="account.report">
+        <field name="name">Profit and Loss statement according to § 231 UGB (GKV)</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_date_range" eval="True"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="country_id" ref="base.at"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_l10n_at_paragraph_231_ugb_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_root" model="account.report.line">
+                <field name="name">Balance sheet profit/loss</field>
+                <field name="hierarchy_level">1</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_root_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PL.balance + RCR.balance + RRR.balance - ARR.balance + RL.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl1" model="account.report.line">
+                        <field name="name">1. Sales revenue</field>
+                        <field name="code">EBIT1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-tag(l10n_at.account_tag_l10n_at_EBIT1)</field>
+                                <field name="subformula" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl2" model="account.report.line">
+                        <field name="name">2. Change in inventories of finished and unfinished goods and services not yet billable (+/-)</field>
+                        <field name="code">EBIT2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-tag(l10n_at.account_tag_l10n_at_EBIT2)</field>
+                                <field name="subformula" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl3" model="account.report.line">
+                        <field name="name">3. Other own work capitalized</field>
+                        <field name="code">EBIT3</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl3_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-tag(l10n_at.account_tag_l10n_at_EBIT3)</field>
+                                <field name="subformula" eval="False"/>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl4" model="account.report.line">
+                        <field name="name">4. Other operating income</field>
+                        <field name="code">EBIT4</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl4_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">EBIT4I.balance + EBIT4II.balance + EBIT4III.balance</field>
+                                <field name="green_on_positive" eval="True"/>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl41" model="account.report.line">
+                                <field name="name">a. Income from the disposal of and additions to fixed assets with the exception of financial assets</field>
+                                <field name="code">EBIT4I</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl41_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-tag(l10n_at.account_tag_l10n_at_EBIT4I)</field>
+                                        <field name="subformula" eval="False"/>
+                                        <field name="green_on_positive" eval="True"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl42" model="account.report.line">
+                                <field name="name">b. Income from the reversal of provisions</field>
+                                <field name="code">EBIT4II</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl42_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-tag(l10n_at.account_tag_l10n_at_EBIT4II)</field>
+                                        <field name="subformula" eval="False"/>
+                                        <field name="green_on_positive" eval="True"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl43" model="account.report.line">
+                                <field name="name">c. Other income</field>
+                                <field name="code">EBIT4III</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl43_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-tag(l10n_at.account_tag_l10n_at_EBIT4III)</field>
+                                        <field name="subformula" eval="False"/>
+                                        <field name="green_on_positive" eval="True"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl5" model="account.report.line">
+                        <field name="name">5. Expenses for material and other purchased manufacturing services</field>
+                        <field name="code">EBIT5</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl5_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">EBIT5I.balance + EBIT5II.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl51" model="account.report.line">
+                                <field name="name">a. Cost of materials</field>
+                                <field name="code">EBIT5I</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl51_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">tag(l10n_at.account_tag_l10n_at_EBIT5I)</field>
+                                        <field name="subformula" eval="False"/>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl52" model="account.report.line">
+                                <field name="name">b. Expenses for purchased services</field>
+                                <field name="code">EBIT5II</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl52_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">tag(l10n_at.account_tag_l10n_at_EBIT5II)</field>
+                                        <field name="subformula" eval="False"/>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl6" model="account.report.line">
+                        <field name="name">6. Personnel expenses</field>
+                        <field name="code">EBIT6</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl6_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">EBIT6I.balance + EBIT6II.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl61" model="account.report.line">
+                                <field name="name">a. Wages and salaries</field>
+                                <field name="code">EBIT6I</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl61_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">tag(l10n_at.account_tag_l10n_at_EBIT6I)</field>
+                                        <field name="subformula" eval="False"/>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl62" model="account.report.line">
+                                <field name="name">b. Social expenses</field>
+                                <field name="code">EBIT6II</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl62_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">tag(l10n_at.account_tag_l10n_at_EBIT6II)</field>
+                                        <field name="subformula" eval="False"/>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl7" model="account.report.line">
+                        <field name="name">7. Depreciation</field>
+                        <field name="code">EBIT7</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl7_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">EBIT7I.balance + EBIT7II.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl71" model="account.report.line">
+                                <field name="name">a. Of intangible fixed assets and property, plant and equipment</field>
+                                <field name="code">EBIT7I</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl71_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">tag(l10n_at.account_tag_l10n_at_EBIT7I)</field>
+                                        <field name="subformula" eval="False"/>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl72" model="account.report.line">
+                                <field name="name">b. Of current assets, insofar as these exceed the normal depreciation in the company</field>
+                                <field name="code">EBIT7II</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl72_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">tag(l10n_at.account_tag_l10n_at_EBIT7II)</field>
+                                        <field name="subformula" eval="False"/>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl8" model="account.report.line">
+                        <field name="name">8. Other operating expenses</field>
+                        <field name="code">EBIT8</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl8_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">tag(l10n_at.account_tag_l10n_at_EBIT8)</field>
+                                <field name="subformula" eval="False"/>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl9" model="account.report.line">
+                        <field name="name">9. Operating result (subtotal from items 1 to 8)</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="code">EBIT</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl9_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">EBIT1.balance + EBIT2.balance + EBIT3.balance + EBIT4.balance - EBIT5.balance - EBIT6.balance - EBIT7.balance - EBIT8.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl10" model="account.report.line">
+                        <field name="name">10. Income from participations</field>
+                        <field name="code">FIN10</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl10_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-tag(l10n_at.account_tag_l10n_at_FIN10)</field>
+                                <field name="subformula" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl11" model="account.report.line">
+                        <field name="name">11. Income from other securities and loans classified as financial assets</field>
+                        <field name="code">FIN11</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl11_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-tag(l10n_at.account_tag_l10n_at_FIN11)</field>
+                                <field name="subformula" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl12" model="account.report.line">
+                        <field name="name">12. Other interest and similar income</field>
+                        <field name="code">FIN12</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl12_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-tag(l10n_at.account_tag_l10n_at_FIN12)</field>
+                                <field name="subformula" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl13" model="account.report.line">
+                        <field name="name">13. Income from the disposal of and additions to financial assets and marketable securities</field>
+                        <field name="code">FIN13</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl13_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-tag(l10n_at.account_tag_l10n_at_FIN13)</field>
+                                <field name="subformula" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl14" model="account.report.line">
+                        <field name="name">14. Expenses from financial assets and marketable securities</field>
+                        <field name="code">FIN14</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl14_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">tag(l10n_at.account_tag_l10n_at_FIN14)</field>
+                                <field name="subformula" eval="False"/>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl15" model="account.report.line">
+                        <field name="name">15. Interest and similar expenses</field>
+                        <field name="code">FIN15</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl15_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">tag(l10n_at.account_tag_l10n_at_FIN15)</field>
+                                <field name="subformula" eval="False"/>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl16" model="account.report.line">
+                        <field name="name">16. Financial result (subtotal from items 10 to 15)</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="code">FIN</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl16_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">FIN10.balance + FIN11.balance + FIN12.balance + FIN13.balance - FIN14.balance - FIN15.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl17" model="account.report.line">
+                        <field name="name">17. Result before taxes (subtotal from items 9 and 16)</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="code">EBT</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl17_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">EBIT.balance + FIN.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl18" model="account.report.line">
+                        <field name="name">18. Taxes on income and earnings</field>
+                        <field name="code">TAX</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl18_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">tag(l10n_at.account_tag_l10n_at_TAX)</field>
+                                <field name="subformula" eval="False"/>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl19" model="account.report.line">
+                        <field name="name">19. Result after taxes</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="code">EBTAT</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl19_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">EBT.balance - TAX.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl20" model="account.report.line">
+                        <field name="name">20. Other taxes, unless included under items 1 to 19</field>
+                        <field name="code">MTAX</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl20_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">tag(l10n_at.account_tag_l10n_at_MTAX)</field>
+                                <field name="subformula" eval="False"/>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl21" model="account.report.line">
+                        <field name="name">21. Net income/loss for the year</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="code">PL</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl21_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">EBTAT.balance - MTAX.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl22" model="account.report.line">
+                        <field name="name">22. Release of capital reserves</field>
+                        <field name="code">RCR</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl22_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-tag(l10n_at.account_tag_l10n_at_RCR)</field>
+                                <field name="subformula" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl23" model="account.report.line">
+                        <field name="name">23. Release of retained earnings</field>
+                        <field name="code">RRR</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl23_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-tag(l10n_at.account_tag_l10n_at_RRR)</field>
+                                <field name="subformula" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl24" model="account.report.line">
+                        <field name="name">24. Allocation to retained earnings</field>
+                        <field name="code">ARR</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl24_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">tag(l10n_at.account_tag_l10n_at_ARR)</field>
+                                <field name="subformula" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl25" model="account.report.line">
+                        <field name="code">RL</field>
+                        <field name="groupby" eval="False"/>
+                        <field name="user_groupby" eval="False"/>
+                        <field name="name">25. Profit/loss carried forward from the previous year (+/-)</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl25_previous_pnl" model="account.report.expression">
+                                <field name="label">previous_pnl</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">
+                                    -tag(l10n_at.account_tag_l10n_at_EBIT1)
+                                    - tag(l10n_at.account_tag_l10n_at_EBIT2)
+                                    - tag(l10n_at.account_tag_l10n_at_EBIT3)
+                                    - tag(l10n_at.account_tag_l10n_at_EBIT4I)
+                                    - tag(l10n_at.account_tag_l10n_at_EBIT4II)
+                                    - tag(l10n_at.account_tag_l10n_at_EBIT4III)
+                                    - tag(l10n_at.account_tag_l10n_at_EBIT5I)
+                                    - tag(l10n_at.account_tag_l10n_at_EBIT5II)
+                                    - tag(l10n_at.account_tag_l10n_at_EBIT6I)
+                                    - tag(l10n_at.account_tag_l10n_at_EBIT6II)
+                                    - tag(l10n_at.account_tag_l10n_at_EBIT7I)
+                                    - tag(l10n_at.account_tag_l10n_at_EBIT7II)
+                                    - tag(l10n_at.account_tag_l10n_at_EBIT8)
+                                    - tag(l10n_at.account_tag_l10n_at_FIN10)
+                                    - tag(l10n_at.account_tag_l10n_at_FIN11)
+                                    - tag(l10n_at.account_tag_l10n_at_FIN12)
+                                    - tag(l10n_at.account_tag_l10n_at_FIN13)
+                                    - tag(l10n_at.account_tag_l10n_at_FIN14)
+                                    - tag(l10n_at.account_tag_l10n_at_FIN15)
+                                    - tag(l10n_at.account_tag_l10n_at_TAX)
+                                    - tag(l10n_at.account_tag_l10n_at_MTAX)
+                                    - tag(l10n_at.account_tag_l10n_at_RCR)
+                                    - tag(l10n_at.account_tag_l10n_at_RRR)
+                                    - tag(l10n_at.account_tag_l10n_at_ARR)
+                                </field>
+                                <field name="date_scope">to_beginning_of_fiscalyear</field>
+                            </record>
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl25_account" model="account.report.expression">
+                                <field name="label">accounts</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-tag(l10n_at.account_tag_l10n_at_PAIV) - tag(l10n_at.account_tag_l10n_at_RL)</field>
+                                <field name="date_scope">from_beginning</field>
+                            </record>
+                            <record id="account_financial_report_l10n_at_paragraph_231_ugb_line_pl25_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RL.previous_pnl + RL.accounts</field>
+                                <field name="subformula" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+    <record id="action_account_financial_report_l10n_at_paragraph_231_ugb" model="ir.actions.client">
+        <field name="name">Profit and Loss</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('account_financial_report_l10n_at_paragraph_231_ugb')}"/>
+    </record>
+</odoo>

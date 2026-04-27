@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="shopee_item_view_list" model="ir.ui.view">
+        <field name="name">shopee.item.list</field>
+        <field name="model">shopee.item</field>
+        <field name="arch" type="xml">
+            <list string="Shopee Items" editable="top">
+                <field name="product_id" optional="show"/>
+                <field
+                    name="shop_id"
+                    optional="show"
+                    options="{'no_create': True, 'no_open': True}"
+                    column_invisible="context.get('default_shop_id', False)"
+                />
+                <field
+                    name="shop_id"
+                    optional="hide"
+                    options="{'no_create': True, 'no_open': True}"
+                    column_invisible="not context.get('default_shop_id', False)"
+                />
+                <field name="shopee_model_identifier" optional="show"/>
+                <field name="shopee_item_identifier" optional="show"/>
+                <field name="sync_to_shopee" optional="show"/>
+                <field name="last_inventory_sync_date" groups="base.group_no_one" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="shopee_item_view_search" model="ir.ui.view">
+        <field name="name">shopee.item.search</field>
+        <field name="model">shopee.item</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="shop_id" filter_domain="[('shop_id.name', 'ilike', self)]"/>
+                <field name="product_id"/>
+                <filter
+                    string="Shopee Shop"
+                    name="group_by_shop"
+                    domain="[]"
+                    context="{'group_by': 'shop_id'}"
+                />
+                <filter
+                    string="Product"
+                    name="group_by_product"
+                    domain="[]"
+                    context="{'group_by': 'product_id'}"
+                />
+            </search>
+        </field>
+    </record>
+
+    <record id="sale_shopee_item_action" model="ir.actions.act_window">
+        <field name="name">Shopee Items</field>
+        <field name="res_model">shopee.item</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

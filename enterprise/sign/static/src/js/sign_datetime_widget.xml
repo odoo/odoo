@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sign.DateTimeNoSeconds" t-inherit="web.DateTimeField" t-inherit-mode="primary">
+        <xpath expr="//span[@t-esc='getFormattedValue(0)']" position="attributes">
+            <attribute name="class" add="pe-1" separator=" "/>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportFilterBudget">
+        <Dropdown
+            navigationOptions="dropdownProps"
+        >
+            <button class="btn btn-secondary">
+                <i class="fa fa-bar-chart me-1"/>Budget
+            </button>
+
+            <t t-set-slot="content">
+                <t t-foreach="controller.options.budgets" t-as="budget" t-key="budget_index">
+                    <div class="o-dropdown-item dropdown-item o-navigable d-flex justify-content-between ps-4 pe-1"
+                         t-att-class="{ 'selected': budget.selected }"
+                         t-on-click="() => this.selectBudget(budget)"
+                    >
+                        <span t-out="budget.name"/>
+                        <button class="btn p-0 px-1" t-on-click.prevent.stop="() => controller.openBudget(budget)">
+                            <i class="fa fa-pencil" />
+                        </button>
+                    </div>
+                </t>
+
+                <div class="dropdown-divider"/>
+
+                <t t-if="controller.options.budgets.filter(x => x.selected).length > 0">
+                    <DropdownItem
+                        class="{ 'filter_show_all_accounts_hook': true, 'selected': controller.options.show_all_accounts }"
+                        onSelected="() => this.filterClicked({ optionKey: 'show_all_accounts', reload: true})"
+                        closingMode="'none'"
+                    >
+                        Show All Accounts
+                    </DropdownItem>
+                </t>
+
+                <div class="o-dropdown-item dropdown-item d-flex align-items-center ps-4 pe-1">
+                    <input
+                        class="o_input"
+                        t-att-class="{ 'o_field_invalid': budgetName.invalid }"
+                        type="text"
+                        placeholder="Budget Name"
+                        t-model="budgetName.value"
+                    />
+                    <button class="btn btn-link" data-hotkey="s" t-on-click="createBudget">
+                        Create
+                    </button>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

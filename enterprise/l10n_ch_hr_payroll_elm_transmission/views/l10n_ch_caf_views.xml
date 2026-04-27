@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ch_compensation_fund_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.compensation.fund.view.form</field>
+        <field name="model">l10n.ch.compensation.fund</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll.l10n_ch_compensation_fund_view_form"/>
+        <field name="arch" type="xml">
+            <sheet position="replace">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder='e.g. "Family Allowance AK Bern"'/></h1>
+                    </div>
+                    <group>
+                        <group string="Company Information">
+                            <field name="company_id" required="1" groups="base.group_multi_company"/>
+                            <field name="insurance_code" string="Indemnity Fund Number" required="1"/>
+                            <field name="member_number" required="1"/>
+                            <field name="member_subnumber"/>
+                        </group>
+                    </group>
+                    <field name="caf_line_ids" nolabel="1" colspan="1">
+                        <list editable="bottom">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="employee_rate"/>
+                            <field name="company_rate"/>
+                        </list>
+                    </field>
+                </sheet>
+            </sheet>
+        </field>
+    </record>
+</odoo>

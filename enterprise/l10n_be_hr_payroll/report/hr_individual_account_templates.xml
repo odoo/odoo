@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_individual_account">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                    <div t-if="report_data" class="page">
+                        <h2>
+                            <span>Individual Account Report for year </span>
+                            <span t-out="report_data['year']">2023</span>
+                        </h2>
+                        <div class="oe_structure"></div>
+                        <br/>
+                        <tbody>
+                            <table t-if="employee" class="table table-sm table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th class="w-50" style="text-align: left;">Employer Information</th>
+                                        <th class="w-50" style="text-align: left;">Employee Information</th>
+                                    </tr>
+                                </thead>
+                                <tr style="background-color: transparent!important;">
+                                    <td>
+                                        <table class="o_ignore_layout_styling table table-sm table-bordered">
+                                            <tbody>
+                                                <tr>
+                                                    <td>Employer details</td>
+                                                    <td><span t-field="company_id.partner_id.contact_address"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Company number</td>
+                                                    <td><span t-field="company_id.l10n_be_company_number"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Joint committee</td>
+                                                    <td>200.000</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Name of the joint committee</td>
+                                                    <td>Joint committee for employees</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Social security organization</td>
+                                                    <td>ONSS (Office National de sécurité sociale)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>ONSS Number</td>
+                                                    <td><span t-field="company_id.dmfa_employer_class"/><span t-field="company_id.onss_registration_number"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Accident insurance organization</td>
+                                                    <td><span t-field="company_id.accident_insurance_name"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Work accident policy number</td>
+                                                    <td><span t-field="company_id.accident_insurance_number"/></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table class="o_ignore_layout_styling table table-sm table-bordered">
+                                            <tbody>
+                                                <tr>
+                                                    <td>Employee Name</td>
+                                                    <td><span t-field="employee.legal_name"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Date of birth</td>
+                                                    <td><span t-field="employee.birthday"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Gender</td>
+                                                    <td><span t-field="employee.gender"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Address</td>
+                                                    <td><span t-field="employee.private_street"/> <span t-field="employee.private_zip"/> <span t-field="employee.private_city"/> <span t-field="employee.private_country_id"/> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Marital Status</td>
+                                                    <td><span t-field="employee.marital"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Number of tax dependents</td>
+                                                    <td><span t-out="employee.children + employee.other_senior_dependent + employee.other_juniors_dependent"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>National Register Identification Number</td>
+                                                    <td><span t-field="employee.niss"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Legal nature of the contract</td>
+                                                    <td>Employee</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Function held</td>
+                                                    <td><span t-out="(employee.job_id or employee.contract_id.job_id).name"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Professional qualification</td>
+                                                    <td><span t-out="(employee.job_id or employee.contract_id.job_id).l10n_be_scale_category"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Entry date</td>
+                                                    <td><span t-field="employee.first_contract_date"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Departure date</td>
+                                                    <td><span t-field="employee.end_notice_period"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Workplace</td>
+                                                    <td><span t-field="employee.address_id.contact_address"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Gross wage</td>
+                                                    <td><span t-field="employee.contract_id.wage_on_signature"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Remuneration payment frequency</td>
+                                                    <td><span t-field="employee.contract_id.schedule_pay"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Current work regime</td>
+                                                    <td><span t-field="employee.contract_id.resource_calendar_id.hours_per_week"/> hours/week</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <p style="page-break-before:always;"></p>
+                            <div class="oe_structure"></div>
+                            <table class="o_ignore_layout_styling table table-bordered table-sm">
+                                <thead><tr>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">JAN</th>
+                                    <th class="text-center">FEB</th>
+                                    <th class="text-center">MAR</th>
+                                    <th class="text-center">APR</th>
+                                    <th class="text-center">MAY</th>
+                                    <th class="text-center">JUN</th>
+                                    <th class="text-center">JUL</th>
+                                    <th class="text-center">AUG</th>
+                                    <th class="text-center">SEP</th>
+                                    <th class="text-center">OCT</th>
+                                    <th class="text-center">NOV</th>
+                                    <th class="text-center">DEC</th>
+                                </tr></thead>
+                                <tr>
+                                    <td><strong>Worked Days</strong></td>
+                                    <td colspan="12"/>
+                                </tr>
+                                <div class="oe_structure"></div>
+                                <t t-foreach="report_data['worked_days']" t-as="worked_day">
+                                    <t t-set="value" t-value="report_data['worked_days'][worked_day]['month']"/>
+                                    <t t-set="name" t-value="False"/>
+
+                                    <t t-foreach="[0,1,2,3,4,5,6,7,8,9,10,11]" t-as="c">
+                                        <t t-if="value[c]['name'] != False">
+                                            <t t-set="name" t-value="value[c]['name']"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="name != False">
+                                        <tr>
+                                            <td><span t-out="name + ' (days)'">Example Day</span></td>
+                                            <t t-foreach="[0,1,2,3,4,5,6,7,8,9,10,11]" t-as="m">
+                                                <t t-if="value[m]['number_of_days'] != 0">
+                                                    <td class="text-end"><span t-out="round(value[m]['number_of_days'], 2)">2.00</span></td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td class="text-center">/</td>
+                                                </t>
+                                            </t>
+                                        </tr>
+                                        <tr>
+                                            <td><span t-out="name + ' (hours)'">Example Hour</span></td>
+                                            <t t-foreach="[0,1,2,3,4,5,6,7,8,9,10,11]" t-as="m">
+                                                <t t-if="value[m]['number_of_days'] != 0">
+                                                    <td class="text-end"><span t-out="round(value[m]['number_of_hours'], 2)">8.00</span></td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td class="text-center">/</td>
+                                                </t>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <div class="oe_structure"></div>
+
+                                <tr>
+                                    <td><strong>Salary Computation</strong></td>
+                                    <td colspan="12"/>
+                                </tr>
+                                <tr t-foreach="report_data['rules']" t-as="rule">
+                                    <t t-set="value" t-value="report_data['rules'][rule]['month']"/>
+                                    <t t-set="name" t-value="False"/>
+
+                                    <t t-foreach="[0,1,2,3,4,5,6,7,8,9,10,11]" t-as="c">
+                                        <t t-if="value[c]['name'] != False">
+                                            <t t-set="name" t-value="value[c]['name']"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="name != False">
+                                        <td><span t-out="name">Demo Name</span></td>
+                                        <t t-foreach="[0,1,2,3,4,5,6,7,8,9,10,11]" t-as="m">
+                                            <t t-if="value[m]['total'] != 0">
+                                                <td class="text-end"><t t-esc="round(value[m]['total'], 2)"/></td>
+                                            </t>
+                                            <t t-else="">
+                                                <td class="text-center">/</td>
+                                            </t>
+                                        </t>
+                                    </t>
+                                </tr>
+                            </table>
+                            <div class="oe_structure"></div>
+                        <p style="page-break-before:always;"></p>
+                            <table class="o_ignore_layout_styling table table-bordered table-sm">
+                                <thead><tr>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">Quarter 1</th>
+                                    <th class="text-center">Quarter 2</th>
+                                    <th class="text-center">Quarter 3</th>
+                                    <th class="text-center">Quarter 4</th>
+                                    <th class="text-center">Total Year</th>
+                                </tr></thead>
+                                <tr>
+                                    <td><strong>Worked Time</strong></td>
+                                    <td colspan="5"/>
+                                </tr>
+                                <div class="oe_structure"></div>
+                                <t t-foreach="report_data['worked_days']" t-as="worked_day">
+                                    <t t-set="value_q" t-value="report_data['worked_days'][worked_day]['quarter']"/>
+                                    <t t-set="value_y" t-value="report_data['worked_days'][worked_day]['year']"/>
+                                    <t t-set="name_t" t-value="False"/>
+                                    <t t-foreach="[0,1,2,3]" t-as="c">
+                                        <t t-if="value_q[c]['name'] != False">
+                                            <t t-set="name_t" t-value="value_q[c]['name'] + ' (days)'"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="name_t != False">
+                                        <tr>
+                                            <td><span t-out="name_t">Demo Name</span></td>
+                                            <t t-foreach="[0,1,2,3]" t-as="q">
+                                                <td t-if="value_q[q]['number_of_days'] != 0" class="text-end"><span t-out="round(value_q[q]['number_of_days'], 2)">5.00</span></td>
+                                                <td t-else="" class="text-center">/</td>
+                                            </t>
+                                            <td t-if="value_y['number_of_days'] != 0" class="text-end"><span t-out="round(value_y['number_of_days'], 2)">20.00</span></td>
+                                            <td t-else="" class="text-center">/</td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>Attendance (hours)</span></td>
+                                            <t t-foreach="[0,1,2,3]" t-as="q">
+                                                <td t-if="value_q[q]['number_of_days'] != 0" class="text-end"><span t-out="round(value_q[q]['number_of_hours'], 2)">8.00</span></td>
+                                                <td t-else="" class="text-center">/</td>
+                                            </t>
+                                            <td t-if="value_y['number_of_hours'] != 0" class="text-end"><span t-out="round(value_y['number_of_hours'], 2)">32.00</span></td>
+                                            <td t-else="" class="text-center">/</td>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <tr>
+                                    <td><strong>Salary Computation</strong></td>
+                                    <td colspan="5"/>
+                                </tr>
+                                <tr t-foreach="report_data['rules']" t-as="rule">
+                                    <t t-set="value_q" t-value="report_data['rules'][rule]['quarter']"/>
+                                    <t t-set="value_y" t-value="report_data['rules'][rule]['year']"/>
+                                    <t t-set="name_t" t-value="False"/>
+                                    <t t-foreach="[0,1,2,3]" t-as="c">
+                                        <t t-if="value_q[c]['name'] != False">
+                                            <t t-set="name_t" t-value="value_q[c]['name']"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="name_t != False">
+                                        <td><span t-out="name_t">Demo Name</span></td>
+                                        <t t-foreach="[0,1,2,3]" t-as="q">
+                                            <td t-if="value_q[q]['total'] != 0" class="text-end"><span t-out="round(value_q[q]['total'], 2)">1500.00</span></td>
+                                            <td t-else="" class="text-center">/</td>
+                                        </t>
+                                        <td t-if="value_y['total'] != 0" class="text-end"><span t-out="round(value_y['total'], 2)">6000.00</span></td>
+                                        <td t-else="" class="text-center">/</td>
+                                    </t>
+                                </tr>
+                            </table>
+                        </tbody>
+                    </div>
+                </t>
+            </t>
+    </template>
+</odoo>

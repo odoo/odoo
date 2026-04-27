@@ -1,0 +1,77 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_project_forecast
+#
+# Translators:
+# Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:48+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,help:sale_project_forecast.field_product_product__planning_enabled
+#: model:ir.model.fields,help:sale_project_forecast.field_product_template__planning_enabled
+msgid ""
+"If enabled, a shift will automatically be generated for the selected role "
+"when confirming the Sales Order.                 With the 'auto plan' "
+"feature, only employees with this role will be automatically assigned shifts "
+"for Sales Orders containing this service.                 The system will "
+"consider employee availability and the remaining time to be "
+"planned.                 You can also manually schedule open shifts for your "
+"Sales Order or assign them to any employee you prefer."
+msgstr ""
+"Nếu bật, hệ thống sẽ tự động tạo một ca làm cho vai trò đã chọn khi xác nhận "
+"Đơn bán hàng. Với tính năng 'tự động lập kế hoạch', chỉ những nhân viên có "
+"vai trò này mới được tự động phân công ca làm cho Đơn bán hàng có chứa dịch "
+"vụ này. Hệ thống sẽ xem xét thời gian trống của nhân viên và thời gian còn "
+"lại cần lập kế hoạch. Bạn cũng có thể lên lịch thủ công các ca làm mở cho "
+"Đơn bán hàng của mình hoặc phân công chúng cho bất kỳ nhân viên nào bạn muốn."
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,field_description:sale_project_forecast.field_product_product__planning_enabled
+#: model:ir.model.fields,field_description:sale_project_forecast.field_product_template__planning_enabled
+msgid "Plan Services"
+msgstr "Lập kế hoạch dịch vụ "
+
+#. module: sale_project_forecast
+#: model:ir.model,name:sale_project_forecast.model_planning_slot
+msgid "Planning Shift"
+msgstr "Lập kế hoạch ca làm"
+
+#. module: sale_project_forecast
+#: model:ir.model,name:sale_project_forecast.model_product_template
+msgid "Product"
+msgstr "Sản phẩm"
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,field_description:sale_project_forecast.field_planning_slot__sale_line_id
+msgid "Sales Order Item"
+msgstr "Hạng mục đơn bán hàng"
+
+#. module: sale_project_forecast
+#: model:ir.model,name:sale_project_forecast.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Dòng đơn bán hàng"
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,help:sale_project_forecast.field_planning_slot__sale_line_id
+msgid ""
+"Sales order item for which this shift will be performed. When sales orders "
+"are automatically planned, the remaining hours of the sales order item, as "
+"well as the role defined on the service, are taken into account."
+msgstr ""
+"Hạng mục đơn đặt hàng mà ca làm này sẽ được thực hiện. Khi đơn bán hàng được "
+"lên kế hoạch tự động, số giờ còn lại của hạng mục đơn bán hàng cũng như vai "
+"trò đã xác định đối với dịch vụ sẽ được tính đến."

@@ -1,0 +1,30 @@
+<odoo>
+    <record id="base.partner_demo_company_mx" model="res.partner">
+        <field name="street_name">Campobasso Norte</field>
+        <field name="street_number">3206</field>
+        <field name="street_number2">9000</field>
+        <field name="city_id" ref="l10n_mx_edi_extended.res_city_mx_agu_005"/>
+    </record>
+
+    <record id="base.partner_demo_company_2_mx" model="res.partner">
+        <field name="city_id" ref="l10n_mx_edi_extended.res_city_mx_roo_004"/>
+    </record>
+
+    <record id="l10n_mx_edi.demo_partner" model="res.partner">
+        <field name="city_id" ref="l10n_mx_edi_extended.res_city_mx_coa_013"/>
+    </record>
+
+    <record id="l10n_mx_edi.demo_partner_2" model="res.partner">
+        <field name="city_id" ref="l10n_mx_edi_extended.res_city_mx_chh_032"/>
+    </record>
+
+    <record id="product.product_product_25" model="product.product">
+        <field name="l10n_mx_edi_tariff_fraction_id" ref="l10n_mx_edi_extended.tariff_fraction_9209910100"/>
+        <field name="l10n_mx_edi_umt_aduana_id" ref="uom.product_uom_kgm"/>
+    </record>
+
+    <record id="product.consu_delivery_02" model="product.product">
+        <field name="l10n_mx_edi_tariff_fraction_id" ref="l10n_mx_edi_extended.tariff_fraction_3818000100"/>
+        <field name="l10n_mx_edi_umt_aduana_id" ref="uom.product_uom_kgm"/>
+    </record>
+</odoo>

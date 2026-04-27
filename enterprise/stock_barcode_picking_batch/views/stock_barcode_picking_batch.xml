@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_barcode_batch_picking_view_info" model="ir.ui.view">
+        <field name="name">stock.picking.batch.form.view.barcode</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="company_id" invisible="1"/>
+                    <field name="allowed_picking_ids" invisible="1"/>
+                    <field name="show_allocation" invisible="1"/>
+                    <button name="action_view_reception_report" string="Allocation" type="object"
+                        class="btn btn-primary o_reception_report" icon="fa-list"
+                        invisible="not show_allocation"
+                        groups="stock.group_reception_report"/>
+                    <field name="user_id" readonly="state not in ['draft', 'in_progress']"/>
+                    <field name="picking_type_id" readonly="1" invisible="not picking_type_id"/>
+                    <field name="state" readonly="1"/>
+                    <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                    <field name="picking_ids" widget="many2many" invisible="not picking_ids" readonly="state not in ['draft', 'in_progress']">
+                        <list decoration-danger="state != 'assigned'">
+                            <button name="action_unbatch"
+                                title="Unbatch Transfer" string="Unbatch Transfer"
+                                icon="fa-chain-broken" type="object"
+                                invisible="state == 'assigned'"/>
+                            <field name="name"/>
+                            <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
+                            <field name="location_id" readonly="state == 'done'"/>
+                            <field name="state"/>
+                        </list>
+                    </field>
+                    <field name="move_ids" readonly="1" invisible="not move_ids">
+                        <list>
+                            <field name="product_id" readonly="state == 'done'"/>
+                            <field name="description_picking" string="Description"/>
+                            <field name="product_uom_qty" readonly="state == 'done'"/>
+                            <field name="state"/>
+                        </list>
+                    </field>
+                </group>
+                <div class="o_barcode_control d-flex justify-content-between p-2 gap-2">
+                    <button string="Discard" class="btn btn-secondary o_discard" special="cancel"/>
+                    <button string="Confirm" class="btn btn-primary o_save" special="save"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="stock_barcode_batch_picking_view_kanban" model="ir.ui.view">
+        <field name="name">stock.picking.batch.kanban</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="arch" type="xml">
+            <kanban import="0" js_class="stock_barcode_list_kanban" sample="1"
+                quick_create="false"
+                group_create="false"
+                action="action_client_action" type="object">
+                <field name="move_line_ids"/>
+                <field name="company_id"/>
+                <templates>
+                    <t t-name="card" class="px-3">
+                        <div class="d-flex">
+                            <div class="d-flex flex-column">
+                                <field name="name" class="fw-bold fs-5"/>
+                                <field name="description"/>
+                                <t t-esc="record.move_line_ids.raw_value.length"/> Lines
+                            </div>
+                            <field name="state" widget="label_selection"
+                                options="{'classes': {
+                                    'draft': 'default',
+                                    'in_progress': 'success',
+                                    'cancel': 'default',
+                                    'done': 'default'}}" class="ms-auto"/>
+                        </div>
+                        <footer class="pt-1">
+                            <field name="picking_type_id" readonly="state != 'draft'"/>
+                            <div class="d-flex ms-auto">
+                                <field name="scheduled_date" readonly="state in ['cancel', 'done']" class="me-1"/>
+                                <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']"/>
+                            </div>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="stock_barcode_batch_picking_action_kanban" model="ir.actions.act_window">
+        <field name="name">Batch Transfers</field>
+        <field name="res_model">stock.picking.batch</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="path">barcode-batches</field>
+        <field name="target">fullscreen</field>
+        <field name="context">{
+            'search_default_in_progress': 1,
+            'search_default_to_do_transfers': 1,
+        }</field>
+        <field name="view_id" ref="stock_barcode_batch_picking_view_kanban"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No batch transfer found
+          </p><p>
+            The goal of the batch transfer is to group operations that may
+            (needs to) be done together in order to increase their efficiency.
+            It may also be useful to assign jobs (one person = one batch) or
+            help the timing management of operations (tasks to be done at 1pm).
+          </p>
+        </field>
+    </record>
+</odoo>

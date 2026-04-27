@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="timesheet_grid.TimesheetValidationKanbanView.Buttons" t-inherit="web.KanbanView.Buttons">
+        <xpath expr="//div[hasclass('o_cp_buttons')]" position="inside">
+            <button type="button" class="btn btn-secondary" t-on-click="validateTimesheet">
+                Validate
+            </button>
+        </xpath>
+    </t>
+
+</templates>

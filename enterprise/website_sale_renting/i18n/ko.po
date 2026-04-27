@@ -1,0 +1,582 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_sale_renting
+#
+# Translators:
+# Wil Odoo, 2024
+# JH CHOI <hwangtog@gmail.com>, 2024
+# Sarah Park, 2025
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:50+0000\n"
+"PO-Revision-Date: 2025-12-13 09:17+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-18/"
+"website_sale_renting/ko/>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+msgid ""
+"\n"
+"                The new period is not valid for some products of your cart.\n"
+"                Your changes on the rental period are not taken into "
+"account.\n"
+"            "
+msgstr ""
+"\n"
+"                장바구니의 일부 제품에 새 기간이 적용되지 않습니다.\n"
+"                렌탈 기간에 대한 변경 사항은 반영되지 않습니다\n"
+"            "
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+msgid ""
+"\n"
+"                Your rental duration was too short. Unfortunately, we do not "
+"process\n"
+"                rentals that last less than %(duration)s %(unit)s.\n"
+"            "
+msgstr ""
+"\n"
+"                렌탈 기간이 너무 짧습니다. 렌탈 기간이\n"
+"                %(duration)s %(unit)s 보다 짧으면 처리할 수 없습니다.\n"
+" "
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+msgid ""
+"\n"
+"                Your rental product had invalid date of pickup (%"
+"(start_date)s).\n"
+"                Unfortunately, we do not process pickups on that weekday.\n"
+"            "
+msgstr ""
+"\n"
+"                렌탈할 품목의 수령 날짜(%(start_date)s)가 잘못되었습니다.\n"
+"                수령 업무를 하지 않는 날짜입니다.\n"
+"            "
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+msgid ""
+"\n"
+"                Your rental product had invalid date of return (%"
+"(end_date)s).\n"
+"                Unfortunately, we do not process returns on that weekday.\n"
+"            "
+msgstr ""
+"\n"
+"                렌탈을 원하시는 품목의 반납 날짜(%(end_date)s)가 유효하지 않"
+"습니다.\n"
+"                해당 요일에는 반납을 처리할 수 없습니다.\n"
+"            "
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+msgid ""
+"\n"
+"                Your rental product had invalid dates of pickup (%"
+"(start_date)s) and\n"
+"                return (%(end_date)s). Unfortunately, we do not process "
+"pickups nor\n"
+"                returns on those weekdays.\n"
+"            "
+msgstr ""
+"\n"
+"                렌탈할 품목의 수령 날짜(%(start_date)s)와\n"
+"                반납 날짜(%(end_date)s)가 잘못되었습니다. 수령이나 반납 업무"
+"를\n"
+"                하지 않는 날짜입니다.\n"
+"            "
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+msgid ""
+"\n"
+"            Some of your rental products (%(product)s) cannot be rented "
+"during the\n"
+"            selected period and your cart must be updated. We're sorry for "
+"the\n"
+"            inconvenience.\n"
+"        "
+msgstr ""
+"\n"
+"            일부 렌탈 품목(%(product)s)은 선택한 기간 동안 렌탈할 수 없습니"
+"다.\n"
+"            장바구니를 다시 업데이트해주십시오.\n"
+"            불편을 드려 죄송합니다.\n"
+"        "
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "(%s days)."
+msgstr "(%s 일)."
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "(%s hours)."
+msgstr "(%s 시간)."
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "(%s months)."
+msgstr "(%s 달)."
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "(%s weeks)."
+msgstr "(%s 주)."
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search_options
+msgid ", .s_rental_search"
+msgstr ", .s_rental_search"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.o_wsale_offcanvas
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.products
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.products_collapsible
+msgid "<b>Rental Period</b>"
+msgstr "<b>렌탈 기간</b>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_product
+msgid ""
+"<i class=\"fa fa-warning\" role=\"img\" aria-label=\"Warning\"/>\n"
+"                            <span name=\"renting_warning_message\"/>"
+msgstr ""
+"<i class=\"fa fa-warning\" role=\"img\" aria-label=\"경고\"/>\n"
+"                            <span name=\"renting_warning_message\"/>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.cart
+msgid ""
+"<i class=\"fa fa-warning\" role=\"img\" aria-label=\"Warning\"/>\n"
+"                        <span name=\"renting_warning_message\"/>"
+msgstr ""
+"<i class=\"fa fa-warning\" role=\"img\" aria-label=\"경고\"/>\n"
+"                        <span name=\"renting_warning_message\"/>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search
+msgid ""
+"<i class=\"fa fa-warning\" role=\"img\" aria-label=\"Warning\"/>\n"
+"                    <span name=\"renting_warning_message\"/>"
+msgstr ""
+"<i class=\"fa fa-warning\" role=\"img\" aria-label=\"경고\"/>\n"
+"                    <span name=\"renting_warning_message\"/>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.datepicker
+msgid ""
+"<i class=\"fa fa-warning\" role=\"img\" aria-label=\"Warning\"/>\n"
+"                <span name=\"renting_warning_message\"/>"
+msgstr ""
+"<i class=\"fa fa-warning\" role=\"img\" aria-label=\"경고\"/>\n"
+"                <span name=\"renting_warning_message\"/>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.o_wsale_offcanvas
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.products
+msgid ""
+"<small class=\"mx-auto\"><b>Clear Rental Period</b></small>\n"
+"                                <i class=\"oi oi-close\" role=\"img\"/>"
+msgstr ""
+"<small class=\"mx-auto\"><b>렌탈 기간 삭제</b></small>\n"
+"                                <i class=\"oi oi-close\" role=\"img\"/>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_search_result_price
+msgid "<small>from</small>"
+msgstr "<small>부터</small>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_search_result_price
+msgid "<small>per</small>"
+msgstr "<small>매</small>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search
+msgid ""
+"<span class=\"d-md-none me-2\">Search period</span>\n"
+"                                <i class=\"fa fa-search\" role=\"img\"/>"
+msgstr ""
+"<span class=\"d-md-none me-2\">기간 검색</span>\n"
+"                                <i class=\"fa fa-search\" role=\"img\"/>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.suggested_products_list
+msgid "<span class=\"ps-1\">per</span>"
+msgstr "<span class=\"ps-1\">/</span>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.price_dynamic_filter_template_product_product
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_products_price
+msgid "<span>/</span>"
+msgstr "<span>/</span>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_product
+msgid "<span>Rental Period</span>"
+msgstr "<span>렌탈 기간</span>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.products_item
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_products_price
+msgid "<span>per</span>"
+msgstr "<span>매</span>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_product
+msgid "<strong class=\"attribute_name\">Pricing</strong>"
+msgstr "<strong class=\"attribute_name\">가격</strong>"
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/snippets/s_rental_search/options.js:0
+msgid "All"
+msgstr "전체"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.cart
+msgid "Applies to all rented items"
+msgstr "모든 렌탈 항목에 적용합니다."
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search_options
+msgid "Attribute Filter"
+msgstr "속성 필터"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_res_company
+msgid "Companies"
+msgstr "회사"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_res_config_settings
+msgid "Config Settings"
+msgstr "환경 설정"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.snippet_options
+msgid "Datepicker"
+msgstr "날짜 선택기"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search_options
+msgid "Day"
+msgstr "일"
+
+#. module: website_sale_renting
+#: model:ir.model.fields.selection,name:website_sale_renting.selection__res_company__renting_minimal_time_unit__day
+msgid "Days"
+msgstr "일"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.res_config_settings_view_form
+msgid "Days during which pickup and return are not possible."
+msgstr "일 동안 수령 및 반납을 할 수 없습니다."
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.cart
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.datepicker
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_product
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search
+msgid "End date"
+msgstr "종료일"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_fri
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_fri
+msgid "Friday"
+msgstr "금요일"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.price_dynamic_filter_template_product_product
+msgid "From"
+msgstr "시작 시간"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.o_wsale_offcanvas
+msgid "Go to your cart"
+msgstr "내 장바구니로 이동"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search_options
+msgid "Hour"
+msgstr "시간"
+
+#. module: website_sale_renting
+#: model:ir.model.fields.selection,name:website_sale_renting.selection__res_company__renting_minimal_time_unit__hour
+msgid "Hours"
+msgstr "시간"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_minimal_time_duration
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_minimal_time_duration
+msgid "Minimal Rental Duration"
+msgstr "최소 렌탈 기간"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_minimal_time_unit
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_minimal_time_unit
+msgid "Minimal Rental Duration Unit"
+msgstr "최소 렌탈 기간 단위"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.res_config_settings_view_form
+msgid "Minimal duration between pickup and return."
+msgstr "수령과 반납 사이의 최소 기간입니다."
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.res_config_settings_view_form
+msgid "Minimal time of rental"
+msgstr "최소 렌탈 기간"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_mon
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_mon
+msgid "Monday"
+msgstr "월요일"
+
+#. module: website_sale_renting
+#: model:ir.model.fields.selection,name:website_sale_renting.selection__res_company__renting_minimal_time_unit__month
+msgid "Months"
+msgstr "월"
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+msgid "No dates were specified on your rental order."
+msgstr "대여 주문서에 날짜가 지정되어 있지 않습니다."
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/product_template.py:0
+msgid "Please choose a return date that is after the pickup date."
+msgstr "반납 날짜를 수령 날짜 이후로 선택하세요."
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "Please select a rental period."
+msgstr "렌탈 기간을 선택하세요."
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_product_pricelist
+msgid "Pricelist"
+msgstr "가격표"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_product_pricing
+msgid "Pricing rule of rental products"
+msgstr "렌탈 품목 가격 책정 규칙"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_product_template
+msgid "Product"
+msgstr "품목"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_product_product
+msgid "Product Variant"
+msgstr "품목 세부선택"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.res_config_settings_view_form_inherit_website
+msgid "Rent Online"
+msgstr "온라인 렌탈"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.cart_summary
+msgid "Rental Period"
+msgstr "렌탈 기간"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.accordion_rental_item
+msgid "Rental Pricing"
+msgstr "임대 요금"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.snippets
+msgid "Rental Search"
+msgstr "렌탈 검색"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.cart
+msgid "Rental period"
+msgstr "렌탈 기간"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_sale_order
+msgid "Sales Order"
+msgstr "판매 주문"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "판매 주문 내역"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_sat
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_sat
+msgid "Saturday"
+msgstr "토요일"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,help:website_sale_renting.field_res_config_settings__tz
+#: model:ir.model.fields,help:website_sale_renting.field_website__tz
+msgid "Select your website timezone here."
+msgstr "여기에서 웹사이트 표준 시간대를 선택하세요."
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+msgid ""
+"Some of your rental products cannot be rented during the selected period and "
+"your cart must be updated. We're sorry for the inconvenience."
+msgstr ""
+"일부 렌탈 품목은 선택한 기간 동안 대여할 수 없습니다. 장바구니를 업데이트해주"
+"십시오. 불편을 드려 죄송합니다."
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.cart
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.datepicker
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_product
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search
+msgid "Start date"
+msgstr "시작일"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_sun
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_sun
+msgid "Sunday"
+msgstr "일요일"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.o_wsale_offcanvas
+msgid "The period must be the same for all the products in your cart."
+msgstr "카트에 있는 모든 제품의 기간이 동일해야 합니다."
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.products
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_product
+msgid ""
+"The period must be the same for all the products in your cart. Go to your "
+"cart to change it or create different orders."
+msgstr ""
+"장바구니에 있는 모든 제품의 기간이 동일해야 합니다. 장바구니로 이동하여 조정"
+"하거나 별도의 주문을 생성하세요."
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "The pickup date cannot be in the past."
+msgstr "수령 날짜는 과거 날짜가 될 수 없습니다."
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "The rental lasts less than the minimal rental duration %s"
+msgstr "렌탈 기간이 최소 렌탈 기간보다 짧습니다 %s"
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "The return date should be after the pickup date."
+msgstr "반납 날짜는 수령 날짜 이후여야 합니다."
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_thu
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_thu
+msgid "Thursday"
+msgstr "목요일"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__tz
+#: model:ir.model.fields,field_description:website_sale_renting.field_website__tz
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.res_config_settings_view_form_inherit_website
+msgid "Timezone"
+msgstr "시간대"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search_options
+msgid "Timing"
+msgstr "시기"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_tue
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_tue
+msgid "Tuesday"
+msgstr "화요일"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.res_config_settings_view_form
+msgid "Unavailability days"
+msgstr "선택할 수 없는 날짜"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_website
+msgid "Website"
+msgstr "웹사이트"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_wed
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_wed
+msgid "Wednesday"
+msgstr "수요일"
+
+#. module: website_sale_renting
+#: model:ir.model.fields.selection,name:website_sale_renting.selection__res_company__renting_minimal_time_unit__week
+msgid "Weeks"
+msgstr "주"
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "You cannot pick up your rental on that day of the week."
+msgstr "해당 요일에는 렌탈 품목을 픽업하실 수 없습니다."
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+msgid "You cannot return your rental on that day of the week."
+msgstr "해당 요일에는 렌탈 품목을 반납하실 수 없습니다."
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+msgid "Your rental product cannot be pickedup in the past."
+msgstr "렌탈 품목의 픽업 날짜는 과거로 설정할 수 없습니다."
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.products_item
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.suggested_products_list
+msgid "from"
+msgstr "보낸 사람"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.o_wsale_offcanvas
+msgid "to change it or create different orders."
+msgstr "를 클릭하여 변경하거나 다른 주문을 생성합니다."

@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="0">
+    <!-- Page : default team -->
+    <template id="team" name="Helpdesk Team">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Submit a Ticket</t>
+            <div id="wrap" class="container mt-4">
+                <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL HELPDESK TEAMS</t>
+                <div class="row mb16">
+                    <div class="oe_structure oe_empty w-100 mb-2" id="oe_structure_website_helpdesk_team_1" t-att-data-editor-message="editor_message"/>
+                    <div class="col-md-9">
+                        <h2 class="o_page_header mt0 d-none" id="team-page"/>
+                    </div>
+                    <div class="col-md-8 ps-4">
+                        <div t-if="team.use_website_helpdesk_form">
+                            <t t-set="template_xmlid" t-value="team.website_form_view_id.xml_id"/>
+                            <t t-call="#{template_xmlid}"/>
+                        </div>
+                    </div>
+                    <div class="col-md-4" id="right-column">
+                        <div class="oe_structure oe_empty" id="oe_structure_website_helpdesk_team_2" t-att-data-editor-message="editor_message"/>
+                        <t t-if="not is_html_empty(team.description)">
+                            <div class="card bg-secondary mt-2 w-75 pull-right" id="about_team">
+                                <h6 class="card-header"><b>About our team</b></h6>
+                            <div class="card-body">
+                                <span t-field="team.description"/>
+                            </div>
+                            </div>
+                        </t>
+                        <div class="oe_structure oe_empty" id="oe_structure_website_helpdesk_team_3" t-att-data-editor-message="editor_message"/>
+                    </div>
+                </div>
+                <div class="oe_structure oe_empty" id="oe_structure_website_helpdesk_team_4" t-att-data-editor-message="editor_message"/>
+            </div>
+        </t>
+    </template>
+
+    <template id="helpdesk_all_team" name="Help">
+        <t t-call="website.layout">
+            <div class="container">
+                <div class="col-md px-0 team_list_columns">
+                    <div class="row">
+                            <div class="col-12"><h1 class="o_page_header mb32 mt32">Select your Team for help</h1></div>
+                        <div t-foreach="teams" t-as="team" class="col-md-6 col-lg-4 mb-4">
+                            <article class="card border-1 shadow-sm h-100 team_card">
+                                <a t-attf-href="#{team.website_url}" class="text-reset text-decoration-none h-100 d-flex flex-column">
+                                    <img src="/website_helpdesk/static/src/img/team_image.jpg" alt="Image"/>
+                                    <main class="card-body d-flex flex-column">
+                                        <h2 t-attf-class="fw-bold my-3">
+                                            <span t-field="team.name" itemprop="name"/>
+                                        </h2>
+                                        <div class="navbar-brand fw-bold text-primary text-uppercase h5 me-auto w-100">
+                                            Contact us <i class="oi oi-arrow-right"/>
+                                        </div>
+                                    </main>
+                                </a>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="ticket_submited" name="Ticket Received">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty h-100">
+                <div class="container d-flex flex-column justify-content-center h-100">
+                    <div class="oe_structure" id="oe_structure_website_helpdesk_thanks_you"/>
+                    <div class="d-flex flex-column align-items-center mb16 p-4 text-center">
+                        <t t-if="request.session.get('form_builder_model_model', '') == 'helpdesk.ticket'">
+                            <t t-set="ticket" t-value="request.website._website_form_last_record()"/>
+                        </t>
+                        <i class="fa fa-paper-plane fa-2x mb-3 rounded-circle text-bg-success" role="presentation"/>
+                        <h1 class="fw-bolder">Thank you!</h1>
+                        <t t-if="ticket">
+                            <p class="lead mb-0">Your ticket has been sent.</p>
+                            <p class="lead">Our team will get right on it.</p>
+                            <a t-if="request.session.uid" class="my-3 border rounded px-4 py-3 bg-100 fs-5 fw-bold shadow-sm text-decoration-none" t-attf-href="/helpdesk/ticket/#{ticket.id}" t-att-title="'Ticket #' + ticket.sudo().ticket_ref">
+                                Ticket #<span t-field="ticket.sudo().ticket_ref"/>
+                            </a>
+                            <span t-if="not request.session.get('uid')" class="my-3 border rounded px-4 py-3 fs-5 fw-bold shadow-sm">
+                                Ticket #<span t-field="ticket.sudo().ticket_ref"/>
+                            </span>
+                        </t>
+                        <a href="/">Go to Homepage</a>
+                    </div>
+                    <div class="oe_structure" id="oe_structure_website_helpdesk_thanks_you_bottom"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <record id="aboutus_page" model="website.page">
+        <field name="is_published">True</field>
+        <field name="url">/your-ticket-has-been-submitted</field>
+        <field name="website_indexed" eval="False"/>
+        <field name="view_id" ref="ticket_submited" />
+    </record>
+
+    <template id="ticket_submit_form" name="Helpdesk: Submit a Ticket Form">
+        <div class="container">
+            <h2 class="text-muted">
+                Submit a Ticket
+                <t t-if="multiple_teams"> - <t t-out="team.name" /></t>
+            </h2>
+            <div class="oe_structure" id="oe_structure_whelpdesk_form_1"/>
+            <span class="hidden" data-for="helpdesk_ticket_form" t-att-data-values="{'team_id': team and team.id or ''}" />
+            <div id="helpdesk_section">
+                <section class="s_website_form pt16 pb16 o_colored_level" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+                    <div class="container">
+                        <form id="helpdesk_ticket_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-success-mode="redirect" data-success-page="/your-ticket-has-been-submitted" data-model_name="helpdesk.ticket" hide-change-model="true">
+                            <div class="s_website_form_rows row s_col_no_bgcolor">
+                                <div class="mb-0 py-2 s_website_form_field col-12 s_website_form_required" data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="helpdesk1">
+                                            <span class="s_website_form_label_content">Full Name</span>
+                                            <span class="s_website_form_mark"> *</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input type="text" class="form-control s_website_form_input" name="partner_name" required="1" data-fill-with="name" id="helpdesk1"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-0 py-2 s_website_form_field col-12 s_website_form_required" data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="helpdesk2">
+                                            <span class="s_website_form_label_content">Phone Number</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input type="tel" class="form-control s_website_form_input" name="partner_phone" data-fill-with="phone" id="helpdesk2"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-0 py-2 s_website_form_field col-12 s_website_form_required" data-type="email" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label " style="width: 200px" for="helpdesk3">
+                                            <span class="s_website_form_label_content">Email Address</span>
+                                            <span class="s_website_form_mark"> *</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input type="email" class="form-control s_website_form_input" name="partner_email" required="1" data-fill-with="email" id="helpdesk3"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-0 py-2 s_website_form_field col-12 s_website_form_custom" data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="helpdesk4">
+                                            <span class="s_website_form_label_content">Company Name</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input type="text" class="form-control s_website_form_input" name="partner_company_name" data-fill-with="commercial_company_name" id="helpdesk4"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-0 py-2 s_website_form_field col-12 s_website_form_model_required" data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label " style="width: 200px" for="helpdesk5">
+                                            <span class="s_website_form_label_content">Message Subject</span>
+                                            <span class="s_website_form_mark"> *</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input type="text" class="form-control s_website_form_input" name="name" required="true" id="helpdesk5"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-0 py-2 s_website_form_field col-12" data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label " style="width: 200px" for="helpdesk6">
+                                            <span class="s_website_form_label_content">Ask Your Question</span>
+                                            <span class="s_website_form_mark"> *</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <textarea type="text" class="form-control s_website_form_input" name="description" required="true" id="helpdesk6" rows="5"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-0 py-2 s_website_form_field col-12 s_website_form_custom" data-type="binary" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class=" col-sm-auto s_website_form_label " style="width: 200px" for="helpdesk7">
+                                            <span class="s_website_form_label_content">Attachment</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input type="file" class="form-control s_website_form_input" name="Attachment" id="helpdesk7"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-0 py-2 s_website_form_field col-12 s_website_form_dnone" data-name="Field"
+                                     data-type="record" data-model="helpdesk.team">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px">
+                                            <span class="s_website_form_label_content">Helpdesk Team</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input type="hidden" class="form-control s_website_form_input" name="team_id" id="helpdesk8" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-0 py-2 col-12 s_website_form_submit" data-name="Submit Button">
+                                    <div style="width: 200px;" class="s_website_form_label"/>
+                                    <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send o_default_snippet_text">Submit Ticket</a>
+                                    <span id="s_website_form_result"/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </template>
+
+    <template id="search_box" name="Knowledge Base: Navbar Search Box">
+        <form t-attf-action="/helpdesk/{{slug(team)}}/knowledgebase" method="get" onsubmit="return this.search.value !== ''"
+              role="search" t-attf-class="o_helpdesk_knowledge_search w-100 #{_form_classes}" t-att-data-autocomplete="autocomplete" t-attf-data-ac-url="/helpdesk/{{slug(team)}}/knowledgebase/autocomplete">
+            <t t-call="website.website_search_box"/>
+        </form>
+    </template>
+
+    <template id="navbar" name="Search Bar">
+        <div class="container">
+            <a class="d-inline-block d-print-none mt-4 mb-2" title="Back to help" t-attf-href="/helpdesk/{{slug(team)}}/knowledgebase"><i class="fa fa-chevron-left me-2"/>Back to help</a>
+            <div class="d-flex flex-wrap align-items-center justify-content-between w-100 mb-2">
+                <h5 class="flex-grow-1 w-100 w-sm-auto mb-2 mb-sm-0">
+                    <span class="text-muted">Results for</span> <q><t t-out="search"/></q>
+                </h5>
+                <ul class="o_whelpdesk_topbar_filters nav d-print-none flex-nowrap gap-2"/>
+                <div class="d-print-none d-flex align-items-center flex-wrap w-100 w-lg-auto pe-0 ms-lg-2">
+                    <t t-call="website_helpdesk.search_box">
+                        <t t-set="search" t-value="search" />
+                        <t t-set="display_detail" t-value="'false'" />
+                    </t>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="navbar_search_date" inherit_id="website_helpdesk.navbar" name="Filter by Date" active="True">
+        <xpath expr="//ul[hasclass('o_whelpdesk_topbar_filters')]" position="inside">
+            <li class="nav-item dropdown my-1">
+                <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" title="Filter by date">
+                    <i class="fa fa-calendar me-2"/>
+                    <t t-if="current_date" t-out="current_date" />
+                    <t t-else="">
+                        By Date
+                    </t>
+                </a>
+                <div class="dropdown-menu">
+                    <a t-attf-class="dropdown-item o_dropdown_reset_tags {{'active' if not current_date else ''}}" t-attf-href="?{{keep_query('search', 'type', 'tag')}}" title="All dates">
+                        All
+                    </a>
+                    <t t-foreach="available_dates.items()" t-as="date">
+                        <a t-attf-href="?{{ keep_query('*', date=date[0]) }}" t-attf-class="dropdown-item {{'active' if searches.get('date') == date[0] else ''}}" t-att-title="date[1]">
+                            <t t-out="date[1]"/>
+                        </a>
+                    </t>
+                </div>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="navbar_search_type" inherit_id="website_helpdesk.navbar" name="Filter by Type" active="True">
+        <xpath expr="//ul[hasclass('o_whelpdesk_topbar_filters')]" position="inside">
+            <li class="nav-item dropdown my-1" t-if="len(available_types) > 1">
+                <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" title="Filter by type">
+                    <i class="fa fa-folder-open me-2"/>
+                    <t t-if="current_type" t-out="current_type" />
+                    <t t-else="">
+                        By Type
+                    </t>
+                </a>
+                <div class="dropdown-menu">
+                    <a t-attf-class="dropdown-item o_dropdown_reset_tags {{'active' if not current_type else ''}}" t-attf-href="?{{keep_query('search', 'date', 'tag')}}" title="All types">
+                        All Types
+                    </a>
+                    <t t-foreach="available_types.items()" t-as="type">
+                        <a t-attf-href="?{{ keep_query('*', type=type[0]) }}" t-attf-class="dropdown-item {{'active' if searches.get('type') == type[0] else ''}}" t-att-title="type[1]">
+                            <t t-out="type[1]"/>
+                        </a>
+                    </t>
+                </div>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="navbar_search_tag" inherit_id="website_helpdesk.navbar" name="Filter by Tags" active="True">
+        <xpath expr="//ul[hasclass('o_whelpdesk_topbar_filters')]" position="inside">
+            <li class="nav-item dropdown my-1" t-if="len(available_tags) > 1">
+                <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" title="Filter by tags">
+                    <i class="fa fa-tag me-2"/>
+                    <t t-if="current_tag" t-out="current_tag" />
+                    <t t-else="">
+                        By Tags
+                    </t>
+                </a>
+                <div class="dropdown-menu whelpdesk_tags_dropdown overflow-auto">
+                    <a t-attf-class="dropdown-item o_dropdown_reset_tags {{'active' if not current_tag else ''}}" t-attf-href="?{{keep_query('search', 'date', 'type')}}" title="All tags">
+                        All Tags
+                    </a>
+                    <t t-foreach="available_tags" t-as="tag">
+                        <a t-attf-href="?{{ keep_query('*', tag=tag) }}" t-attf-class="dropdown-item {{'active' if searches.get('tag') == tag else ''}}" t-att-title="tag">
+                            <t t-out="tag"/>
+                        </a>
+                    </t>
+                </div>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="knowledge_base" name="Knowledge Base">
+        <t t-call="website.layout">
+            <t t-set="additional_title"><t t-out="team.name" /></t>
+            <div id="wrap" class="oe_structure oe_empty">
+                <section class="o_editable mt48 mb32">
+                    <div class="container s_allow_columns">
+                        <div class="row">
+                            <div class="col-lg-8 offset-lg-2 o_colored_level text-center">
+                                <h1 class="mb-3 text-center fw-bold">How can we help you?</h1>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="container mb64">
+                    <t t-call="website_helpdesk.search_box">
+                        <t t-set="_form_classes" t-valuef="w-lg-50 mx-auto"/>
+                        <t t-set="_input_classes" t-valuef="form-control-lg"/>
+                        <t t-set="placeholder">Search for articles, best practices and more...</t>
+                        <t t-set="autocomplete" t-value="1" />
+                    </t>
+                </div>
+                <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS THE KNOWLEDGE PAGE OF ALL HELPDESK TEAMS</t>
+                <div class="oe_structure oe_empty" id="oe_structure_website_helpdesk_kb_1" t-att-data-editor-message="editor_message"/>
+                <section class="s_features o_colored_level" data-snippet="s_features" data-name="Features">
+                    <div class="container">
+                        <div id="o_knowledge_base_sections" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center"/>
+                    </div>
+                </section>
+                <div class="oe_structure oe_empty" id="oe_structure_website_helpdesk_kb_2" t-att-data-editor-message="editor_message"/>
+                <t t-call="website_helpdesk.footer" />
+            </div>
+        </t>
+    </template>
+
+    <template id="search_results" name="Knowledge Base: Search Results">
+        <t t-call="website.layout">
+            <t t-set="additional_title"><t t-out="team.name" /></t>
+            <div id="wrap" class="oe_structure oe_empty d-flex justify-content-between h-100 flex-column">
+                <div id="whelpdesk_top">
+                    <div class="oe_structure" id="oe_structure_whelpdesk_knowledge_1" />
+                    <t t-call="website_helpdesk.navbar" />
+                    <section class="whelpdesk_search_results">
+                        <div class="s_allow_columns container mb-5">
+                            <t t-if="not results">
+                                <h4 class="text-center mt-5">No results found for <q><t t-out="search"/></q></h4>
+                                <p class="text-center">Please try another search  or <a title="Back to help" t-attf-href="/helpdesk/{{slug(team)}}/knowledgebase">go back to help page</a></p>
+                            </t>
+                            <div t-foreach="results" t-as="result" t-key="result_index" class="whelpdesk_result">
+                                <t t-call="{{ result['template'] }}">
+                                    <t t-set="record" t-value="result['record']" />
+                                    <t t-set="url" t-value="result['url']" />
+                                </t>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div id="whelpdesk_bottom">
+                    <div class="oe_structure" id="oe_structure_whelpdesk_knowledge_2" />
+                    <t t-call="website_helpdesk.footer" />
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="footer" name="Knowledge Base: Footer">
+        <section class="s_call_to_action o_cc o_cc3 o_colored_level mt-5 pt64 pb64 " data-snippet="s_call_to_action" data-name="Call to Action">
+            <div class="container">
+                <div class="d-block d-lg-flex align-items-center gap-2">
+                    <div class="flex-grow-1">
+                        <h3>Can't find your answer?</h3>
+                        <p class="lead">Our support team is here to help.</p>
+                    </div>
+                    <div class="d-flex flex-wrap flex-sm-nowrap gap-2 mt-4 mt-lg-0" id="footer_buttons">
+                        <a class="btn btn-primary btn-lg text-nowrap" title="Contact us" t-attf-href="{{team.website_url}}?contact_form=1">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="website_tickets_followup" name="Helpdesk tickets website" inherit_id="helpdesk.tickets_followup">
+        <xpath expr="//t[@t-set='title']" position="replace">
+            <t t-set="additional_title" t-value="ticket.name"/>
+        </xpath>
+    </template>
+</data>
+</odoo>

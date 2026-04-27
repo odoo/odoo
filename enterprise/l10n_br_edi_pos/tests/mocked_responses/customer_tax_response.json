@@ -1,0 +1,285 @@
+{
+  "header": {
+    "amountCalcType": "gross",
+    "companyLocation": "49233848000150",
+    "documentCode": "pos.order_310",
+    "goods": {
+      "class": "VENDA DE PRODU\u00c7\u00c3O DO ESTABELECIMENTO",
+      "finNFe": "1",
+      "goal": "Normal",
+      "idDest": 0,
+      "indPres": "1",
+      "model": "65",
+      "nfceQrCode": "http://www.fazenda.pr.gov.br/nfce/qrcode?p=41250149233848000150650010000002551000003106|2|2|1|e67dc3febdaf425cac465307ccbce643678052a2",
+      "tpEmis": "1",
+      "tpImp": "4",
+      "tplmp": "4",
+      "transport": {
+        "modFreight": "FreeShipping"
+      },
+      "urlKey": "http://www.fazenda.pr.gov.br/nfce/consulta"
+    },
+    "invoiceAccessKey": "41250149233848000150650010000002551000003106",
+    "invoiceNumber": 255,
+    "invoiceSerial": 1,
+    "locations": {
+      "entity": {
+        "activitySector": {
+          "code": "industry"
+        },
+        "address": {
+          "cityCode": 4106902,
+          "cityName": "Curitiba",
+          "country": "BRA",
+          "countryCode": "1058",
+          "neighborhood": "Curitaba",
+          "number": "592",
+          "state": "PR",
+          "street": "Av. Presidente Vargas",
+          "zipcode": "80010-010"
+        },
+        "businessName": "BR Company Customer",
+        "federalTaxId": "51494569013170",
+        "name": "BR Company Customer",
+        "suframa": "",
+        "taxRegime": "simplified",
+        "taxesSettings": {
+          "icmsTaxPayer": true
+        },
+        "type": "business"
+      },
+      "establishment": {
+        "activitySector": {
+          "ActivitySector_CNAE": {
+            "code": "6209100"
+          },
+          "code": "service"
+        },
+        "address": {
+          "cityCode": 4106902,
+          "cityName": "Curitiba",
+          "country": "BRA",
+          "countryCode": "1058",
+          "email": "info@company.brexample.com",
+          "neighborhood": "Centro",
+          "number": "2401",
+          "phone": "+55 11 96123-4567",
+          "state": "PR",
+          "street": "Rua Marechal Deodoro 630, Conjunto",
+          "zipcode": "80010-010"
+        },
+        "businessName": "BR Company",
+        "federalTaxId": "49.233.848/0001-50",
+        "name": "BR Company",
+        "suframa": "",
+        "taxRegime": "estimatedProfit",
+        "taxesSettings": {
+          "cofinsSubjectTo": "T",
+          "csllSubjectTo": "T",
+          "enableCprb": false,
+          "icmsTaxPayer": true,
+          "pCredSN": 0,
+          "pisCofinsAssetCalcBase": "D",
+          "pisCofinsIcmsTaxCreditRelief": false,
+          "pisCofinsIcmsTaxCreditReliefMode": {
+            "icms": false,
+            "icmsDifaDest": false,
+            "icmsDifaDestFcp": false,
+            "icmsFcp": false
+          },
+          "pisCofinsIcmsTaxRelief": true,
+          "pisCofinsIcmsTaxReliefMode": {
+            "icms": true,
+            "icmsDifaDest": false,
+            "icmsDifaDestFcp": false,
+            "icmsFcp": false
+          },
+          "pisCofinsReliefZF": false,
+          "pisSubjectTo": "T",
+          "reduceIcmsTaxReliefToIPIBase": false
+        },
+        "type": "individual"
+      }
+    },
+    "messageType": "goods",
+    "operationType": "standardSales",
+    "payment": {
+      "paymentInfo": {
+        "paymentMode": [
+          {
+            "mode": "99",
+            "modeDescription": "Other",
+            "value": 3.0
+          }
+        ]
+      }
+    },
+    "transactionDate": "2025-01-09T10:27:36-08:00"
+  },
+  "lines": [
+    {
+      "cfop": 5101,
+      "goods": {
+        "entityIcmsStSubstitute": "default",
+        "subjectToIPIonInbound": true
+      },
+      "insuranceAmount": 0,
+      "itemCode": "false",
+      "itemDescriptor": {
+        "cean": "",
+        "cest": "",
+        "cnae": "6209100",
+        "description": "aa Regular Consumable Product",
+        "hsCode": "49011000",
+        "productType": "FOR PRODUCT",
+        "source": "0"
+      },
+      "lineAdditionalInfo": "",
+      "lineAmount": 3,
+      "lineCode": 276,
+      "lineNetFigure": 2.42,
+      "lineTaxedDiscount": 0,
+      "lineUnitPrice": 1,
+      "numberOfItems": 3,
+      "operationType": "standardSales",
+      "otherCostAmount": 0,
+      "overwrite": "no",
+      "taxDetails": [
+        {
+          "calcMode": "rate",
+          "cst": "06",
+          "exemptionCode": "",
+          "isCustomCitation": false,
+          "jurisdictionName": "Brazil",
+          "jurisdictionType": "Country",
+          "rate": 0,
+          "subtotalTaxable": 2.42,
+          "tax": 0,
+          "taxImpact": {
+            "accounting": "none",
+            "impactOnFinalPrice": "Included",
+            "impactOnNetAmount": "Included"
+          },
+          "taxType": "cofins"
+        },
+        {
+          "cst": "00",
+          "exemptionCode": "",
+          "isCustomCitation": false,
+          "jurisdictionName": "Paran\u00e1",
+          "jurisdictionType": "State",
+          "modBC": "3",
+          "rate": 19.5,
+          "source": "0",
+          "subtotalTaxable": 3,
+          "tax": 0.58,
+          "taxImpact": {
+            "accounting": "liability",
+            "impactOnFinalPrice": "Included",
+            "impactOnNetAmount": "Included"
+          },
+          "taxType": "icms"
+        },
+        {
+          "calcMode": "rate",
+          "cst": "06",
+          "exemptionCode": "",
+          "isCustomCitation": false,
+          "jurisdictionName": "Brazil",
+          "jurisdictionType": "Country",
+          "rate": 0,
+          "subtotalTaxable": 2.42,
+          "tax": 0,
+          "taxImpact": {
+            "accounting": "none",
+            "impactOnFinalPrice": "Included",
+            "impactOnNetAmount": "Included"
+          },
+          "taxType": "pis"
+        }
+      ],
+      "useType": "resale"
+    }
+  ],
+  "processingInfo": {
+    "authMS": 3.8965,
+    "calculationMS": 4.1917,
+    "duration": "4.192",
+    "env": "sbx",
+    "invoiceSubmitMS": 0.0074,
+    "retrieveDataMS": 34.398,
+    "taxDiscoveryMS": 24.464,
+    "totalMS": 47.3974,
+    "versionId": "25.1.2"
+  },
+  "summary": {
+    "numberOfLines": 1,
+    "taxByType": {
+      "cofins": {
+        "jurisdictions": [
+          {
+            "jurisdictionName": "Brazil",
+            "jurisdictionType": "Country",
+            "tax": 0
+          }
+        ],
+        "subtotalTaxable": 2.42,
+        "tax": 0
+      },
+      "icms": {
+        "jurisdictions": [
+          {
+            "jurisdictionName": "Paran\u00e1",
+            "jurisdictionType": "State",
+            "tax": 0.58
+          }
+        ],
+        "subtotalTaxable": 3,
+        "tax": 0.58
+      },
+      "pis": {
+        "jurisdictions": [
+          {
+            "jurisdictionName": "Brazil",
+            "jurisdictionType": "Country",
+            "tax": 0
+          }
+        ],
+        "subtotalTaxable": 2.42,
+        "tax": 0
+      }
+    },
+    "taxImpactHighlights": {
+      "added": [],
+      "included": [
+        {
+          "subtotalTaxable": 2.42,
+          "tax": 0,
+          "taxType": "cofins"
+        },
+        {
+          "subtotalTaxable": 3,
+          "tax": 0.58,
+          "taxType": "icms"
+        },
+        {
+          "subtotalTaxable": 2.42,
+          "tax": 0,
+          "taxType": "pis"
+        }
+      ],
+      "informative": [],
+      "subtracted": [],
+      "withheld": []
+    },
+    "totalFreights": 0,
+    "totalInsurances": 0,
+    "totalInvoice": 3,
+    "totalLineAmounts": 3,
+    "totalOtherCosts": 0,
+    "totalTaxedDiscounts": 0,
+    "totalUnTaxedOtherCosts": 0,
+    "totalUntaxedDiscounts": 0
+  },
+  "version": "3"
+}

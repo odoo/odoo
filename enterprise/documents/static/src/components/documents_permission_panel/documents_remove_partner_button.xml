@@ -1,0 +1,26 @@
+<templates>
+    <t t-name="documents.RemovePartnerButton">
+        <t t-if="props.isInternalUser">
+            <button t-if="props.isCurrentUser(props.accessPartner)"
+                class="o_documents_remove_partner_btn btn btn-danger me-2"
+                t-att-disabled="props.disabled"
+                t-on-click.prevent="() => props.removeAccess(props.accessPartner)"
+                title="Remove Access">
+                <i class="fa fa-fw fa-sign-out"/>
+            </button>
+            <button t-else=""
+                class="o_documents_remove_partner_btn btn btn-danger me-2"
+                t-att-disabled="props.disabled"
+                title="Remove Member"
+                t-on-click.prevent="() => props.removeAccess(props.accessPartner)">
+                <i class="fa fa-fw fa-times"/>
+            </button>
+        </t>
+        <button t-else=""
+            class="o_documents_remove_partner_btn btn btn-danger me-2"
+            disabled="true"
+            title="You cannot remove this partner">
+            <i class="fa fa-fw fa-times"/>
+        </button>
+    </t>
+</templates>

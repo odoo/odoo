@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="repair_view_picking_form_no_repair_access" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.repair.no.repair.access</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_repair_return']" position="replace"/>
+            <xpath expr="//header/field[@name='is_repairable']" position="replace"/>
+            <xpath expr="//button[@name='action_view_repairs']" position="replace"/>
+            <xpath expr="//field[@name='repair_ids']" position="replace"/>
+        </field>
+    </record>
+</odoo>

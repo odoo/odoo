@@ -1,0 +1,11 @@
+<odoo noupdate="1">
+    <record id="cron_l10n_nl_reports_status_process" model="ir.cron">
+        <field name="name">Process statusses of the unfinished submitted SBR reports</field>
+        <field name="model_id" ref="model_l10n_nl_reports_sbr_status_service"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_process_submission_status()</field>
+        <field name="interval_number">9999</field>
+        <field name="interval_type">months</field>
+        <field name="active">True</field>
+    </record>
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="action_report_report_l10nfrfichepaye" model="ir.actions.report">
+            <field name="name">Fiche de paye</field>
+            <field name="model">hr.payslip</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_fr_hr_payroll.report_l10n_fr_fiche_paye</field>
+            <field name="report_file">l10n_fr_hr_payroll.report_l10n_fr_fiche_paye</field>
+            <field name="binding_model_id" ref="hr_payroll.model_hr_payslip"/>
+            <field name="binding_type">report</field>
+        </record>
+</odoo>

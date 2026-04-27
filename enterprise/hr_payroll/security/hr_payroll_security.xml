@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+
+    <record model="ir.module.category" id="base.module_category_human_resources_payroll">
+        <field name="sequence">16</field>
+    </record>
+
+    <record id="group_hr_payroll_user" model="res.groups">
+        <field name="name">Officer: Manage all contracts</field>
+        <field name="category_id" ref="base.module_category_human_resources_payroll"/>
+        <field name="implied_ids" eval="[(4, ref('hr.group_hr_user')), (4, ref('hr_contract.group_hr_contract_employee_manager')), (4, ref('hr_contract.group_hr_contract_manager'))]"/>
+        <field name="comment">User can manage all contracts, work entries and create payslips.</field>
+    </record>
+
+    <record id="group_hr_payroll_manager" model="res.groups"> 
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="base.module_category_human_resources_payroll"/>
+        <field name="implied_ids" eval="[(4, ref('hr_payroll.group_hr_payroll_user')), (4, ref('hr_contract.group_hr_contract_manager'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        <field name="comment">User have full access on the application.</field>
+    </record>
+
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4,ref('hr_payroll.group_hr_payroll_manager'))]"/>
+    </record>
+
+    <record id="group_payslip_display" model="res.groups">
+        <field name="name">Display payslip PDF</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('hr_payroll.group_payslip_display'))]"/>
+    </record>
+
+    <record id="hr_payroll_rule_officer" model="ir.rule">
+        <field name="name">Officer and subordinates Payslip</field>
+        <field name="model_id" ref="model_hr_payslip"/>
+        <field name="domain_force">['|','|', ('employee_id.user_id', '=', user.id), ('employee_id.department_id', '=', False), ('employee_id.department_id.manager_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('hr_payroll.group_hr_payroll_user'))]"/>
+    </record>
+
+    <record id="hr_payslip_rule_manager" model="ir.rule">
+        <field name="name">All Payslip</field>
+        <field name="model_id" ref="model_hr_payslip"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4, ref('hr_payroll.group_hr_payroll_manager'))]"/>
+    </record>
+
+    <record id="hr_work_entry_validated" model="ir.rule">
+        <field name="name">hr.work.entry: only non validated work_entries updated</field>
+        <field name="model_id" ref="hr_work_entry.model_hr_work_entry"/>
+        <field name="domain_force">[('state', '!=', 'validated')]</field>
+        <field name="groups" eval="[(4, ref('hr_payroll.group_hr_payroll_manager'))]"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_read" eval="0"/>
+    </record>
+
+    <record id="ir_rule_hr_payroll_structure_multi_company" model="ir.rule">
+        <field name="name">HR Payroll Structure: Multi Company</field>
+        <field name="model_id" ref="model_hr_payroll_structure"/>
+        <field name="domain_force">['|', ('country_id', '=', False), ('country_id', 'in', user.env.companies.mapped('country_id').ids)]</field>
+    </record>
+
+    <record id="ir_rule_hr_payslip_input_type_multi_company" model="ir.rule">
+        <field name="name">HR Payslip Input Type: Multi Company</field>
+        <field name="model_id" ref="model_hr_payslip_input_type"/>
+        <field name="domain_force">['|', ('country_id', '=', False), ('country_id', 'in', user.env.companies.mapped('country_id').ids)]</field>
+    </record>
+
+    <record id="ir_rule_hr_payroll_paramater_multi_company" model="ir.rule">
+        <field name="name">HR Rule Parameter: Multi Company</field>
+        <field name="model_id" ref="model_hr_rule_parameter"/>
+        <field name="domain_force">['|', ('country_id', '=', False), ('country_id', 'in', user.env.companies.mapped('country_id').ids)]</field>
+    </record>
+
+    <record id="ir_rule_hr_payroll_paramater_value_multi_company" model="ir.rule">
+        <field name="name">HR Rule Parameter Value: Multi Company</field>
+        <field name="model_id" ref="model_hr_rule_parameter_value"/>
+        <field name="domain_force">['|', ('country_id', '=', False), ('country_id', 'in', user.env.companies.mapped('country_id').ids)]</field>
+    </record>
+
+    <record id="ir_rule_hr_payslip_multi_company" model="ir.rule">
+        <field name="name">HR Payslip: Multi Company</field>
+        <field name="model_id" ref="model_hr_payslip"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_hr_payslip_line_multi_company" model="ir.rule">
+        <field name="name">HR Payslip Line: Multi Company</field>
+        <field name="model_id" ref="model_hr_payslip_line"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_hr_payslip_run_multi_company" model="ir.rule">
+        <field name="name">HR Payslip Batch: Multi Company</field>
+        <field name="model_id" ref="model_hr_payslip_run"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_hr_salary_attachment_multi_company" model="ir.rule">
+        <field name="name">HR Salary Attachment: Multi Company</field>
+        <field name="model_id" ref="model_hr_salary_attachment"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_hr_payroll_salary_rule_multi_company" model="ir.rule">
+        <field name="name">HR Salary Rule: Multi Company</field>
+        <field name="model_id" ref="model_hr_salary_rule"/>
+        <field name="domain_force">['|', ('struct_id.country_id', '=', False), ('struct_id.country_id', 'in', user.env.companies.mapped('country_id').ids)]</field>
+    </record>
+
+    <record id="ir_rule_hr_payroll_note_multi_company" model="ir.rule">
+        <field name="name">HR Payroll Note: Multi Company</field>
+        <field name="model_id" ref="model_hr_payroll_note"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_hr_employee_declaration" model="ir.rule">
+        <field name="name">HR Payroll Employee Declaration: Multi Company</field>
+        <field name="model_id" ref="model_hr_payroll_employee_declaration"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_hr_payroll_report_multi_company" model="ir.rule">
+        <field name="name">HR Payroll Report: Multi Company</field>
+        <field name="model_id" ref="model_hr_payroll_report"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
+    <record id="ir_rule_hr_payroll_dashboard_warning_multi_company" model="ir.rule">
+        <field name="name">HR Payroll Dashboard Warning: Multi Company</field>
+        <field name="model_id" ref="model_hr_payroll_dashboard_warning"/>
+        <field name="domain_force">['|', ('country_id', '=', False), ('country_id', 'in', user.env.companies.mapped('country_id').ids)]</field>
+    </record>
+
+    <record id="ir_rule_hr_payroll_headcount_multi_company" model="ir.rule">
+        <field name="name">HR Payroll Headcount: Multi Company</field>
+        <field name="model_id" ref="model_hr_payroll_headcount"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</data>
+</odoo>

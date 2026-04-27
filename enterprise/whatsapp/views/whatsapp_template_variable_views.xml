@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="whatsapp_template_variable_view_tree" model="ir.ui.view">
+        <field name="name">whatsapp.template.variable.view.list</field>
+        <field name="model">whatsapp.template.variable</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="wa_template_id"/>
+                <field name="model"/>
+                <field name="line_type"/>
+                <field name="field_type"/>
+                <field name="field_name"/>
+                <field name="demo_value"/>
+            </list>
+        </field>
+    </record>
+    <record id="whatsapp_template_variable_view_form" model="ir.ui.view">
+        <field name="name">whatsapp.template.variable.view.form</field>
+        <field name="model">whatsapp.template.variable</field>
+        <field name="arch" type="xml">
+            <form string="Template Button">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="wa_template_id"/>
+                            <field name="model"/>
+                        </group>
+                        <group>
+                            <field name="line_type"/>
+                            <field name="field_type"/>
+                            <field name="field_name"/>
+                            <field name="demo_value"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

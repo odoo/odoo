@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="form_view_account_move_reversal_inherit_l10n_ke" model="ir.ui.view">
+            <field name="name">form.view.account.move.reversal.inherit.l10n.ke</field>
+            <field name="model">account.move.reversal</field>
+            <field name="inherit_id" ref="account.view_account_move_reversal"/>
+            <field name="arch" type="xml">
+                <field name="reason" position="after">
+                    <field name="country_code" invisible="1"/>
+                    <field name="l10n_ke_reason_code_id"
+                           invisible="country_code != 'KE'"
+                           required="country_code == 'KE' and company_id.l10n_ke_oscu_cmc_key"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

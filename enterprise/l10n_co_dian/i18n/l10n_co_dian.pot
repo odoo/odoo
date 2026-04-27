@@ -1,0 +1,1157 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_co_dian
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-10 19:07+0000\n"
+"PO-Revision-Date: 2026-04-10 19:07+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid ""
+"6c33aba6cd0086c0af774f5ff5e3535e16dc9a753df6bdd8da3d5d242ccee7016d4fc897225593b6e240a9e9f8b19373"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:mail.template,body_html:l10n_co_dian.email_template_edi_credit_note
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Here is your\n"
+"        <t t-if=\"object.name\">\n"
+"            credit note <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            credit note\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (with reference: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        Do not hesitate to contact us if you have any questions.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:mail.template,body_html:l10n_co_dian.email_template_edi_invoice
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Here is your\n"
+"        <t t-if=\"object.name\">\n"
+"            invoice <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            invoice\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (with reference: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            This invoice is already paid.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Please remit payment at your earliest convenience.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br/><br/>\n"
+"                Please use the following communication for your payment: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    on the account <strong t-out=\"object.partner_bank_id.acc_number\"/>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"            <br/><br/>\n"
+"            PS: you can review your timesheets <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">from the portal.</a>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Do not hesitate to contact us if you have any questions.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.res_partner_form_inherit
+msgid ""
+"<i title=\"Update data\" role=\"img\" aria-label=\"Update Data\" class=\"fa "
+"fa-fw fa-refresh\"/>"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "<strong>Payment Means</strong>"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "<strong>Payment Method</strong>"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid "A posted time is required to compute the CUFE/CUDE/CUDS."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid "A technical key on the journal is required to compute the CUFE."
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields.selection,name:l10n_co_dian.selection__account_move__l10n_co_dian_state__invoice_accepted
+#: model:ir.model.fields.selection,name:l10n_co_dian.selection__l10n_co_dian_document__state__invoice_accepted
+msgid "Accepted"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model,name:l10n_co_dian.model_account_move_send
+msgid "Account Move Send"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_res_config_settings__l10n_co_dian_certification_process
+msgid "Activate the certification process"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,help:l10n_co_dian.field_res_config_settings__l10n_co_dian_certification_process
+msgid ""
+"Activate this checkbox if you are in the certification process with the "
+"DIAN."
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,help:l10n_co_dian.field_res_config_settings__l10n_co_dian_demo_mode
+msgid ""
+"Activate this checkbox if you’re testing elecronic invoice flows with "
+"internal validation."
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,help:l10n_co_dian.field_res_config_settings__l10n_co_dian_test_environment
+msgid ""
+"Activate this checkbox if you’re testing workflows for electronic invoicing."
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.res_config_settings_view_form
+msgid ""
+"Activate this mode to be able to test electronic invoicing only with "
+"internal validations, but no responce from the DIAN environment."
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.res_config_settings_view_form
+msgid "Add your certificates to sign your documents."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid ""
+"Alcohol percentage should be set on the %(field_description)s field for "
+"product: %(product_name)s when using ICL taxes."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid ""
+"An Electronic Invoice Type must be selected before sending the invoice."
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.attached_document
+msgid "ApplicationResponse"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.l10n_co_dian_operation_mode_view_tree
+msgid "Are you sure you want to delete this record?"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_document__attachment_id
+msgid "Attachment"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "Autorretenedor"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "Barcode"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields.selection,name:l10n_co_dian.selection__account_move__l10n_co_dian_identifier_type__cude
+msgid "CUDE"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields.selection,name:l10n_co_dian.selection__account_move__l10n_co_dian_identifier_type__cuds
+msgid "CUDS"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields.selection,name:l10n_co_dian.selection__account_move__l10n_co_dian_identifier_type__cufe
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "CUFE"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_account_bank_statement_line__l10n_co_edi_cufe_cude_ref
+#: model:ir.model.fields,field_description:l10n_co_dian.field_account_move__l10n_co_edi_cufe_cude_ref
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_document__identifier
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.view_account_invoice_filter_inherit_l10n_co_dian
+msgid "CUFE/CUDE/CUDS"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields.selection,name:l10n_co_dian.selection__res_company__l10n_co_dian_provider__carvajal
+msgid "Carvajal"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model,name:l10n_co_dian.model_certificate_certificate
+msgid "Certificate"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/xml_utils.py:0
+msgid "Certificate is not available"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.res_config_settings_view_form
+msgid "Certificates"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,help:l10n_co_dian.field_res_config_settings__l10n_co_dian_certificate_ids
+msgid "Certificates to be used for electronic invoicing."
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_document__certification_process
+msgid "Certification Process"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model,name:l10n_co_dian.model_l10n_co_dian_document
+msgid "Colombian documents used for each interaction with the DIAN"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model,name:l10n_co_dian.model_l10n_co_dian_operation_mode
+msgid "Colombian operation modes of DIAN used for different documents"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model,name:l10n_co_dian.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_operation_mode__company_id
+msgid "Company"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model,name:l10n_co_dian.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.res_config_settings_view_form
+msgid ""
+"Configure the operations modes for the different types of documents to be "
+"generated from Odoo"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model,name:l10n_co_dian.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "Contado"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,help:l10n_co_dian.field_account_journal__l10n_co_dian_technical_key
+msgid "Control key acquired in the DIAN portal, used to generate the CUFE"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_document__create_uid
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_operation_mode__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_document__create_date
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_operation_mode__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:mail.template,name:l10n_co_dian.email_template_edi_credit_note
+msgid "Credit Note (DIAN): Sending"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "Crédito"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "Crédito ACH"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_move_send.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.view_account_move_form_inherit_l10n_co_dian
+msgid "DIAN"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.attached_document
+msgid "DIAN 2.1"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields.selection,name:l10n_co_dian.selection__l10n_co_dian_operation_mode__dian_software_operation_mode__invoice
+msgid "DIAN 2.1: Electronic Invoices"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields.selection,name:l10n_co_dian.selection__l10n_co_dian_operation_mode__dian_software_operation_mode__bill
+msgid "DIAN 2.1: Support Documents"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:account.journal,name:l10n_co_dian.invoice_journal
+msgid "DIAN Customer Invoices"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:account.journal,name:l10n_co_dian.debit_note_journal
+msgid "DIAN Debit Notes"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_res_company__l10n_co_dian_demo_mode
+#: model:ir.model.fields,field_description:l10n_co_dian.field_res_config_settings__l10n_co_dian_demo_mode
+msgid "DIAN Demo Mode"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/l10n_co_dian_operation_mode.py:0
+msgid "DIAN Operation Mode"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_res_company__l10n_co_dian_operation_mode_ids
+#: model:ir.model.fields,field_description:l10n_co_dian.field_res_config_settings__l10n_co_dian_operation_mode_ids
+msgid "DIAN Operation Modes"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:account.journal,name:l10n_co_dian.support_document_journal
+msgid "DIAN Support Documents"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "DIAN resolution"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_journal.py:0
+msgid "DIAN returned error %(code)s: \"%(message)s\""
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.view_account_invoice_filter_inherit_l10n_co_dian
+msgid "DIAN status"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields.selection,name:l10n_co_dian.selection__res_company__l10n_co_dian_provider__dian
+msgid "DIAN: Free service"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_document__datetime
+msgid "Datetime"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.l10n_co_dian_operation_mode_view_tree
+msgid "Delete"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/l10n_co_dian_document.py:0
+msgid "Demo mode response"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_document__display_name
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_operation_mode__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.attached_document
+msgid "Documentos adjuntos"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.view_account_move_form_inherit_l10n_co_dian
+msgid "Download"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "Economic activity:"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "Effective date from"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_res_config_settings__l10n_co_dian_provider
+msgid "Electronic Invoicing Provider"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model,name:l10n_co_dian.model_mail_template
+msgid "Email Templates"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/l10n_co_dian_document.py:0
+msgid "Error %(code)s when calling the DIAN server: %(response)s"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_move_send.py:0
+msgid "Error(s) when generating the Attached Document:"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_move_send.py:0
+msgid "Error(s) when generating the UBL attachment:"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_move.py:0
+msgid ""
+"Error(s) when generating the UBL attachment:\n"
+"- %s"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_move_send.py:0
+msgid "Error(s) when sending the document to the DIAN:"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_move.py:0
+msgid ""
+"Error(s) when sending the document to the DIAN:\n"
+"- %s"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid "Every exportation product must have a brand."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid "Every exportation product must have a customs code."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid "Every lines should have non zero price units."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid ""
+"Exportation invoices require custom code in all the products, please fill in"
+" this information before validating the invoice"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "Factura de venta"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.view_account_move_form_inherit_l10n_co_dian
+msgid "Fetch Attached Document"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "Generated by: Software Propio"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.view_account_move_form_inherit_l10n_co_dian
+msgid "Get Status"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_document__id
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_operation_mode__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,help:l10n_co_dian.field_l10n_co_dian_document__zip_key
+msgid ""
+"ID returned by the DIAN when sending a document with the certification "
+"process activated."
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_vendor_document
+msgid "INV/2023/0001"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "IVA"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,help:l10n_co_dian.field_l10n_co_dian_document__test_environment
+msgid "Indicates whether the test endpoint was used to send this document"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,help:l10n_co_dian.field_l10n_co_dian_document__certification_process
+msgid ""
+"Indicates whether we were in the certification process when sending this "
+"document"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:mail.template,name:l10n_co_dian.email_template_edi_invoice
+msgid "Invoice (DIAN): Sending"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/l10n_co_dian_document.py:0
+msgid "Invoice is being processed by the DIAN."
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "Issuing date:"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model,name:l10n_co_dian.model_account_journal
+msgid "Journal"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model,name:l10n_co_dian.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model,name:l10n_co_dian.model_account_move_line
+msgid "Journal Item"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_account_bank_statement_line__l10n_co_dian_attachment_id
+#: model:ir.model.fields,field_description:l10n_co_dian.field_account_move__l10n_co_dian_attachment_id
+msgid "L10N Co Dian Attachment"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_res_company__l10n_co_dian_certificate_ids
+msgid "L10N Co Dian Certificate"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_res_company__l10n_co_dian_certification_process
+msgid "L10N Co Dian Certification Process"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_account_bank_statement_line__l10n_co_dian_document_ids
+#: model:ir.model.fields,field_description:l10n_co_dian.field_account_move__l10n_co_dian_document_ids
+msgid "L10N Co Dian Document"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_res_partner__l10n_co_dian_enable_update_data
+#: model:ir.model.fields,field_description:l10n_co_dian.field_res_users__l10n_co_dian_enable_update_data
+msgid "L10N Co Dian Enable Update Data"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_account_bank_statement_line__l10n_co_dian_identifier_type
+#: model:ir.model.fields,field_description:l10n_co_dian.field_account_move__l10n_co_dian_identifier_type
+msgid "L10N Co Dian Identifier Type"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_account_bank_statement_line__l10n_co_dian_is_enabled
+#: model:ir.model.fields,field_description:l10n_co_dian.field_account_move__l10n_co_dian_is_enabled
+msgid "L10N Co Dian Is Enabled"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_account_bank_statement_line__l10n_co_dian_post_time
+#: model:ir.model.fields,field_description:l10n_co_dian.field_account_move__l10n_co_dian_post_time
+msgid "L10N Co Dian Post Time"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_account_journal__l10n_co_dian_provider
+#: model:ir.model.fields,field_description:l10n_co_dian.field_res_company__l10n_co_dian_provider
+msgid "L10N Co Dian Provider"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_account_bank_statement_line__l10n_co_dian_show_support_doc_button
+#: model:ir.model.fields,field_description:l10n_co_dian.field_account_move__l10n_co_dian_show_support_doc_button
+msgid "L10N Co Dian Show Support Doc Button"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_account_bank_statement_line__l10n_co_dian_state
+#: model:ir.model.fields,field_description:l10n_co_dian.field_account_move__l10n_co_dian_state
+msgid "L10N Co Dian State"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_document__write_uid
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_operation_mode__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_document__write_date
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_operation_mode__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_document__message
+msgid "Message"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_document__message_json
+msgid "Message Json"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_document__move_id
+msgid "Move"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "NIT:"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid "No DIAN Operation Mode Matches"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid "No DIAN certificate is configured on the company."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_journal.py:0
+msgid ""
+"No matching numbering range found for journal with short code '%(actual)s'. "
+"Found '%(expected)s' instead."
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.l10n_co_dian_operation_mode_view_tree
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.res_config_settings_view_form
+msgid "Operation Modes"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.l10n_co_dian_operation_mode_view_form
+msgid "Operation mode"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_vendor_document
+msgid "PROFORMA"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields.selection,name:l10n_co_dian.selection__account_move__l10n_co_dian_state__invoice_pending
+#: model:ir.model.fields.selection,name:l10n_co_dian.selection__l10n_co_dian_document__state__invoice_pending
+msgid "Pending"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid ""
+"Please set a credit note reason as it is required for this type of "
+"transaction."
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields.selection,name:l10n_co_dian.selection__account_move__l10n_co_dian_state__invoice_rejected
+#: model:ir.model.fields.selection,name:l10n_co_dian.selection__l10n_co_dian_document__state__invoice_rejected
+msgid "Rejected"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.view_account_journal_form_inherit_l10n_co_dian
+msgid "Reload DIAN configuration"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "SETT1"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "SETT5000000"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.res_config_settings_view_form
+msgid ""
+"Select between sending electronic documents as an 'In house software' "
+"directly to the DIAN portal or with a 'Technology provider' as Carvajal."
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,help:l10n_co_dian.field_l10n_co_dian_operation_mode__dian_software_operation_mode
+msgid ""
+"Select the type of document to be generated with the operation type "
+"configured"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.view_account_move_form_inherit_l10n_co_dian
+msgid "Send Support Document to DIAN"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.res_config_settings_view_form
+msgid ""
+"Send test electronic documents with your certificate to achieve the "
+"'Enabled' status in the DIAN portal for 'in house software' operation mode"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields.selection,name:l10n_co_dian.selection__account_move__l10n_co_dian_state__invoice_sending_failed
+#: model:ir.model.fields.selection,name:l10n_co_dian.selection__l10n_co_dian_document__state__invoice_sending_failed
+msgid "Sending Failed"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:mail.template,description:l10n_co_dian.email_template_edi_credit_note
+msgid "Sent to customers with the credit note in attachment"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:mail.template,description:l10n_co_dian.email_template_edi_invoice
+msgid "Sent to customers with their invoices in attachment"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "Sequence number from"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_document__show_button_get_status
+msgid "Show Button Get Status"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "Signing date:"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_res_config_settings__l10n_co_dian_certificate_ids
+msgid "Software Certificates"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_operation_mode__dian_software_id
+msgid "Software ID"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_operation_mode__dian_software_operation_mode
+msgid "Software Mode"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_operation_mode__dian_software_security_code
+msgid "Software PIN"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,help:l10n_co_dian.field_l10n_co_dian_operation_mode__dian_software_security_code
+msgid ""
+"Software PIN created in the DIAN portal to invoice electronically with its "
+"own software"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,help:l10n_co_dian.field_res_config_settings__l10n_co_dian_operation_mode_ids
+msgid "Software configurations of DIAN"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,help:l10n_co_dian.field_l10n_co_dian_operation_mode__dian_software_id
+msgid ""
+"Software identifier provided by the DIAN to invoice electronically with its "
+"own software"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "Somos Grandes Contribuyentes"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_document__state
+msgid "State"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "Tax regime:"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "Tax responsability:"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_account_journal__l10n_co_dian_technical_key
+msgid "Technical control key"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_document__test_environment
+msgid "Test Environment"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_res_company__l10n_co_dian_test_environment
+#: model:ir.model.fields,field_description:l10n_co_dian.field_res_config_settings__l10n_co_dian_test_environment
+msgid "Test environment"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_operation_mode__dian_testing_id
+msgid "Testing ID"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,help:l10n_co_dian.field_l10n_co_dian_operation_mode__dian_testing_id
+msgid ""
+"Testing ID is needed for the certification process with the DIAN and for "
+"general testing of electronic invoicing workflows"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_move.py:0
+msgid "The %s was accepted by the DIAN."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_move.py:0
+msgid "The %s was validated locally in Demo Mode."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_journal.py:0
+#: code:addons/l10n_co_dian/models/l10n_co_dian_document.py:0
+msgid "The DIAN server did not respond."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/l10n_co_dian_document.py:0
+msgid "The DIAN server returned an error (code %s)"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid "The identification number of %s contains '-' but is not a NIT."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid "The invoice linked to this credit note has no CUFE."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid ""
+"The issue date can not be older than 6 days or more than 6 days in the "
+"future."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_journal.py:0
+msgid "The journal values are already up to date."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_journal.py:0
+msgid "The journal values were successfully updated."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid "The original debited invoice has no CUFE."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid "The software PIN is required to compute the CUDE/CUDS."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid "The support document linked to this credit note has no CUDS."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid "There is no Colombian code on the unit of measure: %s"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid ""
+"There is no invoice linked to this credit note but the operation type is "
+"'20'."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid "There is no original debited invoice but the operation type is '30'."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid "There is no support document linked to this credit note."
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.res_config_settings_view_form
+msgid ""
+"Tick if you are testing workflows for electronic invoicing or if you need to"
+" activate the certification process environment"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.attached_document
+msgid "UBL 2.1"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model,name:l10n_co_dian.model_account_edi_xml_ubl_dian
+msgid "UBL DIAN Mandate extension"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.attached_document
+msgid "UTF-8"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.attached_document
+msgid "Unidad Especial Dirección de Impuestos y Aduanas Nacionales"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,help:l10n_co_dian.field_account_bank_statement_line__l10n_co_edi_cufe_cude_ref
+#: model:ir.model.fields,help:l10n_co_dian.field_account_move__l10n_co_edi_cufe_cude_ref
+msgid "Unique ID used by the DIAN to identify the invoice."
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_journal.py:0
+msgid "Updated the following journal values: %s"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.view_account_journal_form_inherit_l10n_co_dian
+msgid ""
+"Using the company VAT and software code, fetch the resolution number, "
+"resolution                         date, sequence prefix, sequence numbers "
+"and technical control key"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_vendor_document
+msgid "Vendor Bill"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_vendor_document
+msgid "Vendor Credit Note"
+msgstr ""
+
+#. module: l10n_co_dian
+#. odoo-python
+#: code:addons/l10n_co_dian/models/account_edi_xml_ubl_dian.py:0
+msgid ""
+"Volume in milliliters should be set on the %(field_description)s field for "
+"product: %(product_name)s when using IBUA taxes."
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.constraint,message:l10n_co_dian.constraint_l10n_co_dian_operation_mode_uniq_software_operation_mode
+msgid "You cannot have two records with same mode"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.model.fields,field_description:l10n_co_dian.field_l10n_co_dian_document__zip_key
+msgid "Zip Key"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.attached_document
+msgid "dummy"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:ir.actions.act_window,name:l10n_co_dian.l10n_co_dian_operation_mode_action
+msgid "l10n_co_dian.operation_mode.action"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.attached_document
+msgid "text/xml"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model_terms:ir.ui.view,arch_db:l10n_co_dian.report_invoice_document
+msgid "to"
+msgstr ""
+
+#. module: l10n_co_dian
+#: model:mail.template,subject:l10n_co_dian.email_template_edi_credit_note
+#: model:mail.template,subject:l10n_co_dian.email_template_edi_invoice
+msgid ""
+"{{ object.company_id.partner_id._get_vat_without_verification_code() }};{{ "
+"object.company_id.name }};{{ object.name }};{{ (object.l10n_co_edi_type or "
+"'').rjust(2, '0') }};{{ "
+"object.company_id.partner_id.l10n_co_edi_commercial_name }}"
+msgstr ""

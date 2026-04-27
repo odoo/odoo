@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name="spreadsheet_edition.PivotDetailsSidePanel" class="o_spreadsheet_pivot_side_panel h-100 overflow-hidden d-flex justify-content-between flex-column">
+        <div class="h-100 position-relative overflow-x-hidden overflow-y-auto" t-ref="pivotSidePanel">
+            <t t-if="isModelValid">
+                <PivotTitleSection pivotId="props.pivotId" flipAxis.bind="flipAxis"/>
+                <t t-set="definition" t-value="store.definition"/>
+                <div class="o-section">
+                    <div class="o-section-title">Model</div>
+                    <div class="o_model_name"><t t-esc="modelDisplayName"/> (<t t-esc="definition.model"/>)</div>
+                </div>
+                <OdooPivotLayoutConfigurator
+                    unusedGroupableFields="store.unusedGroupableFields"
+                    measureFields="store.measureFields"
+                    definition="definition"
+                    unusedGranularities="store.unusedGranularities"
+                    dateGranularities="store.dateGranularities"
+                    datetimeGranularities="store.datetimeGranularities"
+                    onDimensionsUpdated.bind="onDimensionsUpdated"
+                    pivotId="props.pivotId"
+                    getScrollableContainerEl.bind="getScrollableContainerEl"
+                />
+                <SidePanelDomain
+                    resModel="definition.model"
+                    domain="definition.domain"
+                    onUpdate.bind="onDomainUpdate"
+                />
+                <div class="o-section" t-if="definition.sortedColumn">
+                    <div class="o-section-title">Sorting</div>
+                    <div t-esc="formatSort()"/>
+                </div>
+                <div class="o-section pt-1">
+                    <div class="o_pivot_last_update text-muted"><i>Last updated at <t t-esc="getLastUpdate()"/></i></div>
+                </div>
+                <div class="o-section py-1" t-if="env.model.getters.isPivotUnused(props.pivotId)">
+                    <ValidationMessages messages="[unusedPivotWarning]" msgType="'warning'"/>
+                </div>
+            </t>
+            <Section t-else="1">
+                <ValidationMessages messages="[invalidPivotModel]" msgType="'error'"/>
+                <button class="mx o-button o-button-primary mt-2 m-1" t-on-click="delete">Delete Pivot</button>
+            </Section>
+        </div>
+        <PivotDeferUpdate
+            t-if="isModelValid"
+            deferUpdate="store.updatesAreDeferred"
+            toggleDeferUpdate="(value) => store.deferUpdates(value)"
+            isDirty="store.isDirty"
+            discard="store.discardPendingUpdate"
+            apply="store.applyUpdate"
+        />
+    </div>
+</templates>

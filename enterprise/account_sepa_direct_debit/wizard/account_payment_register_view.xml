@@ -1,0 +1,26 @@
+<odoo>
+    <data>
+        <record id="account_payment_register_form_inherit_account_sepa_direct_debit" model="ir.ui.view">
+            <field name="name">sdd.account.payment.form.inherit.account.sepa.direct.debit</field>
+            <field name="model">account.payment.register</field>
+            <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@role='alert']" position="before">
+                    <div class="alert alert-info text-center"
+                         invisible="not sdd_mandate_usable"
+                         role="status">Good news! A valid SEPA Mandate is available.</div>
+                    <div class="alert alert-warning text-center"
+                         invisible="sdd_mandate_usable or payment_method_code not in ('sdd', 'sepa_direct_debit')"
+                         role="alert">
+                        Oops! No valid SEPA mandate for the following partner(s):
+                        <field name="no_sdd_mandate_partner_ids" widget="x2many_buttons"/>
+                    </div>
+                    <div class="alert alert-warning text-center"
+                         invisible="currency_id == %(base.EUR)d or payment_method_code not in ('sdd', 'sepa_direct_debit')"
+                         role="status">SEPA Scheme operates in Euro.
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

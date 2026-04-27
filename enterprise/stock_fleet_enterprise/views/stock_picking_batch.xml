@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="stock_picking_batch_form" model="ir.ui.view">
+        <field name="name">stock.picking.batch.form.inherit.stock.fleet.enterprise</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//header/button[@name='action_cancel']" position="before">
+                    <button type="object" name="action_picking_map_view" string="Map" class="btn btn-secondary" invisible="state != 'in_progress'"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>

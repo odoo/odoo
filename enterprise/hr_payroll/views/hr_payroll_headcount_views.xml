@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_headcount_view_form" model="ir.ui.view">
+        <field name="name">hr.payroll.headcount.view.form</field>
+        <field name="model">hr.payroll.headcount</field>
+        <field name="arch" type="xml">
+            <form string="Headcount">
+                <header>
+                    <button string="Populate" name="action_populate" class="btn-primary" type="object" data-hotkey="q" invisible="line_ids"/>
+                    <button string="Populate" name="action_populate" class="btn-secondary" type="object" data-hotkey="q" invisible="not line_ids"/> 
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_lines" type="object" class="oe_stat_button" icon="fa-users" invisible="not employee_count">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="employee_count"/></span>
+                                <span class="o_stat_text">Employees</span>
+                            </div>
+                        </button>
+                    </div>
+                    <field name="display_name" invisible="True"/>
+                    <div class="row" >
+                        <h1 class="d-flex flex-row"><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company" readonly="line_ids"/>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                            </group>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_payroll_headcount_view_tree" model="ir.ui.view">
+        <field name="name">hr.payroll.headcount.view.list</field>
+        <field name="model">hr.payroll.headcount</field>
+        <field name="arch" type="xml">
+            <list string="Headcount">
+                <field name="name"/>
+                <field name="create_uid" widget="many2one_avatar_user"/>
+                <field name="write_date"/>
+                <field name="employee_count"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_payroll_headcount_view_search" model="ir.ui.view">
+        <field name="name">hr.payroll.headcount.view.search</field>
+        <field name="model">hr.payroll.headcount</field>
+        <field name="arch" type="xml">
+            <search string="Search Headcount">
+                <field name="name"/>
+                <field name="create_uid"/>
+                <field name="write_date"/>
+                <field name="employee_count"/>
+                <field name="company_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_payroll_headcount_line_view_tree" model="ir.ui.view">
+        <field name="name">hr.payroll.headcount.line.view.list</field>
+        <field name="model">hr.payroll.headcount.line</field>
+        <field name="arch" type="xml">
+            <list string="Headcount's Employees">
+                <field name="employee_id" widget="many2one_avatar_user"/>
+                <field name="department_id" widget="many2one"/>
+                <field name="job_id" widget="many2one"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="wage_on_payroll"/>
+                <field name="employee_type" optional="hide"/>
+                <field name="contract_names" optional="hide"/>
+                <field name="working_rate_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_payroll_headcount_line_search" model="ir.ui.view">
+        <field name="name">hr.payroll.headcount.line.search</field>
+        <field name="model">hr.payroll.headcount.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Headcount">
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="job_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Department" name="group_by_department" domain="[]" context="{'group_by': 'department_id'}"/>
+                    <filter string="Job" name="group_by_job" domain="[]" context="{'group_by': 'job_id'}"/>
+                    <filter string="Working Rate" name="group_by_Working_rate" domain="[]" context="{'group_by': 'working_rate_ids'}"/>
+                    <filter string="Employee Type" name="group_by_employee_type" domain="[]" context="{'group_by': 'employee_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_payroll_headcount_action" model="ir.actions.act_window">
+        <field name="name">Headcount</field>
+        <field name="res_model">hr.payroll.headcount</field>
+        <field name="view_mode">list,form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

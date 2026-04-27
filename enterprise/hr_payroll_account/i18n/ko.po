@@ -1,0 +1,430 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_payroll_account
+#
+# Translators:
+# Wil Odoo, 2024
+# Daye Jeong, 2024
+# Sarah Park, 2025
+#
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:47+0000\n"
+"PO-Revision-Date: 2025-10-23 22:30+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-18/"
+"hr_payroll_account/ko/>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_bank_statement_line__payslip_count
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_move__payslip_count
+msgid "# of Payslips"
+msgstr "급여 명세서 수"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_view_form
+msgid ""
+"<span class=\"o_stat_text\" invisible=\"move_state != 'draft'\">Journal "
+"Entry <br/>(Draft)</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"move_state !"
+"= 'posted'\">Journal Entry <br/>(Posted)</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"move_state !"
+"= 'cancel'\">Journal Entry <br/>(Canceled)</span>"
+msgstr ""
+"<span class=\"o_stat_text\" invisible=\"move_state != 'draft'\">전표 항목<br/"
+">(초안)</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"move_state !"
+"= 'posted'\">전표 항목 <br/>(발행됨)</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"move_state !"
+"= 'cancel'\">전표 항목 <br/>(취소됨)</span>"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.view_move_form_inherit
+msgid "<span class=\"o_stat_text\">Payslip</span>"
+msgstr "<span class=\"o_stat_text\">급여 명세서</span>"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "계정과목 일람표 서식"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_chart_template.py:0
+msgid "Account Payslip Houserental"
+msgstr "계정 급여 명세서 주택임대"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_salary_rule_view_form
+msgid "Accounting"
+msgstr "회계"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__move_id
+msgid "Accounting Entry"
+msgstr "회계 항목"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "Adjustment Entry"
+msgstr "조정 항목"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract__analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract_history__analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__analytic_account_id
+msgid "Analytic Account"
+msgstr "분석 계정"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_view_form
+msgid "Are you sure you want to proceed?"
+msgstr "계속하시겠습니까?"
+
+#. module: hr_payroll_account
+#: model:ir.actions.act_window,name:hr_payroll_account.action_res_partner_bank_account_form
+#: model:ir.model,name:hr_payroll_account.model_res_partner_bank
+#: model:ir.ui.menu,name:hr_payroll_account.menu_hr_employee_bank_account
+msgid "Bank Accounts"
+msgstr "은행 계좌"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.res_config_settings_view_form
+msgid "Batch Account Move Lines"
+msgstr "일괄 회계 이동 내역"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__batch_payroll_move_lines
+#: model:ir.model.fields,field_description:hr_payroll_account.field_res_company__batch_payroll_move_lines
+#: model:ir.model.fields,field_description:hr_payroll_account.field_res_config_settings__batch_payroll_move_lines
+msgid "Batch Payroll Move Lines"
+msgstr "일괄 급여 이동 내역"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_res_company
+msgid "Companies"
+msgstr "회사"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_res_config_settings
+msgid "Config Settings"
+msgstr "환경설정"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_contract_history
+msgid "Contract history"
+msgstr "계약 내역"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_view_form
+msgid "Create Draft Entry"
+msgstr "초안 항목 만들기"
+
+#. module: hr_payroll_account
+#: model_terms:ir.actions.act_window,help:hr_payroll_account.action_res_partner_bank_account_form
+msgid "Create a Bank Account"
+msgstr "은행 계좌 생성"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__account_credit
+msgid "Credit Account"
+msgstr "대변 계정"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__credit_tag_ids
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__credit_tag_ids
+msgid "Credit Tax Grids"
+msgstr "대변 세금 그리드"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__date
+msgid "Date Account"
+msgstr "정산일"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__account_debit
+msgid "Debit Account"
+msgstr "차변 계정"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__debit_tag_ids
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__debit_tag_ids
+msgid "Debit Tax Grids"
+msgstr "차변 세금 그리드"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_contract
+msgid "Employee Contract"
+msgstr "근로 계약서"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.view_partner_bank_search_inherit
+msgid "Employees"
+msgstr "임직원 관리"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_res_config_settings__batch_payroll_move_lines
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.res_config_settings_view_form
+msgid ""
+"Enable this option to merge all the accounting entries for the same period "
+"into a single account move line. This will anonymize the accounting entries "
+"but also disable single payment generations."
+msgstr ""
+"이 옵션을 활성화하면 같은 기간의 모든 회계 항목을 단일 회계 이동 내역으로 통"
+"합할 수 있습니다. 이 통합 프로세스는 회계 항목을 익명화하지만 개별 결제 기록 "
+"생성도 비활성화합니다."
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_salary_rule__split_move_lines
+msgid ""
+"Enable this option to split the accountig entries for this rule according to "
+"the payslip line name. It could be useful for deduction/reimbursement or "
+"salary attachments for instance."
+msgstr ""
+"이 옵션을 활성화하면 급여 명세서 항목 이름에 따라 이 규칙의 회계 항목을 분할"
+"할 수 있습니다. 예를 들어 공제, 환급 또는 급여 압류에 유용할 수 있습니다."
+
+#. module: hr_payroll_account
+#: model_terms:ir.actions.act_window,help:hr_payroll_account.action_res_partner_bank_account_form
+msgid ""
+"From here you can manage all bank accounts linked to you and your contacts."
+msgstr ""
+"여기에서 고객님 및 관련 연락처에 연결되어 있는 은행 계좌 전체를 관리할 수 있"
+"습니다."
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payroll_payment_report_wizard
+msgid "HR Payroll Payment Report Wizard"
+msgstr "HR 급여 지급 보고서 마법사"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_setup_bank_manual_config__has_alt_bank_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_res_partner_bank__has_alt_bank_account
+msgid "Has Alt Bank Account"
+msgstr "대체 은행 계좌 있음"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payroll_structure.py:0
+msgid ""
+"Incorrect journal: The journal must be in the same currency as the company"
+msgstr "잘못된 전표: 전표는 회사와 같은 통화를 사용하여야 합니다."
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/wizard/hr_payroll_payment_report_wizard.py:0
+msgid ""
+"Invalid IBAN for the following employees:\n"
+"%s"
+msgstr ""
+"다음 직원에 대한 잘못된 IBAN:\n"
+"%s"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_journal
+msgid "Journal"
+msgstr "전표"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+#: code:addons/hr_payroll_account/models/hr_payslip_run.py:0
+#: model:ir.model,name:hr_payroll_account.model_account_move
+msgid "Journal Entry"
+msgstr "전표 입력"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip__date
+msgid "Keep empty to use the period of the validation(Payslip) date."
+msgstr "유효일(급여 명세서) 기간을 비워두십시오."
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_run__move_id
+msgid "Move"
+msgstr "이동"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_run__move_state
+msgid "Move State"
+msgstr "상태 이동"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__not_computed_in_net
+msgid "Not computed in net accountably"
+msgstr "순 책임으로 계산되지 않음"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "One of the contract for these payslips has no structure type."
+msgstr "이 급여 명세서에 대한 근로 계약 중 하나에 구조 유형이 없습니다."
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_payment_register
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_view_form
+msgid "Pay"
+msgstr "지불"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip
+msgid "Pay Slip"
+msgstr "급여 명세서"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/wizard/account_payment_register.py:0
+msgid "Payment done at %s"
+msgstr "%s에서 결제 완료"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_payment
+msgid "Payments"
+msgstr "결제"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "급여 명세서 일괄 처리"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_line
+msgid "Payslip Line"
+msgstr "급여 명세"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_bank_statement_line__payslip_ids
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_move__payslip_ids
+msgid "Payslips"
+msgstr "급여 명세서"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_chart_template.py:0
+msgid "SLR"
+msgstr "SLR"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_chart_template.py:0
+msgid "Salaries"
+msgstr "급여"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payroll_structure__journal_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__journal_id
+msgid "Salary Journal"
+msgstr "급여 전표"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr "급여 규정"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payroll_structure
+msgid "Salary Structure"
+msgstr "급여 구조"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__split_move_lines
+msgid "Split account line based on name"
+msgstr "이름을 기준으로 회계 내역 분할하기"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip_line__credit_tag_ids
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_salary_rule__credit_tag_ids
+msgid ""
+"Tags assigned to this line will impact financial reports when translated "
+"into an accounting journal entry.They will be applied on the credit account "
+"line in the journal entry."
+msgstr ""
+"이 행에 할당된 태그는 회계 분개 항목으로 변환될 때 재무 보고서에 영향을 미칩"
+"니다. 이 태그는 분개 항목의 대변 계정에 적용됩니다."
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip_line__debit_tag_ids
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_salary_rule__debit_tag_ids
+msgid ""
+"Tags assigned to this line will impact financial reports when translated "
+"into an accounting journal entry.They will be applied on the debit account "
+"line in the journal entry."
+msgstr ""
+"이 행에 할당된 태그는 회계 분개 항목으로 변환될 때 재무 보고서에 영향을 미칩"
+"니다. 이 태그는 분개 항목의 차변 계정에 적용됩니다."
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the default Account!"
+msgstr "경비 분개장 \"%s\"의 기본 계정을 올바르게 구성하지 않았습니다."
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "The credit account on the NET salary rule is not reconciliable"
+msgstr "순 급여 규칙과 관련된 크레딧 계정은 조정할 수 없습니다."
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "The employee bank account is untrusted"
+msgstr "직원 은행 계좌를 신뢰할 수 없습니다."
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_salary_rule__not_computed_in_net
+msgid ""
+"This field allows you to delete the value of this rule in the \"Net Salary\" "
+"rule at the accounting level to explicitly display the value of this rule in "
+"the accounting. For example, if you want to display the value of your "
+"representation fees, you can check this field."
+msgstr ""
+"이 필드를 사용하면 회계 레벨의 \"순 급여\" 규칙에서 이 규칙의 값을 삭제하여 "
+"회계에 이 규칙의 값을 명시적으로 표시 할 수 있습니다. 예를 들어, 수수료 값을 "
+"표시하려는 경우 이 필드를 확인할 수 있습니다."
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.view_partner_bank_form_inherit_hr_payroll_account
+msgid "This will replace the employee existing bank account."
+msgstr "이렇게 하면 직원의 기존 은행 계좌가 대체됩니다."
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "You can only register payment for posted journal entries."
+msgstr "발행된 전표만 결제를 등록할 수 있습니다."
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "You can only register payments for unpaid documents."
+msgstr "미결제 문서에 대해서만 결제를 등록할 수 있습니다."
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "You can't create a journal entry for a paid payslip."
+msgstr "지급된 급여명세서에 대한 전표를 만들 수 없습니다."
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_journal.py:0
+msgid "You cannot delete the journal linked to a Salary Structure"
+msgstr "급여 체계와 관련된 저널은 삭제할 수 없습니다"
+
+#~ msgid "One of the payroll structures has no account journal defined on it."
+#~ msgstr "급여 구조에서 이 중 하나에 계정 전표가 정의되어 있지 않습니다."

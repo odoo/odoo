@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+  <record id="view_delivery_carrier_form" model="ir.ui.view">
+    <field name="name">delivery.carrier.form.inherit.delivery.sendcloud</field>
+    <field name="model">delivery.carrier</field>
+    <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//div[@name='title']" position="after">
+        <div colspan="2" class="alert alert-warning" invisible="delivery_type != 'sendcloud' or prod_environment" role="status">
+          <p><i class="fa fa-exclamation-triangle"/> In test environment, to avoid charges, your shippings are automatically <b>cancelled</b> after the label creation.</p>
+        </div>
+      </xpath>
+      <page name="destination" position="before">
+        <page string="SendCloud Configuration" name="sendcloud_configuration" invisible="delivery_type != 'sendcloud'">
+          <group>
+            <group string="Integration">
+              <field name="sendcloud_public_key" required="delivery_type == 'sendcloud'"/>
+              <field name="sendcloud_secret_key" required="delivery_type == 'sendcloud'"/>
+              <div colspan="2" class="alert alert-warning" groups="!base.group_system" role="status">
+                <p><i class="fa fa-exclamation-triangle"/> Only administrators can configure the public and private keys.</p>
+              </div>
+              <field name="country_id" required="delivery_type == 'sendcloud'"/>
+              <div colspan='2'>
+                <button name="action_load_sendcloud_shipping_products" string="Load your products" type="object" class="btn btn-primary"/>
+              </div>
+              <div colspan="2" class="alert alert-warning" invisible="sendcloud_shipping_id" role="status">
+                <p><i class="fa fa-exclamation-triangle"/> Do not forget to load your SendCloud shipping products for a valid configuration.</p>
+              </div>
+              <field name="sendcloud_shipping_id" invisible="1"/>
+              <field name="sendcloud_return_id" invisible="1"/>
+              <field name="sendcloud_shipping_name"/>
+              <field name="sendcloud_return_name"/>
+            </group>
+            <group string="Options">
+              <field name="sendcloud_shipping_rules"/>
+              <field name="sendcloud_default_package_type_id" string="Default Package Type"/>
+              <field name="can_generate_return" invisible="1"/>
+              <field name="return_label_on_delivery" invisible="not can_generate_return or not sendcloud_return_id"/>
+              <field name="get_return_label_from_portal" invisible="not return_label_on_delivery"/>
+              <field name="sendcloud_can_batch_shipping" invisible="1"/>
+              <field name="sendcloud_use_batch_shipping" invisible="not sendcloud_shipping_id or not sendcloud_can_batch_shipping" readonly="not sendcloud_can_batch_shipping"/>
+              <field name="sendcloud_has_custom_functionalities" invisible="1"/>
+              <separator string="Functionality Filters" class="mb-4" invisible="not sendcloud_shipping_id or not sendcloud_has_custom_functionalities"/>
+              <field name="sendcloud_product_functionalities" widget="sendcloud_functionalities" nolabel="1" colspan="2" invisible="not sendcloud_shipping_id or not sendcloud_has_custom_functionalities"/>
+            </group>
+          </group>
+        </page>
+      </page>
+    </field>
+  </record>
+</odoo>

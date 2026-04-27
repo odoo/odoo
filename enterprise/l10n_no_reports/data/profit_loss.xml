@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_financial_report_NO_profitandloss" model="account.report">
+        <field name="name">Profit and Loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.no"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_NO_profitandloss_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_NO_operating_revenue" model="account.report.line">
+                <field name="name">Operating revenues</field>
+                <field name="code">NO_Operating_Revenues</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_NO_operating_revenue_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">NO_30_32.balance + NO_33_39.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_NO_sales_revenue" model="account.report.line">
+                        <field name="name">Sales Revenue</field>
+                        <field name="code">NO_30_32</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_NO_sales_revenue_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-32 - 31 - 30</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_NO_other_operating_income" model="account.report.line">
+                        <field name="name">Other Operating Income</field>
+                        <field name="code">NO_33_39</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_NO_other_operating_income_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-35 - 37 - 38 - 33 - 36 - 34 - 39</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_NO_operating_costs" model="account.report.line">
+                <field name="name">Operating Costs</field>
+                <field name="code">NO_Operating_Costs</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_NO_operating_costs_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">NO_4.balance + NO_5.balance + NO_600_603.balance + NO_605_606.balance + NO_61_7.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_NO_cost_of_materials" model="account.report.line">
+                        <field name="name">Cost of Materials</field>
+                        <field name="code">NO_4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_NO_cost_of_materials_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-4</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_NO_personal_expense" model="account.report.line">
+                        <field name="name">Personal Expense</field>
+                        <field name="code">NO_5</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_NO_personal_expense_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-5</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_NO_depreciation" model="account.report.line">
+                        <field name="name">Depreciation</field>
+                        <field name="code">NO_600_603</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_NO_depreciation_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-602 - 603 - 600 - 601</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_NO_write-downs" model="account.report.line">
+                        <field name="name">Write-Downs</field>
+                        <field name="code">NO_605_606</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_NO_write-downs_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-605 - 606</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_NO_other_operating_expense" model="account.report.line">
+                        <field name="name">Other Operating Expense</field>
+                        <field name="code">NO_61_7</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_NO_other_operating_expense_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-68 - 62 - 66 - 61 - 65 - 64 - 69 - 67 - 7 - 63</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_NO_operating_profit" model="account.report.line">
+                <field name="name">Operating Profit</field>
+                <field name="code">NO_Operating_Profit</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_NO_operating_profit_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">NO_Operating_Revenues.balance + NO_Operating_Costs.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_NO_share_of_profit_of_subsidiaries_and_associated_companies" model="account.report.line">
+                        <field name="name">Share of Profit of Subsidiaries and Associated Companies</field>
+                        <field name="code">NO_800_802</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_NO_share_of_profit_of_subsidiaries_and_associated_companies_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-801 - 800 - 802</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_NO_interest_income_from_group_companies" model="account.report.line">
+                        <field name="name">Interest Income from Group Companies</field>
+                        <field name="code">NO_803</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_NO_interest_income_from_group_companies_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-803</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_NO_other_financial_income" model="account.report.line">
+                        <field name="name">Other Financial Income</field>
+                        <field name="code">NO_804_807</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_NO_other_financial_income_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-805 - 807 - 804 - 806</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_NO_change_in_value_of_marketable_investments" model="account.report.line">
+                        <field name="name">Change in Value of Marketable Investments</field>
+                        <field name="code">NO_808_809_810</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_NO_change_in_value_of_marketable_investments_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">NO_808.balance + NO_809.balance + NO_810.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_NO_increase_in_value_of_marketable_investments" model="account.report.line">
+                                <field name="name">Increase in Value of Marketable Investments</field>
+                                <field name="code">NO_808</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_NO_increase_in_value_of_marketable_investments_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-808</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_NO_income_from_other_investments" model="account.report.line">
+                                <field name="name">Income from Other Investments</field>
+                                <field name="code">NO_809</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_NO_income_from_other_investments_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-809</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_NO_reduction_in_value_of_marketable_investments" model="account.report.line">
+                                <field name="name">Reduction in Value of Marketable Investments</field>
+                                <field name="code">NO_810</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_NO_reduction_in_value_of_marketable_investments_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-810</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_NO_write_downs_of_short_terms_investments" model="account.report.line">
+                        <field name="name">Write-Downs of Short-Terms Investments</field>
+                        <field name="code">NO_811_812</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_NO_write_downs_of_short_terms_investments_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-811 - 812</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_NO_interest_to_group_companies" model="account.report.line">
+                        <field name="name">Interest to Group Companies</field>
+                        <field name="code">NO_813</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_NO_interest_to_group_companies_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-813</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_NO_other_financial_expense" model="account.report.line">
+                        <field name="name">Other Financial Expense</field>
+                        <field name="code">NO_814_817</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_NO_other_financial_expense_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-816 - 817 - 814 - 815</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_NO_ordinary_result_before_taxes" model="account.report.line">
+                <field name="name">Ordinary Result Before Taxes</field>
+                <field name="code">NO_Ordinary_Result</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_NO_ordinary_result_before_taxes_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">NO_Operating_Profit.balance + NO_800_802.balance + NO_803.balance + NO_804_807.balance + NO_808_809_810.balance + NO_811_812.balance + NO_813.balance + NO_814_817.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_NO_tax_on_ordinary_result" model="account.report.line">
+                        <field name="name">Tax on Ordinary Result</field>
+                        <field name="code">NO_83</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_NO_tax_on_ordinary_result_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-83</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_NO_ordinary_result" model="account.report.line">
+                <field name="name">Ordinary Result</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">NO_Ordinary_Result_After_Tax</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_NO_ordinary_result_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">NO_Ordinary_Result.balance + NO_83.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_NO_net_profit_loss_for_the_year" model="account.report.line">
+                        <field name="name">Net profit/Loss for the Year</field>
+                        <field name="code">NO_profit_loss</field>
+                        <field name="groupby" eval="False"/>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_NO_net_profit_loss_for_the_year_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">NO_Ordinary_Result_After_Tax.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

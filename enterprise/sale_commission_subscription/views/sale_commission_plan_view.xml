@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_commission_plan_view_form" model="ir.ui.view">
+        <field name="name">sale.commission.plan.view.form</field>
+        <field name="model">sale.commission.plan</field>
+        <field name="priority">9</field>
+        <field name="inherit_id" ref="sale_commission.sale_commission_plan_view_form"/>
+        <field name="arch" type="xml">
+            <field name="product_categ_id" position="after">
+                <field name="recurring_plan_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>

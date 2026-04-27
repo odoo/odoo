@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="input_global_reimbursement" model="hr.payslip.input.type">
+        <field name="name">Reimbursement</field>
+        <field name="code">REIMBURSEMENT</field>
+        <field name="country_id" ref="base.id"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_id_hr_payroll.hr_payroll_structure_id_employee_salary'))]"/>
+    </record>
+
+    <record id="input_transport_allowance" model="hr.payslip.input.type">
+        <field name="name">Transport Allowance</field>
+        <field name="code">TRANSPORT</field>
+        <field name="country_id" ref="base.id"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_id_hr_payroll.hr_payroll_structure_id_employee_salary'))]"/>
+    </record>
+
+    <record id="input_incentive" model="hr.payslip.input.type">
+        <field name="name">INSENTIF</field>
+        <field name="code">INSENTIF</field>
+        <field name="country_id" ref="base.id"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_id_hr_payroll.hr_payroll_structure_id_employee_salary'))]"/>
+    </record>
+
+    <record id="input_meal_allowance" model="hr.payslip.input.type">
+        <field name="name">Meal Allowance</field>
+        <field name="code">MEAL</field>
+        <field name="country_id" ref="base.id"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_id_hr_payroll.hr_payroll_structure_id_employee_salary'))]"/>
+    </record>
+
+    <record id="input_laptop_allowance" model="hr.payslip.input.type">
+        <field name="name">Laptop Allowance</field>
+        <field name="code">LAPTOP</field>
+        <field name="country_id" ref="base.id"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_id_hr_payroll.hr_payroll_structure_id_employee_salary'))]"/>
+    </record>
+
+    <record id="input_level_allowance" model="hr.payslip.input.type">
+        <field name="name">Level Allowance</field>
+        <field name="code">LEVEL</field>
+        <field name="country_id" ref="base.id"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_id_hr_payroll.hr_payroll_structure_id_employee_salary'))]"/>
+    </record>
+
+    <record id="input_insurance_allowance" model="hr.payslip.input.type">
+        <field name="name">Insurance Allowance</field>
+        <field name="code">INSURANCE</field>
+        <field name="country_id" ref="base.id"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_id_hr_payroll.hr_payroll_structure_id_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_allowance" model="hr.payslip.input.type">
+        <field name="name">THR</field>
+        <field name="code">THR</field>
+        <field name="country_id" ref="base.id"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_id_hr_payroll.hr_payroll_structure_id_employee_salary'))]"/>
+    </record>
+</odoo>

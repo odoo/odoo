@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="loyalty_card_view_form_helpdesk_sale_loyalty" model="ir.ui.view">
+        <field name="name">loyalty.card.view.form.helpdesk.sale.loyalty</field>
+        <field name="model">loyalty.card</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="code" widget="CopyClipboardChar" readonly="1"/>
+                    <field name="expiration_date" readonly="1"/>
+                </group>
+                <footer>
+                    <button name="action_coupon_send" string="Send" type="object" class="btn btn-primary" data-hotkey="q" context="{'dialog_size': 'large'}"/>
+                    <button string="Discard" special="cancel" class="btn btn-secondary" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>    
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="cfe_template" inherit_id="l10n_uy_edi.cfe_template">
+
+        <xpath expr="//*[name()='FchEmis']" position="after">
+            <TipoTraslado t-if="IdDoc.get('TipoTraslado')" t-out="IdDoc['TipoTraslado']"/>
+        </xpath>
+
+        <xpath expr="//*[name()='MntTotal']" position="attributes">
+            <attribute name="t-if">cfe.l10n_latam_document_type_id.internal_type != "stock_picking"</attribute>
+        </xpath>
+        <xpath expr="//*[name()='MntPagar']" position="attributes">
+            <attribute name="t-if">cfe.l10n_latam_document_type_id.internal_type != "stock_picking"</attribute>
+        </xpath>
+        <xpath expr="//*[name()='PrecioUnitario']" position="attributes">
+            <attribute name="t-if">cfe.l10n_latam_document_type_id.internal_type != "stock_picking"</attribute>
+        </xpath>
+        <xpath expr="//*[name()='MontoItem']" position="attributes">
+            <attribute name="t-if">cfe.l10n_latam_document_type_id.internal_type != "stock_picking"</attribute>
+        </xpath>
+    </template>
+
+    <template id="eRem_template">
+        <CFE xmlns="http://cfe.dgi.gub.uy" version="1.0">
+            <eRem>
+                <t t-call="l10n_uy_edi.cfe_template"/>
+            </eRem>
+        </CFE>
+    </template>
+
+</odoo>

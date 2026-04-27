@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_hr_referral_onboarding_form">
+        <field name="name">hr.referral.onboarding.form</field>
+        <field name="model">hr.referral.onboarding</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="image" widget='image' class="oe_avatar bg-black" nolabel="1"/>
+                    <group>
+                        <group name="main_details">
+                            <field name="text"/>
+                            <field name="sequence" groups="base.group_no_one"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_hr_referral_onboarding_tree">
+        <field name="name">hr.referral.onboarding.list</field>
+        <field name="model">hr.referral.onboarding</field>
+        <field name="arch" type="xml">
+            <list>
+                <header>
+                    <button name="action_relaunch_onboarding" type="object"
+                            string="Force Onboarding" display="always"
+                            confirm="This will make the onboarding visible to all employees who have already seen it. Do you want to continue?"/>
+                </header>
+                <field name="sequence" widget="handle"/>
+                <field name="text"/>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_hr_referral_onboarding_configuration">
+        <field name="name">Onboarding</field>
+        <field name="res_model">hr.referral.onboarding</field>
+        <field name="view_mode">list,form</field>
+        <field name="groups_id" eval="[(4, ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
+    </record>
+
+    <menuitem parent="menu_hr_referral_configuration" id="menu_hr_referral_onboarding_configuration" action="action_hr_referral_onboarding_configuration" sequence="5" groups="hr_recruitment.group_hr_recruitment_manager"/>
+
+</odoo>

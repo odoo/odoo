@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="rental_report_pivot_view" model="ir.ui.view">
+        <field name="name">sale.rental.report.pivot</field>
+        <field name="model">sale.rental.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Rental Analysis" sample="1">
+                <field name="date" type="row" interval="day"/>
+                <field name="quantity" type="measure"/>
+                <field name="qty_delivered" type="measure"/>
+                <field name="price" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="rental_report_graph_view" model="ir.ui.view">
+        <field name="name">sale.rental.report.graph</field>
+        <field name="model">sale.rental.report</field>
+        <field name="arch" type="xml">
+            <graph string="Rental Analysis" type="line" sample="1">
+                <field name="date" interval="day"/>
+                <field name="quantity" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="sale_rental_report_view_tree" model="ir.ui.view">
+        <field name="name">sale.rental.report.view.list</field>
+        <field name="model">sale.rental.report</field>
+        <field name="arch" type="xml">
+            <list string="Rental Analysis">
+                <field name="date"/>
+                <field name="order_id" optional="hide"/>
+                <field name="partner_id" optional="show"/>
+                <field name="product_id" optional="show"/>
+                <field name="categ_id" optional="hide"/>
+                <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                <field name="company_id" optional="show" groups="base.group_multi_company"/>
+                <field name="currency_id" optional="show" column_invisible="True"/>
+                <field name="quantity" optional="show" sum="Sum of Daily Ordered Qty"/>
+                <field name="qty_delivered" optional="hide" sum="Sum of Daily Picked-Up Qty"/>
+                <field name="price" optional="show" widget="monetary" sum="Sum of Daily Amount"/>
+                <field name="state" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="rental_report_search_view" model="ir.ui.view">
+        <field name="name">sale.rental.report.search</field>
+        <field name="model">sale.rental.report</field>
+        <field name="arch" type="xml">
+            <search string="Rental Analysis">
+                <field name="date"/>
+                <filter string="Date" name="year" invisible="1" date="date" default_period="year"/>
+                <filter name="Quotations" string="Quotations" domain="[('state','in', ['draft', 'sent'])]"/>
+                <filter name="confirmed_orders" string="Confirmed Orders" domain="[('state', '=', 'sale')]"/>
+                <separator/>
+                <filter name="filter_date" date="date" default_period="year"/>
+                <field name="product_id"/>
+                <field name="product_tmpl_id" groups="product.group_product_variant"/>
+                <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <group expand="1" string="Group By" name="report_group_by">
+                    <filter string="Salesperson" name="User" context="{'group_by':'user_id'}"/>
+                    <filter string="Customer" name="Customer" context="{'group_by':'partner_id'}"/>
+                    <filter string="Product" name="Product" context="{'group_by':'product_id'}"/>
+                    <filter string="Product Category" name="Category" context="{'group_by':'categ_id'}"/>
+                    <filter string="State" name="status" context="{'group_by':'state'}"/>
+                    <filter string="Company" name="company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rental_report" model="ir.actions.act_window">
+        <field name="name">Rental Analysis</field>
+        <field name="res_model">sale.rental.report</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="search_view_id" ref="rental_report_search_view"/>
+        <field name="context">{
+            'search_default_confirmed_orders': 1,
+            'group_by': [],
+            'search_default_filter_date': 1,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+            <p>
+                Create a new rental order
+            </p>
+        </field>
+    </record>
+
+    <record id="action_report_rental_saleorder" model="ir.actions.report">
+        <field name="name">Pickup and Return Receipt</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sale_renting.report_rental_order</field>
+        <field name="report_file">sale_renting.report_rental_order</field>
+        <field name="print_report_name">(object.rental_status not in ('draft', 'sent') and 'Delivery or Return Receipt - %s' %(object.name)) or 'Order - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

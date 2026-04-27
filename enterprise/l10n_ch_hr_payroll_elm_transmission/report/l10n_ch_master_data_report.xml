@@ -1,0 +1,454 @@
+<odoo>
+    <template id="report_company_master_data_document">
+        <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="wizard">
+        <t t-set="company" t-value="doc.get('company')"/>
+        <t t-call="web.external_layout_standard">
+            <div class="page">
+                <h2><t t-esc="company.name"/> - Master Data - <t t-esc="year"/>-<t esc="month"/></h2>
+                <p>
+                    <strong>UID-BFS:</strong>
+                    <t t-esc="company.l10n_ch_uid"/>
+                </p>
+                <hr/>
+                <h3>Work Locations</h3>
+                <t t-if="doc.get('work_locations')">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Address</th>
+                                <th>Canton</th>
+                                <th>Municipality</th>
+                                <th>BUR/REE #</th>
+                                <th>In-House ID</th>
+                                <th>Weekly Hours</th>
+                                <th>Weekly Lessons</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="doc['work_locations']" t-as="wl">
+                                <tr>
+                                    <td>
+                                        <t t-esc="wl.partner_id.street"/>
+                                        <t t-esc="wl.partner_id.street2"/>,
+                                        <t t-esc="wl.partner_id.zip"/>,
+                                        <t t-esc="wl.partner_id.city"/>,
+                                        <t t-esc="wl.partner_id.country_id.code"/>
+                                    </td>
+                                    <td><t t-esc="wl.canton"/></td>
+                                    <td><t t-esc="wl.municipality"/></td>
+                                    <td><t t-esc="wl.bur_ree_number"/></td>
+                                    <td><t t-esc="wl.in_house_id"/></td>
+                                    <td><t t-esc="wl.weekly_hours"/></td>
+                                    <td><t t-esc="wl.weekly_lessons"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+
+                <!-- =========================================
+                     1) AVS (Social Insurance) Institutions
+                     ========================================= -->
+                <hr/>
+                <h3>AVS Institutions</h3>
+                <t t-if="doc.get('avs_records')">
+                    <t t-foreach="doc['avs_records']" t-as="avs">
+                        <div class="mb16">
+                            <h4><t t-esc="avs.name"/></h4>
+                            <ul>
+                                <li>
+                                    <strong>Insurance Code (AK-Nr.):</strong>
+                                    <t t-esc="avs.insurance_code"/>
+                                </li>
+                                <li>
+                                    <strong>Member Number:</strong>
+                                    <t t-esc="avs.member_number"/>
+                                </li>
+                                <li>
+                                    <strong>Sub-Number:</strong>
+                                    <t t-esc="avs.member_subnumber"/>
+                                </li>
+                                <li>
+                                    <strong>Minimum Contributing Age:</strong>
+                                    <t t-esc="avs.age_start"/>
+                                </li>
+                                <li>
+                                    <strong>Retirement Age (Male):</strong>
+                                    <t t-esc="avs.age_stop_male"/>
+                                </li>
+                                <li>
+                                    <strong>Retirement Age (Female):</strong>
+                                    <t t-esc="avs.age_stop_female"/>
+                                </li>
+                                <li>
+                                    <strong>LAA Insurance ID:</strong>
+                                    <t t-esc="avs.laa_insurance_id.name"/>
+                                </li>
+                                <li>
+                                    <strong>LAA Insurance From:</strong>
+                                    <t t-esc="avs.laa_insurance_from"/>
+                                </li>
+                                <li>
+                                    <strong>No LAA Reason:</strong>
+                                    <t t-esc="avs.no_laa_reason"/>
+                                </li>
+                                <li>
+                                    <strong>LPP Insurance ID:</strong>
+                                    <t t-esc="avs.lpp_insurance_id.name"/>
+                                </li>
+                                <li>
+                                    <strong>LPP Insurance From:</strong>
+                                    <t t-esc="avs.lpp_insurance_from"/>
+                                </li>
+                                <li>
+                                    <strong>No LPP Reason:</strong>
+                                    <t t-esc="avs.no_lpp_reason"/>
+                                </li>
+                            </ul>
+                            <!-- AVS / AC lines, thresholds, etc. (if you have them in avs['avs_line_ids'] after a nested read) -->
+                            <t t-if="avs.avs_line_ids">
+                                <h5>Rates</h5>
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Valid From</th>
+                                            <th>Until</th>
+                                            <th>Employee Rate</th>
+                                            <th>Employer Rate</th>
+                                            <th>Admin Fees</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="avs.avs_line_ids" t-as="line">
+                                            <tr>
+                                                <td><t t-esc="line.date_from"/></td>
+                                                <td><t t-esc="line.date_to"/></td>
+                                                <td><t t-esc="line.employee_rate"/></td>
+                                                <td><t t-esc="line.employer_rate"/></td>
+                                                <td><t t-esc="line.admin_fees"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                        </div>
+                    </t>
+                </t>
+
+                <!-- ===============================
+                     2) CAF (Compensation Fund)
+                     =============================== -->
+                <hr/>
+                <h3>CAF Institutions</h3>
+                <t t-if="doc.get('caf_records')">
+                    <t t-foreach="doc['caf_records']" t-as="caf">
+                        <div class="mb16">
+                            <h4><t t-esc="caf.name"/></h4>
+                            <ul>
+                                <li>
+                                    <strong>Indemnity Fund Number:</strong>
+                                    <t t-esc="caf.insurance_code"/>
+                                </li>
+                                <li>
+                                    <strong>Member Number:</strong>
+                                    <t t-esc="caf.member_number"/>
+                                </li>
+                                <li>
+                                    <strong>Sub-Number:</strong>
+                                    <t t-esc="caf.member_subnumber"/>
+                                </li>
+                            </ul>
+                            <!-- CAF lines -->
+                            <t t-if="caf.caf_line_ids">
+                                <h5>Rates</h5>
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Valid From</th>
+                                            <th>Until</th>
+                                            <th>Employee Rate</th>
+                                            <th>Company Rate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="caf['caf_line_ids']" t-as="line">
+                                            <tr>
+                                                <td><t t-esc="line.date_from"/></td>
+                                                <td><t t-esc="line.date_to"/></td>
+                                                <td><t t-esc="line.employee_rate"/></td>
+                                                <td><t t-esc="line.company_rate"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                        </div>
+                    </t>
+                </t>
+                <!-- ===============================
+                     3) LAA (Accident Insurance)
+                     =============================== -->
+                <hr/>
+                <h3>LAA Institutions</h3>
+                <t t-if="doc.get('laa_records')">
+                    <t t-foreach="doc['laa_records']" t-as="laa">
+                        <div class="mb16">
+                            <h4><t t-esc="laa.name"/></h4>
+                            <ul>
+                                <li>
+                                    <strong>Insurance Number:</strong>
+                                    <t t-esc="laa.insurance_code"/>
+                                </li>
+                                <li>
+                                    <strong>UID-BFS Number:</strong>
+                                    <t t-esc="laa.uid_bfs_number"/>
+                                </li>
+                                <li>
+                                    <strong>Customer Number:</strong>
+                                    <t t-esc="laa.customer_number"/>
+                                </li>
+                                <li>
+                                    <strong>Contract Number:</strong>
+                                    <t t-esc="laa.contract_number"/>
+                                </li>
+                            </ul>
+                            <!-- LAA Groups -->
+                            <t t-if="laa.laa_group_ids">
+                                <h5>LAA Groups</h5>
+                                <t t-foreach="laa['laa_group_ids']" t-as="grp">
+                                    <div class="ml16 mb8">
+                                        <strong>Group Name:</strong> <t t-esc="grp.name"/>
+                                        <strong>Group Unit:</strong> <t t-esc="grp.group_unit"/>
+                                        <!-- Group lines -->
+                                        <t t-if="grp.line_ids">
+                                            <table class="table table-sm mt8">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Valid From</th>
+                                                        <th>Until</th>
+                                                        <th>Threshold</th>
+                                                        <th>Occupational Rate</th>
+                                                        <th>Non-Occupational Rate</th>
+                                                        <th>Employer AANP Part</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="grp['line_ids']" t-as="ln">
+                                                        <tr>
+                                                            <td><t t-esc="ln.date_from"/></td>
+                                                            <td><t t-esc="ln.date_to"/></td>
+                                                            <td><t t-esc="ln.threshold"/></td>
+                                                            <td><t t-esc="ln.occupational_male_rate"/>%</td>
+                                                            <td><t t-esc="ln.non_occupational_male_rate"/>%</td>
+                                                            <td><t t-esc="ln.employer_aanp_part"/>%</td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </t>
+                                    </div>
+                                </t>
+                            </t>
+                        </div>
+                    </t>
+                </t>
+
+                <!-- ===============================
+                     4) LAAC (Additional Accident)
+                     =============================== -->
+                <hr/>
+                <h3>LAAC Institutions</h3>
+                <t t-if="doc.get('laac_records')">
+                    <t t-foreach="doc['laac_records']" t-as="laac">
+                        <div class="mb16">
+                            <h4><t t-esc="laac.name"/></h4>
+                            <ul>
+                                <li>
+                                    <strong>Insurance Code:</strong>
+                                    <t t-esc="laac.insurance_code"/>
+                                </li>
+                                <li>
+                                    <strong>Customer Number:</strong>
+                                    <t t-esc="laac.customer_number"/>
+                                </li>
+                                <li>
+                                    <strong>Contract Number:</strong>
+                                    <t t-esc="laac.contract_number"/>
+                                </li>
+                            </ul>
+                            <!-- LAAC Lines -->
+                            <t t-if="laac.line_ids">
+                                <h5>LAAC Solutions</h5>
+                                <t t-foreach="laac.line_ids" t-as="sol">
+                                    <ul>
+                                        <li>
+                                            <strong>Name:</strong>
+                                            <t t-esc="sol.solution_name"/>
+                                        </li>
+                                        <li>
+                                            <strong>Code:</strong>
+                                            <t t-esc="sol.solution_type"/><t t-esc="sol.solution_number"/>
+                                        </li>
+                                    </ul>
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Valid From</th>
+                                                <th>Until</th>
+                                                <th>Wage From</th>
+                                                <th>Wage To</th>
+                                                <th>Male Rate</th>
+                                                <th>Female Rate</th>
+                                                <th>Company Part</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="sol.rate_ids" t-as="rate">
+                                                <tr>
+                                                    <td><t t-esc="rate.date_from"/></td>
+                                                    <td><t t-esc="rate.date_to"/></td>
+                                                    <td><t t-esc="rate.wage_from"/></td>
+                                                    <td><t t-esc="rate.wage_to"/></td>
+                                                    <td><t t-esc="rate.male_rate"/></td>
+                                                    <td><t t-esc="rate.female_rate"/></td>
+                                                    <td><t t-esc="rate.employer_part"/>%</td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </t>
+                            </t>
+                        </div>
+                    </t>
+                </t>
+
+                <!-- ===============================
+                     5) IJM (Sickness Insurance)
+                     =============================== -->
+                <hr/>
+                <h3>IJM (Sickness Insurance)</h3>
+                <h3>IJM Institutions</h3>
+                <t t-if="doc.get('ijm_records')">
+                    <t t-foreach="doc['ijm_records']" t-as="laac">
+                        <div class="mb16">
+                            <h4><t t-esc="laac.name"/></h4>
+                            <ul>
+                                <li>
+                                    <strong>Insurance Code:</strong>
+                                    <t t-esc="laac.insurance_code"/>
+                                </li>
+                                <li>
+                                    <strong>Customer Number:</strong>
+                                    <t t-esc="laac.customer_number"/>
+                                </li>
+                                <li>
+                                    <strong>Contract Number:</strong>
+                                    <t t-esc="laac.contract_number"/>
+                                </li>
+                            </ul>
+                            <!-- LAAC Lines -->
+                            <t t-if="laac.line_ids">
+                                <h5>IJM Solutions</h5>
+                                <t t-foreach="laac.line_ids" t-as="sol">
+                                    <ul>
+                                        <li>
+                                            <strong>Name:</strong>
+                                            <t t-esc="sol.solution_name"/>
+                                        </li>
+                                        <li>
+                                            <strong>Code:</strong>
+                                            <t t-esc="sol.solution_type"/><t t-esc="sol.solution_number"/>
+                                        </li>
+                                    </ul>
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Valid From</th>
+                                                <th>Until</th>
+                                                <th>Wage From</th>
+                                                <th>Wage To</th>
+                                                <th>Male Rate</th>
+                                                <th>Female Rate</th>
+                                                <th>Company Part</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="sol.rate_ids" t-as="rate">
+                                                <tr>
+                                                    <td><t t-esc="rate.date_from"/></td>
+                                                    <td><t t-esc="rate.date_to"/></td>
+                                                    <td><t t-esc="rate.wage_from"/></td>
+                                                    <td><t t-esc="rate.wage_to"/></td>
+                                                    <td><t t-esc="rate.male_rate"/></td>
+                                                    <td><t t-esc="rate.female_rate"/></td>
+                                                    <td><t t-esc="rate.employer_part"/>%</td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </t>
+                            </t>
+                        </div>
+                    </t>
+                </t>
+
+                <!-- ===============================
+                     6) LPP (Pension / 2e pilier)
+                     =============================== -->
+                <hr/>
+                <h3>LPP Institutions</h3>
+                <t t-if="doc.get('lpp_records')">
+                    <t t-foreach="doc['lpp_records']" t-as="lpp">
+                        <div class="mb16">
+                            <h4><t t-esc="lpp.name"/></h4>
+                            <ul>
+                                <li>
+                                    <strong>Insurance Code:</strong>
+                                    <t t-esc="lpp.insurance_code"/>
+                                </li>
+                                <li>
+                                    <strong>Customer Number:</strong>
+                                    <t t-esc="lpp.customer_number"/>
+                                </li>
+                                <li>
+                                    <strong>Contract Number:</strong>
+                                    <t t-esc="lpp.contract_number"/>
+                                </li>
+                            </ul>
+                        </div>
+                    </t>
+                </t>
+
+                <hr/>
+                <!-- ===============================
+                     7) Source Tax Institutions
+                     =============================== -->
+                <h3>Source Tax Institutions</h3>
+                <t t-if="doc.get('source_tax_institutions')">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Canton</th>
+                                <th>DPI Number</th>
+                                <th>Company Number</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="doc['source_tax_institutions']" t-as="sti">
+                                <tr>
+                                    <td><t t-esc="sti.canton"/></td>
+                                    <td><t t-esc="sti.dpi_number"/></td>
+                                    <td><t t-esc="sti.company_number"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+                <hr/>
+            </div>
+        </t>
+        </t>
+        </t>
+    </template>
+</odoo>

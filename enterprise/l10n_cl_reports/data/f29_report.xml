@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_financial_report_f29" model="account.report">
+        <field name="name">Proposal F29</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.cl"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_f29_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_f29_line_01" model="account.report.line">
+                <field name="name">Taxable Sales Base</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_f29_line_0101" model="account.report.line">
+                        <field name="name">Net Sales Taxed VAT</field>
+                        <field name="code">CL_VNGI</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0101_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.code', 'in', ['310115', '310120']), ('tax_line_id', '=', False)]"/>
+                                <field name="subformula">-sum</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0102" model="account.report.line">
+                        <field name="name">Exempt Sales</field>
+                        <field name="code">CL_VEXEN</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0102_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.code', '=', '310122'), ('tax_line_id', '=', False)]"/>
+                                <field name="subformula">-sum</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0103" model="account.report.line">
+                        <field name="name">Exports</field>
+                        <field name="code">CL_VEXPO</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0103_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.code', '=', '310125'), ('tax_line_id', '=', False)]"/>
+                                <field name="subformula">-sum</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0104" model="account.report.line">
+                        <field name="name">Proposed Ratio Factor (%)</field>
+                        <field name="code">CL_FPP_RATE</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0104_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=2</field>
+                                <field name="green_on_positive" eval="False"/>
+                                <field name="figure_type">percentage</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0105" model="account.report.line">
+                        <field name="name">Total Sales</field>
+                        <field name="code">CL_TOTVENT</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0105_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CL_VNGI.balance + CL_VEXEN.balance + CL_VEXPO.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_f29_line_02" model="account.report.line">
+                <field name="name">Taxes Paid on Sale</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_f29_line_0201" model="account.report.line">
+                        <field name="name">VAT Tax Debit</field>
+                        <field name="code">CL_IVADF</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0201_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IVA Debito Fiscal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_f29_line_03" model="account.report.line">
+                <field name="name">Tax Base Purchases</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_f29_line_0301" model="account.report.line">
+                        <field name="name">Net Taxable Purchases Recoverable VAT</field>
+                        <field name="code">CL_COMPNGIR</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0301_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.code', 'in', ['410230', '410235']), ('tax_line_id', '=', False)]"/>
+                                <field name="subformula">sum</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0302" model="account.report.line">
+                        <field name="name">Net Purchases Taxed VAT Common Use</field>
+                        <field name="code">CL_COMPNGIUC</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0302_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.code', '=', '410231'), ('tax_line_id', '=', False)]"/>
+                                <field name="subformula">sum</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0303" model="account.report.line">
+                        <field name="name">Purchases Non-recoverable VAT</field>
+                        <field name="code">CL_COMPINR</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0303_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.code', '=', '410232'), ('tax_line_id', '=', False)]"/>
+                                <field name="subformula">sum</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0304" model="account.report.line">
+                        <field name="name">Supermarket Shopping</field>
+                        <field name="code">CL_COMPS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0304_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.code', '=', '410233'), ('tax_line_id', '=', False)]"/>
+                                <field name="subformula">sum</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0305" model="account.report.line">
+                        <field name="name">Purchases of fixed assets</field>
+                        <field name="code">CL_COMPAF</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0305_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="['|', '|', ('account_id.code', '=like', '1211%'), ('account_id.code', '=like', '1212%'), ('account_id.code', '=', '121330')]"/>
+                                <field name="subformula">sum</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0306" model="account.report.line">
+                        <field name="name">Purchases Not Taxed With VAT</field>
+                        <field name="code">CL_COMPNGI</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0306_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.tag_ids', '=', ref('l10n_cl.tag_cl_purchase_mnt_exe')), ('tax_line_id', '=', False)]"/>
+                                <field name="subformula">sum</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0307" model="account.report.line">
+                        <field name="name">Total Net Purchases</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0307_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CL_COMPNGIR.balance + CL_COMPNGIUC.balance + CL_COMPINR.balance + CL_COMPS.balance + CL_COMPAF.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_f29_line_04" model="account.report.line">
+                <field name="name">Taxes Paid on Purchase</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_f29_line_0401" model="account.report.line">
+                        <field name="name">VAT Paid Purchases Recoverable</field>
+                        <field name="code">CL_IPCOMPR</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0401_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IVA Pagado Compras Recuperables</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0402" model="account.report.line">
+                        <field name="name">VAT Common Use</field>
+                        <field name="code">CL_IUC</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0402_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IVA Pagado Compras Uso Común</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0403" model="account.report.line">
+                        <field name="name">VAT Shopping Supermarket</field>
+                        <field name="code">CL_ICOMPS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0403_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IVA Pagado Compras Supermercado</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0404" model="account.report.line">
+                        <field name="name">VAT Purchases of Fixed Assets Destined for Exempt Sales</field>
+                        <field name="code">CL_IPCOMPAFDVE</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0404_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Compras Activo Fijo</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0405" model="account.report.line">
+                        <field name="name">VAT Purchases Fixed Assets Common Use</field>
+                        <field name="code">CL_IPCOMPAFVUC</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0405_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Compras Activo Fijo Uso Común</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0406" model="account.report.line">
+                        <field name="name">VAT Purchases of Non-recoverable Fixed Assets</field>
+                        <field name="code">CL_IPCOMPAFVNR</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0406_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Compras Activo Fijo No Recuperables</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_f29_line_05" model="account.report.line">
+                <field name="name">VAT Base Tax Credit Affected by FP</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_f29_line_0501" model="account.report.line">
+                        <field name="name">Recoverable VAT</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0501_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CL_IPCOMPR.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0502" model="account.report.line">
+                        <field name="name">VAT Common Use</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0502_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CL_IUC.balance * CL_FPP_RATE.balance / 100</field>
+                                <field name="green_on_positive" eval="False"/>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0504" model="account.report.line">
+                        <field name="name">VAT Purchases Supermarket Common Use</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0504_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CL_ICOMPS.balance * CL_FPP_RATE.balance / 100</field>
+                                <field name="green_on_positive" eval="False"/>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0505" model="account.report.line">
+                        <field name="name">VAT Purchases Fixed Assets Earmarked Sales Exempt Sales</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0505_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CL_IPCOMPAFDVE.balance * CL_FPP_RATE.balance / 100</field>
+                                <field name="green_on_positive" eval="False"/>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0506" model="account.report.line">
+                        <field name="name">VAT Purchases Fixed Assets Sales Common Use</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0506_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CL_IPCOMPAFVUC.balance * CL_FPP_RATE.balance / 100</field>
+                                <field name="green_on_positive" eval="False"/>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0507" model="account.report.line">
+                        <field name="name">VAT Purchases Fixed Assets Non Recoverable Sales</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0507_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CL_IPCOMPAFVNR.balance * CL_FPP_RATE.balance / 100</field>
+                                <field name="green_on_positive" eval="False"/>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_f29_line_06" model="account.report.line">
+                <field name="name">Totals</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_f29_line_0601" model="account.report.line">
+                        <field name="name">VAT Tax Credit</field>
+                        <field name="code">CL_IVACF</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0601_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CL_IPCOMPAFVNR.balance + CL_IPCOMPAFVUC.balance + CL_IPCOMPAFDVE.balance + CL_ICOMPS.balance + CL_IUC.balance + CL_IPCOMPR.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0602" model="account.report.line">
+                        <field name="name">VAT Payable (Negative: Balance in Favor of the Company)</field>
+                        <field name="code">CL_IVAP</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0602_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CL_IVADF.balance - CL_IVACF.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0603" model="account.report.line">
+                        <field name="name">Remaining CF</field>
+                        <field name="code">CL_RCF</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0603_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.code', '=', '110720'), ('tax_line_id', '=', False)]"/>
+                                <field name="subformula">sum</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0604" model="account.report.line">
+                        <field name="name">Workers' Tax</field>
+                        <field name="code">CL_IMPT</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0604_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.code', '=', '210730'), ('tax_line_id', '=', False)]"/>
+                                <field name="subformula">-sum</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0605" model="account.report.line">
+                        <field name="name">Withholding Fees</field>
+                        <field name="code">CL_RETH</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0605_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Retención Segunda Categoría</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0606" model="account.report.line">
+                        <field name="name">PPM rate (%)</field>
+                        <field name="code">CL_PPM_RATE</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0606_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=2</field>
+                                <field name="figure_type">percentage</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0607" model="account.report.line">
+                        <field name="name">PPM</field>
+                        <field name="code">CL_PPM</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0607_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CL_TOTVENT.balance * CL_PPM_RATE.balance / 100</field>
+                                <field name="green_on_positive" eval="False"/>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_f29_line_0608" model="account.report.line">
+                        <field name="name">Total Taxes for the Period (Negative: Balance in Favor of the Company)</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_f29_line_0608_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CL_IVAP.balance + CL_RCF.balance + CL_IMPT.balance + CL_RETH.balance + CL_PPM.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

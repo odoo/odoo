@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_urban_piper_enhancements.Order" t-inherit="pos_preparation_display.Order" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_pdis_order_card_header_top_delivery')]" position="after">
+            <div t-if="this.props.order.delivery_identifier and this.props.order.delivery_datetime" class="px-2 text-info">
+                <span class="fw-bold">Scheduled At:</span> <t t-esc="this.props.order.delivery_datetime"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

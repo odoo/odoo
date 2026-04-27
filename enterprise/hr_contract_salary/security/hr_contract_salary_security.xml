@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="hr_contract_salary_resume_rule_multi_company" model="ir.rule">
+        <field name="name">HR Contract Salary Resume: Multi Company</field>
+        <field name="model_id" ref="model_hr_contract_salary_resume"/>
+        <field name="domain_force">['|', ('structure_type_id','=',False), ('structure_type_id.country_id', 'in', user.env.companies.mapped('country_id').ids + [False])]</field>
+    </record>
+
+    <record id="ir_rule_hr_contract_salary_offer_multi_company" model="ir.rule">
+        <field name="name">HR Contract Salary Offer: Multi Company</field>
+        <field name="model_id" ref="model_hr_contract_salary_offer"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_hr_contract_salary_offer_contract" model="ir.rule">
+        <field name="name">HR Contract Salary Offer: Contract Manager can only see Employee Contracts</field>
+        <field name="model_id" ref="model_hr_contract_salary_offer"/>
+        <field name="domain_force">[('applicant_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('hr_contract.group_hr_contract_manager'))]"/>
+    </record>
+
+    <record id="ir_rule_hr_contract_salary_offer_applicant" model="ir.rule">
+        <field name="name">HR Contract Salary Offer: Recruiters can only see Applicants</field>
+        <field name="model_id" ref="model_hr_contract_salary_offer"/>
+        <field name="domain_force">[('employee_contract_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+    </record>
+</odoo>

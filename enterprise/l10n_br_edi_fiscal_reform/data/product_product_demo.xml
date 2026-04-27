@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="regular_consumable_product_dozen" model="product.product">
+        <field name="name">Regular Consumable Product Dozen</field>
+        <field name="type">consu</field>
+        <field name="taxes_id" eval="False"/>
+        <field name="l10n_br_ncm_code_id" ref="l10n_br_avatax.49011000"/>
+        <field name="l10n_br_source_origin">0</field>
+        <field name="l10n_br_sped_type">FOR PRODUCT</field>
+        <field name="l10n_br_use_type">resale</field>
+        <field name="uom_id" ref="uom.product_uom_dozen"/>
+        <field name="l10n_br_legal_uom_id" ref="uom.product_uom_dozen"/>
+        <field name="uom_po_id" ref="uom.product_uom_dozen"/>
+    </record>
+</odoo>

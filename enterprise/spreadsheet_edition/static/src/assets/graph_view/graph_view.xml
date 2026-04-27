@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-inherit="web.GraphView.Buttons" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('btn-group')][1]" position="after">
+            <t t-if="canInsertChart and !env.isSmall">
+                <div class="btn-group" role="toolbar" aria-label="Insert in Spreadsheet">
+                    <button class="btn btn-secondary o_graph_insert_spreadsheet" t-att-disabled="!model.hasData() or model.useSampleModel" t-on-click="onInsertInSpreadsheet">
+                        Insert in Spreadsheet
+                    </button>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

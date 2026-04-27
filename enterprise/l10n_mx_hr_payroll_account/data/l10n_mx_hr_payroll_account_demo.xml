@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_company_mx_key" model="certificate.key">
+        <field name="name">MX test key (HR)</field>
+        <field name="content" type="base64" file="l10n_mx_edi/demo/pac_credentials/certificate.key"/>
+        <field name="password">12345678a</field>
+        <field name="company_id" ref="base.demo_company_mx"/>
+    </record>
+
+    <record id="res_company_mx_certificate" model="certificate.certificate">
+        <field name="name">MX test certificate (HR)</field>
+        <field name="content" type="base64" file="l10n_mx_edi/demo/pac_credentials/certificate.cer"/>
+        <field name="private_key_id" ref="res_company_mx_key"/>
+        <field name="company_id" ref="base.demo_company_mx"/>
+    </record>
+
+    <record id="base.partner_demo_company_mx" model="res.partner" forcecreate="1">
+        <field name="name">ESCUELA KEMPER URGATE</field>
+        <field name="currency_id" ref="base.MXN"/>
+        <field name="vat">EKU9003173C9</field>
+        <field name="street">Campobasso Norte 3206 - 9000</field>
+        <field name="street2">Fraccionamiento Montecarlo</field>
+        <field name="city">Jesús María</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="state_id" ref="base.state_mx_ags"/>
+        <field name="zip">20928</field>
+        <field name="l10n_mx_edi_fiscal_regime">601</field>
+    </record>
+
+    <record id="base.demo_company_mx" model="res.company" forcecreate="1">
+        <field name="l10n_mx_edi_pac">finkok</field>
+        <field name="l10n_mx_edi_pac_test_env" eval="True"/>
+        <field name="l10n_mx_edi_fiscal_regime">601</field>
+        <field name="partner_id" ref="base.partner_demo_company_mx"/>
+    </record>
+
+    <data noupdate="1">
+        <function model="account.chart.template" name="try_loading">
+            <value eval="[]"/>
+            <value name="template_code" eval="'mx'"/>
+            <value name="company" model="res.company" eval="ref('base.demo_company_mx')"/>
+            <value name="install_demo" eval="True"/>
+        </function>
+    </data>
+
+    <record id="l10n_mx_hr_payroll.res_partner_bank_account_cecilia" model="res.partner.bank">
+        <field name="bank_id" ref="l10n_mx.acc_bank_014_SANTANDER"/>
+        <field name="l10n_mx_edi_clabe">014279991443975186</field>
+    </record>
+
+    <record id="res_partner_bank_account_cesar" model="res.partner.bank">
+        <field name="acc_number">012279991443975187</field>
+        <field name="bank_id" ref="l10n_mx.acc_bank_012_BBVA_BANCOMER"/>
+        <field name="l10n_mx_edi_clabe">012279991443975187</field>
+        <field name="partner_id" ref="l10n_mx_hr_payroll.res_partner_cesar_private_address"/>
+        <field name="company_id" ref="base.demo_company_mx"/>
+    </record>
+
+    <record id="base.hr_employee_cesar" model="hr.employee">
+        <field name="bank_account_id" ref="l10n_mx_hr_payroll_account.res_partner_bank_account_cesar"/>
+    </record>
+
+    <record id="l10n_mx_hr_payroll.res_partner_xochilt" model="res.partner">
+        <field name="l10n_mx_edi_fiscal_regime">605</field>
+    </record>
+
+    <record id="res_partner_bank_account_xochilt" model="res.partner.bank">
+        <field name="acc_number">014279991443975188</field>
+        <field name="bank_id" ref="l10n_mx.acc_bank_014_SANTANDER"/>
+        <field name="l10n_mx_edi_clabe">014279991443975188</field>
+        <field name="partner_id" ref="l10n_mx_hr_payroll.res_partner_xochilt_private_address"/>
+        <field name="company_id" ref="base.demo_company_mx"/>
+    </record>
+
+    <record id="base.hr_employee_xochilt" model="hr.employee">
+        <field name="bank_account_id" ref="l10n_mx_hr_payroll_account.res_partner_bank_account_xochilt"/>
+    </record>
+
+    <record id="l10n_mx_hr_payroll.res_partner_karla" model="res.partner">
+        <field name="l10n_mx_edi_fiscal_regime">605</field>
+    </record>
+
+    <record id="res_partner_bank_account_karla" model="res.partner.bank">
+        <field name="acc_number">014279991443975189</field>
+        <field name="bank_id" ref="l10n_mx.acc_bank_014_SANTANDER"/>
+        <field name="l10n_mx_edi_clabe">014279991443975189</field>
+        <field name="partner_id" ref="l10n_mx_hr_payroll.res_partner_karla_private_address"/>
+        <field name="company_id" ref="base.demo_company_mx"/>
+    </record>
+
+    <record id="base.hr_employee_karla" model="hr.employee">
+        <field name="bank_account_id" ref="l10n_mx_hr_payroll_account.res_partner_bank_account_karla"/>
+    </record>
+</odoo>

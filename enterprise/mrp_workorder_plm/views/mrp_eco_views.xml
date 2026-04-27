@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mrp_workorder_eco_view_form" model="ir.ui.view">
+        <field name="name">mrp.workorder.eco.view.form</field>
+        <field name="model">mrp.eco</field>
+        <field name="inherit_id" ref="mrp_plm.mrp_eco_view_form"/>
+        <field name="arch" type="xml">
+            <field name="routing_change_ids" position="after">
+                <field name="routing_change_ids" invisible="1"/> <!-- needed during the change for routing_change_ids_on_operation -->
+            </field>
+            <field name="routing_change_ids" position="attributes">
+                <attribute name="name">routing_change_ids_on_operation</attribute>
+                <attribute name="invisible">not routing_change_ids_on_operation</attribute>
+            </field>
+            <xpath expr="//page[@name='operation_changes']" position="attributes">
+                <attribute name="invisible">not routing_change_ids_on_operation</attribute>
+            </xpath>
+            <xpath expr="//page[@name='operation_changes']" position="after">
+                <page string="Instruction Changes" name="quality_point_changes"
+                    invisible="not routing_change_ids_on_quality_point"
+                    help="Quality Changes made on the quality point.">
+                    <field name="routing_change_ids_on_quality_point">
+                        <list decoration-danger="change_type=='remove'" decoration-info="change_type=='add'" create="false" delete="false" no_open="true">
+                            <field name="change_type"/>
+                            <field name="operation_name"/>
+                            <field name="workcenter_id"/>
+                            <field name="title"/>
+                            <button name="action_open_routing_change_quality_point" type="object" icon="fa-external-link" class="oe_edit_only" title="Open Quality Point"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

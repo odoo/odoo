@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp_workorder.MrpEmployeeControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_cp_pager')]" position="attributes">
+            <attribute name="t-att-style">'display: none;'</attribute>
+        </xpath>
+        <xpath expr="//section[hasclass('o_control_panel_breadcrumbs_actions')]" position="attributes">
+            <attribute name="t-att-style">'display: none !important;'</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="mrp_workorder.MrpEmployeeListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <xpath expr="//thead" position="attributes">
+            <attribute name="t-att-style">'display: none;'</attribute>
+        </xpath>
+    </t>
+
+</templates>

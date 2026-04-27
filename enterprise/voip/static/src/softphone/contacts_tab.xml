@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<templates>
+    <t t-name="voip.ContactsTab">
+        <div t-attf-class="o-voip-ContactsTab tab-content overflow-y-auto {{ props.extraClass }}" role="tabpanel">
+            <t t-if="voip.softphone.contacts.length > 0">
+                <div t-foreach="voip.softphone.contacts" t-as="contact" t-key="contact.localId" class="list-group-item-action p-3 text-truncate cursor-pointer" t-att-class="{ 'border-bottom': !contact_last }" t-ref="{{ contact_last ? 'last-shown-contact' : 'dummy' + contact_index }}" t-on-click="(ev) => this.onClickContact(ev, contact)">
+                    <img class="o_image_40_cover rounded" t-att-src="getAvatarUrl(contact)"/>
+                    <span class="ps-2"><b class="fw-bolder text-truncate" t-att-title="contact.displayName" t-esc="contact.displayName"/></span>
+                </div>
+            </t>
+            <p t-elif="voip.softphone.searchBarInputValue.trim()" class="m-4 text-center">No search results 💔</p>
+            <p t-else="" class="m-4 text-center">Contacts with a phone number will be shown here.</p>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="documents.Breadcrumbs" t-inherit="web.Breadcrumbs" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_breadcrumb')]" position="attributes">
+            <attribute name="class" remove="align-self-stretch" add="cursor-pointer" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_last_breadcrumb_item')]" position="after">
+            <DocumentsCogMenu/>
+        </xpath>
+    </t>
+
+</templates>

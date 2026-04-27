@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <template id="dmfa_xml_report" inherit_id="l10n_be_hr_payroll.dmfa_xml_report">
+        <xpath expr="//ContributionUnrelatedToNP" position="before">
+            <t t-foreach="vehicles" t-as="vehicle">
+                <t t-call="l10n_be_hr_payroll_fleet.CompanyVehicle"/>
+            </t>
+            <ContributionUnrelatedToNP>
+                <UnrelatedEmployerClass t-esc="employer_class"/>
+                <UnrelatedWorkerCode>862</UnrelatedWorkerCode>
+                <UnrelatedAmount t-esc="vehicles_cotisation"/>
+            </ContributionUnrelatedToNP>
+        </xpath>
+    </template>
+
+    <template id="dmfa_pdf_report" inherit_id="l10n_be_hr_payroll.dmfa_pdf_report">
+        <xpath expr="//tr[@name='double_pay_global']" position="after">
+            <tr>
+                <td>Company Cars Global Contributions:</td>
+                <td style="text-align: right;"><t t-esc="pretty_format(data['vehicles_cotisation'])"/> €</td>
+            </tr>
+        </xpath>
+        <xpath expr="//div[@name='employees_information']" position="before">
+            <p style="page-break-before:always;"> </p>
+            <div class="mt-4 row" name="cars_information">
+                <div class="col-12">
+                    <div class="fw-bold">Company Cars List</div>
+                </div>
+            </div>
+            <ul>
+                <t t-foreach="data['vehicles']" t-as="vehicle">
+                    <li><t t-esc="vehicle.license_plate"/></li>
+                </t>
+            </ul>
+            <p style="page-break-before:always;"> </p>
+        </xpath>
+    </template>
+
+    <template id="CompanyVehicle">
+        <!-- 90294 Bloc fonctionnel permettant de déclarer les informations relatives à un véhicule de société.
+        Un véhicule de société (un numéro de plaque) ne peut se retrouver qu'une seule fois par déclaration. -->
+        <CompanyVehicle>
+            <!-- 00780
+                DESCRIPTION:    Numéro de suite des véhicules de société au sein d’une déclaration
+                DOMAINE DE DEFINITION:  Nombre entier positif et élément de [1;99999]
+
+                TYPE:   Numérique
+                LONGUEUR:   5
+
+                PRESENCE:   Indispensable
+             -->
+            <CompanyVehicleSequenceNbr t-esc="vehicle.sequence"/>
+            <!-- 00781
+                DESCRIPTION:    Numéro de plaque d’un véhicule à la DIV
+                DOMAINE DE DEFINITION:  
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   10
+                PRESENCE:   Indispensable
+             -->
+            <LicensePlate t-esc="vehicle.license_plate"/>
+            <!-- 01217
+                DESCRIPTION:    Zone dans laquelle il est indiqué si le numéro de plaque concerne un véhicule de société respectueux de l’environnement qui est mis à disposition dans le cadre du budget mobilité.
+                DOMAINE DE DEFINITION:  0 = le numéro de plaque ne concerne pas un véhicule de société respectueux de l’environnement qui est mis à disposition dans le cadre du budget mobilité
+                1 = le numéro de plaque concerne un véhicule de société respectueux de l’environnement qui est mis à disposition dans le cadre du budget mobilité
+
+                TYPE:   Numérique
+                LONGUEUR:   1
+                PRESENCE:   Obligatoire si le numéro de plaque concerne un véhicule de société respectueux de l’environnement qui est mis à disposition dans le cadre du budget mobilité.
+             -->
+            <t t-if="vehicle.eco_vehicle != -1">
+                <EcoVehicle t-esc="vehicle.eco_vehicle"/>
+            </t>
+        </CompanyVehicle>
+    </template>
+</data>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_printer_iot_form" model="ir.ui.view">
+        <field name="name">pos.iot.config.form.view</field>
+        <field name="model">pos.printer</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_printer_form"/>
+        <field name="arch" type="xml">
+            <field name="proxy_ip" position="replace">
+                <field name="device_id" invisible="printer_type != 'iot'"/>
+            </field>
+        </field>
+    </record>
+    <record id="view_pos_printer_iot_tree" model="ir.ui.view">
+        <field name="name">pos.iot.config.list.view</field>
+        <field name="model">pos.printer</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_printer"/>
+        <field name="arch" type="xml">
+            <field name="proxy_ip" position="replace">
+                <field name="device_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>

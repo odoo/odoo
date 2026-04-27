@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="web_studio.ListEditorRenderer" t-inherit="web.ListRenderer" >
+
+    <xpath expr="//*[@t-ref='table']" position="before">
+      <div class="d-flex justify-content-between mt-2 mb-2">
+        <div class="d-flex align-items-center align-content-around flex-wrap gap-1">
+          <t t-foreach="props.archInfo.headerButtons" t-as="button" t-key="button.id">
+            <button
+              class="btn btn-secondary o-web-studio-editor--element-clickable"
+              t-att-studioxpath="button.studioXpath"
+              t-att-data-studio-xpath="button.studioXpath"
+              t-att-data-tooltip-template="this.env.debug ? 'views.ViewButtonTooltip' : false"
+              t-att-data-tooltip-info="this.env.debug ? makeTooltipButton(button) : false"
+              data-tooltip-delay="1000"
+              t-on-click="() => this.env.config.onNodeClicked(button.studioXpath)">
+              <t t-esc="button.string"></t>
+            </button>
+          </t>
+          <AddButtonAction/>
+        </div>
+      </div>
+    </xpath>
+
+    <xpath expr="//*[@t-ref='table']" position="attributes">
+      <attribute name="t-on-click.capture">onTableClicked</attribute>
+      <attribute name="t-on-mouseover">onTableHover</attribute>
+      <attribute name="t-on-mouseout">onTableHover</attribute>
+    </xpath>
+
+    <xpath expr="//thead[1]" position="attributes">
+      <attribute name="t-ref">tableHead</attribute>
+    </xpath>
+
+    <xpath expr="//*[contains(@class, 'o_optional_columns_dropdown_toggle')]" position="attributes">
+      <attribute name="class" add="text-muted" separator=" "/>
+    </xpath>
+
+    <xpath expr="//thead//t[@t-foreach]//*[@t-else][1]" position="before">
+      <t t-elif="column.type === 'studio_hook'">
+        <t t-call="web_studio.ListEditor.StudioHook" >
+          <t t-set="column" t-value="column" />
+          <t t-set="isHeader" t-value="true" />
+        </t>
+      </t>
+    </xpath>
+
+    <xpath expr="//thead//t[@t-foreach]/th[1]" position="attributes">
+      <attribute name="t-att-data-studio-xpath">column.studioXpath</attribute>
+      <attribute name="class" add="o-draggable" separator=" " />
+    </xpath>
+
+    <xpath expr="//thead//t[@t-foreach]/th[2]" position="attributes">
+      <attribute name="t-att-data-studio-xpath">column.studioXpath</attribute>
+    </xpath>
+  </t>
+
+  <t t-name="web_studio.ListEditorRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow">
+    <xpath expr="//t[@t-foreach]" position="inside">
+      <t t-if="column.type === 'studio_hook'">
+        <t t-call="web_studio.ListEditor.StudioHook" >
+          <t t-set="column" t-value="column" />
+        </t>
+      </t>
+    </xpath>
+
+    <xpath expr="(//t[@t-foreach]//td)[1]" position="attributes">
+      <attribute name="t-att-data-studio-xpath">column.studioXpath</attribute>
+    </xpath>
+
+    <xpath expr="(//t[@t-foreach]//td)[2]" position="attributes">
+      <attribute name="data-button-group">1</attribute>
+      <attribute name="t-att-data-studio-xpath">column.studioXpath</attribute>
+    </xpath>
+
+    <xpath expr="//t[@t-if='hasOpenFormViewColumn']" position="attributes">
+      <attribute name="t-if">props.archInfo.openFormView</attribute>
+    </xpath>
+
+    <xpath expr="//button[@name='Open in form view']" position="attributes">
+      <attribute name="class" add="disabled" separator=" "/>
+    </xpath>
+  </t>
+
+  <t t-name="web_studio.ListEditor.StudioHook">
+    <t t-tag="isHeader ? 'th' : 'td'" t-att-data-xpath="column.xpath" t-att-data-position="column.position" class="o_web_studio_hook" t-attf-class="{{ !isHeader ? 'border-bottom-0' : ''}}">
+      <i t-if="isHeader" class="fa fa-plus" />
+    </t>
+  </t>
+
+</templates>

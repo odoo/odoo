@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="sign_log_view_tree" model="ir.ui.view">
+      <field name="name">sign.log.list</field>
+      <field name="model">sign.log</field>
+      <field name="arch" type="xml">
+        <list string="Logs">
+          <field name="log_date"/>
+          <field name="action"/>
+          <field name="partner_id"/>
+          <field name="latitude"/>
+          <field name="longitude"/>
+          <field name="ip"/>
+          <!-- who can acces what ?? groups on the fields for the moment -->
+          <field name="request_state" optional="hide"/>
+        </list>
+      </field>
+    </record>
+
+</odoo>

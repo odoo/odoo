@@ -1,0 +1,617 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_cn_asbe_bs" model="account.report">
+        <field name="name">ASBE: Balance Sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="country_id" ref="base.cn"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="default_opening_date_filter">today</field>
+        <field name="availability_condition">coa</field>
+        <field name="chart_template">cn_large_bis</field>
+        <field name="column_ids">
+            <record id="l10n_cn_asbe_bs_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_cn_asbe_bs_cn_a" model="account.report.line">
+                <field name="name">Assets</field>
+                <field name="code">CN_A</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="aggregation_formula">CN_CA.balance + CN_NCA.balance</field>
+                <field name="children_ids">
+                    <record id="l10n_cn_asbe_bs_cn_ca" model="account.report.line">
+                        <field name="name">Current Assets</field>
+                        <field name="code">CN_CA</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="aggregation_formula">CN_MF.balance + CN_TFA.balance + CN_DFA.balance + CN_FAUR.balance + CN_NR.balance + CN_AR.balance + CN_RF.balance + CN_PR.balance + CN_OT.balance + CN_INV.balance + CN_CTA.balance + CN_AFS.balance + CN_NCAO.balance + CN_OCA.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_cn_asbe_bs_cn_mf" model="account.report.line">
+                                <field name="name">Monetary Funds</field>
+                                <field name="code">CN_MF</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">10</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_tfa" model="account.report.line">
+                                <field name="name">Trading Financial Assets</field>
+                                <field name="code">CN_TFA</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1101</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_dfa" model="account.report.line">
+                                <field name="name">Derivative Financial Assets</field>
+                                <field name="code">CN_DFA</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1102</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_faur" model="account.report.line">
+                                <field name="name">Financial Assets Under Resale Agreements</field>
+                                <field name="code">CN_FAUR</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1111</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_nr" model="account.report.line">
+                                <field name="name">Notes Receivable</field>
+                                <field name="code">CN_NR</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1121</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_ar" model="account.report.line">
+                                <field name="name">Accounts Receivable</field>
+                                <field name="code">CN_AR</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1122</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_rf" model="account.report.line">
+                                <field name="name">Receivables Financing</field>
+                                <field name="code">CN_RF</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1124</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_pr" model="account.report.line">
+                                <field name="name">Prepayments</field>
+                                <field name="code">CN_PR</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1123</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_ot" model="account.report.line">
+                                <field name="name">Other Receivables</field>
+                                <field name="code">CN_OT</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">113 + 120 + 121 + 122</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_inv" model="account.report.line">
+                                <field name="name">Inventory</field>
+                                <field name="code">CN_INV</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">140 + 142 + 145 + 147</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_cta" model="account.report.line">
+                                <field name="name">Contract Assets</field>
+                                <field name="code">CN_CTA</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">148</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_afs" model="account.report.line">
+                                <field name="name">Assets Held For Sale</field>
+                                <field name="code">CN_AFS</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">149\(1493)</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_ncao" model="account.report.line">
+                                <field name="name">Non-Current Assets Due Within One Year</field>
+                                <field name="code">CN_NCAO</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1493</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_oca" model="account.report.line">
+                                <field name="name">Other Current Assets</field>
+                                <field name="code">CN_OCA</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">11\(1101, 1102, 1111, 1121, 1122, 1123, 1124, 113) + 12\(120, 121, 122) + 13 + 14\(140, 142, 145, 147, 148, 149)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_cn_asbe_bs_cn_nca" model="account.report.line">
+                        <field name="name">Non-Current Assets</field>
+                        <field name="code">CN_NCA</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="aggregation_formula">CN_DI.balance + CN_ODI.balance + CN_LTR.balance + CN_LTEI.balance + CN_OEII.balance + CN_ONCFA.balance + CN_IRE.balance + CN_FA.balance + CN_CIP.balance + CN_PBA.balance + CN_OGA.balance + CN_ROUA.balance + CN_IA.balance + CN_DE.balance + CN_GW.balance + CN_LTDE.balance + CN_DTA.balance + CN_ONCA.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_cn_asbe_bs_cn_di" model="account.report.line">
+                                <field name="name">Debt Investment</field>
+                                <field name="code">CN_DI</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1504</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_odi" model="account.report.line">
+                                <field name="name">Other Debt Investments</field>
+                                <field name="code">CN_ODI</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1505</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_ltr" model="account.report.line">
+                                <field name="name">Long-Term Receivables</field>
+                                <field name="code">CN_LTR</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">153</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_ltei" model="account.report.line">
+                                <field name="name">Long Term Equity Investment</field>
+                                <field name="code">CN_LTEI</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1511 + 1512</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_oeii" model="account.report.line">
+                                <field name="name">Other Equity Instrument Investments</field>
+                                <field name="code">CN_OEII</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1513</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_oncfa" model="account.report.line">
+                                <field name="name">Other Non-Current Financial Assets</field>
+                                <field name="code">CN_ONCFA</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">15\(1504, 1505, 1511, 1512, 1513, 152, 153)</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_ire" model="account.report.line">
+                                <field name="name">Investment Real Estate</field>
+                                <field name="code">CN_IRE</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">152</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_fa" model="account.report.line">
+                                <field name="name">Fixed Assets</field>
+                                <field name="code">CN_FA</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1601 + 1602 + 1603 + 1606 + 1632</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_cip" model="account.report.line">
+                                <field name="name">Construction In Progress</field>
+                                <field name="code">CN_CIP</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1604 + 1605</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_pba" model="account.report.line">
+                                <field name="name">Productive Biological Assets</field>
+                                <field name="code">CN_PBA</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">162</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_oga" model="account.report.line">
+                                <field name="name">Oil And Gas Assets</field>
+                                <field name="code">CN_OGA</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1631</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_roua" model="account.report.line">
+                                <field name="name">Right-Of-Use Assets</field>
+                                <field name="code">CN_ROUA</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">172</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_ia" model="account.report.line">
+                                <field name="name">Intangible Assets</field>
+                                <field name="code">CN_IA</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">170</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_de" model="account.report.line">
+                                <field name="name">Development Expenditure</field>
+                                <field name="code">CN_DE</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">173</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_gw" model="account.report.line">
+                                <field name="name">Goodwill</field>
+                                <field name="code">CN_GW</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">171</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_ltde" model="account.report.line">
+                                <field name="name">Long-Term Deferred Expenses</field>
+                                <field name="code">CN_LTDE</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">180</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_dta" model="account.report.line">
+                                <field name="name">Deferred Tax Assets</field>
+                                <field name="code">CN_DTA</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">181</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_onca" model="account.report.line">
+                                <field name="name">Other Non-Current Assets</field>
+                                <field name="code">CN_ONCA</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">16\(1601, 1602, 1603, 1604, 1605, 1606, 162, 1631, 1632) + 17\(170, 171, 172, 173) + 18\(180, 181) + 19</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cn_asbe_bs_cn_l" model="account.report.line">
+                <field name="name">Liabilities</field>
+                <field name="code">CN_L</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="aggregation_formula">CN_CL.balance + CN_NCL.balance</field>
+                <field name="children_ids">
+                    <record id="l10n_cn_asbe_bs_cn_cl" model="account.report.line">
+                        <field name="name">Current Liabilities</field>
+                        <field name="code">CN_CL</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="aggregation_formula">CN_STB.balance + CN_FTL.balance + CN_DFL.balance + CN_NP.balance + CN_AP.balance + CN_AVP.balance + CN_COL.balance + CN_ECP.balance + CN_TP.balance + CN_OP.balance + CN_LHFS.balance + CN_NCLO.balance + CN_OCL.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_cn_asbe_bs_cn_stb" model="account.report.line">
+                                <field name="name">Short Term Borrowing</field>
+                                <field name="code">CN_STB</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 2001</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_ftl" model="account.report.line">
+                                <field name="name">Financial Trading Liabilities</field>
+                                <field name="code">CN_FTL</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 200\(2001) - 210 - 2111</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_dfl" model="account.report.line">
+                                <field name="name">Derivative Financial Liabilities</field>
+                                <field name="code">CN_DFL</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 2112</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_np" model="account.report.line">
+                                <field name="name">Notes Payable</field>
+                                <field name="code">CN_NP</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 2201</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_ap" model="account.report.line">
+                                <field name="name">Accounts Payable</field>
+                                <field name="code">CN_AP</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 2202</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_avp" model="account.report.line">
+                                <field name="name">Advance Payment</field>
+                                <field name="code">CN_AVP</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 2203</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_col" model="account.report.line">
+                                <field name="name">Contract Liabilities</field>
+                                <field name="code">CN_COL</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 2204</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_ecp" model="account.report.line">
+                                <field name="name">Employee Compensation Payable</field>
+                                <field name="code">CN_ECP</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 221</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_tp" model="account.report.line">
+                                <field name="name">Taxes Payable</field>
+                                <field name="code">CN_TP</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 222</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_op" model="account.report.line">
+                                <field name="name">Other Payables</field>
+                                <field name="code">CN_OP</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 223 - 2241 - 225 - 226</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_lhfs" model="account.report.line">
+                                <field name="name">Liabilities Held For Sale</field>
+                                <field name="code">CN_LHFS</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 2245</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_nclo" model="account.report.line">
+                                <field name="name">Non-Current Liabilities Due Within One Year</field>
+                                <field name="code">CN_NCLO</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 2402</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_ocl" model="account.report.line">
+                                <field name="name">Other Current Liabilities</field>
+                                <field name="code">CN_OCL</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 20\(200) - 21\(210, 2111, 2112) - 22\(2201, 2202, 2203, 2204, 221, 222, 223, 2241, 2245, 225, 226) - 23 - 24\(2401, 2402)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_cn_asbe_bs_cn_ncl" model="account.report.line">
+                        <field name="name">Non-Current Liabilities</field>
+                        <field name="code">CN_NCL</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="aggregation_formula">CN_LTB.balance + CN_BP.balance + CN_LL.balance + CN_LTP.balance + CN_EL.balance + CN_DFI.balance + CN_DFITL.balance + CN_ONCL.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_cn_asbe_bs_cn_ltb" model="account.report.line">
+                                <field name="name">Long Term Borrowing</field>
+                                <field name="code">CN_LTB</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 2501</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_bp" model="account.report.line">
+                                <field name="name">Bonds Payable</field>
+                                <field name="code">CN_BP</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 2502</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_ll" model="account.report.line">
+                                <field name="name">Lease Liability</field>
+                                <field name="code">CN_LL</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 251</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_ltp" model="account.report.line">
+                                <field name="name">Long-Term Payables</field>
+                                <field name="code">CN_LTP</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 27</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_el" model="account.report.line">
+                                <field name="name">Estimated Liabilities</field>
+                                <field name="code">CN_EL</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 28</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_dfi" model="account.report.line">
+                                <field name="name">Deferred Income</field>
+                                <field name="code">CN_DFI</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 2401</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_dfitl" model="account.report.line">
+                                <field name="name">Deferred Income Tax Liability</field>
+                                <field name="code">CN_DFITL</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 29</field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_oncl" model="account.report.line">
+                                <field name="name">Other Non-Current Liabilities</field>
+                                <field name="code">CN_ONCL</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 25\(251, 2501, 2502) - 26</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cn_asbe_bs_cn_e" model="account.report.line">
+                <field name="name">Owner&apos;s equity (or Shareholders&apos; Equity):</field>
+                <field name="code">CN_E</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="aggregation_formula">CN_PC.balance + CN_CR.balance + CN_SR.balance + CN_SPR.balance + CN_OE.balance + CN_UDPL.balance</field>
+                <field name="children_ids">
+                    <record id="l10n_cn_asbe_bs_cn_pc" model="account.report.line">
+                        <field name="name">Paid-In Capital (or Equity)</field>
+                        <field name="code">CN_PC</field>
+                        <field name="hierarchy_level">4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">- 31 - 32 - 4001 - 4102</field>
+                    </record>
+                    <record id="l10n_cn_asbe_bs_cn_oe" model="account.report.line">
+                        <field name="name">Other Equity Instruments</field>
+                        <field name="code">CN_OE</field>
+                        <field name="hierarchy_level">4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">- 3\(30, 31, 32) - 4\(4001, 4002, 4003, 4101, 4102, 4103, 4104, 4201)</field>
+                    </record>
+                    <record id="l10n_cn_asbe_bs_cn_cr" model="account.report.line">
+                        <field name="name">Capital Reserve (Less Treasury Shares)</field>
+                        <field name="code">CN_CR</field>
+                        <field name="hierarchy_level">4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">- 30 - 4002 - 4201</field>
+                    </record>
+                    <record id="l10n_cn_asbe_bs_cn_spr" model="account.report.line">
+                        <field name="name">Special Reserve</field>
+                        <field name="code">CN_SPR</field>
+                        <field name="hierarchy_level">4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">- 4003</field>
+                    </record>
+                    <record id="l10n_cn_asbe_bs_cn_sr" model="account.report.line">
+                        <field name="name">Surplus Reserve</field>
+                        <field name="code">CN_SR</field>
+                        <field name="hierarchy_level">4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">- 4101</field>
+                    </record>
+                    <record id="l10n_cn_asbe_bs_cn_udpl" model="account.report.line">
+                        <field name="name">Undistributed Profit</field>
+                        <field name="code">CN_UDPL</field>
+                        <field name="hierarchy_level">4</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="aggregation_formula">CN_CURR_YEAR_EARNINGS.balance + CN_PREV_YEAR_EARNINGS.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_cn_asbe_bs_cn_curr_year_earnings" model="account.report.line">
+                                <field name="name">Current Year Unallocated Earnings</field>
+                                <field name="code">CN_CURR_YEAR_EARNINGS</field>
+                                <field name="hierarchy_level">6</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="cn_curr_year_earnings_pnl" model="account.report.expression">
+                                        <field name="label">pnl</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">CN_NEP.balance</field>
+                                        <field name="date_scope">from_fiscalyear</field>
+                                        <field name="subformula">cross_report</field>
+                                    </record>
+                                    <record id="cn_curr_year_earnings_alloc" model="account.report.expression">
+                                        <field name="label">alloc</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">- 4103 - 4104</field>
+                                        <field name="date_scope">from_fiscalyear</field>
+                                    </record>
+                                    <record id="cn_curr_year_earnings_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">CN_CURR_YEAR_EARNINGS.pnl + CN_CURR_YEAR_EARNINGS.alloc</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_cn_asbe_bs_cn_prev_year_earnings" model="account.report.line">
+                                <field name="name">Previous Years Unallocated Earnings</field>
+                                <field name="code">CN_PREV_YEAR_EARNINGS</field>
+                                <field name="hierarchy_level">6</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="cn_prev_year_earnings_allocated_earnings" model="account.report.expression">
+                                        <field name="label">allocated_earnings</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">- 4103 - 4104</field>
+                                        <field name="date_scope">from_beginning</field>
+                                    </record>
+                                    <record id="cn_prev_year_earnings_balance_domain" model="account.report.expression">
+                                        <field name="label">balance_domain</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">- 5 - 60 - 61 - 62 - 63 - 64 - 65 - 66 - 67 - 68 - 69</field>
+                                        <field name="date_scope">from_beginning</field>
+                                    </record>
+                                    <record id="cn_prev_year_earnings_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">CN_PREV_YEAR_EARNINGS.balance_domain + CN_PREV_YEAR_EARNINGS.allocated_earnings - CN_CURR_YEAR_EARNINGS.balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cn_asbe_bs_cn_tle" model="account.report.line">
+                <field name="name">Total Liabilities and Owners&apos; Equity (or Shareholders&apos; Equity)</field>
+                <field name="code">CN_TLE</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="aggregation_formula">CN_L.balance + CN_E.balance</field>
+            </record>
+        </field>
+    </record>
+</odoo>

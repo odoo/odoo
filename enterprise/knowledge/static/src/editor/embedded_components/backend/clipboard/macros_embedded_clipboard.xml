@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="knowledge.MacrosEmbeddedClipboard" t-inherit="knowledge.EmbeddedClipboard" t-inherit-mode="primary">
+        <xpath expr='//EmbeddedComponentToolbarButton[@name="&apos;copyToClipboard&apos;"]' position="before">
+            <EmbeddedComponentToolbarButton
+                hidden="!targetRecordInfo?.canPostMessages"
+                icon="'fa-envelope'"
+                label.translate="Send as Message"
+                onClick.bind="onClickSendAsMessage"
+            />
+            <EmbeddedComponentToolbarButton
+                hidden="!targetRecordInfo?.withHtmlField"
+                icon="'fa-pencil-square'"
+                label="htmlFieldTargetMessage"
+                onClick.bind="onClickUseAsDescription"
+            />
+        </xpath>
+    </t>
+</templates>

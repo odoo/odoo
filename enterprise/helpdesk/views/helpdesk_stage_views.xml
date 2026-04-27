@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="helpdesk_stage_view_tree" model="ir.ui.view">
+        <field name="name">helpdesk.stages.list</field>
+        <field name="model">helpdesk.stage</field>
+        <field name="arch" type="xml">
+            <list string="Stage" multi_edit="1" sample="1" delete="0">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="team_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
+                <field name="template_id" options="{'no_create': True}" optional="hide"/>
+                <field name="fold" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="helpdesk_stage_view_tree_inherited" model="ir.ui.view">
+        <field name="name">helpdesk.stages.tree.inherit</field>
+        <field name="model">helpdesk.stage</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_stage_view_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='team_ids']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='template_id']" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="helpdesk_stage_view_search" model="ir.ui.view">
+        <field name="name">helpdesk.stages.search</field>
+        <field name="model">helpdesk.stage</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="team_ids"/>
+                <field name="template_id" domain="[('model', '=', 'helpdesk.ticket')]"/>
+                <filter string="Archived" name="active" domain="[('active', '=' ,False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="helpdesk_stage_view_kanban" model="ir.ui.view">
+        <field name="name">helpdesk.stages.kanban</field>
+        <field name="model">helpdesk.stage</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="sequence" widget="handle"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="fw-bolder fs-5"/>
+                        <field name="team_ids" options="{'color_field': 'color'}" widget="many2many_tags"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="helpdesk_stage_view_form" model="ir.ui.view">
+        <field name="name">helpdesk.stage.form</field>
+        <field name="model">helpdesk.stage</field>
+        <field name="arch" type="xml">
+            <form string="Stage Search" delete="0">
+                <field name="active" invisible="1" />
+                <sheet>
+                    <div class="oe_button_box" name="button_box" invisible="not context.get('display_stat_button', False)">
+                        <button class="oe_stat_button" type="object" name="action_open_helpdesk_ticket" icon="fa-life-ring" invisible="ticket_count == 0">
+                            <field name="ticket_count" widget="statinfo" string="Tickets"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active" />
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="template_id" context="{'default_model': 'helpdesk.ticket'}"/>
+                            <field name="sequence" groups="base.group_no_one"/>
+                        </group>
+                        <group>
+                            <field name="fold"/>
+                            <field name="team_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="unlink_helpdesk_stage_action" model="ir.actions.server">
+        <field name="name">Delete</field>
+        <field name="model_id" ref="helpdesk.model_helpdesk_stage"/>
+        <field name="binding_model_id" ref="helpdesk.model_helpdesk_stage"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_unlink_wizard(stage_view=True)</field>
+    </record>
+
+    <record id="helpdesk_stage_action" model="ir.actions.act_window">
+        <field name="name">Stages</field>
+        <field name="res_model">helpdesk.stage</field>
+        <field name="path">helpdesk-stages</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="search_view_id" ref="helpdesk_stage_view_search"/>
+        <field name="context">{'display_stat_button': True}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No stages found. Let's create one!
+          </p><p>
+            Adapt your pipeline to your workflow and track the progress of your tickets.
+          </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_stage_team_action" model="ir.actions.act_window">
+        <field name="name">Team Stages</field>
+        <field name="res_model">helpdesk.stage</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="search_view_id" ref="helpdesk_stage_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No stages found. Let's create one!
+            </p><p>
+                Adapt your pipeline to your workflow and track the progress of your tickets.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_stage_tree_view_team" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="helpdesk_stage_view_tree_inherited"/>
+        <field name="act_window_id" ref="helpdesk_stage_team_action"/>
+    </record>
+
+</odoo>

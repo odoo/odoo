@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.StudioHomeMenu" t-inherit="web_enterprise.HomeMenu" t-inherit-mode="primary" t-translation="off">
+    <xpath expr="//div[hasclass('o_home_menu')]" position="attributes">
+        <attribute name="class" add="o_studio_home_menu" separator=" " />
+        <attribute name="t-attf-style">
+        {{ backgroundImageUrl ? "background-image: radial-gradient(circle, rgba(0,0,0, 0) 0%, rgba(0,0,0, 1) 100%), repeating-linear-gradient(45deg, rgba(255,255,255, .05), rgba(255,255,255, .05) 30px, rgba(0,0,0, .05) 30px, rgba(0,0,0, .05) 60px), url(" + backgroundImageUrl + ");" : '' }}
+      </attribute>
+    </xpath>
+    <!-- New App button -->
+    <xpath expr="//div[hasclass('o_apps')]/div/a[hasclass('o_app')][hasclass('o_menuitem')]" position="attributes">
+        <attribute name="t-att-class">{
+            o_focused: appIndex === app_index,
+            'o_web_studio_new_app': app.isNewAppButton
+        }</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_draggable')]" position="attributes">
+        <attribute name="t-attf-class" add="{{ app.isNewAppButton ? 'order-first' : '' }}" />
+    </xpath>
+    <!-- Edit icons -->
+    <xpath expr="//div[hasclass('o_apps')]/div/a[hasclass('o_app')][hasclass('o_menuitem')]" position="inside">
+        <a t-if="!app.isNewAppButton" class="o_web_studio_edit_icon lh-1" t-on-click.stop.prevent="() => this.onEditIconClick(app)">
+            <i class="fa fa-pencil-square" />
+        </a>
+    </xpath>
+</t>
+
+</templates>

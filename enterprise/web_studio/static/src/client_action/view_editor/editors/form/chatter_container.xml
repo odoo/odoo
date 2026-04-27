@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web_studio.ChatterContainer" t-inherit="mail.Chatter">
+        <xpath expr='//div[hasclass("o-mail-Chatter")]' position="inside">
+            <div class="o_web_studio_overlay"/>
+        </xpath>
+        <xpath expr='//div[hasclass("o-mail-Chatter")]' position="attributes">
+            <attribute name="t-on-click.capture.stop">onClick</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="web_studio.ChatterContainerHook">
+        <div t-if="env.viewEditorModel.isChatterAllowed" class="o_web_studio_add_chatter o_chatter" t-on-click.capture.stop="onClick">
+            <span class="container">
+                <span>
+                <i class="fa fa-comments" style="margin-right:10px"/>
+                Add Chatter Widget
+                </span>
+            </span>
+            <div class="o_Studio_ChatterContainer">
+                <Chatter threadModel="props.threadModel"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

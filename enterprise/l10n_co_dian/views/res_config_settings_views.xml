@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.l10n_co_edi</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <!-- Add a checkbox to allow chosing Carvajal or DIAN inside the settings block -->
+                <t id="l10n_co_edi_settings_content" position="before">
+                    <setting help="Select between sending electronic documents as an 'In house software' directly to the DIAN portal or with a 'Technology provider' as Carvajal."
+                             class="col-lg-12">
+                        <field name="l10n_co_dian_provider" widget="radio"/>
+                    </setting>
+                </t>
+
+                <!-- Make Carvajal settings block invisible if DIAN is used -->
+                <t id="l10n_co_edi_settings_content" position="attributes">
+                    <attribute name="invisible">l10n_co_dian_provider == 'dian'</attribute>
+                </t>
+
+                <!-- Add DIAN settings block -->
+                <t id="l10n_co_edi_settings_content" position="after">
+                    <t invisible="l10n_co_dian_provider == 'carvajal'">
+                        <setting class="w-100" help="Configure the operations modes for the different types of documents to be generated from Odoo">
+                            <field name="l10n_co_dian_operation_mode_ids" class="w-100" string="Operation Modes"/>
+                        </setting>
+                        <setting class="w-100" help="Add your certificates to sign your documents.">
+                            <field name="l10n_co_dian_certificate_ids" class="w-100" string="Certificates"/>
+                        </setting>
+                        <setting class="col-lg-12" help="Tick if you are testing workflows for electronic invoicing or if you need to activate the certification process environment">
+                            <field name="l10n_co_dian_test_environment"/>
+                        </setting>
+                        <setting class="col-lg-12" invisible="not l10n_co_dian_test_environment"
+                                 help="Send test electronic documents with your certificate to achieve the 'Enabled' status in the DIAN portal for 'in house software' operation mode">
+                            <field name="l10n_co_dian_certification_process"/>
+                        </setting>
+                        <setting class="col-lg-12" invisible="l10n_co_dian_test_environment"
+                                help="Activate this mode to be able to test electronic invoicing only with internal validations, but no responce from the DIAN environment.">
+                            <field name="l10n_co_dian_demo_mode"/>
+                        </setting>
+                    </t>
+                </t>
+            </field>
+        </record>
+    </data>
+</odoo>

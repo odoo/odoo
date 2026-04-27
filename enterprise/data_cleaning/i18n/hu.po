@@ -1,0 +1,1070 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* data_cleaning
+#
+# Translators:
+# Tamás Dombos, 2024
+# Ákos Nagy <akos.nagy@oregional.hu>, 2024
+# Martin Trigaux, 2024
+# gezza <geza.nagy@oregional.hu>, 2024
+# Tamás Németh <ntomasz81@gmail.com>, 2024
+# krnkris, 2024
+# 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-03 18:59+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2025\n"
+"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_group.py:0
+msgid "%(model)s - Similarity: %(similarity)s%%"
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_model.py:0
+msgid "%s (copy)"
+msgstr "%s (másolat)"
+
+#. module: data_cleaning
+#. odoo-javascript
+#: code:addons/data_cleaning/static/src/views/data_merge_list_view.js:0
+msgid "%s records have been merged"
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_duplicate
+msgid ""
+"' deduplication rule.<br/>\n"
+"You can merge them"
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.notification
+msgid ""
+"' field cleaning rule.<br/>\n"
+"You can validate changes"
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_model_form
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "<span class=\"me-1\">Every</span>"
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "<span class=\"oe_inline\">%</span>"
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "<span invisible=\"not custom_merge_method\">Model specific</span>"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.constraint,message:data_cleaning.constraint_data_merge_rule_uniq_model_id_field_id
+msgid "A field can only appear once!"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__action
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_model_form
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_list
+msgid "Action"
+msgstr "Akció"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__action_display
+msgid "Action Display"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__action_technical
+msgid "Action Technical"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__action
+msgid "Actions"
+msgstr "Akciók"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__active
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__active
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__active
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__active
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__active
+msgid "Active"
+msgstr "Aktív"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action_case__lower
+msgid "All Lowercase"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action_trim__all
+msgid "All Spaces"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action_case__upper
+msgid "All Uppercase"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_merge_model__removal_mode__archive
+msgid "Archive"
+msgstr "Archiválás"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_model_view_search
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_record_search
+msgid "Archived"
+msgstr "Archivált"
+
+#. module: data_cleaning
+#. odoo-javascript
+#: code:addons/data_cleaning/static/src/views/data_merge_list_view.js:0
+msgid ""
+"Are you sure that you want to merge the selected records in their respective "
+"group?"
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-javascript
+#: code:addons/data_cleaning/static/src/views/data_merge_list_view.js:0
+msgid "Are you sure that you want to merge these records?"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_model__cleaning_mode__automatic
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_merge_model__merge_mode__automatic
+msgid "Automatic"
+msgstr "Automatikus"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_ir_model__is_merge_enabled
+#: model_terms:ir.ui.view,arch_db:data_cleaning.ir_model_view_search
+msgid "Can Be Merged"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__action_case
+msgid "Case"
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_rule.py:0
+msgid "Case/Accent Insensitive Match"
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_model_form
+msgid "Clean"
+msgstr "Tiszta"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_model_form
+msgid "Cleaning Actions"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__cleaning_mode
+msgid "Cleaning Mode"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_data_cleaning_model
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__cleaning_model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__cleaning_model_id
+msgid "Cleaning Model"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_data_cleaning_record
+msgid "Cleaning Record"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_data_cleaning_rule
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_list
+msgid "Cleaning Rule"
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_search
+msgid "Cleaning Rules"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__company_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__company_id
+msgid "Company"
+msgstr "Vállalat"
+
+#. module: data_cleaning
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_merge_record
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_merge_record_notification
+msgid "Configure rules to identify duplicate records"
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_cleaning_record
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_cleaning_record_notification
+msgid "Configure rules to identify records to clean"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_res_partner
+msgid "Contact"
+msgstr "Kapcsolat"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_ir_model__ref_merge_ir_act_server_id
+msgid ""
+"Contextual menu action that redirects to the deduplicate view of data_merge."
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__country_id
+msgid "Country"
+msgstr "Ország"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__record_create_uid
+msgid "Created By"
+msgstr "Létrehozta"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__record_create_date
+msgid "Created On"
+msgstr "Létrehozva"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__create_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__create_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__create_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__create_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__create_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__create_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__create_uid
+msgid "Created by"
+msgstr "Létrehozta"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__create_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__create_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__create_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__create_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__create_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__create_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__create_date
+msgid "Created on"
+msgstr "Létrehozva"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__mix_by_company
+msgid "Cross-Company"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__current_value
+msgid "Current"
+msgstr "Jelenlegi"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__custom_merge_method
+msgid "Custom Merge Method"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.actions.server,name:data_cleaning.ir_cron_clean_records_ir_actions_server
+msgid "Data Cleaning: Clean Records"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.actions.server,name:data_cleaning.ir_cron_cleanup_ir_actions_server
+msgid "Data Merge: Cleanup Records"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.actions.server,name:data_cleaning.ir_cron_find_duplicates_ir_actions_server
+msgid "Data Merge: Find Duplicate Records"
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_cleaning_model.py:0
+msgid "Data to Clean"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_model__notify_frequency_period__days
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_merge_model__notify_frequency_period__days
+msgid "Days"
+msgstr "nap"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_record.py:0
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "Deduplicate"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.ui.menu,name:data_cleaning.menu_data_merge_config_rules_deduplication
+#: model:ir.ui.menu,name:data_cleaning.menu_data_merge_group
+msgid "Deduplication"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_data_merge_group
+msgid "Deduplication Group"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_data_merge_model
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__model_id
+msgid "Deduplication Model"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_data_merge_record
+msgid "Deduplication Record"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_data_merge_rule
+msgid "Deduplication Rule"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.actions.act_window,name:data_cleaning.action_data_merge_config
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__rule_ids
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "Deduplication Rules"
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_model.py:0
+msgid "Deduplication is forbidden on the model: %s"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_merge_model__removal_mode__delete
+msgid "Delete"
+msgstr "Törlés"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_storage_tree
+msgid "Details"
+msgstr "Részletek"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__differences
+msgid "Differences"
+msgstr "Különbségek"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_record__differences
+msgid "Differences with the master record"
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.ir_model_view_form
+msgid "Disable Merge"
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_list
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_record_list
+msgid "Discard"
+msgstr "Elvetés"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_search
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_record_search
+msgid "Discarded"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__display_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__display_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__display_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__display_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__display_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__display_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__display_name
+#: model:ir.model.fields,field_description:data_cleaning.field_ir_attachment_report__display_name
+msgid "Display Name"
+msgstr "Megjelenített név"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__divergent_fields
+msgid "Divergent Fields"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__domain
+msgid "Domain"
+msgstr "Tartomány"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__removal_mode
+msgid "Duplicate Removal"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.actions.act_window,name:data_cleaning.action_data_merge_record
+#: model:ir.actions.act_window,name:data_cleaning.action_data_merge_record_notification
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "Duplicates"
+msgstr "Duplikálások"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_model.py:0
+msgid "Duplicates to Merge"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_model__create_threshold
+msgid "Duplicates with a similarity below this threshold will not be suggested"
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.ir_model_view_form
+msgid "Enable Merge"
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_rule.py:0
+msgid "Exact Match"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__field_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__field_id
+msgid "Field"
+msgstr "Mező"
+
+#. module: data_cleaning
+#: model:ir.ui.menu,name:data_cleaning.menu_data_cleaning_config_rules_cleaning
+#: model:ir.ui.menu,name:data_cleaning.menu_data_cleaning_record
+msgid "Field Cleaning"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.actions.act_window,name:data_cleaning.action_data_cleaning_record
+#: model:ir.actions.act_window,name:data_cleaning.action_data_cleaning_record_notification
+msgid "Field Cleaning Records"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.actions.act_window,name:data_cleaning.action_data_cleaning_config
+msgid "Field Cleaning Rules"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__field_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__name
+msgid "Field Name"
+msgstr "Mező neve"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_field_form
+msgid "Field To Clean"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__field_values
+msgid "Field Values"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action_case__first
+msgid "First Letters to Uppercase"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action__phone
+msgid "Format Phone"
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_storage_search
+msgid "Group By"
+msgstr "Csoportosítás"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_ir_model__hide_merge_action
+msgid "Hide merge action button"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_cleaning_rule__action_case
+msgid ""
+"How the type case is set by the rule. 'First Letters to Uppercase' sets "
+"every letter to lowercase except the first letter of each word, which is set "
+"to uppercase."
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_duplicate
+#: model_terms:ir.ui.view,arch_db:data_cleaning.notification
+msgid "I've identified"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__id
+#: model:ir.model.fields,field_description:data_cleaning.field_ir_attachment_report__id
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_record_list
+msgid "ID"
+msgstr "ID"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_ir_model__is_merge_enabled
+msgid ""
+"If True, the generic data merge tool is available in the contextual menu of "
+"this model."
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_model__is_contextual_merge_action
+msgid ""
+"If True, this record is used for contextual menu action \"Merge\" on the "
+"target model."
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_ir_model__hide_merge_action
+msgid ""
+"If the model already has a custom merge method, the class attribute "
+"`_merge_disabled` is set to true on\n"
+"             that model and the generic data merge action should not be "
+"available on that model."
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__is_deleted
+msgid "Is Deleted"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__is_discarded
+msgid "Is Discarded"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__is_master
+msgid "Is Master"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__last_notification
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__last_notification
+msgid "Last Notification"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__write_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__write_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__write_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__write_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__write_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__write_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__write_uid
+msgid "Last Updated by"
+msgstr "Frissítette"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__write_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__write_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__write_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__write_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__write_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__write_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__write_date
+msgid "Last Updated on"
+msgstr "Frissítve"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_record__used_in
+msgid "List of other models referencing this record"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_cleaning_model__notify_user_ids
+msgid "List of users to notify when there are new records to clean"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_model__notify_user_ids
+msgid "List of users to notify when there are new records to merge"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_model__cleaning_mode__manual
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_merge_model__merge_mode__manual
+msgid "Manual"
+msgstr "Manuális"
+
+#. module: data_cleaning
+#: model:ir.actions.act_window,name:data_cleaning.ir_model_action_merge
+#: model:ir.ui.menu,name:data_cleaning.ir_model_menu_merge_action_manager
+msgid "Manual Merge"
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_record.py:0
+msgid "Manual Selection - %s"
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-javascript
+#. odoo-python
+#: code:addons/data_cleaning/models/ir_model.py:0
+#: code:addons/data_cleaning/static/src/views/data_merge_list_view.xml:0
+#: model:ir.actions.server,name:data_cleaning.merge_action_res_country
+#: model:ir.actions.server,name:data_cleaning.merge_action_res_country_state
+#: model:ir.actions.server,name:data_cleaning.merge_action_res_partner_category
+#: model:ir.actions.server,name:data_cleaning.merge_action_res_partner_industry
+#: model:ir.actions.server,name:data_cleaning.merge_action_res_partner_title
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_record_list
+msgid "Merge"
+msgstr "Egyesítés"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__match_mode
+msgid "Merge If"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__merge_mode
+msgid "Merge Mode"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_ir_model__ref_merge_ir_act_server_id
+msgid "Merge Server Action"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__is_contextual_merge_action
+msgid "Merge action attached"
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_model.py:0
+msgid "Missing required PostgreSQL extension: unaccent"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__res_model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__res_model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__res_model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__res_model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__res_model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__res_model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__res_model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_ir_attachment_report__res_model
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_record_search
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_storage_search
+msgid "Model"
+msgstr "Modell"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__res_model_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__res_model_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__res_model_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__res_model_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__res_model_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__res_model_name
+msgid "Model Name"
+msgstr "Modell név"
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_ir_model
+msgid "Models"
+msgstr "Modellek"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_model__notify_frequency_period__months
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_merge_model__notify_frequency_period__months
+msgid "Months"
+msgstr "Hónap"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__name
+msgid "Name"
+msgstr "Név"
+
+#. module: data_cleaning
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_cleaning_record
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_cleaning_record_notification
+msgid "No cleaning suggestions"
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_record.py:0
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_merge_record
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_merge_record_notification
+msgid "No duplicates found"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__notify_frequency
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__notify_frequency
+msgid "Notify"
+msgstr "Értesítés"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__notify_frequency_period
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__notify_frequency_period
+msgid "Notify Frequency Period"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__notify_user_ids
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__notify_user_ids
+msgid "Notify Users"
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_record.py:0
+msgid "Query Failed."
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__record_ids
+#: model:ir.model.fields,field_description:data_cleaning.field_ir_attachment_report__res_id
+msgid "Record"
+msgstr "Bejegyzés"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__group_id
+msgid "Record Group"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__res_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__res_id
+msgid "Record ID"
+msgstr "Bejegyzés azonosító"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__name
+msgid "Record Name"
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_model_form
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_search
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_record_search
+msgid "Records"
+msgstr "Bejegyzések"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__records_to_clean_count
+msgid "Records To Clean"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__records_to_merge_count
+msgid "Records To Merge Count"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_model__domain
+msgid "Records eligible for the deduplication process"
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_record.py:0
+msgid "Records must be of the same model"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_model__merge_threshold
+msgid ""
+"Records with a similarity percentage above this threshold will be "
+"automatically merged"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_ir_attachment_report__name
+msgid "Resource Name"
+msgstr "Erőforrás neve"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__rule_ids
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_record_search
+msgid "Rule"
+msgstr "Szabály"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__rule_ids
+msgid "Rules"
+msgstr "Szabályok"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action__html
+msgid "Scrap HTML"
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_model_form
+msgid "Select a model to configure cleaning actions"
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "Select a model to configure deduplication rules"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__sequence
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__sequence
+msgid "Sequence"
+msgstr "Sorszám"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action__case
+msgid "Set Type Case"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__similarity
+msgid "Similarity %"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__merge_threshold
+msgid "Similarity Threshold"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_group__similarity
+msgid ""
+"Similarity coefficient based on the amount of text fields exactly in common."
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.actions.act_window,name:data_cleaning.action_data_storage
+#: model:ir.model,name:data_cleaning.model_ir_attachment_report
+#: model:ir.ui.menu,name:data_cleaning.menu_data_cleaning_storage
+msgid "Storage"
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/report/data_storage.py:0
+msgid "Storage Detail: %(name)s"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_model__rule_ids
+msgid "Suggest to merge records matching at least one of these rules"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__suggested_value_display
+msgid "Suggested"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__suggested_value
+msgid "Suggested Value"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__create_threshold
+msgid "Suggestion Threshold"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action_trim__superfluous
+msgid "Superfluous Spaces"
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_cleaning_rule.py:0
+msgid ""
+"The Python module `phonenumbers` is not installed. Format phone will not "
+"work."
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-javascript
+#: code:addons/data_cleaning/static/src/views/data_merge_list_view.js:0
+msgid "The connection timed out. Please try merging fewer records at once."
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.constraint,message:data_cleaning.constraint_data_cleaning_model_check_notif_freq
+#: model:ir.model.constraint,message:data_cleaning.constraint_data_merge_model_check_notif_freq
+msgid "The notification frequency should be greater than 0"
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_record.py:0
+msgid "The referenced record does not exist"
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-javascript
+#: code:addons/data_cleaning/static/src/views/data_merge_list_view.js:0
+msgid "The selected records have been merged"
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_record.py:0
+msgid "The target model does not exists."
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_record.py:0
+msgid "There is not referenced record"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.constraint,message:data_cleaning.constraint_data_merge_model_uniq_name
+msgid "This name is already taken"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_ir_attachment_report__size
+msgid "Total Size"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__action_trim
+msgid "Trim"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action__trim
+msgid "Trim Spaces"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__field_id
+msgid "Unique ID Field"
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-javascript
+#: code:addons/data_cleaning/static/src/views/data_cleaning_list_view.xml:0
+#: code:addons/data_cleaning/static/src/views/data_merge_list_view.xml:0
+msgid "Unselect"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__record_write_uid
+msgid "Updated By"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__record_write_date
+msgid "Updated On"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__used_in
+msgid "Used In"
+msgstr "Használva"
+
+#. module: data_cleaning
+#. odoo-javascript
+#: code:addons/data_cleaning/static/src/views/data_cleaning_list_view.xml:0
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_list
+msgid "Validate"
+msgstr "Jóváhagyás"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_model__notify_frequency_period__weeks
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_merge_model__notify_frequency_period__weeks
+msgid "Weeks"
+msgstr "hét"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_model__mix_by_company
+msgid "When enabled, duplicates across different companies will be suggested"
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_cleaning_rule__action_trim
+msgid ""
+"Which spaces are trimmed by the rule. Leading, trailing, and successive "
+"spaces are considered superfluous."
+msgstr ""
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_record.py:0
+msgid "You must select at least two %s in order to merge them."
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_duplicate
+msgid "duplicate records with the '"
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_duplicate
+#: model_terms:ir.ui.view,arch_db:data_cleaning.notification
+msgid "here"
+msgstr "itt"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_merged
+msgid "merged into"
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_main
+msgid "merged into this one"
+msgstr ""
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.notification
+msgid "records to clean with the '"
+msgstr ""

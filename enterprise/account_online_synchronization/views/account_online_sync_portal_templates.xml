@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_renew_consent" name="Renew Consent">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="False"/>
+            <div class="row">
+                <div class="col-auto">
+                    <h4>Connect your bank account to Odoo</h4>
+                </div>
+            </div>
+            <div class="row justify-content-center mb-4">
+                <div class="col-auto">
+                    <img alt="Odoo" src="/web/static/img/odoo_logo.svg" style="height: 5em;" class="align-baseline w-auto"/>
+                </div>
+            </div>
+            <div class="js_reconnect">
+                <div class="row justify-content-center mb-5">
+                    <div class="col-auto">
+                        <table class="table table-responsive">
+                            <tbody>
+                                <tr>
+                                    <td class="text-end h5">Bank</td>
+                                    <td class="text-start ps-4 h5"><t t-out="bank"/><t t-if="bank">,</t> <t t-out="bank_account"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-end h5">Journal</td>
+                                    <td class="text-start ps-4 h5"><t t-out="journal"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-end h5">Latest Balance</td>
+                                    <td class="text-start ps-4 h5"><span t-att-class="latest_balance > 0 and '' or 'text-danger'" t-out="latest_balance_formatted"/> on <t t-out="latest_sync"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row justify-content-center mb-4 oe_online_sync">
+                    <div class="col-auto">
+                        <a id="renew_consent_button" role="button" class="btn btn-primary py-2" t-att-iframe-params="iframe_params">
+                            <h3 class="mb-0">Connect my Bank</h3>
+                        </a>
+                    </div>
+                </div>
+                <div class="row justify-content-center" style="color: #d4924a;">
+                    <div class="col-auto">
+                        Security Tip: always check the domain name of this page, before clicking on the button.
+                    </div>
+                </div>
+            </div>
+            <div class="js_reconnect d-none">
+                <div class="row justify-content-center mb-5">
+                    <div class="col-auto">
+                        <h2>Thank You!</h2>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

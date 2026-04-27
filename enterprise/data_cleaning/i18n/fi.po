@@ -1,0 +1,1111 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* data_cleaning
+#
+# Translators:
+# Tiffany Chang, 2024
+# Miku Laitinen <miku.laitinen@gmail.com>, 2024
+# Jussi Lehto <jussi@gulfeo.com>, 2024
+# Kari Lindgren <karisatu@gmail.com>, 2024
+# Janne Rättyä <janne.rattya@web-veistamo.fi>, 2024
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2024
+# Martin Trigaux, 2024
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
+# Wil Odoo, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-03 18:59+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_group.py:0
+msgid "%(model)s - Similarity: %(similarity)s%%"
+msgstr "%(model)s - Samankaltaisuus: %(similarity)s%%"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_model.py:0
+msgid "%s (copy)"
+msgstr "%s (kopio)"
+
+#. module: data_cleaning
+#. odoo-javascript
+#: code:addons/data_cleaning/static/src/views/data_merge_list_view.js:0
+msgid "%s records have been merged"
+msgstr "%s tietueet on yhdistetty"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_duplicate
+msgid ""
+"' deduplication rule.<br/>\n"
+"You can merge them"
+msgstr ""
+"' kaksoiskappalesääntö.<br/>\n"
+"Voit yhdistää ne"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.notification
+msgid ""
+"' field cleaning rule.<br/>\n"
+"You can validate changes"
+msgstr ""
+"' kentän puhdistussääntö.<br/>\n"
+"Voit vahvistaa muutokset"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_model_form
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "<span class=\"me-1\">Every</span>"
+msgstr "<span class=\"me-1\">Joka</span>"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "<span class=\"oe_inline\">%</span>"
+msgstr "<span class=\"oe_inline\"> % </span>"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "<span invisible=\"not custom_merge_method\">Model specific</span>"
+msgstr "<span invisible=\"not custom_merge_method\">Mallikohtainen</span>"
+
+#. module: data_cleaning
+#: model:ir.model.constraint,message:data_cleaning.constraint_data_merge_rule_uniq_model_id_field_id
+msgid "A field can only appear once!"
+msgstr "Kenttä voi esiintyä vain kerran!"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__action
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_model_form
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_list
+msgid "Action"
+msgstr "Toiminto"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__action_display
+msgid "Action Display"
+msgstr "Toimintanäyttö"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__action_technical
+msgid "Action Technical"
+msgstr "Toiminta Tekninen"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__action
+msgid "Actions"
+msgstr "Toiminnot"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__active
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__active
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__active
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__active
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__active
+msgid "Active"
+msgstr "Aktiivinen"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action_case__lower
+msgid "All Lowercase"
+msgstr "Kaikki gemenat"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action_trim__all
+msgid "All Spaces"
+msgstr "Kaikki välilyönnit"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action_case__upper
+msgid "All Uppercase"
+msgstr "Kaikki versaalit"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_merge_model__removal_mode__archive
+msgid "Archive"
+msgstr "Arkistoi"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_model_view_search
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_record_search
+msgid "Archived"
+msgstr "Arkistoitu"
+
+#. module: data_cleaning
+#. odoo-javascript
+#: code:addons/data_cleaning/static/src/views/data_merge_list_view.js:0
+msgid ""
+"Are you sure that you want to merge the selected records in their respective "
+"group?"
+msgstr "Oletko varma, että haluat yhdistää valitut tietueet omassa ryhmässään?"
+
+#. module: data_cleaning
+#. odoo-javascript
+#: code:addons/data_cleaning/static/src/views/data_merge_list_view.js:0
+msgid "Are you sure that you want to merge these records?"
+msgstr "Oletko varma, että haluat yhdistää nämä tietueet?"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_model__cleaning_mode__automatic
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_merge_model__merge_mode__automatic
+msgid "Automatic"
+msgstr "Automaattinen"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_ir_model__is_merge_enabled
+#: model_terms:ir.ui.view,arch_db:data_cleaning.ir_model_view_search
+msgid "Can Be Merged"
+msgstr "Voidaan yhdistää"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__action_case
+msgid "Case"
+msgstr "Aakkoslaji"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_rule.py:0
+msgid "Case/Accent Insensitive Match"
+msgstr "Kirjainkoosta tai aksenttimerkeistä riippumaton paritus"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_model_form
+msgid "Clean"
+msgstr "Siisti"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_model_form
+msgid "Cleaning Actions"
+msgstr "Puhdistustoimet"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__cleaning_mode
+msgid "Cleaning Mode"
+msgstr "Puhdistustila"
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_data_cleaning_model
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__cleaning_model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__cleaning_model_id
+msgid "Cleaning Model"
+msgstr "Puhdistusmalli"
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_data_cleaning_record
+msgid "Cleaning Record"
+msgstr "Puhdistusrekisteri"
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_data_cleaning_rule
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_list
+msgid "Cleaning Rule"
+msgstr "Puhdistussääntö"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_search
+msgid "Cleaning Rules"
+msgstr "Siivoussäännöt"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__company_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__company_id
+msgid "Company"
+msgstr "Yritys"
+
+#. module: data_cleaning
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_merge_record
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_merge_record_notification
+msgid "Configure rules to identify duplicate records"
+msgstr "Määritä säännöt päällekkäisten tietueiden tunnistamiseksi"
+
+#. module: data_cleaning
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_cleaning_record
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_cleaning_record_notification
+msgid "Configure rules to identify records to clean"
+msgstr "Määritä säännöt puhdistettavien tietueiden tunnistamiseksi"
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_res_partner
+msgid "Contact"
+msgstr "Kontakti"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_ir_model__ref_merge_ir_act_server_id
+msgid ""
+"Contextual menu action that redirects to the deduplicate view of data_merge."
+msgstr ""
+"Kontekstivalikon toiminto, joka ohjaa data_merge-ohjelman deduplicate-"
+"näkymään."
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__country_id
+msgid "Country"
+msgstr "Maa"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__record_create_uid
+msgid "Created By"
+msgstr "Luonut"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__record_create_date
+msgid "Created On"
+msgstr "Luotu"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__create_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__create_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__create_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__create_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__create_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__create_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__create_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__create_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__create_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__create_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__create_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__create_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__create_date
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__mix_by_company
+msgid "Cross-Company"
+msgstr "Yritysten välinen"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__current_value
+msgid "Current"
+msgstr "Nykyinen"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__custom_merge_method
+msgid "Custom Merge Method"
+msgstr "Mukautettu yhdistämismenetelmä"
+
+#. module: data_cleaning
+#: model:ir.actions.server,name:data_cleaning.ir_cron_clean_records_ir_actions_server
+msgid "Data Cleaning: Clean Records"
+msgstr "Tietojen puhdistus: Puhtaat tietueet"
+
+#. module: data_cleaning
+#: model:ir.actions.server,name:data_cleaning.ir_cron_cleanup_ir_actions_server
+msgid "Data Merge: Cleanup Records"
+msgstr "Tietojen yhdistäminen: Tietueiden puhdistus"
+
+#. module: data_cleaning
+#: model:ir.actions.server,name:data_cleaning.ir_cron_find_duplicates_ir_actions_server
+msgid "Data Merge: Find Duplicate Records"
+msgstr "Tietojen yhdistäminen: Etsi päällekkäiset tietueet"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_cleaning_model.py:0
+msgid "Data to Clean"
+msgstr "Puhdistettavat tiedot"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_model__notify_frequency_period__days
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_merge_model__notify_frequency_period__days
+msgid "Days"
+msgstr "Päivää"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_record.py:0
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "Deduplicate"
+msgstr "Poista kaksoiskappaleet"
+
+#. module: data_cleaning
+#: model:ir.ui.menu,name:data_cleaning.menu_data_merge_config_rules_deduplication
+#: model:ir.ui.menu,name:data_cleaning.menu_data_merge_group
+msgid "Deduplication"
+msgstr "Kaksoiskappaleiden poisto"
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_data_merge_group
+msgid "Deduplication Group"
+msgstr "Kaksoiskappaleiden ryhmä"
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_data_merge_model
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__model_id
+msgid "Deduplication Model"
+msgstr "Kaksoiskappaleiden tunnistuksen malli"
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_data_merge_record
+msgid "Deduplication Record"
+msgstr "Kaksoiskappaleiden tietue"
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_data_merge_rule
+msgid "Deduplication Rule"
+msgstr "Kaksoiskappaleiden sääntö"
+
+#. module: data_cleaning
+#: model:ir.actions.act_window,name:data_cleaning.action_data_merge_config
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__rule_ids
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "Deduplication Rules"
+msgstr "Kaksoiskappaleiden säännöt"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_model.py:0
+msgid "Deduplication is forbidden on the model: %s"
+msgstr "Kaksoiskappaleiden poisto on kiellettyä mallissa: %s"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_merge_model__removal_mode__delete
+msgid "Delete"
+msgstr "Poista"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_storage_tree
+msgid "Details"
+msgstr "Tiedot"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__differences
+msgid "Differences"
+msgstr "Erot"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_record__differences
+msgid "Differences with the master record"
+msgstr "Erot master data -tietueeseen verrattuna"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.ir_model_view_form
+msgid "Disable Merge"
+msgstr "Poista yhdistäminen käytöstä"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_list
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_record_list
+msgid "Discard"
+msgstr "Hylkää"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_search
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_record_search
+msgid "Discarded"
+msgstr "Käytöstä poistetut"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__display_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__display_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__display_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__display_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__display_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__display_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__display_name
+#: model:ir.model.fields,field_description:data_cleaning.field_ir_attachment_report__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__divergent_fields
+msgid "Divergent Fields"
+msgstr "Erilaiset kentät"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__domain
+msgid "Domain"
+msgstr "Verkkotunnus"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__removal_mode
+msgid "Duplicate Removal"
+msgstr "Kaksoiskappaleiden poisto"
+
+#. module: data_cleaning
+#: model:ir.actions.act_window,name:data_cleaning.action_data_merge_record
+#: model:ir.actions.act_window,name:data_cleaning.action_data_merge_record_notification
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "Duplicates"
+msgstr "Kaksoiskappaleet"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_model.py:0
+msgid "Duplicates to Merge"
+msgstr "Yhdistettävät kaksoiskappaleet"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_model__create_threshold
+msgid "Duplicates with a similarity below this threshold will not be suggested"
+msgstr ""
+"Kaksoiskappaleita, joiden samankaltaisuus on alle tämän kynnysarvon, ei "
+"ehdoteta"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.ir_model_view_form
+msgid "Enable Merge"
+msgstr "Ota yhdistäminen käyttöön"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_rule.py:0
+msgid "Exact Match"
+msgstr "Tarkka vastaavuus"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__field_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__field_id
+msgid "Field"
+msgstr "Kenttä"
+
+#. module: data_cleaning
+#: model:ir.ui.menu,name:data_cleaning.menu_data_cleaning_config_rules_cleaning
+#: model:ir.ui.menu,name:data_cleaning.menu_data_cleaning_record
+msgid "Field Cleaning"
+msgstr "Kentän puhdistus"
+
+#. module: data_cleaning
+#: model:ir.actions.act_window,name:data_cleaning.action_data_cleaning_record
+#: model:ir.actions.act_window,name:data_cleaning.action_data_cleaning_record_notification
+msgid "Field Cleaning Records"
+msgstr "Kentän puhdistusrekisterit"
+
+#. module: data_cleaning
+#: model:ir.actions.act_window,name:data_cleaning.action_data_cleaning_config
+msgid "Field Cleaning Rules"
+msgstr "Kentän puhdistussäännöt"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__field_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__name
+msgid "Field Name"
+msgstr "Kentän nimi"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_field_form
+msgid "Field To Clean"
+msgstr "Kenttä puhdistettavaksi"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__field_values
+msgid "Field Values"
+msgstr "Kentän arvot"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action_case__first
+msgid "First Letters to Uppercase"
+msgstr "Ensimmäiset kirjaimet versaaliksi"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action__phone
+msgid "Format Phone"
+msgstr "Puhelinnumeron muotoilu"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_storage_search
+msgid "Group By"
+msgstr "Ryhmittely"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_ir_model__hide_merge_action
+msgid "Hide merge action button"
+msgstr "Piilota yhdistämistoimintopainike"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_cleaning_rule__action_case
+msgid ""
+"How the type case is set by the rule. 'First Letters to Uppercase' sets "
+"every letter to lowercase except the first letter of each word, which is set "
+"to uppercase."
+msgstr ""
+"Miten aakkoslajit asetetaan säännössä. 'First Letters to Uppercase' asettaa "
+"kaikki kirjaimet gemenaksi paitsi jokaisen sanan ensimmäisen kirjaimen, joka "
+"asetetaan versaaliksi."
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_duplicate
+#: model_terms:ir.ui.view,arch_db:data_cleaning.notification
+msgid "I've identified"
+msgstr "Olen tunnistanut"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__id
+#: model:ir.model.fields,field_description:data_cleaning.field_ir_attachment_report__id
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_record_list
+msgid "ID"
+msgstr "ID"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_ir_model__is_merge_enabled
+msgid ""
+"If True, the generic data merge tool is available in the contextual menu of "
+"this model."
+msgstr ""
+"Jos True, yleinen tietojen yhdistämistyökalu on käytettävissä tämän mallin "
+"kontekstivalikossa."
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_model__is_contextual_merge_action
+msgid ""
+"If True, this record is used for contextual menu action \"Merge\" on the "
+"target model."
+msgstr ""
+"Jos True, tätä tietuetta käytetään kohdemallin kontekstivalikon toiminnossa "
+"\"Yhdistä\"."
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_ir_model__hide_merge_action
+msgid ""
+"If the model already has a custom merge method, the class attribute "
+"`_merge_disabled` is set to true on\n"
+"             that model and the generic data merge action should not be "
+"available on that model."
+msgstr ""
+"Jos mallilla on jo mukautettu yhdistämismenetelmä, luokan attribuutti "
+"`_merge_disabled` asetetaan true:ksi seuraavassa tapauksessa: "
+"`_merge_disabled`\n"
+"             ja yleinen tietojen yhdistämistoiminto ei saa olla "
+"käytettävissä kyseisessä mallissa."
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__is_deleted
+msgid "Is Deleted"
+msgstr "On poistettu"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__is_discarded
+msgid "Is Discarded"
+msgstr "On hylätty"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__is_master
+msgid "Is Master"
+msgstr "On master"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__last_notification
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__last_notification
+msgid "Last Notification"
+msgstr "Viimeisin ilmoitus"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__write_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__write_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__write_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__write_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__write_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__write_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__write_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__write_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__write_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__write_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__write_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__write_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_record__used_in
+msgid "List of other models referencing this record"
+msgstr "Luettelo muista malleista, jotka viittaavat tähän tietueeseen"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_cleaning_model__notify_user_ids
+msgid "List of users to notify when there are new records to clean"
+msgstr ""
+"Luettelo käyttäjistä, joille ilmoitetaan, kun uusia tietueita on "
+"puhdistettavana"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_model__notify_user_ids
+msgid "List of users to notify when there are new records to merge"
+msgstr ""
+"Luettelo käyttäjistä, joille ilmoitetaan, kun on tullut uusia yhdistettäviä "
+"tietueita"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_model__cleaning_mode__manual
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_merge_model__merge_mode__manual
+msgid "Manual"
+msgstr "Manuaalinen"
+
+#. module: data_cleaning
+#: model:ir.actions.act_window,name:data_cleaning.ir_model_action_merge
+#: model:ir.ui.menu,name:data_cleaning.ir_model_menu_merge_action_manager
+msgid "Manual Merge"
+msgstr "Manuaalinen yhdistäminen"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_record.py:0
+msgid "Manual Selection - %s"
+msgstr "Manuaalinen valinta - %s"
+
+#. module: data_cleaning
+#. odoo-javascript
+#. odoo-python
+#: code:addons/data_cleaning/models/ir_model.py:0
+#: code:addons/data_cleaning/static/src/views/data_merge_list_view.xml:0
+#: model:ir.actions.server,name:data_cleaning.merge_action_res_country
+#: model:ir.actions.server,name:data_cleaning.merge_action_res_country_state
+#: model:ir.actions.server,name:data_cleaning.merge_action_res_partner_category
+#: model:ir.actions.server,name:data_cleaning.merge_action_res_partner_industry
+#: model:ir.actions.server,name:data_cleaning.merge_action_res_partner_title
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_record_list
+msgid "Merge"
+msgstr "Yhdistä"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__match_mode
+msgid "Merge If"
+msgstr "Yhdistä jos"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__merge_mode
+msgid "Merge Mode"
+msgstr "Yhdistämistila"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_ir_model__ref_merge_ir_act_server_id
+msgid "Merge Server Action"
+msgstr "Yhdistämisen Palvelintoiminto"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__is_contextual_merge_action
+msgid "Merge action attached"
+msgstr "Yhdistämistoiminnon liite"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_model.py:0
+msgid "Missing required PostgreSQL extension: unaccent"
+msgstr "Puuttuu vaadittu PostgreSQL-laajennus: unaccent"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__res_model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__res_model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__res_model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__res_model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__res_model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__res_model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__res_model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_ir_attachment_report__res_model
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_record_search
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_storage_search
+msgid "Model"
+msgstr "Malli"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__res_model_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__res_model_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__res_model_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__res_model_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__res_model_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__res_model_name
+msgid "Model Name"
+msgstr "Mallin nimi"
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_ir_model
+msgid "Models"
+msgstr "Mallit"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_model__notify_frequency_period__months
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_merge_model__notify_frequency_period__months
+msgid "Months"
+msgstr "Kuukaudet"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__name
+msgid "Name"
+msgstr "Nimi"
+
+#. module: data_cleaning
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_cleaning_record
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_cleaning_record_notification
+msgid "No cleaning suggestions"
+msgstr "Ei puhdistusehdotuksia"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_record.py:0
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_merge_record
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_merge_record_notification
+msgid "No duplicates found"
+msgstr "Kaksoiskappaleita ei löydy"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__notify_frequency
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__notify_frequency
+msgid "Notify"
+msgstr "Ilmoita"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__notify_frequency_period
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__notify_frequency_period
+msgid "Notify Frequency Period"
+msgstr "Ilmoita taajuuden jakso"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__notify_user_ids
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__notify_user_ids
+msgid "Notify Users"
+msgstr "Ilmoita käyttäjille"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_record.py:0
+msgid "Query Failed."
+msgstr "Kysely epäonnistui."
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__record_ids
+#: model:ir.model.fields,field_description:data_cleaning.field_ir_attachment_report__res_id
+msgid "Record"
+msgstr "Tietue"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__group_id
+msgid "Record Group"
+msgstr "Tietueryhmä"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__res_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__res_id
+msgid "Record ID"
+msgstr "Tietue ID"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__name
+msgid "Record Name"
+msgstr "Tiedon nimi"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_model_form
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_search
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_record_search
+msgid "Records"
+msgstr "Tiedot"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__records_to_clean_count
+msgid "Records To Clean"
+msgstr "Tietueita puhdistettavana"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__records_to_merge_count
+msgid "Records To Merge Count"
+msgstr "Yhdistettävien tietueiden määrä"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_model__domain
+msgid "Records eligible for the deduplication process"
+msgstr "Tietueet, joista voi poistaa kaksoiskappaleita"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_record.py:0
+msgid "Records must be of the same model"
+msgstr "Tietueiden on oltava samaa mallia"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_model__merge_threshold
+msgid ""
+"Records with a similarity percentage above this threshold will be "
+"automatically merged"
+msgstr ""
+"Tietueet, joiden samankaltaisuusprosentti ylittää tämän kynnysarvon, "
+"yhdistetään automaattisesti"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_ir_attachment_report__name
+msgid "Resource Name"
+msgstr "Resurssin nimi"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__rule_ids
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_record_search
+msgid "Rule"
+msgstr "Sääntö"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__rule_ids
+msgid "Rules"
+msgstr "Säännöt"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action__html
+msgid "Scrap HTML"
+msgstr "HTML-romu"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_model_form
+msgid "Select a model to configure cleaning actions"
+msgstr "Valitse malli puhdistustoimien määrittämistä varten"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "Select a model to configure deduplication rules"
+msgstr ""
+"Valitse malli, jonka avulla voit määrittää kaksoiskappaleiden poiston säännöt"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__sequence
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__sequence
+msgid "Sequence"
+msgstr "Järjestys"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action__case
+msgid "Set Type Case"
+msgstr "Aseta aakkoslaji"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_group__similarity
+msgid "Similarity %"
+msgstr "Samankaltaisuus %"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__merge_threshold
+msgid "Similarity Threshold"
+msgstr "Samankaltaisuuden kynnysarvo"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_group__similarity
+msgid ""
+"Similarity coefficient based on the amount of text fields exactly in common."
+msgstr ""
+"Samankaltaisuuskerroin, joka perustuu täsmälleen yhteisten tekstikenttien "
+"määrään."
+
+#. module: data_cleaning
+#: model:ir.actions.act_window,name:data_cleaning.action_data_storage
+#: model:ir.model,name:data_cleaning.model_ir_attachment_report
+#: model:ir.ui.menu,name:data_cleaning.menu_data_cleaning_storage
+msgid "Storage"
+msgstr "Varasto"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/report/data_storage.py:0
+msgid "Storage Detail: %(name)s"
+msgstr "Varastoinnin tiedot: %(name)s"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_model__rule_ids
+msgid "Suggest to merge records matching at least one of these rules"
+msgstr ""
+"Ehdota niiden tietueiden yhdistämistä, jotka vastaavat vähintään yhtä näistä "
+"säännöistä"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__suggested_value_display
+msgid "Suggested"
+msgstr "Ehdotettu"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__suggested_value
+msgid "Suggested Value"
+msgstr "Ehdotettu arvo"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_model__create_threshold
+msgid "Suggestion Threshold"
+msgstr "Ehdotuskynnys"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action_trim__superfluous
+msgid "Superfluous Spaces"
+msgstr "Turhat välilyönnit"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_cleaning_rule.py:0
+msgid ""
+"The Python module `phonenumbers` is not installed. Format phone will not "
+"work."
+msgstr ""
+"Python-moduulia `phonenumbers` ei ole asennettu. Format phone ei toimi."
+
+#. module: data_cleaning
+#. odoo-javascript
+#: code:addons/data_cleaning/static/src/views/data_merge_list_view.js:0
+msgid "The connection timed out. Please try merging fewer records at once."
+msgstr ""
+
+#. module: data_cleaning
+#: model:ir.model.constraint,message:data_cleaning.constraint_data_cleaning_model_check_notif_freq
+#: model:ir.model.constraint,message:data_cleaning.constraint_data_merge_model_check_notif_freq
+msgid "The notification frequency should be greater than 0"
+msgstr "Ilmeentymistiheyden on oltava suurempi kuin 0"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_record.py:0
+msgid "The referenced record does not exist"
+msgstr "Viitattua tietuetta ei ole olemassa"
+
+#. module: data_cleaning
+#. odoo-javascript
+#: code:addons/data_cleaning/static/src/views/data_merge_list_view.js:0
+msgid "The selected records have been merged"
+msgstr "Valitut tietueet on yhdistetty"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_record.py:0
+msgid "The target model does not exists."
+msgstr "Kohdemallia ei ole olemassa."
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_record.py:0
+msgid "There is not referenced record"
+msgstr "Viitattua tietuetta ei löydy"
+
+#. module: data_cleaning
+#: model:ir.model.constraint,message:data_cleaning.constraint_data_merge_model_uniq_name
+msgid "This name is already taken"
+msgstr "Tämä nimi on jo varattu"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_ir_attachment_report__size
+msgid "Total Size"
+msgstr "Koko yhteensä"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__action_trim
+msgid "Trim"
+msgstr "Trimmaa"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action__trim
+msgid "Trim Spaces"
+msgstr "Trimmaa välit"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_rule__field_id
+msgid "Unique ID Field"
+msgstr "Yksilöllinen ID-kenttä"
+
+#. module: data_cleaning
+#. odoo-javascript
+#: code:addons/data_cleaning/static/src/views/data_cleaning_list_view.xml:0
+#: code:addons/data_cleaning/static/src/views/data_merge_list_view.xml:0
+msgid "Unselect"
+msgstr "Poista valinta"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__record_write_uid
+msgid "Updated By"
+msgstr "Päivittäjä"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__record_write_date
+msgid "Updated On"
+msgstr "Päivitetty"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_merge_record__used_in
+msgid "Used In"
+msgstr "Käytössä"
+
+#. module: data_cleaning
+#. odoo-javascript
+#: code:addons/data_cleaning/static/src/views/data_cleaning_list_view.xml:0
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_list
+msgid "Validate"
+msgstr "Vahvista"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_model__notify_frequency_period__weeks
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_merge_model__notify_frequency_period__weeks
+msgid "Weeks"
+msgstr "Viikot"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_merge_model__mix_by_company
+msgid "When enabled, duplicates across different companies will be suggested"
+msgstr ""
+"Kun tämä on käytössä, päällekkäisyyksiä eri yhtiöiden välillä ehdotetaan"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_cleaning_rule__action_trim
+msgid ""
+"Which spaces are trimmed by the rule. Leading, trailing, and successive "
+"spaces are considered superfluous."
+msgstr ""
+"Mitkä välilyönnit leikataan säännöllä. Johtavat, peräkkäiset ja peräkkäiset "
+"välilyönnit katsotaan tarpeettomiksi."
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_merge_record.py:0
+msgid "You must select at least two %s in order to merge them."
+msgstr "Sinun on valittava vähintään kaksi %s, jotta voit yhdistää ne."
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_duplicate
+msgid "duplicate records with the '"
+msgstr "päällekkäiset tietueet, joissa on '"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_duplicate
+#: model_terms:ir.ui.view,arch_db:data_cleaning.notification
+msgid "here"
+msgstr "tänne"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_merged
+msgid "merged into"
+msgstr "yhdistetty kohteeseen"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.data_merge_main
+msgid "merged into this one"
+msgstr "yhdistetty tähän"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.notification
+msgid "records to clean with the '"
+msgstr "tietueet, jotka puhdistetaan '"

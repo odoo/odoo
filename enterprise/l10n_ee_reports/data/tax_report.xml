@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_ee.tax_report" model="account.report">
+            <!-- Sequence is needed to ensure the closing entry is associated with the tax report and not its annex -->
+            <field name="sequence">1</field>
+            <field name="custom_handler_model_id" ref="model_l10n_ee_tax_report_handler"/>
+        </record>
+    </data>
+</odoo>

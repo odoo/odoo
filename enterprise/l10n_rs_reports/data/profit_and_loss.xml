@@ -1,0 +1,816 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_financial_report_rs_PnL" model="account.report">
+        <field name="name">Profit and Loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.rs"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_rs_PnL_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_rs_PnL_operating_result" model="account.report.line">
+                <field name="name">Operating profit/loss (A - B)</field>
+                <field name="code">RS_1030</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_rs_PnL_operating_result_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">RS_1001.balance - RS_1018.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_rs_PnL_A" model="account.report.line">
+                        <field name="name">A. Operating income (I + II + III + IV)</field>
+                        <field name="code">RS_1001</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rs_PnL_A_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RS_1002.balance + RS_1009.balance + RS_1016.balance + RS_1017.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_rs_PnL_A_I" model="account.report.line">
+                                <field name="name">I. Income from goods sold</field>
+                                <field name="code">RS_1002</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_A_I_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">RS_1003.balance + RS_1004.balance + RS_1005.balance + RS_1006.balance + RS_1007.balance + RS_1008.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_rs_PnL_A_I_1" model="account.report.line">
+                                        <field name="name">1. Goods sold to domestic parent companies and subsidiaries</field>
+                                        <field name="code">RS_1003</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_A_I_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-600</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_rs_PnL_A_I_2" model="account.report.line">
+                                        <field name="name">2. Goods sold to foreign parent companies and subsidiaries</field>
+                                        <field name="code">RS_1004</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_A_I_2_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-601</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_rs_PnL_A_I_3" model="account.report.line">
+                                        <field name="name">3. Goods sold to other associated companies on the domestic market</field>
+                                        <field name="code">RS_1005</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_A_I_3_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-602</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_rs_PnL_A_I_4" model="account.report.line">
+                                        <field name="name">4. Goods sold to other associated companies on the foreign market</field>
+                                        <field name="code">RS_1006</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_A_I_4_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-603</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_rs_PnL_A_I_5" model="account.report.line">
+                                        <field name="name">5. Goods sold to domestic customers</field>
+                                        <field name="code">RS_1007</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_A_I_5_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-604</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_rs_PnL_A_I_6" model="account.report.line">
+                                        <field name="name">6. Goods sold to foreign customers</field>
+                                        <field name="code">RS_1008</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_A_I_6_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-605</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_rs_PnL_A_II" model="account.report.line">
+                                <field name="name">II. Income from products sold and services provided</field>
+                                <field name="code">RS_1009</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_A_II_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">RS_1010.balance + RS_1011.balance + RS_1012.balance + RS_1013.balance + RS_1014.balance + RS_1015.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_rs_PnL_A_II_1" model="account.report.line">
+                                        <field name="name">1. Products sold and services provided to domestic parent companies and subsidiaries</field>
+                                        <field name="code">RS_1010</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_A_II_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-610</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_rs_PnL_A_II_2" model="account.report.line">
+                                        <field name="name">2. Products sold and services provided to foreign parent companies and subsidiaries</field>
+                                        <field name="code">RS_1011</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_A_II_2_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-611</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_rs_PnL_A_II_3" model="account.report.line">
+                                        <field name="name">3. Products sold and services provided to other associated companies on the domestic market</field>
+                                        <field name="code">RS_1012</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_A_II_3_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-612</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_rs_PnL_A_II_4" model="account.report.line">
+                                        <field name="name">4. Products sold and services provided to other associated companies on the foreign market</field>
+                                        <field name="code">RS_1013</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_A_II_4_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-613</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_rs_PnL_A_II_5" model="account.report.line">
+                                        <field name="name">5. Products sold and services provided to domestic customers</field>
+                                        <field name="code">RS_1014</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_A_II_5_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-614</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_rs_PnL_A_II_6" model="account.report.line">
+                                        <field name="name">6. Products sold and services provided to foreign customers</field>
+                                        <field name="code">RS_1015</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_A_II_6_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-615</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_rs_PnL_A_III" model="account.report.line">
+                                <field name="name">III. Income from premiums, subsidies, grants, donations and similar</field>
+                                <field name="code">RS_1016</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_A_III_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-64</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_rs_PnL_A_IV" model="account.report.line">
+                                <field name="name">IV. Other operating income</field>
+                                <field name="code">RS_1017</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_A_IV_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-65</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rs_PnL_B" model="account.report.line">
+                        <field name="name">B. Operating expenses (I - II - III + IV + V + VI + VII + VIII + IX + X + XI)</field>
+                        <field name="code">RS_1018</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rs_PnL_B_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RS_1019.balance - RS_1020.balance - RS_1021.balance + RS_1022.balance + RS_1023.balance + RS_1024.balance + RS_1025.balance + RS_1026.balance + RS_1027.balance + RS_1028.balance + RS_1029.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_rs_PnL_B_I" model="account.report.line">
+                                <field name="name">I. Cost of goods sold</field>
+                                <field name="code">RS_1019</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_B_I_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">50</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_rs_PnL_B_II" model="account.report.line">
+                                <field name="name">II. Revenue from undertaking for own purposes</field>
+                                <field name="code">RS_1020</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_B_II_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-62</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_rs_PnL_B_III" model="account.report.line">
+                                <field name="name">III. Increase in inventories of work in progress and finished products and unfinished services</field>
+                                <field name="code">RS_1021</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_B_III_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-630</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_rs_PnL_B_IV" model="account.report.line">
+                                <field name="name">IV. Decrease in inventories of work in progress and finished products and unfinished services</field>
+                                <field name="code">RS_1022</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_B_IV_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">631</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_rs_PnL_B_V" model="account.report.line">
+                                <field name="name">V. Raw material costs</field>
+                                <field name="code">RS_1023</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_B_V_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">51\(513)</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_rs_PnL_B_VI" model="account.report.line">
+                                <field name="name">VI. Fuel and energy costs</field>
+                                <field name="code">RS_1024</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_B_VI_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">513</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_rs_PnL_B_VII" model="account.report.line">
+                                <field name="name">VII. Salaries, wages and other personal indemnities</field>
+                                <field name="code">RS_1025</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_B_VII_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">52</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_rs_PnL_B_VIII" model="account.report.line">
+                                <field name="name">VIII. Production services costs</field>
+                                <field name="code">RS_1026</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_B_VIII_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">53</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_rs_PnL_B_IX" model="account.report.line">
+                                <field name="name">IX. Depreciation costs</field>
+                                <field name="code">RS_1027</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_B_IX_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">540</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_rs_PnL_B_X" model="account.report.line">
+                                <field name="name">X. Long-term provision costs</field>
+                                <field name="code">RS_1028</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_B_X_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">54\(540)</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_rs_PnL_B_XI" model="account.report.line">
+                                <field name="name">XI. Intangible costs</field>
+                                <field name="code">RS_1029</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_B_XI_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">55</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_rs_PnL_financial_result" model="account.report.line">
+                <field name="name">Profit from financing (C - D)</field>
+                <field name="code">RS_1048</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_rs_PnL_financial_result_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">RS_1032.balance - RS_1040.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_rs_PnL_C" model="account.report.line">
+                        <field name="name">C. Financial income (I + II + III)</field>
+                        <field name="code">RS_1032</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rs_PnL_C_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RS_1033.balance + RS_1038.balance + RS_1039.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_rs_PnL_C_I" model="account.report.line">
+                                <field name="name">I. Financial income from associated companies and other financial income (1034 + 1035 + 1036 + 1037)</field>
+                                <field name="code">RS_1033</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_C_I_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">RS_1034.balance + RS_1035.balance + RS_1036.balance + RS_1037.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_rs_PnL_C_I_1" model="account.report.line">
+                                        <field name="name">1. Financial income from parent company and subsidiaries</field>
+                                        <field name="code">RS_1034</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_C_I_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-660</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_rs_PnL_C_I_2" model="account.report.line">
+                                        <field name="name">2. Financial income from other associated companies</field>
+                                        <field name="code">RS_1035</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_C_I_2_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-661</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_rs_PnL_C_I_3" model="account.report.line">
+                                        <field name="name">3. Share in the profits of associated companies and joint ventures</field>
+                                        <field name="code">RS_1036</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_C_I_3_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-665</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_rs_PnL_C_I_4" model="account.report.line">
+                                        <field name="name">4. Other financial income</field>
+                                        <field name="code">RS_1037</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_C_I_4_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-669</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_rs_PnL_C_II" model="account.report.line">
+                                <field name="name">II. Income from interest (from third parties)</field>
+                                <field name="code">RS_1038</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_C_II_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-662</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_rs_PnL_C_III" model="account.report.line">
+                                <field name="name">III. Positive effects on exchange rate and effects of foreign currency clause (to third parties)</field>
+                                <field name="code">RS_1039</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_C_III_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-663 - 664</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rs_PnL_D" model="account.report.line">
+                        <field name="name">D. Financial expenses (I + II + III)</field>
+                        <field name="code">RS_1040</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rs_PnL_D_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RS_1041.balance + RS_1046.balance + RS_1047.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_rs_PnL_D_I" model="account.report.line">
+                                <field name="name">I. Financial expenses incurred with associated companies and other financial expenses (1042 + 1043 + 1044 + 1045)</field>
+                                <field name="code">RS_1041</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_D_I_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">RS_1042.balance + RS_1043.balance + RS_1044.balance + RS_1045.balance</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_rs_PnL_D_I_1" model="account.report.line">
+                                        <field name="name">1. Financial expenses incurred with parent company and subsidiaries</field>
+                                        <field name="code">RS_1042</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_D_I_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">560</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_rs_PnL_D_I_2" model="account.report.line">
+                                        <field name="name">2. Financial expenses incurred with other associated companies</field>
+                                        <field name="code">RS_1043</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_D_I_2_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">561</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_rs_PnL_D_I_3" model="account.report.line">
+                                        <field name="name">3. Share in losses of associated companies and joint ventures</field>
+                                        <field name="code">RS_1044</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_D_I_3_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">565</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_rs_PnL_D_I_4" model="account.report.line">
+                                        <field name="name">4. Other financial expenses</field>
+                                        <field name="code">RS_1045</field>
+                                        <field name="hierarchy_level" eval="3"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_rs_PnL_D_I_4_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">569 + 566</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_rs_PnL_D_II" model="account.report.line">
+                                <field name="name">II. Interest expenses (to third parties)</field>
+                                <field name="code">RS_1046</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_D_II_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">562</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_rs_PnL_D_III" model="account.report.line">
+                                <field name="name">III. Negative effects on exchange rate and effects of foreign currency clause (to third parties)</field>
+                                <field name="code">RS_1047</field>
+                                <field name="hierarchy_level" eval="2"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_rs_PnL_D_III_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">563 + 564</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_rs_PnL_other_result" model="account.report.line">
+                <field name="name">Profit from other regular operations and irregular operations (E - F + G - H + I - J)</field>
+                <field name="code">RS_other_result</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_rs_PnL_other_result_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">RS_1050.balance - RS_1051.balance + RS_1052.balance - RS_1053.balance + RS_1056.balance - RS_1057.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_rs_PnL_E" model="account.report.line">
+                        <field name="name">E. Income on value adjustment of other assets carried at fair value through profit and loss account</field>
+                        <field name="code">RS_1050</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rs_PnL_E_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-683 - 685</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rs_PnL_F" model="account.report.line">
+                        <field name="name">F. Expenses on value adjustment of other assets carried at fair value through profit and loss account</field>
+                        <field name="code">RS_1051</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rs_PnL_F_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">583 + 585</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rs_PnL_G" model="account.report.line">
+                        <field name="name">G. Other income</field>
+                        <field name="code">RS_1052</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rs_PnL_G_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-68\(683,685) - 67</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rs_PnL_H" model="account.report.line">
+                        <field name="name">H. Other expenses</field>
+                        <field name="code">RS_1053</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rs_PnL_H_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">58\(583,585) + 57</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rs_PnL_I" model="account.report.line">
+                        <field name="name">I. Net profit from discontinued operations, effects of changes in accounting policies and corrections of errors from previous periods</field>
+                        <field name="code">RS_1056</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rs_PnL_I_balance_unbound" model="account.report.expression">
+                                <field name="label">balance_unbound</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-69 - 59</field>
+                            </record>
+                            <record id="account_financial_report_rs_PnL_I_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RS_1056.balance_unbound</field>
+                                <field name="subformula">if_above(RSD(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rs_PnL_J" model="account.report.line">
+                        <field name="name">J. Net loss from discontinued operations, effects of changes in accounting policies and corrections of errors from previous periods</field>
+                        <field name="code">RS_1057</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rs_PnL_J_balance_unbound" model="account.report.expression">
+                                <field name="label">balance_unbound</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">69 + 59</field>
+                            </record>
+                            <record id="account_financial_report_rs_PnL_J_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RS_1057.balance_unbound</field>
+                                <field name="subformula">if_above(RSD(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_rs_PnL_results_before_tax" model="account.report.line">
+                <field name="name">Profit before tax (Operating + Financing + Other regular and Irregular operations)</field>
+                <field name="code">RS_1058</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_rs_PnL_results_before_tax_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">RS_1030.balance + RS_1048.balance + RS_other_result.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_rs_PnL_tax_profit" model="account.report.line">
+                <field name="name">Tax on profit (I + II - III + IV)</field>
+                <field name="code">RS_tax_profit</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_rs_PnL_tax_profit_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">RS_1060.balance + RS_1061.balance - RS_1062.balance + RS_1063.balance</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_rs_PnL_tax_profit_I" model="account.report.line">
+                        <field name="name">I. Tax expenses for the period</field>
+                        <field name="code">RS_1060</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rs_PnL_tax_profit_I_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">721</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rs_PnL_tax_profit_II" model="account.report.line">
+                        <field name="name">II. Deferred tax expenses of a period</field>
+                        <field name="code">RS_1061</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rs_PnL_tax_profit_II_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">7220</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rs_PnL_tax_profit_III" model="account.report.line">
+                        <field name="name">III. Deferred tax income of a period</field>
+                        <field name="code">RS_1062</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rs_PnL_tax_profit_III_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7221</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rs_PnL_tax_profit_IV" model="account.report.line">
+                        <field name="name">IV. Personal indemnities paid to employer</field>
+                        <field name="code">RS_1063</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rs_PnL_tax_profit_IV_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">723</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_rs_PnL_P" model="account.report.line">
+                <field name="name">P. Net profit/loss (profit before tax - tax on profit)</field>
+                <field name="code">RS_1064</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_rs_PnL_P_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">RS_1058.balance - RS_tax_profit.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+    <record id="action_account_report_rs_PnL" model="ir.actions.client">
+        <field name="name">Profit and Loss</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'model': 'account.report', 'report_id': ref('account_financial_report_rs_PnL')}"/>
+    </record>
+</odoo>

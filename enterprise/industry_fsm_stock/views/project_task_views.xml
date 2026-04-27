@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_task_form2_inherit" model="ir.ui.view">
+        <field name="name">view.task.form2.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_fsm_view_material']" position="before">
+                <button class="oe_stat_button" name="action_fsm_pick_up"
+                    type="object" icon="fa-truck" invisible="not partner_id and not is_fsm or not stock_move_customer_product_count or not allow_material or not allow_billable">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text d-flex align-items-baseline gap-1">
+                            <field name="stock_move_customer_product_count" widget="statinfo" string="Products" nolabel="1" class="oe_inline"/>
+                            <span>Products</span>
+                        </span>
+                        <span class="o_stat_text">
+                            to Pick up
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

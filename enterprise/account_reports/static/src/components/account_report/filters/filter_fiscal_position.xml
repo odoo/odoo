@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportFilterFiscalPosition">
+        <Dropdown>
+            <button class="btn btn-secondary">
+                <i class="fa fa-book me-1"/>Fiscal Position: <t t-esc="selectedFiscalPositionName"/>
+            </button>
+
+            <t t-set-slot="content">
+                <t t-if="controller.groups.account_readonly and controller.options.allow_domestic">
+                    <DropdownItem
+                        class="{ 'selected': controller.options.fiscal_position === 'domestic' }"
+                        onSelected="() => this.filterClicked({ optionKey: 'fiscal_position', optionValue: 'domestic', reload: true})"
+                    >
+                        Domestic
+                    </DropdownItem>
+                </t>
+
+                <t t-if="controller.groups.account_readonly">
+                    <DropdownItem
+                        class="{ 'selected': controller.options.fiscal_position === 'all' }"
+                        onSelected="() => this.filterClicked({ optionKey: 'fiscal_position', optionValue: 'all', reload: true})"
+                    >
+                        All
+                    </DropdownItem>
+                </t>
+
+                <t t-foreach="controller.options.available_vat_fiscal_positions" t-as="fiscalPosition" t-key="fiscalPosition_index">
+                    <t t-if="fiscalPosition_first">
+                        <div class="dropdown-divider"/>
+                    </t>
+
+                    <DropdownItem
+                        class="{ 'selected': controller.options.fiscal_position === fiscalPosition.id }"
+                        onSelected="() => this.filterClicked({ optionKey: 'fiscal_position', optionValue: fiscalPosition.id, reload: true})"
+                    >
+                        <t t-esc="fiscalPosition.name"/>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

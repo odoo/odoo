@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_work_entry_export_mixin_form_view" model="ir.ui.view">
+        <field name="name">hr.work.entry.export.mixin.form</field>
+        <field name="model">hr.work.entry.export.mixin</field>
+        <field name="arch" type="xml">
+            <form string="Export Employee Work Entries">
+                <header>
+                    <button name="action_populate"
+                            type="object"
+                            string="Populate"
+                            class="btn-primary"
+                            data-hotkey="p"
+                            invisible="eligible_employee_count"/>
+                    <button name="action_export_file"
+                            type="object"
+                            string="Generate Export File"
+                            class="btn-primary"
+                            data-hotkey="z"
+                            invisible="export_file or not eligible_employee_count"/>
+                    <button name="action_populate"
+                            type="object"
+                            string="Populate"
+                            data-hotkey="p"
+                            invisible="not eligible_employee_count"/>
+                    <button name="action_export_file"
+                            type="object"
+                            string="Generate Export File"
+                            data-hotkey="z"
+                            invisible="not export_file or not eligible_employee_count"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_employees"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-users">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="eligible_employee_count"/></span>
+                                <span class="o_stat_text">Eligible Employees</span>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <field name="reference_month"/>
+                        <field name="reference_year" widget="integer" options="{'type': 'number'}"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="export_filename" readonly="1" invisible="1"/>
+                        <field name="export_file" readonly="1" filename="export_filename" invisible="not export_file"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_work_entry_export_mixin_list_view" model="ir.ui.view">
+        <field name="name">hr.work.entry.export.mixin.list</field>
+        <field name="model">hr.work.entry.export.mixin</field>
+        <field name="arch" type="xml">
+            <list string="Export Employee Work Entries">
+                <field name="create_uid" widget="many2one_avatar_user"/>
+                <field name="period_start"/>
+                <field name="period_stop"/>
+                <field name="export_filename" column_invisible="True"/> <!-- needed for the widget -->
+                <field name="export_file" widget="binary" filename="export_filename"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_work_entry_export_employee_mixin_list_view" model="ir.ui.view">
+        <field name="name">hr.work.entry.export.employee.list</field>
+        <field name="model">hr.work.entry.export.employee.mixin</field>
+        <field name="arch" type="xml">
+            <list string="Eligible Employees" type="object" action="action_open_work_entries" editable="top">
+                <field name="export_id" column_invisible="1"/>
+                <field name="employee_id" widget="many2one_avatar_user"/>
+                <field name="contract_ids" string="contracts" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+</odoo>

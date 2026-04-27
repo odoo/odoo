@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="l10n_tr_reports.view_account_journal_form" model="ir.ui.view">
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='bank_account']//field[@name='default_account_id']" position="after">
+                <field name="l10n_tr_default_sales_return_account_id" string="Default Return from Sales Account" invisible="country_code != 'TR' or type != 'sale'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

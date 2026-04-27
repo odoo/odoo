@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_move_reversal" model="ir.ui.view">
+        <field name="name">account.move.reversal.form</field>
+        <field name="model">account.move.reversal</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_account_move_reversal"/>
+        <field name="arch" type="xml">
+            <field name="l10n_latam_document_number" position="after">
+                <field name="country_code" invisible="1"/>
+                <field name="l10n_ar_afip_fce_is_cancellation" invisible="country_code != 'AR'"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

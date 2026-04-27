@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_parameter_l10n_jo_min_sse" model="hr.rule.parameter">
+        <field name="name">Jordan Minimum Social Security Employee Deduction</field>
+        <field name="code">l10n_jo_min_sse_ded</field>
+        <field name="country_id" ref="base.jo"/>
+    </record>
+    <record id="rule_parameter_l10n_jo_min_sse_value_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">3349.00</field>
+        <field name="rule_parameter_id" ref="rule_parameter_l10n_jo_min_sse"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_l10n_jo_sse_rate" model="hr.rule.parameter">
+        <field name="name">Jordan Social Security Employee Deduction Rate %</field>
+        <field name="code">l10n_jo_sse_rate</field>
+        <field name="country_id" ref="base.jo"/>
+    </record>
+    <record id="rule_parameter_l10n_jo_sse_rate_value_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">-7.5</field>
+        <field name="rule_parameter_id" ref="rule_parameter_l10n_jo_sse_rate"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_l10n_jo_min_ssc" model="hr.rule.parameter">
+        <field name="name">Jordan Minimum Social Security Employer Contribution</field>
+        <field name="code">l10n_jo_min_ssc_contrib</field>
+        <field name="country_id" ref="base.jo"/>
+    </record>
+    <record id="rule_parameter_l10n_jo_min_ssc_value_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">3349.00</field>
+        <field name="rule_parameter_id" ref="rule_parameter_l10n_jo_min_ssc"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_l10n_jo_ssc_rate" model="hr.rule.parameter">
+        <field name="name">Jordan Social Security Employer Contribution Rate %</field>
+        <field name="code">l10n_jo_ssc_rate</field>
+        <field name="country_id" ref="base.jo"/>
+    </record>
+    <record id="rule_parameter_l10n_jo_ssc_rate_value_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">-14.25</field>
+        <field name="rule_parameter_id" ref="rule_parameter_l10n_jo_ssc_rate"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <!-- Tax Rates -->
+    <record id="rule_parameter_l10_jo_tax_rates" model="hr.rule.parameter">
+        <field name="name">Jordan Tax Bracket Rates</field>
+        <field name="code">l10_jo_tax_rates</field>
+        <field name="country_id" ref="base.jo"/>
+    </record>
+    <record id="rule_parameter_l10_jo_tax_rates_value_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+    # TAXB_from, TAXB_to, tax_pcnt
+    (0.00, 5_000.00, 0.05),
+    (5_000.01, 10_000.00, 0.10),
+    (10_000.01, 15_000.00, 0.15),
+    (15_000.01, 20_000.00, 0.20),
+    (20_000.01, 1_000_000.00, 0.25),
+    (1_000_000.01, 0.00, 0.30),
+]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_l10_jo_tax_rates"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+</odoo>

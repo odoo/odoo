@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_epf_report_view_list" model="ir.ui.view">
+        <field name="model">l10n.in.hr.payroll.epf.report</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="month"/>
+                <field name="year" options="{'type': 'number'}"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_epf_report_view_form" model="ir.ui.view">
+        <field name="model">l10n.in.hr.payroll.epf.report</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_export_xlsx" string="Export XLSX File" type="object" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="year" class="o_hr_narrow_field" options="{'type': 'number'}"/>
+                            <field name="month" class="o_hr_narrow_field"/>
+                            <field name="xls_filename" invisible="1"/>
+                        </group>
+                    </group>
+                    <div invisible="not xls_file">
+                        <h2>Generation Complete</h2>
+                        <p class="oe_inline" name="xls_file">
+                            Download the XLSX details file:<br/>
+                            <field name="xls_file" readonly="1" filename="xls_filename"/>
+                        </p>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_in_hr_epf_report_action" model="ir.actions.act_window">
+        <field name="name">EPF Report</field>
+        <field name="res_model">l10n.in.hr.payroll.epf.report</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="hr_epf_report_view_list"/>
+    </record>
+
+    <menuitem
+        id="l10n_in_hr_epf_report_menu"
+        name="EPF Report"
+        action="l10n_in_hr_epf_report_action"
+        parent="l10n_in_hr_payroll.menu_reporting_l10n_in"
+        sequence="5"/>
+</odoo>

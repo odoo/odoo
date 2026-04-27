@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="profit_loss_zm" model="account.report">
+        <field name="name">Profit and Loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="True"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.zm"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="profit_loss_zm_balance_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="profit_loss_zm_net_profit" model="account.report.line">
+                <field name="name">NET PROFIT</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">ZM_NET_PROFIT</field>
+                <field name="aggregation_formula"></field>
+                <field name="expression_ids">
+                    <record id="profit_loss_zm_net_profit_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ZM_INCOME.balance - ZM_COST_SALES.balance - ZM_EXPENSES.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="profit_loss_zm_income" model="account.report.line">
+                <field name="name">INCOME</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">ZM_INCOME</field>
+                <field name="aggregation_formula"></field>
+                <field name="expression_ids">
+                    <record id="profit_loss_zm_income_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ZM_INCOME_INCOME_SALES.balance + ZM_INCOME_INCOME_OTHER.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="profit_loss_zm_income_income_sales" model="account.report.line">
+                        <field name="name">Sales</field>
+                        <field name="code">ZM_INCOME_INCOME_SALES</field>
+                        <field name="account_codes_formula">-1</field>
+                    </record>
+                    <record id="profit_loss_zm_income_income_other" model="account.report.line">
+                        <field name="name">Other Income</field>
+                        <field name="code">ZM_INCOME_INCOME_OTHER</field>
+                        <field name="account_codes_formula">- 27 - 28 - 29 - 9990001</field>
+                    </record>
+                </field>
+            </record>
+            <record id="profit_loss_zm_cost_sales" model="account.report.line">
+                <field name="name">COST OF SALES</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">ZM_COST_SALES</field>
+                <field name="account_codes_formula">21 + 22 + 24 + 47 + 48</field>
+            </record>
+            <record id="profit_loss_zm_expenses" model="account.report.line">
+                <field name="name">EXPENSES</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">ZM_EXPENSES</field>
+                <field name="aggregation_formula"></field>
+                <field name="expression_ids">
+                    <record id="profit_loss_zm_expenses_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">
+                            ZM_EXPENSES_ADMINISTRATIVE.balance + ZM_EXPENSES_IT_RESEARCH.balance + ZM_EXPENSES_LICENSE.balance +
+                            ZM_EXPENSES_OTHER.balance + ZM_EXPENSES_PAYROLL_CONSULTING.balance + ZM_EXPENSES_PROFESSIONAL_FEES.balance +
+                            ZM_EXPENSES_PROPERTY_COSTS.balance + ZM_EXPENSES_STAFF_COSTS.balance
+                        </field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="profit_loss_zm_expenses_administrative" model="account.report.line">
+                        <field name="name">Administrative Costs</field>
+                        <field name="code">ZM_EXPENSES_ADMINISTRATIVE</field>
+                        <field name="account_codes_formula">340 + 37 + 39</field>
+                    </record>
+                    <record id="profit_loss_zm_expenses_it_research" model="account.report.line">
+                        <field name="name">IT and Research</field>
+                        <field name="code">ZM_EXPENSES_IT_RESEARCH</field>
+                        <field name="account_codes_formula">33</field>
+                    </record>
+                    <record id="profit_loss_zm_expenses_license" model="account.report.line">
+                        <field name="name">License costs</field>
+                        <field name="code">ZM_EXPENSES_LICENSE</field>
+                        <field name="account_codes_formula">455 + 456</field>
+                    </record>
+                    <record id="profit_loss_zm_expenses_other" model="account.report.line">
+                        <field name="name">Other Expenses</field>
+                        <field name="code">ZM_EXPENSES_OTHER</field>
+                        <field name="account_codes_formula">32 + 345 + 35 + 36 + 38 + 9990002</field>
+                    </record>
+                    <record id="profit_loss_zm_expenses_payroll_consulting" model="account.report.line">
+                        <field name="name">Payroll and Consulting</field>
+                        <field name="code">ZM_EXPENSES_PAYROLL_CONSULTING</field>
+                        <field name="account_codes_formula">440</field>
+                    </record>
+                    <record id="profit_loss_zm_expenses_professional_fees" model="account.report.line">
+                        <field name="name">Professional Fees</field>
+                        <field name="code">ZM_EXPENSES_PROFESSIONAL_FEES</field>
+                        <field name="account_codes_formula">31 + 40 + 42 + 46</field>
+                    </record>
+                    <record id="profit_loss_zm_expenses_property_costs" model="account.report.line">
+                        <field name="name">Property Costs</field>
+                        <field name="code">ZM_EXPENSES_PROPERTY_COSTS</field>
+                        <field name="account_codes_formula">41 + 43</field>
+                    </record>
+                    <record id="profit_loss_zm_expenses_staff_costs" model="account.report.line">
+                        <field name="name">Staff Expenses</field>
+                        <field name="code">ZM_EXPENSES_STAFF_COSTS</field>
+                        <field name="account_codes_formula">445 + 450</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+</odoo>

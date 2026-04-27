@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <!-- BASIC -->
+        <function model="hr.salary.rule" name="write">
+            <value model="hr.salary.rule" search="[
+                ('struct_id', '=', ref('l10n_ma_hr_payroll.hr_payroll_salary_ma_structure_base')),
+                ('code', '=', 'BASIC')]"/>
+            <value eval="{'sequence': 0}"/>
+        </function>
+
+        <!-- ALLOWANCES -->
+        <record id="l10n_ma_hr_rule_extra_hours_25" model="hr.salary.rule">
+            <field name="name">Extra Hours 25%</field>
+            <field name="code">EXTRA_HOURS_25</field>
+            <field name="sequence">1</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">input</field>
+            <field name="condition_other_input_id" ref="l10n_ma_hr_payroll.input_extra_hours_25"/>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="l10n_ma_hr_payroll.input_extra_hours_25"/>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+        <record id="l10n_ma_hr_rule_extra_hours_50" model="hr.salary.rule">
+            <field name="name">Extra Hours 50%</field>
+            <field name="code">EXTRA_HOURS_50</field>
+            <field name="sequence">2</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">input</field>
+            <field name="condition_other_input_id" ref="l10n_ma_hr_payroll.input_extra_hours_50"/>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="l10n_ma_hr_payroll.input_extra_hours_50"/>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+        <record id="l10n_ma_hr_rule_extra_hours_100" model="hr.salary.rule">
+            <field name="name">Extra Hours 100%</field>
+            <field name="code">EXTRA_HOURS_100</field>
+            <field name="sequence">3</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">input</field>
+            <field name="condition_other_input_id" ref="l10n_ma_hr_payroll.input_extra_hours_100"/>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="l10n_ma_hr_payroll.input_extra_hours_100"/>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+        <record id="l10n_ma_hr_rule_seniority" model="hr.salary.rule">
+            <field name="name">Seniority</field>
+            <field name="code">SENIORITY</field>
+            <field name="sequence">4</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">
+months = (payslip.date_from.year - contract.first_contract_date.year) * 12 + (payslip.date_from.month - contract.first_contract_date.month)
+result = months >= 24
+            </field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+months = (payslip.date_from.year - contract.first_contract_date.year) * 12 + (payslip.date_from.month - contract.first_contract_date.month)
+years = months / 12
+
+basic_salary = categories['BASIC']
+result = 0
+for low, high, rate in payslip._rule_parameter('l10n_ma_seniority'):
+    if low &lt;= years &lt;= high:
+        result = basic_salary * rate
+        break
+            </field>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+        <record id="l10n_ma_hr_rule_kilometric_exemption" model="hr.salary.rule">
+            <field name="name">Kilometric Exemption</field>
+            <field name="code">KILOMETRIC_EXEMPTION</field>
+            <field name="sequence">5</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.l10n_ma_kilometric_exemption</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = contract.l10n_ma_kilometric_exemption
+            </field>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+        <record id="l10n_ma_hr_rule_transportation_exemption" model="hr.salary.rule">
+            <field name="name">Transportation Exemption</field>
+            <field name="code">TRANSPORT_EXEMPTION</field>
+            <field name="sequence">6</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.l10n_ma_transport_exemption</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = contract.l10n_ma_transport_exemption
+            </field>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+
+        <record id="l10n_ma_hr_rule_hra" model="hr.salary.rule">
+            <field name="name">House Rent Allowance</field>
+            <field name="code">HRA</field>
+            <field name="sequence">7</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.l10n_ma_hra</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.l10n_ma_hra</field>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+
+        <record id="l10n_ma_hr_rule_da" model="hr.salary.rule">
+            <field name="name">Dearness Allowance</field>
+            <field name="code">DA</field>
+            <field name="sequence">8</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.l10n_ma_da</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.l10n_ma_da</field>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+
+        <record id="l10n_ma_hr_rule_meal" model="hr.salary.rule">
+            <field name="name">Meal Allowance</field>
+            <field name="code">MEAL_A</field>
+            <field name="sequence">9</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.l10n_ma_meal_allowance</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = min(contract.l10n_ma_meal_allowance, 0.2 * result_rules['BASIC']['total'])
+            </field>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+
+        <record id="l10n_ma_hr_rule_medical" model="hr.salary.rule">
+            <field name="name">Medical Allowance</field>
+            <field name="code">MED_A</field>
+            <field name="sequence">10</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.l10n_ma_medical_allowance</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.l10n_ma_medical_allowance</field>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+
+        <!-- GROSS -->
+        <function model="hr.salary.rule" name="write">
+            <value model="hr.salary.rule" search="[
+                ('struct_id', '=', ref('l10n_ma_hr_payroll.hr_payroll_salary_ma_structure_base')),
+                ('code', '=', 'GROSS')]"/>
+            <value eval="{'sequence': 20}"/>
+        </function>
+
+        <!-- UNTAXABLE DEDUCTIONS -->
+        <record id="l10n_ma_hr_payroll_rules_employee_cnss" model="hr.salary.rule">
+            <field name="name">Employee CNSS</field>
+            <field name="code">E_CNSS</field>
+            <field name="sequence">21</field>
+            <field name="category_id" ref="l10n_ma_hr_payroll.UNTAXABLE_DED"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+gross_salary = result_rules['GROSS']['total']
+cnss_coef = payslip._rule_parameter('l10n_ma_cnss') / 100
+cnss_ceil = payslip._rule_parameter('l10n_ma_cnss_max')
+result = min(cnss_ceil, gross_salary) * cnss_coef
+            </field>
+            <field name="partner_id" ref="hr_CNSS_register"/>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+
+        <record id="l10n_ma_hr_payroll_rules_job_loss_allowance" model="hr.salary.rule">
+            <field name="name">Job Loss Allowance</field>
+            <field name="code">JOB_LOSS_ALW</field>
+            <field name="sequence">22</field>
+            <field name="category_id" ref="l10n_ma_hr_payroll.UNTAXABLE_DED"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+gross_salary = result_rules['GROSS']['total']
+job_loss_coef = payslip._rule_parameter('l10n_ma_job_loss') / 100
+job_loss_ceil = payslip._rule_parameter('l10n_ma_job_loss_max')
+result = min(job_loss_ceil, gross_salary * job_loss_coef)
+            </field>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+
+        <record id="l10n_ma_hr_payroll_rules_employee_amo" model="hr.salary.rule">
+            <field name="category_id" ref="l10n_ma_hr_payroll.UNTAXABLE_DED"/>
+            <field name="name">Employee AMO</field>
+            <field name="code">E_AMO</field>
+            <field name="sequence">23</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+gross_salary = result_rules['GROSS']['total']
+amo_coef = payslip._rule_parameter('l10n_ma_job_loss') / 100
+result = gross_salary * amo_coef
+            </field>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+
+        <record id="l10n_ma_hr_payroll_rules_medical_alw" model="hr.salary.rule">
+            <field name="category_id" ref="l10n_ma_hr_payroll.UNTAXABLE_DED"/>
+            <field name="name">Medical Allowance</field>
+            <field name="code">MEDICAL_ALW</field>
+            <field name="sequence">24</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+gross_salary = result_rules['GROSS']['total']
+medical_alw_coef = payslip._rule_parameter('l10n_ma_medical_alw') / 100
+result = gross_salary * medical_alw_coef
+            </field>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+
+        <record id="l10n_ma_hr_payroll_rules_cimr" model="hr.salary.rule">
+            <field name="category_id" ref="l10n_ma_hr_payroll.UNTAXABLE_DED"/>
+            <field name="name">CIMR</field>
+            <field name="code">CIMR</field>
+            <field name="sequence">25</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+gross_salary = result_rules['GROSS']['total']
+cimr_coef = payslip._rule_parameter('l10n_ma_cimr') / 100
+cimr_ceil = payslip._rule_parameter('l10n_ma_cimr_max')
+result = min(cimr_ceil, gross_salary * cimr_coef)
+            </field>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+
+        <record id="l10n_ma_hr_payroll_rules_pro_contribution" model="hr.salary.rule">
+            <field name="category_id" ref="l10n_ma_hr_payroll.UNTAXABLE_DED"/>
+            <field name="name">Professional Contribution</field>
+            <field name="code">PRO_CONTRIBUTION</field>
+            <field name="sequence">26</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+gross_salary = result_rules['GROSS']['total']
+cimr_coef = payslip._rule_parameter('l10n_ma_cimr') / 100
+result = gross_salary * cimr_coef
+            </field>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+
+        <record id="l10n_ma_hr_payroll_rules_total_untaxable_ded" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="name">Total Untaxable Deductions</field>
+            <field name="code">TOTAL_UT_DED</field>
+            <field name="sequence">30</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = categories['UNTAXABLE_DED']
+            </field>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+
+        <!-- GROSS TAXABLE -->
+        <record id="l10n_ma_hr_rule_taxable_gross" model="hr.salary.rule">
+            <field name="name">Gross Taxable</field>
+            <field name="code">GROSS_TAXABLE</field>
+            <field name="sequence">40</field>
+            <field name="category_id" ref="hr_payroll.GROSS"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = min(
+    result_rules['GROSS']['total'] - categories['UNTAXABLE_DED'],
+    payslip._rule_parameter('l10n_ma_social_security_ceil')
+)
+            </field>
+            <field name="appears_on_payslip" eval="False"/>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+
+        <!-- INCOME TAX -->
+        <record id="l10n_ma_hr_rule_gross_income_tax" model="hr.salary.rule">
+            <field name="name">Gross Income Tax</field>
+            <field name="code">GROSS_INCOME_TAX</field>
+            <field name="sequence">50</field>
+            <field name="category_id" ref="l10n_ma_hr_payroll.INCOME_TAX"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+tax_breakdown = payslip._rule_parameter('l10n_ma_income_tax_breakdown')
+gross = result_rules['GROSS_TAXABLE']['total']
+result = 0
+for max_gross, coef, deduction in tax_breakdown:
+    if gross > max_gross:
+        continue
+    result = gross * (coef / 100) - deduction
+    break
+            </field>
+            <field name="appears_on_payslip" eval="False"/>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+
+        <record id="l10n_ma_hr_rule_family_charge" model="hr.salary.rule">
+            <field name="name">Family Charge</field>
+            <field name="code">FAMILY_CHARGE</field>
+            <field name="sequence">51</field>
+            <field name="category_id" ref="l10n_ma_hr_payroll.INCOME_TAX"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = 0
+if contract.employee_id.marital == 'married':
+    result+=30
+if contract.employee_id.children:
+    result+=min(180, 30*contract.employee_id.children)
+            </field>
+            <field name="appears_on_payslip" eval="False"/>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+
+        <record id="l10n_ma_hr_rule_net_income_tax" model="hr.salary.rule">
+            <field name="name">Net Income Tax</field>
+            <field name="code">NET_INCOME_TAX</field>
+            <field name="sequence">60</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+gross_ic = result_rules['GROSS_INCOME_TAX']['total']
+fam_charge = result_rules['FAMILY_CHARGE']['total']
+result = max(0, gross_ic - fam_charge)
+            </field>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+
+        <!-- DEDUCTIONS -->
+        <record id="l10n_ma_hr_rule_social_contribution" model="hr.salary.rule">
+            <field name="name">Social Contribution</field>
+            <field name="code">SOCIAL_CONTRIBUTION</field>
+            <field name="sequence">61</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+virtual_net = result_rules['GROSS']['total'] - categories['UNTAXABLE_DED'] - result_rules['NET_INCOME_TAX']['total']
+coef = payslip._rule_parameter('l10n_ma_social_contribution_coef') / 100
+min = payslip._rule_parameter('l10n_ma_min_net_for_soc_contr')
+result = 0
+if virtual_net > min:
+    result = coef * virtual_net
+            </field>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+
+        <record id="l10n_ma_hr_salary_rule_av_sal" model="hr.salary.rule">
+            <field name="code">AVS</field>
+            <field name="name">Avance sur Salaire</field>
+            <field name="sequence">62</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="condition_select">python</field>
+            <field name="amount_select">code</field>
+            <field name="condition_python">result = 'AVS' in inputs > 0</field>
+            <field name="amount_python_compute">
+result = -inputs['AVS'].amount
+result_name = inputs['AVS'].name
+            </field>
+            <field name="struct_id" ref="hr_payroll_salary_ma_structure_base"/>
+        </record>
+
+        <!-- NET -->
+        <function model="hr.salary.rule" name="write">
+            <value model="hr.salary.rule" search="[
+                ('struct_id', '=', ref('l10n_ma_hr_payroll.hr_payroll_salary_ma_structure_base')),
+                ('code', '=', 'NET')]"/>
+            <value eval="{'amount_python_compute': &quot;result = result_rules['GROSS']['total'] - categories['DED'] - result_rules['NET_INCOME_TAX']['total']&quot;}"/>
+        </function>
+    </data>
+</odoo>

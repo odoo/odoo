@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sign.KanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="attributes">
+            <attribute name="class" add="o_sign_view" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="before">
+            <div t-if="dragState.showDragZone" class="o_dropzone">
+                <i class="fa fa-upload fa-10x"/>
+            </div>
+        </xpath>
+        <t t-call="web.ActionHelper" position="replace">
+            <t t-if="showNoContentHelper">
+                <SignActionHelper resModel="props.list.resModel"/>
+            </t>
+        </t>
+    </t>
+</templates>

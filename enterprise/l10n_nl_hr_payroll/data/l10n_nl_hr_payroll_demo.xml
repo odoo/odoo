@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.demo_company_nl" model="res.company" forcecreate="1">
+        <field name="name">My Dutch Company</field>
+        <field name="currency_id" ref="base.EUR"/>
+        <field name="street">Korenmolengat 42</field>
+        <field name="zip">2761 EC</field>
+        <field name="city">Zevenhuizen</field>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_nl'))]"/>
+    </record>
+
+    <record id="base.user_demo" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_nl'))]"/>
+    </record>
+
+    <record id="hr_department_rdnl" model="hr.department">
+        <field name="name">RD NL</field>
+        <field name="company_id" ref="base.demo_company_nl"/>
+    </record>
+
+    <record id="job_developer_dutch" model="hr.job">
+        <field name="name">Experienced Developer NL</field>
+        <field name="department_id" ref="hr_department_rdnl"/>
+        <field name="no_of_recruitment">5</field>
+        <field name="company_id" ref="base.demo_company_nl"/>
+    </record>
+
+    <record id="hr_employee_wouter" model="hr.employee">
+        <field name="name">Wouter Maas</field>
+        <field name="job_id" ref="job_developer_dutch"/>
+        <field name="country_id" ref="base.nl"/>
+        <field name="company_id" ref="base.demo_company_nl"/>
+        <field name="image_1920" type="base64" file="l10n_nl_hr_payroll/static/img/hr_employee_wouter.jpg"/>
+        <field name="gender">male</field>
+    </record>
+
+    <record id="res_partner_lotte" model="res.partner">
+        <field name="name">Lotte Van Leeuw</field>
+        <field name="street">Arslanlaan 82d</field>
+        <field name="city">Burgum</field>
+        <field name="zip">2622DX</field>
+        <field name="country_id" ref="base.nl"/>
+        <field name="phone">06-86764476</field>
+        <field name="email">lotte.van.leeuw@example.com</field>
+        <field name="company_id" ref="base.demo_company_nl"/>
+    </record>
+
+    <record id="user_lotte" model="res.users">
+        <field name="partner_id" ref="l10n_nl_hr_payroll.res_partner_lotte"/>
+        <field name="login">lottevanleeuw@example.com</field>
+        <field name="password">lottevanleeuw</field>
+        <field name="signature" type="html"><span>--<br/>+L. Van Leeuw</span></field>
+        <field name="company_ids" eval="[(4, ref('base.demo_company_nl'))]"/>
+        <field name="company_id" ref="base.demo_company_nl"/>
+        <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
+        <field name="image_1920" type="base64" file="l10n_nl_hr_payroll/static/img/hr_employe_lotte.jpg"/>
+    </record>
+
+    <record id="res_partner_lotte_work_address" model="res.partner">
+        <field name="name">NL Offices</field>
+        <field name="street">van der Heijdenpad 72</field>
+        <field name="city">Gouderak</field>
+        <field name="zip">7722XJ</field>
+        <field name="country_id" ref="base.nl"/>
+        <field name="company_id" ref="base.demo_company_nl"/>
+    </record>
+
+    <record id="res_partner_lotte_private_address" model="res.partner">
+        <field name="name">Lotte Van Leeuw</field>
+        <field name="company_id" ref="base.demo_company_nl"/>
+    </record>
+
+    <record id="res_partner_bank_account_lotte" model="res.partner.bank">
+        <field name="acc_number">NL20002904010518489266398616</field>
+        <field name="bank_id" ref="base.bank_ing"/>
+        <field name="partner_id" ref="l10n_nl_hr_payroll.res_partner_lotte_private_address"/>
+        <field name="company_id" ref="base.demo_company_nl"/>
+    </record>
+
+    <record id="hr_employee_lotte" model="hr.employee">
+        <field name="name">Lotte Van Leeuw (lvl)</field>
+        <field name="gender">female</field>
+        <field name="marital">single</field>
+        <field name="job_title">Software Developer</field>
+        <field name="private_street">de Bruinbaan 13</field>
+        <field name="private_city">Heeten</field>
+        <field name="private_zip">2231BB</field>
+        <field name="private_country_id" ref="base.nl"/>
+        <field name="private_phone">0048 391 443 088</field>
+        <field name="private_email">lotte.van.leeuw@example.com</field>
+        <field name="address_id" ref="l10n_nl_hr_payroll.res_partner_lotte_work_address"/>
+        <field name="emergency_contact">Stijn Van Leeuw</field>
+        <field name="emergency_phone">(058) 3186203</field>
+        <field name="birthday">1991-07-28</field>
+        <field name="distance_home_work">25</field>
+        <field name="place_of_birth">Netherlands</field>
+        <field name="country_of_birth" ref="base.nl"/>
+        <field name="certificate">master</field>
+        <field name="study_field">Civil Engineering</field>
+        <field name="study_school">Université Catholique de Louvain-la-Neuve</field>
+        <field name="parent_id" ref="l10n_nl_hr_payroll.hr_employee_wouter"/>
+        <field name="country_id" ref="base.nl"/>
+        <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+        <field name="identification_id">8752027365496</field>
+        <field name="bank_account_id" ref="l10n_nl_hr_payroll.res_partner_bank_account_lotte"/>
+        <field name="image_1920" type="base64" file="l10n_nl_hr_payroll/static/img/hr_employe_lotte.jpg"/>
+        <field name="company_id" ref="base.demo_company_nl"/>
+        <field name="user_id" ref="l10n_nl_hr_payroll.user_lotte"/>
+    </record>
+
+    <record id="hr_contract_cdi_lotte_previous" model="hr.contract">
+        <field name="name">CDI - Lotte Van Leeuw - Experienced Developer</field>
+        <field name="department_id" ref="hr_department_rdnl"/>
+        <field name="employee_id" ref="hr_employee_lotte"/>
+        <field name="job_id" ref="l10n_nl_hr_payroll.job_developer_dutch"/>
+        <field name="structure_type_id" ref="l10n_nl_hr_payroll.structure_type_employee_nl"/>
+        <field name="wage">3000</field>
+        <field name="state">close</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="company_id" ref="base.demo_company_nl"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-2, month=1, day=1))"/>
+        <field name="date_end" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1, days=-2))"/>
+        <field name="resource_calendar_id" model="resource.calendar" eval="obj().search([('company_id', '=', obj().env.ref('base.demo_company_nl').id)], limit=1)"/>
+    </record>
+
+    <record id="hr_contract_cdi_lotte" model="hr.contract">
+        <field name="name">CDI - Lotte Van Leeuw - Experienced Developer</field>
+        <field name="department_id" ref="hr_department_rdnl"/>
+        <field name="employee_id" ref="hr_employee_lotte"/>
+        <field name="job_id" ref="l10n_nl_hr_payroll.job_developer_dutch"/>
+        <field name="structure_type_id" ref="l10n_nl_hr_payroll.structure_type_employee_nl"/>
+        <field name="wage">3600</field>
+        <field name="state">open</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="company_id" ref="base.demo_company_nl"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1, days=-1))"/>
+        <field name="resource_calendar_id" model="resource.calendar" eval="obj().search([('company_id', '=', obj().env.ref('base.demo_company_nl').id)], limit=1)"/>
+    </record>
+
+    <record id="hr_employee_lotte" model="hr.employee">
+        <field name="contract_id" ref="l10n_nl_hr_payroll.hr_contract_cdi_lotte"/>
+    </record>
+</odoo>

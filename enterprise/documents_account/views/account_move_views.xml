@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+
+        <record id="view_account_move_form_inherit_documents_account" model="ir.ui.view">
+            <field name="name">account.move.form.inherit.documents_account</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="before">
+                    <field name="suspense_statement_line_id" invisible="1"/>
+                    <div groups="account.group_account_invoice,account.group_account_readonly" class="alert alert-info" role="alert"
+                         invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') or not suspense_statement_line_id or state != 'posted'">
+                        This invoice has been initiated by a bank transaction. <bold><button class="alert-link" type="object" name="button_reconcile_with_st_line" role="button" string="Check them" style="padding: 0;vertical-align: baseline;"/></bold> to mark this invoice as paid.
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account_move_view_form" model="ir.ui.view">
+            <field name="name">account.move.view.form.inherit.document</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button class="oe_stat_button" name="action_view_documents_account_move" groups="documents.group_documents_user"
+                        type="object" icon="fa-file-text-o" invisible="not has_documents">
+                       <div class="o_stat_info">
+                            <span class="o_stat_text">Documents</span>
+                        </div>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

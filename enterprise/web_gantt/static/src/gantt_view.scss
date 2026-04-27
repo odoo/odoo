@@ -1,0 +1,700 @@
+.o_gantt_view {
+	--Gantt__Buttons-height: 45px;
+
+	@media (max-width: 767px) {
+		--Gantt__Buttons-height: 91px; // = 2 times the height in normal display + 1px for the <hr> element
+	}
+
+	user-select: none;
+
+	.o_view_nocontent {
+		@include o-gantt-zindex(view-nocontent);
+		position: fixed;
+		top: 225px;
+	}
+
+	.o_view_sample_data .o_sample_data_disabled {
+		@include o-sample-data-disabled;
+	}
+
+	.o_gantt_renderer_controls {
+		@include o-gantt-zindex(controls);
+		height: var(--Gantt__Buttons-height) !important;
+		input[type="range"] {
+			min-width: 80px;
+			max-width: 80px;
+		}
+	}
+
+	@include media-only(print) {
+		> .o_content {
+			overflow: auto;
+		}
+	}
+}
+
+.o_gantt_range_menu {
+	.o_gantt_range_custom_item.dropdown-item:not(.disabled):not(:disabled) {
+		background-color: inherit !important;
+		cursor: default !important;
+		label {
+			cursor: default !important;
+		}
+		&.selected {
+			font-weight: 400;
+		}
+	}
+}
+
+.o_gantt_view .o_gantt_renderer {
+
+	// Renderer grid
+	display: grid;
+
+	grid-template-columns:
+		[row-headers] var(--Gantt__RowHeader-width) [content] 1fr;
+
+	--Gantt__RowHeader-template-column: 16px;
+
+	// Allows to use color variables in js
+	--Gantt__Day-background-color: #{$o-view-background-color};
+	--Gantt__DayOff-background-color: #e9ecef;
+	--Gantt__DayOffToday-background-color: #fffaeb;
+
+	// Group colors
+	--Gantt__Group-background: linear-gradient(#{darken($gantt-row-open-bg, 5%)},
+		#{$gantt-row-open-bg});
+	--Gantt__GroupOpen-background: linear-gradient(#{$gantt-row-open-bg},
+		#{darken($gantt-row-open-bg, 5%)});
+	--Gantt__GroupToday-background: #{mix($gantt-row-open-bg, $gantt-highlight-today-bg)};
+
+	// ============================= Main Layout ==============================
+	// ========================================================================
+
+	// Utilities to use the grid-template-rows or grid-template-columns
+	.o_gantt_grid_rows {
+		display: grid;
+		grid-template-rows: var(--Gantt__GridRows-grid-template-rows);
+	}
+
+	.o_gantt_grid_columns {
+		display: grid;
+		grid-column: 2 / span 2;
+		grid-template-columns: var(--Gantt__GridColumns-grid-template-columns);
+	}
+
+	// Row headers
+	.o_gantt_row_header {
+		cursor: pointer;
+		display: grid;
+		grid-column: 1 / -1;
+		grid-row: 3;
+		grid-template-columns: repeat(auto-fill,
+				minmax(var(--Gantt__RowHeader-template-column), 1fr));
+		line-height: var(--Gantt__Pill-height);
+
+		.o_gantt_progress_bar {
+			grid-row: 1;
+			grid-column: 1 / -1;
+		}
+
+		.o_gantt_row_title {
+			grid-row: 1;
+		}
+
+		&.o_gantt_group {
+			line-height: initial;
+		}
+
+		&.o_mobile_progress_bar {
+			grid-template-rows: 1fr var(--Gantt__Pill-height);
+
+			.o_gantt_progress_bar {
+				grid-row: 2;
+			}
+		}
+	}
+
+	// =============================== Buttons ================================
+	// ========================================================================
+
+	.o_gantt_buttons_container {
+		gap: 0.25rem 1rem;
+	}
+
+	// All rows (Regular, Group Header and Total)
+	// ==========================================
+	.o_gantt_row_thumbnail_wrapper .o_gantt_row_thumbnail {
+		width: auto;
+		max-height: var(--Gantt__Thumbnail-max-height);
+	}
+
+	// ===============  Cursors while dragging  ==============
+	// =======================================================
+
+	&.o_grabbing,
+	&.o_grabbing .o_gantt_pill {
+		cursor: move !important;
+	}
+
+	&.o_copying,
+	&.o_copying .o_gantt_pill {
+		cursor: copy !important;
+	}
+
+	&.o_grabbing_locked,
+	&.o_grabbing_locked .o_gantt_pill {
+		cursor: not-allowed !important;
+	}
+
+	@include media-breakpoint-down(md) {
+		& {
+			width: max-content;
+		}
+	}
+
+	.o_dragged_pill_ghost {
+		opacity: 0.5;
+	}
+
+	// ================ Header ===============
+	// =======================================
+
+	.o_gantt_title {
+		top: var(--Gantt__Buttons-height);
+		@include o-gantt-zindex(title);
+		border-bottom: 1px solid $gantt-border-color;
+		grid-row: 1 / span 2;
+	}
+
+	.o_gantt_header_groups {
+		top: var(--Gantt__Buttons-height);
+		@include o-gantt-zindex(column-header-groups);
+		grid-row: 1;
+	}
+
+	.o_gantt_header_columns {
+		top: var(--Gantt__Buttons-height);
+		@include o-gantt-zindex(headers);
+		grid-row: 2;
+		margin-top: calc(var(--Gantt__Pill-height) * -1);
+		padding-top: var(--Gantt__Pill-height);
+	}
+
+	.o_gantt_header_cell {
+		border: 1px solid transparent;
+		border-bottom-color: $gantt-border-color;
+		border-right-color: $gantt-border-color;
+		height: var(--Gantt__Pill-height);
+		color: $headings-color;
+		position: relative;
+		@include o-gantt-cell;
+
+		@include media-breakpoint-down(md) {
+			min-width: 0;
+		}
+	}
+
+	.o_gantt_header_title {
+		height: var(--Gantt__Pill-height);
+		left: calc(var(--Gantt__RowHeader-width) - 1px);
+		border: solid $gantt-border-color;
+		border-width: 0 0 1px 1px;
+		margin-left: -1px;
+	}
+
+	// ======= All sidebar headers (Header, Regular, Groups and Total) ========
+	// ========================================================================
+	.o_gantt_row_sidebar {
+		@include o-gantt-zindex(headers);
+		grid-column: 1;
+		color: $headings-color;
+
+		&:not(.o_gantt_row_headers) {
+			border-bottom: 1px solid $gantt-border-color;
+		}
+
+		.o_gantt_progressbar,
+		.o_gantt_text_hoverable {
+			right: 0;
+			height: 100%;
+			background-color: inherit;
+		}
+	}
+
+	// =================== "Regular" & "Group Header" cells ===================
+	// ========================================================================
+	.o_gantt_cell {
+		border: solid $gantt-border-color;
+		border-width: 0 1px 1px 0;
+		@include o-gantt-cell;
+		@include o-gantt-zindex(grid);
+
+		&.o_drag_hover {
+			background: $gantt-highlight-cell-color !important;
+			@include o-gantt-zindex(grid-interact);
+		}
+	}
+
+	// ================================ Pills =================================
+	// ========================================================================
+	.o_gantt_pill_wrapper {
+		padding: 2px 2px 3px 3px;
+		min-height: var(--Gantt__Pill-height);
+		@include o-gantt-zindex(pill);
+
+        &.highlight, &.o_connector_creator_lock {
+            @include o-gantt-zindex(pill-interact);
+        }
+
+		// Group pills
+		&.o_gantt_group_pill {
+			pointer-events: none;
+			min-height: auto;
+			display: grid;
+
+			.o_gantt_pill {
+				grid-area: 1 / 1;
+				background-color: $primary;
+				border-color: $primary;
+				height: 2px;
+
+				&:before,
+				&:after {
+					content: "";
+					border-top: 4px solid transparent;
+					border-bottom: 5px solid transparent;
+				}
+
+				&:before {
+					border-left: 5px solid;
+					border-left-color: inherit;
+					@include o-position-absolute($top: -3px, $left: 0);
+				}
+
+				&:after {
+					border-right: 5px solid;
+					border-right-color: inherit;
+					@include o-position-absolute($top: -3px, $right: 0);
+				}
+			}
+
+			&.o_group_open .o_gantt_pill {
+
+				&:before,
+				&:after {
+					top: 2px;
+					border: 2px solid transparent;
+					border-top-color: inherit;
+				}
+
+				&:before {
+					border-left-color: inherit;
+				}
+
+				&:after {
+					border-right-color: inherit;
+				}
+			}
+
+			.o_gantt_pill_title {
+				grid-area: 1 / 1;
+				width: fit-content;
+			}
+		}
+
+		&.o_resizable {
+			.o_resize_handle {
+				width: 0.5rem
+					/* 6px */
+				;
+				pointer-events: auto;
+				position: absolute;
+				top: 0;
+				@include o-gantt-zindex(interact);
+
+				&.o_handle_start {
+					left: 0;
+				}
+
+				&.o_handle_end {
+					right: 0;
+				}
+			}
+
+			@include o-gantt-hover() {
+				&:not(.o_resized) .o_resize_handle {
+					background-color: rgba(230, 230, 230, 0.5);
+
+					&:hover {
+						background-color: rgba(230, 230, 230, 0.8);
+					}
+				}
+			}
+		}
+
+		&.o_draggable,
+		&.o_undraggable {
+			transition: transform 0.6s, box-shadow 0.3s;
+
+			&.o_dragged {
+				opacity: 0.8;
+				transform: rotate(-3deg);
+				box-shadow: 0 5px 25px -10px black;
+				@include o-gantt-zindex(interact);
+
+				.o_gantt_pill {
+					box-shadow: 0 5px 25px -10px black;
+				}
+
+				.o_resize_handle {
+					visibility: hidden;
+				}
+			}
+		}
+
+		&.o_undraggable:not(.o_dragged) .o_gantt_lock {
+			display: none;
+		}
+
+		&.o_resizable.o_resized {
+			.o_gantt_pill {
+				cursor: inherit;
+			}
+
+			.o_resize_handle {
+				background-color: rgba(black, 0.5);
+				@include o-gantt-zindex(interact);
+			}
+		}
+
+		.o_gantt_consolidated_pill_title {
+			background: none !important;
+			color: $headings-color;
+			position: absolute;
+			top: 21px;
+			font-size: 0.7em;
+
+			&.o_gantt_consolidated_pill_small {
+				transform: rotate(75deg);
+			}
+		}
+
+		&:not(.o_connector_creator_lock):not(.o_connector_creator_highlight) .o_connector_creator_wrapper {
+			display: none;
+		}
+
+		@include o-gantt-hover() {
+			.o_connector_creator_wrapper {
+				display: inline;
+			}
+		}
+
+		// used for `color` attribute on <gantt>
+		@for $index from 1 through length($o-colors-complete) {
+			$color: nth($o-colors-complete, $index);
+
+			.o_gantt_pill.o_gantt_color_#{$index - 1} .o_gantt_progress {
+				opacity: 0.2;
+				background-color: darken($color, 30%);
+			}
+
+			&.highlight .o_gantt_pill.o_gantt_color_#{$index - 1} {
+				color: color-contrast($color);
+				background-color: $color;
+			}
+		}
+	}
+
+	// ========================== Main pill content ===========================
+	// ========================================================================
+
+	.o_gantt_cells {
+		grid-row: 3;
+	}
+
+	.o_gantt_cells .o_gantt_pill {
+		overflow: hidden;
+		user-select: none;
+		box-sizing: content-box;
+		cursor: pointer;
+		@include o-gantt-hoverable-colors(nth($o-colors-complete, 1));
+
+		.o_gantt_pill_title {
+			// Prevent displaying pill's description when size is smaller than 50px
+			max-width: calc((100% - 50px) * 9999);
+		}
+
+		.o_gantt_pill_avatar {
+			// Prevent displaying pill's avatar when size is smaller than 100px
+			max-width: calc((100% - 100px) * 9999);
+		}
+
+		&.decoration-info {
+			@include o-gantt-gradient-decorations(nth($o-colors-complete, 1));
+		}
+
+		// used for `color` attribute on <gantt>
+		@for $index from 1 through length($o-colors-complete) {
+			&.o_gantt_color_#{$index - 1} {
+				$gantt-color: nth($o-colors-complete, $index);
+
+				@include o-gantt-hoverable-colors($gantt-color);
+
+				&.decoration-info {
+					@include o-gantt-gradient-decorations($gantt-color);
+				}
+
+				.o_gantt_progress {
+					opacity: 0.2;
+					background-color: darken($gantt-color, 30%);
+				}
+			}
+		}
+
+		@each $color, $value in $theme-colors {
+			&.decoration-#{$color}:before {
+				@include o-gantt-ribbon-decoration($value);
+			}
+		}
+	}
+
+	// ========================= "Group Header" rows ==========================
+	// ========================================================================
+	.o_gantt_group {
+		background: var(--Gantt__Group-background);
+
+		&.o_gantt_today {
+			background: var(--Gantt__GroupToday-background);
+		}
+
+		&.o_gantt_group_hovered:not(.o_gantt_today) {
+			background: var(--Gantt__GroupOpen-background);
+		}
+
+		&.o_group_open {
+			border-left-width: 0;
+			background: var(--Gantt__GroupOpen-background);
+
+			&.o_gantt_group_hovered {
+				background: var(--Gantt__Group-background);
+			}
+		}
+
+		&.o_gantt_row_header b {
+			font-weight: bold;
+		}
+	}
+
+	// ========================== Connector creators ==========================
+	// ========================================================================
+
+	.o_connector_creator_wrapper {
+		height: $o-connector-wrapper-height;
+		@include o-gantt-zindex(interact);
+
+		// used for `color` attribute on <gantt>
+		@for $index from 1 through length($o-colors-complete) {
+			&.o_gantt_color_#{$index - 1} {
+				$color: nth($o-colors-complete, $index);
+
+				.o_connector_creator_bullet {
+					background-color: $color;
+					color: color-contrast($color);
+					@include o-grab-cursor;
+				}
+
+				.o_connector_creator_top {
+					border-top: solid 1px $color;
+				}
+
+				.o_connector_creator_right {
+					/*rtl:ignore*/
+					border-left: solid 1px $color;
+				}
+
+				.o_connector_creator_bottom {
+					border-bottom: solid 1px $color;
+				}
+
+				.o_connector_creator_left {
+					/*rtl:ignore*/
+					border-right: solid 1px $color;
+				}
+			}
+		}
+	}
+
+	.o_connector_creator_wrapper_top {
+		top: -1 * $o-connector-wrapper-height;
+	}
+
+	.o_connector_creator_wrapper_bottom {
+		bottom: -1 * $o-connector-wrapper-height;
+	}
+
+	.o_connector_creator {
+		height: $o-connector-creator-size;
+		width: $o-connector-creator-size;
+
+        &::before {
+            @include o-position-absolute(0, 0, 0, 0);
+            z-index: -1;
+            border: inherit;
+            border-width: $border-width * 3;
+            border-color: var(--Gantt__Day-background-color);
+            transform: translate(var(--Gantt__Connector-creator-x, $border-width * 2), var(--Gantt__Connector-creator-y, $border-width * -2));
+            content: "";
+        }
+	}
+
+	.o_connector_creator_bullet {
+		height: $o-connector-creator-bullet-diameter;
+		width: $o-connector-creator-bullet-diameter;
+		outline: $border-width solid var(--Gantt__Day-background-color);
+	}
+
+	.o_connector_creator_top {
+		bottom: 0;
+
+		.o_connector_creator_bullet {
+			top: -0.5 * $o-connector-creator-bullet-diameter;
+		}
+	}
+
+	.o_connector_creator_right {
+		--Gantt__Connector-creator-x: #{$border-width * -2};
+		--Gantt__Connector-creator-y: #{$border-width * 2};
+
+		/*rtl:ignore*/
+		right: $o-connector-creator-size;
+
+		.o_connector_creator_bullet {
+			/*rtl:ignore*/
+			right: -0.5 * $o-connector-creator-bullet-diameter;
+		}
+	}
+
+	.o_connector_creator_bottom {
+		top: 0;
+
+		.o_connector_creator_bullet {
+			bottom: -0.5 * $o-connector-creator-bullet-diameter;
+		}
+	}
+
+	.o_connector_creator_left {
+		/*rtl:ignore*/
+		left: $o-connector-creator-size;
+
+		.o_connector_creator_bullet {
+			/*rtl:ignore*/
+			left: -0.5 * $o-connector-creator-bullet-diameter;
+		}
+	}
+
+	// ============================= "TOTAL" row ==============================
+	// ========================================================================
+	.o_gantt_row_total {
+		grid-row: 4;
+
+		.o_gantt_cell,
+		.o_gantt_row_title,
+		.o_gantt_pill_wrapper {
+			min-height: calc(var(--Gantt__Pill-height) * 1.6);
+		}
+
+		.o_gantt_pill {
+			color: inherit;
+			margin-left: 1px;
+			background-color: rgba($o-brand-odoo, 0.5);
+		}
+
+		.o_gantt_pill_wrapper:hover {
+			overflow: visible;
+
+			.o_gantt_pill {
+				color: inherit;
+				background-color: rgba($o-brand-odoo, 0.8);
+			}
+
+			&:before {
+				content: "";
+				border: 1px solid $o-brand-odoo;
+				border-width: 0 1px;
+				background: rgba($o-brand-odoo, 0.1);
+				height: 100vh;
+				pointer-events: none;
+				@include o-gantt-zindex(interact);
+				@include o-position-absolute(auto, -1px, 0, 0);
+			}
+		}
+
+		.o_gantt_cell:last-child .o_gantt_pill_wrapper:hover:before {
+			border-right: 0px;
+			right: 0;
+		}
+	}
+
+	.o_gantt_pill_resize_badge {
+		transition: all 0.15s ease-in-out;
+		box-shadow: 0 1px 2px 0 rgba(black, 0.28);
+		@include o-gantt-zindex(badge);
+	}
+
+	.o_gantt_connector {
+		--Connector__ButtonBorder-color: #091124;
+		--Connector__ButtonBackground-color: #ffffff;
+		--Connector__ButtonReschedule-color: #00a09d;
+		--Connector__ButtonRemove-color: #dd3c4f;
+		--Connector__ButtonAccent-color: #ffffff;
+
+		&.o_connector_highlighted {
+			@include o-gantt-zindex(interact);
+		}
+
+		.o_connector_stroke_button {
+			>rect {
+				cursor: pointer;
+				fill: var(--Connector__ButtonBackground-color);
+				stroke: var(--Connector__ButtonBorder-color);
+				stroke-width: 24px;
+				transition: fill 0.15s;
+			}
+
+			&.o_connector_stroke_reschedule_button {
+				line {
+					stroke: var(--Connector__ButtonReschedule-color);
+					transition: stroke 0.15s;
+				}
+
+				&:hover {
+					>rect {
+						fill: var(--Connector__ButtonReschedule-color);
+					}
+
+					line {
+						stroke: var(--Connector__ButtonAccent-color);
+					}
+				}
+			}
+
+			&.o_connector_stroke_remove_button {
+				g rect {
+					fill: var(--Connector__ButtonRemove-color);
+					transition: fill 0.15s;
+				}
+
+				&:hover {
+					>rect {
+						fill: var(--Connector__ButtonRemove-color);
+					}
+
+					g rect {
+						fill: var(--Connector__ButtonAccent-color);
+					}
+				}
+			}
+		}
+	}
+}

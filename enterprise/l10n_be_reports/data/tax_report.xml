@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_be.tax_report_vat" model="account.report">
+            <field name="custom_handler_model_id" ref="model_l10n_be_tax_report_handler"/>
+        </record>
+
+        <template id="pdf_export_filters" inherit_id="account_reports.pdf_export_filters" primary="True">
+            <xpath expr="(//div[hasclass('row')])[last()]" position="after">
+                <t t-if="options.get('closing_entry')">
+                    <div class="row" t-if="'ask_restitution' in options">
+                        <div class="col-5"> Ask restitution: </div>
+                        <div class="col-7 o_text-muted">
+                            <t t-out="'Yes' if options.get('ask_restitution') else 'No'"/>
+                        </div>
+                    </div>
+                    <div class="row" t-if="'client_nihil' in options">
+                        <div class="col-5"> Client nihil: </div>
+                        <div class="col-7 o_text-muted">
+                            <t t-out="'Yes' if options.get('client_nihil') else 'No'"/>
+                        </div>
+                    </div>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

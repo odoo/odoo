@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="documents.mail_activity_type_view_form" model="ir.ui.view">
+        <field name="name">mail.activity.type.form.inherit.documents</field>
+        <field name="model">mail.activity.type</field>
+        <field name="inherit_id" ref="mail.mail_activity_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category']" position="after">
+                <field name="folder_id" invisible="category != 'upload_file'" widget="documents_folder_many2one"/>
+                <field name="tag_ids" widget="many2many_tags" invisible="category != 'upload_file'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mail_activity_type_action_document" model="ir.actions.act_window">
+        <field name="name">Activity Types</field>
+        <field name="res_model">mail.activity.type</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">['|', ('res_model', '=', False), ('res_model', '=', 'documents.document')]</field>
+        <field name="context">{'default_res_model': 'documents.document'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No activity types found. Let's create one!
+            </p><p>
+                Those represent the different categories of things you have to do (e.g. "Call" or "Send email").
+            </p>
+        </field>
+    </record>
+
+</odoo>

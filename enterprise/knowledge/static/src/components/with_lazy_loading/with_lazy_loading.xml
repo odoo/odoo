@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="knowledge.WithLazyLoading">
+        <t t-if="state.isLoaded">
+            <t t-slot="default"/>
+        </t>
+        <t t-else="">
+            <div t-ref="loader" class="p-3 text-center">
+                <i class="fa fa-circle-o-notch fa-2x fa-spin" title="loader" role="img"/>
+            </div>
+        </t>
+    </t>
+</templates>

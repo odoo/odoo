@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="quality_check_on_demand_view_form_inherit" model="ir.ui.view">
+        <field name="name">quality.check.on.demand.view.form.inherit</field>
+        <field name="model">quality.check.on.demand</field>
+        <field name="inherit_id" ref="quality_control.quality_check_on_demand_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="production_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

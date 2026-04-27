@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_in_hr_payroll_salary_statement_view_form" model="ir.ui.view">
+        <field name="name">l10n_in_hr_payroll.salary.statement.form</field>
+        <field name="model">l10n_in_hr_payroll.salary.statement</field>
+        <field name="arch" type="xml">
+            <form string="Salary Statement">
+                <header>
+                    <button name="action_generate_declarations" string="Populate" type="object" class="btn-primary" invisible="lines_count"/>
+                    <button name="action_generate_declarations" string="Populate" type="object" class="btn-secondary" invisible="not lines_count"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_declarations" type="object" class="oe_stat_button" icon="fa-users" invisible="not lines_count">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="lines_count"/></span>
+                                <span class="o_stat_text">Eligible Employees</span>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <field name="year" class="o_hr_narrow_field"/>
+                        <field name="month" class="o_hr_narrow_field"/>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_in_hr_payroll_salary_statement_action" model="ir.actions.act_window">
+        <field name="name">Salary Statement Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_in_hr_payroll.salary.statement</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_in_hr_payroll_salary_statement"
+        name="Salary Statement Report"
+        action="l10n_in_hr_payroll_salary_statement_action"
+        parent="l10n_in_hr_payroll.menu_reporting_l10n_in"
+        groups="hr_payroll.group_hr_payroll_manager,hr_payroll.group_hr_payroll_user"
+        />
+</odoo>

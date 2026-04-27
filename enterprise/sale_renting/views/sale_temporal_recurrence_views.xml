@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="sale_temporal_recurrence_view_tree" model="ir.ui.view">
+        <field name="name">sale.temporal.recurrence.list</field>
+        <field name="model">sale.temporal.recurrence</field>
+        <field name="arch" type="xml">
+            <list string="Periodicity">
+                <field name="name"/>
+                <field name="duration"/>
+                <field name="unit"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="sale_temporal_recurrence_view_form" model="ir.ui.view">
+        <field name="name">sale.temporal.recurrence.form</field>
+        <field name="model">sale.temporal.recurrence</field>
+        <field name="arch" type="xml">
+            <form string="Periodicity">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="duration"/>
+                            <field name="unit"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_temporal_recurrence_action" model="ir.actions.act_window">
+        <field name="name">Periods</field>
+        <field name="res_model">sale.temporal.recurrence</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new period
+            </p>
+        </field>
+    </record>
+</odoo>

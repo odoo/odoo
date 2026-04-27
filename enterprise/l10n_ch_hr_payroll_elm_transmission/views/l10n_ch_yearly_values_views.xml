@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_l10n_ch_employee_yearly_values_tree" model="ir.ui.view">
+        <field name="name">l10n.ch.employee.yearly.values.tree</field>
+        <field name="model">l10n.ch.employee.yearly.values</field>
+        <field name="arch" type="xml">
+            <list string="Swiss Employee Yearly Values" create="0" delete="0">
+                <field name="employee_id"/>
+                <field name="year"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_l10n_ch_employee_yearly_values_form" model="ir.ui.view">
+        <field name="name">l10n.ch.employee.yearly.values.form</field>
+        <field name="model">l10n.ch.employee.yearly.values</field>
+        <field name="arch" type="xml">
+            <form string="Swiss Employee Yearly Values" create="0" delete="0">
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="year"/>
+                    </group>
+                    <field name="monthly_value_ids">
+                        <list string="Monthly Values">
+                            <field name="month"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_l10n_ch_employee_monthly_values_form" model="ir.ui.view">
+        <field name="name">l10n.ch.employee.monthly.values.form</field>
+        <field name="model">l10n.ch.employee.monthly.values</field>
+        <field name="arch" type="xml">
+            <form string="Swiss Employee Monthly Values" create="0" delete="0">
+                <sheet>
+                    <group>
+                        <field name="yearly_values_id"/>
+                        <field name="month"/>
+                    </group>
+                    <group>
+                        <field name="person" widget="jsonb"/>
+                        <field name="monthly_statistics" widget="jsonb"/>
+                        <field name="employee_meta_data" widget="jsonb"/>
+                        <field name="additional_particular" widget="jsonb"/>
+                        <field name="lpp_mutations"/>
+                        <field name="bvg_lpp_annual_basis"/>
+                        <field name="payroll_month_closed"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_l10n_ch_employee_yearly_values_search" model="ir.ui.view">
+        <field name="name">l10n.ch.employee.yearly.values.search</field>
+        <field name="model">l10n.ch.employee.yearly.values</field>
+        <field name="arch" type="xml">
+            <search string="Search Yearly Snapshots">
+                <field name="employee_id"/>
+                <field name="year"/>
+                <group expand="1" string="Group By">
+                    <filter string="Year"
+                            name="group_by_year"
+                            context="{'group_by':'year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_l10n_ch_employee_yearly_values" model="ir.actions.act_window">
+        <field name="name">Yearly Snapshot</field>
+        <field name="res_model">l10n.ch.employee.yearly.values</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">
+            {
+                "search_default_group_by_year": 1
+            }
+        </field>
+    </record>
+
+</odoo>

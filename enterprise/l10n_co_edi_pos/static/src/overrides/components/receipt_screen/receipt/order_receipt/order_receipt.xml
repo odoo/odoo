@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('before-footer')]" position="inside">
+            <t t-if="props.data.l10n_co_edi_pos_receipt_data">
+                <t t-set="before_footer_data" t-value="props.data.l10n_co_edi_pos_receipt_data.before_footer"/>
+
+                <div class="d-flex flex-column align-items-center mt-4">
+                    <!-- Client info -->
+                    <div class="receipt_l10n_co_edi_partner_name">Razón social / Nombre: <t t-out="before_footer_data.partner_name"/></div>
+                    <div class="receipt_l10n_co_edi_identification_type">Tipo de identificación: <t t-out="before_footer_data.identification_type"/></div>
+                    <div class="receipt_l10n_co_edi_identification_number">Número de identificación: <t t-out="before_footer_data.identification_number"/></div>
+                    <div class="receipt_l10n_co_edi_address">Dirección: <t t-out="before_footer_data.address"/></div>
+
+                    <!-- Company info -->
+                    <div class="receipt_l10n_co_edi_large_taxpayer">
+                        <t t-if="before_footer_data.large_taxpayer" class="mt-3">Somos Grandes Contribuyentes</t>
+                        <t t-else="" class="mt-3">No Somos Grandes Contribuyentes</t>
+                    </div>
+
+                    <div class="receipt_l10n_co_edi_fiscal_regimen">Regimen fiscal: <t t-out="before_footer_data.fiscal_regimen_description"/></div>
+                    <div>Responsabilidad Tributaria:</div>
+                    <div class="receipt_l10n_co_edi_obligation_type_description"><t t-out="before_footer_data.obligation_type_description"/></div>
+                    <img alt="Barcode" t-att-src="before_footer_data.barcode_src" class="mt-3"/>
+                </div>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[hasclass('after-footer')]" position="before">
+            <t t-if="props.data.l10n_co_edi_pos_receipt_data">
+                <t t-set="after_footer_data" t-value="props.data.l10n_co_edi_pos_receipt_data.after_footer"/>
+
+                <div class="d-flex flex-column align-items-center">
+                    <br/>
+                    <t t-if="props.data.l10n_co_edi_pos_receipt_data.document_state == 'invoice_accepted'">
+                        <t t-foreach="after_footer_data.cufe_chunks" t-as="chunk" t-key="chunk">
+                            <div t-if="chunk_first">CUFE: <t t-out="chunk"/></div>
+                            <div t-else=""><t t-out="chunk"/></div>
+                        </t>
+                        <div class="receipt_l10n_co_edi_signing_time mt-2">Fecha de firma: <t t-out="after_footer_data.signing_time"/></div>
+                        <div class="receipt_l10n_co_edi_issue_date_time">Fecha de emisión: <t t-out="after_footer_data.issue_date"/> <t t-out="after_footer_data.issue_time"/></div>
+                    </t>
+                    <div>Generado por Software Propio</div>
+                    <div class="receipt_l10n_co_edi_pos_serial_number">Número de serie del punto de venta: <t t-out="after_footer_data.l10n_co_edi_pos_serial_number"/></div>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

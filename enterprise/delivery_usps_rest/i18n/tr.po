@@ -1,0 +1,868 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * delivery_usps_rest
+#
+# Translators:
+# Wil Odoo, 2025
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:45+0000\n"
+"PO-Revision-Date: 2025-11-25 18:32+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-18/"
+"delivery_usps_rest/tr/>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__3d
+msgid "3D - 3-Digit"
+msgstr "3D - 3-Digit (Basamak)"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__3n
+msgid "3N - 3-Digit Dimensional Rectangular"
+msgstr "3N - 3 Basamaklı Boyutlu Dikdörtgen (paket sınıfı)"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__3r
+msgid "3R - 3-Digit Dimensional Nonrectangular"
+msgstr "3R - 3 Basamaklı Boyutlu Dikdörtgen Olmayan"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_label_size__3x5fmp
+msgid "3x5"
+msgstr "3x5"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_label_size__4x5label
+msgid "4x5"
+msgstr "4x5"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_label_size__4x6label
+msgid "4x6"
+msgstr "4x6"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__5d
+msgid "5D - 5-Digit"
+msgstr "5D - 5-Digit (Basamak)"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__ba
+msgid "BA - Basic"
+msgstr "BA - Temel"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__bb
+msgid "BB - Mixed NDC"
+msgstr "BB - Karma NDC"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_service__bound_printed_matter
+msgid "Bound Printed Matter"
+msgstr "Ciltlenmiş Basılı Materyal"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__cm
+msgid "CM - USPS Connect® Local Mail"
+msgstr "CM - USPS Connect® Yerel Posta"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__cp
+msgid "CP - Cubic Parcel"
+msgstr "CP - Kübik Parsel"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_crid
+msgid "CRID"
+msgstr "CRID"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_stock_package_type__package_carrier_type
+msgid "Carrier"
+msgstr "Nakliyeci"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_rest_content_type__commercial_sample
+msgid "Commercial Sample"
+msgstr "Ticari Örnek"
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/usps_request.py:0
+msgid "Company phone number is invalid. Please insert a US phone number."
+msgstr ""
+"Şirket telefon numarası geçersiz. Lütfen bir ABD telefon numarası ekleyin."
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_rest_content_type
+msgid "Content Type (REST)"
+msgstr "İçerik Türü (REST)"
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/usps_request.py:0
+msgid "Couldn't decode the response from USPS."
+msgstr "USPS'den gelen cevabı çözemedim."
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/usps_request.py:0
+msgid ""
+"Couldn't decode the response from USPS.\n"
+"%s"
+msgstr ""
+"USPS'den gelen cevabı çözemedim.\n"
+"%s"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_rest_content_type__cremated_remains
+msgid "Cremated Remains"
+msgstr "Yakılan Kalıntılar"
+
+#. module: delivery_usps_rest
+#: model_terms:ir.ui.view,arch_db:delivery_usps_rest.view_delivery_carrier_form_with_provider_usps
+msgid "Custom Data"
+msgstr "Özel Veriler"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__dc
+msgid "DC - NDC"
+msgstr "DC - NDC"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__de
+msgid "DE - SCF"
+msgstr "DE - SCF"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__df
+msgid "DF - 5-Digit"
+msgstr "DF - 5 Digit (Basamak)"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__dn
+msgid "DN - Dimensional Nonrectangular"
+msgstr "DN - Boyutlu Dikdörtgen Olmayan"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__dr
+msgid "DR - Dimensional Rectangular"
+msgstr "DR - Boyutlu Dikdörtgen"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_rest_content_type__dangerous_goods
+msgid "Dangerous Goods"
+msgstr "Tehlikeli Mallar"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_delivery_nature
+msgid "Delivery Nature"
+msgstr "Teslimat Niteliği"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_rest_content_type__document
+msgid "Document"
+msgstr "Belge"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_delivery_nature__domestic
+msgid "Domestic"
+msgstr "Yerli"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_domestic_rating_indicator
+msgid "Domestic Rating Indicator"
+msgstr "Yurtiçi Derecelendirme Göstergesi"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__e4
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_international_rating_indicator__e4
+msgid ""
+"E4 - Priority Mail Express Flat Rate Envelope - Post Office To Addressee"
+msgstr "E4 - Öncelikli Posta Ekspres Düz Fiyatlı Zarf - Postaneden Alıcıya"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__e6
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_international_rating_indicator__e6
+msgid "E6 - Priority Mail Express Legal Flat Rate Envelope"
+msgstr "E6 - Priority Mail Express Legal Düz Fiyatlı Zarf"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_international_rating_indicator__e7
+msgid "E7 - Priority Mail Express Legal Flat Rate Envelope Sunday / Holiday"
+msgstr "E7 - Priority Mail Express Yasal Düz Fiyatlı Zarf Pazar / Tatil"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_eps_account_number
+msgid "EPS Account Number"
+msgstr "EPS Hesap Numarası"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_extra_data_payment_token_request
+msgid "Extra Data for Payment Token Requests"
+msgstr "Ödeme Jetonu Talepleri için Ekstra Veriler"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_extra_data_rate_request
+msgid "Extra Data for Rate Requests"
+msgstr "Fiyat Talepleri için Ekstra Veriler"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_extra_data_shipment_request
+msgid "Extra Data for Shipment Requests"
+msgstr "Gönderi Talepleri için Ekstra Veriler"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,help:delivery_usps_rest.field_delivery_carrier__usps_extra_data_payment_token_request
+#: model:ir.model.fields,help:delivery_usps_rest.field_delivery_carrier__usps_extra_data_rate_request
+#: model:ir.model.fields,help:delivery_usps_rest.field_delivery_carrier__usps_extra_data_shipment_request
+msgid ""
+"Extra data to be sent in the request. It should be a JSON-formatted string. "
+"For example:\n"
+"This functionality is advanced/technical and should only be used if you know "
+"what you are doing.\n"
+"Example of a valid value: ```\n"
+"\"packageDescription\": {\"extraServices\": [920] }\n"
+"```\n"
+"With the above example, the service (920) will be added to the shipment "
+"request.\n"
+"For more information, please refer to the USS API documentation: https://"
+"developer.usps.com/apis.\n"
+msgstr ""
+"İstekte gönderilecek ekstra veriler. JSON biçimli bir dize olmalıdır. "
+"Örneğin:\n"
+"Bu işlevsellik ileri düzey/tekniktir ve yalnızca ne yaptığınızı biliyorsanız "
+"kullanılmalıdır.\n"
+"Geçerli bir değer örneği: ```\n"
+"\"packageDescription\": {\"extraServices\": [920] }\n"
+"```\n"
+"Yukarıdaki örnekle, hizmet (920) gönderi talebine eklenecektir.\n"
+"Daha fazla bilgi için lütfen USS API belgelerine bakın: https://"
+"developer.usps.com/apis.\n"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__fa
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_international_rating_indicator__fa
+msgid "FA - Legal Flat Rate Envelope"
+msgstr "FA - Legal Düz Fiyatlı Zarf"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__fb
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_international_rating_indicator__fb
+msgid "FB - Medium Flat Rate Box/Large Flat Rate Bag"
+msgstr "FB - Orta Boy Sabit Fiyatlı Kutu/Büyük Boy Sabit Fiyatlı Çanta"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__fe
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_international_rating_indicator__fe
+msgid "FE - Flat Rate Envelope"
+msgstr "FE - Sabit Fiyatlı Zarf"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__fp
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_international_rating_indicator__fp
+msgid "FP - Padded Flat Rate Envelope"
+msgstr "FP - Yastıklı Sabit Fiyatlı Zarf"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__fs
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_international_rating_indicator__fs
+msgid "FS - Small Flat Rate Box"
+msgstr "FS - Küçük Sabit Fiyatlı Kutu"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_international_service__first-class_package_international_service
+msgid "First-Class Package International Service"
+msgstr "Birinci Sınıf Paket Uluslararası Hizmet"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_service__first-class_package_service
+msgid "First-Class Package Service"
+msgstr "Birinci Sınıf Paket Servisi"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_processing_category__flats
+msgid "Flats"
+msgstr "Büyük zarflar / düz postalar"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_rest_content_type__gift
+msgid "Gift"
+msgstr "Hediye"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_international_service__global_express_guaranteed
+msgid "Global Express Guaranteed"
+msgstr "Global Express Garantili"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_rest_content_type__humanitarian_donations
+msgid "Humanitarian Donations"
+msgstr "İnsani Yardım Bağışları"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_delivery_nature__international
+msgid "International"
+msgstr "Uluslararası"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_international_rating_indicator
+msgid "International Rating Indicator"
+msgstr "Uluslararası Derecelendirme Göstergesi"
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/delivery_usps.py:0
+msgid "Invalid syntax for USPS extra data."
+msgstr "USPS ekstra verileri için geçersiz sözdizimi."
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_processing_category__irregular
+msgid "Irregular"
+msgstr "Düzensiz"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_rest_label_file_type__jpg
+msgid "JPG"
+msgstr "JPG"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__lc
+msgid "LC - USPS Connect® Local Single Piece"
+msgstr "LC - USPS Connect® Yerel Tek Parça"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__lf
+msgid "LF - Flat Rate Box"
+msgstr "LF - Sabit Fiyatlı Kutu"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__ll
+msgid "LL - Large Flat Rate Bag"
+msgstr "LL - Büyük Sabit Fiyatlı Çanta"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__lo
+msgid "LO - USPS Connect® Local Oversized"
+msgstr "LO - USPS Connect® Yerel Büyük Boy"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__ls
+msgid "LS - Small Flat Rate Bag"
+msgstr "LS - Küçük Düz Fiyatlı Çanta"
+
+#. module: delivery_usps_rest
+#: model_terms:ir.ui.view,arch_db:delivery_usps_rest.view_delivery_carrier_form_with_provider_usps
+msgid "Label Format"
+msgstr "Etiket Biçimi"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_processing_category__letters
+msgid "Letters"
+msgstr "Mektuplar"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_service__library_mail
+msgid "Library Mail"
+msgstr "Kütüphane Postası"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_mid
+msgid "MID"
+msgstr "MID"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_processing_category__machinable
+msgid "Machinable"
+msgstr "İşlenebilir"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_manifest_mid
+msgid "Manifest MID"
+msgstr "Manifest MID"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_service__media_mail
+msgid "Media Mail"
+msgstr "Medya Postası"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_rest_content_type__medical_supplies
+msgid "Medical Supplies"
+msgstr "Tıbbi Malzemeler"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_rest_content_type__merchandise
+msgid "Merchandise"
+msgstr "Mal"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__np
+msgid "NP - Non-Presorted"
+msgstr "NP - Önceden Hazırlanmamış"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_processing_category__non_machinable
+msgid "Non-Machinable"
+msgstr "İşlenemez"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_rest_content_type__non_negotiable_document
+msgid "Non-Negotiable Document"
+msgstr "Müzakere Edilemez Belge"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__os
+msgid "OS - Oversized"
+msgstr "OS - Büyük Boy"
+
+#. module: delivery_usps_rest
+#: model_terms:ir.ui.view,arch_db:delivery_usps_rest.view_delivery_carrier_form_with_provider_usps
+msgid "Options"
+msgstr "Seçenekler"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_rest_content_type__other
+msgid "Other"
+msgstr "Diğer"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__p5
+msgid "P5 - Cubic Soft Pack Tier 1"
+msgstr "P5 - Kübik Yumuşak Paket Kademe 1"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__p6
+msgid "P6 - Cubic Soft Pack Tier 2"
+msgstr "P6 - Kübik Yumuşak Paket Kademe 2"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__p7
+msgid "P7 - Cubic Soft Pack Tier 3"
+msgstr "P7 - Kübik Yumuşak Paket Kademe 3"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__p8
+msgid "P8 - Cubic Soft Pack Tier 4"
+msgstr "P8 - Kübik Yumuşak Paket Katman 4"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__p9
+msgid "P9 - Cubic Soft Pack Tier 5"
+msgstr "P9 - Kübik Yumuşak Paket Kademe 5"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_international_rating_indicator__pa
+msgid "PA - Priority Mail Express International Single Piece"
+msgstr "PA - Priority Mail Express Uluslararası Tek Parça"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__pa
+msgid "PA - Priority Mail Express Single Piece"
+msgstr "PA - Priority Mail Express Tek Parça"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_rest_label_file_type__pdf
+msgid "PDF"
+msgstr "PDF"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__pl
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_international_rating_indicator__pl
+msgid "PL - Large Flat Rate Box"
+msgstr "PL - Büyük Sabit Fiyatlı Kutu"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__pm
+msgid "PM - Large Flat Rate Box APO/FPO/DPO"
+msgstr "PM - Büyük Sabit Fiyatlı Kutu APO/FPO/DPO"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__pr
+msgid "PR - Presorted"
+msgstr "PR - Önceden Sınıflandırılmış"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_service__parcel_select
+msgid "Parcel Select"
+msgstr "Parsel Seçimi"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_service__parcel_select_lightweight
+msgid "Parcel Select Lightweight"
+msgstr "Parcel Select Hafif Ağırlık"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_rest_content_type__pharmaceuticals
+msgid "Pharmaceuticals"
+msgstr "İlaçlar"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,help:delivery_usps_rest.field_delivery_carrier__usps_processing_category
+msgid "Please check on USPS website to check your package processing category"
+msgstr ""
+"Paket işleme kategorinizi kontrol etmek için lütfen USPS web sitesini "
+"kontrol edin"
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/usps_request.py:0
+msgid "Please enter a valid ZIP code in recipient address"
+msgstr "Lütfen alıcı adresine geçerli bir posta kodu girin"
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/usps_request.py:0
+msgid "Please enter a valid ZIP code in your Company address"
+msgstr "Lütfen Şirket adresinize geçerli bir posta kodu girin"
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/usps_request.py:0
+msgid "Please provide at least one item to ship."
+msgstr "En az bir adet kargolanacak ürün sağlayın."
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/usps_request.py:0
+msgid ""
+"Please set country USA in your company address, Service is only available "
+"for USA"
+msgstr ""
+"Lütfen şirket adresinizde ABD ülkesini ayarlayın, Hizmet yalnızca ABD için "
+"kullanılabilir"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_service__priority_mail
+msgid "Priority Mail"
+msgstr "Öncelikli Posta"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_service__priority_mail_express
+msgid "Priority Mail Express"
+msgstr "Öncelikli Posta Ekspresi"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_international_service__priority_mail_express_international
+msgid "Priority Mail Express International"
+msgstr "Priority Mail Express Uluslararası"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_international_service__priority_mail_international
+msgid "Priority Mail International"
+msgstr "Uluslararası Öncelikli Posta"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_processing_category
+msgid "Processing Category"
+msgstr "İşleme Kategorisi"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "Sağlayıcı"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__q0
+msgid "Q0 - Cubic Soft Pack Tier 10"
+msgstr "Q0 - Kübik Yumuşak Paket Kademe 10"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__q6
+msgid "Q6 - Cubic Soft Pack Tier 6"
+msgstr "Q6 - Kübik Yumuşak Paket Kademe 6"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__q7
+msgid "Q7 - Cubic Soft Pack Tier 7"
+msgstr "Q7 - Kübik Yumuşak Paket Kademe 7"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__q8
+msgid "Q8 - Cubic Soft Pack Tier 8"
+msgstr "Q8 - Kübik Yumuşak Paket Kademe 8"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__q9
+msgid "Q9 - Cubic Soft Pack Tier 9"
+msgstr "Q9 - Kübik Yumuşak Paket Kademe 9"
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/delivery_usps.py:0
+msgid "Return Shipment created into USPS"
+msgstr "USPS'de oluşturulan İade Gönderisi"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_rest_content_type__returned_goods
+msgid "Returned Goods"
+msgstr "İade Edilen Mallar"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__sn
+msgid "SN - SCF Dimensional Nonrectangular"
+msgstr "SN - SCF Boyutlu Dikdörtgen Olmayan"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__sp
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_international_rating_indicator__sp
+msgid "SP - Single Piece"
+msgstr "SP - Tek Parça"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_rating_indicator__sr
+msgid "SR - SCF Dimensional Rectangular"
+msgstr "SR - SCF Boyutlu Dikdörtgen"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_rest_label_file_type__svg
+msgid "SVG"
+msgstr "SVG"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_rest_content_type__sample
+msgid "Sample"
+msgstr "Örneklem"
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/delivery_usps.py:0
+msgid "Shipment created into USPS"
+msgstr "USPS'de oluşturulan gönderi"
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/delivery_usps.py:0
+msgid "Shipment with tracking number %(tracking_ref)s has been cancelled"
+msgstr "Takip numarası %(tracking_ref)s olan gönderi iptal edildi"
+
+#. module: delivery_usps_rest
+#: model:ir.model,name:delivery_usps_rest.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "Nakliye Yöntemleri"
+
+#. module: delivery_usps_rest
+#: model:ir.model,name:delivery_usps_rest.model_stock_package_type
+msgid "Stock package type"
+msgstr "Stok Paket Türü"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_rest_label_file_type__tiff
+msgid "TIFF"
+msgstr "TIFF"
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/usps_request.py:0
+msgid ""
+"The address of your company is missing or wrong (Missing field(s) :  \n"
+" %s)"
+msgstr ""
+"Şirket adresiniz eksik veya yanlış (Kalan alan (lar): \n"
+"%s )"
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/usps_request.py:0
+msgid ""
+"The estimated shipping price cannot be computed because the weight is "
+"missing for the following product(s): \n"
+" %s"
+msgstr ""
+"Aşağıdaki ürün(ler) için ağırlık eksik olduğundan tahmini nakliye fiyatı "
+"hesaplanamıyor:\n"
+"%s"
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/delivery_usps.py:0
+msgid ""
+"The package cannot be created because the total weight of the products in "
+"the picking is 0.0 %s"
+msgstr ""
+"Toplamadaki ürünlerin toplam ağırlığı 0,0 %s olduğu için paket "
+"oluşturulamıyor."
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/usps_request.py:0
+msgid ""
+"The recipient address is missing or wrong (Missing field(s) :  \n"
+" %s)"
+msgstr "Alıcı adresi eksik veya yanlış (Kayıp alan (lar): \\ n %s )"
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/delivery_usps.py:0
+msgid ""
+"There is no price available for this shipping, please choose another service"
+msgstr "Bu gönderi için fiyat mevcut değil, lütfen başka bir hizmet seçin"
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/delivery_usps.py:0
+msgid "Tracking Number:"
+msgstr "Takip Numarası:"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__delivery_type__usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__stock_package_type__package_carrier_type__usps_rest
+msgid "USPS"
+msgstr "USPS"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_api_key
+msgid "USPS API Key"
+msgstr "USPS API Anahtarı"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_api_secret
+msgid "USPS API Secret"
+msgstr "USPS API Sırrı"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_access_token
+msgid "USPS Access Token"
+msgstr "USPS Erişim Simgesi"
+
+#. module: delivery_usps_rest
+#: model_terms:ir.ui.view,arch_db:delivery_usps_rest.view_delivery_carrier_form_with_provider_usps
+msgid "USPS Configuration"
+msgstr "USPS Konfigürasyonu"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_service__usps_connect_local
+msgid "USPS Connect Local"
+msgstr "USPS Connect Yerel"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_service__usps_connect_mail
+msgid "USPS Connect Mail"
+msgstr "USPS Connect Mail"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_service__usps_connect_next_day
+msgid "USPS Connect Next Day"
+msgstr "USPS Connect Ertesi Gün"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_service__usps_connect_regional
+msgid "USPS Connect Regional"
+msgstr "USPS Connect Bölgesel"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_service__usps_connect_same_day
+msgid "USPS Connect Same Day"
+msgstr "USPS Connect Aynı Gün"
+
+#. module: delivery_usps_rest
+#: model:delivery.carrier,name:delivery_usps_rest.delivery_carrier_usps_domestic
+#: model:product.template,name:delivery_usps_rest.product_product_delivery_usps_domestic_product_template
+msgid "USPS Domestic"
+msgstr "USPS Yurtiçi"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_domestic_service
+msgid "USPS Domestic Service"
+msgstr "USPS Yurtiçi Hizmet"
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/usps_request.py:0
+msgid ""
+"USPS Domestic is used only to ship inside of the USA. Please change the "
+"delivery method into USPS International."
+msgstr ""
+"USPS Domestic yalnızca ABD içinde gönderim yapmak için kullanılır. Lütfen "
+"teslimat yöntemini USPS International olarak değiştirin."
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_service__usps_ground_advantage
+msgid "USPS Ground Advantage"
+msgstr "USPS Kara Avantajı"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_service__usps_ground_advantage_return_service
+msgid "USPS Ground Advantage Return Service"
+msgstr "USPS Kara Avantajı İade Hizmeti"
+
+#. module: delivery_usps_rest
+#: model:delivery.carrier,name:delivery_usps_rest.delivery_carrier_usps_international
+#: model:product.template,name:delivery_usps_rest.product_product_delivery_usps_international_product_template
+msgid "USPS International"
+msgstr "USPS Uluslararası"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_international_service
+msgid "USPS International Service"
+msgstr "USPS Uluslararası Hizmet"
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/usps_request.py:0
+msgid ""
+"USPS International is used only to ship outside of the USA. Please change "
+"the delivery method into USPS Domestic."
+msgstr ""
+"USPS International yalnızca ABD dışına gönderim yapmak için kullanılır. "
+"Lütfen teslimat yöntemini USPS Yurtiçi olarak değiştirin."
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_rest_label_file_type
+msgid "USPS Label File Type"
+msgstr "USPS Etiket Dosyası Türü"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_label_size
+msgid "USPS Label Size"
+msgstr "USPS Etiket Boyutu"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_default_package_type_id
+msgid "USPS Package Type"
+msgstr "USPS Paket Türü"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields,field_description:delivery_usps_rest.field_delivery_carrier__usps_payment_token
+msgid "USPS Payment Token"
+msgstr "USPS Ödeme Simgesi"
+
+#. module: delivery_usps_rest
+#: model:ir.model.fields.selection,name:delivery_usps_rest.selection__delivery_carrier__usps_domestic_service__usps_retail_ground
+msgid "USPS Retail Ground"
+msgstr "USPS Perakende Kara"
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/usps_request.py:0
+msgid "You need to set your USPS API Key and Secret to use this feature."
+msgstr ""
+"Bu özelliği kullanmak için USPS API Anahtarınızı ve Şifrenizi (Secret) "
+"ayarlamanız gerekmektedir."
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/usps_request.py:0
+msgid ""
+"You need to set your USPS CRID, MID, Manifest MID and EPS Account Number to "
+"use this feature."
+msgstr ""
+"Bu özelliği kullanmak için USPS CRID, MID, Manifesto MID ve EPS Hesap "
+"Numaranızı ayarlamanız gerekir."
+
+#. module: delivery_usps_rest
+#. odoo-python
+#: code:addons/delivery_usps_rest/models/usps_request.py:0
+msgid "Your USPS API Key and Secret are invalid."
+msgstr "USPS API Anahtarınız (Key) ve Şifreniz (Secret) geçersiz."

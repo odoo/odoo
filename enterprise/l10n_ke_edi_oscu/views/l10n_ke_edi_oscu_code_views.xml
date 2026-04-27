@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_ke_edi_code_view_tree" model="ir.ui.view">
+            <field name="name">l10n.ke.edi.oscu.code.list</field>
+            <field name="model">l10n_ke_edi_oscu.code</field>
+            <field name="arch" type="xml">
+                <list string="eTIMS Code" create="0" delete="0">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="code_type"/>
+                    <field name="description"/>
+                </list>
+            </field>
+        </record>
+        <record id="l10n_ke_edi_code_search" model="ir.ui.view">
+            <field name="name">l10n.ke.edi.oscu.code.search</field>
+            <field name="model">l10n_ke_edi_oscu.code</field>
+            <field name="arch" type="xml">
+                <search string="">
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="description"/>
+                    </group>
+                    <group expand="0" string="Group By">
+                        <filter string="Code Type" name="code_type" context="{'group_by':'code_type'}"/>
+                        <separator orientation="vertical"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="l10n_ke_edi_code_action" model="ir.actions.act_window">
+            <field name="name">eTIMS Codes</field>
+            <field name="res_model">l10n_ke_edi_oscu.code</field>
+            <field name="view_id" ref="l10n_ke_edi_code_view_tree"/>
+        </record>
+
+    </data>
+</odoo>

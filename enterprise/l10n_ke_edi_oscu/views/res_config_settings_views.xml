@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">l10n.ke.edi.oscu.inherit.res.config.settings.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='print_vendor_checks_setting_container']" position="after">
+                <div invisible="country_code != 'KE'">
+                    <block title="Kenya eTIMS Integration" id="l10n_ke_edi_oscu">
+                        <field name="l10n_ke_oscu_cmc_key" invisible="1"/>
+                        <setting company_dependent="1" string="eTIMS Server Mode">
+                            <div class="content-group">
+                                <div class="text-muted">
+                                    Production: Connection to eTIMS in production mode.<br/>
+                                    Test: Connection to eTIMS in test mode.<br/>
+                                    Demo: Mocked data, does not require an initialized OSCU.<br/>
+                                </div>
+                                <div class="mt16">
+                                    <field name="l10n_ke_server_mode"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting company_dependent="1" string="Insurance"
+                                 help="Fill out this information if you have an obligation to report company insurance to the KRA.">
+                            <div class="content-group">
+                                <div class="row">
+                                    <label string="Code" for="l10n_ke_insurance_code" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_ke_insurance_code"/>
+                                </div>
+                                <div class="row">
+                                    <label string="Name" for="l10n_ke_insurance_name" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_ke_insurance_name"/>
+                                </div>
+                                <div class="row">
+                                    <label string="Rate" for="l10n_ke_insurance_rate" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_ke_insurance_rate"/>
+                                </div>
+                                <div class="mt16">
+                                    <button name="action_l10n_ke_send_insurance" string="Send Insurance Details" type="object" noSaveDialog="1"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting company_dependent="1" string="OSCU Configuration" invisible="l10n_ke_server_mode not in ('prod', 'test')">
+                            <div class="content-group">
+                                <div class="row">
+                                    <label string="Serial No." for="l10n_ke_oscu_serial_number" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_ke_oscu_serial_number"/>
+                                </div>
+                                <div class="row" groups="base.group_no_one">
+                                    <label string="Unit ID" for="l10n_ke_control_unit" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_ke_control_unit"/>
+                                </div>
+                                <div class="row" groups="base.group_no_one">
+                                    <label string="CMC Key" for="l10n_ke_oscu_cmc_key" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_ke_oscu_cmc_key" password="True"/>
+                                </div>
+                                <div class="row">
+                                    <div colspan="2" class="d-flex" invisible="l10n_ke_oscu_cmc_key">
+                                        <div>
+                                            <field name="l10n_ke_oscu_user_help" nolabel="1"/>
+                                        </div>
+                                        <div>
+                                            You have requested an OSCU device for your Odoo instance on the
+                                            <a href="https://etims.kra.go.ke/" target="_blank" invisible="l10n_ke_server_mode != 'prod'">KRA portal</a>
+                                            <a href="https://etims-sbx.kra.go.ke/" target="_blank" invisible="l10n_ke_server_mode != 'test'">KRA test portal</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div colspan="2" class="d-flex">
+                                        <div>
+                                            <field name="l10n_ke_oscu_user_agreement_is_readonly" invisible="1"/>
+                                            <field name="l10n_ke_oscu_user_agreement" nolabel="1" readonly="l10n_ke_oscu_user_agreement_is_readonly"/>
+                                        </div>
+                                        <div>
+                                            Users agree to take all measures necessary to ensure the unmodified execution of the parts of the software that are responsible for managing, storing, receiving and transmitting tax records.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt16">
+                                    <button name="action_l10n_ke_oscu_initialize" string="Initialize OSCU" type="object" invisible="l10n_ke_oscu_cmc_key" noSaveDialog="1"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

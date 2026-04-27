@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_us_employee_salary_co_state_income_tax" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_us_hr_payroll.hr_payroll_taxes"/>
+        <field name="name">CO State Income Tax</field>
+        <field name="code">COINCOMETAX</field>
+        <field name="sequence">162</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.employee_id.address_id.state_id.code == 'CO'</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+# Step 1
+# Compute Gross Income (GI) = Employee's Gross Wage * Number of Payroll Periods per Year
+gross_income = categories['TAXABLE'] * contract._get_salary_costs_factor()
+
+# Step 2
+# Get the correct deduction from the taxable amount
+if employee.l10n_us_state_withholding_allowance:
+    deduction = employee.l10n_us_state_withholding_allowance
+else:
+    match employee.l10n_us_state_filing_status:
+        case 'co_status_2':
+            deduction = payslip._rule_parameter('l10n_us_co_ded_jointly')
+        case _:
+            deduction = payslip._rule_parameter('l10n_us_co_ded_single')
+
+# Step 3
+# Final taxable amount by applying the deduction
+taxable = gross_income - deduction
+
+# Step 4
+# Tax amount per year
+yearly_tax = taxable * payslip._rule_parameter('l10n_us_co_income_tax_rate')
+
+# Step 5
+# Tax amount per payroll period
+tax = yearly_tax / contract._get_salary_costs_factor()
+
+# Step 6
+# Add extra tax withholding
+tax += employee.l10n_us_state_extra_withholding or 0
+
+result = -tax
+        </field>
+        <field name="struct_id" ref="l10n_us_hr_payroll.hr_payroll_structure_us_employee_salary"/>
+        <field name="partner_id" ref="l10n_us_hr_payroll.res_partner_revenue_co"/>
+    </record>
+</odoo>

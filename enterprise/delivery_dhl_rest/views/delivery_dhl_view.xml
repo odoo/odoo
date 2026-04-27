@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record id="view_delivery_carrier_form_with_provider_dhl" model="ir.ui.view">
+    <field name="name">delivery.carrier.form.provider.dhl</field>
+    <field name="model">delivery.carrier</field>
+    <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//page[@name='destination']" position='before'>
+            <page string="DHL Configuration" name="dhl_configuration" invisible="delivery_type != 'dhl_rest'">
+                <group>
+                    <group>
+                        <field name="dhl_api_key" required="delivery_type == 'dhl_rest'"/>
+                        <field name="dhl_api_secret" required="delivery_type == 'dhl_rest'"/>
+                        <field name="dhl_account_number" required="delivery_type == 'dhl_rest'"/>
+                        <field name="dhl_region_code" required="delivery_type == 'dhl_rest'"/>
+                        <field name="dhl_product_code" required="delivery_type == 'dhl_rest'"/>
+                    </group>
+                    <group>
+                        <field name="dhl_default_package_type_id" required="delivery_type == 'dhl_rest'" domain="[('package_carrier_type', '=', 'dhl_rest')]"/>
+                        <field name="dhl_unit_system" required="delivery_type == 'dhl_rest'"/>
+                        <field name="dhl_label_image_format" string="Label Format" required="delivery_type == 'dhl_rest'"/>
+                        <field name="dhl_label_template" required="delivery_type == 'dhl_rest'"/>
+                    </group>
+                    <group string="Options">
+                        <field name="return_label_on_delivery" invisible="can_generate_return == False"/>
+                        <field name="get_return_label_from_portal" invisible="return_label_on_delivery == False"/>
+                        <field name="dhl_dutiable"/>
+                        <field name="dhl_duty_payment" string='Duties paid by' invisible="dhl_dutiable == False" required="delivery_type == 'dhl_rest'"/>
+                    </group>
+                </group>
+                <group string="Custom Data" name="dhl_customs" groups="base.group_no_one">
+                    <field name="dhl_extra_data_rate_request" colspan="2"/>
+                    <field name="dhl_extra_data_ship_request" colspan="2"/>
+                    <field name="dhl_extra_data_return_request" colspan="2"/>
+                </group>
+            </page>
+        </xpath>
+    </field>
+</record>
+
+</odoo>

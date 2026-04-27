@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="holiday_type_id_annual_leave" model="hr.leave.type">
+        <field name="name">ID Annual Leaves</field>
+        <field name="requires_allocation">yes</field>
+        <field name="request_unit">half_day</field>
+        <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_legal_leave" />
+        <field name="leave_validation_type">no_validation</field>
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="holiday_type_id_sick_leave" model="hr.leave.type">
+        <field name="name">ID Sick Leaves</field>
+        <field name="requires_allocation">no</field>
+        <field name="request_unit">half_day</field>
+        <field name="support_document">True</field>
+        <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_sick_leave"/>
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="holiday_type_id_unpaid_leave" model="hr.leave.type">
+        <field name="name">ID Unpaid Leaves</field>
+        <field name="requires_allocation">no</field>
+        <field name="request_unit">half_day</field>
+        <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_unpaid_leave"/>
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="holiday_type_id_marriage_leave" model="hr.leave.type">
+        <field name="name">ID Marriage Leaves</field>
+        <field name="requires_allocation">no</field>
+        <field name="support_document">True</field>
+        <field name="work_entry_type_id" ref="work_entry_type_marriage_leave"/>
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="holiday_type_id_maternity_leave" model="hr.leave.type">
+        <field name="name">ID Maternity Leaves</field>
+        <field name="requires_allocation">no</field>
+        <field name="work_entry_type_id" ref="work_entry_type_maternity_leave"/>
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="holiday_type_id_paternity_leave" model="hr.leave.type">
+        <field name="name">ID Paternity Leaves</field>
+        <field name="requires_allocation">no</field>
+        <field name="work_entry_type_id" ref="work_entry_type_paternity_leave"/>
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="holiday_type_id_bereavement_leave" model="hr.leave.type">
+        <field name="name">ID Bereavement Leaves</field>
+        <field name="requires_allocation">no</field>
+        <field name="work_entry_type_id" ref="work_entry_type_bereavement_leave"></field>
+        <field name="company_id" eval="False" />
+    </record>
+</odoo>

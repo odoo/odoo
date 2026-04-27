@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_missing_bank_statement_line_tree" model="ir.ui.view">
+            <field name="name">missing.bank.statement.line.list</field>
+            <field name="model">account.bank.statement.line.transient</field>
+            <field name="arch" type="xml">
+                <list create="false" js_class="transient_bank_statement_line_list_view">
+                    <field name="date"/>
+                    <field name="payment_ref"/>
+                    <field name="partner_name"/>
+                    <field name="account_number"/>
+                    <field name="amount"/>
+                    <field name="amount_currency" optional="hide"/>
+                    <field name="transaction_details" optional="hide" groups="base.group_no_one"/>
+                    <field name="online_transaction_identifier" optional="hide"/>
+                    <field name="state" widget="badge" decoration-muted="state == 'pending'" decoration-success="state == 'posted'"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="missing_bank_statement_line_search" model="ir.ui.view">
+            <field name="name">missing.bank.statement.line.search</field>
+            <field name="model">account.bank.statement.line.transient</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="state"/>
+                    <separator/>
+                    <filter name="filter_posted" string="Posted Transactions" domain="[('state', '=', 'posted')]"/>
+                </search>
+            </field>
+        </record>
+    </data>
+</odoo>

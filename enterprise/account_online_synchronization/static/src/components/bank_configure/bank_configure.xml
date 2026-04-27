@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+    <t t-name="account.BankConfigureWidget">
+        <div class="bank_configure_container d-flex flex-wrap" t-ref="container">
+            <t t-if="state.isLoading">
+                loading...
+            </t>
+            <span t-elif="!state.institutions.length">
+                <button class="btn btn-primary" t-on-click="fallbackConnectBank" name="action_configure_bank_journal">Setup Bank</button>
+            </span>
+            <div class="d-grid" t-attf-style="{{state.gridStyle}}" t-if="!state.isLoading and state.institutions.length">
+                <div class="dashboard_bank" t-on-click="() => this.connectBank()">
+                    <button class="h-100 w-100 rounded btn btn-primary fw-normal" name="action_configure_bank_journal">
+                        <span class="img-fluid">Search over <span class="text-nowrap">26 000</span> banks</span>
+                    </button>
+                </div>
+                <div t-foreach="state.institutions" t-as="institution" t-key="institution.id"
+                     t-attf-class="dashboard_bank"
+                     t-on-click="() => this.connectBank(institution.id)"
+                >
+                    <button class="align-self-center h-100 w-100 rounded">
+                        <span t-if="institution.default_picture" t-out="institution.name"/>
+                        <img t-else="" class="img-fluid p-2" t-att-src="institution.picture" t-att-title="institution.name"/>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>

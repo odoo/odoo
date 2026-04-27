@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="ir_rule_l10n_ch_avs" model="ir.rule">
+        <field name="name">Swiss Payroll: AVS Multi-company</field>
+        <field name="model_id" ref="model_l10n_ch_social_insurance"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_l10n_ch_caf" model="ir.rule">
+        <field name="name">Swiss Payroll: CAF Multi-company</field>
+        <field name="model_id" ref="model_l10n_ch_compensation_fund"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_l10n_ch_laa" model="ir.rule">
+        <field name="name">Swiss Payroll: LAA Multi-company</field>
+        <field name="model_id" ref="model_l10n_ch_accident_insurance"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_l10n_ch_lpp" model="ir.rule">
+        <field name="name">Swiss Payroll: LPP Multi-company</field>
+        <field name="model_id" ref="model_l10n_ch_lpp_insurance"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_l10n_ch_laac" model="ir.rule">
+        <field name="name">Swiss Payroll: LAAC Multi-company</field>
+        <field name="model_id" ref="model_l10n_ch_additional_accident_insurance"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_l10n_ch_ijm" model="ir.rule">
+        <field name="name">Swiss Payroll: IJM Multi-company</field>
+        <field name="model_id" ref="model_l10n_ch_sickness_insurance"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_l10n_ch_source_tax" model="ir.rule">
+        <field name="name">Swiss Payroll: ST Multi-company</field>
+        <field name="model_id" ref="model_l10n_ch_source_tax_institution"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_l10n_ch_work_location" model="ir.rule">
+        <field name="name">Swiss Payroll: Work Locations Multi-company</field>
+        <field name="model_id" ref="model_l10n_ch_location_unit"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_l10n_ch_wage_statements" model="ir.rule">
+        <field name="name">Swiss Payroll: Wage Statements Multi-company</field>
+        <field name="model_id" ref="model_l10n_ch_salary_certificate_profile"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_l10n_ch_lpp_trans" model="ir.rule">
+        <field name="name">Swiss Payroll: LPP Declaration Multi-company</field>
+        <field name="model_id" ref="model_l10n_ch_lpp_basis_report"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_l10n_ch_ema_trans" model="ir.rule">
+        <field name="name">Swiss Payroll: EMA Declaration Multi-company</field>
+        <field name="model_id" ref="model_l10n_ch_ema_declaration"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="ir_rule_l10n_ch_stat_trans" model="ir.rule">
+        <field name="name">Swiss Payroll: Statistic Declaration Multi-company</field>
+        <field name="model_id" ref="model_l10n_ch_statistic_report"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_l10n_ch_master_data" model="ir.rule">
+        <field name="name">Swiss Payroll: Master Data Multi-company</field>
+        <field name="model_id" ref="model_l10n_ch_master_data_report"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

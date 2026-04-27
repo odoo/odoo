@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_company_form_inherit_l10n_uy_edi" model="ir.ui.view">
+        <field name="name">res.company.form.inherit</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="model">res.company</field>
+        <field type="xml" name="arch">
+            <field name="vat" position="after">
+                <field name="l10n_uy_edi_branch_code"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

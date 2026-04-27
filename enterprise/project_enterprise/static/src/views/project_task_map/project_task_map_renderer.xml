@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="project_enterprise.ProjectTaskMapRenderer" t-inherit="web_map.MapRenderer" t-inherit-mode="primary">
+        <xpath expr="//t[@t-if='env.isSmall']//t[@t-call='web_map.MapRenderer.PinListContainer']" position="attributes">
+            <attribute name="t-call">project_enterprise.ProjectTaskMapRenderer.PinListContainer</attribute>
+        </xpath>
+        <xpath expr="//t[@t-if='!env.isSmall']//t[@t-call='web_map.MapRenderer.PinListContainer']" position="attributes">
+            <attribute name="t-call">project_enterprise.ProjectTaskMapRenderer.PinListContainer</attribute>
+        </xpath>
+    </t>
+    <t t-name="project_enterprise.ProjectTaskMapRenderer.PinListContainer" t-inherit="web_map.MapRenderer.PinListContainer" t-inherit-mode="primary">
+        <xpath expr="//t[@t-elif='canDisplayPinList']/t[@t-call='web_map.MapRenderer.PinList']" position="attributes">
+            <attribute name="t-call">project_enterprise.ProjectTaskMapRenderer.PinList</attribute>
+        </xpath>
+        <xpath expr="//t[@t-if='canDisplayPinList and props.model.data.isGrouped']//t[@t-call='web_map.MapRenderer.PinList']" position="attributes">
+            <attribute name="t-call">project_enterprise.ProjectTaskMapRenderer.PinList</attribute>
+        </xpath>
+    </t>
+    <t t-name="project_enterprise.ProjectTaskMapRenderer.PinList" t-inherit="web_map.MapRenderer.PinList" t-inherit-mode="primary">
+        <xpath expr="//t[@t-call='web_map.MapRenderer.PinListItems']" position="attributes">
+            <attribute name="t-call">project_enterprise.ProjectTaskMapRenderer.PinListItems</attribute>
+        </xpath>
+    </t>
+    <t t-name="project_enterprise.ProjectTaskMapRenderer.PinListItems" t-inherit="web_map.MapRenderer.PinListItems" t-inherit-mode="primary">
+        <xpath expr="//li[@t-if='latitude and longitude']" position="attributes">
+            <attribute name="t-attf-class">#{record.planned_date_begin ? '' : 'text-muted'}</attribute>
+        </xpath>
+        <xpath expr="//t[@t-foreach='records']" position="before">
+            <p t-if="!records.length" class="fst-italic text-muted">View customer locations for your tasks</p>
+        </xpath>
+    </t>
+</templates>

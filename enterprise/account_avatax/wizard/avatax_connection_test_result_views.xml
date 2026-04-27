@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="avatax_connection_test_result_view_form" model="ir.ui.view">
+        <field name="name">avatax.connection.test.result.form</field>
+        <field name="model">avatax.connection.test.result</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="server_response" readonly="1"/>
+                <footer>
+                    <button string="Close" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

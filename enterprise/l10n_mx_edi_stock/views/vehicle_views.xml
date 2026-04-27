@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="vehicle_form_view_hazard" model="ir.ui.view">
+        <field name="name">l10n_mx_edi.vehicle.form.hazard</field>
+        <field name="model">l10n_mx_edi.vehicle</field>
+        <field name="inherit_id" ref="l10n_mx_edi_stock.vehicle_form_view"/>
+        <field name="arch" type="xml">
+            <field name="transport_insurance_policy" position="after">
+                <field name="environment_insurer"/>
+                <field name="environment_insurance_policy"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

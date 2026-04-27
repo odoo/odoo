@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+  <div t-name="spreadsheet_dashboard_edition.DashboardEdit">
+    <button t-if="isDashboardAdmin"
+            type="button"
+            class="btn btn-link o_edit_dashboard fa fa-pencil"
+            tabindex="-1"
+            draggable="false"
+            aria-label="Edit"
+            data-tooltip="Edit"
+            t-on-click.stop="onClick" />
+  </div>
+</templates>

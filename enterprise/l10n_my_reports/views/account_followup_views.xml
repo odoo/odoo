@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.actions.server" id="partner_action_print_report_statement" >
+        <field name="name">Print Statement of Account</field>
+        <field name="model_id" ref="model_res_partner"/>
+        <field name="binding_model_id" ref="model_res_partner"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_print_report_statement_account()</field>
+    </record>
+
+</odoo>

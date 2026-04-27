@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="pos_tyro.FailureDialog">
+        <Dialog size="'md'" title.translate="Tyro payment failed">
+            <p t-out="`Transaction result: ${props.result}`" class="text-prewrap"/>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="() => props.close()">
+                    OK
+                </button>
+                <button t-if="props.hasReceipt" class="btn btn-secondary" t-on-click="() => props.printReceipt()">
+                    Print Receipt
+                </button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_provisions" model="hr.salary.rule.category">
+        <field name="name">Provisions</field>
+        <field name="code">MX_PROVISIONS</field>
+    </record>
+
+    <record id="hr_payroll_integrated_daily_wage" model="hr.salary.rule.category">
+        <field name="name">Integrated Daily Wage</field>
+        <field name="code">INT_DAY_WAGE</field>
+    </record>
+
+    <record id="hr_payroll_social_security_employee" model="hr.salary.rule.category">
+        <field name="name">IMSS (Employee)</field>
+        <field name="code">IMSS_EMPLOYEE</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_social_security_employer" model="hr.salary.rule.category">
+        <field name="name">IMSS (Employer)</field>
+        <field name="code">IMSS_EMPLOYER</field>
+    </record>
+
+    <record id="hr_payroll_social_security_employee_total" model="hr.salary.rule.category">
+        <field name="name">IMSS Total (Employee)</field>
+        <field name="code">IMSS_EMPLOYEE_TOTAL</field>
+    </record>
+
+    <record id="hr_payroll_social_security_employer_total" model="hr.salary.rule.category">
+        <field name="name">IMSS Total (Employer)</field>
+        <field name="code">IMSS_EMPLOYER_TOTAL</field>
+    </record>
+
+    <record id="hr_payroll_savings_fund_employee" model="hr.salary.rule.category">
+        <field name="name">Savings Fund (Employee) - Deduction</field>
+        <field name="code">SAVINGS_FUND_EMPLOYEE</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_savings_fund_employer_alw" model="hr.salary.rule.category">
+        <field name="name">Savings Fund (Employer) - Allowance</field>
+        <field name="code">SAVINGS_FUND_EMPLOYER_ALW</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+
+    <record id="hr_payroll_savings_fund_employer_ded" model="hr.salary.rule.category">
+        <field name="name">Savings Fund (Employer) - Deduction</field>
+        <field name="code">SAVINGS_FUND_EMPLOYER_DED</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_holidays_on_time" model="hr.salary.rule.category">
+        <field name="name">Holidays On Time</field>
+        <field name="code">HOLIDAYS_ON_TIME</field>
+    </record>
+
+    <record id="hr_payroll_non_taxable_benefit" model="hr.salary.rule.category">
+        <field name="name">Non Taxable Benefit</field>
+        <field name="code">NON_TAX_BENEFIT</field>
+    </record>
+
+    <record id="hr_payroll_voucher" model="hr.salary.rule.category">
+        <field name="name">Voucher</field>
+        <field name="code">MX_VOUCHER</field>
+    </record>
+
+    <record id="hr_payroll_intermediary_computation" model="hr.salary.rule.category">
+        <field name="name">Intermediary Computation</field>
+        <field name="code">INTERMEDIARY_COMPUTATION</field>
+    </record>
+
+    <record id="hr_payroll_exemption" model="hr.salary.rule.category">
+        <field name="name">Exemption</field>
+        <field name="code">MX_EXEMPTION</field>
+    </record>
+
+    <record id="hr_payroll_taxable_alw" model="hr.salary.rule.category">
+        <field name="name">Taxable Allowance</field>
+        <field name="code">TAXABLE_ALW</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+
+    <record id="hr_payroll_taxes" model="hr.salary.rule.category">
+        <field name="name">Taxes</field>
+        <field name="code">MX_TAXES</field>
+    </record>
+</odoo>

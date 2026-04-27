@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- For Table Top -->
+    <record id="quality_point_sheet" model="quality.point">
+        <field name="title">Quality Sheet</field>
+        <field name="product_ids" eval="[(4, ref('mrp.product_product_computer_desk_head'))]"/>
+        <field name="picking_type_ids" model="stock.warehouse" eval="[(4, obj().env.ref('stock.warehouse0').manu_type_id.id)]"/>
+        <field name="operation_id" ref="mrp.mrp_routing_workcenter_0"/>
+        <field name="test_type_id" ref="quality_control_worksheet.test_type_worksheet"/>
+        <field name="worksheet_template_id" ref="quality_control_worksheet.quality_control_worksheet_template1"/>
+        <field name="worksheet_success_conditions">[("x_texture","=","smooth"), ("x_length","in", ["medium","short"])]</field>
+        <field name="failure_message">The test has failed: the texture should be "smooth", and length should be "1.80m ~ 1.85m" or "1.86m ~ 1.90m".</field>
+        <field name="worksheet_page">0</field>
+        <field name="sequence">0</field>
+    </record>
+
+</odoo>

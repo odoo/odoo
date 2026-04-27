@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="timesheet_grid.GridTimerButtonCell">
+        <button type="button"
+                class="btn_timer_line btn position-relative border-2 fa-stack"
+                t-att-class="{
+                    'btn-outline-secondary': !state.timerRunning and props.hovered or !state.timerRunning and env.isSmall or !state.timerRunning,
+                    'btn-success': props.hovered,
+                    'btn-danger': state.timerRunning,
+                 }"
+                t-on-click.synthetic="() => this.props.onTimerClick(this.props.row)"
+        >
+            <span class="o_grid_timer_button position-absolute start-0 top-0 d-flex align-items-center justify-content-center w-100 h-100"
+                  t-att-class="{
+                    'bg-view bg-opacity-75' : !props.hovered and !state.timerRunning and !env.isSmall
+                  }">
+                <span t-if="!state.timerRunning &amp;&amp; !props.hovered" class="d-none d-md-inline text-primary"
+                      t-att-class="{
+                        'text-lowercase': !props.addTimeMode,
+                        'text-muted fa fa-play': !props.hotKey,
+                      }"
+                      t-out="props.hotKey"/>
+                <i t-if="state.timerRunning or props.hovered or env.isSmall"
+                   class="fa"
+                   t-att-class="{
+                    'fa-stop' : state.timerRunning,
+                    'fa-play' : !state.timerRunning and !props.addTimeMode,
+                    'fa-plus' : !state.timerRunning and props.addTimeMode,
+                   }"
+                />
+            </span>
+        </button>
+    </t>
+
+</templates>

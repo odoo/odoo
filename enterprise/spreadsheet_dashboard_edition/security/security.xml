@@ -1,0 +1,8 @@
+<odoo>
+    <record id="ir_rule_spreadsheet_dashboard_threads" model="ir.rule">
+        <field name="name">Spreadsheet dashboard threads: groups</field>
+        <field name="model_id" ref="model_spreadsheet_cell_thread" />
+        <field name="groups" eval="[(4, ref('base.group_user'))]" />
+        <field name="domain_force">['&amp;', ('dashboard_id' ,'!=', False), ('dashboard_id.group_ids', 'in', user.groups_id.ids)]</field>
+    </record>
+</odoo>

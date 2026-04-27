@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="l10n_uk_reports_hmrc_users_form">
+        <field name="name">HMRC Users Form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="UK HMRC Integration" name="uk_hmrc_integration" groups="base.group_system">
+                    <group>
+                    <group>
+                        <field name="l10n_uk_user_token" readonly="1"/>
+                        <field name="l10n_uk_hmrc_vat_token" readonly="1"/>
+                        <field name="l10n_uk_hmrc_vat_token_expiration_time" readonly="1"/>
+                    </group>
+                    <group>
+                        <button type='object' name='hmrc_reset_tokens' string="Remove Authentication Credentials" />
+                    </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

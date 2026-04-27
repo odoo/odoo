@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_br_customs_regime_view_form" model="ir.ui.view">
+        <field name="name">l10n_br.customs.regime.view.form</field>
+        <field name="model">l10n_br.customs.regime</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_br_customs_regime_view_list" model="ir.ui.view">
+        <field name="name">l10n_br.customs.regime.view.list</field>
+        <field name="model">l10n_br.customs.regime</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="l10n_br_customs_regime_action" model="ir.actions.act_window">
+        <field name="name">Customs Regimes</field>
+        <field name="res_model">l10n_br.customs.regime</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="l10n_br_customs_regime_view_list"/>
+    </record>
+
+    <menuitem id="customs_regimes_menu" name="Customs Regime" action="l10n_br_customs_regime_action" parent="l10n_br.brazilian_accounting_menu"/>
+</odoo>

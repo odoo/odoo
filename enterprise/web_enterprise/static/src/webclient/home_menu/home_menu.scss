@@ -1,0 +1,140 @@
+.o_home_menu_background {
+    // 'Home menu background' design is shared with enterprise login
+    // screens and it's located in './home_menu_background.scss'
+
+    // When applied on webclient (note: we do not specify the webclient class
+    // here to avoid breaking studio custom style)
+    &:not(.o_home_menu_background_custom):not(.o_in_studio) .o_main_navbar {
+        background: transparent;
+        border-bottom-color: transparent;
+
+        .o_dropdown_active,
+        > ul > li.show > a {
+            outline: none;
+        }
+    }
+
+    &.o_home_menu_background_custom .o_home_menu {
+        background: {
+            size: cover;
+            repeat: no-repeat;
+            position: center;
+        }
+    }
+
+    .o_menu_systray {
+        @include print-variable(o-navbar-badge-bg, $o-navbar-badge-bg);
+    }
+}
+
+.o_home_menu {
+    font-size: $font-size-base;
+
+    .container {
+        @include media-breakpoint-up(md) {
+            max-width: $o-home-menu-container-size !important;
+        }
+    }
+
+    .o_app {
+        .o_app_icon {
+            width: $o-home-menu-app-icon-max-width;
+            aspect-ratio: 1;
+            padding: $o-home-menu-app-icon-padding;
+            background-color: var(--AppSwitcherIcon-background, #{$o-home-menu-app-icon-background-color});
+            object-fit: cover;
+            transform-origin: center bottom;
+            transition: box-shadow ease-in 0.1s, transform ease-in 0.1s;
+            box-shadow: var(--AppSwitcherIcon-inset-shadow, inset 0 0 0 1px rgba(0,0,0, .2)), 
+                0 1px 1px rgba(#000, .02),
+                0 2px 2px rgba(#000, .02),
+                0 4px 4px rgba(#000, .02),
+                0 8px 8px rgba(#000, .02),
+                0 16px 16px rgba(#000, .02);
+
+            .fa {
+                font-size: $o-home-menu-app-icon-max-width * 0.5;
+            }
+        }
+        
+        &:hover .o_app_icon {
+            box-shadow: var(--AppSwitcherIcon-inset-shadow, inset 0 0 0 1px rgba(0,0,0, .2)), 
+                0 2px 2px rgba(#000, .03),
+                0 4px 4px rgba(#000, .03),
+                0 8px 8px rgba(#000, .03),
+                0 12px 12px rgba(#000, .03),
+                0 24px 24px rgba(#000, .03);
+            transform: translateY(-2px);
+        }
+
+        &:active .o_app_icon {
+            transform: translateY(-2px) scale(.98);
+            transition: none;
+        }
+
+        .o_caption {
+            color: var(--homeMenuCaption-color, #{$o-home-menu-caption-color});
+            text-shadow: $o-home-menu-caption-shadow;
+        }
+
+        &.o_focused {
+            background: $component-active-bg;
+            outline: 1px solid $o-action;
+            border-radius: $border-radius;
+        }
+    }
+
+    .o_dragged_app {
+        transition: transform 0.5s;
+        transform: rotate(6deg);
+        .o_app_icon {
+            box-shadow: 0 8px 15px -10px black;
+            transform: translateY(-1px);
+        }
+    }
+
+    // iOS iPhone list layout due to Apple AppStore review
+    @include media-breakpoint-down(md) {
+        &.o_ios_app {
+            .o_apps {
+                flex-direction: column;
+                font-size: $o-home-menu-font-size-base * 1.25;
+                margin-top: map-get($spacers, 1);
+                padding: 0 map-get($spacers, 2);
+
+                > *, .o_app {
+                    width: 100%;
+                }
+            }
+
+            .o_app {
+                flex-direction: row !important;
+                justify-content: initial !important;
+                background-color: rgba(255, 255, 255, 0.1);
+                padding: map-get($spacers, 3) map-get($spacers, 4) !important;
+            }
+
+            .o_app_icon {
+                width: $o-home-menu-app-icon-max-width * 0.75;
+                height: $o-home-menu-app-icon-max-width * 0.75;
+                margin-right: map-get($spacers, 4);
+            }
+
+            .o_caption {
+                text-align: start !important;
+            }
+        }
+
+        &:not(.o_ios_app) .o_caption {
+            font-size: $font-size-sm;
+            font-weight: $font-weight-bold;
+        }
+    }
+}
+
+.o_home_menu_background_custom {
+    .o_home_menu .o_app .o_caption {
+        color: $o-home-menu-custom-caption-color;
+        text-shadow: $o-home-menu-custom-caption-shadow;
+    }
+}

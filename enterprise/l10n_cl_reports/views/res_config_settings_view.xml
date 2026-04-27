@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_f29_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.f29.report</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_cl.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//block[@id='l10n_cl_section']" position="inside">
+                <setting string="PPM for the fiscal year" help="Select the value for % PPM that should be used during the current fiscal year." id="l10n_cl_tasa_ppm_settings">
+                    <div class="content-group">
+                        <div class="row">
+                            <label string="PPM (%)" for="l10n_cl_report_tasa_ppm" class="col-lg-3 o_light_label"/>
+                            <div class="content-group mt16">
+                                <field name="l10n_cl_report_tasa_ppm" class="text-center oe_inline" />
+                            </div>
+                        </div>
+                    </div>
+                </setting>
+                <setting id="l10n_cl_fpp_settings" string="Proportional Factor for the fiscal year" help="If you use a proportional factor, select this to be used during the F29 proposal for the fiscal year." invisible="country_code != 'CL'">
+                    <div class="content-group">
+                        <div class="row">
+                            <label string="FPP (%)" for="l10n_cl_report_fpp_value" class="col-lg-3 o_light_label"/>
+                            <div class="content-group mt16">
+                                <field name="l10n_cl_report_fpp_value" class="text-center oe_inline" />
+                            </div>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

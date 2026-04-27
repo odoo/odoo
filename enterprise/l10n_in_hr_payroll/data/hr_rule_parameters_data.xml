@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="l10n_in_rule_parameter_basic" model="hr.rule.parameter">
+        <field name="name">India: Basic Salary Value</field>
+        <field name="code">l10n_in_basic_value</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_basic_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">7000</field>
+        <field name="rule_parameter_id" ref="l10n_in_hr_payroll.l10n_in_rule_parameter_basic"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_basic_percent" model="hr.rule.parameter">
+        <field name="name">India: Basic Salary Percentage</field>
+        <field name="code">l10n_in_basic_percent</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_basic_percent_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.60</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_basic_percent"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_regular_basic_day" model="hr.rule.parameter">
+        <field name="name">India: Basic Salary Days</field>
+        <field name="code">l10n_in_basic_days</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_regular_basic_day_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.31</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_regular_basic_day"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_hra" model="hr.rule.parameter">
+        <field name="name">India: House Rent Allowance Value</field>
+        <field name="code">l10n_in_hra_value</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_hra_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.40</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_hra"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_std_alw" model="hr.rule.parameter">
+        <field name="name">India: Standard Allowance</field>
+        <field name="code">l10n_in_std_alw</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_std_alw_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">4167</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_std_alw"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_bonus_percent" model="hr.rule.parameter">
+        <field name="name">India: Bonus Value and Percentage</field>
+        <field name="code">l10n_in_bonus_percent</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_bonus_percent_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            (450000.00, (12, 0.30)),
+            (550000.00, (3, 0.20)),
+            (0.00, (1, 0.10)),
+        ]</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_bonus_percent"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_tds_percent" model="hr.rule.parameter">
+        <field name="name">India: TDS Rate Chart</field>
+        <field name="code">l10n_in_tds_rate_chart</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_tds_percent_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            (0.0, (0, 300000)),
+            (0.05, (300000, 600000)),
+            (0.1, (600000, 900000)),
+            (0.15, (900000, 1200000)),
+            (0.2, (1200000, 1500000)),
+            (0.3, (1500000, 'inf'))
+        ]</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_tds_percent"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_surcharg_percent" model="hr.rule.parameter">
+        <field name="name">India: Surcharge Rate</field>
+        <field name="code">l10n_in_surcharge_rate</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_surcharge_percent_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            (0.0, (0, 5000000)),
+            (0.1, (5000000, 10000000)),
+            (0.15, (10000000, 20000000)),
+            (0.25, (20000000, 'inf')),
+        ]</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_surcharg_percent"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_standard_deduction" model="hr.rule.parameter">
+        <field name="name">India: Standard Deduction</field>
+        <field name="code">l10n_in_standard_deduction</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_standard_deduction_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">50000</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_standard_deduction"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_min_income_tax_rebate" model="hr.rule.parameter">
+        <field name="name">India: Minimun Income for Tax Rebate</field>
+        <field name="code">l10n_in_min_income_tax_rebate</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_min_income_tax_rebate_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">700000</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_min_income_tax_rebate"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_min_income_surcharge" model="hr.rule.parameter">
+        <field name="name">India: Miminum Income for Surcharge</field>
+        <field name="code">l10n_in_min_income_surcharge</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_min_income_surcharge_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">5000000</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_min_income_surcharge"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_max_surcharge_tax_rate" model="hr.rule.parameter">
+        <field name="name">India: Maximum Tax Rate for Surcharge</field>
+        <field name="code">l10n_in_max_surcharge_tax_rate</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_max_surcharge_tax_rate_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            (5000000, 1200000, 0),
+            (10000000, 2700000, 270000),
+            (20000000, 5700000, 855000),
+            (50000000, 14700000, 3675000),
+        ]</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_max_surcharge_tax_rate"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_lta_percent" model="hr.rule.parameter">
+        <field name="name">India: Leave Travel Allowance Value and Percentage</field>
+        <field name="code">l10n_in_lta_percent</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_lta_percent_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            (450000.00, (12, 0.30)),
+            (550000.00, (3, 0.20)),
+            (0.00, (1, 0.10)),
+        ]</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_lta_percent"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_professional_tax" model="hr.rule.parameter">
+        <field name="name">India: Professional Tax</field>
+        <field name="code">l10n_in_professional_tax</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_professional_tax_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">[-200, -150, -80]</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_professional_tax"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_pf_percent" model="hr.rule.parameter">
+        <field name="name">India: Provident Fund Percentage</field>
+        <field name="code">l10n_in_pf_percent</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_empr_pf_ctb_percent_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.12</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_pf_percent"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_pf_amount" model="hr.rule.parameter">
+        <field name="name">India: Provident Fund Value</field>
+        <field name="code">l10n_in_pf_amount</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_pf_amount_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">15000.00</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_pf_amount"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_eps_contri_percent" model="hr.rule.parameter">
+        <field name="name">India: EPS Contri Percentage</field>
+        <field name="code">l10n_in_eps_contri_percent</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_eps_contri_percent_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.0833</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_eps_contri_percent"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_esicf_percent" model="hr.rule.parameter">
+        <field name="name">India: Employer's State Insurance Corporation Percentage</field>
+        <field name="code">l10n_in_esicf_percent</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_esicf_percent_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.0325</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_esicf_percent"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_city_alw_percent" model="hr.rule.parameter">
+        <field name="name">India: City Compensatory Allowance Percentage</field>
+        <field name="code">l10n_in_city_alw_percent</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_city_alw_percent_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.10</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_city_alw_percent"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_chea" model="hr.rule.parameter">
+        <field name="name">India: Child Education Allowance</field>
+        <field name="code">l10n_in_chea_value</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_chea_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">[100, 200]</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_chea"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_child" model="hr.rule.parameter">
+        <field name="name">India: Child Hostel Allowance Value</field>
+        <field name="code">l10n_in_child_hostel_allowance</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_child_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">[300, 600]</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_child"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_esicf" model="hr.rule.parameter">
+        <field name="name">India: Employer's State Insurance Corporation Value</field>
+        <field name="code">l10n_in_esicf_value</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_esicf_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">21000</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_esicf"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_leave_days" model="hr.rule.parameter">
+        <field name="name">India: Leave Days</field>
+        <field name="code">l10n_in_leave_days</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_leave_days_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">22</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_leave_days"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_cbda_percent" model="hr.rule.parameter">
+        <field name="name">India: India:Employee's NPS Contribution</field>
+        <field name="code">l10n_in_cbda_percent</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_cbda_percent_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.10</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_cbda_percent"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_in_rule_parameter_performace_bonus_percent" model="hr.rule.parameter">
+        <field name="name">India: Performace Bonus Percentage</field>
+        <field name="code">l10n_in_regular_bonus_percent</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+    <record id="l10n_in_rule_parameter_performace_bonus_percent_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.40</field>
+        <field name="rule_parameter_id" ref="l10n_in_rule_parameter_performace_bonus_percent"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+</odoo>

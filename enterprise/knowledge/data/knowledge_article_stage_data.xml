@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Stages -->
+    <record id="knowledge_article_template_stage_new" model="knowledge.article.stage">
+        <field name="name">New</field>
+        <field name="sequence">1</field>
+        <field name="fold">False</field>
+        <field name="parent_id" ref="knowledge_article_template_shared_todos"/>
+    </record>
+
+    <record id="knowledge_article_template_stage_ongoing" model="knowledge.article.stage">
+        <field name="name">Ongoing</field>
+        <field name="sequence">2</field>
+        <field name="fold">False</field>
+        <field name="parent_id" ref="knowledge_article_template_shared_todos"/>
+    </record>
+
+    <record id="knowledge_article_template_stage_done" model="knowledge.article.stage">
+        <field name="name">Done</field>
+        <field name="sequence">3</field>
+        <field name="fold">True</field>
+        <field name="parent_id" ref="knowledge_article_template_shared_todos"/>
+    </record>
+
+    <!-- Assign a stage to the articles items -->
+
+    <record id="knowledge_article_template_shared_todos_water_the_plants" model="knowledge.article">
+        <field name="stage_id" ref="knowledge_article_template_stage_new"/>
+    </record>
+
+    <record id="knowledge_article_template_shared_todos_pay_the_electricity_bill" model="knowledge.article">
+        <field name="stage_id" ref="knowledge_article_template_stage_new"/>
+    </record>
+
+    <record id="knowledge_article_template_shared_todos_write_the_next_newsletter" model="knowledge.article">
+        <field name="stage_id" ref="knowledge_article_template_stage_ongoing"/>
+    </record>
+
+    <record id="knowledge_article_template_shared_todos_contact_our_lawyer" model="knowledge.article">
+        <field name="stage_id" ref="knowledge_article_template_stage_done"/>
+    </record>
+</odoo>

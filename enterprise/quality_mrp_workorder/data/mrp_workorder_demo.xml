@@ -1,0 +1,60 @@
+<odoo>
+    <!-- Quality Control From Manufacturing -->
+
+    <record id="quality_point_pass_fail" model="quality.point">
+        <field name="product_ids" eval="[(4, ref('mrp.product_product_computer_desk'))]"/>
+        <field name="picking_type_ids" model="stock.warehouse" eval="[(4, obj().env.ref('stock.warehouse0').manu_type_id.id)]"/>
+        <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
+        <field name="test_type_id" ref="quality_control.test_type_passfail"/>
+        <field name="note">Check the fastenings are in good condition.</field>
+        <field name="title">Quality check</field>
+        <field name="worksheet_page">2</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <record id="quality_point_measure" model="quality.point">
+        <field name="product_ids" eval="[(4, ref('mrp.product_product_computer_desk'))]"/>
+        <field name="picking_type_ids" model="stock.warehouse" eval="[(4, obj().env.ref('stock.warehouse0').manu_type_id.id)]"/>
+        <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
+        <field name="test_type_id" ref="quality_control.test_type_measure"/>
+        <field name="note">Please measure the angle formed by the two adjacent wooden panels at the bottom left-hand corner.</field>
+        <field name="norm">90</field>
+        <field name="norm_unit">degrees</field>
+        <field name="tolerance_min">88</field>
+        <field name="tolerance_max">92</field>
+        <field name="title">Measure the Angle</field>
+        <field name="worksheet_page">3</field>
+        <field name="failure_message">The test has failed: the measure should be between 88 and 92 degrees.</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <record id="quality_point_stool_instruction_15" model="quality.point" forcecreate="0">
+        <field name="product_ids" model="product.product" eval="[(4, p) for p in obj().env.ref('mrp_workorder.product_template_stool').product_variant_ids.ids]"/>
+        <field name="picking_type_ids" model="stock.warehouse" eval="[(4, obj().env.ref('stock.warehouse0').manu_type_id.id)]"/>
+        <field name="operation_id" ref="mrp_workorder.mrp_routing_workcenter_stool"/>
+        <field name="test_type_id" ref="quality_control.test_type_measure"/>
+        <field name="norm">35</field>
+        <field name="norm_unit">mm</field>
+        <field name="tolerance_min">34</field>
+        <field name="tolerance_max">36</field>
+        <field name="note"><![CDATA[
+        <p>Using the Vernier Caliper, measure the width of one of the Stool Foots to make sure it meets the quality standards.</p>
+        <p><img class="img-fluid o_we_custom_image" src="/quality_mrp_workorder/static/img/qp_stool_15.jpeg" style="width: 50%;"><br></p>]]>
+        </field>
+        <field name="title">Quality Check</field>
+        <field name="sequence">150</field>
+    </record>
+    <record id="quality_point_stool_instruction_35" model="quality.point" forcecreate="0">
+        <field name="product_ids" model="product.product" eval="[(4, p) for p in obj().env.ref('mrp_workorder.product_template_stool').product_variant_ids.ids]"/>
+        <field name="picking_type_ids" model="stock.warehouse" eval="[(4, obj().env.ref('stock.warehouse0').manu_type_id.id)]"/>
+        <field name="operation_id" ref="mrp_workorder.mrp_routing_workcenter_stool"/>
+        <field name="test_type_id" ref="quality_control.test_type_passfail"/>
+        <field name="note"><![CDATA[
+        <p>Place the Stool on the floor and make sure it doesn't buckle.</p>
+                    ]]>
+        </field>
+        <field name="title">Buckle test</field>
+        <field name="sequence">350</field>
+    </record>
+
+</odoo>

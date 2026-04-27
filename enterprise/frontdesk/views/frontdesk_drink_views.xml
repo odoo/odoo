@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="frontdesk_drink_view_tree" model="ir.ui.view">
+        <field name="name">frontdesk.drink.view.list</field>
+        <field name="model">frontdesk.drink</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="notify_user_ids" widget="many2many_avatar_user"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="frontdesk_drink_view_form" model="ir.ui.view">
+        <field name="name">frontdesk.drink.view.form</field>
+        <field name="model">frontdesk.drink</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="drink_image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name" string="Drink Name"/>
+                        <h1><field name="name" placeholder="e.g. Coca-Cola"/></h1>
+                    </div>
+                    <group class="gx-0">
+                        <group>
+                            <field name="notify_user_ids" widget="many2many_avatar_user"/>
+                        </group>
+                        <group>
+                            <field name="sequence" string="Sequence"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="frontdesk_drink_view_kanban" model="ir.ui.view">
+        <field name="name">frontdesk.drink.view.kanban</field>
+        <field name="model">frontdesk.drink</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name='card' class="flex-row">
+                        <aside>
+                            <field name="drink_image" widget="image" options="{'size': [64, 64]}"/>
+                        </aside>
+                        <main class="ms-2">
+                            <field name='name' class="fw-bolder fs-5"/>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="frontdesk_drink_view_search" model="ir.ui.view">
+        <field name="name">frontdesk.drink.search</field>
+        <field name="model">frontdesk.drink</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_frontdesk_drink" model="ir.actions.act_window">
+        <field name="name">Drinks</field>
+        <field name="res_model">frontdesk.drink</field>
+        <field name="view_mode">kanban,form,list,search</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No drinks to offer to visitors. Let's add one!</p>
+        </field>
+    </record>
+</odoo>

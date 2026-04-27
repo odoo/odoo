@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_hr_payslip_new" model="ir.actions.act_window">
+        <field name="name">Payslip</field>
+        <field name="res_model">hr.payslip</field>
+        <field name="view_mode">form</field>
+    </record>
+
+    <record id="action_hr_salary_attachment_new" model="ir.actions.act_window">
+        <field name="name">Salary Attachment</field>
+        <field name="res_model">hr.salary.attachment</field>
+        <field name="view_mode">form</field>
+    </record>
+
+    <!-- Contract View -->
+    <record id="hr_contract_form_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="currency_id" invisible="1"/>
+            </field>
+            <field name="structure_type_id" position="attributes">
+                <attribute name="required">1</attribute>
+            </field>
+            <xpath expr="//label[@for='wage']" position="before">
+                <field name="wage_type"/>
+                <field name="schedule_pay"/>
+                <label for="hourly_wage" invisible="wage_type != 'hourly'"/>
+                <div class="o_row mw-50" name="hourly_wage" invisible="wage_type != 'hourly'">
+                    <field name="hourly_wage" nolabel="1"/>
+                    <span>/ hour</span>
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='wage_period_label']" position="attributes">
+                <attribute name="invisible">schedule_pay != 'monthly'</attribute>
+            </xpath>
+            <xpath expr="//div[@name='wage_period_label']" position="after">
+                <div class="mb-3" invisible="schedule_pay != 'annually'">/ year</div>
+                <div class="mb-3" invisible="schedule_pay != 'semi-annually'">/ half-year</div>
+                <div class="mb-3" invisible="schedule_pay != 'quarterly'">/ quarter</div>
+                <div class="mb-3" invisible="schedule_pay != 'bi-monthly'">/ two months</div>
+                <div class="mb-3" invisible="schedule_pay != 'semi-monthly'">/ half-month</div>
+                <div class="mb-3" invisible="schedule_pay != 'bi-weekly'">/ two weeks</div>
+                <div class="mb-3" invisible="schedule_pay != 'weekly'">/ week</div>
+                <div class="mb-3" invisible="schedule_pay != 'daily'">/ day</div>
+            </xpath>
+            <xpath expr="//label[@for='wage']" position="attributes">
+                <attribute name="invisible">wage_type == 'hourly'</attribute>
+            </xpath>
+            <xpath expr="//div[@name='wage']" position="attributes">
+                <attribute name="invisible">wage_type == 'hourly'</attribute>
+            </xpath>
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" name="action_open_payslips"
+                        type="object" icon="fa-dollar" groups="hr_payroll.group_hr_payroll_user"
+                        invisible="payslips_count == 0 or state == 'draft'">
+                    <field name="payslips_count" string="Payslips" widget="statinfo"/>
+                </button>
+                <button class="oe_stat_button" name="%(action_hr_payslip_new)d"
+                        type="action" icon="fa-dollar" groups="hr_payroll.group_hr_payroll_user"
+                        context="{'default_employee_id': employee_id, 'default_contract_id': id}"
+                        invisible="not employee_id or payslips_count or state == 'draft'">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text"> Payslips </span>
+                            <span class="o_stat_value"> New </span>
+                        </div>
+                </button>
+                <button class="oe_stat_button" string="Salary Attachments" name="action_open_salary_attachments"
+                        groups="hr_payroll.group_hr_payroll_user"
+                        type="object" icon="fa-book" invisible="salary_attachments_count == 0">
+                    <field name="salary_attachments_count" string="Salary Attachments" widget="statinfo"/>
+                </button>
+                <button class="oe_stat_button" name="%(action_hr_salary_attachment_new)d"
+                        type="action" icon="fa-book" groups="hr_payroll.group_hr_payroll_user"
+                        context="{'default_employee_ids': [employee_id]}"
+                        invisible="not employee_id or salary_attachments_count">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Salary Attachments</span>
+                            <span class="o_stat_value">New</span>
+                        </div>
+                </button>
+            </div>
+            <group name="contract_details_2" position="inside">
+                <separator string="Part time"/>
+                    <label for="time_credit"/>
+                    <div class="o_row" style="width: 5rem !important;">
+                        <field name="time_credit" class="oe_inline"/>
+                        <field name="work_time_rate" invisible="not time_credit" widget="percentage"/>
+                    </div>
+                    <field name="standard_calendar_id" invisible="not time_credit" help="The Standard Calendar is the calendar used by the people working at a 100% rate. It's used here to compute your part-time percentage."/>
+                    <field name="time_credit_type_id" invisible="not time_credit" required="time_credit"/>
+            </group>
+        </field>
+    </record>
+
+    <record id="hr_contract_search_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.search.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='end_date']" position="after">
+                <separator/>
+                <filter string="Part Time" name="part_time" domain="[('time_credit', '=', True)]"/>
+            </xpath>
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="employee_id" string="Employee Code" filter_domain="[('employee_id.registration_number','ilike', self)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_contract_view_kanban" model="ir.ui.view">
+        <field name="name">hr.contract.kanban</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_kanban"/>
+        <field name="arch" type="xml">
+            <field name="activity_state" position="after">
+                <field name="wage_type"/>
+                <field name="currency_id"/>
+            </field>
+            <div name="div_date_id" position="after">
+                <div class="text-muted" name="div_job_id">
+                    <t t-if="record.wage_type.raw_value == 'monthly'">
+                        Wage : <field name="contract_wage"/> / Month
+                    </t>
+                    <t t-if="record.wage_type.raw_value == 'hourly'">
+                        Wage : <field name="hourly_wage"/> / Hour
+                    </t>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="hr_contract_view_tree" model="ir.ui.view">
+        <field name="name">hr.contract.view.list</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <header>
+                   <button name="%(hr_payroll.action_hr_payroll_index)d" type="action" string="Index Contracts" groups="hr_contract.group_hr_contract_manager" display="always"/>
+                </header>
+            </xpath>
+            <xpath expr="//field[@name='structure_type_id']" position="after">
+                <field name="payslips_count" optional="hidden"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_contract.action_hr_contract" model="ir.actions.act_window">
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'sequence': 2, 'view_id': ref('hr_payroll.hr_contract_view_tree')})]"/>
+    </record>
+
+    <record id="action_hr_contract_repository" model="ir.actions.act_window">
+        <field name="name">Contracts</field>
+        <field name="res_model">hr.contract</field>
+        <field name="view_mode">kanban,list,form,activity</field>
+        <field name="domain">[('employee_id', '!=', False)]</field>
+        <field name="context">{'search_default_running': 1, 'search_default_to_renew': 1}</field>
+        <field name="search_view_id" ref="hr_contract.hr_contract_view_search"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'sequence': 2, 'view_id': ref('hr_payroll.hr_contract_view_tree')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new contract
+            </p>
+        </field>
+    </record>
+
+    <record id="action_new_salary_attachment" model="ir.actions.server">
+        <field name="name">Create Salary Attachment</field>
+        <field name="model_id" ref="hr_payroll.model_hr_contract"/>
+        <field name="binding_model_id" ref="hr_contract.model_hr_contract"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">action = record.action_new_salary_attachment()</field>
+    </record>
+</odoo>

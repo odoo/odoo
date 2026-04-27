@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="missing_information_view_form" model="ir.ui.view">
+        <field name="name">missing.information.view.form</field>
+        <field name="model">account_followup.missing.information.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <p>We were not able to process some of the automated follow-up actions due to missing information on the partners.</p>
+                <footer>
+                    <button name="view_partners_action" type="object" string="View partners" class="oe_highlight"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="missing_information_view_tree" model="ir.ui.view">
+        <field name="name">missing.information.view.list</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <list create="false" editable="bottom">
+                <field name="name" readonly="True"/>
+                <field name="email"/>
+                <field name="mobile"/>
+                <field name="phone"/>
+                <field name="street"/>
+                <field name="city"/>
+                <field name="zip"/>
+                <field name="country_id"/>
+            </list>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="google_reserve_merchant_view_list" model="ir.ui.view">
+        <field name="name">google.reserve.merchant.view.list</field>
+        <field name="model">google.reserve.merchant</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="business_category"/>
+                <field name="phone"/>
+                <field name="website_url"/>
+                <field name="location_id" context="{'show_address': True}"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="google_reserve_merchant_view_form" model="ir.ui.view">
+        <field name="name">google.reserve.merchant.view.form</field>
+        <field name="model">google.reserve.merchant</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="business_category" placeholder="e.g Restaurant"/>
+                        <field name="phone"/>
+                        <field name="website_url"/>
+                        <field name="location_id" context="{'show_address': True}"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="google_reserve_merchant_action" model="ir.actions.act_window">
+        <field name="name">Google Reserve Merchants</field>
+        <field name="res_model">google.reserve.merchant</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="menu_appointment_google_reserve_merchants"
+        parent="appointment.appointment_menu_config"
+        action="appointment_google_reserve.google_reserve_merchant_action"
+        groups="appointment.group_appointment_manager"
+        name="Google Reserve"/>
+</odoo>

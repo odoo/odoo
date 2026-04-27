@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ro_cas_category" model="hr.salary.rule.category">
+        <field name="name">Security Contribution (CAS)</field>
+        <field name="code">CAS</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="l10n_ro_cass_category" model="hr.salary.rule.category">
+        <field name="name">Social Health Insurance (CASS)</field>
+        <field name="code">CASS</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="l10n_ro_income_tax_category" model="hr.salary.rule.category">
+        <field name="name">Income Tax</field>
+        <field name="code">INCOMETAX</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="l10n_ro_cam_category" model="hr.salary.rule.category">
+        <field name="name">Work Insurance (CAM)</field>
+        <field name="code">CAM</field>
+    </record>
+
+    <record id="l10n_ro_unemployed_disabled_category" model="hr.salary.rule.category">
+        <field name="name">Unemployed Disabled People Contribution</field>
+        <field name="code">UNEMPDISABLED</field>
+    </record>
+
+    <record id="l10n_ro_pension_category" model="hr.salary.rule.category">
+        <field name="name">Pension Contribution</field>
+        <field name="code">PENSION</field>
+    </record>
+</odoo>

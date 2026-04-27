@@ -1,0 +1,254 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_payroll_expense
+#
+# Translators:
+# Wil Odoo, 2024
+# Junko Augias, 2024
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2026-04-16 10:36+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/"
+"hr_payroll_expense/ja/>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.16.2\n"
+
+#. module: hr_payroll_expense
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.view_account_payment_register_form_inherit_hr_payroll_expense
+msgid ""
+"<span class=\"fw-bold\">\n"
+"                            The expenses will already be reimbursed in a "
+"payslip. Make sure this payment is intended.\n"
+"                        </span>"
+msgstr ""
+"<span class=\"fw-bold\">\n"
+"                            経費はすでに給与明細で精算される予定です。この支"
+"払が意図したものであることを確認して下さい。\n"
+"                        </span>"
+
+#. module: hr_payroll_expense
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_expense_sheet_view_form_inherit_payroll
+msgid "<span class=\"o_stat_text\">Payslip</span>"
+msgstr "<span class=\"o_stat_text\">給与明細</span>"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_expense_sheet
+msgid "Expense Report"
+msgstr "経費報告"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"Expense reimbursement rule needs to be configured to add expenses to "
+"payslips.\n"
+"Please create one salary rule with the \"%(code)s\" code on the relevant "
+"salary structures."
+msgstr ""
+"経費を給与明細に追加するには、経費精算規則を設定する必要があります。\n"
+"該当する給与規則に \"%(code)s\" コードを使用して、1つの給与規則を作成して下さ"
+"い。"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "Expense report (\"%(name)s\") was removed from the next payslip."
+msgstr "次の給与明細から経費報告(\"%(name)s\")が削除されました。"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "Expense report (\"%(name)s\") will be added to the next payslip."
+msgstr "経費報告(\"%(name)s\")は次の給与明細に追加されます。"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_payslip__expense_sheet_ids
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_payslip_view_form_inherit_expense
+msgid "Expenses"
+msgstr "費用"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_payslip__expenses_count
+msgid "Expenses Count"
+msgstr "経費数"
+
+#. module: hr_payroll_expense
+#: model:hr.salary.rule,name:hr_payroll_expense.hr_salary_rule_expense_refund
+msgid "Expenses Reimbursement"
+msgstr "経費精算"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,help:hr_payroll_expense.field_hr_payslip__expense_sheet_ids
+msgid "Expenses to reimburse to employee."
+msgstr "従業員に精算する経費"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_payslip_employees
+msgid "Generate payslips for all selected employees"
+msgstr "選択した全ての従業員の給与明細を作成する。"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "Go to salary rules"
+msgstr "給与規則に移動"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_account_payment_register__is_already_paid_through_a_payslip
+msgid "Is Already Paid Through A Payslip"
+msgstr "給与明細を通して既に支払われています"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_account_move
+msgid "Journal Entry"
+msgstr "仕訳"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payroll_structure.py:0
+msgid ""
+"No debit account found in the '%(rule_name)s' payslip salary rule. Please "
+"add a payable debit account to be able to create an accounting entry for the "
+"expense reports linked to this payslip."
+msgstr ""
+" '%(rule_name)s' の給与明細の給与規則に引落口座がありません。この給与明細に関"
+"連付けられた経費報告の会計仕訳を作成できるように、支払用の引落口座を追加して"
+"下さい。"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid ""
+"No salary rule was found to handle expenses in structure '%"
+"(structure_name)s'."
+msgstr ""
+"組織 '%(structure_name)s' で経費を処理するための給与規則が見つかりませんでし"
+"た。"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"Only approved expense reports that were paid by an employee can be "
+"reimbursed in a payslip."
+msgstr "給与明細で精算できるのは、従業員が支払った承認済みの経費報告のみです。"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_account_payment_register
+msgid "Pay"
+msgstr "支払"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_payslip
+msgid "Pay Slip"
+msgstr "給与明細"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_expense_sheet__payslip_id
+msgid "Payslip"
+msgstr "給与明細"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_expense_sheet__refund_in_payslip
+msgid "Reimburse In Next Payslip"
+msgstr "次回給与明細で経費精算"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid "Reimbursed Expenses"
+msgstr "精算済経費"
+
+#. module: hr_payroll_expense
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_expense_sheet_view_form_inherit_payroll
+msgid "Remove from Payslip"
+msgstr "給与明細から削除する"
+
+#. module: hr_payroll_expense
+#: model:ir.actions.server,name:hr_payroll_expense.hr_expense_add_to_payslip_action_server
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_expense_sheet_view_form_inherit_payroll
+msgid "Report in Next Payslip"
+msgstr "次回の給与明細で報告"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_payroll_structure
+msgid "Salary Structure"
+msgstr "給与体系"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payroll_structure.py:0
+msgid ""
+"The '%(account_name)s' account for the salary rule '%(rule_name)s' must be "
+"of type 'Payable'."
+msgstr ""
+" '%(account_name)s' 勘定科目、給与規則'%(rule_name)s' 用は、'買掛金'タイプで"
+"ある必要があります。"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid ""
+"The salary rules with the code 'EXPENSES' must have a debit account set to "
+"be able to properly reimburse the linked expenses. This must be an account "
+"of type 'Payable'."
+msgstr ""
+"コード '経費' の給与規則では、リンクされた経費を適切に精算できるように、借方"
+"勘定が設定されている必要があります。これは'買掛金'タイプの勘定科目でなければ"
+"なりません。"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"The state of the accounting entries linked to this expense report do not "
+"allow it to be reimbursed through a payslip."
+msgstr ""
+"この経費報告書にリンクされている会計項目の状態では、給与明細書による精算はで"
+"きません。"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "There are no valid expense sheets selected."
+msgstr "有効な経費シートが選択されていません。"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"You cannot remove an expense from a payslip that has already been "
+"validated.\n"
+"Expenses can only be removed from draft or canceled payslips."
+msgstr ""
+"すでに有効になっている給与明細書から経費を削除することはできません。\n"
+"削除できるのは、ドラフトまたは取消された給与明細書からのみです。"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid ""
+"You don't have the access rights to link an expense report to a payslip. You "
+"need to be a payroll officer to do that."
+msgstr ""
+"経費報告書を給与明細書にリンクさせるアクセス権はありません。そのためには給与"
+"担当者である必要があります。"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/account_move.py:0
+msgid "You don't have the access rights to post an invoice."
+msgstr "請求書を記帳するためのアクセス権がありません。"

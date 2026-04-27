@@ -1,0 +1,21 @@
+<odoo>
+    <data>
+        <record id="invoice_form_inherit_l10n_ke_oscu_pos" model="ir.ui.view">
+            <field name="name">invoice.form.inherit.l10n.ke.oscu.pos</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <field name="pos_order_ids" invisible="1" groups="point_of_sale.group_pos_user"/>
+                    <button name="action_view_pos_order"
+                        string="Pos Order"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-shopping-cart"
+                        invisible="not pos_order_ids"
+                        groups="point_of_sale.group_pos_user"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

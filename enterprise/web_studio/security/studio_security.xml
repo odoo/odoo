@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="studio_approval_entry_group_user_rule" model="ir.rule">
+            <field name="name">Studio Validation Entries: manage your own entries (user)</field>
+            <field name="model_id" ref="web_studio.model_studio_approval_entry"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+    
+        <record id="studio_approval_entry_group_system_rule" model="ir.rule">
+            <field name="name">Studio Validation Entries: manage all entries (admin)</field>
+            <field name="model_id" ref="web_studio.model_studio_approval_entry"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+        </record>
+
+    </data>
+</odoo>

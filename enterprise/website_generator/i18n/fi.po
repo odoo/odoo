@@ -1,0 +1,423 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_generator
+#
+# Translators:
+# Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2024
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
+# Joakim Weckman, 2024
+# Mikko Salmela <salmemik@gmail.com>, 2024
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Jessica Jakara, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:50+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Jessica Jakara, 2025\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_generator
+#: model:mail.template,body_html:website_generator.email_template_website_scrapped
+msgid ""
+"<div>\n"
+"            <p><b>Great news!</b> Your website conversion is complete and "
+"your new integrated Odoo website is now live.</p>\n"
+"            <p>Check out your new website here: <a t-att-"
+"href=\"ctx.get('website_url')\"><t t-out=\"ctx.get('website_url')\"/></a></"
+"p>\n"
+"            <p>Thank you for choosing Odoo for your web integration!</p>\n"
+"            <p>Best regards,</p>\n"
+"            <br/>\n"
+"            <p>Odoo - The best open source website builder.</p>\n"
+"            </div>\n"
+"            "
+msgstr ""
+"<div>\n"
+"            <p><b>Iloisia uutisia!</b> Verkkosivusi konversio on nyt valmis "
+"ja uusi integroitu Odoo-verkkosivusi on nyt livenä.</p>\n"
+"            <p>Tutustu uuteen verkkosivuusi täällä: <a t-att-"
+"href=\"ctx.get('website_url')\"><t t-out=\"ctx.get('website_url')\"/></a></"
+"p>\n"
+"            <p>Kiitos, että valitsit Odoon verkkosivusi integroimiseksi!</"
+"p>\n"
+"            <p>Parhain terveisin,</p>\n"
+"            <br/>\n"
+"            <p>Odoo - Paras avoimen lähdekoodin verkkosivun rakennuspalvelu."
+"</p>\n"
+"            </div>\n"
+"            "
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__additional_urls
+msgid "Additional URLs"
+msgstr "Lisää URL-osoitteita"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "An error occurred"
+msgstr "Tapahtui virhe"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "Attachment not found"
+msgstr "Liitettä ei löydy"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "Banned url"
+msgstr "Kielletty url"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "Could not fetch result, invalid output uuid or result expired"
+msgstr ""
+"Tulosta ei voitu noutaa, virheellinen tuloksen UUID tai tulos on vanhentunut"
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__create_date
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "Done, website generated"
+msgstr "Valmis, verkkosivu luotu"
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/configurator/configurator.xml:0
+msgid "During beta, the number of imported pages may be limited."
+msgstr "Beta-vaiheen aikana tuotujen sivujen määrä saattaa olla rajoitettu."
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/configurator/configurator.xml:0
+msgid "Enter your website URL"
+msgstr "Syötä verkkosivusi URL"
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/configurator/configurator.xml:0
+msgid "Features"
+msgstr "Ominaisuudet"
+
+#. module: website_generator
+#: model:ir.model,name:website_generator.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP-reititys"
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/configurator/configurator.xml:0
+msgid "Import Products"
+msgstr "Tuo tuotteita"
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/configurator/configurator.xml:0
+msgid "Import my website"
+msgstr "Tuo verkkosivuni"
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/configurator/configurator.xml:0
+msgid "Import your"
+msgstr "Tuo"
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/generator_wait/generator.js:0
+msgid "Importing your website."
+msgstr "Verkkosivuasi tuodaan."
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "Invalid dbuuid"
+msgstr "Virheellinen dbuuid"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "Invalid import products"
+msgstr "Virheellinen tuotteiden tuonti"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "Invalid token"
+msgstr "Virheellinen tunnus (token)"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "Invalid url"
+msgstr "Virheellinen url"
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__notified
+msgid "Notified"
+msgstr "Tiedot"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "Number of allowed requests exhausted"
+msgstr "Sallittujen pyyntöjen määrä käytetty loppuun"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "Number of concurrent requests exceeded"
+msgstr "Yhtäaikaisten pyyntöjen määrä ylitetty"
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__page_count
+msgid "Number of pages"
+msgstr "Sivujen lukumäärä"
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__uuid
+msgid "Output UUID generated from Website Scraper Server"
+msgstr "Website Scraper Server -palvelimen tuottama UUID-tunnuksen tulos"
+
+#. module: website_generator
+#: model:ir.model,name:website_generator.model_website_page
+msgid "Page"
+msgstr "Sivu"
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/configurator/configurator.xml:0
+msgid "Pages"
+msgstr "Sivut"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "Processing"
+msgstr "Käsittelyssä"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "Request is still processing, result not available yet"
+msgstr "Pyyntöä käsitellään edelleen, tulos ei ole vielä saatavilla"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "Server is currently under maintenance. Please retry later"
+msgstr "Palvelimella on huoltokatko. Yritä myöhemmin uudelleen"
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/generator_wait/generator.xml:0
+msgid "Something went wrong"
+msgstr "Jokin meni vikaan"
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/configurator/configurator.js:0
+msgid "Something went wrong while importing your website."
+msgstr "Jotakin meni vikaan verkkosivusi tuonnissa."
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__status
+msgid "Status"
+msgstr "Tila"
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__status_message
+msgid "Status Message"
+msgstr "Tilaviesti"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "Success"
+msgstr "Onnistuminen"
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/systray_items/generator_request.js:0
+msgid "The import of your website has started!"
+msgstr "Verkkosivusi tuonti on alkanut!"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "The request asks for too many pages"
+msgstr "Pyyntö pyytää liian monta sivua"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/website.py:0
+msgid "The website scraper service is currently unavailable."
+msgstr "Verkkosivusi haalintatoiminto ei ole tällä hetkellä saatavilla."
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/generator_wait/generator.xml:0
+msgid "This can take a few minutes."
+msgstr "Tämä saattaa kestää muutamia minuutteja."
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/page.py:0
+msgid "Top Menu for Website %s"
+msgstr "Päävalikko verkkosivulle %s"
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__target_url
+msgid "URL to scrape"
+msgstr "URL-osoite kaapattavaksi"
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__version
+msgid "Version"
+msgstr "Versio"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "Version is unsupported"
+msgstr "Versio ei ole tuettu"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "Waiting for the server to process the request"
+msgstr "Odotetaan, että palvelin käsittelee pyynnön"
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/generator_wait/generator.xml:0
+msgid "We could not convert your website, please try again later"
+msgstr "Emme pystyneet muuntamaan verkkosivustoasi, yritä myöhemmin uudelleen"
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/systray_items/generator_request.js:0
+msgid "We will notify %(email)s when everything is ready."
+msgstr "Lähetämme viestiä osoitteeseen %(email)s, kun kaikki on valmista."
+
+#. module: website_generator
+#: model:ir.model,name:website_generator.model_website
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__website_id
+msgid "Website"
+msgstr "Verkkosivu"
+
+#. module: website_generator
+#: model:ir.actions.client,name:website_generator.website_generator_screen
+msgid "Website Generator"
+msgstr "Verkkosivun generaattori"
+
+#. module: website_generator
+#: model:ir.actions.server,name:website_generator.action_convert_scraping_request_ICP
+msgid "Website Generator After Install"
+msgstr "Verkkosivun generaattori asennuksen jälkeen"
+
+#. module: website_generator
+#: model:ir.model,name:website_generator.model_website_generator_request
+msgid "Website Generator Request"
+msgstr "Verkkosivun generaattorin pyyntö"
+
+#. module: website_generator
+#: model:ir.actions.server,name:website_generator.cron_get_result_ir_actions_server
+msgid "Website Generator: Get website scraper results"
+msgstr "Verkkosivugeneraattori: Hanki verkkosivuston scraper tulokset"
+
+#. module: website_generator
+#: model:mail.template,name:website_generator.email_template_website_scrapped
+msgid "Website Scraped"
+msgstr "Verkkosivu haettu"
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/configurator/configurator.xml:0
+msgid "Website URL"
+msgstr "Verkkosivuston osoite"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "Website blocked or unreachable"
+msgstr "Verkkosivu estetty tai ei tavoitettavissa"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+msgid "Website not supported"
+msgstr "Verkkosivua ei tueta"
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/generator_wait/generator.xml:0
+msgid "You will be redirected once your website is ready."
+msgstr "Sinut uudelleenohjataan, kun verkkosivusi on valmis."
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/configurator/configurator.xml:0
+msgid "You'll be able to create your pages later on."
+msgstr "Voit luoda sivut myöhemmin."
+
+#. module: website_generator
+#: model:mail.template,subject:website_generator.email_template_website_scrapped
+msgid "Your Odoo Website is Ready!"
+msgstr "Odoo-sivusi on valmis!"
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/configurator/configurator.xml:0
+msgid "and"
+msgstr "ja"
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/configurator/configurator.xml:0
+msgid "beta"
+msgstr "beta"

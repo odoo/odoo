@@ -1,0 +1,370 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * documents_project
+#
+# Translators:
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2024
+# Martin Trigaux, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
+# Jessica Jakara, 2025
+# Wil Odoo, 2025
+# Saara Hakanen <sahak@odoo.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:47+0000\n"
+"PO-Revision-Date: 2026-03-30 06:13+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/"
+"documents_project/fi/>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.16.2\n"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_add_draft
+msgid "Add Tag Draft"
+msgstr "Lisää tunnisteen luonnos"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_add_to_validate
+msgid "Add Tag To Validate"
+msgstr "Lisää tunniste vahvistusta varten"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_add_validated
+msgid "Add Tag Validated"
+msgstr "Lisää tunniste Vahvistettu"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_ask_for_validation_code
+msgid "Ask For Validation - Check conditions"
+msgstr "Pyydä vahvistusta - Tarkista ehdot"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_ask_for_validation
+msgid "Ask for validation"
+msgstr "Pyydä vahvistusta"
+
+#. module: documents_project
+#: model:ir.model,name:documents_project.model_ir_attachment
+msgid "Attachment"
+msgstr "Liite"
+
+#. module: documents_project
+#: model_terms:ir.ui.view,arch_db:documents_project.edit_project_document_form_inherit
+msgid "Categorize and share your documents with your customers"
+msgstr "Luokittele ja jaa asiakirjoja asiakkaidesi kanssa"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_create_a_task_code
+#: model:ir.actions.server,name:documents_project.ir_actions_server_create_project_task
+msgid "Create a Task"
+msgstr "Luo tehtävä"
+
+#. module: documents_project
+#: model:ir.model.fields,field_description:documents_project.field_project_project__documents_tag_ids
+msgid "Default Tags"
+msgstr "Oletustunnisteet"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_create_project_deprecate
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_add_deprecated
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_remove_deprecated
+msgid "Deprecate"
+msgstr "Poista käytöstä"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_deprecate_code
+msgid "Deprecate - Check conditions"
+msgstr "Poistetaan käytöstä - Tarkista ehdot"
+
+#. module: documents_project
+#: model:ir.model,name:documents_project.model_documents_document
+msgid "Document"
+msgstr "Dokumentti"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/controllers/portal.py:0
+#: code:addons/documents_project/models/project_project.py:0
+#: model:ir.actions.act_window,name:documents_project.action_view_documents_project_project
+#: model:ir.actions.act_window,name:documents_project.action_view_documents_project_task
+#: model:ir.embedded.actions,name:documents_project.project_embedded_action_documents
+#: model:ir.embedded.actions,name:documents_project.project_embedded_action_documents_dashboard
+#: model:ir.model.fields,field_description:documents_project.field_project_project__use_documents
+#: model:ir.model.fields,field_description:documents_project.field_project_task__document_ids
+#: model_terms:ir.ui.view,arch_db:documents_project.portal_my_task
+#: model_terms:ir.ui.view,arch_db:documents_project.portal_tasks_list
+#: model_terms:ir.ui.view,arch_db:documents_project.project_sharing_project_task_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:documents_project.project_view_kanban_inherit_documents
+#: model_terms:ir.ui.view,arch_db:documents_project.view_task_form2_document_inherit
+msgid "Documents"
+msgstr "Asiakirjat"
+
+#. module: documents_project
+#: model_terms:ir.ui.view,arch_db:documents_project.edit_project_document_form_inherit
+msgid "Documents &amp; Analytics"
+msgstr "Asiakirjat &amp; analytiikka"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "Documents already linked to a task."
+msgstr "Tehtävään jo linkitetyt asiakirjat."
+
+#. module: documents_project
+#: model:ir.model.fields,field_description:documents_project.field_project_project__documents_folder_id
+msgid "Folder"
+msgstr "Kansio"
+
+#. module: documents_project
+#: model:ir.model.fields,help:documents_project.field_project_project__documents_folder_id
+#: model:ir.model.fields,help:documents_project.field_project_task__documents_folder_id
+msgid ""
+"Folder in which all of the documents of this project will be categorized. "
+"All of the attachments of your tasks will be automatically added as "
+"documents in this workspace as well."
+msgstr ""
+"Kansio, johon kaikki tämän projektin asiakirjat luokitellaan. Kaikki "
+"tehtävien liitetiedostot lisätään automaattisesti asiakirjoiksi myös tähän "
+"työtilaan."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "Impossible to create a task on a deprecated document"
+msgstr "Tehtävää ei voida luoda vanhentuneelle asiakirjalle"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid ""
+"Impossible to update write `res_id` without `access_internal` for records "
+"with different `res_models` when some are linked to projects or tasks."
+msgstr ""
+"Kirjoitusta ei voi päivittää ilman `res_id` pääsyä `access_internal` "
+"tietueille, joilla on eri `res_models`. Jotkin tietueet on linkitetty "
+"projekteihin tai tehtäviin."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "Invalid project search"
+msgstr "Virheellinen projektihaku"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "Invalid task search"
+msgstr "Virheellinen tehtävähaku"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_mark_as_draft_code
+msgid "Mark As Draft - Check conditions"
+msgstr "Merkitse luonnokseksi - Tarkista ehdot"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_mark_as_draft
+msgid "Mark as draft"
+msgstr "Merkitse luonnokseksi"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "New task from Documents"
+msgstr "Uusi tehtävä asiakirjoista"
+
+#. module: documents_project
+#: model:ir.model,name:documents_project.model_project_project
+#: model_terms:ir.ui.view,arch_db:documents_project.document_view_search_inherit
+msgid "Project"
+msgstr "Projekti"
+
+#. module: documents_project
+#: model:ir.model.fields,field_description:documents_project.field_documents_document__project_ids
+msgid "Projects"
+msgstr "Projektit"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_remove_draft
+msgid "Remove Tag Draft"
+msgstr "Poista tunniste Luonnos"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_remove_to_validate
+msgid "Remove Tag To Validate"
+msgstr "Poista tunniste Vahvistettavaksi"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_remove_validated
+msgid "Remove Tag Validated"
+msgstr "Poista tunniste Vahvistettu"
+
+#. module: documents_project
+#: model:ir.model,name:documents_project.model_documents_tag
+msgid "Tag"
+msgstr "Tunniste"
+
+#. module: documents_project
+#: model:ir.model,name:documents_project.model_project_task
+#: model_terms:ir.ui.view,arch_db:documents_project.document_view_search_inherit
+msgid "Task"
+msgstr "Tehtävä"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "Task created from document %s"
+msgstr "Asiakirjasta luotu tehtävä %s"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "Task created from documents"
+msgstr "Asiakirjoista luotu tehtävä"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/project_task.py:0
+msgid "Task's Documents"
+msgstr "Tehtävän asiakirjat"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/project_project.py:0
+msgid ""
+"The \"%(folder)s\" folder should either be in the \"%(company)s\" company "
+"like this project or be open to all companies."
+msgstr ""
+"\"%(folder)s\" -kansio pitäisi joko olla \"%(company)s\" -yrityksessä, kuten "
+"tässä projektissa, tai sen pitäisi olla avoin kaikille yrityksille."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid ""
+"The \"%s\" workspace is required by the Project application and cannot be "
+"archived."
+msgstr "Projektisovellus tarvitsee työtilan \"%s\", eikä sitä voi arkistoida."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid ""
+"The \"%s\" workspace is required by the Project application and cannot be "
+"deleted."
+msgstr "Project-sovellus tarvitsee työtilan \"%s\", eikä sitä voi poistaa."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid ""
+"This action can't be performed, as it would remove the workspaces used by "
+"the following projects:\n"
+"%(projects)s\n"
+"To continue, choose different workspaces or turn off the Documents feature "
+"for these projects."
+msgstr ""
+"Tätä toimintoa ei voida suorittaa, sillä se poistaisi työtilat, joita "
+"käytetään seuraavissa projekteissa:\n"
+"%(projects)s\n"
+"Jatkaaksesi sinun tulee valita toinen työtila tai poistaa käytöstä näiden "
+"projektien Asiakirjat-ominaisuus."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid ""
+"This folder should remain in the same company as the \"%(project)s\" project "
+"to which it is linked. Please update the company of the \"%(project)s\" "
+"project, or leave the company of this workspace empty."
+msgstr ""
+"Tämän kansion on oltava samassa yrityksessä kuin \"%(project)s\" -projekti, "
+"johon se on linkitetty. Päivitä \"%(project)s-projektin yritys tai jätä "
+"tämän työtilan yritys tyhjäksi."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid ""
+"This folder should remain in the same company as the following projects to "
+"which it is linked:\n"
+"%s\n"
+"\n"
+"Please update the company of those projects, or leave the company of this "
+"workspace empty."
+msgstr ""
+"Tämän kansion on oltava samassa yrityksessä kuin seuraavat projektit, joihin "
+"se on linkitetty:\n"
+"%s\n"
+"\n"
+"Päivitä näiden projektien yritys tai jätä tämän työtilan yritys tyhjäksi."
+
+#. module: documents_project
+#: model_terms:ir.actions.act_window,help:documents_project.action_view_documents_project_project
+#: model_terms:ir.actions.act_window,help:documents_project.action_view_documents_project_task
+msgid ""
+"Upload <span class=\"fw-normal\">a file or </span>drag <span class=\"fw-"
+"normal\">it here.</span>"
+msgstr ""
+"Lähetä <span class=\"fw-normal\">tiedosto tai</span> vedä <span class=\"fw-"
+"normal\">se tänne.</span>"
+
+#. module: documents_project
+#: model:ir.model.fields,field_description:documents_project.field_project_task__folder_user_permission
+msgid "User permission"
+msgstr "Käyttäjän lupa"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_ask_validate
+msgid "Validate"
+msgstr "Vahvista"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_validate_code
+msgid "Validate - Check conditions"
+msgstr "Vahvista - Tarkista ehdot"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/project_project.py:0
+msgid ""
+"You cannot change the company of this project, because its workspace is "
+"linked to the other following projects that are still in the \"%"
+"(other_company)s\" company:\n"
+"%(other_workspaces)s\n"
+"\n"
+"Please update the company of all projects so that they remain in the same "
+"company as their workspace, or leave the company of the \"%(workspace)s\" "
+"workspace blank."
+msgstr ""
+"Et voi muuttaa tämän projektin yritystä, koska sen työtila on linkitetty "
+"muihin seuraaviin projekteihin, jotka ovat edelleen \"%(other_company)s\" "
+"-yrityksessä:\n"
+"%(other_workspaces)s\n"
+"\n"
+"Päivitä kaikkien projektien yritys niin, että ne pysyvät samassa yrityksessä "
+"kuin niiden työtila, tai jätä \"%(workspace)s\" -työtilan yritys tyhjäksi."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "You cannot create a task from a folder."
+msgstr "Et voi luoda tehtävää kansiosta."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "You cannot set a company on the %s folder."
+msgstr "Et voi asettaa yritystä %s-kansioon."
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "new %(model)s from %(new_record)s"
+msgstr "uusi %(model)s tietueista %(new_record)s"

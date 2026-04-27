@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_saleorder_document" inherit_id="sale.report_saleorder_document" priority="50">
+        <xpath expr="//div[@name='informations_reference']" position="after">
+            <t t-if="doc.is_subscription">
+                <div class="col" name="plan">
+                    <strong>Recurring Plan</strong>
+                    <div t-field="doc.plan_id.name"/>
+                </div>
+                <div t-if="doc.start_date" class="col" name="subscription_start_date">
+                    <strong>Start Date</strong>
+                    <div t-field="doc.start_date"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="sale_order_digest">
+        <div>
+            <t t-if="origin== 'renewal'">This subscription is the renewal of subscription <t t-out="record_url"/>.</t>
+            <t t-if="origin == 'upsell'">This upsell order has been created from the subscription <t t-out="record_url"/>.</t>
+            <ul>
+                <li>Start Date: <t t-out="start_date"/></li>
+                <li>Next Invoice: <t t-out="next_invoice_date"/></li>
+                <li>MRR: <t t-out="recurring_monthly"/></li>
+                <li>Untaxed Total: <t t-out="untaxed_amount"/></li>
+                <li t-if="quotation_template">Quotation Template: <t t-out="quotation_template"/></li>
+            </ul>
+        </div>
+    </template>
+
+    <template id="recurring_details" name="Pricing Details">
+        <t t-foreach="rendering_values" t-as="val">
+            <div class="pb-2">
+                <div>
+                    <span class="text-start">Recurring</span>:
+                    <span class="text-end"><t t-out="val['recurring']"/></span>
+                </div>
+                <div>
+                    <span class="text-start">Non Recurring</span>:
+                    <span class="text-end"><t t-out="val['non_recurring']"/></span>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

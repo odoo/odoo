@@ -1,0 +1,59 @@
+<odoo>
+    <record id="l10n_ch_insurance_report_view_form" model="ir.ui.view">
+        <field name="name">ch.yearly.report.form</field>
+        <field name="model">ch.yearly.report</field>
+        <field name="arch" type="xml">
+            <form string="Yearly Institution Reports">
+                <header>
+                    <button string="Generate Reports" name="action_generate_pdf" type="object" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h2>
+                            <field name="name" class="oe_inline" placeholder="e.g. 2024 Yearly Report"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <field name="year" class="o_hr_narrow_field" options="{'type': 'number'}"/>
+                        <separator string="Institutions"/>
+                        <field name="avs_institution_ids" widget="many2many_tags" string="AVS"/>
+                        <field name="caf_institution_ids" widget="many2many_tags" string="CAF"/>
+                        <field name="laa_institution_ids" widget="many2many_tags" string="LAA"/>
+                        <field name="laac_institution_ids" widget="many2many_tags" string="LAAC"/>
+                        <field name="ijm_institution_ids" widget="many2many_tags" string="IJM"/>
+                        <field name="company_id" invisible="1" />
+                        <field name="currency_id" invisible="1" />
+                    </group>
+                    <field name="report_line_ids">
+                        <list edit="false" create="false" no_open="true">
+                            <field name="report_type"/>
+                            <field name="pdf_filename" column_invisible="1"/>
+                            <field name="pdf_file" filename="pdf_filename" widget="binary"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_ch_insurance_report_view_tree" model="ir.ui.view">
+        <field name="name">ch.yearly.report.list</field>
+        <field name="model">ch.yearly.report</field>
+        <field name="arch" type="xml">
+            <list string="Insurance Reports">
+                <field name="name"/>
+                <field name="year"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_ch_insurance_report_action" model="ir.actions.act_window">
+        <field name="name">Yearly Institution Reports</field>
+        <field name="res_model">ch.yearly.report</field>
+        <field name="view_mode">list,form</field>
+        <field name="target">current</field>
+    </record>
+
+</odoo>

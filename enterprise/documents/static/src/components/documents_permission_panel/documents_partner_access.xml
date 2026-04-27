@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.PartnerAccess">
+        <h4 t-if="props.ownerUser or props.accessPartners.length">People with access</h4>
+        <!-- Owner line if not OdooBot-->
+        <div t-if="props.ownerUser" class="row m-0 px-3 py-1 pt-2">
+            <t t-call="documents.PartnerAccess.info">
+                <t t-set="partner" t-value="props.ownerUser"/>
+            </t>
+            <div class="col-sm-5 pe-0 d-flex justify-content-end">
+                <span class="fw-bold text-muted pe-2">Owner</span>
+            </div>
+        </div>
+        <!-- Partners with access -->
+        <t t-foreach="props.accessPartners" t-as="accessPartner" t-key="accessPartner_index">
+            <div t-if="accessPartner.role" class="o_documents_access_partner row m-0 px-3 py-1">
+                <t t-call="documents.PartnerAccess.info">
+                    <t t-set="partner" t-value="accessPartner"/>
+                </t>
+                <div class="col-5 col-sm-5 pe-0">
+                    <div class="input-group">
+                       <DocumentsAccessExpirationDateBtn
+                            accessPartner="accessPartner"
+                            disabled="props.disabled"
+                            editionMode="true"
+                            setExpirationDate.bind="props.setExpirationDate"/>
+                        <DocumentsRemovePartnerButton
+                            accessPartner="accessPartner"
+                            disabled="props.disabled"
+                            isInternalUser="props.isInternalUser"
+                            isCurrentUser.bind="props.isCurrentUser"
+                            removeAccess.bind="props.removeDocumentAccess"/>
+                        <DocumentsPermissionSelect
+                            ariaLabel.translate="User Access Role"
+                            selectClass="'mt-2'"
+                            disabled="props.disabled"
+                            onChange.bind="(e) => props.onChangePartnerRole(e, accessPartner)"
+                            options="props.selections"
+                            showFeedbackChange="accessPartner.role !== props.basePartnersRole[accessPartner.id]"
+                            value="accessPartner.role"
+                            noEditorMessage="this.noEditorMessage(accessPartner)"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="documents.PartnerAccess.info">
+        <div class="col-2 col-sm-1">
+            <img class="o_documents_permission_panel_avatar o_avatar rounded" t-if="partner.partner_id.id"
+                t-attf-src="/web/image?model=res.partner&amp;field=avatar_128&amp;id={{ partner.partner_id.id }}"/>
+        </div>
+        <div class="col-5 col-sm-6 pe-1">
+            <div t-attf-class="text-truncate {{ props.isCurrentUser(partner) ? 'd-sm-flex align-items-sm-center fw-bold text-primary' : '' }}">
+                <t t-out="partner.partner_id.name"/>
+                <span t-if="props.isCurrentUser(partner)" class="badge d-none d-sm-block ms-1 rounded-pill text-bg-primary">You</span>
+            </div>
+            <div class="text-truncate text-muted">
+                <span class="o_member_email" t-if="partner.partner_id.email" t-out="partner.partner_id.email"/>
+            </div>
+            <div t-if="partner.expiration_date" class="text-truncate text-muted">
+                <span t-att-class="{'text-primary': partner.expiration_date !== props.basePartnersAccessExpDate[partner.id]}">Exp: <t t-out="getFormattedLocalExpirationDate(partner)"/></span>
+                <span t-if="!props.disabled" t-on-click="() => this.props.setExpirationDate(partner, false)" class="o_documents_unset_expiration_date fa fa-times pe-2 ps-3"/>
+                <DocumentsAccessExpirationDateBtn
+                    t-if="!props.disabled"
+                    accessPartner="accessPartner"
+                    disabled="props.disabled"
+                    setExpirationDate.bind="props.setExpirationDate"/>
+            </div>
+        </div>
+    </t>
+</templates>

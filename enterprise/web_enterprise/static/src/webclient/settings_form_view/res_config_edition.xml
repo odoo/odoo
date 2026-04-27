@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="res_config_edition" t-inherit-mode="extension">
+
+        <xpath expr="//h3" position="replace">
+            <h3 class="px-0">
+                Odoo <t t-esc="serverVersion"/> (Enterprise Edition)
+            </h3>
+        </xpath>
+
+        <xpath expr="//*[@id='license']" position="replace">
+            <a id="license" target="_blank" href="https://www.odoo.com/documentation/master/legal/licenses.html" style="text-decoration: underline;">Odoo Enterprise Edition License V1.0</a>
+        </xpath>
+
+        <xpath expr="//h3" position="after">
+            <t t-if="expirationDate">
+                <h5>Database expiration: <t t-esc="expirationDate"/></h5>
+            </t>
+        </xpath>
+
+    </t>
+
+</templates>

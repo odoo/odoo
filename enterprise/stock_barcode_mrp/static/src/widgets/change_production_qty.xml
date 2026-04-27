@@ -1,0 +1,8 @@
+<templates>
+<t t-name="stock_barcode_mrp.ChangeProductionQty">
+    <div class="o_button_qty_done bg-secondary px-2 pb-1 border border-primary"
+            t-on-click.stop="openChangeQtyWizard">
+            / <span name="product_uom_qty" class="ms-1" t-out="props.record.data[props.name]"/>
+    </div>
+</t>
+</templates>

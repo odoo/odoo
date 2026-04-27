@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="assets_report" model="account.report">
+        <field name="name">Depreciation Schedule</field>
+        <field name="filter_hierarchy">optional</field>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="custom_handler_model_id" ref="model_account_asset_report_handler"/>
+        <field name="load_more_limit" eval="80"/>
+        <field name="column_ids">
+            <record id="assets_report_acquisition_date" model="account.report.column">
+                <field name="name">Acquisition Date</field>
+                <field name="expression_label">acquisition_date</field>
+                <field name="figure_type">date</field>
+            </record>
+            <record id="assets_report_first_depreciation" model="account.report.column">
+                <field name="name">First Depreciation</field>
+                <field name="expression_label">first_depreciation</field>
+                <field name="figure_type">date</field>
+            </record>
+            <record id="assets_report_first_method" model="account.report.column">
+                <field name="name">Method</field>
+                <field name="expression_label">method</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="assets_report_duration_rate" model="account.report.column">
+                <field name="name">Duration / Rate</field>
+                <field name="expression_label">duration_rate</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="assets_report_date_from" model="account.report.column">
+                <field name="name">date from</field>
+                <field name="expression_label">assets_date_from</field>
+            </record>
+            <record id="assets_report_assets_plus" model="account.report.column">
+                <field name="name">+</field>
+                <field name="expression_label">assets_plus</field>
+            </record>
+            <record id="assets_report_assets_minus" model="account.report.column">
+                <field name="name">-</field>
+                <field name="expression_label">assets_minus</field>
+            </record>
+            <record id="assets_report_assets_date_to" model="account.report.column">
+                <field name="name">date to</field>
+                <field name="expression_label">assets_date_to</field>
+            </record>
+            <record id="assets_report_depre_date_from" model="account.report.column">
+                <field name="name">date from</field>
+                <field name="expression_label">depre_date_from</field>
+            </record>
+            <record id="assets_report_depre_plus" model="account.report.column">
+                <field name="name">+</field>
+                <field name="expression_label">depre_plus</field>
+            </record>
+            <record id="assets_report_depre_minus" model="account.report.column">
+                <field name="name">-</field>
+                <field name="expression_label">depre_minus</field>
+            </record>
+            <record id="assets_report_depre_date_to" model="account.report.column">
+                <field name="name">date to</field>
+                <field name="expression_label">depre_date_to</field>
+            </record>
+            <record id="assets_report_balance" model="account.report.column">
+                <field name="name">book_value</field>
+                <field name="expression_label">balance</field>
+            </record>
+      </field>
+    </record>
+</odoo>

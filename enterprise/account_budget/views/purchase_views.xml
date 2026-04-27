@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="purchase_order_form_account_budget" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.account.budget</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_budget" string="Budget" type="object"
+                        icon="fa-bar-chart" invisible="not is_analytic or is_above_budget"/>
+                <button name="action_budget" string="Budget" type="object" class="text-danger"
+                        icon="fa-bar-chart" invisible="not is_analytic or not is_above_budget"/>
+                <field name="is_above_budget" invisible="1"/>
+            </xpath>
+            <xpath expr="//page[@name='products']/field[@name='order_line']/list" position="inside">
+                <field name="is_above_budget" column_invisible="1"/>
+            </xpath>
+            <xpath expr="//page[@name='products']/field[@name='order_line']/list" position="attributes">
+                <attribute name="decoration-danger">is_above_budget</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

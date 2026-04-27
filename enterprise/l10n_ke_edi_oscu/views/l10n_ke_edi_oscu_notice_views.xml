@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_ke_edi_notice_view_tree" model="ir.ui.view">
+            <field name="name">l10n.ke.edi.oscu.notice.list</field>
+            <field name="model">l10n_ke_edi_oscu.notice</field>
+            <field name="arch" type="xml">
+                <list string="eTIMS Notices" create="0" delete="0">
+                    <field name="number"/>
+                    <field name="title"/>
+                    <field name="contents"/>
+                    <field name="detail_url"/>
+                </list>
+            </field>
+        </record>
+        <record id="l10n_ke_edi_notice_action" model="ir.actions.act_window">
+            <field name="name">eTIMS Notices</field>
+            <field name="res_model">l10n_ke_edi_oscu.notice</field>
+            <field name="view_id" ref="l10n_ke_edi_notice_view_tree"/>
+        </record>
+    </data>
+</odoo>

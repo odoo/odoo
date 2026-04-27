@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="models_to_export_list" model="ir.ui.view">
+        <field name="name">models.to.export.list</field>
+        <field name="model">studio.export.model</field>
+        <field name="arch" type="xml">
+            <list string="Studio Export">
+                    <header>
+                        <button type="object" name="action_preset" string="Preset" display="always"/>
+                        <button
+                            type="action"
+                            name="web_studio.action_studio_export_wizard"
+                            string="Export"
+                            display="always"
+                            context="{'studio_export_all': True}"
+                        />
+                    </header>
+                    <field name="sequence" widget="handle"/>
+                    <field name="model_id"/>
+                    <field name="is_demo_data"/>
+                    <field name="updatable"/>
+                    <field name="records_count"/>
+                    <field name="include_attachment" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="models_to_export_form_view" model="ir.ui.view">
+        <field name="name">models.to.export.form</field>
+        <field name="model">studio.export.model</field>
+        <field name="arch" type="xml">
+            <form string="Studio Export">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="model_name" invisible="1"/>
+                            <field name="model_id"/>
+                            <field name="is_demo_data"/>
+                            <field name="include_attachment"/>
+                        </group>
+                        <group>
+                            <field
+                                name="domain"
+                                widget="domain"
+                                options="{'model': 'model_name', 'in_dialog': True, 'foldable': True}"
+                            />
+                            <field name="updatable"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Fields to exclude">
+                            <field name="excluded_fields" widget="many2many">
+                                <list no_open="1" limit="200">
+                                    <field name="field_description"/>
+                                    <field name="name"/>
+                                    <field name="ttype"/>
+                                    <field name="relation"/>
+                                    <field name="required"/>
+                                    <field name="readonly"/>
+                                    <field name="store"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_models_to_export" model="ir.actions.act_window">
+        <field name="name">Studio Export</field>
+        <field name="res_model">studio.export.model</field>
+        <field name="target">main</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Additional Studio Exports
+            </p>
+            <p>
+                Configure additional models to export with Studio, such as records that hold configuration information or demo data.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        name="Studio Export"
+        action="action_models_to_export"
+        id="menu_models_to_export"
+        parent="base.next_id_9"/>
+
+</odoo>

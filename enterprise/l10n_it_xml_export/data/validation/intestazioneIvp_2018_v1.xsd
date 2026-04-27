@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2017 sp2 (x64) (http://www.altova.com) by rsiino (Sogei S.p.A.) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="urn:www.agenziaentrate.gov.it:specificheTecniche:common" xmlns:sc="urn:www.agenziaentrate.gov.it:specificheTecniche:sco:common" xmlns:iv="urn:www.agenziaentrate.gov.it:specificheTecniche:sco:ivp" xmlns:ns1="www.agenziaentrate.gov.it:specificheTecniche:telent:v1" targetNamespace="urn:www.agenziaentrate.gov.it:specificheTecniche:sco:ivp" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<xs:annotation>
+		<xs:documentation xml:lang="it"><![CDATA[
+		Versione 1.0 - 13/02/16
+		]]></xs:documentation>
+	</xs:annotation>
+	<xs:import namespace="urn:www.agenziaentrate.gov.it:specificheTecniche:common" schemaLocation="fornitura_v3.xsd"/>
+	<xs:element name="Intestazione"/>
+	<xs:complexType name="Intestazione_IVP_Type">
+		<xs:sequence>
+			<xs:element name="CodiceFornitura">
+				<xs:simpleType>
+					<xs:restriction base="cm:DatoAN_Type">
+						<xs:enumeration value="IVP18"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CodiceFiscaleDichiarante" type="cm:DatoCF_Type" minOccurs="0"/>
+			<xs:element name="CodiceCarica" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="cm:DatoNP_Type">
+						<xs:enumeration value="1"/>
+						<xs:enumeration value="2"/>
+						<xs:enumeration value="3"/>
+						<xs:enumeration value="4"/>
+						<xs:enumeration value="5"/>
+						<xs:enumeration value="6"/>
+						<xs:enumeration value="7"/>
+						<xs:enumeration value="8"/>
+						<xs:enumeration value="9"/>
+						<xs:enumeration value="11"/>
+						<xs:enumeration value="12"/>
+						<xs:enumeration value="13"/>
+						<xs:enumeration value="14"/>
+						<xs:enumeration value="15"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="IdSistema" type="cm:DatoCF_Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

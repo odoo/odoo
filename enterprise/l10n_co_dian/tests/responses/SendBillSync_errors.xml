@@ -1,0 +1,32 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope"
+    xmlns:a="http://www.w3.org/2005/08/addressing"
+    xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+    <s:Header>
+        <a:Action s:mustUnderstand="1">http://wcf.dian.colombia/IWcfDianCustomerServices/SendBillSyncResponse</a:Action>
+        <o:Security s:mustUnderstand="1"
+            xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <u:Timestamp u:Id="_0">
+                <u:Created>2024-02-15T11:52:53.930Z</u:Created>
+                <u:Expires>2024-02-15T11:57:53.930Z</u:Expires>
+            </u:Timestamp>
+        </o:Security>
+    </s:Header>
+    <s:Body>
+        <SendBillSyncResponse xmlns="http://wcf.dian.colombia">
+            <SendBillSyncResult xmlns:b="http://schemas.datacontract.org/2004/07/DianResponse"
+                xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+                <b:ErrorMessage xmlns:c="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+                    <c:string>Regla: ZB01, Rechazo: Fallo en el esquema XML del archivo</c:string>
+                </b:ErrorMessage>
+                <b:IsValid>false</b:IsValid>
+                <b:StatusCode>99</b:StatusCode>
+                <b:StatusDescription>Documento con errores en campos mandatorios.</b:StatusDescription>
+                <b:StatusMessage>Validación contiene errores en campos mandatorios. MessagesType not found.</b:StatusMessage>
+                <b:XmlBase64Bytes i:nil="true"/>
+                <b:XmlBytes i:nil="true"/>
+                <b:XmlDocumentKey i:nil="true"/>
+                <b:XmlFileName>invoice</b:XmlFileName>
+            </SendBillSyncResult>
+        </SendBillSyncResponse>
+    </s:Body>
+</s:Envelope>

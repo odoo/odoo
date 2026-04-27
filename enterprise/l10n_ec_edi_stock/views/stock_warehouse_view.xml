@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_l10n_ec_edi_stock_view_warehouse_form" model="ir.ui.view">
+            <field name="name">view_l10n_ec_edi_stock_view_warehouse_form</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="l10n_ec_country_code" invisible="1"/>
+                    <field name="l10n_ec_entity" invisible="l10n_ec_country_code != 'EC'" placeholder="001"/>
+                    <field name="l10n_ec_emission" invisible="l10n_ec_country_code != 'EC'" placeholder="001"/>
+                    <field name="l10n_ec_delivery_number" invisible="l10n_ec_country_code != 'EC'"
+                        readonly="not l10n_ec_delivery_number_sequence_id"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

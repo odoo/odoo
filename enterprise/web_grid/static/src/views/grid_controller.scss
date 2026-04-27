@@ -1,0 +1,18 @@
+@include media-breakpoint-down(md) {
+    .o_grid_range_buttons.show > .dropdown-menu {
+        display: inline-flex;
+        min-width: 0px;
+    }
+}
+
+.o_grid_view {
+    .o_view_sample_data .o_grid_highlightable {
+        overflow: hidden;
+        @include o-sample-data-disabled;
+    }
+
+    .o_view_nocontent {
+        position: fixed;
+        top: 225px;
+    }
+}

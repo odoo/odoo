@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+<data noupdate="1">
+    <record id="social_stream_youtube_account" model="social.stream">
+        <field name="name">YouTube Account: My Company</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="stream_type_id" ref="social_youtube.stream_type_youtube_channel_videos" />
+        <field name="media_id" ref="social_youtube.social_media_youtube" />
+        <field name="account_id" ref="social_account_youtube" />
+    </record>
+
+    <record id="social_live_post_youtube_1" model="social.live.post">
+        <field name="state">posted</field>
+        <field name="post_id" ref="social_post_global_3" />
+        <field name="account_id" ref="social_account_youtube" />
+        <field name="engagement">4871</field>
+    </record>
+
+    <record id="social_stream_post_youtube_1" model="social.stream.post">
+        <field name="stream_id" ref="social_stream_youtube_account" />
+        <field name="author_name">My Company Page</field>
+        <field name="youtube_video_id">GhhdOgHQxZ4</field>
+        <field name="link_title">Happy New Year!</field>
+        <field name="youtube_likes_count">574</field>
+        <field name="youtube_dislikes_count">5</field>
+        <field name="youtube_comments_count">57</field>
+        <field name="youtube_views_count">57945</field>
+        <field name="link_image_url">http://i3.ytimg.com/vi/kmt-oVAB6hU/hqdefault.jpg</field>
+        <field name="twitter_profile_image_url" eval="'/web/image/res.users/%s/image_128' % ref('base.user_admin')" />
+        <field name="message">To celebrate the new year, we have a gift for you: Learn how to build your own chair!</field>
+        <field name="published_date" eval="time.strftime('%Y-01-10 08:00:00')"/>
+    </record>
+</data>
+</odoo>

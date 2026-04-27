@@ -1,0 +1,23 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <v1:VoidShipmentResponse xmlns:v1="http://www.ups.com/XMLSchema/XOLTWS/Void/v1.1">
+            <v11:Response xmlns:v11="http://www.ups.com/XMLSchema/XOLTWS/Common/v1.0">
+                <v11:ResponseStatus>
+                    <v11:Code>1</v11:Code>
+                    <v11:Description>Success</v11:Description>
+                </v11:ResponseStatus>
+                <v11:TransactionReference>
+                    <v11:CustomerContext>Cancle shipment</v11:CustomerContext>
+                    <v11:TransactionIdentifier>sxlhcXhZ7gc40ty6Rq</v11:TransactionIdentifier>
+                </v11:TransactionReference>
+            </v11:Response>
+            <v1:SummaryResult>
+                <v1:Status>
+                    <v1:Code>1</v1:Code>
+                    <v1:Description>Voided</v1:Description>
+                </v1:Status>
+            </v1:SummaryResult>
+        </v1:VoidShipmentResponse>
+    </soapenv:Body>
+</soapenv:Envelope>

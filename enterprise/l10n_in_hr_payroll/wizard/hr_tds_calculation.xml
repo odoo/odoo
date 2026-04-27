@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_in_tds_computation_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n.in.tds.computation.wizard.view.form</field>
+        <field name="model">l10n.in.tds.computation.wizard</field>
+        <field name="arch" type="xml">
+        <form string="TDS Calculation">
+            <group style="grid-template-columns: 250px auto">
+                <field name="currency_id" invisible="1"/>
+                <field name="total_income" widget="monetary"/>
+                <field name="standard_deduction" widget="monetary"/>
+                <field name="taxable_income" widget="monetary"/>
+                <field name="tax_on_taxable_income" widget="monetary"/>
+                <field name="rebate" class="o_text_overflow" widget="monetary"/>
+                <field name="total_tax_on_income" widget="monetary"/>
+                <field name="surcharge" widget="monetary"/>
+                <field name="cess" widget="monetary"/>
+                <field name="total_tax" widget="monetary"/>
+                <field name="tds_monthly" widget="monetary"/>
+            </group>
+            <footer>
+                <button name="set_tds_on_contracts" string="Adjust TDS" type="object" class="btn-primary" data-hotkey="q"/>
+                <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+            </footer>
+        </form>
+        </field>
+    </record>
+
+    <record id="action_tds_calculation" model="ir.actions.act_window">
+        <field name="name">Employee TDS Calculation</field>
+        <field name="res_model">l10n.in.tds.computation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'dialog_size': 'medium'}</field>
+    </record>
+</odoo>

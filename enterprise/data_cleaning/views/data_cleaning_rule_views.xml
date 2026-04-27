@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_data_cleaning_field_form">
+            <field name="name">Field Cleaning Rule Form</field>
+            <field name="model">data_cleaning.rule</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="res_model_id" invisible="1" />
+                        <field name="action_display" invisible="1" />
+                        <field name="field_id" string="Field To Clean" options="{'no_create': True, 'no_edit': True, 'no_open': True}" />
+                    </group>
+
+                    <group>
+                        <group>
+                            <field name="action" widget="radio" />
+                        </group>
+                        <group>
+                            <field name="action_trim" widget="radio" invisible="action != 'trim'" required="action == 'trim'" />
+                            <field name="action_case" widget="radio" invisible="action != 'case'" required="action == 'case'" />
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

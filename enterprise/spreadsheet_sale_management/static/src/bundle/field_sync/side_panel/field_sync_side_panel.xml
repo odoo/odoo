@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name="spreadsheet_sale_management.FieldSyncSidePanel">
+        <Section>
+            <t t-set-slot="title">Cell to sync</t>
+            <SelectionInput
+                ranges="[fieldSyncPositionString]"
+                hasSingleRange="true"
+                required="true"
+                onSelectionChanged.bind="onRangeChanged"
+                onSelectionConfirmed.bind="onRangeConfirmed"
+            />
+        </Section>
+        <Section>
+            <t t-set-slot="title">Record to sync (position)</t>
+            <input
+                class="o_input o-required mt-3"
+                t-ref="positionInput"
+                type="number"
+                min="1"
+                t-on-change="updateRecordPosition"
+                t-on-focusout="updateRecordPosition"
+                title="Position of the record in the list"
+            />
+
+        </Section>
+        <Section>
+            <t t-set-slot="title">Field to sync</t>
+            <ModelFieldSelector
+                resModel="'sale.order.line'"
+                readonly="false"
+                allowEmpty="false"
+                followRelations="false"
+                isDebugMode="!!env.debug"
+                filter.bind="filterField"
+                path="fieldSync.fieldName"
+                update.bind="updateField"
+            />
+        </Section>
+        <div class="o-sidePanelButtons">
+            <span t-if="state.updateSuccessful" class="p-2 text-primary">
+                <i class="fa fa-check"/>
+                Saved
+            </span>
+      </div>
+    </div>
+
+</templates>

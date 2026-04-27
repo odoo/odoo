@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id='control_statement_export_template'>
+        <Pisemnost nazevSW="Odoo SA" t-att-verzeSW="odoo_version">
+            <DPHKH1 verzePis="03.01.10">
+                <t t-call="l10n_cz_reports_2025.veta_d"/>
+                <t t-call="l10n_cz_reports_2025.veta_p"/>
+                <t t-foreach="line_A1" t-as="line">
+                    <VetaA1 t-att-dic_odb="line['vat_number']" t-att-c_evid_dd="line['journal_entry']"
+                            t-att-duzp="line['taxable_supply_date']" t-att-zakl_dane1="line['tax_base_1']"
+                            t-att-kod_pred_pl="line['supplies_code']"/>
+                </t>
+                <t t-foreach="line_A2" t-as="line">
+                    <VetaA2 t-att-k_stat="line['country_code']" t-att-vatid_dod="line['vat_number']" t-att-c_evid_dd="line['journal_entry']"
+                            t-att-dppd="line['taxable_supply_date']" t-att-zakl_dane1="line['tax_base_1']"
+                            t-att-dan1="line['tax_1']" t-att-zakl_dane2="line['tax_base_2']"
+                            t-att-dan2="line['tax_2']"/>
+                </t>
+                <t t-foreach="line_A3" t-as="line">
+                    <VetaA3 t-att-k_stat="line['country_code']" t-att-vatid_odb="line['vat_number']"
+                            t-att-c_evid_dd="line['journal_entry']" t-att-dup="line['taxable_supply_date']"
+                            t-att-osv_filling="line['tax_base_1']"/>
+                </t>
+                <t t-foreach="line_A4" t-as="line">
+                    <VetaA4 t-att-dic_odb="line['vat_number']" t-att-c_evid_dd="line['journal_entry']"
+                            t-att-dppd="line['taxable_supply_date']" t-att-zakl_dane1="line['tax_base_1']"
+                            t-att-dan1="line['tax_1']" t-att-zakl_dane2="line['tax_base_2']"
+                            t-att-dan2="line['tax_2']" t-att-kod_rezim_pl="line['supplies_code']"
+                            zdph_44="N"/>
+                </t>
+                <t t-foreach="line_A5" t-as="line">
+                    <VetaA5 t-att-zakl_dane1="line['tax_base_1']" t-att-dan1="line['tax_1']"
+                            t-att-zakl_dane2="line['tax_base_2']" t-att-dan2="line['tax_2']"/>
+                </t>
+                <t t-foreach="line_B1" t-as="line">
+                    <VetaB1 t-att-dic_dod="line['vat_number']" t-att-c_evid_dd="line['journal_entry']"
+                            t-att-duzp="line['taxable_supply_date']" t-att-zakl_dane1="line['tax_base_1']"
+                            t-att-dan1="line['tax_1']" t-att-zakl_dane2="line['tax_base_2']"
+                            t-att-dan2="line['tax_2']" t-att-kod_pred_pl="line['supplies_code']"/>
+                </t>
+                <t t-foreach="line_B2" t-as="line">
+                    <VetaB2 t-att-dic_dod="line['vat_number']" t-att-c_evid_dd="line['journal_entry']"
+                            t-att-dppd="line['taxable_supply_date']" t-att-zakl_dane1="line['tax_base_1']"
+                            t-att-dan1="line['tax_1']" t-att-zakl_dane2="line['tax_base_2']"
+                            t-att-dan2="line['tax_2']" pomer="N" zdph_44="N"/>
+                </t>
+                <t t-foreach="line_B3" t-as="line">
+                    <VetaB3 t-att-zakl_dane1="line['tax_base_1']" t-att-dan1="line['tax_1']"
+                            t-att-zakl_dane2="line['tax_base_2']" t-att-dan2="line['tax_2']"/>
+                </t>
+                <VetaC t-att-celk_zd_a2="line_C8[0]['tax_base_1']" t-att-obrat23="line_C1[0]['tax_base_1']"
+                       t-att-obrat5="line_C2[0]['tax_base_1']" t-att-pln23="line_C3[0]['tax_base_1']"
+                       t-att-pln5="line_C4[0]['tax_base_1']" t-att-pln_rez_pren="line_C5[0]['tax_base_1']"
+                       t-att-rez_pren23="line_C6[0]['tax_base_1']" t-att-rez_pren5="line_C7[0]['tax_base_1']"/>
+            </DPHKH1>
+        </Pisemnost>
+    </template>
+</odoo>

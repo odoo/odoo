@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="knowledge.FormStatusIndicator" t-inherit="web.FormStatusIndicator">
+        <xpath expr="//div[hasclass('o_form_status_indicator_buttons')]" position="before">
+            <img src="/knowledge/static/src/img/form_status_indicator_saved.svg"
+                 class="align-items-center d-flex px-1 py-0 border border-transparent user-select-none"
+                 t-attf-class="{{ displayButtons ? 'd-none' : ''}}"
+                 data-tooltip="All changes saved"/>
+        </xpath>
+    </t>
+</templates>

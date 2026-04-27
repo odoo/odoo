@@ -1,0 +1,98 @@
+.account_report_filter {
+    &.date {
+        .date_filter:hover .btn_previous_date,
+        .date_filter:hover .btn_next_date:not(:disabled) {
+            color: $o-gray-600;
+        }
+        .filter_name {
+            min-width: 10ch;
+        }
+        .time_text { width: 120px }
+        .btn_previous_date, .btn_next_date {
+            background: inherit;
+            border: none;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            color: $o-gray-300;
+        }
+        .dropdown-item.focus {
+            background: transparent;
+            &:hover { background: rgba(0, 0, 0, 0.08) }
+        }
+    }
+
+    &.date, &.comparison {
+        .dropdown-item.date {
+            display: flex;
+            justify-content: space-between;
+
+            .o_datetime_input {
+                display: inline;
+                width: 10ch;
+                margin: 0 8px;
+                text-align: center;
+            }
+        }
+    }
+
+    &.comparison, &.intervals {
+        .dropdown-item.period, .dropdown-item.interval {
+            display: flex;
+            justify-content: space-between;
+
+            &.order:hover {
+                background-color: unset;
+                color: unset;
+                cursor: default;
+            }
+
+            input[type=number] {
+                display: inline;
+                width: 86px;
+                margin: 0 8px;
+                border-top: none;
+                border-left: none;
+                border-right: none;
+                border-bottom: 1px solid var(--o-input-border-color);
+                text-align: center;
+                background-color: inherit;
+            }
+        }
+
+        .dropdown-item.date {
+            .o_datetime_input {
+                display: inline;
+                width: 86px;
+                margin: 0 8px;
+                padding: 0 4px;
+                text-align: center;
+            }
+        }
+
+        .dropdown-item.link {
+            cursor: default;
+
+            &.focus, &.selected:hover, &.selected:focus { background-color: inherit; }
+        }
+    }
+
+    &.analytic, &.analytic_groupby, &.partner {
+        .dropdown {
+            display: inherit;
+        }
+        .dropdown-item {
+            display: flex;
+            label { width: 60px }
+        }
+        .dropdown-item.focus, .dropdown-item.selected:hover, .dropdown-item.selected:focus { background-color: inherit; }
+        .o_input_dropdown { width: 100% }
+        .o_field_tags {
+            margin-left: 8px;
+            flex-direction: column;
+            flex-grow: 9;
+
+            .o_tag { width: fit-content }
+        }
+    }
+}

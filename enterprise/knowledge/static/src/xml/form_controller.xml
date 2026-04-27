@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="KnowledgeControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_cp_pager')]" position="before">
+            <t t-slot="control-panel-knowledge-button"/>
+        </xpath>
+    </t>
+    <t t-name="Knowledge.FormView" t-inherit="web.FormView" t-inherit-mode="extension">
+        <xpath expr="//Layout" position="inside">
+            <t t-set-slot="control-panel-knowledge-button">
+                <button class="o_knowledge_icon_search btn opacity-trigger-hover" t-att-class="{'btn-secondary': env.isSmall}" type="button" t-on-click="onClickSearchKnowledgeArticle" title="Search Knowledge Articles">
+                    <t t-call="Knowledge.KnowledgeIcon"/>
+                </button>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="Knowledge.KnowledgeIcon">
+        <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" class="o_ui_app_icon oi oi-fw">
+            <path fill="var(--oi-color, #1AD3BB)" d="M21 0c-2 0-4 2-4 3.99V12h18v20.071l5.428 3.748A1 1 0 0 0 42 35.001V0H21Z" class="opacity-50 opacity-100-hover"/>
+            <path fill="var(--oi-color, #985184)" d="M8 17.99C8 16 10 14 12 14h21v35a1 1 0 0 1-1.572.82L23 44c-1.5-1-3.5-1-5 0l-8.428 5.82A1 1 0 0 1 8 49V17.99Z"/>
+            <path fill="var(--oi-color, #005E7A)" d="M33 30.658 32 30c-1.5-1-3.5-1-5 0l-8.428 5.82A1 1 0 0 1 17 35V14h16v16.658Z"/>
+        </svg>
+    </t>
+</templates>

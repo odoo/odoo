@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_move_closing_mx" model="ir.ui.view">
+            <field name="name">account.move.closing.mx</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@id='other_tab_entry']//group[@name='misc_group']" position="inside">
+                    <separator string="Mexico"></separator>
+                    <field name="l10n_mx_closing_move" invisible="move_type != 'entry' or country_code != 'MX'"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

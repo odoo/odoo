@@ -1,0 +1,1125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_financial_report_mr_pnl" model="account.report">
+        <field name="name">Profit and loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.mr"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_mr_pnl_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_mr_income_statement" model="account.report.line">
+                <field name="name">Income Statement</field>
+                <field name="code">MR_income_statement</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_mr_income_statement_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">MR_income_and_profit.balance - MR_expense_loss.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_mr_expense_and_loss" model="account.report.line">
+                        <field name="name">Expense and loss accounts</field>
+                        <field name="code">MR_expense_loss</field>
+                        <field name="hierarchy_level">0</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_mr_expense_and_loss_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MR_purchase_inventory.balance + MR_subcontracting_purchase.balance + MR_external_investments.balance + MR_external_activity.balance + MR_charges_loss.balance + MR_staff_costs.balance + MR_taxes_duties.balance + MR_financial_charges.balance + MR_depreciation_provision.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_mr_purchase_inventory" model="account.report.line">
+                                <field name="name">Purchase and inventory changes</field>
+                                <field name="code">MR_purchase_inventory</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mr_purchase_inventory_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MR_goods.balance + MR_raw_material.balance + MR_packaging.balance + MR_stock_variation.balance + MR_non_stock_purchases.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mr_goods" model="account.report.line">
+                                        <field name="name">Goods</field>
+                                        <field name="code">MR_goods</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">600</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_raw_material" model="account.report.line">
+                                        <field name="name">Raw materials and other supplies</field>
+                                        <field name="code">MR_raw_material</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">601</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_packaging" model="account.report.line">
+                                        <field name="name">Packaging</field>
+                                        <field name="code">MR_packaging</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">602</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_stock_variation" model="account.report.line">
+                                        <field name="name">Stock variation</field>
+                                        <field name="code">MR_stock_variation</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">603</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_non_stock_purchases" model="account.report.line">
+                                        <field name="name">Purchases of non-stocked supplies</field>
+                                        <field name="code">MR_non_stock_purchases</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mr_non_stock_purchases_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">MR_non_storable_water.balance + MR_fuel_lubricants.balance + MR_maintenance_supplies.balance + MR_workshop_factory.balance + MR_small_tools.balance + MR_cleaning_products.balance + MR_office_admin.balance + MR_work_clothes.balance + MR_other_supplies.balance</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_mr_non_storable_water" model="account.report.line">
+                                                <field name="name">Non-storable supplies (water-energy)</field>
+                                                <field name="code">MR_non_storable_water</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6060</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_fuel_lubricants" model="account.report.line">
+                                                <field name="name">Fuels, fuel and lubricants</field>
+                                                <field name="code">MR_fuel_lubricants</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6061</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_maintenance_supplies" model="account.report.line">
+                                                <field name="name">Maintenance supplies and materials</field>
+                                                <field name="code">MR_maintenance_supplies</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6062</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_workshop_factory" model="account.report.line">
+                                                <field name="name">Workshop, factory and store supplies</field>
+                                                <field name="code">MR_workshop_factory</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6063</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_small_tools" model="account.report.line">
+                                                <field name="name">Small tools</field>
+                                                <field name="code">MR_small_tools</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6064</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_cleaning_products" model="account.report.line">
+                                                <field name="name">Cleaning products</field>
+                                                <field name="code">MR_cleaning_products</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6065</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_office_admin" model="account.report.line">
+                                                <field name="name">Office and administrative supplies</field>
+                                                <field name="code">MR_office_admin</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6066</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_work_clothes" model="account.report.line">
+                                                <field name="name">Work clothes</field>
+                                                <field name="code">MR_work_clothes</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6067</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_other_supplies" model="account.report.line">
+                                                <field name="name">Other materials and supplies</field>
+                                                <field name="code">MR_other_supplies</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6068</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mr_subcontracting_purchase" model="account.report.line">
+                                <field name="name">Subcontracting purchases</field>
+                                <field name="code">MR_subcontracting_purchase</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">61</field>
+                            </record>
+                            <record id="account_financial_report_mr_external_investments" model="account.report.line">
+                                <field name="name">External charges related to investment</field>
+                                <field name="code">MR_external_investments</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mr_external_investments_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MR_rental_charges.balance + MR_maintenance_works.balance + MR_insurance_premiums.balance + MR_studies_research.balance + MR_general_documentation.balance + MR_conferences_costs.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mr_rental_charges" model="account.report.line">
+                                        <field name="name">Rentals and various rental charges</field>
+                                        <field name="code">MR_rental_charges</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">620</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_maintenance_works" model="account.report.line">
+                                        <field name="name">Maintenance and repair work</field>
+                                        <field name="code">MR_maintenance_works</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">621</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_insurance_premiums" model="account.report.line">
+                                        <field name="name">Insurance premiums</field>
+                                        <field name="code">MR_insurance_premiums</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">623</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_studies_research" model="account.report.line">
+                                        <field name="name">Studies and research</field>
+                                        <field name="code">MR_studies_research</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">624</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_general_documentation" model="account.report.line">
+                                        <field name="name">General and technical documentation</field>
+                                        <field name="code">MR_general_documentation</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">625</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_conferences_costs" model="account.report.line">
+                                        <field name="name">Costs of conferences, seminars, lectures</field>
+                                        <field name="code">MR_conferences_costs</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">626</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mr_external_activity" model="account.report.line">
+                                <field name="name">External charges related to the activity</field>
+                                <field name="code">MR_external_activity</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mr_external_activity_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MR_transport.balance + MR_travel_missions_receptions.balance + MR_postage_comm_costs.balance + MR_intermediate_fees.balance + MR_ads_promotions.balance + MR_banking_services.balance + MR_headquarters_share_costs.balance + MR_misc_charges.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mr_transport" model="account.report.line">
+                                        <field name="name">Transports</field>
+                                        <field name="code">MR_transport</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mr_transport_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">MR_transport_purchase.balance + MR_transport_sales.balance + MR_transport_establishments.balance + MR_transport_staff.balance + MR_transport_other.balance</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_mr_transport_purchase" model="account.report.line">
+                                                <field name="name">Transport on purchases</field>
+                                                <field name="code">MR_transport_purchase</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6300</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_transport_sales" model="account.report.line">
+                                                <field name="name">Transports on sales</field>
+                                                <field name="code">MR_transport_sales</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6301</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_transport_establishments" model="account.report.line">
+                                                <field name="name">Transport between establishments</field>
+                                                <field name="code">MR_transport_establishments</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6302</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_transport_staff" model="account.report.line">
+                                                <field name="name">Collective transport of staff</field>
+                                                <field name="code">MR_transport_staff</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6305</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_transport_other" model="account.report.line">
+                                                <field name="name">Other transport costs (moving, etc.)</field>
+                                                <field name="code">MR_transport_other</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6308</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mr_travel_missions_receptions" model="account.report.line">
+                                        <field name="name">Travel, missions, receptions</field>
+                                        <field name="code">MR_travel_missions_receptions</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mr_travel_missions_receptions_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">MR_travel.balance + MR_missions.balance + MR_receptions.balance</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_mr_travel" model="account.report.line">
+                                                <field name="name">Travel</field>
+                                                <field name="code">MR_travel</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6310</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_missions" model="account.report.line">
+                                                <field name="name">Missions</field>
+                                                <field name="code">MR_missions</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6315</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_receptions" model="account.report.line">
+                                                <field name="name">Receptions</field>
+                                                <field name="code">MR_receptions</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6317</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mr_postage_comm_costs" model="account.report.line">
+                                        <field name="name">Postage and telecommunications costs</field>
+                                        <field name="code">MR_postage_comm_costs</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">632</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_intermediate_fees" model="account.report.line">
+                                        <field name="name">Intermediary fees and charges</field>
+                                        <field name="code">MR_intermediate_fees</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mr_intermediate_fees_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">MR_temporary_staff.balance + MR_fees_services.balance + MR_acts_litigation_costs.balance + MR_auto_info_processing.balance + MR_commissions.balance + MR_misc_costs.balance</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_mr_temporary_staff" model="account.report.line">
+                                                <field name="name">Temporary staff</field>
+                                                <field name="code">MR_temporary_staff</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6330</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_fees_services" model="account.report.line">
+                                                <field name="name">Fees (engineering, architectural, consulting, legal, tax, accounting services)</field>
+                                                <field name="code">MR_fees_services</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6331</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_acts_litigation_costs" model="account.report.line">
+                                                <field name="name">Costs of acts and litigation</field>
+                                                <field name="code">MR_acts_litigation_costs</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6332</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_auto_info_processing" model="account.report.line">
+                                                <field name="name">Automatic processing of information, research organizations, technical assistance</field>
+                                                <field name="code">MR_auto_info_processing</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6333</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_commissions" model="account.report.line">
+                                                <field name="name">Commissions and brokerage and freight forwarder fees</field>
+                                                <field name="code">MR_commissions</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6334</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_misc_costs" model="account.report.line">
+                                                <field name="name">Miscellaneous</field>
+                                                <field name="code">MR_misc_costs</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">6338</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mr_ads_promotions" model="account.report.line">
+                                        <field name="name">Advertising and propaganda, publications, sales promotions</field>
+                                        <field name="code">MR_ads_promotions</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">634</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_banking_services" model="account.report.line">
+                                        <field name="name">Banking services</field>
+                                        <field name="code">MR_banking_services</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">635</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_headquarters_share_costs" model="account.report.line">
+                                        <field name="name">Share of headquarters costs abroad</field>
+                                        <field name="code">MR_headquarters_share_costs</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">637</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_misc_charges" model="account.report.line">
+                                        <field name="name">Miscellaneous charges</field>
+                                        <field name="code">MR_misc_charges</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">638</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mr_charges_loss" model="account.report.line">
+                                <field name="name">Various charges and losses</field>
+                                <field name="code">MR_charges_loss</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mr_charges_loss_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MR_land_rents.balance + MR_royalties_patents.balance + MR_discounts_allowances_granted.balance + MR_attendance_fees.balance + MR_donations_tips.balance + MR_bad_debt.balance + MR_criminal_fines.balance + MR_exceptional_charges.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mr_land_rents" model="account.report.line">
+                                        <field name="name">Land rents and income</field>
+                                        <field name="code">MR_land_rents</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">640</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_royalties_patents" model="account.report.line">
+                                        <field name="name">Royalties for concessions, patents, licenses, copyright and reproduction rights</field>
+                                        <field name="code">MR_royalties_patents</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">641</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_discounts_allowances_granted" model="account.report.line">
+                                        <field name="name">Discounts, allowances and rebates granted</field>
+                                        <field name="code">MR_discounts_allowances_granted</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">642</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_attendance_fees" model="account.report.line">
+                                        <field name="name">Attendance fees</field>
+                                        <field name="code">MR_attendance_fees</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">643</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_donations_tips" model="account.report.line">
+                                        <field name="name">Donations, tips and grants awarded</field>
+                                        <field name="code">MR_donations_tips</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">645</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_bad_debt" model="account.report.line">
+                                        <field name="name">Bad debts</field>
+                                        <field name="code">MR_bad_debt</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">646</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_criminal_fines" model="account.report.line">
+                                        <field name="name">Criminal fines (on markets, for non-tax offences)</field>
+                                        <field name="code">MR_criminal_fines</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">647</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_exceptional_charges" model="account.report.line">
+                                        <field name="name">Other exceptional charges and losses</field>
+                                        <field name="code">MR_exceptional_charges</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">648</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mr_staff_costs" model="account.report.line">
+                                <field name="name">Staff costs</field>
+                                <field name="code">MR_staff_costs</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mr_staff_costs_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MR_staff_remuneration.balance + MR_operator_remuneration.balance + MR_social_charges.balance + MR_other_social_charges.balance + MR_retraining_costs.balance + MR_benefits_in_kind.balance + MR_personnel_charges.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mr_staff_remuneration" model="account.report.line">
+                                        <field name="name">Staff remuneration (including majority manager and company directors)</field>
+                                        <field name="code">MR_staff_remuneration</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">650</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_operator_remuneration" model="account.report.line">
+                                        <field name="name">Remuneration for the work of the operator and his family</field>
+                                        <field name="code">MR_operator_remuneration</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">651</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_social_charges" model="account.report.line">
+                                        <field name="name">Social and welfare charges</field>
+                                        <field name="code">MR_social_charges</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">652</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_operator_contributions" model="account.report.line">
+                                        <field name="name">Contributions from the operator and members of partnerships, majority managers</field>
+                                        <field name="code">MR_operator_contributions</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">654</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_other_social_charges" model="account.report.line">
+                                        <field name="name">Other social charges</field>
+                                        <field name="code">MR_other_social_charges</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">655</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_retraining_costs" model="account.report.line">
+                                        <field name="name">Retraining and vocational training costs</field>
+                                        <field name="code">MR_retraining_costs</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">656</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_benefits_in_kind" model="account.report.line">
+                                        <field name="name">Benefits in kind</field>
+                                        <field name="code">MR_benefits_in_kind</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">657</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_other_personal_charges" model="account.report.line">
+                                        <field name="name">Other Personnel charges</field>
+                                        <field name="code">MR_personnel_charges</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">658</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mr_taxes_duties" model="account.report.line">
+                                <field name="name">Taxes, duties and similar payments</field>
+                                <field name="code">MR_taxes_duties</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mr_taxes_duties_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MR_direct_taxes.balance + MR_indirect_taxes.balance + MR_registration_stamp.balance + MR_customs_duties.balance + MR_taxes_african_orgs.balance + MR_taxes_international_orgs.balance + MR_taxes_payable_abroad.balance + MR_taxes_penalities.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mr_direct_taxes" model="account.report.line">
+                                        <field name="name">Direct taxes and similar taxes</field>
+                                        <field name="code">MR_direct_taxes</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">660</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_indirect_taxes" model="account.report.line">
+                                        <field name="name">Taxes and indirect taxes</field>
+                                        <field name="code">MR_indirect_taxes</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">661</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_registration_stamp" model="account.report.line">
+                                        <field name="name">Registration and stamp</field>
+                                        <field name="code">MR_registration_stamp</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">662</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_customs_duties" model="account.report.line">
+                                        <field name="name">Customs duties</field>
+                                        <field name="code">MR_customs_duties</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">663</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_taxes_african_orgs" model="account.report.line">
+                                        <field name="name">Taxes and duties within the framework of African organizations</field>
+                                        <field name="code">MR_taxes_african_orgs</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">664</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_taxes_international_orgs" model="account.report.line">
+                                        <field name="name">Taxes and duties within the framework of international organizations</field>
+                                        <field name="code">MR_taxes_international_orgs</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">665</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_taxes_payable_abroad" model="account.report.line">
+                                        <field name="name">Taxes and duties payable abroad</field>
+                                        <field name="code">MR_taxes_payable_abroad</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">666</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_taxes_penalities" model="account.report.line">
+                                        <field name="name">Tax Penalties and Fines</field>
+                                        <field name="code">MR_taxes_penalities</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">667</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mr_financial_charges" model="account.report.line">
+                                <field name="name">Financial charges</field>
+                                <field name="code">MR_financial_charges</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mr_financial_charges_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MR_loans_interest.balance + MR_accounts_interest.balance + MR_banking_interest.balance + MR_bonds_interest.balance + MR_discounts_granted.balance + MR_exchange_diff_loss.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mr_loans_interest" model="account.report.line">
+                                        <field name="name">Interest on loans (including bond redemption premiums)</field>
+                                        <field name="code">MR_loans_interest</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">670</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_accounts_interest" model="account.report.line">
+                                        <field name="name">Interest on current accounts and deposits</field>
+                                        <field name="code">MR_accounts_interest</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">672</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_banking_interest" model="account.report.line">
+                                        <field name="name">Banking and financing transaction interest</field>
+                                        <field name="code">MR_banking_interest</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">673</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_bonds_interest" model="account.report.line">
+                                        <field name="name">Interest on guaranteed bonds</field>
+                                        <field name="code">MR_bonds_interest</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">674</field> 
+                                    </record>
+                                    <record id="account_financial_report_mr_discounts_granted" model="account.report.line">
+                                        <field name="name">Discounts granted</field>
+                                        <field name="code">MR_discounts_granted</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">676</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_exchange_diff_loss" model="account.report.line">
+                                        <field name="name">Exchange differences (losses)</field>
+                                        <field name="code">MR_exchange_diff_loss</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">678</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mr_depreciation_provision" model="account.report.line">
+                                <field name="name">Allocations to depreciation and provision accounts</field>
+                                <field name="code">MR_depreciation_provision</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mr_depreciation_provision_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MR_depreciation_amortization_prov.balance + MR_depreciation_assets_prov.balance + MR_regulated_prov.balance + MR_risks_prov.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mr_depreciation_amortization_prov" model="account.report.line">
+                                        <field name="name">Depreciation and amortization provisions (class 2)</field>
+                                        <field name="code">MR_depreciation_amortization_prov</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">680</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_depreciation_assets_prov" model="account.report.line">
+                                        <field name="name">Allocations to provisions for depreciation of assets (classes 2, 3, 4 and 5)</field>
+                                        <field name="code">MR_depreciation_assets_prov</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">685</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_regulated_prov" model="account.report.line">
+                                        <field name="name">Allocations to regulated provisions</field>
+                                        <field name="code">MR_regulated_prov</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">686</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_risks_prov" model="account.report.line">
+                                        <field name="name">Allocations to provisions for risks and charges</field>
+                                        <field name="code">MR_risks_prov</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">687</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_mr_income_and_profit" model="account.report.line">
+                        <field name="name">Income and profit accounts</field>
+                        <field name="code">MR_income_and_profit</field>
+                        <field name="hierarchy_level">0</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_mr_income_and_profit_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MR_goods_production_sales.balance + MR_production_stored.balance + MR_production_company.balance + MR_misc_products.balance + MR_operating_balancing_subsidies.balance + MR_financial_products.balance + MR_reversals_depreciation_provisions.balance + MR_immobilized_trasferred_costs.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_mr_goods_production_sales" model="account.report.line">
+                                <field name="name">Sales of goods and Production sold</field>
+                                <field name="code">MR_goods_production_sales</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mr_goods_production_sales_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MR_production_sold.balance + MR_production_sold_services.balance + MR_ancillary_activities.balance + MR_sales_goods_b.balance + MR_provision_personnel_invoiced.balance + MR_customer_allowances.balance + MR_discounts_granted_sales.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mr_production_sold" model="account.report.line">
+                                        <field name="name">Sale of goods (production sold)</field>
+                                        <field name="code">MR_production_sold</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-700</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_production_sold_services" model="account.report.line">
+                                        <field name="name">Production sold (works, services)</field>
+                                        <field name="code">MR_production_sold_services</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-701</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_ancillary_activities" model="account.report.line">
+                                        <field name="name">Products from ancillary activities</field>
+                                        <field name="code">MR_ancillary_activities</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-706</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_sales_goods_b" model="account.report.line">
+                                        <field name="name">Sales of goods B</field>
+                                        <field name="code">MR_sales_goods_b</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-707</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_provision_personnel_invoiced" model="account.report.line">
+                                        <field name="name">Provision of invoiced personnel</field>
+                                        <field name="code">MR_provision_personnel_invoiced</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-7084</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_customer_allowances" model="account.report.line">
+                                        <field name="name">Allowances granted to customers</field>
+                                        <field name="code">MR_customer_allowances</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-7087</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_customer_allowances" model="account.report.line">
+                                        <field name="name">Allowances granted to customers</field>
+                                        <field name="code">MR_customer_allowances</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-7087</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_discounts_granted_sales" model="account.report.line">
+                                        <field name="name">Discounts and rebates granted on sales</field>
+                                        <field name="code">MR_discounts_granted_sales</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-709</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mr_production_stored" model="account.report.line">
+                                <field name="name">Production stored or destocking (variation for the financial year)</field>
+                                <field name="code">MR_production_stored</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mr_production_stored_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MR_in_progress_variation.balance + MR_intermediate_variation.balance + MR_finished_variation.balance + MR_residual_variation.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mr_in_progress_variation" model="account.report.line">
+                                        <field name="name">Variation of “in progress” production</field>
+                                        <field name="code">MR_in_progress_variation</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-713</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_intermediate_variation" model="account.report.line">
+                                        <field name="name">Variation of intermediate products</field>
+                                        <field name="code">MR_intermediate_variation</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-714</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_finished_variation" model="account.report.line">
+                                        <field name="name">Variation of finished products</field>
+                                        <field name="code">MR_finished_variation</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-715</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_residual_variation" model="account.report.line">
+                                        <field name="name">Variation of residual products</field>
+                                        <field name="code">MR_residual_variation</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-716</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mr_production_company" model="account.report.line">
+                                <field name="name">Production of the company for itself</field>
+                                <field name="code">MR_production_company</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mr_production_company_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MR_immobilized_production.balance + MR_self_consumed_production.balance + MR_company_services.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mr_immobilized_production" model="account.report.line">
+                                        <field name="name">Immobilized production (self-equipment)</field>
+                                        <field name="code">MR_immobilized_production</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-722</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_self_consumed_production" model="account.report.line">
+                                        <field name="name">Self-consumed production</field>
+                                        <field name="code">MR_self_consumed_production</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-723</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_company_services" model="account.report.line">
+                                        <field name="name">Services provided by the company for itself</field>
+                                        <field name="code">MR_company_services</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-726</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mr_misc_products" model="account.report.line">
+                                <field name="name">Miscellaneous products and profits</field>
+                                <field name="code">MR_misc_products</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mr_misc_products_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MR_tenancies_sharecroppers.balance + MR_royalties_patents_income.balance + MR_discounts_allowences_obtained.balance + MR_attendance_fees_remuneration.balance + MR_equipment_grants_financial_year.balance + MR_contributions_received.balance + MR_amortized_receivables.balance + MR_tax_breaks.balance + MR_other_exceptional_profits.balance + MR_insurance_compensation.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mr_tenancies_sharecroppers" model="account.report.line">
+                                        <field name="name">Tenancies and sharecroppers</field>
+                                        <field name="code">MR_tenancies_sharecroppers</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-740</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_royalties_patents_income" model="account.report.line">
+                                        <field name="name">Royalties for concessions, patents, licenses, copyright and reproduction rights</field>
+                                        <field name="code">MR_royalties_patents_income</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-741</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_discounts_allowences_obtained" model="account.report.line">
+                                        <field name="name">Discounts, allowances and rebates obtained</field>
+                                        <field name="code">MR_discounts_allowences_obtained</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-742</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_attendance_fees_remuneration" model="account.report.line">
+                                        <field name="name">Attendance fees and remuneration of directors, managers, etc.</field>
+                                        <field name="code">MR_attendance_fees_remuneration</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-743</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_equipment_grants_financial_year" model="account.report.line">
+                                        <field name="name">Equipment grants, share transferred to the results of the financial year</field>
+                                        <field name="code">MR_equipment_grants_financial_year</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-744</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_contributions_received" model="account.report.line">
+                                        <field name="name">Contributions and donations received</field>
+                                        <field name="code">MR_contributions_received</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-745</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_amortized_receivables" model="account.report.line">
+                                        <field name="name"> Receipt of amortized receivables</field>
+                                        <field name="code">MR_amortized_receivables</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-746</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_tax_breaks" model="account.report.line">
+                                        <field name="name">Tax breaks</field>
+                                        <field name="code">MR_tax_breaks</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-747</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_other_exceptional_profits" model="account.report.line">
+                                        <field name="name">Other exceptional products and profits</field>
+                                        <field name="code">MR_other_exceptional_profits</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-748</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_insurance_compensation" model="account.report.line">
+                                        <field name="name">Insurance compensation in the nature of damages</field>
+                                        <field name="code">MR_insurance_compensation</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-749</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mr_operating_balancing_subsidies" model="account.report.line">
+                                <field name="name">Operating subsidies and balancing subsidies</field>
+                                <field name="code">MR_operating_balancing_subsidies</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mr_operating_balancing_subsidies_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MR_operating_grants.balance + MR_balance_subsidies.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mr_operating_grants" model="account.report.line">
+                                        <field name="name">Operating grants</field>
+                                        <field name="code">MR_operating_grants</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-76</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_balance_subsidies" model="account.report.line">
+                                        <field name="name">Balance subsidies</field>
+                                        <field name="code">MR_balance_subsidies</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-076</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mr_financial_products" model="account.report.line">
+                                <field name="name">Financial products</field>
+                                <field name="code">MR_financial_products</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mr_financial_products_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MR_loans_fixed_asset_income.balance + MR_investment_fixed_asset_income.balance + MR_current_accounts_income.balance + MR_discounts_obtained.balance + MR_exchange_diff_gains.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mr_loans_fixed_asset_income" model="account.report.line">
+                                        <field name="name">Income from loans and other fixed assets</field>
+                                        <field name="code">MR_loans_fixed_asset_income</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-770</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_investment_fixed_asset_income" model="account.report.line">
+                                        <field name="name">Income from fixed assets and investment securities</field>
+                                        <field name="code">MR_investment_fixed_asset_income</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-771</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_current_accounts_income" model="account.report.line">
+                                        <field name="name">Income from current accounts and deposits</field>
+                                        <field name="code">MR_current_accounts_income</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-772</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_discounts_obtained" model="account.report.line">
+                                        <field name="name">Discounts obtained</field>
+                                        <field name="code">MR_discounts_obtained</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">776</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_exchange_diff_gains" model="account.report.line">
+                                        <field name="name">Exchange rate differences (gains)</field>
+                                        <field name="code">MR_exchange_diff_gains</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-778</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mr_reversals_depreciation_provisions" model="account.report.line">
+                                <field name="name">Reversals of depreciation and provisions</field>
+                                <field name="code">MR_reversals_depreciation_provisions</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mr_reversals_depreciation_provisions_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MR_reversals_depreciation.balance + MR_reversals_operating_prov.balance + MR_reversals_prov_depreciation.balance + MR_reversals_prov_risks.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mr_reversals_depreciation" model="account.report.line">
+                                        <field name="name">Reversals of depreciation</field>
+                                        <field name="code">MR_reversals_depreciation</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-780</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_reversals_operating_prov" model="account.report.line">
+                                        <field name="name">Reversals of operating provisions</field>
+                                        <field name="code">MR_reversals_operating_prov</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-781</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_reversals_prov_depreciation" model="account.report.line">
+                                        <field name="name">Reversals of provisions for depreciation</field>
+                                        <field name="code">MR_reversals_prov_depreciation</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-785</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_reversals_prov_risks" model="account.report.line">
+                                        <field name="name">Reversals of provisions for risks and charges</field>
+                                        <field name="code">MR_reversals_prov_risks</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-787</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mr_immobilized_trasferred_costs" model="account.report.line">
+                                <field name="name">Costs to be immobilized or transferred</field>
+                                <field name="code">MR_immobilized_trasferred_costs</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mr_fimmobilized_trasferred_costs_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MR_immobilized_costs.balance + MR_transferred_fees.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mr_immobilized_costs" model="account.report.line">
+                                        <field name="name">Costs to be immobilized</field>
+                                        <field name="code">MR_immobilized_costs</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-791</field>
+                                    </record>
+                                    <record id="account_financial_report_mr_transferred_fees" model="account.report.line">
+                                        <field name="name">Fees to be transferred</field>
+                                        <field name="code">MR_transferred_fees</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mr_transferred_fees_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">MR_charges_third_parties.balance + MR_transferred_costs.balance + MR_transferred_benefits_in_kind.balance</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_mr_charges_third_parties" model="account.report.line">
+                                                <field name="name">Charges attributable to third parties</field>
+                                                <field name="code">MR_charges_third_parties</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-7920</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_transferred_costs" model="account.report.line">
+                                                <field name="name">Costs to be transferred to asset disposal accounts</field>
+                                                <field name="code">MR_transferred_costs</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-7921</field>
+                                            </record>
+                                            <record id="account_financial_report_mr_transferred_benefits_in_kind" model="account.report.line">
+                                                <field name="name">Benefits in kind</field>
+                                                <field name="code">MR_transferred_benefits_in_kind</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-7922</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

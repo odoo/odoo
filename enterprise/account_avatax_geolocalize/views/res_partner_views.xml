@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='geo_localize_button']" position="replace">
+                <field name="is_avatax_valid" invisible="1"/>
+                <button invisible="partner_latitude != 0 or partner_longitude != 0"
+                        icon="fa-gear" string="Compute based on address" title="Compute Localization"
+                        name="geo_localize" type="object" class="btn btn-link p-0"/>
+                <button invisible="is_avatax_valid or partner_latitude == 0 and partner_longitude == 0"
+                        icon="fa-refresh" string="Refresh" title="Refresh Localization"
+                        name="geo_localize" type="object" class="btn btn-link p-0"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

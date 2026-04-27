@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data auto_sequence="1">
+        <record id="check_register_report" model="account.report">
+            <field name="name">Check Register</field>
+            <field name="filter_journals" eval="True"/>
+            <field name="filter_analytic" eval="True"/>
+            <field name="filter_period_comparison" eval="False"/>
+            <field name="search_bar" eval="True"/>
+            <field name="load_more_limit" eval="80"/>
+            <field name="custom_handler_model_id" ref="model_l10n_us_report_handler"/>
+            <field name="column_ids">
+                <record id="check_register_report_date" model="account.report.column">
+                    <field name="name">Date</field>
+                    <field name="expression_label">date</field>
+                    <field name="figure_type">date</field>
+                </record>
+                <record id="check_register_report_communication" model="account.report.column">
+                    <field name="name">Communication</field>
+                    <field name="expression_label">communication</field>
+                    <field name="figure_type">string</field>
+                </record>
+                <record id="check_register_report_partner" model="account.report.column">
+                    <field name="name">Partner</field>
+                    <field name="expression_label">partner_name</field>
+                    <field name="figure_type">string</field>
+                </record>
+                <record id="check_register_report_currency" model="account.report.column">
+                    <field name="name">Currency</field>
+                    <field name="expression_label">amount_currency</field>
+                </record>
+                <record id="check_register_report_debit" model="account.report.column">
+                    <field name="name">Debit</field>
+                    <field name="expression_label">debit</field>
+                </record>
+                <record id="check_register_report_credit" model="account.report.column">
+                    <field name="name">Credit</field>
+                    <field name="expression_label">credit</field>
+                </record>
+                <record id="check_register_report_balance" model="account.report.column">
+                    <field name="name">Balance</field>
+                    <field name="expression_label">balance</field>
+                </record>
+            </field>
+        </record>
+    </data>
+
+        <record id="check_register_action" model="ir.actions.client">
+            <field name="name">Check Register</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('l10n_us_reports.check_register_report')}"/>
+        </record>
+
+        <menuitem id="check_register_menu"
+                  name="Check Register"
+                  parent="account_reports.account_reports_audit_reports_menu"
+                  sequence="100"
+                  groups="account.group_account_readonly"
+                  action="l10n_us_reports.check_register_action"/>
+</odoo>

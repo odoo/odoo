@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="knowledge.WysiwygArticleHelper">
+        <div t-if="props.isVisible" class="o_knowledge_helper pb-3">
+            <p class="text-muted">Start typing to continue with an empty page or pick an option below to get started.</p>
+            <div class="d-flex flex-column">
+                <a href="#" class="o_knowledge_load_template p-2" data-hotkey="A" t-on-click="onLoadTemplateBtnClick" t-if="!isPortalUser">
+                    <i class="fa fa-lg fa-paint-brush me-1"/> Load a Template
+                </a>
+                <a href="#" class="o_knowledge_add_item_kanban p-2" data-hotkey="K" t-on-click="onBuildItemKanbanBtnClick">
+                    <i class="fa fa-lg fa-th-large me-1"/> Build an Item Kanban
+                </a>
+                <a href="#" class="o_knowledge_add_item_list p-2" data-hotkey="L" t-on-click="onBuildItemListBtnClick">
+                    <i class="fa fa-lg fa-th-list me-1"/> Build an Item List
+                </a>
+                <a href="#" class="o_knowledge_add_item_calendar p-2" data-hotkey="C" t-on-click="onBuildItemCalendarBtnClick">
+                    <i class="fa fa-lg fa-calendar me-1"/> Build an Item Calendar
+                </a>
+                <a href="#" class="o_knowledge_generate_article p-2" data-hotkey="G" t-on-click="onGenerateArticleClick">
+                    <i class="fa fa-lg fa-magic me-1"/> Generate an Article with AI
+                </a>
+            </div>
+        </div>
+    </t>
+</templates>

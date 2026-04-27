@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+        <!-- utm.campaign  -->
+        <record model="data_merge.model" id="data_merge_model_utm_campaign">
+            <field name="name">UTM Campaign</field>
+            <field name="res_model_id" ref="utm.model_utm_campaign"/>
+            <field name="notify_user_ids" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record model="data_merge.rule" id="data_merge_field_utm_campaign_name">
+            <field name="model_id" ref="data_merge_model_utm_campaign"/>
+            <field name="field_id" ref="utm.field_utm_campaign__name"/>
+            <field name="match_mode">exact</field>
+        </record>
+
+        <!-- utm.medium -->
+        <record model="data_merge.model" id="data_merge_model_utm_medium">
+            <field name="name">UTM Medium</field>
+            <field name="res_model_id" ref="utm.model_utm_medium"/>
+            <field name="notify_user_ids" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record model="data_merge.rule" id="data_merge_field_utm_medium_name">
+            <field name="model_id" ref="data_merge_model_utm_medium"/>
+            <field name="field_id" ref="utm.field_utm_medium__name"/>
+            <field name="match_mode">exact</field>
+        </record>
+
+        <!-- utm.source  -->
+        <record model="data_merge.model" id="data_merge_model_utm_source">
+            <field name="name">UTM Source</field>
+            <field name="res_model_id" ref="utm.model_utm_source"/>
+            <field name="notify_user_ids" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record model="data_merge.rule" id="data_merge_field_utm_source_name">
+            <field name="model_id" ref="data_merge_model_utm_source"/>
+            <field name="field_id" ref="utm.field_utm_source__name"/>
+            <field name="match_mode">exact</field>
+        </record>
+    </data>
+    <data noupdate="1">
+        <function model="data_merge.rule" name="_update_default_rules">
+            <value eval="[ref('data_merge_field_utm_campaign_name'),
+                ref('data_merge_field_utm_medium_name'),
+                ref('data_merge_field_utm_source_name')]"/>
+        </function>
+    </data>
+</odoo>

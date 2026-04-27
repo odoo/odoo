@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <template id="default_record_page">
+        <t t-call="website.layout">
+            <div id="o_website_record_page wrap">
+                <t t-set="editor_message">Drag building blocks to customize the header of single record pages.</t>
+                <div class="oe_structure oe_empty oe_new" t-att-data-editor-message="editor_message"/>
+                <div class="container">
+                    <ol t-if="listing" class="breadcrumb p-0 my-2">
+                        <li class="breadcrumb-item o_not_editable">
+                            <a t-att-href="listing['href']" >
+                                <span t-out="listing['name']" />
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <studio_placeholder for="name"/>
+                        </li>
+                    </ol>
+                    <div class="d-flex flex-row my-4 flex-wrap align-items-center justify-content-between">
+                        <div class="col-lg-4 mt-lg-4 col-sm-12">
+                            <h1 class="h1">
+                                <studio_placeholder for="name"/>
+                            </h1>
+                            <studio_placeholder for="monetary"/>
+                            <studio_placeholder for="tags"/>
+                        </div>
+                        <studio_placeholder for="image" class="col-lg-6 mt-md-4 col-sm-12 me-2"/>
+                    </div>
+                    <studio_placeholder for="html"/>
+                </div>
+                <t t-set="editor_message">Drag building blocks to customize the footer of single record pages.</t>
+                <div class="oe_structure oe_empty oe_new" t-att-data-editor-message="editor_message"></div>
+            </div>
+        </t>
+    </template>
+
+    <template id="default_form_field_name">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
+                    <div class="container">
+                        <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="" data-success-page="">
+                            <div class="s_website_form_rows row s_col_no_bgcolor">
+                                <div class="mb-3 col-12 s_website_form_field s_website_form_required" data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="studio1">
+                                            <span class="s_website_form_label_content">Name</span>
+                                            <span class="s_website_form_mark"> *</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input id="studio1" type="text" class="form-control s_website_form_input" name="name" required="1"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3 col-12 s_website_form_submit" data-name="Submit Button">
+                                    <div style="width: 200px;" class="s_website_form_label"/>
+                                    <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send">Submit</a>
+                                    <span id="s_website_form_result"></span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="default_listing">
+        <t t-call="website.layout">
+            <div class="container o_website_listing_layout">
+                <div class="oe_structure oe_new"></div>
+                <section class="s_searchbar o_colored_level o_cc pt48 pb48">
+                    <div class="row">
+                        <div class="col-lg-8 offset-lg-2">
+                            <div class="btn-toolbar">
+
+                                <form method="get" class="o_searchbar_form s_searchbar_input me-auto flex-grow-1">
+                                    <div role="search" class="input-group">
+                                        <input type="search" name="search" class="search-query form-control oe_search_box border-0 text-bg-light" placeholder="Search..." t-att-value="search" autocomplete="off"/>
+                                        <button type="submit" aria-label="Search" title="Search" class="btn oe_search_button btn-light">
+                                            <i class="oi oi-search"></i>
+                                            <span t-if="search" class="oe_search_found">
+                                                <small>(<t t-out="search_count or 0"/> found)</small>
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <input name="order" type="hidden" class="o_search_order_by" t-att-value="order_by if order_by else 'name asc'"/>
+                                </form>
+
+                                <t t-call="website_studio.listing_layout_switcher"/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div t-attf-class="row mx-n2 mt8 #{'o_website_grid' if layout_mode == 'grid' else 'o_website_list'}">
+                    <t t-foreach="records" t-as="record">
+                        <div t-attf-class="#{'col-lg-3 col-md-4 col-sm-6 px-2 col-xs-12' if layout_mode == 'grid' else ''}">
+                            <a class="o_website_record text-decoration-none d-grid card w-100 mb-3" t-att-href="record_to_url(record)">
+                                <div class='d-flex'>
+                                    <studio_placeholder for="image" class="h-100 w-100"/>
+                                </div>
+                                <studio_placeholder for="tags" class="text-end me-1"/>
+                                <div class="card-body py-2 px-3">
+                                    <h5 class="card-title">
+                                        <studio_placeholder for="name"/>
+                                    </h5>
+                                    <div class="card-text d-flex flex-column flex-grow-1 mt-1">
+                                        <span class="mb-0">
+                                            <studio_placeholder for="monetary"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </t>
+                </div>
+
+                <div class="oe_structure oe_new"></div>
+                <div t-if="pager" class="o_portal_pager d-flex justify-content-center my-4">
+                    <t t-call="portal.pager"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="website_studio.listing_layout_switcher" active="True" name="Grid or List button">
+        <t t-set="_activeClasses" t-translation="off">border-primary</t>
+        <div t-attf-class="listing_layout_switcher btn-group ms-3" t-att-data-active-classes="_activeClasses" t-att-data-view-id="view_id">
+            <input type="radio" class="btn-check" name="wstudio_layout" id="o_wstudio_apply_grid" value="grid" t-att-checked="'checked' if layout_mode != 'list' else None"/>
+            <label t-attf-class="btn btn-light #{_activeClasses if layout_mode != 'list' else None} o_wstudio_apply_grid" title="Grid" for="o_wstudio_apply_grid">
+                <i class="fa fa-th-large"/>
+            </label>
+            <input type="radio" class="btn-check" name="wstudio_layout" id="o_wstudio_apply_list" t-att-checked="'checked' if layout_mode == 'list' else None" value="list"/>
+            <label t-attf-class="btn btn-light #{_activeClasses if layout_mode == 'list' else None} o_wstudio_apply_list" title="List" for="o_wstudio_apply_list">
+                <i class="oi oi-view-list"/>
+            </label>
+        </div>
+    </template>
+</data>
+</odoo>

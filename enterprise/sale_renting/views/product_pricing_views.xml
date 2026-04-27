@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="product_pricing_tree" model="ir.ui.view">
+        <field name="name">product.pricing.list</field>
+        <field name="model">product.pricing</field>
+        <field name="arch" type="xml">
+            <list string="Prices" editable="bottom">
+                <field name="product_template_id" readonly="1"/>
+                <field name="product_variant_ids" widget="many2many_tags"
+                      groups="product.group_product_variant"
+                      readonly="1"
+                />
+                    <field name="recurrence_id" readonly="1"/>
+                    <field name="pricelist_id" groups="product.group_product_pricelist"/>
+                    <field name="currency_id" column_invisible="True"/>
+                    <field name="price"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="product_pricing_action" model="ir.actions.act_window">
+        <field name="name">Prices</field>
+        <field name="res_model">product.pricing</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new recurrence
+            </p>
+        </field>
+    </record>
+</odoo>

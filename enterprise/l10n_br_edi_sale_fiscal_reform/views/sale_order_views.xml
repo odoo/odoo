@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sale_order_view_form" model="ir.ui.view">
+            <field name="name">sale.order.view.form.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="l10n_br_edi_sale.order_form_inherit"/>
+            <field name="arch" type="xml">
+                <field name="l10n_br_edi_payment_method" position="after">
+                    <field name="l10n_br_presence" invisible="country_code != 'BR'"/>
+                    <field name="l10n_br_service_operation_indicator" invisible="country_code != 'BR'"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="order_form_inherit" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="l10n_br_avatax_sale.order_form_inherit"/>
+            <field name="arch" type="xml">
+                <field name="l10n_br_goods_operation_type_id" position="attributes">
+                    <attribute name="invisible" separator="or" remove="l10n_br_is_service_transaction"/>
+                    <!-- After the reform it's not only for goods. -->
+                    <attribute name="string">Operation Type</attribute>
+                    <attribute name="help">Brazil: This is the operation type related to the transaction. It will identify how taxes will be computed.</attribute>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

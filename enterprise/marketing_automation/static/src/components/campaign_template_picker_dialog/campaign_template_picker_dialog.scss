@@ -1,0 +1,22 @@
+.o_ma_campaign_template_picker_dialog {
+    .o_ma_campaign_picker_page {
+        .o_ma_campaign_picker_card {
+            border-width: 1px;
+            outline: solid 0px $secondary;
+            transition: outline-width 0.1s linear, box-shadow 0.25s;
+            min-height: 12vh;
+            &.o_ma_campaign_picker_active, &:hover {
+                box-shadow: $box-shadow;
+                outline-width: 3px;
+            }
+            &.o_ma_campaign_picker_active {
+                outline-color: $primary;
+            }
+        } 
+        pointer-events: auto;
+    }
+    .o_ma_campaign_picker_icon {
+        width: 65% !important;
+        height: 65% !important;
+    }
+}

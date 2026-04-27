@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="mrp_workorder.MOViewListDropdown" t-inherit="mrp.MOViewListDropdown" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('dropdown-divider')]" position="after">
+            <DropdownItem
+                class="`d-flex align-items-center`"
+                onSelected="() => this.openShopFloor()">
+                    <span t-attf-class="oi oi-view-kanban me-2"/>
+                    <span>Open Shop Floor</span>
+            </DropdownItem>
+        </xpath>
+    </t>
+</templates>

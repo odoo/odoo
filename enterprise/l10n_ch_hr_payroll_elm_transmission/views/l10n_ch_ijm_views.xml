@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_ch_sickness_insurance_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.sickness.insurance.view.form</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll.l10n_ch_sickness_insurance_view_form"/>
+        <field name="model">l10n.ch.sickness.insurance</field>
+        <field name="arch" type="xml">
+            <sheet position="replace">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder='e.g. "Sickness Insurance Gastrosocial"'/></h1>
+                    </div>
+                    <group>
+                        <group string="Insurer Information">
+                            <field name="company_id" required="1" groups="base.group_multi_company"/>
+                            <field name="insurance_code"/>
+                            <field name="customer_number"/>
+                            <field name="contract_number"/>
+                        </group>
+                    </group>
+                    <group string="IJM Solution" colspan="2">
+                        <field name="line_ids" nolabel="1" colspan="2">
+                            <list>
+                                <field name="solution_name"/>
+                                <field name="solution_type"/>
+                                <field name="solution_number"/>
+                                <field name="rate_ids"/>
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+            </sheet>
+        </field>
+    </record>
+</odoo>

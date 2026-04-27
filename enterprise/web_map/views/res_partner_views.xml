@@ -1,0 +1,25 @@
+<?xml version = "1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_view_form_inherit_map" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.map</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <sheet position="inside">
+                <field name="partner_longitude" invisible="1"/>  <!-- Used by the MapModel JavaScript -->
+                <field name="partner_latitude" invisible="1"/>  <!-- Used by the MapModel JavaScript -->
+            </sheet>
+        </field>
+    </record>
+
+    <record id="view_res_partner_filter_inherit_map" model="ir.ui.view">
+        <field name="name">res.partner.search.inherit.map</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="contact_address_complete" string="Address"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

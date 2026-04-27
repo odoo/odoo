@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="calendar_booking_view_form" model="ir.ui.view">
+        <field name="name">calendar.booking.view.form</field>
+        <field name="model">calendar.booking</field>
+        <field name="arch" type="xml">
+            <form string="Booking" create="False" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="start"/>
+                            <field name="stop"/>
+                            <field name="appointment_type_id"/>
+                            <field name="staff_user_id"/>
+                            <field name="product_id"/>
+                            <field name="account_move_id"/>
+                        </group>
+                        <group>
+                            <field name="appointment_invite_id"/>
+                            <field name="name"/>
+                            <field name="guest_ids" widget="many2many_tags"/>
+                            <field name="asked_capacity"/>
+                            <field name="not_available"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Resources" name="resources">
+                            <field name="booking_line_ids">
+                                <list create="0" delete="0" edit="0">
+                                    <field name="appointment_resource_id"/>
+                                    <field name="capacity_reserved"/>
+                                    <field name="capacity_used"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Answers" name="answers">
+                            <field name="appointment_answer_input_ids">
+                                <list create="0" delete="0" edit="0">
+                                    <field name="question_id"/>
+                                    <field name="value_answer_id"/>
+                                    <field name="value_text_box"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

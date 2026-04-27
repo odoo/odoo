@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_pl_small_pl" model="account.report">
+        <field name="name">Profit and loss - Small</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="country_id" ref="base.pl"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="default_opening_date_filter">this_year</field>
+        <field name="column_ids">
+            <record id="l10n_pl_small_pl_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_pl_small_pl_a" model="account.report.line">
+                <field name="name">A. Net income from sales</field>
+                <field name="code">pl_small_pl_a</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_pl_small_pl_a_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">pl_small_pl_a_1.balance - pl_small_pl_a_2.balance - pl_small_pl_a_3.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_pl_small_pl_a_1" model="account.report.line">
+                        <field name="name">I. Net revenue from sales</field>
+                        <field name="code">pl_small_pl_a_1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-70.00 - 73.00 - 74.00</field>
+                    </record>
+                    <record id="l10n_pl_small_pl_a_2" model="account.report.line">
+                        <field name="name">II. Change in products</field>
+                        <field name="code">pl_small_pl_a_2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_small_pl_a_2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">49</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pl_small_pl_a_3" model="account.report.line">
+                        <field name="name">III. Cost of products manufactured for the entity's own use</field>
+                        <field name="code">pl_small_pl_a_3</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_small_pl_a_3_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">79 + 70.01</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_pl_small_pl_b" model="account.report.line">
+                <field name="name">B. Operating costs</field>
+                <field name="code">pl_small_pl_b</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_pl_small_pl_b_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">pl_small_pl_b_1.balance + pl_small_pl_b_2.balance + pl_small_pl_b_3.balance + pl_small_pl_b_4.balance + pl_small_pl_b_5.balance + pl_small_pl_b_6.balance</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_pl_small_pl_b_1" model="account.report.line">
+                        <field name="name">I. Depreciation</field>
+                        <field name="code">pl_small_pl_b_1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_small_pl_b_1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">40.00</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pl_small_pl_b_2" model="account.report.line">
+                        <field name="name">II. Consumption of materials and energy</field>
+                        <field name="code">pl_small_pl_b_2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_small_pl_b_2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">40.01</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pl_small_pl_b_3" model="account.report.line">
+                        <field name="name">III. External services</field>
+                        <field name="code">pl_small_pl_b_3</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_small_pl_b_3_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">40.02</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pl_small_pl_b_4" model="account.report.line">
+                        <field name="name">IV. Salaries</field>
+                        <field name="code">pl_small_pl_b_4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_small_pl_b_4_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">40.04</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pl_small_pl_b_5" model="account.report.line">
+                        <field name="name">V. Social security and other benefits</field>
+                        <field name="code">pl_small_pl_b_5</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_small_pl_b_5_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">40.05</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pl_small_pl_b_6" model="account.report.line">
+                        <field name="name">VI. Other costs</field>
+                        <field name="code">pl_small_pl_b_6</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_small_pl_b_6_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">40.03 + 40.09 + 5 + 73.01 + 74.01</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_pl_small_pl_c" model="account.report.line">
+                <field name="name">C. Profit (loss) on sales (A-B)</field>
+                <field name="code">pl_small_pl_c</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_pl_small_pl_c_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">pl_small_pl_a.balance - pl_small_pl_b.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_pl_small_pl_d" model="account.report.line">
+                <field name="name">D. Other operating income</field>
+                <field name="code">pl_small_pl_d</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-76.00 - 999997</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="l10n_pl_small_pl_e" model="account.report.line">
+                <field name="name">E. Other operating expenses</field>
+                <field name="code">pl_small_pl_e</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula" eval="False"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_pl_small_pl_e_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">76.01 + 999998</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_pl_small_pl_f" model="account.report.line">
+                <field name="name">F. Financial income</field>
+                <field name="code">pl_small_pl_f</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_pl_small_pl_f_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">pl_small_pl_f_1.balance + pl_small_pl_f_2.balance + pl_small_pl_f_3.balance + pl_small_pl_f_4.balance + pl_small_pl_f_5.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_pl_small_pl_f_1" model="account.report.line">
+                        <field name="name">I. Dividends and shares in profits from entities in which the entity has an equity interest</field>
+                        <field name="code">pl_small_pl_f_1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-75.000.2</field>
+                    </record>
+                    <record id="l10n_pl_small_pl_f_2" model="account.report.line">
+                        <field name="name">II. Interests</field>
+                        <field name="code">pl_small_pl_f_2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-75.000.3</field>
+                    </record>
+                    <record id="l10n_pl_small_pl_f_3" model="account.report.line">
+                        <field name="name">III. Profit on disposal of financial assets</field>
+                        <field name="code">pl_small_pl_f_3</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-75.000.1 - 75.000.4</field>
+                    </record>
+                    <record id="l10n_pl_small_pl_f_4" model="account.report.line">
+                        <field name="name">IV. Revaluation of financial assets</field>
+                        <field name="code">pl_small_pl_f_4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-75.000.5</field>
+                    </record>
+                    <record id="l10n_pl_small_pl_f_5" model="account.report.line">
+                        <field name="name">V. Other</field>
+                        <field name="code">pl_small_pl_f_5</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula"> - 75.000.6 - 75.000.7 - 75.000.9</field>
+                        <field name="hide_if_zero" eval="True"/>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_pl_small_pl_g" model="account.report.line">
+                <field name="name">G. Finance costs</field>
+                <field name="code">pl_small_pl_g</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_pl_small_pl_g_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">pl_small_pl_g_1.balance + pl_small_pl_g_2.balance + pl_small_pl_g_3.balance + pl_small_pl_g_4.balance</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_pl_small_pl_g_1" model="account.report.line">
+                        <field name="name">I. Interests</field>
+                        <field name="code">pl_small_pl_g_1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_small_pl_g_1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">75.010.3</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pl_small_pl_g_2" model="account.report.line">
+                        <field name="name">II. Loss on disposal of financial assets</field>
+                        <field name="code">pl_small_pl_g_2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_small_pl_g_2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">75.010.1</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pl_small_pl_g_3" model="account.report.line">
+                        <field name="name">III. Revaluation of financial assets</field>
+                        <field name="code">pl_small_pl_g_3</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_small_pl_g_3_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">75.010.2</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pl_small_pl_g_4" model="account.report.line">
+                        <field name="name">IV. Other</field>
+                        <field name="code">pl_small_pl_g_4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="hide_if_zero" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_small_pl_g_4_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">75.010.4 + 75.010.5 + 75.010.9</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_pl_small_pl_h" model="account.report.line">
+                <field name="name">H. Gross profit (loss) (C+D-E+F-G)</field>
+                <field name="code">pl_small_pl_h</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_pl_small_pl_h_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">pl_small_pl_c.balance + pl_small_pl_d.balance - pl_small_pl_e.balance + pl_small_pl_f.balance - pl_small_pl_g.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_pl_small_pl_i" model="account.report.line">
+                <field name="name">I. Income tax</field>
+                <field name="code">pl_small_pl_i</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula" eval="False"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_pl_small_pl_i_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">87</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_pl_small_pl_j" model="account.report.line">
+                <field name="name">J. Net profit (loss) (H-I)</field>
+                <field name="code">pl_small_pl_j</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_pl_small_pl_j_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">pl_small_pl_h.balance - pl_small_pl_i.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

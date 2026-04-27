@@ -1,0 +1,3271 @@
+{
+  "version": 21,
+  "sheets": [
+    {
+      "id": "sheet1",
+      "name": "Dashboard",
+      "colNumber": 9,
+      "rowNumber": 117,
+      "rows": {
+        "0": { "size": 40 },
+        "7": { "size": 39 },
+        "24": { "size": 44 },
+        "41": { "size": 40 },
+        "58": { "size": 40 },
+        "75": { "size": 43 },
+        "92": { "size": 43 }
+      },
+      "cols": {},
+      "merges": [],
+      "cells": {
+        "A1": { "content": "=_t(\"Last 30 days\")" },
+        "A8": { "content": "=_t(\"Customer churn rate\")" },
+        "A25": { "content": "=_t(\"Revenue churn rate\")" },
+        "A42": { "content": "=_t(\"Net Retention rate\")" },
+        "A59": { "content": "=_t(\"Customer Life Time Value\")" },
+        "A76": { "content": "=_t(\"Monthly Growth\")" },
+        "A93": { "content": "=_t(\"Average Revenue\")" }
+      },
+      "styles": {
+        "A1": 1,
+        "A8": 1,
+        "A25": 1,
+        "A42": 1,
+        "A59": 1,
+        "A76": 1,
+        "A93": 1
+      },
+      "formats": {},
+      "borders": {
+        "A1:I1": 1,
+        "A8:I8": 1,
+        "A25:I25": 1,
+        "A42:I42": 1,
+        "A59:I59": 1,
+        "A76:I76": 1,
+        "A93:I93": 1,
+        "A2:I2": 2,
+        "A9:I9": 2,
+        "A26:I26": 2,
+        "A43:I43": 2,
+        "A60:I60": 2,
+        "A77:I77": 2,
+        "A94:I94": 2
+      },
+      "conditionalFormats": [],
+      "figures": [
+        {
+          "id": "c5965b6e-d729-44cc-8e3a-0b605c325d3d",
+          "x": 0,
+          "y": 40,
+          "width": 207,
+          "height": 107,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": {
+              "text": "Customer Churn rate",
+              "bold": true,
+              "color": "#434343"
+            },
+            "type": "scorecard",
+            "background": "#FEF2F2",
+            "baseline": "Data!C3",
+            "baselineDescr": "Churns",
+            "keyValue": "Data!C2",
+            "humanize": false
+          }
+        },
+        {
+          "id": "aa964ffe-ad26-4124-8c0c-6044f124fced",
+          "x": 219,
+          "y": 40,
+          "width": 207,
+          "height": 107,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": {
+              "text": "Revenue Churn",
+              "color": "#434343",
+              "bold": true
+            },
+            "type": "scorecard",
+            "background": "#FEF2F2",
+            "baseline": "Data!C5",
+            "baselineDescr": "MRR",
+            "keyValue": "Data!C4",
+            "humanize": false
+          }
+        },
+        {
+          "id": "5034de4a-9be0-410d-97eb-0a7092f48969",
+          "x": 437,
+          "y": 40,
+          "width": 207,
+          "height": 107,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": {
+              "text": "Net Retention rate",
+              "color": "#434343",
+              "bold": true
+            },
+            "type": "scorecard",
+            "background": "#ECFDF5",
+            "baselineDescr": "",
+            "keyValue": "Data!C6",
+            "humanize": false
+          }
+        },
+        {
+          "id": "d8fb1b9b-bd79-41f8-a0df-982395c26b96",
+          "x": 656,
+          "y": 40,
+          "width": 207,
+          "height": 107,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": {
+              "text": "Cust. Life Time Value",
+              "bold": true,
+              "color": "#434343"
+            },
+            "type": "scorecard",
+            "background": "#FFF7ED",
+            "baselineDescr": "",
+            "keyValue": "Data!C7",
+            "humanize": false
+          }
+        },
+        {
+          "id": "f2d1a98e-d4d6-4711-a073-319b72d52fed",
+          "x": 0,
+          "y": 217,
+          "width": 863,
+          "height": 367,
+          "tag": "chart",
+          "data": {
+            "type": "line",
+            "dataSetsHaveTitle": false,
+            "dataSets": [{ "dataRange": "Data!T12:T35" }],
+            "legendPosition": "none",
+            "labelRange": "Data!A12:A35",
+            "title": { "text": "" },
+            "labelsAsText": true,
+            "stacked": false,
+            "aggregated": false,
+            "cumulative": false,
+            "fillArea": true
+          }
+        },
+        {
+          "id": "2e2ed109-f199-4941-9750-edf85856c2ab",
+          "x": 0,
+          "y": 629,
+          "width": 863,
+          "height": 368,
+          "tag": "chart",
+          "data": {
+            "type": "line",
+            "dataSetsHaveTitle": false,
+            "dataSets": [{ "dataRange": "Data!U12:U35" }],
+            "legendPosition": "none",
+            "labelRange": "Data!A12:A35",
+            "title": { "text": "" },
+            "labelsAsText": true,
+            "stacked": false,
+            "aggregated": false,
+            "cumulative": false,
+            "fillArea": true
+          }
+        },
+        {
+          "id": "d083cb45-5352-48aa-b511-e5cf8ed4959c",
+          "x": 0,
+          "y": 1037,
+          "width": 863,
+          "height": 368,
+          "tag": "chart",
+          "data": {
+            "type": "line",
+            "dataSetsHaveTitle": false,
+            "dataSets": [{ "dataRange": "Data!V12:V35" }],
+            "legendPosition": "none",
+            "labelRange": "Data!A12:A35",
+            "title": { "text": "" },
+            "labelsAsText": true,
+            "stacked": false,
+            "aggregated": false,
+            "cumulative": false,
+            "fillArea": true
+          }
+        },
+        {
+          "id": "d61c9bf1-4832-400c-8913-8c9319905d1b",
+          "x": 0,
+          "y": 1445,
+          "width": 863,
+          "height": 367,
+          "tag": "chart",
+          "data": {
+            "type": "line",
+            "dataSetsHaveTitle": false,
+            "dataSets": [{ "dataRange": "Data!W12:W35" }],
+            "legendPosition": "none",
+            "labelRange": "Data!A12:A35",
+            "title": { "text": "" },
+            "labelsAsText": true,
+            "stacked": false,
+            "aggregated": false,
+            "cumulative": false,
+            "fillArea": true
+          }
+        },
+        {
+          "id": "36fb37c8-76a6-40b6-a7c6-d57e7076f5db",
+          "x": 0,
+          "y": 1856,
+          "width": 863,
+          "height": 367,
+          "tag": "chart",
+          "data": {
+            "type": "line",
+            "dataSetsHaveTitle": false,
+            "dataSets": [{ "dataRange": "Data!X12:X35" }],
+            "legendPosition": "none",
+            "labelRange": "Data!A12:A35",
+            "title": { "text": "" },
+            "labelsAsText": true,
+            "stacked": false,
+            "aggregated": false,
+            "cumulative": false,
+            "fillArea": true
+          }
+        },
+        {
+          "id": "7e33aaf7-0e56-4369-9d22-d1a51f181f13",
+          "x": 0,
+          "y": 2267,
+          "width": 863,
+          "height": 345,
+          "tag": "chart",
+          "data": {
+            "type": "line",
+            "dataSetsHaveTitle": false,
+            "dataSets": [{ "dataRange": "Data!Z12:Z35" }],
+            "legendPosition": "none",
+            "labelRange": "Data!A12:A35",
+            "title": { "text": "" },
+            "labelsAsText": true,
+            "stacked": false,
+            "aggregated": false,
+            "cumulative": false,
+            "fillArea": true
+          }
+        }
+      ],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": { "ROW": [], "COL": [] },
+      "dataValidationRules": [],
+      "comments": {}
+    },
+    {
+      "id": "8f4743ea-4299-4b28-9c56-46b7b3b943d9",
+      "name": "Data",
+      "colNumber": 33,
+      "rowNumber": 100,
+      "rows": {},
+      "cols": {
+        "0": { "size": 142 },
+        "1": { "size": 84 },
+        "2": { "size": 85 },
+        "3": { "size": 82 },
+        "4": { "size": 48 },
+        "5": { "size": 77 },
+        "6": { "size": 66 },
+        "7": { "size": 129 },
+        "8": { "size": 48 },
+        "9": { "size": 123 },
+        "10": { "size": 52 },
+        "11": { "size": 121 },
+        "12": { "size": 48 },
+        "13": { "size": 116 },
+        "14": { "size": 55 },
+        "15": { "size": 94 },
+        "16": { "size": 48 },
+        "17": { "size": 88 },
+        "18": { "size": 70 },
+        "19": { "size": 138 },
+        "20": { "size": 132 },
+        "21": { "size": 120 },
+        "22": { "size": 163 },
+        "23": { "size": 105 },
+        "24": { "size": 112 },
+        "25": { "size": 112 },
+        "26": { "size": 114 },
+        "27": { "size": 120 },
+        "28": { "size": 163 },
+        "29": { "size": 105 },
+        "30": { "size": 112 },
+        "31": { "size": 114 }
+      },
+      "merges": [],
+      "cells": {
+        "A1": { "content": "=_t(\"KPI\")" },
+        "A2": { "content": "=_t(\"Customer churn rate\")" },
+        "A3": { "content": "=_t(\"Churns\")" },
+        "A4": { "content": "=_t(\"Revenue Churn\")" },
+        "A5": { "content": "=_t(\"MRR delta\")" },
+        "A6": { "content": "=_t(\"Net Retention\")" },
+        "A7": { "content": "=_t(\"CLTV\")" },
+        "A10": { "content": "=_t(\"Montly analysis\")" },
+        "A11": { "content": "=_t(\"Before\")" },
+        "A12": { "content": "=C12" },
+        "A13": { "content": "=C13" },
+        "A14": { "content": "=C14" },
+        "A15": { "content": "=C15" },
+        "A16": { "content": "=C16" },
+        "A17": { "content": "=C17" },
+        "A18": { "content": "=C18" },
+        "A19": { "content": "=C19" },
+        "A20": { "content": "=C20" },
+        "A21": { "content": "=C21" },
+        "A22": { "content": "=C22" },
+        "A23": { "content": "=C23" },
+        "A24": { "content": "=C24" },
+        "A25": { "content": "=C25" },
+        "A26": { "content": "=C26" },
+        "A27": { "content": "=C27" },
+        "A28": { "content": "=C28" },
+        "A29": { "content": "=C29" },
+        "A30": { "content": "=C30" },
+        "A31": { "content": "=C31" },
+        "A32": { "content": "=C32" },
+        "A33": { "content": "=C33" },
+        "A34": { "content": "=C34" },
+        "A35": { "content": "=C35" },
+        "A36": { "content": "=C36" },
+        "A39": { "content": "=_t(\"Last 30 Days analysis\")" },
+        "A41": { "content": "-29" },
+        "A42": { "content": "-28" },
+        "A43": { "content": "-27" },
+        "A44": { "content": "-26" },
+        "A45": { "content": "-25" },
+        "A46": { "content": "-24" },
+        "A47": { "content": "-23" },
+        "A48": { "content": "-22" },
+        "A49": { "content": "-21" },
+        "A50": { "content": "-20" },
+        "A51": { "content": "-19" },
+        "A52": { "content": "-18" },
+        "A53": { "content": "-17" },
+        "A54": { "content": "-16" },
+        "A55": { "content": "-15" },
+        "A56": { "content": "-14" },
+        "A57": { "content": "-13" },
+        "A58": { "content": "-12" },
+        "A59": { "content": "-11" },
+        "A60": { "content": "-10" },
+        "A61": { "content": "-9" },
+        "A62": { "content": "-8" },
+        "A63": { "content": "-7" },
+        "A64": { "content": "-6" },
+        "A65": { "content": "-5" },
+        "A66": { "content": "-4" },
+        "A67": { "content": "-3" },
+        "A68": { "content": "-2" },
+        "A69": { "content": "-1" },
+        "A70": { "content": "=_t(\"Today\")" },
+        "B1": { "content": "=_t(\"Current\")" },
+        "B2": { "content": "=iferror((Q70-Q40)/(E40-Q40),0)" },
+        "B3": { "content": "=Q70-Q40" },
+        "B4": { "content": "=IFERROR(-(R71+J71)/X40,0)" },
+        "B5": { "content": "=F71+J71+N71+R71" },
+        "B6": { "content": "=IFERROR((X40+J71+N71+R71)/X40, 1)" },
+        "B7": { "content": "=IFERROR(Z9/B2,0)" },
+        "B12": { "content": "-24" },
+        "B13": { "content": "-23" },
+        "B14": { "content": "-22" },
+        "B15": { "content": "-21" },
+        "B16": { "content": "-20" },
+        "B17": { "content": "-19" },
+        "B18": { "content": "-18" },
+        "B19": { "content": "-17" },
+        "B20": { "content": "-16" },
+        "B21": { "content": "-15" },
+        "B22": { "content": "-14" },
+        "B23": { "content": "-13" },
+        "B24": { "content": "-12" },
+        "B25": { "content": "-11" },
+        "B26": { "content": "-10" },
+        "B27": { "content": "-9" },
+        "B28": { "content": "-8" },
+        "B29": { "content": "-7" },
+        "B30": { "content": "-6" },
+        "B31": { "content": "-5" },
+        "B32": { "content": "-4" },
+        "B33": { "content": "-3" },
+        "B34": { "content": "-2" },
+        "B35": { "content": "-1" },
+        "B36": { "content": "=_t(\"This month\")" },
+        "B37": { "content": "=_t(\"Today\")" },
+        "B40": { "content": "=_t(\"Before\")" },
+        "B41": { "content": "=B42-1" },
+        "B42": { "content": "=B43-1" },
+        "B43": { "content": "=B44-1" },
+        "B44": { "content": "=B45-1" },
+        "B45": { "content": "=B46-1" },
+        "B46": { "content": "=B47-1" },
+        "B47": { "content": "=B48-1" },
+        "B48": { "content": "=B49-1" },
+        "B49": { "content": "=B50-1" },
+        "B50": { "content": "=B51-1" },
+        "B51": { "content": "=B52-1" },
+        "B52": { "content": "=B53-1" },
+        "B53": { "content": "=B54-1" },
+        "B54": { "content": "=B55-1" },
+        "B55": { "content": "=B56-1" },
+        "B56": { "content": "=B57-1" },
+        "B57": { "content": "=B58-1" },
+        "B58": { "content": "=B59-1" },
+        "B59": { "content": "=B60-1" },
+        "B60": { "content": "=B61-1" },
+        "B61": { "content": "=B62-1" },
+        "B62": { "content": "=B63-1" },
+        "B63": { "content": "=B64-1" },
+        "B64": { "content": "=B65-1" },
+        "B65": { "content": "=B66-1" },
+        "B66": { "content": "=B67-1" },
+        "B67": { "content": "=B68-1" },
+        "B68": { "content": "=B69-1" },
+        "B69": { "content": "=B70-1" },
+        "B70": { "content": "=TODAY()" },
+        "C1": { "content": "=_t(\"Current\")" },
+        "C2": { "content": "=B2" },
+        "C3": { "content": "=FORMAT.LARGE.NUMBER(B3)" },
+        "C4": { "content": "=B4" },
+        "C5": { "content": "=FORMAT.LARGE.NUMBER(B5)" },
+        "C6": { "content": "=B6" },
+        "C7": { "content": "=FORMAT.LARGE.NUMBER(B7)" },
+        "C9": { "content": "=_t(\"All time data\")" },
+        "C12": { "content": "=EDATE($C$36,B12)" },
+        "C13": { "content": "=EDATE($C$36,B13)" },
+        "C14": { "content": "=EDATE($C$36,B14)" },
+        "C15": { "content": "=EDATE($C$36,B15)" },
+        "C16": { "content": "=EDATE($C$36,B16)" },
+        "C17": { "content": "=EDATE($C$36,B17)" },
+        "C18": { "content": "=EDATE($C$36,B18)" },
+        "C19": { "content": "=EDATE($C$36,B19)" },
+        "C20": { "content": "=EDATE($C$36,B20)" },
+        "C21": { "content": "=EDATE($C$36,B21)" },
+        "C22": { "content": "=EDATE($C$36,B22)" },
+        "C23": { "content": "=EDATE($C$36,B23)" },
+        "C24": { "content": "=EDATE($C$36,B24)" },
+        "C25": { "content": "=EDATE($C$36,B25)" },
+        "C26": { "content": "=EDATE($C$36,B26)" },
+        "C27": { "content": "=EDATE($C$36,B27)" },
+        "C28": { "content": "=EDATE($C$36,B28)" },
+        "C29": { "content": "=EDATE($C$36,B29)" },
+        "C30": { "content": "=EDATE($C$36,B30)" },
+        "C31": { "content": "=EDATE($C$36,B31)" },
+        "C32": { "content": "=EDATE($C$36,B32)" },
+        "C33": { "content": "=EDATE($C$36,B33)" },
+        "C34": { "content": "=EDATE($C$36,B34)" },
+        "C35": { "content": "=EDATE($C$36,B35)" },
+        "C36": { "content": "=DATE(YEAR(C37), MONTH(C37), 1)" },
+        "C37": { "content": "=TODAY()" },
+        "C71": { "content": "=_t(\"Cumul period\")" },
+        "D9": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\")"
+        },
+        "D10": { "content": "=_t(\"New (count)\")" },
+        "D12": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C12)"
+        },
+        "D13": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C13)"
+        },
+        "D14": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C14)"
+        },
+        "D15": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C15)"
+        },
+        "D16": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C16)"
+        },
+        "D17": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C17)"
+        },
+        "D18": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C18)"
+        },
+        "D19": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C19)"
+        },
+        "D20": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C20)"
+        },
+        "D21": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C21)"
+        },
+        "D22": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C22)"
+        },
+        "D23": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C23)"
+        },
+        "D24": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C24)"
+        },
+        "D25": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C25)"
+        },
+        "D26": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C26)"
+        },
+        "D27": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C27)"
+        },
+        "D28": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C28)"
+        },
+        "D29": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C29)"
+        },
+        "D30": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C30)"
+        },
+        "D31": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C31)"
+        },
+        "D32": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C32)"
+        },
+        "D33": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C33)"
+        },
+        "D34": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C34)"
+        },
+        "D35": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C35)"
+        },
+        "D36": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"0_creation\",\"event_date:month\",C36)"
+        },
+        "D37": { "content": "=SUM(D12:D36)" },
+        "D39": { "content": "=_t(\"New (count)\")" },
+        "D41": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B41)"
+        },
+        "D42": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B42)"
+        },
+        "D43": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B43)"
+        },
+        "D44": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B44)"
+        },
+        "D45": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B45)"
+        },
+        "D46": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B46)"
+        },
+        "D47": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B47)"
+        },
+        "D48": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B48)"
+        },
+        "D49": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B49)"
+        },
+        "D50": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B50)"
+        },
+        "D51": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B51)"
+        },
+        "D52": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B52)"
+        },
+        "D53": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B53)"
+        },
+        "D54": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B54)"
+        },
+        "D55": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B55)"
+        },
+        "D56": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B56)"
+        },
+        "D57": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B57)"
+        },
+        "D58": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B58)"
+        },
+        "D59": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B59)"
+        },
+        "D60": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B60)"
+        },
+        "D61": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B61)"
+        },
+        "D62": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B62)"
+        },
+        "D63": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B63)"
+        },
+        "D64": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B64)"
+        },
+        "D65": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B65)"
+        },
+        "D66": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B66)"
+        },
+        "D67": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B67)"
+        },
+        "D68": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B68)"
+        },
+        "D69": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B69)"
+        },
+        "D70": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"0_creation\",\"event_date:day\",B70)"
+        },
+        "D71": { "content": "=SUM(D41:D69)" },
+        "E10": { "content": "=_t(\"Cumul\")" },
+        "E11": { "content": "=D9-sum(D12:D36)" },
+        "E12": { "content": "=E11+D12" },
+        "E13": { "content": "=E12+D13" },
+        "E14": { "content": "=E13+D14" },
+        "E15": { "content": "=E14+D15" },
+        "E16": { "content": "=E15+D16" },
+        "E17": { "content": "=E16+D17" },
+        "E18": { "content": "=E17+D18" },
+        "E19": { "content": "=E18+D19" },
+        "E20": { "content": "=E19+D20" },
+        "E21": { "content": "=E20+D21" },
+        "E22": { "content": "=E21+D22" },
+        "E23": { "content": "=E22+D23" },
+        "E24": { "content": "=E23+D24" },
+        "E25": { "content": "=E24+D25" },
+        "E26": { "content": "=E25+D26" },
+        "E27": { "content": "=E26+D27" },
+        "E28": { "content": "=E27+D28" },
+        "E29": { "content": "=E28+D29" },
+        "E30": { "content": "=E29+D30" },
+        "E31": { "content": "=E30+D31" },
+        "E32": { "content": "=E31+D32" },
+        "E33": { "content": "=E32+D33" },
+        "E34": { "content": "=E33+D34" },
+        "E35": { "content": "=E34+D35" },
+        "E36": { "content": "=E35+D36" },
+        "E39": { "content": "=_t(\"Cumul\")" },
+        "E40": { "content": "=D9-sum(D41:D70)" },
+        "E41": { "content": "=E40+D41" },
+        "E42": { "content": "=E41+D42" },
+        "E43": { "content": "=E42+D43" },
+        "E44": { "content": "=E43+D44" },
+        "E45": { "content": "=E44+D45" },
+        "E46": { "content": "=E45+D46" },
+        "E47": { "content": "=E46+D47" },
+        "E48": { "content": "=E47+D48" },
+        "E49": { "content": "=E48+D49" },
+        "E50": { "content": "=E49+D50" },
+        "E51": { "content": "=E50+D51" },
+        "E52": { "content": "=E51+D52" },
+        "E53": { "content": "=E52+D53" },
+        "E54": { "content": "=E53+D54" },
+        "E55": { "content": "=E54+D55" },
+        "E56": { "content": "=E55+D56" },
+        "E57": { "content": "=E56+D57" },
+        "E58": { "content": "=E57+D58" },
+        "E59": { "content": "=E58+D59" },
+        "E60": { "content": "=E59+D60" },
+        "E61": { "content": "=E60+D61" },
+        "E62": { "content": "=E61+D62" },
+        "E63": { "content": "=E62+D63" },
+        "E64": { "content": "=E63+D64" },
+        "E65": { "content": "=E64+D65" },
+        "E66": { "content": "=E65+D66" },
+        "E67": { "content": "=E66+D67" },
+        "E68": { "content": "=E67+D68" },
+        "E69": { "content": "=E68+D69" },
+        "E70": { "content": "=E69+D70" },
+        "F9": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\")"
+        },
+        "F10": { "content": "=_t(\"New (MRR)\")" },
+        "F12": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C12)"
+        },
+        "F13": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C13)"
+        },
+        "F14": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C14)"
+        },
+        "F15": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C15)"
+        },
+        "F16": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C16)"
+        },
+        "F17": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C17)"
+        },
+        "F18": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C18)"
+        },
+        "F19": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C19)"
+        },
+        "F20": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C20)"
+        },
+        "F21": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C21)"
+        },
+        "F22": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C22)"
+        },
+        "F23": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C23)"
+        },
+        "F24": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C24)"
+        },
+        "F25": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C25)"
+        },
+        "F26": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C26)"
+        },
+        "F27": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C27)"
+        },
+        "F28": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C28)"
+        },
+        "F29": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C29)"
+        },
+        "F30": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C30)"
+        },
+        "F31": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C31)"
+        },
+        "F32": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C32)"
+        },
+        "F33": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C33)"
+        },
+        "F34": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C34)"
+        },
+        "F35": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C35)"
+        },
+        "F36": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:month\",C36)"
+        },
+        "F37": { "content": "=SUM(F12:F36)" },
+        "F39": { "content": "=_t(\"New (MRR)\")" },
+        "F41": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B41)"
+        },
+        "F42": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B42)"
+        },
+        "F43": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B43)"
+        },
+        "F44": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B44)"
+        },
+        "F45": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B45)"
+        },
+        "F46": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B46)"
+        },
+        "F47": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B47)"
+        },
+        "F48": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B48)"
+        },
+        "F49": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B49)"
+        },
+        "F50": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B50)"
+        },
+        "F51": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B51)"
+        },
+        "F52": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B52)"
+        },
+        "F53": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B53)"
+        },
+        "F54": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B54)"
+        },
+        "F55": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B55)"
+        },
+        "F56": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B56)"
+        },
+        "F57": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B57)"
+        },
+        "F58": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B58)"
+        },
+        "F59": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B59)"
+        },
+        "F60": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B60)"
+        },
+        "F61": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B61)"
+        },
+        "F62": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B62)"
+        },
+        "F63": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B63)"
+        },
+        "F64": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B64)"
+        },
+        "F65": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B65)"
+        },
+        "F66": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B66)"
+        },
+        "F67": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B67)"
+        },
+        "F68": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B68)"
+        },
+        "F69": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B69)"
+        },
+        "F70": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"0_creation\",\"event_date:day\",B70)"
+        },
+        "F71": { "content": "=SUM(F41:F69)" },
+        "G10": { "content": "=_t(\"Cumul\")" },
+        "G11": { "content": "=F9-sum(F12:F36)" },
+        "G12": { "content": "=G11+F12" },
+        "G13": { "content": "=G12+F13" },
+        "G14": { "content": "=G13+F14" },
+        "G15": { "content": "=G14+F15" },
+        "G16": { "content": "=G15+F16" },
+        "G17": { "content": "=G16+F17" },
+        "G18": { "content": "=G17+F18" },
+        "G19": { "content": "=G18+F19" },
+        "G20": { "content": "=G19+F20" },
+        "G21": { "content": "=G20+F21" },
+        "G22": { "content": "=G21+F22" },
+        "G23": { "content": "=G22+F23" },
+        "G24": { "content": "=G23+F24" },
+        "G25": { "content": "=G24+F25" },
+        "G26": { "content": "=G25+F26" },
+        "G27": { "content": "=G26+F27" },
+        "G28": { "content": "=G27+F28" },
+        "G29": { "content": "=G28+F29" },
+        "G30": { "content": "=G29+F30" },
+        "G31": { "content": "=G30+F31" },
+        "G32": { "content": "=G31+F32" },
+        "G33": { "content": "=G32+F33" },
+        "G34": { "content": "=G33+F34" },
+        "G35": { "content": "=G34+F35" },
+        "G36": { "content": "=G35+F36" },
+        "G39": { "content": "=_t(\"Cumul\")" },
+        "G40": { "content": "=F9-sum(F41:F70)" },
+        "G41": { "content": "=G40+F41" },
+        "G42": { "content": "=G41+F42" },
+        "G43": { "content": "=G42+F43" },
+        "G44": { "content": "=G43+F44" },
+        "G45": { "content": "=G44+F45" },
+        "G46": { "content": "=G45+F46" },
+        "G47": { "content": "=G46+F47" },
+        "G48": { "content": "=G47+F48" },
+        "G49": { "content": "=G48+F49" },
+        "G50": { "content": "=G49+F50" },
+        "G51": { "content": "=G50+F51" },
+        "G52": { "content": "=G51+F52" },
+        "G53": { "content": "=G52+F53" },
+        "G54": { "content": "=G53+F54" },
+        "G55": { "content": "=G54+F55" },
+        "G56": { "content": "=G55+F56" },
+        "G57": { "content": "=G56+F57" },
+        "G58": { "content": "=G57+F58" },
+        "G59": { "content": "=G58+F59" },
+        "G60": { "content": "=G59+F60" },
+        "G61": { "content": "=G60+F61" },
+        "G62": { "content": "=G61+F62" },
+        "G63": { "content": "=G62+F63" },
+        "G64": { "content": "=G63+F64" },
+        "G65": { "content": "=G64+F65" },
+        "G66": { "content": "=G65+F66" },
+        "G67": { "content": "=G66+F67" },
+        "G68": { "content": "=G67+F68" },
+        "G69": { "content": "=G68+F69" },
+        "G70": { "content": "=G69+F70" },
+        "H9": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\")"
+        },
+        "H10": { "content": "=_t(\"Contraction (count)\")" },
+        "H12": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C12)"
+        },
+        "H13": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C13)"
+        },
+        "H14": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C14)"
+        },
+        "H15": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C15)"
+        },
+        "H16": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C16)"
+        },
+        "H17": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C17)"
+        },
+        "H18": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C18)"
+        },
+        "H19": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C19)"
+        },
+        "H20": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C20)"
+        },
+        "H21": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C21)"
+        },
+        "H22": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C22)"
+        },
+        "H23": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C23)"
+        },
+        "H24": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C24)"
+        },
+        "H25": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C25)"
+        },
+        "H26": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C26)"
+        },
+        "H27": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C27)"
+        },
+        "H28": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C28)"
+        },
+        "H29": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C29)"
+        },
+        "H30": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C30)"
+        },
+        "H31": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C31)"
+        },
+        "H32": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C32)"
+        },
+        "H33": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C33)"
+        },
+        "H34": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C34)"
+        },
+        "H35": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C35)"
+        },
+        "H36": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"15_contraction\",\"event_date:month\",C36)"
+        },
+        "H37": { "content": "=SUM(H12:H36)" },
+        "H39": { "content": "=_t(\"Contraction (count)\")" },
+        "H41": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B41)"
+        },
+        "H42": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B42)"
+        },
+        "H43": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B43)"
+        },
+        "H44": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B44)"
+        },
+        "H45": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B45)"
+        },
+        "H46": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B46)"
+        },
+        "H47": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B47)"
+        },
+        "H48": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B48)"
+        },
+        "H49": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B49)"
+        },
+        "H50": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B50)"
+        },
+        "H51": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B51)"
+        },
+        "H52": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B52)"
+        },
+        "H53": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B53)"
+        },
+        "H54": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B54)"
+        },
+        "H55": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B55)"
+        },
+        "H56": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B56)"
+        },
+        "H57": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B57)"
+        },
+        "H58": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B58)"
+        },
+        "H59": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B59)"
+        },
+        "H60": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B60)"
+        },
+        "H61": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B61)"
+        },
+        "H62": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B62)"
+        },
+        "H63": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B63)"
+        },
+        "H64": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B64)"
+        },
+        "H65": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B65)"
+        },
+        "H66": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B66)"
+        },
+        "H67": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B67)"
+        },
+        "H68": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B68)"
+        },
+        "H69": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B69)"
+        },
+        "H70": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"15_contraction\",\"event_date:day\",B70)"
+        },
+        "H71": { "content": "=SUM(H41:H69)" },
+        "I10": { "content": "=_t(\"Cumul\")" },
+        "I11": { "content": "=H9-sum(H12:H36)" },
+        "I12": { "content": "=I11+H12" },
+        "I13": { "content": "=I12+H13" },
+        "I14": { "content": "=I13+H14" },
+        "I15": { "content": "=I14+H15" },
+        "I16": { "content": "=I15+H16" },
+        "I17": { "content": "=I16+H17" },
+        "I18": { "content": "=I17+H18" },
+        "I19": { "content": "=I18+H19" },
+        "I20": { "content": "=I19+H20" },
+        "I21": { "content": "=I20+H21" },
+        "I22": { "content": "=I21+H22" },
+        "I23": { "content": "=I22+H23" },
+        "I24": { "content": "=I23+H24" },
+        "I25": { "content": "=I24+H25" },
+        "I26": { "content": "=I25+H26" },
+        "I27": { "content": "=I26+H27" },
+        "I28": { "content": "=I27+H28" },
+        "I29": { "content": "=I28+H29" },
+        "I30": { "content": "=I29+H30" },
+        "I31": { "content": "=I30+H31" },
+        "I32": { "content": "=I31+H32" },
+        "I33": { "content": "=I32+H33" },
+        "I34": { "content": "=I33+H34" },
+        "I35": { "content": "=I34+H35" },
+        "I36": { "content": "=I35+H36" },
+        "I39": { "content": "=_t(\"Cumul\")" },
+        "I40": { "content": "=H9-sum(H41:H70)" },
+        "I41": { "content": "=I40+H41" },
+        "I42": { "content": "=I41+H42" },
+        "I43": { "content": "=I42+H43" },
+        "I44": { "content": "=I43+H44" },
+        "I45": { "content": "=I44+H45" },
+        "I46": { "content": "=I45+H46" },
+        "I47": { "content": "=I46+H47" },
+        "I48": { "content": "=I47+H48" },
+        "I49": { "content": "=I48+H49" },
+        "I50": { "content": "=I49+H50" },
+        "I51": { "content": "=I50+H51" },
+        "I52": { "content": "=I51+H52" },
+        "I53": { "content": "=I52+H53" },
+        "I54": { "content": "=I53+H54" },
+        "I55": { "content": "=I54+H55" },
+        "I56": { "content": "=I55+H56" },
+        "I57": { "content": "=I56+H57" },
+        "I58": { "content": "=I57+H58" },
+        "I59": { "content": "=I58+H59" },
+        "I60": { "content": "=I59+H60" },
+        "I61": { "content": "=I60+H61" },
+        "I62": { "content": "=I61+H62" },
+        "I63": { "content": "=I62+H63" },
+        "I64": { "content": "=I63+H64" },
+        "I65": { "content": "=I64+H65" },
+        "I66": { "content": "=I65+H66" },
+        "I67": { "content": "=I66+H67" },
+        "I68": { "content": "=I67+H68" },
+        "I69": { "content": "=I68+H69" },
+        "I70": { "content": "=I69+H70" },
+        "J9": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\")"
+        },
+        "J10": { "content": "=_t(\"Contraction (MRR)\")" },
+        "J12": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C12)"
+        },
+        "J13": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C13)"
+        },
+        "J14": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C14)"
+        },
+        "J15": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C15)"
+        },
+        "J16": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C16)"
+        },
+        "J17": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C17)"
+        },
+        "J18": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C18)"
+        },
+        "J19": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C19)"
+        },
+        "J20": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C20)"
+        },
+        "J21": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C21)"
+        },
+        "J22": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C22)"
+        },
+        "J23": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C23)"
+        },
+        "J24": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C24)"
+        },
+        "J25": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C25)"
+        },
+        "J26": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C26)"
+        },
+        "J27": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C27)"
+        },
+        "J28": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C28)"
+        },
+        "J29": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C29)"
+        },
+        "J30": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C30)"
+        },
+        "J31": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C31)"
+        },
+        "J32": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C32)"
+        },
+        "J33": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C33)"
+        },
+        "J34": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C34)"
+        },
+        "J35": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C35)"
+        },
+        "J36": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:month\",C36)"
+        },
+        "J37": { "content": "=SUM(J12:J36)" },
+        "J39": { "content": "=_t(\"Contraction (MRR)\")" },
+        "J41": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B41)"
+        },
+        "J42": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B42)"
+        },
+        "J43": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B43)"
+        },
+        "J44": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B44)"
+        },
+        "J45": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B45)"
+        },
+        "J46": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B46)"
+        },
+        "J47": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B47)"
+        },
+        "J48": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B48)"
+        },
+        "J49": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B49)"
+        },
+        "J50": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B50)"
+        },
+        "J51": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B51)"
+        },
+        "J52": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B52)"
+        },
+        "J53": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B53)"
+        },
+        "J54": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B54)"
+        },
+        "J55": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B55)"
+        },
+        "J56": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B56)"
+        },
+        "J57": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B57)"
+        },
+        "J58": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B58)"
+        },
+        "J59": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B59)"
+        },
+        "J60": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B60)"
+        },
+        "J61": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B61)"
+        },
+        "J62": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B62)"
+        },
+        "J63": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B63)"
+        },
+        "J64": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B64)"
+        },
+        "J65": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B65)"
+        },
+        "J66": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B66)"
+        },
+        "J67": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B67)"
+        },
+        "J68": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B68)"
+        },
+        "J69": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B69)"
+        },
+        "J70": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"15_contraction\",\"event_date:day\",B70)"
+        },
+        "J71": { "content": "=SUM(J41:J69)" },
+        "K10": { "content": "=_t(\"Cumul\")" },
+        "K11": { "content": "=J9-sum(J12:J36)" },
+        "K12": { "content": "=K11+J12" },
+        "K13": { "content": "=K12+J13" },
+        "K14": { "content": "=K13+J14" },
+        "K15": { "content": "=K14+J15" },
+        "K16": { "content": "=K15+J16" },
+        "K17": { "content": "=K16+J17" },
+        "K18": { "content": "=K17+J18" },
+        "K19": { "content": "=K18+J19" },
+        "K20": { "content": "=K19+J20" },
+        "K21": { "content": "=K20+J21" },
+        "K22": { "content": "=K21+J22" },
+        "K23": { "content": "=K22+J23" },
+        "K24": { "content": "=K23+J24" },
+        "K25": { "content": "=K24+J25" },
+        "K26": { "content": "=K25+J26" },
+        "K27": { "content": "=K26+J27" },
+        "K28": { "content": "=K27+J28" },
+        "K29": { "content": "=K28+J29" },
+        "K30": { "content": "=K29+J30" },
+        "K31": { "content": "=K30+J31" },
+        "K32": { "content": "=K31+J32" },
+        "K33": { "content": "=K32+J33" },
+        "K34": { "content": "=K33+J34" },
+        "K35": { "content": "=K34+J35" },
+        "K36": { "content": "=K35+J36" },
+        "K39": { "content": "=_t(\"Cumul\")" },
+        "K40": { "content": "=J9-sum(J41:J70)" },
+        "K41": { "content": "=K40+J41" },
+        "K42": { "content": "=K41+J42" },
+        "K43": { "content": "=K42+J43" },
+        "K44": { "content": "=K43+J44" },
+        "K45": { "content": "=K44+J45" },
+        "K46": { "content": "=K45+J46" },
+        "K47": { "content": "=K46+J47" },
+        "K48": { "content": "=K47+J48" },
+        "K49": { "content": "=K48+J49" },
+        "K50": { "content": "=K49+J50" },
+        "K51": { "content": "=K50+J51" },
+        "K52": { "content": "=K51+J52" },
+        "K53": { "content": "=K52+J53" },
+        "K54": { "content": "=K53+J54" },
+        "K55": { "content": "=K54+J55" },
+        "K56": { "content": "=K55+J56" },
+        "K57": { "content": "=K56+J57" },
+        "K58": { "content": "=K57+J58" },
+        "K59": { "content": "=K58+J59" },
+        "K60": { "content": "=K59+J60" },
+        "K61": { "content": "=K60+J61" },
+        "K62": { "content": "=K61+J62" },
+        "K63": { "content": "=K62+J63" },
+        "K64": { "content": "=K63+J64" },
+        "K65": { "content": "=K64+J65" },
+        "K66": { "content": "=K65+J66" },
+        "K67": { "content": "=K66+J67" },
+        "K68": { "content": "=K67+J68" },
+        "K69": { "content": "=K68+J69" },
+        "K70": { "content": "=K69+J70" },
+        "L9": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\")"
+        },
+        "L10": { "content": "=_t(\"Expansion (count)\")" },
+        "L12": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C12)"
+        },
+        "L13": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C13)"
+        },
+        "L14": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C14)"
+        },
+        "L15": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C15)"
+        },
+        "L16": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C16)"
+        },
+        "L17": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C17)"
+        },
+        "L18": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C18)"
+        },
+        "L19": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C19)"
+        },
+        "L20": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C20)"
+        },
+        "L21": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C21)"
+        },
+        "L22": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C22)"
+        },
+        "L23": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C23)"
+        },
+        "L24": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C24)"
+        },
+        "L25": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C25)"
+        },
+        "L26": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C26)"
+        },
+        "L27": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C27)"
+        },
+        "L28": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C28)"
+        },
+        "L29": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C29)"
+        },
+        "L30": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C30)"
+        },
+        "L31": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C31)"
+        },
+        "L32": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C32)"
+        },
+        "L33": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C33)"
+        },
+        "L34": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C34)"
+        },
+        "L35": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C35)"
+        },
+        "L36": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"1_expansion\",\"event_date:month\",C36)"
+        },
+        "L37": { "content": "=SUM(L12:L36)" },
+        "L39": { "content": "=_t(\"Expansion (count)\")" },
+        "L41": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B41)"
+        },
+        "L42": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B42)"
+        },
+        "L43": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B43)"
+        },
+        "L44": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B44)"
+        },
+        "L45": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B45)"
+        },
+        "L46": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B46)"
+        },
+        "L47": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B47)"
+        },
+        "L48": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B48)"
+        },
+        "L49": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B49)"
+        },
+        "L50": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B50)"
+        },
+        "L51": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B51)"
+        },
+        "L52": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B52)"
+        },
+        "L53": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B53)"
+        },
+        "L54": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B54)"
+        },
+        "L55": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B55)"
+        },
+        "L56": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B56)"
+        },
+        "L57": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B57)"
+        },
+        "L58": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B58)"
+        },
+        "L59": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B59)"
+        },
+        "L60": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B60)"
+        },
+        "L61": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B61)"
+        },
+        "L62": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B62)"
+        },
+        "L63": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B63)"
+        },
+        "L64": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B64)"
+        },
+        "L65": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B65)"
+        },
+        "L66": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B66)"
+        },
+        "L67": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B67)"
+        },
+        "L68": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B68)"
+        },
+        "L69": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B69)"
+        },
+        "L70": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"1_expansion\",\"event_date:day\",B70)"
+        },
+        "L71": { "content": "=SUM(L41:L69)" },
+        "M10": { "content": "=_t(\"Cumul\")" },
+        "M11": { "content": "=L9-sum(L12:L36)" },
+        "M12": { "content": "=M11+L12" },
+        "M13": { "content": "=M12+L13" },
+        "M14": { "content": "=M13+L14" },
+        "M15": { "content": "=M14+L15" },
+        "M16": { "content": "=M15+L16" },
+        "M17": { "content": "=M16+L17" },
+        "M18": { "content": "=M17+L18" },
+        "M19": { "content": "=M18+L19" },
+        "M20": { "content": "=M19+L20" },
+        "M21": { "content": "=M20+L21" },
+        "M22": { "content": "=M21+L22" },
+        "M23": { "content": "=M22+L23" },
+        "M24": { "content": "=M23+L24" },
+        "M25": { "content": "=M24+L25" },
+        "M26": { "content": "=M25+L26" },
+        "M27": { "content": "=M26+L27" },
+        "M28": { "content": "=M27+L28" },
+        "M29": { "content": "=M28+L29" },
+        "M30": { "content": "=M29+L30" },
+        "M31": { "content": "=M30+L31" },
+        "M32": { "content": "=M31+L32" },
+        "M33": { "content": "=M32+L33" },
+        "M34": { "content": "=M33+L34" },
+        "M35": { "content": "=M34+L35" },
+        "M36": { "content": "=M35+L36" },
+        "M39": { "content": "=_t(\"Cumul\")" },
+        "M40": { "content": "=L9-sum(L41:L70)" },
+        "M41": { "content": "=M40+L41" },
+        "M42": { "content": "=M41+L42" },
+        "M43": { "content": "=M42+L43" },
+        "M44": { "content": "=M43+L44" },
+        "M45": { "content": "=M44+L45" },
+        "M46": { "content": "=M45+L46" },
+        "M47": { "content": "=M46+L47" },
+        "M48": { "content": "=M47+L48" },
+        "M49": { "content": "=M48+L49" },
+        "M50": { "content": "=M49+L50" },
+        "M51": { "content": "=M50+L51" },
+        "M52": { "content": "=M51+L52" },
+        "M53": { "content": "=M52+L53" },
+        "M54": { "content": "=M53+L54" },
+        "M55": { "content": "=M54+L55" },
+        "M56": { "content": "=M55+L56" },
+        "M57": { "content": "=M56+L57" },
+        "M58": { "content": "=M57+L58" },
+        "M59": { "content": "=M58+L59" },
+        "M60": { "content": "=M59+L60" },
+        "M61": { "content": "=M60+L61" },
+        "M62": { "content": "=M61+L62" },
+        "M63": { "content": "=M62+L63" },
+        "M64": { "content": "=M63+L64" },
+        "M65": { "content": "=M64+L65" },
+        "M66": { "content": "=M65+L66" },
+        "M67": { "content": "=M66+L67" },
+        "M68": { "content": "=M67+L68" },
+        "M69": { "content": "=M68+L69" },
+        "M70": { "content": "=M69+L70" },
+        "N9": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\")"
+        },
+        "N10": { "content": "=_t(\"Expansion (MRR)\")" },
+        "N12": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C12)"
+        },
+        "N13": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C13)"
+        },
+        "N14": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C14)"
+        },
+        "N15": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C15)"
+        },
+        "N16": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C16)"
+        },
+        "N17": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C17)"
+        },
+        "N18": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C18)"
+        },
+        "N19": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C19)"
+        },
+        "N20": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C20)"
+        },
+        "N21": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C21)"
+        },
+        "N22": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C22)"
+        },
+        "N23": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C23)"
+        },
+        "N24": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C24)"
+        },
+        "N25": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C25)"
+        },
+        "N26": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C26)"
+        },
+        "N27": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C27)"
+        },
+        "N28": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C28)"
+        },
+        "N29": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C29)"
+        },
+        "N30": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C30)"
+        },
+        "N31": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C31)"
+        },
+        "N32": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C32)"
+        },
+        "N33": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C33)"
+        },
+        "N34": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C34)"
+        },
+        "N35": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C35)"
+        },
+        "N36": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:month\",C36)"
+        },
+        "N37": { "content": "=SUM(N12:N36)" },
+        "N39": { "content": "=_t(\"Expansion (MRR)\")" },
+        "N41": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B41)"
+        },
+        "N42": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B42)"
+        },
+        "N43": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B43)"
+        },
+        "N44": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B44)"
+        },
+        "N45": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B45)"
+        },
+        "N46": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B46)"
+        },
+        "N47": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B47)"
+        },
+        "N48": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B48)"
+        },
+        "N49": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B49)"
+        },
+        "N50": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B50)"
+        },
+        "N51": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B51)"
+        },
+        "N52": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B52)"
+        },
+        "N53": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B53)"
+        },
+        "N54": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B54)"
+        },
+        "N55": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B55)"
+        },
+        "N56": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B56)"
+        },
+        "N57": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B57)"
+        },
+        "N58": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B58)"
+        },
+        "N59": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B59)"
+        },
+        "N60": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B60)"
+        },
+        "N61": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B61)"
+        },
+        "N62": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B62)"
+        },
+        "N63": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B63)"
+        },
+        "N64": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B64)"
+        },
+        "N65": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B65)"
+        },
+        "N66": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B66)"
+        },
+        "N67": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B67)"
+        },
+        "N68": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B68)"
+        },
+        "N69": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B69)"
+        },
+        "N70": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"1_expansion\",\"event_date:day\",B70)"
+        },
+        "N71": { "content": "=SUM(N41:N69)" },
+        "O10": { "content": "=_t(\"Cumul\")" },
+        "O11": { "content": "=N9-sum(N12:N36)" },
+        "O12": { "content": "=O11+N12" },
+        "O13": { "content": "=O12+N13" },
+        "O14": { "content": "=O13+N14" },
+        "O15": { "content": "=O14+N15" },
+        "O16": { "content": "=O15+N16" },
+        "O17": { "content": "=O16+N17" },
+        "O18": { "content": "=O17+N18" },
+        "O19": { "content": "=O18+N19" },
+        "O20": { "content": "=O19+N20" },
+        "O21": { "content": "=O20+N21" },
+        "O22": { "content": "=O21+N22" },
+        "O23": { "content": "=O22+N23" },
+        "O24": { "content": "=O23+N24" },
+        "O25": { "content": "=O24+N25" },
+        "O26": { "content": "=O25+N26" },
+        "O27": { "content": "=O26+N27" },
+        "O28": { "content": "=O27+N28" },
+        "O29": { "content": "=O28+N29" },
+        "O30": { "content": "=O29+N30" },
+        "O31": { "content": "=O30+N31" },
+        "O32": { "content": "=O31+N32" },
+        "O33": { "content": "=O32+N33" },
+        "O34": { "content": "=O33+N34" },
+        "O35": { "content": "=O34+N35" },
+        "O36": { "content": "=O35+N36" },
+        "O39": { "content": "=_t(\"Cumul\")" },
+        "O40": { "content": "=N9-sum(N41:N70)" },
+        "O41": { "content": "=O40+N41" },
+        "O42": { "content": "=O41+N42" },
+        "O43": { "content": "=O42+N43" },
+        "O44": { "content": "=O43+N44" },
+        "O45": { "content": "=O44+N45" },
+        "O46": { "content": "=O45+N46" },
+        "O47": { "content": "=O46+N47" },
+        "O48": { "content": "=O47+N48" },
+        "O49": { "content": "=O48+N49" },
+        "O50": { "content": "=O49+N50" },
+        "O51": { "content": "=O50+N51" },
+        "O52": { "content": "=O51+N52" },
+        "O53": { "content": "=O52+N53" },
+        "O54": { "content": "=O53+N54" },
+        "O55": { "content": "=O54+N55" },
+        "O56": { "content": "=O55+N56" },
+        "O57": { "content": "=O56+N57" },
+        "O58": { "content": "=O57+N58" },
+        "O59": { "content": "=O58+N59" },
+        "O60": { "content": "=O59+N60" },
+        "O61": { "content": "=O60+N61" },
+        "O62": { "content": "=O61+N62" },
+        "O63": { "content": "=O62+N63" },
+        "O64": { "content": "=O63+N64" },
+        "O65": { "content": "=O64+N65" },
+        "O66": { "content": "=O65+N66" },
+        "O67": { "content": "=O66+N67" },
+        "O68": { "content": "=O67+N68" },
+        "O69": { "content": "=O68+N69" },
+        "O70": { "content": "=O69+N70" },
+        "P9": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\")"
+        },
+        "P10": { "content": "=_t(\"Churn (count)\")" },
+        "P12": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C12)"
+        },
+        "P13": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C13)"
+        },
+        "P14": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C14)"
+        },
+        "P15": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C15)"
+        },
+        "P16": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C16)"
+        },
+        "P17": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C17)"
+        },
+        "P18": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C18)"
+        },
+        "P19": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C19)"
+        },
+        "P20": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C20)"
+        },
+        "P21": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C21)"
+        },
+        "P22": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C22)"
+        },
+        "P23": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C23)"
+        },
+        "P24": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C24)"
+        },
+        "P25": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C25)"
+        },
+        "P26": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C26)"
+        },
+        "P27": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C27)"
+        },
+        "P28": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C28)"
+        },
+        "P29": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C29)"
+        },
+        "P30": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C30)"
+        },
+        "P31": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C31)"
+        },
+        "P32": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C32)"
+        },
+        "P33": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C33)"
+        },
+        "P34": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C34)"
+        },
+        "P35": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C35)"
+        },
+        "P36": {
+          "content": "=PIVOT.VALUE(1,\"__count\",\"event_type\",\"2_churn\",\"event_date:month\",C36)"
+        },
+        "P37": { "content": "=SUM(P12:P36)" },
+        "P39": { "content": "=_t(\"Churn (count)\")" },
+        "P41": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B41)"
+        },
+        "P42": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B42)"
+        },
+        "P43": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B43)"
+        },
+        "P44": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B44)"
+        },
+        "P45": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B45)"
+        },
+        "P46": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B46)"
+        },
+        "P47": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B47)"
+        },
+        "P48": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B48)"
+        },
+        "P49": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B49)"
+        },
+        "P50": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B50)"
+        },
+        "P51": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B51)"
+        },
+        "P52": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B52)"
+        },
+        "P53": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B53)"
+        },
+        "P54": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B54)"
+        },
+        "P55": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B55)"
+        },
+        "P56": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B56)"
+        },
+        "P57": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B57)"
+        },
+        "P58": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B58)"
+        },
+        "P59": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B59)"
+        },
+        "P60": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B60)"
+        },
+        "P61": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B61)"
+        },
+        "P62": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B62)"
+        },
+        "P63": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B63)"
+        },
+        "P64": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B64)"
+        },
+        "P65": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B65)"
+        },
+        "P66": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B66)"
+        },
+        "P67": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B67)"
+        },
+        "P68": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B68)"
+        },
+        "P69": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B69)"
+        },
+        "P70": {
+          "content": "=PIVOT.VALUE(2,\"__count\",\"event_type\",\"2_churn\",\"event_date:day\",B70)"
+        },
+        "P71": { "content": "=SUM(P41:P69)" },
+        "Q10": { "content": "=_t(\"Cumul\")" },
+        "Q11": { "content": "=P9-sum(P12:P36)" },
+        "Q12": { "content": "=Q11+P12" },
+        "Q13": { "content": "=Q12+P13" },
+        "Q14": { "content": "=Q13+P14" },
+        "Q15": { "content": "=Q14+P15" },
+        "Q16": { "content": "=Q15+P16" },
+        "Q17": { "content": "=Q16+P17" },
+        "Q18": { "content": "=Q17+P18" },
+        "Q19": { "content": "=Q18+P19" },
+        "Q20": { "content": "=Q19+P20" },
+        "Q21": { "content": "=Q20+P21" },
+        "Q22": { "content": "=Q21+P22" },
+        "Q23": { "content": "=Q22+P23" },
+        "Q24": { "content": "=Q23+P24" },
+        "Q25": { "content": "=Q24+P25" },
+        "Q26": { "content": "=Q25+P26" },
+        "Q27": { "content": "=Q26+P27" },
+        "Q28": { "content": "=Q27+P28" },
+        "Q29": { "content": "=Q28+P29" },
+        "Q30": { "content": "=Q29+P30" },
+        "Q31": { "content": "=Q30+P31" },
+        "Q32": { "content": "=Q31+P32" },
+        "Q33": { "content": "=Q32+P33" },
+        "Q34": { "content": "=Q33+P34" },
+        "Q35": { "content": "=Q34+P35" },
+        "Q36": { "content": "=Q35+P36" },
+        "Q39": { "content": "=_t(\"Cumul\")" },
+        "Q40": { "content": "=P9-sum(P41:P70)" },
+        "Q41": { "content": "=Q40+P41" },
+        "Q42": { "content": "=Q41+P42" },
+        "Q43": { "content": "=Q42+P43" },
+        "Q44": { "content": "=Q43+P44" },
+        "Q45": { "content": "=Q44+P45" },
+        "Q46": { "content": "=Q45+P46" },
+        "Q47": { "content": "=Q46+P47" },
+        "Q48": { "content": "=Q47+P48" },
+        "Q49": { "content": "=Q48+P49" },
+        "Q50": { "content": "=Q49+P50" },
+        "Q51": { "content": "=Q50+P51" },
+        "Q52": { "content": "=Q51+P52" },
+        "Q53": { "content": "=Q52+P53" },
+        "Q54": { "content": "=Q53+P54" },
+        "Q55": { "content": "=Q54+P55" },
+        "Q56": { "content": "=Q55+P56" },
+        "Q57": { "content": "=Q56+P57" },
+        "Q58": { "content": "=Q57+P58" },
+        "Q59": { "content": "=Q58+P59" },
+        "Q60": { "content": "=Q59+P60" },
+        "Q61": { "content": "=Q60+P61" },
+        "Q62": { "content": "=Q61+P62" },
+        "Q63": { "content": "=Q62+P63" },
+        "Q64": { "content": "=Q63+P64" },
+        "Q65": { "content": "=Q64+P65" },
+        "Q66": { "content": "=Q65+P66" },
+        "Q67": { "content": "=Q66+P67" },
+        "Q68": { "content": "=Q67+P68" },
+        "Q69": { "content": "=Q68+P69" },
+        "Q70": { "content": "=Q69+P70" },
+        "R9": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\")"
+        },
+        "R10": { "content": "=_t(\"Churn (MRR)\")" },
+        "R12": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C12)"
+        },
+        "R13": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C13)"
+        },
+        "R14": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C14)"
+        },
+        "R15": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C15)"
+        },
+        "R16": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C16)"
+        },
+        "R17": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C17)"
+        },
+        "R18": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C18)"
+        },
+        "R19": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C19)"
+        },
+        "R20": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C20)"
+        },
+        "R21": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C21)"
+        },
+        "R22": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C22)"
+        },
+        "R23": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C23)"
+        },
+        "R24": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C24)"
+        },
+        "R25": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C25)"
+        },
+        "R26": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C26)"
+        },
+        "R27": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C27)"
+        },
+        "R28": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C28)"
+        },
+        "R29": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C29)"
+        },
+        "R30": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C30)"
+        },
+        "R31": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C31)"
+        },
+        "R32": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C32)"
+        },
+        "R33": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C33)"
+        },
+        "R34": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C34)"
+        },
+        "R35": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C35)"
+        },
+        "R36": {
+          "content": "=PIVOT.VALUE(1,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:month\",C36)"
+        },
+        "R37": { "content": "=SUM(R12:R36)" },
+        "R39": { "content": "=_t(\"Churn (MRR)\")" },
+        "R41": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B41)"
+        },
+        "R42": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B42)"
+        },
+        "R43": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B43)"
+        },
+        "R44": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B44)"
+        },
+        "R45": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B45)"
+        },
+        "R46": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B46)"
+        },
+        "R47": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B47)"
+        },
+        "R48": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B48)"
+        },
+        "R49": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B49)"
+        },
+        "R50": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B50)"
+        },
+        "R51": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B51)"
+        },
+        "R52": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B52)"
+        },
+        "R53": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B53)"
+        },
+        "R54": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B54)"
+        },
+        "R55": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B55)"
+        },
+        "R56": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B56)"
+        },
+        "R57": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B57)"
+        },
+        "R58": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B58)"
+        },
+        "R59": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B59)"
+        },
+        "R60": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B60)"
+        },
+        "R61": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B61)"
+        },
+        "R62": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B62)"
+        },
+        "R63": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B63)"
+        },
+        "R64": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B64)"
+        },
+        "R65": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B65)"
+        },
+        "R66": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B66)"
+        },
+        "R67": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B67)"
+        },
+        "R68": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B68)"
+        },
+        "R69": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B69)"
+        },
+        "R70": {
+          "content": "=PIVOT.VALUE(2,\"mrr_change_normalized\",\"event_type\",\"2_churn\",\"event_date:day\",B70)"
+        },
+        "R71": { "content": "=SUM(R41:R69)" },
+        "S10": { "content": "=_t(\"Cumul\")" },
+        "S11": { "content": "=R9-sum(R12:R36)" },
+        "S12": { "content": "=S11+R12" },
+        "S13": { "content": "=S12+R13" },
+        "S14": { "content": "=S13+R14" },
+        "S15": { "content": "=S14+R15" },
+        "S16": { "content": "=S15+R16" },
+        "S17": { "content": "=S16+R17" },
+        "S18": { "content": "=S17+R18" },
+        "S19": { "content": "=S18+R19" },
+        "S20": { "content": "=S19+R20" },
+        "S21": { "content": "=S20+R21" },
+        "S22": { "content": "=S21+R22" },
+        "S23": { "content": "=S22+R23" },
+        "S24": { "content": "=S23+R24" },
+        "S25": { "content": "=S24+R25" },
+        "S26": { "content": "=S25+R26" },
+        "S27": { "content": "=S26+R27" },
+        "S28": { "content": "=S27+R28" },
+        "S29": { "content": "=S28+R29" },
+        "S30": { "content": "=S29+R30" },
+        "S31": { "content": "=S30+R31" },
+        "S32": { "content": "=S31+R32" },
+        "S33": { "content": "=S32+R33" },
+        "S34": { "content": "=S33+R34" },
+        "S35": { "content": "=S34+R35" },
+        "S36": { "content": "=S35+R36" },
+        "S39": { "content": "=_t(\"Cumul\")" },
+        "S40": { "content": "=R9-sum(R41:R70)" },
+        "S41": { "content": "=S40+R41" },
+        "S42": { "content": "=S41+R42" },
+        "S43": { "content": "=S42+R43" },
+        "S44": { "content": "=S43+R44" },
+        "S45": { "content": "=S44+R45" },
+        "S46": { "content": "=S45+R46" },
+        "S47": { "content": "=S46+R47" },
+        "S48": { "content": "=S47+R48" },
+        "S49": { "content": "=S48+R49" },
+        "S50": { "content": "=S49+R50" },
+        "S51": { "content": "=S50+R51" },
+        "S52": { "content": "=S51+R52" },
+        "S53": { "content": "=S52+R53" },
+        "S54": { "content": "=S53+R54" },
+        "S55": { "content": "=S54+R55" },
+        "S56": { "content": "=S55+R56" },
+        "S57": { "content": "=S56+R57" },
+        "S58": { "content": "=S57+R58" },
+        "S59": { "content": "=S58+R59" },
+        "S60": { "content": "=S59+R60" },
+        "S61": { "content": "=S60+R61" },
+        "S62": { "content": "=S61+R62" },
+        "S63": { "content": "=S62+R63" },
+        "S64": { "content": "=S63+R64" },
+        "S65": { "content": "=S64+R65" },
+        "S66": { "content": "=S65+R66" },
+        "S67": { "content": "=S66+R67" },
+        "S68": { "content": "=S67+R68" },
+        "S69": { "content": "=S68+R69" },
+        "S70": { "content": "=S69+R70" },
+        "T10": { "content": "=_t(\"Customer Churn rate\")" },
+        "T12": { "content": "=iferror((P12/E11),0)" },
+        "T13": { "content": "=iferror((P13/E12),0)" },
+        "T14": { "content": "=iferror((P14/E13),0)" },
+        "T15": { "content": "=iferror((P15/E14),0)" },
+        "T16": { "content": "=iferror((P16/E15),0)" },
+        "T17": { "content": "=iferror((P17/E16),0)" },
+        "T18": { "content": "=iferror((P18/E17),0)" },
+        "T19": { "content": "=iferror((P19/E18),0)" },
+        "T20": { "content": "=iferror((P20/E19),0)" },
+        "T21": { "content": "=iferror((P21/E20),0)" },
+        "T22": { "content": "=iferror((P22/E21),0)" },
+        "T23": { "content": "=iferror((P23/E22),0)" },
+        "T24": { "content": "=iferror((P24/E23),0)" },
+        "T25": { "content": "=iferror((P25/E24),0)" },
+        "T26": { "content": "=iferror((P26/E25),0)" },
+        "T27": { "content": "=iferror((P27/E26),0)" },
+        "T28": { "content": "=iferror((P28/E27),0)" },
+        "T29": { "content": "=iferror((P29/E28),0)" },
+        "T30": { "content": "=iferror((P30/E29),0)" },
+        "T31": { "content": "=iferror((P31/E30),0)" },
+        "T32": { "content": "=iferror((P32/E31),0)" },
+        "T33": { "content": "=iferror((P33/E32),0)" },
+        "T34": { "content": "=iferror((P34/E33),0)" },
+        "T35": { "content": "=iferror((P35/E34),0)" },
+        "T36": { "content": "=iferror((P36/E35),0)" },
+        "T39": { "content": "=_t(\"Customer Churn rate\")" },
+        "T41": { "content": "=iferror((P41/E40),0)" },
+        "T42": { "content": "=iferror((P42/E41),0)" },
+        "T43": { "content": "=iferror((P43/E42),0)" },
+        "T44": { "content": "=iferror((P44/E43),0)" },
+        "T45": { "content": "=iferror((P45/E44),0)" },
+        "T46": { "content": "=iferror((P46/E45),0)" },
+        "T47": { "content": "=iferror((P47/E46),0)" },
+        "T48": { "content": "=iferror((P48/E47),0)" },
+        "T49": { "content": "=iferror((P49/E48),0)" },
+        "T50": { "content": "=iferror((P50/E49),0)" },
+        "T51": { "content": "=iferror((P51/E50),0)" },
+        "T52": { "content": "=iferror((P52/E51),0)" },
+        "T53": { "content": "=iferror((P53/E52),0)" },
+        "T54": { "content": "=iferror((P54/E53),0)" },
+        "T55": { "content": "=iferror((P55/E54),0)" },
+        "T56": { "content": "=iferror((P56/E55),0)" },
+        "T57": { "content": "=iferror((P57/E56),0)" },
+        "T58": { "content": "=iferror((P58/E57),0)" },
+        "T59": { "content": "=iferror((P59/E58),0)" },
+        "T60": { "content": "=iferror((P60/E59),0)" },
+        "T61": { "content": "=iferror((P61/E60),0)" },
+        "T62": { "content": "=iferror((P62/E61),0)" },
+        "T63": { "content": "=iferror((P63/E62),0)" },
+        "T64": { "content": "=iferror((P64/E63),0)" },
+        "T65": { "content": "=iferror((P65/E64),0)" },
+        "T66": { "content": "=iferror((P66/E65),0)" },
+        "T67": { "content": "=iferror((P67/E66),0)" },
+        "T68": { "content": "=iferror((P68/E67),0)" },
+        "T69": { "content": "=iferror((P69/E68),0)" },
+        "T70": { "content": "=iferror((P70/E69),0)" },
+        "U10": { "content": "=_t(\"Revenue Churn rate\")" },
+        "U12": { "content": "=((-R12)+(-J12))/(G11+K11+O11+S11)" },
+        "U13": { "content": "=((-R13)+(-J13))/(G12+K12+O12+S12)" },
+        "U14": { "content": "=((-R14)+(-J14))/(G13+K13+O13+S13)" },
+        "U15": { "content": "=((-R15)+(-J15))/(G14+K14+O14+S14)" },
+        "U16": { "content": "=((-R16)+(-J16))/(G15+K15+O15+S15)" },
+        "U17": { "content": "=((-R17)+(-J17))/(G16+K16+O16+S16)" },
+        "U18": { "content": "=((-R18)+(-J18))/(G17+K17+O17+S17)" },
+        "U19": { "content": "=((-R19)+(-J19))/(G18+K18+O18+S18)" },
+        "U20": { "content": "=((-R20)+(-J20))/(G19+K19+O19+S19)" },
+        "U21": { "content": "=((-R21)+(-J21))/(G20+K20+O20+S20)" },
+        "U22": { "content": "=((-R22)+(-J22))/(G21+K21+O21+S21)" },
+        "U23": { "content": "=((-R23)+(-J23))/(G22+K22+O22+S22)" },
+        "U24": { "content": "=((-R24)+(-J24))/(G23+K23+O23+S23)" },
+        "U25": { "content": "=((-R25)+(-J25))/(G24+K24+O24+S24)" },
+        "U26": { "content": "=((-R26)+(-J26))/(G25+K25+O25+S25)" },
+        "U27": { "content": "=((-R27)+(-J27))/(G26+K26+O26+S26)" },
+        "U28": { "content": "=((-R28)+(-J28))/(G27+K27+O27+S27)" },
+        "U29": { "content": "=((-R29)+(-J29))/(G28+K28+O28+S28)" },
+        "U30": { "content": "=((-R30)+(-J30))/(G29+K29+O29+S29)" },
+        "U31": { "content": "=((-R31)+(-J31))/(G30+K30+O30+S30)" },
+        "U32": { "content": "=((-R32)+(-J32))/(G31+K31+O31+S31)" },
+        "U33": { "content": "=((-R33)+(-J33))/(G32+K32+O32+S32)" },
+        "U34": { "content": "=((-R34)+(-J34))/(G33+K33+O33+S33)" },
+        "U35": { "content": "=((-R35)+(-J35))/(G34+K34+O34+S34)" },
+        "U36": { "content": "=((-R36)+(-J36))/(G35+K35+O35+S35)" },
+        "U39": { "content": "=_t(\"Revenue Churn rate\")" },
+        "U41": { "content": "=((-R41)+(-J41))/(G40+K40+O40+S40)" },
+        "U42": { "content": "=((-R42)+(-J42))/(G41+K41+O41+S41)" },
+        "U43": { "content": "=((-R43)+(-J43))/(G42+K42+O42+S42)" },
+        "U44": { "content": "=((-R44)+(-J44))/(G43+K43+O43+S43)" },
+        "U45": { "content": "=((-R45)+(-J45))/(G44+K44+O44+S44)" },
+        "U46": { "content": "=((-R46)+(-J46))/(G45+K45+O45+S45)" },
+        "U47": { "content": "=((-R47)+(-J47))/(G46+K46+O46+S46)" },
+        "U48": { "content": "=((-R48)+(-J48))/(G47+K47+O47+S47)" },
+        "U49": { "content": "=((-R49)+(-J49))/(G48+K48+O48+S48)" },
+        "U50": { "content": "=((-R50)+(-J50))/(G49+K49+O49+S49)" },
+        "U51": { "content": "=((-R51)+(-J51))/(G50+K50+O50+S50)" },
+        "U52": { "content": "=((-R52)+(-J52))/(G51+K51+O51+S51)" },
+        "U53": { "content": "=((-R53)+(-J53))/(G52+K52+O52+S52)" },
+        "U54": { "content": "=((-R54)+(-J54))/(G53+K53+O53+S53)" },
+        "U55": { "content": "=((-R55)+(-J55))/(G54+K54+O54+S54)" },
+        "U56": { "content": "=((-R56)+(-J56))/(G55+K55+O55+S55)" },
+        "U57": { "content": "=((-R57)+(-J57))/(G56+K56+O56+S56)" },
+        "U58": { "content": "=((-R58)+(-J58))/(G57+K57+O57+S57)" },
+        "U59": { "content": "=((-R59)+(-J59))/(G58+K58+O58+S58)" },
+        "U60": { "content": "=((-R60)+(-J60))/(G59+K59+O59+S59)" },
+        "U61": { "content": "=((-R61)+(-J61))/(G60+K60+O60+S60)" },
+        "U62": { "content": "=((-R62)+(-J62))/(G61+K61+O61+S61)" },
+        "U63": { "content": "=((-R63)+(-J63))/(G62+K62+O62+S62)" },
+        "U64": { "content": "=((-R64)+(-J64))/(G63+K63+O63+S63)" },
+        "U65": { "content": "=((-R65)+(-J65))/(G64+K64+O64+S64)" },
+        "U66": { "content": "=((-R66)+(-J66))/(G65+K65+O65+S65)" },
+        "U67": { "content": "=((-R67)+(-J67))/(G66+K66+O66+S66)" },
+        "U68": { "content": "=((-R68)+(-J68))/(G67+K67+O67+S67)" },
+        "U69": { "content": "=((-R69)+(-J69))/(G68+K68+O68+S68)" },
+        "U70": { "content": "=((-R70)+(-J70))/(G69+K69+O69+S69)" },
+        "V10": { "content": "=_t(\"Net Retention rate\")" },
+        "V12": {
+          "content": "=if((G11+K11+O11+S11)<=0,100%,((G11+K11+O11+S11)+F12+J12+N12+R12)/(G11+K11+O11+S11))"
+        },
+        "V13": {
+          "content": "=if((G12+K12+O12+S12)<=0,100%,((G12+K12+O12+S12)+F13+J13+N13+R13)/(G12+K12+O12+S12))"
+        },
+        "V14": {
+          "content": "=if((G13+K13+O13+S13)<=0,100%,((G13+K13+O13+S13)+F14+J14+N14+R14)/(G13+K13+O13+S13))"
+        },
+        "V15": {
+          "content": "=if((G14+K14+O14+S14)<=0,100%,((G14+K14+O14+S14)+F15+J15+N15+R15)/(G14+K14+O14+S14))"
+        },
+        "V16": {
+          "content": "=if((G15+K15+O15+S15)<=0,100%,((G15+K15+O15+S15)+F16+J16+N16+R16)/(G15+K15+O15+S15))"
+        },
+        "V17": {
+          "content": "=if((G16+K16+O16+S16)<=0,100%,((G16+K16+O16+S16)+F17+J17+N17+R17)/(G16+K16+O16+S16))"
+        },
+        "V18": {
+          "content": "=if((G17+K17+O17+S17)<=0,100%,((G17+K17+O17+S17)+F18+J18+N18+R18)/(G17+K17+O17+S17))"
+        },
+        "V19": {
+          "content": "=if((G18+K18+O18+S18)<=0,100%,((G18+K18+O18+S18)+F19+J19+N19+R19)/(G18+K18+O18+S18))"
+        },
+        "V20": {
+          "content": "=if((G19+K19+O19+S19)<=0,100%,((G19+K19+O19+S19)+F20+J20+N20+R20)/(G19+K19+O19+S19))"
+        },
+        "V21": {
+          "content": "=if((G20+K20+O20+S20)<=0,100%,((G20+K20+O20+S20)+F21+J21+N21+R21)/(G20+K20+O20+S20))"
+        },
+        "V22": {
+          "content": "=if((G21+K21+O21+S21)<=0,100%,((G21+K21+O21+S21)+F22+J22+N22+R22)/(G21+K21+O21+S21))"
+        },
+        "V23": {
+          "content": "=if((G22+K22+O22+S22)<=0,100%,((G22+K22+O22+S22)+F23+J23+N23+R23)/(G22+K22+O22+S22))"
+        },
+        "V24": {
+          "content": "=if((G23+K23+O23+S23)<=0,100%,((G23+K23+O23+S23)+F24+J24+N24+R24)/(G23+K23+O23+S23))"
+        },
+        "V25": {
+          "content": "=if((G24+K24+O24+S24)<=0,100%,((G24+K24+O24+S24)+F25+J25+N25+R25)/(G24+K24+O24+S24))"
+        },
+        "V26": {
+          "content": "=if((G25+K25+O25+S25)<=0,100%,((G25+K25+O25+S25)+F26+J26+N26+R26)/(G25+K25+O25+S25))"
+        },
+        "V27": {
+          "content": "=if((G26+K26+O26+S26)<=0,100%,((G26+K26+O26+S26)+F27+J27+N27+R27)/(G26+K26+O26+S26))"
+        },
+        "V28": {
+          "content": "=if((G27+K27+O27+S27)<=0,100%,((G27+K27+O27+S27)+F28+J28+N28+R28)/(G27+K27+O27+S27))"
+        },
+        "V29": {
+          "content": "=if((G28+K28+O28+S28)<=0,100%,((G28+K28+O28+S28)+F29+J29+N29+R29)/(G28+K28+O28+S28))"
+        },
+        "V30": {
+          "content": "=if((G29+K29+O29+S29)<=0,100%,((G29+K29+O29+S29)+F30+J30+N30+R30)/(G29+K29+O29+S29))"
+        },
+        "V31": {
+          "content": "=if((G30+K30+O30+S30)<=0,100%,((G30+K30+O30+S30)+F31+J31+N31+R31)/(G30+K30+O30+S30))"
+        },
+        "V32": {
+          "content": "=if((G31+K31+O31+S31)<=0,100%,((G31+K31+O31+S31)+F32+J32+N32+R32)/(G31+K31+O31+S31))"
+        },
+        "V33": {
+          "content": "=if((G32+K32+O32+S32)<=0,100%,((G32+K32+O32+S32)+F33+J33+N33+R33)/(G32+K32+O32+S32))"
+        },
+        "V34": {
+          "content": "=if((G33+K33+O33+S33)<=0,100%,((G33+K33+O33+S33)+F34+J34+N34+R34)/(G33+K33+O33+S33))"
+        },
+        "V35": {
+          "content": "=if((G34+K34+O34+S34)<=0,100%,((G34+K34+O34+S34)+F35+J35+N35+R35)/(G34+K34+O34+S34))"
+        },
+        "V36": {
+          "content": "=if((G35+K35+O35+S35)<=0,100%,((G35+K35+O35+S35)+F36+J36+N36+R36)/(G35+K35+O35+S35))"
+        },
+        "V39": { "content": "=_t(\"Net Retention rate\")" },
+        "V41": {
+          "content": "=if((G40+K40+O40+S40)<=0,100%,((G40+K40+O40+S40)+F41+J41+N41+R41)/(G40+K40+O40+S40))"
+        },
+        "V42": {
+          "content": "=if((G41+K41+O41+S41)<=0,100%,((G41+K41+O41+S41)+F42+J42+N42+R42)/(G41+K41+O41+S41))"
+        },
+        "V43": {
+          "content": "=if((G42+K42+O42+S42)<=0,100%,((G42+K42+O42+S42)+F43+J43+N43+R43)/(G42+K42+O42+S42))"
+        },
+        "V44": {
+          "content": "=if((G43+K43+O43+S43)<=0,100%,((G43+K43+O43+S43)+F44+J44+N44+R44)/(G43+K43+O43+S43))"
+        },
+        "V45": {
+          "content": "=if((G44+K44+O44+S44)<=0,100%,((G44+K44+O44+S44)+F45+J45+N45+R45)/(G44+K44+O44+S44))"
+        },
+        "V46": {
+          "content": "=if((G45+K45+O45+S45)<=0,100%,((G45+K45+O45+S45)+F46+J46+N46+R46)/(G45+K45+O45+S45))"
+        },
+        "V47": {
+          "content": "=if((G46+K46+O46+S46)<=0,100%,((G46+K46+O46+S46)+F47+J47+N47+R47)/(G46+K46+O46+S46))"
+        },
+        "V48": {
+          "content": "=if((G47+K47+O47+S47)<=0,100%,((G47+K47+O47+S47)+F48+J48+N48+R48)/(G47+K47+O47+S47))"
+        },
+        "V49": {
+          "content": "=if((G48+K48+O48+S48)<=0,100%,((G48+K48+O48+S48)+F49+J49+N49+R49)/(G48+K48+O48+S48))"
+        },
+        "V50": {
+          "content": "=if((G49+K49+O49+S49)<=0,100%,((G49+K49+O49+S49)+F50+J50+N50+R50)/(G49+K49+O49+S49))"
+        },
+        "V51": {
+          "content": "=if((G50+K50+O50+S50)<=0,100%,((G50+K50+O50+S50)+F51+J51+N51+R51)/(G50+K50+O50+S50))"
+        },
+        "V52": {
+          "content": "=if((G51+K51+O51+S51)<=0,100%,((G51+K51+O51+S51)+F52+J52+N52+R52)/(G51+K51+O51+S51))"
+        },
+        "V53": {
+          "content": "=if((G52+K52+O52+S52)<=0,100%,((G52+K52+O52+S52)+F53+J53+N53+R53)/(G52+K52+O52+S52))"
+        },
+        "V54": {
+          "content": "=if((G53+K53+O53+S53)<=0,100%,((G53+K53+O53+S53)+F54+J54+N54+R54)/(G53+K53+O53+S53))"
+        },
+        "V55": {
+          "content": "=if((G54+K54+O54+S54)<=0,100%,((G54+K54+O54+S54)+F55+J55+N55+R55)/(G54+K54+O54+S54))"
+        },
+        "V56": {
+          "content": "=if((G55+K55+O55+S55)<=0,100%,((G55+K55+O55+S55)+F56+J56+N56+R56)/(G55+K55+O55+S55))"
+        },
+        "V57": {
+          "content": "=if((G56+K56+O56+S56)<=0,100%,((G56+K56+O56+S56)+F57+J57+N57+R57)/(G56+K56+O56+S56))"
+        },
+        "V58": {
+          "content": "=if((G57+K57+O57+S57)<=0,100%,((G57+K57+O57+S57)+F58+J58+N58+R58)/(G57+K57+O57+S57))"
+        },
+        "V59": {
+          "content": "=if((G58+K58+O58+S58)<=0,100%,((G58+K58+O58+S58)+F59+J59+N59+R59)/(G58+K58+O58+S58))"
+        },
+        "V60": {
+          "content": "=if((G59+K59+O59+S59)<=0,100%,((G59+K59+O59+S59)+F60+J60+N60+R60)/(G59+K59+O59+S59))"
+        },
+        "V61": {
+          "content": "=if((G60+K60+O60+S60)<=0,100%,((G60+K60+O60+S60)+F61+J61+N61+R61)/(G60+K60+O60+S60))"
+        },
+        "V62": {
+          "content": "=if((G61+K61+O61+S61)<=0,100%,((G61+K61+O61+S61)+F62+J62+N62+R62)/(G61+K61+O61+S61))"
+        },
+        "V63": {
+          "content": "=if((G62+K62+O62+S62)<=0,100%,((G62+K62+O62+S62)+F63+J63+N63+R63)/(G62+K62+O62+S62))"
+        },
+        "V64": {
+          "content": "=if((G63+K63+O63+S63)<=0,100%,((G63+K63+O63+S63)+F64+J64+N64+R64)/(G63+K63+O63+S63))"
+        },
+        "V65": {
+          "content": "=if((G64+K64+O64+S64)<=0,100%,((G64+K64+O64+S64)+F65+J65+N65+R65)/(G64+K64+O64+S64))"
+        },
+        "V66": {
+          "content": "=if((G65+K65+O65+S65)<=0,100%,((G65+K65+O65+S65)+F66+J66+N66+R66)/(G65+K65+O65+S65))"
+        },
+        "V67": {
+          "content": "=if((G66+K66+O66+S66)<=0,100%,((G66+K66+O66+S66)+F67+J67+N67+R67)/(G66+K66+O66+S66))"
+        },
+        "V68": {
+          "content": "=if((G67+K67+O67+S67)<=0,100%,((G67+K67+O67+S67)+F68+J68+N68+R68)/(G67+K67+O67+S67))"
+        },
+        "V69": {
+          "content": "=if((G68+K68+O68+S68)<=0,100%,((G68+K68+O68+S68)+F69+J69+N69+R69)/(G68+K68+O68+S68))"
+        },
+        "V70": {
+          "content": "=if((G69+K69+O69+S69)<=0,100%,((G69+K69+O69+S69)+F70+J70+N70+R70)/(G69+K69+O69+S69))"
+        },
+        "W10": { "content": "=_t(\"Customer Life time value\")" },
+        "W12": { "content": "=iferror((Z12/T12),0)" },
+        "W13": { "content": "=iferror((Z13/T13),0)" },
+        "W14": { "content": "=iferror((Z14/T14),0)" },
+        "W15": { "content": "=iferror((Z15/T15),0)" },
+        "W16": { "content": "=iferror((Z16/T16),0)" },
+        "W17": { "content": "=iferror((Z17/T17),0)" },
+        "W18": { "content": "=iferror((Z18/T18),0)" },
+        "W19": { "content": "=iferror((Z19/T19),0)" },
+        "W20": { "content": "=iferror((Z20/T20),0)" },
+        "W21": { "content": "=iferror((Z21/T21),0)" },
+        "W22": { "content": "=iferror((Z22/T22),0)" },
+        "W23": { "content": "=iferror((Z23/T23),0)" },
+        "W24": { "content": "=iferror((Z24/T24),0)" },
+        "W25": { "content": "=iferror((Z25/T25),0)" },
+        "W26": { "content": "=iferror((Z26/T26),0)" },
+        "W27": { "content": "=iferror((Z27/T27),0)" },
+        "W28": { "content": "=iferror((Z28/T28),0)" },
+        "W29": { "content": "=iferror((Z29/T29),0)" },
+        "W30": { "content": "=iferror((Z30/T30),0)" },
+        "W31": { "content": "=iferror((Z31/T31),0)" },
+        "W32": { "content": "=iferror((Z32/T32),0)" },
+        "W33": { "content": "=iferror((Z33/T33),0)" },
+        "W34": { "content": "=iferror((Z34/T34),0)" },
+        "W35": { "content": "=iferror((Z35/T35),0)" },
+        "W36": { "content": "=iferror((Z36/T36),0)" },
+        "W39": { "content": "=_t(\"Customer Life time value\")" },
+        "W41": { "content": "=iferror((Z41/T41),0)" },
+        "W42": { "content": "=iferror((Z42/T42),0)" },
+        "W43": { "content": "=iferror((Z43/T43),0)" },
+        "W44": { "content": "=iferror((Z44/T44),0)" },
+        "W45": { "content": "=iferror((Z45/T45),0)" },
+        "W46": { "content": "=iferror((Z46/T46),0)" },
+        "W47": { "content": "=iferror((Z47/T47),0)" },
+        "W48": { "content": "=iferror((Z48/T48),0)" },
+        "W49": { "content": "=iferror((Z49/T49),0)" },
+        "W50": { "content": "=iferror((Z50/T50),0)" },
+        "W51": { "content": "=iferror((Z51/T51),0)" },
+        "W52": { "content": "=iferror((Z52/T52),0)" },
+        "W53": { "content": "=iferror((Z53/T53),0)" },
+        "W54": { "content": "=iferror((Z54/T54),0)" },
+        "W55": { "content": "=iferror((Z55/T55),0)" },
+        "W56": { "content": "=iferror((Z56/T56),0)" },
+        "W57": { "content": "=iferror((Z57/T57),0)" },
+        "W58": { "content": "=iferror((Z58/T58),0)" },
+        "W59": { "content": "=iferror((Z59/T59),0)" },
+        "W60": { "content": "=iferror((Z60/T60),0)" },
+        "W61": { "content": "=iferror((Z61/T61),0)" },
+        "W62": { "content": "=iferror((Z62/T62),0)" },
+        "W63": { "content": "=iferror((Z63/T63),0)" },
+        "W64": { "content": "=iferror((Z64/T64),0)" },
+        "W65": { "content": "=iferror((Z65/T65),0)" },
+        "W66": { "content": "=iferror((Z66/T66),0)" },
+        "W67": { "content": "=iferror((Z67/T67),0)" },
+        "W68": { "content": "=iferror((Z68/T68),0)" },
+        "W69": { "content": "=iferror((Z69/T69),0)" },
+        "W70": { "content": "=iferror((Z70/T70),0)" },
+        "X9": { "content": "=F9+J9+N9+R9" },
+        "X10": { "content": "=_t(\"MRR\")" },
+        "X11": { "content": "=G11+K11+O11+S11" },
+        "X12": { "content": "=G12+K12+O12+S12" },
+        "X13": { "content": "=G13+K13+O13+S13" },
+        "X14": { "content": "=G14+K14+O14+S14" },
+        "X15": { "content": "=G15+K15+O15+S15" },
+        "X16": { "content": "=G16+K16+O16+S16" },
+        "X17": { "content": "=G17+K17+O17+S17" },
+        "X18": { "content": "=G18+K18+O18+S18" },
+        "X19": { "content": "=G19+K19+O19+S19" },
+        "X20": { "content": "=G20+K20+O20+S20" },
+        "X21": { "content": "=G21+K21+O21+S21" },
+        "X22": { "content": "=G22+K22+O22+S22" },
+        "X23": { "content": "=G23+K23+O23+S23" },
+        "X24": { "content": "=G24+K24+O24+S24" },
+        "X25": { "content": "=G25+K25+O25+S25" },
+        "X26": { "content": "=G26+K26+O26+S26" },
+        "X27": { "content": "=G27+K27+O27+S27" },
+        "X28": { "content": "=G28+K28+O28+S28" },
+        "X29": { "content": "=G29+K29+O29+S29" },
+        "X30": { "content": "=G30+K30+O30+S30" },
+        "X31": { "content": "=G31+K31+O31+S31" },
+        "X32": { "content": "=G32+K32+O32+S32" },
+        "X33": { "content": "=G33+K33+O33+S33" },
+        "X34": { "content": "=G34+K34+O34+S34" },
+        "X35": { "content": "=G35+K35+O35+S35" },
+        "X36": { "content": "=G36+K36+O36+S36" },
+        "X39": { "content": "=_t(\"MRR\")" },
+        "X40": { "content": "=G40+K40+O40+S40" },
+        "X41": { "content": "=G41+K41+O41+S41" },
+        "X42": { "content": "=G42+K42+O42+S42" },
+        "X43": { "content": "=G43+K43+O43+S43" },
+        "X44": { "content": "=G44+K44+O44+S44" },
+        "X45": { "content": "=G45+K45+O45+S45" },
+        "X46": { "content": "=G46+K46+O46+S46" },
+        "X47": { "content": "=G47+K47+O47+S47" },
+        "X48": { "content": "=G48+K48+O48+S48" },
+        "X49": { "content": "=G49+K49+O49+S49" },
+        "X50": { "content": "=G50+K50+O50+S50" },
+        "X51": { "content": "=G51+K51+O51+S51" },
+        "X52": { "content": "=G52+K52+O52+S52" },
+        "X53": { "content": "=G53+K53+O53+S53" },
+        "X54": { "content": "=G54+K54+O54+S54" },
+        "X55": { "content": "=G55+K55+O55+S55" },
+        "X56": { "content": "=G56+K56+O56+S56" },
+        "X57": { "content": "=G57+K57+O57+S57" },
+        "X58": { "content": "=G58+K58+O58+S58" },
+        "X59": { "content": "=G59+K59+O59+S59" },
+        "X60": { "content": "=G60+K60+O60+S60" },
+        "X61": { "content": "=G61+K61+O61+S61" },
+        "X62": { "content": "=G62+K62+O62+S62" },
+        "X63": { "content": "=G63+K63+O63+S63" },
+        "X64": { "content": "=G64+K64+O64+S64" },
+        "X65": { "content": "=G65+K65+O65+S65" },
+        "X66": { "content": "=G66+K66+O66+S66" },
+        "X67": { "content": "=G67+K67+O67+S67" },
+        "X68": { "content": "=G68+K68+O68+S68" },
+        "X69": { "content": "=G69+K69+O69+S69" },
+        "X70": { "content": "=G70+K70+O70+S70" },
+        "Y9": { "content": "=D9-P9" },
+        "Y10": { "content": "=_t(\"Active sub.\")" },
+        "Y11": { "content": "=E11-I11+M11-Q11" },
+        "Y12": { "content": "=E12-I12+M12-Q12" },
+        "Y13": { "content": "=E13-I13+M13-Q13" },
+        "Y14": { "content": "=E14-I14+M14-Q14" },
+        "Y15": { "content": "=E15-I15+M15-Q15" },
+        "Y16": { "content": "=E16-I16+M16-Q16" },
+        "Y17": { "content": "=E17-I17+M17-Q17" },
+        "Y18": { "content": "=E18-I18+M18-Q18" },
+        "Y19": { "content": "=E19-I19+M19-Q19" },
+        "Y20": { "content": "=E20-I20+M20-Q20" },
+        "Y21": { "content": "=E21-I21+M21-Q21" },
+        "Y22": { "content": "=E22-I22+M22-Q22" },
+        "Y23": { "content": "=E23-I23+M23-Q23" },
+        "Y24": { "content": "=E24-I24+M24-Q24" },
+        "Y25": { "content": "=E25-I25+M25-Q25" },
+        "Y26": { "content": "=E26-I26+M26-Q26" },
+        "Y27": { "content": "=E27-I27+M27-Q27" },
+        "Y28": { "content": "=E28-I28+M28-Q28" },
+        "Y29": { "content": "=E29-I29+M29-Q29" },
+        "Y30": { "content": "=E30-I30+M30-Q30" },
+        "Y31": { "content": "=E31-I31+M31-Q31" },
+        "Y32": { "content": "=E32-I32+M32-Q32" },
+        "Y33": { "content": "=E33-I33+M33-Q33" },
+        "Y34": { "content": "=E34-I34+M34-Q34" },
+        "Y35": { "content": "=E35-I35+M35-Q35" },
+        "Y36": { "content": "=E36-I36+M36-Q36" },
+        "Y39": { "content": "=_t(\"Active sub.\")" },
+        "Y40": { "content": "=E40-Q40" },
+        "Y41": { "content": "=E41-Q41" },
+        "Y42": { "content": "=E42-Q42" },
+        "Y43": { "content": "=E43-Q43" },
+        "Y44": { "content": "=E44-Q44" },
+        "Y45": { "content": "=E45-Q45" },
+        "Y46": { "content": "=E46-Q46" },
+        "Y47": { "content": "=E47-Q47" },
+        "Y48": { "content": "=E48-Q48" },
+        "Y49": { "content": "=E49-Q49" },
+        "Y50": { "content": "=E50-Q50" },
+        "Y51": { "content": "=E51-Q51" },
+        "Y52": { "content": "=E52-Q52" },
+        "Y53": { "content": "=E53-Q53" },
+        "Y54": { "content": "=E54-Q54" },
+        "Y55": { "content": "=E55-Q55" },
+        "Y56": { "content": "=E56-Q56" },
+        "Y57": { "content": "=E57-Q57" },
+        "Y58": { "content": "=E58-Q58" },
+        "Y59": { "content": "=E59-Q59" },
+        "Y60": { "content": "=E60-Q60" },
+        "Y61": { "content": "=E61-Q61" },
+        "Y62": { "content": "=E62-Q62" },
+        "Y63": { "content": "=E63-Q63" },
+        "Y64": { "content": "=E64-Q64" },
+        "Y65": { "content": "=E65-Q65" },
+        "Y66": { "content": "=E66-Q66" },
+        "Y67": { "content": "=E67-Q67" },
+        "Y68": { "content": "=E68-Q68" },
+        "Y69": { "content": "=E69-Q69" },
+        "Y70": { "content": "=E70-Q70" },
+        "Z9": { "content": "=IFERROR(X9/Y9,0)" },
+        "Z10": { "content": "=_t(\"Average revenue\")" },
+        "Z11": { "content": "=IFERROR(X11/Y11,0)" },
+        "Z12": { "content": "=IFERROR(X12/Y12,0)" },
+        "Z13": { "content": "=IFERROR(X13/Y13,0)" },
+        "Z14": { "content": "=IFERROR(X14/Y14,0)" },
+        "Z15": { "content": "=IFERROR(X15/Y15,0)" },
+        "Z16": { "content": "=IFERROR(X16/Y16,0)" },
+        "Z17": { "content": "=IFERROR(X17/Y17,0)" },
+        "Z18": { "content": "=IFERROR(X18/Y18,0)" },
+        "Z19": { "content": "=IFERROR(X19/Y19,0)" },
+        "Z20": { "content": "=IFERROR(X20/Y20,0)" },
+        "Z21": { "content": "=IFERROR(X21/Y21,0)" },
+        "Z22": { "content": "=IFERROR(X22/Y22,0)" },
+        "Z23": { "content": "=IFERROR(X23/Y23,0)" },
+        "Z24": { "content": "=IFERROR(X24/Y24,0)" },
+        "Z25": { "content": "=IFERROR(X25/Y25,0)" },
+        "Z26": { "content": "=IFERROR(X26/Y26,0)" },
+        "Z27": { "content": "=IFERROR(X27/Y27,0)" },
+        "Z28": { "content": "=IFERROR(X28/Y28,0)" },
+        "Z29": { "content": "=IFERROR(X29/Y29,0)" },
+        "Z30": { "content": "=IFERROR(X30/Y30,0)" },
+        "Z31": { "content": "=IFERROR(X31/Y31,0)" },
+        "Z32": { "content": "=IFERROR(X32/Y32,0)" },
+        "Z33": { "content": "=IFERROR(X33/Y33,0)" },
+        "Z34": { "content": "=IFERROR(X34/Y34,0)" },
+        "Z35": { "content": "=IFERROR(X35/Y35,0)" },
+        "Z36": { "content": "=IFERROR(X36/Y36,0)" },
+        "Z39": { "content": "=_t(\"Average revenue\")" },
+        "Z40": { "content": "=IFERROR(X40/Y40,0)" },
+        "Z41": { "content": "=IFERROR(X41/Y41,0)" },
+        "Z42": { "content": "=IFERROR(X42/Y42,0)" },
+        "Z43": { "content": "=IFERROR(X43/Y43,0)" },
+        "Z44": { "content": "=IFERROR(X44/Y44,0)" },
+        "Z45": { "content": "=IFERROR(X45/Y45,0)" },
+        "Z46": { "content": "=IFERROR(X46/Y46,0)" },
+        "Z47": { "content": "=IFERROR(X47/Y47,0)" },
+        "Z48": { "content": "=IFERROR(X48/Y48,0)" },
+        "Z49": { "content": "=IFERROR(X49/Y49,0)" },
+        "Z50": { "content": "=IFERROR(X50/Y50,0)" },
+        "Z51": { "content": "=IFERROR(X51/Y51,0)" },
+        "Z52": { "content": "=IFERROR(X52/Y52,0)" },
+        "Z53": { "content": "=IFERROR(X53/Y53,0)" },
+        "Z54": { "content": "=IFERROR(X54/Y54,0)" },
+        "Z55": { "content": "=IFERROR(X55/Y55,0)" },
+        "Z56": { "content": "=IFERROR(X56/Y56,0)" },
+        "Z57": { "content": "=IFERROR(X57/Y57,0)" },
+        "Z58": { "content": "=IFERROR(X58/Y58,0)" },
+        "Z59": { "content": "=IFERROR(X59/Y59,0)" },
+        "Z60": { "content": "=IFERROR(X60/Y60,0)" },
+        "Z61": { "content": "=IFERROR(X61/Y61,0)" },
+        "Z62": { "content": "=IFERROR(X62/Y62,0)" },
+        "Z63": { "content": "=IFERROR(X63/Y63,0)" },
+        "Z64": { "content": "=IFERROR(X64/Y64,0)" },
+        "Z65": { "content": "=IFERROR(X65/Y65,0)" },
+        "Z66": { "content": "=IFERROR(X66/Y66,0)" },
+        "Z67": { "content": "=IFERROR(X67/Y67,0)" },
+        "Z68": { "content": "=IFERROR(X68/Y68,0)" },
+        "Z69": { "content": "=IFERROR(X69/Y69,0)" },
+        "Z70": { "content": "=IFERROR(X70/Y70,0)" },
+        "AA11": { "content": "=IFERROR((E10+I10+M10-Q10)/D9)" },
+        "AA12": { "content": "=IFERROR((E11+I11+M11-Q11)/D12)" },
+        "AA13": { "content": "=IFERROR((E12+I12+M12-Q12)/D13)" },
+        "AA14": { "content": "=IFERROR((E13+I13+M13-Q13)/D14)" },
+        "AA15": { "content": "=IFERROR((E14+I14+M14-Q14)/D15)" },
+        "AA16": { "content": "=IFERROR((E15+I15+M15-Q15)/D16)" },
+        "AA17": { "content": "=IFERROR((E16+I16+M16-Q16)/D17)" },
+        "AA18": { "content": "=IFERROR((E17+I17+M17-Q17)/D18)" },
+        "AA19": { "content": "=IFERROR((E18+I18+M18-Q18)/D19)" },
+        "AA20": { "content": "=IFERROR((E19+I19+M19-Q19)/D20)" },
+        "AA21": { "content": "=IFERROR((E20+I20+M20-Q20)/D21)" },
+        "AA22": { "content": "=IFERROR((E21+I21+M21-Q21)/D22)" }
+      },
+      "styles": {
+        "A10": 2,
+        "A39": 2,
+        "A1:B1": 2,
+        "C9": 2,
+        "D9:D10": 2,
+        "D39": 2,
+        "F9:F10": 2,
+        "F39": 2,
+        "H9:H10": 2,
+        "H39": 2,
+        "J9:J10": 2,
+        "J39": 2,
+        "L9:L10": 2,
+        "L39": 2,
+        "N9:N10": 2,
+        "N39": 2,
+        "P9:P10": 2,
+        "P39": 2,
+        "R9:R10": 2,
+        "R39": 2,
+        "T10:W10": 2,
+        "T39:X39": 2,
+        "X9:Z10": 2,
+        "Z39": 2,
+        "C1": 3,
+        "C2:C7": 4,
+        "E10": 5,
+        "E39": 5,
+        "G10": 5,
+        "G39": 5,
+        "I10": 5,
+        "I39": 5,
+        "K10": 5,
+        "K39": 5,
+        "M10": 5,
+        "M39": 5,
+        "O10": 5,
+        "O39": 5,
+        "Q10": 5,
+        "Q39": 5,
+        "S10": 5,
+        "S39": 5,
+        "E11:E36": 6,
+        "E40:E70": 6,
+        "G11:G36": 6,
+        "G40:G70": 6,
+        "I11:I36": 6,
+        "I40:I70": 6,
+        "K11:K36": 6,
+        "K40:K70": 6,
+        "M11:M36": 6,
+        "M40:M70": 6,
+        "O11:O36": 6,
+        "O40:O70": 6,
+        "Q11:Q36": 6,
+        "Q40:Q70": 6,
+        "S11:S36": 6,
+        "S40:S70": 6,
+        "Y39": 7
+      },
+      "formats": {
+        "A12:A36": 1,
+        "C2": 2,
+        "B4:C4": 2,
+        "B6:C6": 2,
+        "T12:T36": 2,
+        "T41:T70": 2
+      },
+      "borders": {
+        "B9": 3,
+        "C11:C37": 3,
+        "C39:C71": 3,
+        "E11:E35": 3,
+        "E40:E69": 3,
+        "G11:G35": 3,
+        "G40:G69": 3,
+        "I11:I35": 3,
+        "I40:I69": 3,
+        "K11:K35": 3,
+        "K40:K69": 3,
+        "M11:M35": 3,
+        "M40:M69": 3,
+        "O11:O35": 3,
+        "O40:O69": 3,
+        "Q11:Q35": 3,
+        "Q40:Q69": 3,
+        "S11:S35": 3,
+        "S40:S69": 3,
+        "E38": 4,
+        "G38": 4,
+        "I38": 4,
+        "K38": 4,
+        "M38": 4,
+        "O38": 4,
+        "Q38": 4,
+        "C8:Z8": 4,
+        "S38:Z38": 4,
+        "C9": 5,
+        "C10": 6,
+        "E10": 6,
+        "E39": 6,
+        "G10": 6,
+        "G39": 6,
+        "I10": 6,
+        "I39": 6,
+        "K10": 6,
+        "K39": 6,
+        "M10": 6,
+        "M39": 6,
+        "O10": 6,
+        "O39": 6,
+        "Q10": 6,
+        "Q39": 6,
+        "S10": 6,
+        "S39": 6,
+        "D38": 7,
+        "F38": 7,
+        "H38": 7,
+        "J38": 7,
+        "L38": 7,
+        "N38": 7,
+        "P38": 7,
+        "R38": 7,
+        "D9:Y9": 7,
+        "D10": 8,
+        "D39": 8,
+        "F10": 8,
+        "F39": 8,
+        "H10": 8,
+        "H39": 8,
+        "J10": 8,
+        "J39": 8,
+        "L10": 8,
+        "L39": 8,
+        "N10": 8,
+        "N39": 8,
+        "P10": 8,
+        "P39": 8,
+        "R10": 8,
+        "R39": 8,
+        "S37": 8,
+        "S71": 8,
+        "D11:D35": 9,
+        "D40:D69": 9,
+        "F11:F35": 9,
+        "F40:F69": 9,
+        "H11:H35": 9,
+        "H40:H69": 9,
+        "J11:J35": 9,
+        "J40:J69": 9,
+        "L11:L35": 9,
+        "L40:L69": 9,
+        "N11:N35": 9,
+        "N40:N69": 9,
+        "P11:P35": 9,
+        "P40:P69": 9,
+        "R11:R35": 9,
+        "R40:R69": 9,
+        "AA9:AA36": 9,
+        "AA39:AA70": 9,
+        "D36": 10,
+        "D70": 10,
+        "F36": 10,
+        "F70": 10,
+        "H36": 10,
+        "H70": 10,
+        "J36": 10,
+        "J70": 10,
+        "L36": 10,
+        "L70": 10,
+        "N36": 10,
+        "N70": 10,
+        "P36": 10,
+        "P70": 10,
+        "R36": 10,
+        "R70": 10,
+        "D37": 11,
+        "D71": 11,
+        "F37": 11,
+        "F71": 11,
+        "H37": 11,
+        "H71": 11,
+        "J37": 11,
+        "J71": 11,
+        "L37": 11,
+        "L71": 11,
+        "N37": 11,
+        "N71": 11,
+        "P37": 11,
+        "P71": 11,
+        "R37": 11,
+        "R71": 11,
+        "D72": 12,
+        "F72": 12,
+        "H72": 12,
+        "J72": 12,
+        "L72": 12,
+        "N72": 12,
+        "P72": 12,
+        "R72": 12,
+        "T37:Z37": 12,
+        "T71:Z71": 12,
+        "E36": 13,
+        "E70": 13,
+        "G36": 13,
+        "G70": 13,
+        "I36": 13,
+        "I70": 13,
+        "K36": 13,
+        "K70": 13,
+        "M36": 13,
+        "M70": 13,
+        "O36": 13,
+        "O70": 13,
+        "Q36": 13,
+        "Q70": 13,
+        "S36": 13,
+        "S70": 13,
+        "E37": 14,
+        "E71": 14,
+        "G37": 14,
+        "G71": 14,
+        "I37": 14,
+        "I71": 14,
+        "K37": 14,
+        "K71": 14,
+        "M37": 14,
+        "M71": 14,
+        "O37": 14,
+        "O71": 14,
+        "Q37": 14,
+        "Q71": 14,
+        "T10:Z10": 14,
+        "T39:Z39": 14,
+        "T11:Z35": 15,
+        "T40:Z69": 15,
+        "T36:Z36": 16,
+        "T70:Z70": 16,
+        "Z9": 17
+      },
+      "conditionalFormats": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [
+          { "start": 10, "end": 36, "isFolded": false },
+          { "start": 39, "end": 69, "isFolded": false }
+        ],
+        "COL": []
+      },
+      "dataValidationRules": [],
+      "comments": {}
+    }
+  ],
+  "styles": {
+    "1": { "fontSize": 16, "textColor": "#2D7E84", "bold": true },
+    "2": { "bold": true },
+    "3": { "bold": true, "fillColor": "#F3F3F3" },
+    "4": { "fillColor": "#F3F3F3" },
+    "5": { "bold": true, "fillColor": "#E6F2F3" },
+    "6": { "fillColor": "#E6F2F3" },
+    "7": { "bold": true, "align": "center" }
+  },
+  "formats": { "1": "mmmm yyyy", "2": "0.00%" },
+  "borders": {
+    "1": { "bottom": { "style": "thin", "color": "#CCCCCC" } },
+    "2": { "top": { "style": "thin", "color": "#CCCCCC" } },
+    "3": { "right": { "style": "thin", "color": "#2D7E84" } },
+    "4": { "bottom": { "style": "thin", "color": "#2D7E84" } },
+    "5": {
+      "top": { "style": "thin", "color": "#2D7E84" },
+      "bottom": { "style": "thin", "color": "#2D7E84" },
+      "left": { "style": "thin", "color": "#2D7E84" }
+    },
+    "6": {
+      "top": { "style": "thin", "color": "#2D7E84" },
+      "right": { "style": "thin", "color": "#2D7E84" }
+    },
+    "7": {
+      "top": { "style": "thin", "color": "#2D7E84" },
+      "bottom": { "style": "thin", "color": "#2D7E84" }
+    },
+    "8": {
+      "top": { "style": "thin", "color": "#2D7E84" },
+      "left": { "style": "thin", "color": "#2D7E84" }
+    },
+    "9": { "left": { "style": "thin", "color": "#2D7E84" } },
+    "10": {
+      "bottom": { "style": "thin", "color": "#2D7E84" },
+      "left": { "style": "thin", "color": "#2D7E84" }
+    },
+    "11": {
+      "top": { "style": "thin", "color": "#2D7E84" },
+      "bottom": { "style": "thin", "color": "#2D7E84" },
+      "left": { "style": "thin", "color": "#2D7E84" },
+      "right": { "style": "thin", "color": "#2D7E84" }
+    },
+    "12": { "top": { "style": "thin", "color": "#2D7E84" } },
+    "13": {
+      "bottom": { "style": "thin", "color": "#2D7E84" },
+      "right": { "style": "thin", "color": "#2D7E84" }
+    },
+    "14": {
+      "top": { "style": "thin", "color": "#2D7E84" },
+      "left": { "style": "thin", "color": "#2D7E84" },
+      "right": { "style": "thin", "color": "#2D7E84" }
+    },
+    "15": {
+      "left": { "style": "thin", "color": "#2D7E84" },
+      "right": { "style": "thin", "color": "#2D7E84" }
+    },
+    "16": {
+      "bottom": { "style": "thin", "color": "#2D7E84" },
+      "left": { "style": "thin", "color": "#2D7E84" },
+      "right": { "style": "thin", "color": "#2D7E84" }
+    },
+    "17": {
+      "top": { "style": "thin", "color": "#2D7E84" },
+      "bottom": { "style": "thin", "color": "#2D7E84" },
+      "right": { "style": "thin", "color": "#2D7E84" }
+    }
+  },
+  "revisionId": "START_REVISION",
+  "uniqueFigureIds": true,
+  "settings": {
+    "locale": {
+      "name": "English (US)",
+      "code": "en_US",
+      "thousandsSeparator": ",",
+      "decimalSeparator": ".",
+      "dateFormat": "mm/dd/yyyy",
+      "timeFormat": "hh:mm:ss",
+      "formulaArgSeparator": ",",
+      "weekStart": 7
+    }
+  },
+  "pivots": {
+    "1": {
+      "type": "ODOO",
+      "fieldMatching": {},
+      "context": {
+        "search_default_group_by_event_date": 1,
+        "search_default_group_by_event_type": 1
+      },
+      "domain": [
+        "|",
+        ["event_type", "=", "0_creation"],
+        "|",
+        ["event_type", "=", "1_expansion"],
+        "|",
+        ["event_type", "=", "15_contraction"],
+        ["event_type", "=", "2_churn"]
+      ],
+      "id": "1",
+      "measures": [
+        { "id": "mrr_change_normalized", "fieldName": "mrr_change_normalized" },
+        { "id": "__count", "fieldName": "__count" },
+        { "id": "contract_number", "fieldName": "contract_number" },
+        { "id": "arr_change_normalized", "fieldName": "arr_change_normalized" }
+      ],
+      "model": "sale.order.log.report",
+      "name": "Sale Order Log Analysis by Type of event",
+      "sortedColumn": null,
+      "formulaId": "1",
+      "columns": [],
+      "rows": [
+        { "fieldName": "event_type" },
+        { "fieldName": "event_date", "granularity": "month" }
+      ]
+    },
+    "2": {
+      "type": "ODOO",
+      "fieldMatching": {},
+      "context": { "search_default_group_by_event_date": 1 },
+      "domain": [],
+      "id": "2",
+      "measures": [
+        { "id": "mrr_change_normalized", "fieldName": "mrr_change_normalized" },
+        { "id": "arr_change_normalized", "fieldName": "arr_change_normalized" },
+        { "id": "contract_number", "fieldName": "contract_number" },
+        { "id": "__count", "fieldName": "__count" }
+      ],
+      "model": "sale.order.log.report",
+      "name": "Sale Order Log Analysis by Event Date (Day)",
+      "sortedColumn": null,
+      "formulaId": "2",
+      "columns": [{ "fieldName": "event_date", "granularity": "day" }],
+      "rows": [{ "fieldName": "event_type" }]
+    }
+  },
+  "pivotNextId": 4,
+  "customTableStyles": {},
+  "odooVersion": 12,
+  "globalFilters": [],
+  "lists": {},
+  "listNextId": 1,
+  "chartOdooMenusReferences": {}
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="whatsapp.Composer.actions" t-inherit="mail.Composer.actions" t-inherit-mode="extension">
+        <xpath expr="//*[@name='root']" position="replace">
+            <t t-if="thread?.channel_type === 'whatsapp' and !state.active"></t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+    <t t-name="whatsapp.Composer.quickActions" t-inherit="mail.Composer.quickActions" t-inherit-mode="extension">
+        <xpath expr="//*[@name='root']" position="replace">
+            <t t-if="thread?.channel_type === 'whatsapp' and !state.active"></t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+    <t t-name="whatsapp.Composer.extraActions" t-inherit="mail.Composer.extraActions" t-inherit-mode="extension">
+        <xpath expr="//*[@name='root']" position="replace">
+            <t t-if="thread?.channel_type === 'whatsapp' and !state.active"></t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+    <t t-name="whatsapp.Composer.attachFiles" t-inherit="mail.Composer.attachFiles" t-inherit-mode="extension">
+        <xpath expr="//FileUploader" position="attributes">
+            <attribute name="multiUpload">thread and thread.channel_type === 'whatsapp' ? false : true</attribute>
+        </xpath>
+        <xpath expr="//FileUploader/t/button" position="attributes">
+            <attribute name="t-att-disabled" add="or (thread and thread.channel_type === 'whatsapp' and props.composer.attachments.length > 0)" separator=" " />
+        </xpath>
+    </t>
+</templates>

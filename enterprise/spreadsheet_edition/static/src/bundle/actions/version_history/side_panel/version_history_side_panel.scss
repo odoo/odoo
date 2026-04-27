@@ -1,0 +1,54 @@
+.o-version-history .o_spreadsheet_user {
+  font-size: 13px;
+
+  img {
+    height: 1rem;
+    width: 1rem;
+  }
+}
+
+.o-version-history-wrapper {
+  width: 350px;
+  height: 100%;
+  overflow: clip;
+  box-sizing: border-box !important;
+  background-color: white;
+  border-color: #EBEBEB !important;
+}
+
+.o-version-history-item {
+  padding: 10px 12px 10px 12px;
+
+  &:not(.active):not(:hover) .o-version-history-menu {
+    visibility: hidden;
+  }
+
+  &:hover {
+    &:not(.active) {
+      background-color: #EBEBEB !important;
+    }
+  }
+
+  .os-input {
+    background-color: inherit;
+    font-size: 14px;
+  }
+
+  &.active {
+    background-color: #E6F2F3;
+    border: 1px solid #017E84 !important;
+
+    .os-input {
+      font-weight: 590;
+    }
+  }
+}
+
+.o-version-history-load-more-container {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.o-version-history {
+  outline: unset;
+}

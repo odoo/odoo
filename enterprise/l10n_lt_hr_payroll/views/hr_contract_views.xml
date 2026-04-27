@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.inherit.l10n.lt.hr.payroll</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+        <field name="arch" type="xml">
+            <group name="salary" position="inside">
+                <label for="l10n_lt_benefits_in_kind" invisible="country_code != 'LT'"/>
+                <div class="o_row" invisible="country_code != 'LT'">
+                    <field name="l10n_lt_benefits_in_kind" class="o_hr_narrow_field" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <field name="l10n_lt_time_limited" invisible="country_code != 'LT'"/>
+                <field name="l10n_lt_pension" invisible="country_code != 'LT'"/>
+            </group>
+        </field>
+    </record>
+</odoo>

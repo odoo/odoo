@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="checkout_delivery" inherit_id="website_sale.delivery_method">
+        <xpath expr="//input[@name='o_delivery_radio']" position="attributes">
+            <attribute name="t-att-data-shiprocket-payment-method">True</attribute>
+        </xpath>
+    </template>
+
+    <template id="payment_method_form" inherit_id="payment.method_form">
+        <xpath expr="//input[@name='o_payment_radio']" position="attributes">
+            <attribute name="t-att-data-provider-custom-mode">provider_sudo.custom_mode</attribute>
+        </xpath>
+    </template>
+</odoo>

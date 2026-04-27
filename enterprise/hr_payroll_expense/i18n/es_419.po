@@ -1,0 +1,263 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_payroll_expense
+#
+# Translators:
+# Wil Odoo, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Fernanda Alvarez, 2024
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2025-10-29 17:42+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
+"odoo-18/hr_payroll_expense/es_419/>\n"
+"Language: es_419\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: hr_payroll_expense
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.view_account_payment_register_form_inherit_hr_payroll_expense
+msgid ""
+"<span class=\"fw-bold\">\n"
+"                            The expenses will already be reimbursed in a "
+"payslip. Make sure this payment is intended.\n"
+"                        </span>"
+msgstr ""
+"<span class=\"fw-bold\">\n"
+"                            Los gastos se reembolsarán en el recibo de "
+"nómina. Asegúrese de que el pago sea correcto.\n"
+"                        </span>"
+
+#. module: hr_payroll_expense
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_expense_sheet_view_form_inherit_payroll
+msgid "<span class=\"o_stat_text\">Payslip</span>"
+msgstr "<span class=\"o_stat_text\">Recibo de nómina</span>"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_expense_sheet
+msgid "Expense Report"
+msgstr "Reporte de gastos"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"Expense reimbursement rule needs to be configured to add expenses to "
+"payslips.\n"
+"Please create one salary rule with the \"%(code)s\" code on the relevant "
+"salary structures."
+msgstr ""
+"Debe configurar la regla de reembolso de gastos para agregar gastos a los "
+"recibos de nómina.\n"
+"Cree una regla salarial con el código \"%(code)s\" en las estructuras "
+"salariales correspondientes."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "Expense report (\"%(name)s\") was removed from the next payslip."
+msgstr ""
+"El reporte de gastos (\"%(name)s\") se eliminó del siguiente recibo de "
+"nómina."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "Expense report (\"%(name)s\") will be added to the next payslip."
+msgstr ""
+"El reporte de gastos (\"%(name)s\") se agregará al siguiente recibo de "
+"nómina."
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_payslip__expense_sheet_ids
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_payslip_view_form_inherit_expense
+msgid "Expenses"
+msgstr "Gastos"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_payslip__expenses_count
+msgid "Expenses Count"
+msgstr "Número de gastos"
+
+#. module: hr_payroll_expense
+#: model:hr.salary.rule,name:hr_payroll_expense.hr_salary_rule_expense_refund
+msgid "Expenses Reimbursement"
+msgstr "Reembolso de gastos"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,help:hr_payroll_expense.field_hr_payslip__expense_sheet_ids
+msgid "Expenses to reimburse to employee."
+msgstr "Gastos por reembolsar al empleado."
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_payslip_employees
+msgid "Generate payslips for all selected employees"
+msgstr "Generar los recibos de nómina para todos los empleados seleccionados"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "Go to salary rules"
+msgstr "Ir a las reglas salariales"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_account_payment_register__is_already_paid_through_a_payslip
+msgid "Is Already Paid Through A Payslip"
+msgstr "Ya se pagó en nómina"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payroll_structure.py:0
+msgid ""
+"No debit account found in the '%(rule_name)s' payslip salary rule. Please "
+"add a payable debit account to be able to create an accounting entry for the "
+"expense reports linked to this payslip."
+msgstr ""
+"No se encontró cuenta de abono en la regla salarial de la nómina de pago \"%"
+"(rule_name)s\". Agregue una cuenta de abono a la que se le pueda pagar para "
+"poder crear un asiento contable para los reportes de gastos vinculados a "
+"este recibo de nómina."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid ""
+"No salary rule was found to handle expenses in structure '%"
+"(structure_name)s'."
+msgstr ""
+"No se encontró ninguna regla salarial para gestionar los gastos en la "
+"estructura %(structure_name)s."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"Only approved expense reports that were paid by an employee can be "
+"reimbursed in a payslip."
+msgstr ""
+"Solo se pueden reembolsar en el recibo de nómina los reportes de gastos "
+"aprobados que un empleado pagó."
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_account_payment_register
+msgid "Pay"
+msgstr "Pagar"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Recibo de nómina"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_expense_sheet__payslip_id
+msgid "Payslip"
+msgstr "Recibo de nómina"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_expense_sheet__refund_in_payslip
+msgid "Reimburse In Next Payslip"
+msgstr "Reembolsar en el siguiente recibo de nómina"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid "Reimbursed Expenses"
+msgstr "Gastos reembolsados"
+
+#. module: hr_payroll_expense
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_expense_sheet_view_form_inherit_payroll
+msgid "Remove from Payslip"
+msgstr "Eliminar del recibo de nómina"
+
+#. module: hr_payroll_expense
+#: model:ir.actions.server,name:hr_payroll_expense.hr_expense_add_to_payslip_action_server
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_expense_sheet_view_form_inherit_payroll
+msgid "Report in Next Payslip"
+msgstr "Reportar en el siguiente recibo de nómina"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_payroll_structure
+msgid "Salary Structure"
+msgstr "Estructura salarial"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payroll_structure.py:0
+msgid ""
+"The '%(account_name)s' account for the salary rule '%(rule_name)s' must be "
+"of type 'Payable'."
+msgstr ""
+"La cuenta \"%(account_name)s\" para la regla salarial \"%(rule_name)s\" debe "
+"ser del tipo \"Por pagar\"."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid ""
+"The salary rules with the code 'EXPENSES' must have a debit account set to "
+"be able to properly reimburse the linked expenses. This must be an account "
+"of type 'Payable'."
+msgstr ""
+"Las reglas salariales con el código \"GASTOS\" deben tener una cuenta de "
+"abono configurada para poder reembolsar los gastos vinculados de forma "
+"adecuada. El tipo de cuenta debe ser del tipo \"Por pagar\"."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"The state of the accounting entries linked to this expense report do not "
+"allow it to be reimbursed through a payslip."
+msgstr ""
+"El estado de los asientos contables vinculados a este reporte de gastos no "
+"permite su reembolso mediante un recibo de nómina."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "There are no valid expense sheets selected."
+msgstr "No se seleccionaron hojas de gastos válidas."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"You cannot remove an expense from a payslip that has already been "
+"validated.\n"
+"Expenses can only be removed from draft or canceled payslips."
+msgstr ""
+"No puede eliminar un gasto de un recibo de nómina que ya se validó.\n"
+"Los gastos solo se pueden eliminar de recibos de nómina en borrador o "
+"cancelados."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid ""
+"You don't have the access rights to link an expense report to a payslip. You "
+"need to be a payroll officer to do that."
+msgstr ""
+"No tiene los permisos de acceso para vincular un reporte de gastos a un "
+"recibo de nómina. Debe ser encargado de nómina."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/account_move.py:0
+msgid "You don't have the access rights to post an invoice."
+msgstr "No cuenta con permisos de acceso para registrar una factura."

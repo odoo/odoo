@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="avatax_validate_address_view_form" model="ir.ui.view">
+        <field name="name">avatax.validate.address.view.form</field>
+        <field name="model">avatax.validate.address</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="partner_id" invisible="1"/>
+                <field name="is_already_valid" invisible="1"/>
+                <div class="alert alert-success" role="alert" invisible="not is_already_valid">
+                    This is already a valid address.
+                </div>
+                <group>
+                    <group string="Validated Address">
+                        <field name="validated_street" string="Street"/>
+                        <field name="validated_street2" string=""/>
+                        <field name="validated_zip" string="Zip Code"/>
+                        <field name="validated_city" string="City"/>
+                        <field name="validated_state_id" string="State"/>
+                        <field name="validated_country_id" string="Country"/>
+                        <field name="validated_latitude" string="Latitude"/>
+                        <field name="validated_longitude" string="Longitude"/>
+                    </group>
+                    <group string="Original Address">
+                        <field name="street"/>
+                        <field name="street2" string=""/>
+                        <field name="zip"/>
+                        <field name="city"/>
+                        <field name="state_id"/>
+                        <field name="country_id"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_save_validated" type="object" default_focus="1"
+                            string="Save Validated" class="oe_highlight" invisible="is_already_valid"/>
+                    <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_hr_payroll_structure_cp200_cct90_basic_salary_rule" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="name">Non-recurring performance-related benefits</field>
+        <field name="sequence">1</field>
+        <field name="code">BASIC</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = payslip.paid_amount
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_structure_cct90"/>
+    </record>
+
+    <record id="cp200_employees_cct90_gross_salary" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_salary"/>
+        <field name="name">Gross Salary</field>
+        <field name="code">SALARY</field>
+        <field name="sequence">20</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['BASIC']
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_structure_cct90"/>
+    </record>
+
+    <record id="cp200_employees_cct90_onss_rule" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_onss"/>
+        <field name="name">Social contribution</field>
+        <field name="code">ONSS</field>
+        <field name="sequence">41</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result=not contract.no_onss</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">SALARY</field>
+        <field name="amount_percentage">-13.07</field>
+        <field name="partner_id" ref="res_partner_onss"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_structure_cct90"/>
+    </record>
+
+     <record id="l10n_be_hr_payroll_structure_cp200_cct90_gross_salary_rule" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.GROSS"/>
+        <field name="name">Taxable Salary</field>
+        <field name="sequence">100</field>
+        <field name="code">GROSS</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+exemption_amount = payslip._rule_parameter('cct90_employee_pp_threshold')
+result = max(0, categories['BASIC'] + categories['ALW'] - exemption_amount)
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_structure_cct90"/>
+    </record>
+
+    <record id="cp200_employees_cct90_p_p" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_pp"/>
+        <field name="name">Withholding Tax</field>
+        <field name="code">P.P</field>
+        <field name="sequence">102</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = payslip._get_thirteen_month_withholding_taxes(localdict)</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_structure_cct90"/>
+    </record>
+
+    <record id="cp200_employees_cct90_pp_total" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_withholding_taxes_total"/>
+        <field name="name">Withholding Taxes (Total)</field>
+        <field name="code">PPTOTAL</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">110</field>
+        <field name="condition_select">none</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -categories['PP']
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_structure_cct90"/>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_cct90_ded" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Deduction</field>
+        <field name="sequence">198</field>
+        <field name="code">DEDUCTION</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'DEDUCTION' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -inputs['DEDUCTION'].amount
+result_name = inputs['DEDUCTION'].name
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_structure_cct90"/>
+    </record>
+
+    <record id="cp200_employees_cct90_attachment" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Attachment of Salary</field>
+        <field name="sequence">174</field>
+        <field name="code">ATTACH_SALARY</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'ATTACH_SALARY' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -inputs['ATTACH_SALARY'].amount
+result_name = inputs['ATTACH_SALARY'].name
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_structure_cct90"/>
+    </record>
+
+    <record id="cp200_employees_cct90_assignment" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Assignment of Salary</field>
+        <field name="sequence">174</field>
+        <field name="code">ASSIG_SALARY</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'ASSIG_SALARY' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -inputs['ASSIG_SALARY'].amount
+result_name = inputs['ASSIG_SALARY'].name
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_structure_cct90"/>
+    </record>
+
+    <record id="cp200_employees_cct90_child_support" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Child Support</field>
+        <field name="code">CHILD_SUPPORT</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">174</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'CHILD_SUPPORT' in inputs</field>
+        <field name="amount_python_compute">
+result = -inputs['CHILD_SUPPORT'].amount
+result_name = inputs['CHILD_SUPPORT'].name
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_structure_cct90"/>
+    </record>
+
+    <record id="cp200_employees_cct90_reimbursment" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Reimbursement</field>
+        <field name="sequence">199</field>
+        <field name="code">REIMBURSEMENT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'REIMBURSEMENT' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['REIMBURSEMENT'].amount
+result_name = inputs['REIMBURSEMENT'].name
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_structure_cct90"/>
+    </record>
+
+    <record id="l10n_be_hr_payroll_structure_cp200_cct90_net_salary" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="name">Net Salary</field>
+        <field name="sequence">200</field>
+        <field name="code">NET</field>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['BASIC'] + categories['ALW'] + categories['DED']
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_structure_cct90"/>
+    </record>
+
+    <record id="cp200_employees_cct90_onss_employer_basic" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS Basic (Employer)</field>
+        <field name="code">ONSSEMPLOYERBASIC</field>
+        <field name="sequence">501</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+exemption_amount = payslip._rule_parameter('cct90_employer_onss_threshold')
+onss_rate = payslip._rule_parameter('cct90_employer_onss_rate')
+result_rate = onss_rate if categories['BASIC'] &gt; exemption_amount else 0
+result = max(0, result_rules['SALARY']['total'] - exemption_amount)
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_structure_cct90"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_cct90_onss_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer"/>
+        <field name="name">Accounting: ONSS (Employer)</field>
+        <field name="code">ONSSEMPLOYER</field>
+        <field name="sequence">502</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['ONSSEMPLOYERBASIC']['total']
+        </field>
+        <field name="partner_id" ref="res_partner_onss"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_structure_cct90"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+</odoo>

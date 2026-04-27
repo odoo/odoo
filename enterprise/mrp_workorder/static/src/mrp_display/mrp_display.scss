@@ -1,0 +1,28 @@
+.o_mrp_display {
+    .o_mrp_display_records {
+        column-width: 340px;
+        column-gap: 8px;
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        align-items: start;
+
+        @include media-breakpoint-up(lg) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        @include media-breakpoint-up(xl) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        @include media-breakpoint-up(xxl) {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    .o_avatar_connected {
+        height: 30px !important;
+        width: 30px !important;
+    }
+
+    .o_control_panel_navigation {
+        align-items: center;
+    }
+}

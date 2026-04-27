@@ -1,0 +1,1624 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://www.sbr.gov.au/ato/payevntemp" elementFormDefault="qualified" targetNamespace="http://www.sbr.gov.au/ato/payevntemp" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="PAYEVNTEMP" type="tns:PAYEVNTEMP" />
+	<xs:complexType name="PAYEVNTEMP">
+		<xs:annotation>
+			<xs:documentation>This schema was generated from a template.</xs:documentation>
+			<xs:documentation>Manual changes to this file will be overwritten if the schema is regenerated.</xs:documentation>
+			<xs:documentation>Generated on 2021-04-14T14:04:50, by ESR Version 2.4.42.0 using ESR Database SWS_EA_ESR_Cloud_Prod</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="Payee" type="tns:Payee">
+				<xs:annotation>
+					<xs:documentation>Payee</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Identifiers">
+		<xs:annotation>
+			<xs:documentation>Payee Identifiers</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="1" name="TaxFileNumberId" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payee TFN</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP13</xs:documentation>
+					<xs:documentation>Report Guidance: This is to identify an individual within the ATO.  If a TFN exemption is being sought, valid TFNs to use are:
+000000000 – Where the payee has not completed a TFN declaration, the payee has completed a TFN declaration and chooses not to quote a TFN, the payee has indicated that they applied or enquired about a TFN with the ATO and failed to provide a TFN within 28 days.
+111111111 -  Where the payee has not provided a TFN but they indicate on the TFN declaration that they have applied or enquired about a TFN with the ATO.
+333333333 - Where the payee is under the age of eighteen and earns $350 or less weekly, earns $700 or less fortnightly or earns $1517 or less monthly.
+444444444 - Where the payee is a recipient of a social security or service pension or benefit (other than Newstart, sickness allowance, special benefits or partner allowance) an exemption from quoting a TFN may be claimed.
+
+For employment termination payments, in the event the payment is due to the death of an employee, show either the TFN of the trustee for the deceased estate or the TFN of the dependant or non dependant of the deceased employee, whichever is applicable.</xs:documentation>
+					<xs:documentation>Business Definition: A unique number issued by the Tax Office to individuals and organisations to identify their tax records. It increases the efficiency in administering tax and other Australian Government systems such as income support payments. It is also used as the identifier for clients' income tax roles. A Tax File Number (TFN) can be used externally only for communication with the Tax Office, either directly by the client, or by an external organisation that is required to collect and quote the client's TFN to the Tax Office.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="8" />
+						<xs:maxLength value="9" />
+						<xs:pattern value="([0-9])*" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="AustralianBusinessNumberId" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Contractor ABN</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP91</xs:documentation>
+					<xs:documentation>Report Guidance: This is used to allow a payer to report a voluntary agreement. This must be supplied if voluntary agreement income is to be included during the financial year.</xs:documentation>
+					<xs:documentation>Business Definition: A unique public identifier issued to all entities registered in the Australian Business Register (ABR), to be used in their dealings with government. Companies registered under the Corporations Law and business entities carrying on an enterprise in Australia are entitled to an ABN.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[0-9]{11}" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="EmploymentPayrollNumberId">
+				<xs:annotation>
+					<xs:documentation>Payee Payroll ID</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP11</xs:documentation>
+					<xs:documentation>Report Guidance: Payee Payroll ID is used in combination with ABN, Branch, BMS ID and Payee TFN/ABN to identify a unique pay record. This is used to help identify the payee if they have more than one instance in a payroll system, e.g. payee paid on two separate awards. A PAYEVNT message can only contain a single child record per employee per Payee Payroll ID.</xs:documentation>
+					<xs:documentation>Business Definition: Number allocated by the payer payroll system to identify a payee. This identifier will be quoted on any correspondence regarding the payee's declaration to assist correct identification of the payee.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+						<xs:maxLength value="200" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="PreviousPayrollIDEmploymentPayrollNumberId" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Previous Payroll ID</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP251</xs:documentation>
+					<xs:documentation>Report Guidance: The Previous Payroll ID is used to transfer payee YTD values from an old payroll ID to the new payroll id for the payee.
+This element has complex business rules and you MUST refer to STP Business Implementation Guide for the appropriate definition and how to source the data in your solution.</xs:documentation>
+					<xs:documentation>Business Definition: Number allocated by the payer payroll system to identify a payee. This identifier will be quoted on any correspondence regarding the payee's declaration to assist correct identification of the payee.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+						<xs:maxLength value="200" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PersonNameDetails">
+		<xs:annotation>
+			<xs:documentation>Payee Name Details</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="FamilyNameT">
+				<xs:annotation>
+					<xs:documentation>Payee Family Name</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP15</xs:documentation>
+					<xs:documentation>Report Guidance: This is the payee's family name. Where the payee has a legal single name only, this field must be completed.  If a beneficiary receives payment upon a person's death, use either the name of the trustee for the deceased estate or the beneficiary of the deceased person, whichever is applicable.</xs:documentation>
+					<xs:documentation>Business Definition: The person's last name or surname. The name by which a family group is identified.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+						<xs:maxLength value="40" />
+						<xs:pattern value="([0-9a-zA-Z \.,\?\(\)\{\}:;'\|\-_=\\/@#$%\*=&amp;&quot;])*" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="GivenNameT" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payee First Name</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP16</xs:documentation>
+					<xs:documentation>Report Guidance: This should be provided unless the payee has a legal single name. For non-individual trustees, split the legal name over name elements.</xs:documentation>
+					<xs:documentation>Business Definition: A personal name usually given to someone at birth by their parent/s that uniquely identifies them socially and within a family group.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40" />
+						<xs:pattern value="([0-9a-zA-Z \.,\?\(\)\{\}:;'\|\-_=\\/@#$%\*=&amp;&quot;])*" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="OtherGivenNameT" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payee Other Name</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP17</xs:documentation>
+					<xs:documentation>Business Definition: The middle name given to a person which complements that person's identifying name within the family group or the name by which the person is uniquely socially identified.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40" />
+						<xs:pattern value="([0-9a-zA-Z \.,\?\(\)\{\}:;'\|\-_=\\/@#$%\*=&amp;&quot;])*" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PersonDemographicDetailsBirth">
+		<xs:annotation>
+			<xs:documentation>Payee Demographic Details</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="1" name="Dm" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payee Day of Birth</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP205</xs:documentation>
+					<xs:documentation>Report Guidance: If year of birth is not known, do not provide.</xs:documentation>
+					<xs:documentation>Business Definition: The date of the day in the month in which an individual was born</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minInclusive value="1" />
+						<xs:maxInclusive value="31" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="M" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payee Month of Birth</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP203</xs:documentation>
+					<xs:documentation>Report Guidance: If year of birth is not known, do not provide.</xs:documentation>
+					<xs:documentation>Business Definition: The month in which an individual was born</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minInclusive value="1" />
+						<xs:maxInclusive value="12" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="Y" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payee Year of Birth</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP204</xs:documentation>
+					<xs:documentation>Report Guidance: If unknown, do not provide.</xs:documentation>
+					<xs:documentation>Business Definition: The year in which an individual was born</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minInclusive value="1800" />
+						<xs:maxInclusive value="9999" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AddressDetails">
+		<xs:annotation>
+			<xs:documentation>Address Details</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="Line1T">
+				<xs:annotation>
+					<xs:documentation>Payee Address Line 1</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP21</xs:documentation>
+					<xs:documentation>Report Guidance: This is the residential address of the payee. Unit/apartment and street address must be provided in the 1st and 2nd address lines. It may not be necessary to use both lines. The suburb/town/city, state/territory and postcode must be supplied in the separate elements as specified and must not be included in the first or second address line elements.</xs:documentation>
+					<xs:documentation>Business Definition: First line utilising free format, that is used to create a semi structured address.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+						<xs:maxLength value="38" />
+						<xs:pattern value="([0-9a-zA-Z \.,\?\(\)\[\]:;'\-=\\/@$%\*&amp;!&quot;])*" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="Line2T" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payee Address Line 2</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP22</xs:documentation>
+					<xs:documentation>Report Guidance: Address line 2 is used to complete the residential street address of the payee. This is an optional element and does not need to be populated.</xs:documentation>
+					<xs:documentation>Business Definition: Second line utilising free format, that is used to create a semi structured address.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="38" />
+						<xs:pattern value="([0-9a-zA-Z \.,\?\(\)\[\]:;'\-=\\/@$%\*&amp;!&quot;])*" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="LocalityNameT">
+				<xs:annotation>
+					<xs:documentation>Payee Suburb/Town</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP23</xs:documentation>
+					<xs:documentation>Report Guidance: This is the suburb, town or locality for the residential address of the payee.</xs:documentation>
+					<xs:documentation>Business Definition: A word or combination of words, by which a geographic locality/suburb is designated or known.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+						<xs:maxLength value="46" />
+						<xs:pattern value="([0-9a-zA-Z \.,\?\(\)\[\]:;'\-=\\/@$%\*&amp;!&quot;])*" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="StateOrTerritoryC" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payee State/Territory</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP24</xs:documentation>
+					<xs:documentation>Report Guidance: This is the state/territory of the residential address of the payee. This element is required if the country is not provided or Australia.</xs:documentation>
+					<xs:documentation>Business Definition: The code that is assigned to each Australian State or Territory.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="AAT" />
+						<xs:enumeration value="ACT" />
+						<xs:enumeration value="NSW" />
+						<xs:enumeration value="NT" />
+						<xs:enumeration value="QLD" />
+						<xs:enumeration value="SA" />
+						<xs:enumeration value="TAS" />
+						<xs:enumeration value="VIC" />
+						<xs:enumeration value="WA" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="PostcodeT" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payee Postcode</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP25</xs:documentation>
+					<xs:documentation>Report Guidance: This is the postcode of the contact address of the payee. This is mandatory if the payee's country code is either not supplied or Australia (AU).</xs:documentation>
+					<xs:documentation>Business Definition: The Australian descriptor for a postal delivery area, aligned with locality, suburb or place.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[0-9]{4}" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="CountryC" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payee Country Code</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP27</xs:documentation>
+					<xs:documentation>Report Guidance: The country code for the residential address of the payee. It does not need to be supplied if country is AU.</xs:documentation>
+					<xs:documentation>Business Definition: This represents the Country Code as prescribed by AS4590 and inherited from ISO 3166.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="ad" />
+						<xs:enumeration value="ae" />
+						<xs:enumeration value="af" />
+						<xs:enumeration value="ag" />
+						<xs:enumeration value="ai" />
+						<xs:enumeration value="al" />
+						<xs:enumeration value="am" />
+						<xs:enumeration value="ao" />
+						<xs:enumeration value="aq" />
+						<xs:enumeration value="ar" />
+						<xs:enumeration value="as" />
+						<xs:enumeration value="at" />
+						<xs:enumeration value="au" />
+						<xs:enumeration value="aw" />
+						<xs:enumeration value="ax" />
+						<xs:enumeration value="az" />
+						<xs:enumeration value="ba" />
+						<xs:enumeration value="bb" />
+						<xs:enumeration value="bd" />
+						<xs:enumeration value="be" />
+						<xs:enumeration value="bf" />
+						<xs:enumeration value="bg" />
+						<xs:enumeration value="bh" />
+						<xs:enumeration value="bi" />
+						<xs:enumeration value="bj" />
+						<xs:enumeration value="bl" />
+						<xs:enumeration value="bm" />
+						<xs:enumeration value="bn" />
+						<xs:enumeration value="bo" />
+						<xs:enumeration value="bq" />
+						<xs:enumeration value="br" />
+						<xs:enumeration value="bs" />
+						<xs:enumeration value="bt" />
+						<xs:enumeration value="bv" />
+						<xs:enumeration value="bw" />
+						<xs:enumeration value="by" />
+						<xs:enumeration value="bz" />
+						<xs:enumeration value="ca" />
+						<xs:enumeration value="cc" />
+						<xs:enumeration value="cd" />
+						<xs:enumeration value="cf" />
+						<xs:enumeration value="cg" />
+						<xs:enumeration value="ch" />
+						<xs:enumeration value="ci" />
+						<xs:enumeration value="ck" />
+						<xs:enumeration value="cl" />
+						<xs:enumeration value="cm" />
+						<xs:enumeration value="cn" />
+						<xs:enumeration value="co" />
+						<xs:enumeration value="cr" />
+						<xs:enumeration value="cu" />
+						<xs:enumeration value="cv" />
+						<xs:enumeration value="cw" />
+						<xs:enumeration value="cx" />
+						<xs:enumeration value="cy" />
+						<xs:enumeration value="cz" />
+						<xs:enumeration value="de" />
+						<xs:enumeration value="dj" />
+						<xs:enumeration value="dk" />
+						<xs:enumeration value="dm" />
+						<xs:enumeration value="do" />
+						<xs:enumeration value="dz" />
+						<xs:enumeration value="ec" />
+						<xs:enumeration value="ee" />
+						<xs:enumeration value="eg" />
+						<xs:enumeration value="eh" />
+						<xs:enumeration value="er" />
+						<xs:enumeration value="es" />
+						<xs:enumeration value="et" />
+						<xs:enumeration value="fi" />
+						<xs:enumeration value="fj" />
+						<xs:enumeration value="fk" />
+						<xs:enumeration value="fm" />
+						<xs:enumeration value="fo" />
+						<xs:enumeration value="fr" />
+						<xs:enumeration value="ga" />
+						<xs:enumeration value="gb" />
+						<xs:enumeration value="gd" />
+						<xs:enumeration value="ge" />
+						<xs:enumeration value="gf" />
+						<xs:enumeration value="gg" />
+						<xs:enumeration value="gh" />
+						<xs:enumeration value="gi" />
+						<xs:enumeration value="gl" />
+						<xs:enumeration value="gm" />
+						<xs:enumeration value="gn" />
+						<xs:enumeration value="gp" />
+						<xs:enumeration value="gq" />
+						<xs:enumeration value="gr" />
+						<xs:enumeration value="gs" />
+						<xs:enumeration value="gt" />
+						<xs:enumeration value="gu" />
+						<xs:enumeration value="gw" />
+						<xs:enumeration value="gy" />
+						<xs:enumeration value="hk" />
+						<xs:enumeration value="hm" />
+						<xs:enumeration value="hn" />
+						<xs:enumeration value="hr" />
+						<xs:enumeration value="ht" />
+						<xs:enumeration value="hu" />
+						<xs:enumeration value="id" />
+						<xs:enumeration value="ie" />
+						<xs:enumeration value="il" />
+						<xs:enumeration value="im" />
+						<xs:enumeration value="in" />
+						<xs:enumeration value="io" />
+						<xs:enumeration value="iq" />
+						<xs:enumeration value="ir" />
+						<xs:enumeration value="is" />
+						<xs:enumeration value="it" />
+						<xs:enumeration value="je" />
+						<xs:enumeration value="jm" />
+						<xs:enumeration value="jo" />
+						<xs:enumeration value="jp" />
+						<xs:enumeration value="ke" />
+						<xs:enumeration value="kg" />
+						<xs:enumeration value="kh" />
+						<xs:enumeration value="ki" />
+						<xs:enumeration value="km" />
+						<xs:enumeration value="kn" />
+						<xs:enumeration value="kp" />
+						<xs:enumeration value="kr" />
+						<xs:enumeration value="kw" />
+						<xs:enumeration value="ky" />
+						<xs:enumeration value="kz" />
+						<xs:enumeration value="la" />
+						<xs:enumeration value="lb" />
+						<xs:enumeration value="lc" />
+						<xs:enumeration value="li" />
+						<xs:enumeration value="lk" />
+						<xs:enumeration value="lr" />
+						<xs:enumeration value="ls" />
+						<xs:enumeration value="lt" />
+						<xs:enumeration value="lu" />
+						<xs:enumeration value="lv" />
+						<xs:enumeration value="ly" />
+						<xs:enumeration value="ma" />
+						<xs:enumeration value="mc" />
+						<xs:enumeration value="md" />
+						<xs:enumeration value="me" />
+						<xs:enumeration value="mf" />
+						<xs:enumeration value="mg" />
+						<xs:enumeration value="mh" />
+						<xs:enumeration value="mk" />
+						<xs:enumeration value="ml" />
+						<xs:enumeration value="mm" />
+						<xs:enumeration value="mn" />
+						<xs:enumeration value="mo" />
+						<xs:enumeration value="mp" />
+						<xs:enumeration value="mq" />
+						<xs:enumeration value="mr" />
+						<xs:enumeration value="ms" />
+						<xs:enumeration value="mt" />
+						<xs:enumeration value="mu" />
+						<xs:enumeration value="mv" />
+						<xs:enumeration value="mw" />
+						<xs:enumeration value="mx" />
+						<xs:enumeration value="my" />
+						<xs:enumeration value="mz" />
+						<xs:enumeration value="na" />
+						<xs:enumeration value="nc" />
+						<xs:enumeration value="ne" />
+						<xs:enumeration value="nf" />
+						<xs:enumeration value="ng" />
+						<xs:enumeration value="ni" />
+						<xs:enumeration value="nl" />
+						<xs:enumeration value="no" />
+						<xs:enumeration value="np" />
+						<xs:enumeration value="nr" />
+						<xs:enumeration value="nu" />
+						<xs:enumeration value="nz" />
+						<xs:enumeration value="om" />
+						<xs:enumeration value="pa" />
+						<xs:enumeration value="pe" />
+						<xs:enumeration value="pf" />
+						<xs:enumeration value="pg" />
+						<xs:enumeration value="ph" />
+						<xs:enumeration value="pk" />
+						<xs:enumeration value="pl" />
+						<xs:enumeration value="pm" />
+						<xs:enumeration value="pn" />
+						<xs:enumeration value="pr" />
+						<xs:enumeration value="ps" />
+						<xs:enumeration value="pt" />
+						<xs:enumeration value="pw" />
+						<xs:enumeration value="py" />
+						<xs:enumeration value="qa" />
+						<xs:enumeration value="re" />
+						<xs:enumeration value="ro" />
+						<xs:enumeration value="rs" />
+						<xs:enumeration value="ru" />
+						<xs:enumeration value="rw" />
+						<xs:enumeration value="sa" />
+						<xs:enumeration value="sb" />
+						<xs:enumeration value="sc" />
+						<xs:enumeration value="sd" />
+						<xs:enumeration value="se" />
+						<xs:enumeration value="sg" />
+						<xs:enumeration value="sh" />
+						<xs:enumeration value="si" />
+						<xs:enumeration value="sj" />
+						<xs:enumeration value="sk" />
+						<xs:enumeration value="sl" />
+						<xs:enumeration value="sm" />
+						<xs:enumeration value="sn" />
+						<xs:enumeration value="so" />
+						<xs:enumeration value="sr" />
+						<xs:enumeration value="ss" />
+						<xs:enumeration value="st" />
+						<xs:enumeration value="sv" />
+						<xs:enumeration value="sx" />
+						<xs:enumeration value="sy" />
+						<xs:enumeration value="sz" />
+						<xs:enumeration value="tc" />
+						<xs:enumeration value="td" />
+						<xs:enumeration value="tf" />
+						<xs:enumeration value="tg" />
+						<xs:enumeration value="th" />
+						<xs:enumeration value="tj" />
+						<xs:enumeration value="tk" />
+						<xs:enumeration value="tl" />
+						<xs:enumeration value="tm" />
+						<xs:enumeration value="tn" />
+						<xs:enumeration value="to" />
+						<xs:enumeration value="tr" />
+						<xs:enumeration value="tt" />
+						<xs:enumeration value="tv" />
+						<xs:enumeration value="tw" />
+						<xs:enumeration value="tz" />
+						<xs:enumeration value="ua" />
+						<xs:enumeration value="ug" />
+						<xs:enumeration value="um" />
+						<xs:enumeration value="us" />
+						<xs:enumeration value="uy" />
+						<xs:enumeration value="uz" />
+						<xs:enumeration value="va" />
+						<xs:enumeration value="vc" />
+						<xs:enumeration value="ve" />
+						<xs:enumeration value="vg" />
+						<xs:enumeration value="vi" />
+						<xs:enumeration value="vn" />
+						<xs:enumeration value="vu" />
+						<xs:enumeration value="wf" />
+						<xs:enumeration value="ws" />
+						<xs:enumeration value="ye" />
+						<xs:enumeration value="yt" />
+						<xs:enumeration value="za" />
+						<xs:enumeration value="zm" />
+						<xs:enumeration value="zw" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElectronicContact">
+		<xs:annotation>
+			<xs:documentation>Electronic Contact</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="1" name="ElectronicMailAddressT" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payee E-mail Address</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP94</xs:documentation>
+					<xs:documentation>Report Guidance: The email address the payee wants TFN Declaration notifications sent to.
+The E-mail Address must begin with a non-whitespace character, then be followed by any number of non-whitespace characters, an @ symbol, 1 or more non-whitespace characters, a period and a further 1 or more non-whitespace characters. Valid characters are one of the following: A to Z a to z 0 to 9 ! @ $ % &amp; * ( ) - _ = [ ] ; : ' "" , . ? / or a space character.</xs:documentation>
+					<xs:documentation>Business Definition: Denotes the address of an electronic mail service.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="200" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="TelephoneMinimalN" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payee Phone Number</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP95</xs:documentation>
+					<xs:documentation>Report Guidance: This is the contact phone number of the payee. Include country code and area code. Mobile numbers are acceptable.</xs:documentation>
+					<xs:documentation>Business Definition: The number that is associated to a unique provision of telephone service.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="16" />
+						<xs:pattern value="([0-9a-zA-Z ])*" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EmployerConditions">
+		<xs:annotation>
+			<xs:documentation>Employment Conditions</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="1" name="EmploymentStartD" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payee Commencement Date</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP92</xs:documentation>
+					<xs:documentation>Report Guidance: A payer must the report the commencement date when the payee has started paid employment or is rehired using the same payroll id.
+When a payer does not know the correct commencement date, the default date of 1/1/1800 is to be used.  
+This element has complex business rules and you MUST refer to STP Business Implementation Guide for the appropriate definition and how to source the data in your solution.</xs:documentation>
+					<xs:documentation>Business Definition: The date when a person commenced paid employment.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:date" />
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="EmploymentEndD" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payee Cessation Date</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP93</xs:documentation>
+					<xs:documentation>Report Guidance: A payer must report a cessation date when the payee ceases paid employment and there is no likelihood of being rehired e.g. casual employee or when subsequent payments are made to the payee after the cessation date i.e. same cessation date should be reported.
+This element has complex business rules and you MUST refer to STP Business Implementation Guide for the appropriate definition and how to source the data in your solution.</xs:documentation>
+					<xs:documentation>Business Definition: The date when a person ceases paid employment.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:date" />
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="PaymentBasisC" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Employment Basis Code</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP282</xs:documentation>
+					<xs:documentation>Report Guidance: This is the type of working arrangement between the payer and payee.
+Refer to the type definitions in the STP Business Implementation Guide.</xs:documentation>
+					<xs:documentation>Business Definition: The basis of payment indicates the type of arrangement between the payer and payee.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string" />
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="CessationTypeC" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Cessation Type Code</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP253</xs:documentation>
+					<xs:documentation>Report Guidance: The cessation type code must be reported when the payer reports the payee cessation date.
+Refer to the type definitions in the STP Business Implementation Guide.</xs:documentation>
+					<xs:documentation>Business Definition: The code describing the reason the employer and employee relationship has ceased.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string" />
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="TaxTreatmentC" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Tax Treatment Code</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP254</xs:documentation>
+					<xs:documentation>Report Guidance: The tax treatment code that applies to the payee at the end of the reporting period. It includes main tax scales, student loans and Medicare levy variations. For Update, this will be the code last calculated for the person.  
+This element has complex business rules and you MUST refer to STP Business Implementation Guide for the appropriate definition and how to source the data in your solution.</xs:documentation>
+					<xs:documentation>Business Definition: The tax treatment code indicates how the amount withheld was calculated.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+						<xs:pattern value="[A-Za-z0-9]+" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="TaxOffsetClaimTotalA" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Tax Offset Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP255</xs:documentation>
+					<xs:documentation>Report Guidance: This is the annual amount of the offset provided by the payee to the payer to adjust the withholding amount.
+This element has complex business rules and you MUST refer to STP Business Implementation Guide for the appropriate definition and how to source the data in your solution.</xs:documentation>
+					<xs:documentation>Business Definition: This is the value, during the relevant period, for the total of all tax offsets being claimed.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="11" />
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="99999999999" />
+						<xs:fractionDigits value="0" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PaidLeaveCollection">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="PaidLeave" type="tns:PaidLeave" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PaidLeave">
+		<xs:annotation>
+			<xs:documentation>Paid Leave</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="TypeC">
+				<xs:annotation>
+					<xs:documentation>Paid Leave Type Code</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP269</xs:documentation>
+					<xs:documentation>Report Guidance: There are many different types of paid leave and conditions on what is reported.  
+Refer to the type definitions in the STP Business Implementation Guide</xs:documentation>
+					<xs:documentation>Business Definition: The code for the type of paid leave.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="PaymentA">
+				<xs:annotation>
+					<xs:documentation>Paid Leave Payment Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP270</xs:documentation>
+					<xs:documentation>Report Guidance: This is the YTD Paid Leave amount for the specific paid leave type.
+Paid leave may be paid at the same rate as the payees normal rate of salary and wages, or another rate, as defined in the industrial instruments.</xs:documentation>
+					<xs:documentation>Business Definition: Gross paid leave amount.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="-99999999999.99" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AllowanceCollection">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="Allowance" type="tns:Allowance" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Allowance">
+		<xs:annotation>
+			<xs:documentation>Allowance Items</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="TypeC">
+				<xs:annotation>
+					<xs:documentation>Allowance Type Code</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP7</xs:documentation>
+					<xs:documentation>Report Guidance: There are a range of different types of allowances and conditions on when they are reported.  
+This element has complex business rules and you MUST refer to STP Business Implementation Guide for the appropriate definition and how to source the data in your solution.</xs:documentation>
+					<xs:documentation>Business Definition: This is the type of allowance.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="OtherAllowanceTypeDe" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Other Allowance Type Description</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP8</xs:documentation>
+					<xs:documentation>Report Guidance: When Allowance type is Other, use this element to describe the type of allowance.</xs:documentation>
+					<xs:documentation>Business Definition: This is the description or justification of the type of allowance paid to an individual that is not classified elsewhere.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40" />
+						<xs:pattern value="([0-9a-zA-Z \.,\?\(\)\[\]:;'\-=\\/@$%\*&amp;!&quot;])*" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="EmploymentAllowancesA">
+				<xs:annotation>
+					<xs:documentation>Payee Allowance Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP62</xs:documentation>
+					<xs:documentation>Report Guidance: This is the YTD amount for the specific allowance type. 
+This element has complex business rules and you MUST refer to STP Business Implementation Guide for the appropriate definition and how to source the data in your solution.</xs:documentation>
+					<xs:documentation>Business Definition: Gross Allowance amount.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="-99999999999.99" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SalarySacrificeCollection">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="SalarySacrifice" type="tns:SalarySacrifice" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SalarySacrifice">
+		<xs:annotation>
+			<xs:documentation>Salary Sacrifice</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="TypeC">
+				<xs:annotation>
+					<xs:documentation>Salary Sacrifice Type Code</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP266</xs:documentation>
+					<xs:documentation>Report Guidance: There are a range of different types of salary sacrifice.  
+Refer to the type definitions in the STP Business Implementation Guide.</xs:documentation>
+					<xs:documentation>Business Definition: The type of salary sacrifice arrangement.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="PaymentA">
+				<xs:annotation>
+					<xs:documentation>Salary Sacrifice Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP267</xs:documentation>
+					<xs:documentation>Report Guidance: Under a salary sacrifice arrangement between the employer and their employee, the employee agrees to forgo part of their future entitlement (such as salary or wages) in return for benefits of a similar value. The gross amount sacrificed is to be recorded as a YTD amount.  
+It does not include any sacrificed amounts for expenses for which the employee would normally get a tax deduction.  This is known as the ‘otherwise deductible rule’. If this occurs, the 'otherwise deductible' expense will be offset by the sacrificed amount and cannot be claimed as an income tax deduction. This is because the ‘deductible element’ of the expense has been taken into account when the employer calculates the taxable value of the benefit provided to the employee for FBT purposes.
+
+From 1 January 2020, a Payer cannot use its contributions under an effective salary arrangement to meet its superannuation guarantee obligation.</xs:documentation>
+					<xs:documentation>Business Definition: Gross amount sacrificed by employee.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="-99999999999.99" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LumpSumCollection">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="LumpSum" type="tns:LumpSum" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LumpSum">
+		<xs:annotation>
+			<xs:documentation>Lump Sum Payments</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="TypeC">
+				<xs:annotation>
+					<xs:documentation>Lump Sum Type Code</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP271</xs:documentation>
+					<xs:documentation>Report Guidance: This is the code for the various types of lump sum payments.
+Refer to the type definitions in the STP Business Implementation Guide.</xs:documentation>
+					<xs:documentation>Business Definition: This is the type of Lump sum payment.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="FinancialY" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Lump Sum Financial Year</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP272</xs:documentation>
+					<xs:documentation>Report Guidance: This is the financial year the Lump sum payment made to an employee applies to. It must only be supplied for Lump Sum E type payments. Multiple Lump Sum E payments can be reported but must be accumulated amount for a single year.</xs:documentation>
+					<xs:documentation>Business Definition: This element represents the income year of the reported Lump Sum Type E amount. For example, the 2007 financial year relates to the period 1 July 2006 to 30 June 2007.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int" />
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="PaymentsA">
+				<xs:annotation>
+					<xs:documentation>Lump Sum Payment Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP273</xs:documentation>
+					<xs:documentation>Report Guidance: This is the YTD amount specific to the Lump Sum Type.</xs:documentation>
+					<xs:documentation>Business Definition: Gross amount of a lump sum payment made to a payee.</xs:documentation>
+					<xs:documentation>Business Guidance: Details of any lump sum payments including payment in lieu of unused leave credits, severance pay, long service leave etc.
+When you leave a job, you may receive lump sum payments for unused annual and long service leave.
+If your employment was terminated, certain payments for unused annual and long service leave are taxed concessionally.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="-99999999999.99" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EmploymentTerminationPaymentCollection">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="EmploymentTerminationPayment" type="tns:EmploymentTerminationPayment" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EmploymentTerminationPayment">
+		<xs:annotation>
+			<xs:documentation>Termination Payments</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="IncomeTaxPayAsYouGoWithholdingTypeC">
+				<xs:annotation>
+					<xs:documentation>ETP Code</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP34</xs:documentation>
+					<xs:documentation>Report Guidance: This is the code for the various types to define an employment termination payment.  
+Refer to the type definitions in the STP Business Implementation Guide.</xs:documentation>
+					<xs:documentation>Business Definition: A code that identifies the reason for the Employment Termination Payment (ETP) being made.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string" />
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="IncomeD">
+				<xs:annotation>
+					<xs:documentation>Payee ETP Payment Date</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP123</xs:documentation>
+					<xs:documentation>Report Guidance: This is the date the Employment Termination Payment (ETP) was paid. It must be in the same financial year as the Pay/Update date reported for the Payer.</xs:documentation>
+					<xs:documentation>Business Definition: This is the date when the employment termination payment was made to the employee.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:date" />
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="IncomeTaxFreeA" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payee Termination Payment Tax Free Component</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP50</xs:documentation>
+					<xs:documentation>Report Guidance: This is the Employment Termination Payment (ETP) tax free amount for the corresponding ETP reason. Each payment must be recorded separately and not aggregated into a year to date value. Tax free components need not be reported for Death Benefit payments, but must be reported for Life Benefit payments.</xs:documentation>
+					<xs:documentation>Business Definition: This is the value, during the relevant period, for the tax free component of the Employment Termination Payment (ETP)</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="IncomeTaxableA" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payee Termination Payment Taxable Component</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP51</xs:documentation>
+					<xs:documentation>Report Guidance: This is the Employment Termination Payment (ETP) taxable amount for the corresponding ETP code. Each payment must be recorded separately and not aggregated into a year to date value.</xs:documentation>
+					<xs:documentation>Business Definition: This is the value, during the relevant period, for the taxable component of an individual's employment termination payment.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="IncomePayAsYouGoWithholdingA" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payee Total ETP PAYGW Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP117</xs:documentation>
+					<xs:documentation>Report Guidance: This is the Employment Termination Payment (ETP) PAYGW amount for the corresponding ETP reason.  Each amount must be recorded separately per ETP Code/Payment Date and not aggregated into a year to date value.</xs:documentation>
+					<xs:documentation>Business Definition: This is the value, during the relevant period, for the amount withheld from the Employment Termination Payment (ETP) as Pay As You Go (PAYG) withholding.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RemunerationCollection">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="Remuneration" type="tns:Remuneration" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Remuneration">
+		<xs:annotation>
+			<xs:documentation>Income Stream Collection</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="IncomeStreamTypeC">
+				<xs:annotation>
+					<xs:documentation>Income Stream Type Code</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP257</xs:documentation>
+					<xs:documentation>Report Guidance: There are a different income streams that are reportable through STP.  
+Refer to type definitions in the STP Business Implementation Guide.</xs:documentation>
+					<xs:documentation>Business Definition: The type of withholding payment that is being reported.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="AddressDetailsCountryC" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Country Code</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP260</xs:documentation>
+					<xs:documentation>Report Guidance: Country code is dependent on the income type and may be either the residency status or the country where the payee is working.  
+This element has complex business rules and you MUST refer to STP Business Implementation Guide for the appropriate definition and how to source the data in your solution.</xs:documentation>
+					<xs:documentation>Business Definition: This represents the Country Code as prescribed by AS4590 and inherited from ISO 3166.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="ad" />
+						<xs:enumeration value="ae" />
+						<xs:enumeration value="af" />
+						<xs:enumeration value="ag" />
+						<xs:enumeration value="ai" />
+						<xs:enumeration value="al" />
+						<xs:enumeration value="am" />
+						<xs:enumeration value="ao" />
+						<xs:enumeration value="aq" />
+						<xs:enumeration value="ar" />
+						<xs:enumeration value="as" />
+						<xs:enumeration value="at" />
+						<xs:enumeration value="au" />
+						<xs:enumeration value="aw" />
+						<xs:enumeration value="ax" />
+						<xs:enumeration value="az" />
+						<xs:enumeration value="ba" />
+						<xs:enumeration value="bb" />
+						<xs:enumeration value="bd" />
+						<xs:enumeration value="be" />
+						<xs:enumeration value="bf" />
+						<xs:enumeration value="bg" />
+						<xs:enumeration value="bh" />
+						<xs:enumeration value="bi" />
+						<xs:enumeration value="bj" />
+						<xs:enumeration value="bl" />
+						<xs:enumeration value="bm" />
+						<xs:enumeration value="bn" />
+						<xs:enumeration value="bo" />
+						<xs:enumeration value="bq" />
+						<xs:enumeration value="br" />
+						<xs:enumeration value="bs" />
+						<xs:enumeration value="bt" />
+						<xs:enumeration value="bv" />
+						<xs:enumeration value="bw" />
+						<xs:enumeration value="by" />
+						<xs:enumeration value="bz" />
+						<xs:enumeration value="ca" />
+						<xs:enumeration value="cc" />
+						<xs:enumeration value="cd" />
+						<xs:enumeration value="cf" />
+						<xs:enumeration value="cg" />
+						<xs:enumeration value="ch" />
+						<xs:enumeration value="ci" />
+						<xs:enumeration value="ck" />
+						<xs:enumeration value="cl" />
+						<xs:enumeration value="cm" />
+						<xs:enumeration value="cn" />
+						<xs:enumeration value="co" />
+						<xs:enumeration value="cr" />
+						<xs:enumeration value="cu" />
+						<xs:enumeration value="cv" />
+						<xs:enumeration value="cw" />
+						<xs:enumeration value="cx" />
+						<xs:enumeration value="cy" />
+						<xs:enumeration value="cz" />
+						<xs:enumeration value="de" />
+						<xs:enumeration value="dj" />
+						<xs:enumeration value="dk" />
+						<xs:enumeration value="dm" />
+						<xs:enumeration value="do" />
+						<xs:enumeration value="dz" />
+						<xs:enumeration value="ec" />
+						<xs:enumeration value="ee" />
+						<xs:enumeration value="eg" />
+						<xs:enumeration value="eh" />
+						<xs:enumeration value="er" />
+						<xs:enumeration value="es" />
+						<xs:enumeration value="et" />
+						<xs:enumeration value="fi" />
+						<xs:enumeration value="fj" />
+						<xs:enumeration value="fk" />
+						<xs:enumeration value="fm" />
+						<xs:enumeration value="fo" />
+						<xs:enumeration value="fr" />
+						<xs:enumeration value="ga" />
+						<xs:enumeration value="gb" />
+						<xs:enumeration value="gd" />
+						<xs:enumeration value="ge" />
+						<xs:enumeration value="gf" />
+						<xs:enumeration value="gg" />
+						<xs:enumeration value="gh" />
+						<xs:enumeration value="gi" />
+						<xs:enumeration value="gl" />
+						<xs:enumeration value="gm" />
+						<xs:enumeration value="gn" />
+						<xs:enumeration value="gp" />
+						<xs:enumeration value="gq" />
+						<xs:enumeration value="gr" />
+						<xs:enumeration value="gs" />
+						<xs:enumeration value="gt" />
+						<xs:enumeration value="gu" />
+						<xs:enumeration value="gw" />
+						<xs:enumeration value="gy" />
+						<xs:enumeration value="hk" />
+						<xs:enumeration value="hm" />
+						<xs:enumeration value="hn" />
+						<xs:enumeration value="hr" />
+						<xs:enumeration value="ht" />
+						<xs:enumeration value="hu" />
+						<xs:enumeration value="id" />
+						<xs:enumeration value="ie" />
+						<xs:enumeration value="il" />
+						<xs:enumeration value="im" />
+						<xs:enumeration value="in" />
+						<xs:enumeration value="io" />
+						<xs:enumeration value="iq" />
+						<xs:enumeration value="ir" />
+						<xs:enumeration value="is" />
+						<xs:enumeration value="it" />
+						<xs:enumeration value="je" />
+						<xs:enumeration value="jm" />
+						<xs:enumeration value="jo" />
+						<xs:enumeration value="jp" />
+						<xs:enumeration value="ke" />
+						<xs:enumeration value="kg" />
+						<xs:enumeration value="kh" />
+						<xs:enumeration value="ki" />
+						<xs:enumeration value="km" />
+						<xs:enumeration value="kn" />
+						<xs:enumeration value="kp" />
+						<xs:enumeration value="kr" />
+						<xs:enumeration value="kw" />
+						<xs:enumeration value="ky" />
+						<xs:enumeration value="kz" />
+						<xs:enumeration value="la" />
+						<xs:enumeration value="lb" />
+						<xs:enumeration value="lc" />
+						<xs:enumeration value="li" />
+						<xs:enumeration value="lk" />
+						<xs:enumeration value="lr" />
+						<xs:enumeration value="ls" />
+						<xs:enumeration value="lt" />
+						<xs:enumeration value="lu" />
+						<xs:enumeration value="lv" />
+						<xs:enumeration value="ly" />
+						<xs:enumeration value="ma" />
+						<xs:enumeration value="mc" />
+						<xs:enumeration value="md" />
+						<xs:enumeration value="me" />
+						<xs:enumeration value="mf" />
+						<xs:enumeration value="mg" />
+						<xs:enumeration value="mh" />
+						<xs:enumeration value="mk" />
+						<xs:enumeration value="ml" />
+						<xs:enumeration value="mm" />
+						<xs:enumeration value="mn" />
+						<xs:enumeration value="mo" />
+						<xs:enumeration value="mp" />
+						<xs:enumeration value="mq" />
+						<xs:enumeration value="mr" />
+						<xs:enumeration value="ms" />
+						<xs:enumeration value="mt" />
+						<xs:enumeration value="mu" />
+						<xs:enumeration value="mv" />
+						<xs:enumeration value="mw" />
+						<xs:enumeration value="mx" />
+						<xs:enumeration value="my" />
+						<xs:enumeration value="mz" />
+						<xs:enumeration value="na" />
+						<xs:enumeration value="nc" />
+						<xs:enumeration value="ne" />
+						<xs:enumeration value="nf" />
+						<xs:enumeration value="ng" />
+						<xs:enumeration value="ni" />
+						<xs:enumeration value="nl" />
+						<xs:enumeration value="no" />
+						<xs:enumeration value="np" />
+						<xs:enumeration value="nr" />
+						<xs:enumeration value="nu" />
+						<xs:enumeration value="nz" />
+						<xs:enumeration value="om" />
+						<xs:enumeration value="pa" />
+						<xs:enumeration value="pe" />
+						<xs:enumeration value="pf" />
+						<xs:enumeration value="pg" />
+						<xs:enumeration value="ph" />
+						<xs:enumeration value="pk" />
+						<xs:enumeration value="pl" />
+						<xs:enumeration value="pm" />
+						<xs:enumeration value="pn" />
+						<xs:enumeration value="pr" />
+						<xs:enumeration value="ps" />
+						<xs:enumeration value="pt" />
+						<xs:enumeration value="pw" />
+						<xs:enumeration value="py" />
+						<xs:enumeration value="qa" />
+						<xs:enumeration value="re" />
+						<xs:enumeration value="ro" />
+						<xs:enumeration value="rs" />
+						<xs:enumeration value="ru" />
+						<xs:enumeration value="rw" />
+						<xs:enumeration value="sa" />
+						<xs:enumeration value="sb" />
+						<xs:enumeration value="sc" />
+						<xs:enumeration value="sd" />
+						<xs:enumeration value="se" />
+						<xs:enumeration value="sg" />
+						<xs:enumeration value="sh" />
+						<xs:enumeration value="si" />
+						<xs:enumeration value="sj" />
+						<xs:enumeration value="sk" />
+						<xs:enumeration value="sl" />
+						<xs:enumeration value="sm" />
+						<xs:enumeration value="sn" />
+						<xs:enumeration value="so" />
+						<xs:enumeration value="sr" />
+						<xs:enumeration value="ss" />
+						<xs:enumeration value="st" />
+						<xs:enumeration value="sv" />
+						<xs:enumeration value="sx" />
+						<xs:enumeration value="sy" />
+						<xs:enumeration value="sz" />
+						<xs:enumeration value="tc" />
+						<xs:enumeration value="td" />
+						<xs:enumeration value="tf" />
+						<xs:enumeration value="tg" />
+						<xs:enumeration value="th" />
+						<xs:enumeration value="tj" />
+						<xs:enumeration value="tk" />
+						<xs:enumeration value="tl" />
+						<xs:enumeration value="tm" />
+						<xs:enumeration value="tn" />
+						<xs:enumeration value="to" />
+						<xs:enumeration value="tr" />
+						<xs:enumeration value="tt" />
+						<xs:enumeration value="tv" />
+						<xs:enumeration value="tw" />
+						<xs:enumeration value="tz" />
+						<xs:enumeration value="ua" />
+						<xs:enumeration value="ug" />
+						<xs:enumeration value="um" />
+						<xs:enumeration value="us" />
+						<xs:enumeration value="uy" />
+						<xs:enumeration value="uz" />
+						<xs:enumeration value="va" />
+						<xs:enumeration value="vc" />
+						<xs:enumeration value="ve" />
+						<xs:enumeration value="vg" />
+						<xs:enumeration value="vi" />
+						<xs:enumeration value="vn" />
+						<xs:enumeration value="vu" />
+						<xs:enumeration value="wf" />
+						<xs:enumeration value="ws" />
+						<xs:enumeration value="ye" />
+						<xs:enumeration value="yt" />
+						<xs:enumeration value="za" />
+						<xs:enumeration value="zm" />
+						<xs:enumeration value="zw" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="IncomeTaxPayAsYouGoWithholdingTaxWithheldA" nillable="true">
+				<xs:annotation>
+					<xs:documentation>PAYGW Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP259</xs:documentation>
+					<xs:documentation>Report Guidance: This is the YTD PAYGW amounts withheld from the gross amounts for the relevant income stream.
+
+PAYGW amounts withheld from allowances and lump sum payments are added to this element.</xs:documentation>
+					<xs:documentation>Business Definition: This is the value, during the relevant period, for the amount withheld under the Pay As You Go (PAYG) arrangement.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="IncomeTaxForeignWithholdingA" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Foreign Tax Paid Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP278</xs:documentation>
+					<xs:documentation>Report Guidance: This is the YTD credit available to a payee who received foreign income that is taxable in Australia and for which they paid (or are taken to have paid) tax to a foreign government.</xs:documentation>
+					<xs:documentation>Business Definition: The amount of foreign tax withheld during the relevant period.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="IndividualNonBusinessExemptForeignEmploymentIncomeA" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Exempt Foreign Income Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP261</xs:documentation>
+					<xs:documentation>Report Guidance: This is the YTD Foreign employment income that is exempt from income tax in Australia.</xs:documentation>
+					<xs:documentation>Business Definition: The amount of foreign employment income exempt from income tax in Australia.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="GrossA" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Gross Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP258</xs:documentation>
+					<xs:documentation>Report Guidance: The gross amount to be reported is based on the disaggregation method.
+This element has complex business rules and you MUST refer to STP Business Implementation Guide for the appropriate definition and how to source the data in your solution.</xs:documentation>
+					<xs:documentation>Business Definition: Gross remuneration amount less other amounts reported elsewhere</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="-99999999999.99" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="PaidLeaveCollection" type="tns:PaidLeaveCollection">
+				<xs:annotation>
+					<xs:documentation>Paid Leave</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="AllowanceCollection" type="tns:AllowanceCollection">
+				<xs:annotation>
+					<xs:documentation>Allowance Items</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="OvertimePaymentA" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Overtime Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP263</xs:documentation>
+					<xs:documentation>Report Guidance: This is the YTD Overtime amount for the specific income type.  
+It generally includes payments for work performed during hours outside an employee’s ordinary hours of work.  Amounts to be included in this element follow the same guidelines used to determine whether overtime payments are included in ordinary time earnings for calculation of Superannuation Guarantee.</xs:documentation>
+					<xs:documentation>Business Definition: Gross overtime amount.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="-99999999999.99" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="GrossBonusesAndCommissionsA" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Bonuses and Commissions Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP262</xs:documentation>
+					<xs:documentation>Report Guidance: This is the YTD bonuses and commissions amount.  
+Bonuses include additional earnings received as a reward for good performance, and other like ‘bonus’ payments. It may include a discrete and clearly identifiable bonus payment that relates solely to work performed entirely outside ordinary hours. For example, an employer may pay a bonus specifically to recognise a special project that an employee contributed to entirely in non-ordinary hours.
+A commission includes a payment made to an employee such as a salesperson on the basis of the volume of sales he or she achieves or other similar criteria.</xs:documentation>
+					<xs:documentation>Business Definition: Gross bonuses and commissions.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="-99999999999.99" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="GrossDirectorsFeesA" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Directors' Fees Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP264</xs:documentation>
+					<xs:documentation>Report Guidance: This is the YTD Directors fees amount for the specific income type.
+All fees paid to a company director are earnings in respect of the director’s ordinary hours of work.</xs:documentation>
+					<xs:documentation>Business Definition: Gross Directors Fees amount.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="-99999999999.99" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="IndividualNonBusinessCommunityDevelopmentEmploymentProjectA" nillable="true">
+				<xs:annotation>
+					<xs:documentation>CDEP Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP279</xs:documentation>
+					<xs:documentation>Report Guidance: This is the YTD CDEP payment amount paid to payees as the income support component of community development employment project (CDEP) wages paid. Include the total gross amount before amounts are withheld for tax.</xs:documentation>
+					<xs:documentation>Business Definition: The amount of a payment made under a Community Development Employment Project (CDEP) scheme.</xs:documentation>
+					<xs:documentation>Business Guidance: A CDEP payment is one of the following:
+- CDEP scheme wages. These are payments made to participants as a wage for the work they do, for hours worked in excess of the CDEP 'limit', or to trainees under the traineeship program. 
+- CDEP scheme participant supplement from a Centrelink payment. This supplement is an extra payment to make sure that someone getting a CDEP wage component is getting at least the same level of income as an unemployed person.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="SalarySacrificeCollection" type="tns:SalarySacrificeCollection">
+				<xs:annotation>
+					<xs:documentation>Salary Sacrifice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="LumpSumCollection" type="tns:LumpSumCollection">
+				<xs:annotation>
+					<xs:documentation>Lump Sum Payments</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="EmploymentTerminationPaymentCollection" type="tns:EmploymentTerminationPaymentCollection">
+				<xs:annotation>
+					<xs:documentation>Termination Payments</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DeductionCollection">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="Deduction" type="tns:Deduction" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Deduction">
+		<xs:annotation>
+			<xs:documentation>Deduction Items</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="RemunerationTypeC">
+				<xs:annotation>
+					<xs:documentation>Deduction Type</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP10</xs:documentation>
+					<xs:documentation>Report Guidance: There are a range of different types of deductions and conditions on when they are reported.
+This element has complex business rules and you MUST refer to STP Business Implementation Guide for the appropriate definition and how to source the data in your solution.</xs:documentation>
+					<xs:documentation>Business Definition: The code for the type of deduction.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string" />
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="RemunerationA">
+				<xs:annotation>
+					<xs:documentation>Payee Deduction Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP87</xs:documentation>
+					<xs:documentation>Report Guidance: The YTD amount specific to each Deduction Type.</xs:documentation>
+					<xs:documentation>Business Definition: The amount deducted from a payee’s remuneration.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SuperannuationContributionCollection">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="SuperannuationContribution" type="tns:SuperannuationContribution" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SuperannuationContribution">
+		<xs:annotation>
+			<xs:documentation>Super Entitlement Year To Date</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="EntitlementTypeC">
+				<xs:annotation>
+					<xs:documentation>Super Entitlement Type Code</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP283</xs:documentation>
+					<xs:documentation>Report Guidance: This is the code for the various types of superannuation entitlements that are to be reported through STP.
+Refer to the type definitions in the STP Business Implementation Guide.</xs:documentation>
+					<xs:documentation>Business Definition: This is the type of superannuation entitlement.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string" />
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="EmployerContributionsYearToDateA">
+				<xs:annotation>
+					<xs:documentation>Super Entitlement Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP284</xs:documentation>
+					<xs:documentation>Report Guidance: The YTD amount specific to each Super Entitlement Type.</xs:documentation>
+					<xs:documentation>Business Definition: This is the YTD amount of superannuation entitlement type reported.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="IncomeFringeBenefitsReportableCollection">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="IncomeFringeBenefitsReportable" type="tns:IncomeFringeBenefitsReportable" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="IncomeFringeBenefitsReportable">
+		<xs:annotation>
+			<xs:documentation>Reportable Fringe Benefits Amount</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="FringeBenefitsReportableExemptionC">
+				<xs:annotation>
+					<xs:documentation>RFB Exemption Status Code</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP276</xs:documentation>
+					<xs:documentation>Report Guidance: This is the code for the various Reportable Fringe Benefits Exemption Status types.
+Refer to the type definitions in the STP Business Implementation Guide.</xs:documentation>
+					<xs:documentation>Business Definition: This indicates whether the employer making the payment has a tax exempt status.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="A">
+				<xs:annotation>
+					<xs:documentation>Payee RFB Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP277</xs:documentation>
+					<xs:documentation>Report Guidance: This is the grossed up year-to-date taxable total of the fringe benefits provided to a payee in the fringe benefits tax (FBT) year (1 April to 31 March) specific to each RFB Exemption Status Code.</xs:documentation>
+					<xs:documentation>Business Definition: This is the value, during the relevant period, for reportable fringe benefit provided to an employee (or their associate, such as a family member) in respect of employment.</xs:documentation>
+					<xs:documentation>Business Guidance: Benefits can be provided by employer's associate or by a third party under an arrangement with the employer. An employee can be a current, future or former employee.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PayrollPeriod">
+		<xs:annotation>
+			<xs:documentation>Payroll Run</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="StartD">
+				<xs:annotation>
+					<xs:documentation>Period Start Date</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP29</xs:documentation>
+					<xs:documentation>Report Guidance: For Submit, this is the start date of the pay period for the payee.  
+
+For Update, if the message is for the current financial year, then this date must be the same as the pay/update date from the PAYEVNT record.  If it is to update a previous financial year, this date must be set to the last date of the relevant financial year.
+This element has complex business rules and you MUST refer to STP Business Implementation Guide for the appropriate definition and how to source the data in your solution.</xs:documentation>
+					<xs:documentation>Business Definition: The Period Start Date is the initial date of the period.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:date" />
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="EndD">
+				<xs:annotation>
+					<xs:documentation>Period End Date</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP30</xs:documentation>
+					<xs:documentation>Report Guidance: For Submit, this is the end date of the pay period for the payee.
+
+For Update, the Period End Date must be the same as the Period Start Date.
+This element has complex business rules and you MUST refer to STP Business Implementation Guide for the appropriate definition and how to source the data in your solution.</xs:documentation>
+					<xs:documentation>Business Definition: The Period End Date is the final date of the period.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:date" />
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="RemunerationPayrollEventFinalI">
+				<xs:annotation>
+					<xs:documentation>Final Event Indicator</xs:documentation>
+					<xs:documentation>Alias: PAYEVNTEMP110</xs:documentation>
+					<xs:documentation>Report Guidance: The final event indicator allows a payer to make a declaration to the ATO that they have provided all the information for each payee for a financial year. This declaration allows the ATO to make the payee information available for income tax return prefill and extinguishes the payer’s liability to provide a payment summary for that payee.</xs:documentation>
+					<xs:documentation>Business Definition: This indicates whether the report is the employers final payroll for the current reporting period.</xs:documentation>
+					<xs:documentation>Business Guidance: A choice of TRUE/FALSE values.
+true = report is the employers final payroll data for the current reporting period.
+false = report is not the employers final payroll data for the current reporting period.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:boolean" />
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="RemunerationCollection" type="tns:RemunerationCollection">
+				<xs:annotation>
+					<xs:documentation>Income Stream Collection</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="DeductionCollection" type="tns:DeductionCollection">
+				<xs:annotation>
+					<xs:documentation>Deduction Items</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="SuperannuationContributionCollection" type="tns:SuperannuationContributionCollection">
+				<xs:annotation>
+					<xs:documentation>Super Entitlement Year To Date</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="IncomeFringeBenefitsReportableCollection" type="tns:IncomeFringeBenefitsReportableCollection">
+				<xs:annotation>
+					<xs:documentation>Reportable Fringe Benefits Amount</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Payee">
+		<xs:annotation>
+			<xs:documentation>Payee</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="Identifiers" type="tns:Identifiers">
+				<xs:annotation>
+					<xs:documentation>Payee Identifiers</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="PersonNameDetails" type="tns:PersonNameDetails">
+				<xs:annotation>
+					<xs:documentation>Payee Name Details</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="PersonDemographicDetailsBirth" type="tns:PersonDemographicDetailsBirth">
+				<xs:annotation>
+					<xs:documentation>Payee Demographic Details</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="AddressDetails" type="tns:AddressDetails">
+				<xs:annotation>
+					<xs:documentation>Address Details</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="ElectronicContact" type="tns:ElectronicContact">
+				<xs:annotation>
+					<xs:documentation>Electronic Contact</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="EmployerConditions" type="tns:EmployerConditions">
+				<xs:annotation>
+					<xs:documentation>Employment Conditions</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="PayrollPeriod" type="tns:PayrollPeriod">
+				<xs:annotation>
+					<xs:documentation>Payroll Run</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

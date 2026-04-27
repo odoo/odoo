@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_production_order_create_eco" model="ir.actions.server">
+        <field name="name">Create ECO</field>
+        <field name="model_id" ref="mrp.model_mrp_production"/>
+        <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="groups_id" eval="[(4, ref('mrp_plm.group_plm_user'))]"/>
+        <field name="code">action = records.action_create_eco()</field>
+    </record>
+
+    <record id="mrp_plm_production_form_view" model="ir.ui.view">
+        <field name="name">mrp.plm.production.form</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button class="oe_stat_button" name="action_open_eco" type="object" icon="fa-cogs"
+                    groups="mrp_plm.group_plm_user" invisible="eco_count &lt; 1"
+                    context="{'default_production_id': id, 'default_bom_id': bom_id, 'default_product_tmpl_id': product_tmpl_id}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="eco_count"/></span>
+                        <span class="o_stat_text">ECO(S)</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='is_outdated_bom']" position="after">
+                <field name="latest_bom_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='action_update_bom']" position="attributes">
+                <attribute name="invisible">not is_outdated_bom and not latest_bom_id or state not in ['draft', 'confirmed']</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportFilterTaxUnit">
+        <Dropdown>
+            <button class="btn btn-secondary">
+                <i class="fa fa-home me-1"/>Tax Unit: <t t-esc="selectedTaxUnitName"/>
+            </button>
+
+            <t t-set-slot="content">
+                <t t-if="controller.groups.account_readonly">
+                    <DropdownItem
+                        class="{ 'selected': controller.options.tax_unit === 'company_only' }"
+                        onSelected="() => this.filterClicked({ optionKey: 'tax_unit', optionValue: 'company_only', reload: true})"
+                    >
+                        Company Only
+                    </DropdownItem>
+                </t>
+
+                <t t-foreach="controller.options.available_tax_units" t-as="taxUnit" t-key="taxUnit_index">
+                    <t t-if="taxUnit_first">
+                        <div class="dropdown-divider"/>
+                    </t>
+
+                    <DropdownItem
+                        class="{ 'selected': controller.options.tax_unit === taxUnit.id }"
+                        onSelected="() => this.filterTaxUnit(taxUnit)"
+                        t-out="taxUnit.name"
+                    />
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

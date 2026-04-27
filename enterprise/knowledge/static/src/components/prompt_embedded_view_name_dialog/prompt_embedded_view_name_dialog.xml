@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="knowledge.PromptEmbeddedViewNameDialog">
+        <Dialog title="title" size="'md'">
+            <div class="mb-3 row">
+                <label for="label" class="col-sm-5 col-form-label p-0 ps-3">
+                    What items do you want to manage?
+                </label>
+                <div class="col-sm-7 ps-0">
+                    <input id="label" type="text" class="form-control"
+                        t-att-placeholder="placeholder"
+                        t-att-value="this.props.defaultName or ''"
+                        t-on-keydown="onInputKeydown"
+                        t-ref="input"/>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button t-if="this.props.isNew" class="btn btn-primary" t-on-click="() => this.save()" data-hotkey="q">Insert</button>
+                <button t-else="" class="btn btn-primary" t-on-click="() => this.save()" data-hotkey="r">Rename</button>
+                <button class="btn btn-secondary" t-on-click="() => this.props.close()" data-hotkey="x">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- display ec sales list report menu item -->
+        <record model="ir.ui.menu" id="account_reports.menu_action_account_report_sales">
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="l10n_fi_reports.action_generate_ec_sales_list_report_export" model="ir.actions.report">
+            <field name="name">Generate EC Sales List report export</field>
+            <field name="model">account.report</field>
+            <field name="report_type">qweb-text</field>
+            <field name="report_name">l10n_fi_reports.ec_sales_list_report_export</field>
+        </record>
+    </data>
+
+    <record id="finland_ec_sales_report" model="account.report">
+        <field name="name">EC Sales List</field>
+        <field name="country_id" ref="base.fi"/>
+        <field name="root_report_id" ref="account_reports.generic_ec_sales_report"/>
+        <field name="load_more_limit" eval="80"/>
+        <field name="search_bar" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="custom_handler_model_id" ref="model_l10n_fi_reports_ec_sales_report_handler"/>
+        <field name="column_ids">
+            <record id="finland_ec_sales_report_country_code" model="account.report.column">
+                <field name="name">Country code</field>
+                <field name="expression_label">country_code</field>
+                <field name="figure_type">string</field>
+                <field name="sortable" eval="True"/>
+            </record>
+            <record id="finland_ec_sales_report_buyer_vat_number" model="account.report.column">
+                <field name="name">Buyer's VAT number</field>
+                <field name="expression_label">vat_number</field>
+                <field name="figure_type">string</field>
+                <field name="sortable" eval="True"/>
+            </record>
+            <record id="finland_ec_sales_report_goods" model="account.report.column">
+                <field name="name">Selling of goods</field>
+                <field name="expression_label">goods</field>
+                <field name="figure_type">monetary</field>
+                <field name="sortable" eval="True"/>
+            </record>
+            <record id="finland_ec_sales_report_services" model="account.report.column">
+                <field name="name">Selling of services</field>
+                <field name="expression_label">services</field>
+                <field name="figure_type">monetary</field>
+                <field name="sortable" eval="True"/>
+            </record>
+            <record id="finland_ec_sales_report_triangular" model="account.report.column">
+                <field name="name">VAT Triangulation</field>
+                <field name="expression_label">triangular</field>
+                <field name="figure_type">monetary</field>
+                <field name="sortable" eval="True"/>
+            </record>
+        </field>
+    </record>
+</odoo>

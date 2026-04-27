@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_tax_form_inherit_l10n_pe_edi" model="ir.ui.view">
+            <field name="name">account.tax.form.inherit.l10n_pe_edi</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="l10n_pe.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='l10n_pe_edi_unece_category']" position="after">
+                    <field name="l10n_pe_edi_affectation_reason"
+                           invisible="country_code != 'PE'"
+                           options="{'no_open': True, 'no_create': True}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account_tax_group_tree_inherit_l10n_pe_edi" model="ir.ui.view">
+            <field name="name">account.tax.group.list.inherit.l10n_pe_edi</field>
+            <field name="model">account.tax.group</field>
+            <field name="inherit_id" ref="account.view_tax_group_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tax_payable_account_id']" position="after">
+                    <field name="l10n_pe_edi_code" invisible="country_code != 'PE'" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

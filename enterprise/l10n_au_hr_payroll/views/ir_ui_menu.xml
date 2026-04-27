@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Configuration -->
+    <menuitem
+        name="Australia"
+        id="l10n_au_hr_payroll"
+        parent="hr_work_entry_contract_enterprise.menu_hr_payroll_configuration"
+        sequence="100"/>
+
+    <menuitem
+        name="Super Funds"
+        id="l10n_au_super_fund"
+        parent="l10n_au_hr_payroll"
+        sequence="10"
+        action="l10n_au_super_fund_action"/>
+
+    <menuitem
+        name="Super Accounts"
+        id="l10n_au_super_account"
+        parent="l10n_au_hr_payroll"
+        sequence="20"
+        action="l10n_au_super_account_action"/>
+
+    <!-- Reporting -->
+    <menuitem
+        id="menu_reporting_l10n_au"
+        name="Australia"
+        sequence="30"
+        parent="hr_payroll.menu_hr_payroll_report"/>
+
+    <menuitem
+        name="Terminate Employee"
+        id="l10n_au_termination"
+        parent="menu_reporting_l10n_au"
+        sequence="200"
+        action="l10n_au_termination_payment_action"/>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="planning.PlanningGanttRendererControls.ToolbarContent" t-inherit="web_gantt.GanttRendererControls.ToolbarContent">
+        <xpath expr="//div[@name='expandCollapseButtons']" position="after">
+            <strong t-if="!env.isSmall" class="text-success d-flex justify-content-center align-items-center position-absolute top-0 end-0 h-100 bg-light px-3"
+                t-att-class="{ invisible: !this.props.duplicateToolHelperReactive.shouldDisplay }"
+            >
+                <i class="fa fa-lightbulb-o me-2"/>
+                Press Ctrl to duplicate the shift
+            </strong>
+        </xpath>
+    </t>
+
+</templates>

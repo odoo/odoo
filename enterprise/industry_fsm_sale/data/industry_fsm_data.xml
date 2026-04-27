@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="field_service_product" model="product.product">
+            <field name="name">Field Service</field>
+            <field name="project_id" search="[('id', '=?', ref('industry_fsm.fsm_project', raise_if_not_found=False)), ('is_fsm', '=', True)]"/>
+            <field name="service_tracking">task_global_project</field>
+            <field name="type">service</field>
+            <field name="list_price">100</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+            <field name="service_policy">delivered_timesheet</field>
+            <field name="image_1920" type="base64" file="sale_timesheet/static/img/product_product_time_product.png"/>
+        </record>
+	</data>
+</odoo>

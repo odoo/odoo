@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="hr_payroll_dashboard_warning_missing_info" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees with missing required information</field>
+            <field name="country_id" ref="base.au"/>
+            <field name="evaluation_code">
+invalid_employees = self.env['hr.employee'].search([
+    ('company_id', 'in', self.env.companies.ids),
+    '|', '|', '|',
+    ('work_phone', '=', False),
+    ('private_street', '=', False),
+    ('private_city', '=', False),
+    ('birthday', '=', False),
+])
+if invalid_employees:
+    warning_count = len(invalid_employees)
+    warning_records = invalid_employees
+            </field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_missing_tfn" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees who have not provided a TFN declaration after 28 days</field>
+            <field name="country_id" ref="base.au"/>
+            <field name="evaluation_code">
+self.env.cr.execute("""
+    SELECT DISTINCT e.id
+      FROM hr_employee e
+     WHERE e.l10n_au_tfn_declaration = '111111111'
+       AND e.create_date &lt; NOW() - INTERVAL '28 days'
+       AND e.company_id = any(%s)
+       AND e.active
+""", [self.env.companies.ids])
+if self.env.cr.rowcount:
+    invalid_employees = [e[0] for e in self.env.cr.fetchall()]
+    warning_count = len(invalid_employees)
+    warning_records = self.env['hr.employee'].browse(invalid_employees)
+            </field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_incorrect_proportion" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees who have misconfigured super account proportions</field>
+            <field name="country_id" ref="base.au"/>
+            <field name="evaluation_code">
+au_companies = self.env.companies.filtered(lambda c: c.country_id.code == "AU")
+proportions = self.env["l10n_au.super.account"].read_group(
+    [("account_active", "=", True)],
+    ["proportion:sum"],
+    ["employee_id"],
+)
+invalid_employees = self.env['hr.employee'].browse([p["employee_id"][0] for p in proportions if p["proportion"] != 1])
+
+if invalid_employees:
+
+    warning_count = len(invalid_employees)
+    warning_records = invalid_employees
+            </field>
+        </record>
+    </data>
+</odoo>

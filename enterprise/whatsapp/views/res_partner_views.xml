@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.view.form.inherit.whatsapp</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="priority" eval="15"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button invisible="wa_channel_count == 0" type="object"
+                    class="oe_stat_button"
+                    icon="fa-whatsapp"
+                    name="action_open_partner_wa_channels"
+                    title="WhatsApp Chats">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Chats</span>
+                        <field name="wa_channel_count" class="o_stat_value" />
+                    </div>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

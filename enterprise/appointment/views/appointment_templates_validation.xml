@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="appointment_validated" name="Website Appointment: Appointment Confirmed">
+        <t t-if="request.env.user._is_public()" t-set="no_breadcrumbs" t-value="True"/>
+        <t t-call="portal.portal_layout">
+            <t t-set="appointment_type" t-value="event.appointment_type_id"/>
+            <t t-set="staff_user" t-value="event.user_id"/>
+            <t t-set="resources" t-value="event.appointment_resource_ids"/>
+            <t t-set="based_on_users" t-value="appointment_type.schedule_based_on == 'users'"/>
+            <t t-set="attendee_description" t-value="event._get_attendee_description()"/>
+            <div id="wrap" class="o_appointment d-flex bg-o-color-4 p-4">
+                <div class="oe_structure"/>
+                <div class="oe_structure container">
+                    <div class="o_appointment_edit_in_backend alert alert-info alert-dismissible fade show d-print-none css_editable_mode_hidden" groups="appointment.group_appointment_manager">
+                        <t t-call="appointment.appointment_edit_in_backend"/>
+                    </div>
+                    <t t-if="appointment_type">
+                    <h2 t-if="is_cancelled" role="alert">
+                        <i class="fa fa-times text-danger me-3"/>Appointment Cancelled
+                    </h2>
+                    <t t-elif="state == 'no_time_left'">
+                        <div role="alert" class="alert alert-danger">
+                            Oops! Your appointment is scheduled in less than <t t-out="int(appointment_type.min_cancellation_hours)"/> hour(s) and cannot be cancelled at this time.<br/>
+                            <t t-if="cancel_responsible">
+                                To make any changes, please contact
+                                <t t-out="cancel_responsible.name"/> at <t t-out="cancel_responsible.email"/>
+                                <t t-if="cancel_responsible.partner_id.phone"> or <t t-out="cancel_responsible.partner_id.phone"/> </t>.
+                            </t>
+                            <t t-else="">
+                                To make any changes, please contact us.
+                            </t>
+                        </div>
+                        <h2 role="alert">
+                            <i class="fa fa-check-circle text-success me-3"/>Appointment Scheduled!
+                        </h2>
+                    </t>
+                    <t t-else="" role="status">
+                        <h2 t-if="event.appointment_status == 'booked'">
+                            <i class="fa fa-check-circle text-success me-3"/>Appointment Scheduled!
+                        </h2>
+                        <span t-else="">
+                            <h2><i class="fa fa-thumbs-up me-3 text-info"/>Appointment Reserved!</h2>
+                            <h5>We will come back to you to confirm it.</h5>
+                        </span>
+                    </t>
+                    </t>
+                    <h4 t-attf-class="py-3 {{'text-decoration-line-through' if is_cancelled else ''}}">
+                        <span class="fw-normal" t-out="event.name"/>
+                    </h4>
+                    <a t-if="is_cancelled" role="button" class="btn btn-block bg-white border mb-4"
+                        t-attf-href="/appointment/#{appointment_type.id}?#{keep_query('*')}">
+                        <i class="fa fa-lg fa-calendar-plus-o me-3 text-primary"/>Schedule another meeting
+                    </a>
+                    <div class="oe_structure"/>
+                    <div class="o_appointment_validation_details o_wappointment_type_options row justify-content-between"
+                        t-att-data-appointment-type-id="appointment_type.id"
+                        t-att-data-event-access-token="event.access_token"
+                        t-att-data-event-start="event.start">
+                        <div t-attf-class="col-12 col-md-8 pe-md-4 pe-lg-5 {{'text-decoration-line-through' if is_cancelled else ''}}">
+                            <div class="row mb-4">
+                                <div class="col-3">
+                                    <span class="text-muted">When</span>
+                                </div>
+                                <div class="col-9">
+                                    <strong t-out="datetime_start"/>
+                                    <span t-if="not appointment_type.hide_timezone" class="text-muted"> (<t t-out="request.session.timezone"/>)</span>
+                                    <div t-if="not is_cancelled" class="o_appointment_add_to_calendar_btns d-flex flex-wrap gap-3 mt-2">
+                                        <a role="button" class="o_outlook_calendar btn btn-block bg-white" t-attf-href="/calendar/ics/#{event.access_token}.ics">
+                                            <img src="/appointment/static/src/img/outlook-calendar.svg" alt="Outlook"/>
+                                            <small>Add to iCal/Outlook</small>
+                                        </a>
+                                        <a role="button" class="o_google_calendar btn btn-block bg-white" t-att-href="google_url">
+                                            <img src="/appointment/static/src/img/google-calendar.svg" alt="Google Agenda"/>
+                                            <small>Add to Google Agenda</small>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div t-if="not appointment_type.hide_duration" class="row mb-4">
+                                <div class="col-3">
+                                    <span class="text-muted">Duration</span>
+                                </div>
+                                <div class="col-9 col-lg-6">
+                                    <t t-out="event.duration" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/>
+                                </div>
+                            </div>
+                            <div t-if="not based_on_users and (
+                                    (len(resources) > 1 and
+                                        (appointment_type.assign_method != 'time_auto_assign' or
+                                         appointment_type.avatars_display == 'show'))
+                                    or
+                                    (len(resources) == 1 and
+                                        appointment_type.assign_method != 'time_auto_assign' and
+                                        appointment_type.avatars_display == 'hide' and
+                                        is_html_empty(resources[0].description))
+                                )" class="row mb-4">
+                                <div class="col-3">
+                                    <span class="text-muted">Resources</span>
+                                </div>
+                                <div class="col-9 col-lg-6">
+                                    <div t-foreach="event.appointment_resource_ids" t-as="resource">
+                                        <t t-out="resource.name"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div t-if="based_on_users or appointment_type.location_id or event.location" class="row mb-4">
+                                <div class="col-3">
+                                    <span class="text-muted">Where</span>
+                                </div>
+                                <div class="col-9 col-lg-6">
+                                    <span t-if="appointment_type.location_id">
+                                        <div t-att-class="str(appointment_type.location_id.contact_address).strip() and 'fw-bold' or ''"
+                                             t-field="appointment_type.location_id" t-options="{'widget': 'contact', 'fields': ['name']}"/>
+                                        <div t-field="appointment_type.location_id" t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': true}"/>
+                                    </span>
+                                    <t t-elif="event.location" t-out="event.location"/>
+                                    <t t-elif="based_on_users" ><span>Online</span></t>
+                                </div>
+                            </div>
+                            <div t-if="event.videocall_location" class="row mb-4">
+                                <div class="col-3">
+                                    <span class="text-muted">How to join</span>
+                                </div>
+                                <div class="col-9 text-break">
+                                    <span class="text-muted">
+                                        Join using
+                                        <span title="Copy Link" t-att-data-value="event.videocall_location"
+                                            class="o_appointment_copy_link cursor-pointer text-decoration-underline text-primary">
+                                            <t t-if="event.videocall_source == 'discuss'" class="o_appointment_discuss_location">Odoo Discuss</t>
+                                            <t t-else="">this link</t>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div t-elif="event.videocall_redirection" class="row mb-4">
+                                <div class="col-3">
+                                    <span class="text-muted">How to join</span>
+                                </div>
+                                <div class="col-9 text-break">
+                                    <span class="text-muted">
+                                        Join using
+                                        <span title="Copy Link" t-att-data-value="event.videocall_redirection"
+                                            class="o_appointment_copy_link cursor-pointer text-decoration-underline text-primary">
+                                            <t t-if="event.videocall_source == 'discuss'" class="o_appointment_discuss_redirection">Odoo Discuss</t>
+                                            <t t-else="">this link</t>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div t-if="event.resource_total_capacity_reserved > 1" class="row mb-4">
+                                <div class="col-3">
+                                    <span class="text-muted">For</span>
+                                </div>
+                                <div class="col-9 col-lg-6">
+                                    <t t-out="event.resource_total_capacity_reserved"/> people
+                                </div>
+                            </div>
+                            <div t-if="not appointment_type or based_on_users or appointment_type.allow_guests" class="row mb-4">
+                                <div class="col-3">
+                                    <span class="text-muted">Attendees</span>
+                                </div>
+                                <div class="col-9">
+                                    <div t-foreach="event.attendee_ids" t-as="attendee">
+                                        <span t-out="attendee.common_name"/>
+                                        <t t-if="not is_cancelled">
+                                            <span t-if="attendee.state == 'accepted'" class="fa fa-check text-success" title="Confirmed" role="img" aria-label="Confirmed"/>
+                                            <span t-if="attendee.state == 'declined'" class="fa fa-times text-danger" title="Declined" role="img" aria-label="Declined"/>
+                                            <span t-if="attendee.state == 'needsAction'" class="fa fa-fw fa-question-circle text-warning" title="Uncertain" role="img" aria-label="Uncertain"/>
+                                        </t>
+                                    </div>
+                                    <form t-if="appointment_type.allow_guests and not is_cancelled">
+                                        <input type="hidden" id="access_token" t-att-value="event.access_token"/>
+                                        <button type="button" class="o_appointment_guest_addition_open btn btn-link"><i class="fa fa-plus me-1"/>Add Guests</button>
+                                        <textarea type="email" class="s_website_form_input form-control d-none mt-2" id="o_appointment_input_guest_emails" name="attendee_email" placeholder="e.g. john.doe@email.com&#13;&#10;e.g. jane.doe@example.com&#13;&#10;..." rows="5"/>
+                                        <div class="o_appointment_validation_error alert alert-danger d-none my-2">
+                                            <i class="fa fa-warning me-1"/>
+                                            <span class="o_appointment_error_text"></span>
+                                        </div>
+                                        <div class="d-md-flex">
+                                            <button type="button" class="o_appointment_guest_add btn btn-primary mt-2 me-2 d-none">Add Guests</button>
+                                            <button type="button" class="o_appointment_guest_discard btn btn-link mt-2 d-none">Discard</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div t-if="attendee_description" class="row mb-4">
+                                <div class="col-3">
+                                    <span class="text-muted">Details</span>
+                                </div>
+                                <div class="col-9">
+                                    <div t-out="attendee_description"/>
+                                </div>
+                            </div>
+                            <div t-if="not appointment_type and event_attendee" class="col d-flex justify-content-lg-end justify-content-md-start justify-content-sm-end mt-md-0 mt-sm-3">
+                                <form t-if="event_attendee.state != 'accepted'" method="POST" t-attf-action="/calendar/meeting/accept?id={{event.id}}&amp;token={{event_attendee.access_token}}" class="me-1 d-inline-block">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <button type="submit" role="button" class="ms-1 btn btn-primary btn-block text-nowrap">Accept</button>
+                                </form>
+                                <form t-if="event_attendee.state != 'declined'" method="POST" t-attf-action="/calendar/meeting/decline?id={{event.id}}&amp;token={{event_attendee.access_token}}" class="ms-1 d-inline-block">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <button type="submit" role="button" class="btn btn-danger btn-block text-nowrap">Decline</button>
+                                </form>
+                            </div>
+                            <div t-if="appointment_type and (not partner_id or event.appointment_booker_id.id == partner_id or not appointment_type.allow_guests) and not is_cancelled" class="row mb-4">
+                                <div class="col-12">
+                                    <span>Not available anymore?</span>
+                                    <!--d-block anchor instead of div for compatibility with overrides in stable-->
+                                    <a class="my-1 text-decoration-underline o_appointment_cancel_link d-block">
+                                        <form method="POST" t-attf-action="/calendar/#{event.access_token}/cancel?#{keep_query()}">
+                                            <input type="hidden" name="partner_id" t-att-value="partner_id"/>
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <button type="submit" role="button" class="btn btn-danger btn-block">Cancel your appointment</button>
+                                        </form>
+                                    </a>
+                                </div>
+                            </div>
+                            <div t-if="appointment_type.message_confirmation">
+                                <div class="fw-normal" t-out="appointment_type.message_confirmation"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 px-md-4">
+                            <t t-call="appointment.appointment_validated_card"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+    <template id="appointment_validated_card" name="Appointment Validated: User / Resource Card">
+        <div t-if="staff_user and based_on_users">
+            <article class="card o_appointment_user_short_card card border-0" itemscope="itemscope" itemtype="http://schema.org/Employee">
+                <header t-if="appointment_type.avatars_display == 'show'" class="bg-secondary rounded o_appointment_avatar_container ratio ratio-4x3">
+                    <div t-attf-style="background-image: url('/appointment/#{appointment_type.id}/avatar?user_id=#{staff_user.id}');"
+                            class="o_appointment_avatar_background rounded"/>
+                </header>
+                <main class="card-body px-0">
+                    <h5 t-out="staff_user.name"/>
+                    <div class="o_appointment_card_user_fct mb-2 text-muted border-bottom">
+                        <div t-field="staff_user.partner_id.function" placeholder="Add a function here..."/>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <div t-if="staff_user.email" class="list-group-item d-flex align-items-center ps-0 border-0">
+                            <i class="fa fa-envelope fa-fw me-2 text-muted"/>
+                            <span class="text-truncate"><t t-out="staff_user.email"/></span>
+                        </div>
+                        <div t-if="staff_user.partner_id.phone" class="list-group-item d-flex align-items-center ps-0 border-0">
+                            <i class="fa fa-phone fa-fw me-2 text-muted"/>
+                            <t t-out="staff_user.partner_id.phone"/>
+                        </div>
+                    </div>
+                </main>
+            </article>
+        </div>
+        <div t-elif="len(resources) == 1 and (
+            appointment_type.avatars_display == 'show' or
+            (not is_html_empty(resources[0].description) and appointment_type.assign_method != 'time_auto_assign')
+        )">
+            <t t-set="resource" t-value="resources[0]"/>
+            <article class="card o_appointment_user_short_card card border-0" itemscope="itemscope">
+                <header t-if="appointment_type.avatars_display == 'show'" class="bg-secondary rounded o_appointment_avatar_container ratio ratio-4x3">
+                    <div t-attf-style="background-image: url('/appointment/#{appointment_type.id}/resource_avatar?resource_id=#{resource.id}');"
+                            class="o_appointment_avatar_background rounded"/>
+                </header>
+                <main class="card-body px-0">
+                    <h5 class="mb-2" t-out="resource.name"/>
+                    <div t-if="not is_html_empty(resource.description)" class="o_wappointment_card_user_dsc mb-2 py-3 text-muted border-top">
+                        <div t-field="resource.description" placeholder="Add a resource description here..."/>
+                    </div>
+                </main>
+            </article>
+        </div>
+    </template>
+</odoo>

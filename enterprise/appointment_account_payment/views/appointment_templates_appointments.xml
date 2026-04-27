@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="appointment_info" inherit_id="appointment.appointment_meeting_details">
+    <xpath expr="//div[hasclass('o_appointment_details_location')]" position="before">
+        <div t-if="appointment_type.product_id" class="d-flex py-1 px-0 bg-transparent o-cc1-text border-0">
+            <t t-set="isDetailsManageCapacity" t-value="appointment_type.resource_manage_capacity and isDetails"/>
+            <i class="fa fa-credit-card fa-fw me-2 mt-1 text-muted"/>
+            <span class="o_appointment_details_price">
+                <t t-out="appointment_type.product_lst_price * asked_capacity if isDetailsManageCapacity else appointment_type.product_lst_price"
+                    t-options="{'widget': 'monetary', 'display_currency': appointment_type.product_currency_id}"/>
+            </span>
+            <span t-if="appointment_type.resource_manage_capacity and not isDetails" class="ms-1">per seat</span>
+        </div>
+    </xpath>
+</template>
+</odoo>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('before-footer')]" position="after">
+            <t t-if="props.data.headerData.company.country_id?.code === 'CL'">
+                <br/>
+                <br/>
+                <div t-if="props.data.voucher_number">
+                    <div class="pos-receipt-order-data">
+                        Voucher Number: <t t-esc="props.data.voucher_number"/>
+                    </div>
+                </div>
+                <br/>
+                <div class="d-flex flex-column align-items-center pos-receipt-order-data">
+                    <img class="img-fluid w-100" t-attf-src="data:image/*;base64,{{props.data.l10n_cl_sii_barcode_image}}"/>
+                    <span>Timbre Electrónico SII</span>
+                    <span>Resolución Nº: <t t-out="props.data.l10n_cl_dte_resolution_number"/></span>
+                    <span>de Fecha: <t t-out="props.data.l10n_cl_dte_resolution_date"/></span>
+                    <span>Verifique documento en www.sii.cl</span>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[@id='order-date']" position="attributes">
+            <attribute name="t-if" add="(props.data.headerData.company.country?.code !== 'CL' or !props.data.headerData.company.cl_vat)" separator=" and "/>
+        </xpath>
+    </t>
+</templates>

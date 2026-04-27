@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_preparation_display.PreparationDisplay" t-inherit="pos_preparation_display.PreparationDisplay" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('burger-menu')]//div" position="inside">
+            <span t-if="filterSelected>0" class="openMenu badge right text-bg-info rounded-pill" t-esc="filterSelected"/>
+            <span t-if="outOfPaperListFiltered.length>0" class="openMenu badge left text-bg-danger rounded-pill" t-esc="outOfPaperListFiltered.length"/>
+        </xpath>
+        <xpath expr="//li[hasclass('recall-button')]" position="before">
+            <t t-foreach="outOfPaperListFiltered" t-as="configPaperStatus" t-key="configPaperStatus">
+                <li class="menu-item navbar-button" t-on-click="() => this.paperNotificationClick(configPaperStatus)">
+                    <a class="dropdown-item py-2 text-wrap text-danger">
+                        <span t-esc="configPaperStatus.name"/> out of paper
+                    </a>
+                </li>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[hasclass('top-buttons')]" position="before">
+            <section t-if="outOfPaperListFiltered.length>0" class="d-flex align-items-center h-100 border-start border-bottom">
+                <button t-if="!state.isAlertMenu" class="menu btn btn-light btn-lg position-relative h-100 px-4 rounded-0 shadow-none" t-on-click="openAlertMenu">
+                    <div class="d-flex px-1">
+                        <i class="fa fa-exclamation-triangle oi-large" aria-hidden="true"></i>
+                        <span class="d-none d-lg-inline-block px-2">Alert</span>
+                        <span t-if="outOfPaperListFiltered.length>0" class="openMenu badge right text-bg-danger rounded-pill" t-esc="outOfPaperListFiltered.length"/>
+                    </div>
+                </button>
+                <button t-else="" class="menu btn btn-light btn-lg position-relative h-100 px-4 rounded-0 shadow-none" t-on-click="closeAlertMenu">
+                    <div class="position-relative px-1">
+                        <i class="fa fa-exclamation-triangle oi-large" aria-hidden="true"></i>
+                        <span class="d-none d-lg-inline-block px-2">Alert</span>
+                    </div>
+                    <ul class="dropdown-menu sub-menu position-absolute d-flex flex-column align-items-stretch w-100 bg-white shadow-lg z-1">
+                        <t t-foreach="outOfPaperListFiltered" t-as="configPaperStatus" t-key="configPaperStatus">
+                            <li class="menu-item navbar-button" t-on-click="() => this.paperNotificationClick(configPaperStatus)">
+                                <a class="dropdown-item py-2 text-wrap text-danger">
+                                    <span t-esc="configPaperStatus.name"/> out of paper
+                                </a>
+                            </li>
+                        </t>
+                    </ul>
+                </button>
+            </section>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="tax_report_ple_purchase_8_2" model="account.report">
+        <field name="name">VAT Report (RCE Purchase 8.5)</field>
+        <field name="root_report_id" ref="account.generic_tax_report" />
+        <field name="country_id" ref="base.pe" />
+        <field name="filter_fiscal_position" eval="True" />
+        <field name="availability_condition">country</field>
+        <field name="custom_handler_model_id" ref="model_l10n_pe_tax_ple_8_2_report_handler" />
+        <field name="column_ids">
+            <record id="tax_report_ple_8_2_invoice_date" model="account.report.column">
+                <field name="name">Date</field>
+                <field name="expression_label">invoice_date</field>
+                <field name="figure_type">date</field>
+            </record>
+            <record id="tax_report_ple_8_2_document_type" model="account.report.column">
+                <field name="name">Doc. Type</field>
+                <field name="expression_label">document_type</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="tax_report_ple_8_2_customer" model="account.report.column">
+                <field name="name">Customer</field>
+                <field name="expression_label">customer</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="tax_report_ple_8_2_amount_total" model="account.report.column">
+                <field name="name">Amount Total</field>
+                <field name="expression_label">amount_total</field>
+            </record>
+            <record id="tax_report_ple_8_2_base_igv" model="account.report.column">
+                <field name="name">BASE IGV</field>
+                <field name="expression_label">base_igv</field>
+            </record>
+            <record id="tax_report_ple_8_2_igv" model="account.report.column">
+                <field name="name">IGV</field>
+                <field name="expression_label">tax_igv</field>
+            </record>
+            <record id="tax_report_ple_8_2_exo" model="account.report.column">
+                <field name="name">EXO</field>
+                <field name="expression_label">base_exo</field>
+            </record>
+            <record id="tax_report_ple_8_2_ina" model="account.report.column">
+                <field name="name">INA</field>
+                <field name="expression_label">base_ina</field>
+            </record>
+            <record id="tax_report_ple_8_2_tax_ivap" model="account.report.column">
+                <field name="name">IVAP</field>
+                <field name="expression_label">tax_ivap</field>
+            </record>
+            <record id="tax_report_ple_8_2_icbper" model="account.report.column">
+                <field name="name">ICBPER</field>
+                <field name="expression_label">vat_icbper</field>
+            </record>
+            <record id="tax_report_ple_8_2_free" model="account.report.column">
+                <field name="name">FREE</field>
+                <field name="expression_label">base_free</field>
+            </record>
+            <record id="tax_report_ple_8_2_other_taxes" model="account.report.column">
+                <field name="name">Other Taxes</field>
+                <field name="expression_label">vat_other</field>
+            </record>
+            <record id="tax_report_ple_8_2_withholdings" model="account.report.column">
+                <field name="name">Withholdings</field>
+                <field name="expression_label">base_withholdings</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="ple_82_line" model="account.report.line">
+                <field name="name">RCE 8.5</field>
+                <field name="groupby">move_id</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="ple_82_line_invoice_date" model="account.report.expression">
+                        <field name="label">invoice_date</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_ple_82</field>
+                        <field name="subformula">invoice_date</field>
+                    </record>
+                    <record id="ple_82_line_document_type" model="account.report.expression">
+                        <field name="label">document_type</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_ple_82</field>
+                        <field name="subformula">document_type</field>
+                    </record>
+                    <record id="ple_82_line_customer" model="account.report.expression">
+                        <field name="label">customer</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_ple_82</field>
+                        <field name="subformula">customer</field>
+                    </record>
+                    <record id="ple_82_line_amount_total" model="account.report.expression">
+                        <field name="label">amount_total</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_ple_82</field>
+                        <field name="subformula">amount_total</field>
+                    </record>
+                    <record id="ple_82_line_base_igv" model="account.report.expression">
+                        <field name="label">base_igv</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_ple_82</field>
+                        <field name="subformula">base_igv</field>
+                    </record>
+                    <record id="ple_82_line_igv" model="account.report.expression">
+                        <field name="label">tax_igv</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_ple_82</field>
+                        <field name="subformula">tax_igv</field>
+                    </record>
+                    <record id="ple_82_line_exo" model="account.report.expression">
+                        <field name="label">base_exo</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_ple_82</field>
+                        <field name="subformula">base_exo</field>
+                    </record>
+                    <record id="ple_82_line_ina" model="account.report.expression">
+                        <field name="label">base_ina</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_ple_82</field>
+                        <field name="subformula">base_ina</field>
+                    </record>
+                    <record id="ple_82_line_tax_ivap" model="account.report.expression">
+                        <field name="label">tax_ivap</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_ple_82</field>
+                        <field name="subformula">tax_ivap</field>
+                    </record>
+                    <record id="ple_82_line_icbper" model="account.report.expression">
+                        <field name="label">vat_icbper</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_ple_82</field>
+                        <field name="subformula">vat_icbper</field>
+                    </record>
+                    <record id="ple_82_line_free" model="account.report.expression">
+                        <field name="label">base_free</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_ple_82</field>
+                        <field name="subformula">base_free</field>
+                    </record>
+                    <record id="ple_82_line_other" model="account.report.expression">
+                        <field name="label">vat_other</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_ple_82</field>
+                        <field name="subformula">vat_other</field>
+                    </record>
+                    <record id="ple_82_line_withholdings" model="account.report.expression">
+                        <field name="label">base_withholdings</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_ple_82</field>
+                        <field name="subformula">base_withholdings</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp_workorder.ProductCatalogKanbanRenderer" t-inherit="ProductCatalogKanbanRenderer" t-inherit-mode="extension">
+        <xpath expr="//t[@t-if='groupOrRecord.group']//KanbanRecord" position="attributes">
+            <attribute name="pushCatalogKanbanUpdate">props.pushCatalogKanbanUpdate?.bind(this)</attribute>
+        </xpath>
+        <xpath expr="//t[@t-else='']//KanbanRecord" position="attributes">
+            <attribute name="pushCatalogKanbanUpdate">props.pushCatalogKanbanUpdate?.bind(this)</attribute>
+        </xpath>
+    </t>
+</templates>

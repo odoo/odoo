@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id='cz_vies_summary_template'>
+        <Pisemnost nazevSW="Odoo SA" t-att-verzeSW="odoo_version">
+            <DPHSHV verzePis="02.01">
+                <t t-call="l10n_cz_reports_2025.veta_d"/>
+                <t t-call="l10n_cz_reports_2025.veta_p"/>
+                <t t-foreach="lines" t-as="line">
+                    <VetaR
+                        t-att-k_stat="line['country_code']"
+                        t-att-c_vat="line['vat_number']"
+                        t-att-k_pln_eu="line['transaction_code']"
+                        t-att-pln_pocet="line['supplies_number']"
+                        t-att-pln_hodnota="line['total_value']"/>
+                </t>
+            </DPHSHV>
+        </Pisemnost>
+    </template>
+</odoo>

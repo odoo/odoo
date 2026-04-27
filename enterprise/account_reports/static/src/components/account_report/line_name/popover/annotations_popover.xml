@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportAnnotationsPopover">
+        <div class="d-flex flex-column flex-start gap-2">
+            <table class="annotation_popover" t-ref="popoverTable">
+                <tr class="annotation_popover_line">
+                    <th>Date</th>
+                    <th>Annotation</th>
+                    <th/>
+                </tr>
+
+                <t t-foreach="annotations" t-as="annotation" t-key="annotation.id">
+                    <AnnotationPopoverLine
+                        annotation="this.formatAnnotation(annotation)"
+                        onDelete="(annotationId) => this.deleteAnnotation(annotationId)"
+                        onEdit="(editedAnnotation) => this.editAnnotation(editedAnnotation, annotation)"
+                    />
+                </t>
+                <AnnotationPopoverLine
+                    t-if="isAddingAnnotation"
+                    annotation="newAnnotation.value"
+                    onDelete="() => this.cleanNewAnnotation()"
+                    onEdit="(annotationToCreate) => this.saveNewAnnotation(annotationToCreate)"
+                />
+                <tr class="annotation_popover_line">
+                    <td colspan="4">
+                        <a class="oe_link" href="#" t-on-click.prevent="addAnnotation" data-hotkey="c">
+                            Add a line
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </t>
+</templates>

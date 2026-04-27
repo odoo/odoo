@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="stock_barcode.GroupedLineComponent">
+        <div t-on-click="select"
+            class="o_barcode_line list-group-item d-flex flex-row flex-wrap pt-0"
+            t-att-data-virtual-id="line.virtual_id"
+            t-att-data-barcode="line.product_id.barcode" t-attf-class="{{componentClasses}}">
+            <div class="o_barcode_line_summary d-flex flex-grow-1 py-2 mt-2" t-att-class="opened ? 'o_unfolded': ''">
+                <div class="o_barcode_line_details flex-grow-1">
+                    <t t-call="stock_barcode.LineTitle"/>
+                    <t t-if="!displayToggleBtn" t-call="stock_barcode.LineLot"/>
+                    <t t-call="stock_barcode.LineQuantity"/>
+                    <t t-call="stock_barcode.LineDestinationLocation"/>
+                </div>
+            </div>
+            <div class="o_sublines mb-2 flex-grow-1" t-if="opened &amp;&amp; displayToggleBtn">
+                <t t-foreach="linesToDisplay" t-as="subline" t-key="subline.virtual_id">
+                    <LineComponent t-props="sublineProps"/>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="authorization_error" name="Authorization Error">
+        <!-- Parameters description:
+            - error_message: The reason of the error.
+            - account_url: The URL to the Amazon account.
+        -->
+        <t t-call="portal.frontend_layout">
+            <div class="wrap">
+                <div class="container">
+                    <h1>An error occurred</h1>
+                    <p>An error occurred while linking your account with Amazon.</p>
+                    <p><t t-esc="error_message"/></p>
+                    <a t-att-href="account_url" class="btn btn-primary mt-2">Back to my account</a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

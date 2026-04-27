@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_import_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.account.base.import</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='fiscal_localization_setting_container']" position="after">
+                <t groups="account.group_account_user">
+                    <block title="Accounting Import" name="accounting_import_setting_container">
+                        <setting string="Initial Setup" help="Choose how you want to setup your CoA">
+                            <div class="content-group">
+                                <div class="d-flex mt4 align-items-center">
+                                    <button name="%(account_base_import.action_open_coa_setup)d" icon="oi-arrow-right" type="action" string="Review Manually" class="btn-link"/>
+                                    <span class="text-muted">(end of year balances)</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <button name="%(account_base_import.action_open_import_guide)d" icon="oi-arrow-right" type="action" string="Import" class="btn-link"/>
+                                    <span class="text-muted">(for full history)</span>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </t>
+            </xpath>
+        </field>
+    </record>
+</odoo>

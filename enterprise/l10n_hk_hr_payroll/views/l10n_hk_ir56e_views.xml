@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_hk_ir56e_view_form" model="ir.ui.view">
+        <field name="name">l10n_hk_ir56e.view.form</field>
+        <field name="model">l10n_hk.ir56e</field>
+        <field name="arch" type="xml">
+            <form string="IR56E Sheet">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_declarations" type="object" class="oe_stat_button" icon="fa-users">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="lines_count"/></span>
+                                <span class="o_stat_text">Eligible Employees</span>
+                            </div>
+                        </button>
+                    </div>
+                    <field name="state" invisible="1" />
+                    <group>
+                        <field name="submission_date" />
+                        <field name="name_of_signer" />
+                        <field name="designation_of_signer" />
+                    </group>
+                    <div class="mt-3" invisible="not pdf_error">
+                        <p class="oe_inline">
+                            <field name="pdf_error" readonly="1" nolabel="1"/>
+                        </p>
+                    </div>
+                    <p name="save_warning" invisible="state != 'done'">The files won't be posted in the employee portal if you don't have the Documents app.</p>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_hk_ir56e_view_tree" model="ir.ui.view">
+        <field name="name">l10n_hk.ir56e.view.list</field>
+        <field name="model">l10n_hk.ir56e</field>
+        <field name="arch" type="xml">
+            <list string="IR56E Sheets">
+                <field name="display_name" string="Name" />
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_hk_ir56e_action" model="ir.actions.act_window">
+        <field name="name">IR56E Sheet</field>
+        <field name="res_model">l10n_hk.ir56e</field>
+        <field name="view_mode">list,form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

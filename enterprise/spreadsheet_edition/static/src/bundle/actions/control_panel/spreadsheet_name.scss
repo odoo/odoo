@@ -1,0 +1,29 @@
+.o_sp_name {
+    --o-input-border-color: transparent;
+
+    display: inline-block;
+    max-width: 95%;
+
+    input {
+        max-width: 100%;
+        text-overflow: clip;
+        overflow: hidden;
+        padding: 0px 5px 0px 2px;
+        color: $o-brand-secondary;
+        font-size: 16px;
+
+        &:hover, &:focus {
+            color: $o-gray-900;
+            --o-input-border-color: #{$o-action};
+        }
+        &.o-sp-untitled {
+            font-style: italic;
+        }
+        &.o-sp-untitled:focus {
+            font-style: normal;
+        }
+        &:disabled {
+            background-color: inherit;
+        }
+    }
+}

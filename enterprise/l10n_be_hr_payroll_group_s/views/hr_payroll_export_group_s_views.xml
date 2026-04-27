@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_export_group_s_form_view" model="ir.ui.view">
+        <field name="name">hr.payroll.export.group.s.form</field>
+        <field name="model">l10n.be.hr.payroll.export.group.s</field>
+        <field name="inherit_id" ref="hr_payroll.hr_work_entry_export_mixin_form_view"/>
+        <field name="mode">primary</field>
+    </record>
+
+    <record id="hr_payroll_export_group_s_list_view" model="ir.ui.view">
+        <field name="name">hr.payroll.export.group.s.list</field>
+        <field name="model">l10n.be.hr.payroll.export.group.s</field>
+        <field name="inherit_id" ref="hr_payroll.hr_work_entry_export_mixin_list_view"/>
+        <field name="mode">primary</field>
+    </record>
+    
+    <record id="l10n_be_export_group_s_employee_list_view" model="ir.ui.view">
+        <field name="name">l10n.be.hr.payroll.export.group.s.employee.list</field>
+        <field name="model">l10n.be.hr.payroll.export.group.s.employee</field>
+        <field name="inherit_id" ref="hr_payroll.hr_work_entry_export_employee_mixin_list_view"/>
+        <field name="mode">primary</field>
+    </record>
+
+    <record id="l10n_be_export_group_s_action" model="ir.actions.act_window">
+        <field name="name">Export to Group S</field>
+        <field name="res_model">l10n.be.hr.payroll.export.group.s</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_be_export_work_entries_group_s"
+        name="Export Work Entries to Group S"
+        action="l10n_be_export_group_s_action"
+        parent="l10n_be_hr_payroll.menu_reporting_l10n_be"
+        sequence="26"/>
+</odoo>

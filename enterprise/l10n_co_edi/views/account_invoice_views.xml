@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="invoice_form_inherit_l10n_co_edi" model="ir.ui.view">
+            <field name="name">account.move.form.l10n_co_edi</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@id='header_right_group']" position="after">
+                    <group name="l10n_co_edi_fields" invisible="move_type not in ['out_invoice', 'out_refund', 'in_invoice', 'in_refund'] or country_code != 'CO' or move_type in ['in_invoice', 'in_refund'] and not l10n_co_edi_is_support_document">
+                        <!-- CO edi Fields -->
+                        <field name="country_code" invisible="1"/>
+                        <field name="l10n_co_edi_debit_note" invisible="1"/>
+                        <field name="l10n_co_edi_is_direct_payment" invisible="1"/>
+                        <field name="l10n_co_edi_is_support_document" invisible="1"/>
+                        <field name="l10n_co_edi_type" readonly="state != 'draft'"/>
+                        <field name="l10n_co_edi_attachment_url" widget="url"/>
+                        <field name="l10n_co_edi_operation_type" readonly="state != 'draft'"/>
+                        <field name="l10n_co_edi_payment_option_id" readonly="state != 'draft'" required="l10n_co_edi_is_direct_payment"/>
+                        <field name="l10n_co_edi_cufe_cude_ref" class="text-break" readonly="1" invisible="edi_state in ('to_send', None)" groups="base.group_no_one"/>
+                        <field name="l10n_co_edi_description_code_credit" invisible="move_type not in ('out_refund', 'in_refund')" readonly="state != 'draft'"/>
+                        <field name="l10n_co_edi_description_code_debit" invisible="not l10n_co_edi_debit_note" required="l10n_co_edi_debit_note"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

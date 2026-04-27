@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="view_stock_move_line_detailed_operation_tree_inherit_stock_barcode" model="ir.ui.view">
+        <field name="name">stock.move.line.operations.list.inherit</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="product_barcode" column_invisible="True"/>
+                <field name="location_processed" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//field[@name='quantity']" position="attributes">
+                <attribute name="options">{'barcode_events': True}</attribute>
+                <attribute name="widget">field_float_scannable</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_move_line_kanban_inherited" model="ir.ui.view">
+        <field name="name">stock.move.line.kanban.inherited</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='quantity']" position="after">
+                <field name="product_barcode" invisible="1"/>
+                <field name="location_processed" invisible="1"/>
+                <field name="result_package_id" invisible="1"/>
+                <field name="lots_visible" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_picking_barcode" model="ir.ui.view">
+        <field name="name">stock.picking.form.view.barcode</field>
+        <field name="model">stock.picking</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form string="Picking Details">
+                <field name="show_allocation" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="picking_type_code" invisible="1"/>
+                <group>
+                    <button name="action_view_reception_report" string="Allocation" type="object"
+                        context="{'default_picking_ids': [id]}"
+                        class="btn btn-primary o_reception_report" icon="fa-list"
+                        invisible="not show_allocation"
+                        groups="stock.group_reception_report"/>
+                    <field name="partner_id" readonly="state in ['cancel', 'done']"/>
+                    <field name="scheduled_date" readonly="1" invisible="not scheduled_date"/>
+                    <field name="origin" readonly="1" invisible="not origin"/>
+                    <field name="state" readonly="1" invisible="not state"/>
+                    <field name="priority" readonly="1" invisible="not priority"/>
+                    <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" invisible="picking_type_code == 'incoming'" readonly="state == 'done'"/>
+                    <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" invisible="picking_type_code == 'outgoing'" readonly="state == 'done'"/>
+                    <field name="owner_id" readonly="1" invisible="not owner_id" groups="stock.group_tracking_owner"/>
+                    <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                    <field name="move_ids" readonly="1" invisible="not move_ids">
+                        <kanban>
+                            <templates>
+                                <t t-name="card" class="row g-0">
+                                    <field name="product_id" class="col-6 fw-bolder fs-5" readonly="state == 'done'"/>
+                                    <field name="product_uom_qty" readonly="state == 'done'" class="col-6 text-end"/>
+                                    <field name="description_picking" class="col-6"/>
+                                    <field name="state" class="col-6 text-end"/>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                    <field name="note" readonly="1" invisible="not note"/>
+                </group>
+                <div class="o_barcode_control d-flex justify-content-between p-2 gap-2 fixed-bottom">
+                    <button string="Discard" class="btn btn-secondary o_discard" special="cancel"/>
+                    <button string="Confirm" class="btn btn-primary o_save" special="save"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="open_picking" model="ir.actions.act_window">
+        <field name="name">Open picking form</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">form</field>
+        <field name="context">{
+            'res_id': active_id,
+        }
+        </field>
+    </record>
+
+    <record id="stock_picking_view_kanban" model="ir.ui.view">
+        <field name="name">stock.picking.view.kanban.stock.barcode</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.stock_picking_kanban"/>
+        <field name="mode">primary</field>
+        <!--High priority to not be the standard view of pickings in inventory app-->
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban[hasclass('o_kanban_mobile')]" position="attributes">
+                <attribute name="js_class">stock_barcode_list_kanban</attribute>
+                <attribute name="import">false</attribute>
+                <attribute name="quick_create">false</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="replace">
+                <field name="state" widget="badge"
+                       decoration-success="state in ['confirmed', 'assigned']"
+                       decoration-info="state in ['draft', 'waiting']" class="ms-auto"/>
+            </xpath>
+            <xpath expr="//field[@name='activity_ids']" position="replace"></xpath>
+            <!-- Use mobile view-->
+            <xpath expr="//field[@name='name']" position="replace">
+                <button class="btn btn-link p-0 ms-1 text-black" name="action_open_picking_client_action"
+                  type="object">
+                  <field name="name"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- If Barcode is installed, don't show the "Install Barcode" footer -->
+    <template id="barcode_help_message_template" inherit_id="stock.help_message_template">
+        <xpath expr="//p[@name='footer_help_message']" position="replace">
+            <t></t>
+        </xpath>
+    </template>
+
+</data></odoo>

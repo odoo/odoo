@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_get_otp_gstr_validate_send_otp" model="ir.ui.view">
+        <field name="name">l10n_in.gst.otp.validation.wizard.send.otp</field>
+        <field name="model">l10n_in.gst.otp.validation</field>
+        <field name="arch" type="xml">
+            <form string="Get OTP">
+                <sheet>
+                    <div>
+                        <span class="text-warning">
+                            * If you send OTP continuously more than 3 times your username will be blocked for 6 hours
+                        </span>
+                        Would you like to send the OTP to the registered phone number?
+                    </div>
+                    <footer>
+                        <button string="Send OTP"
+                                class="btn btn-primary"
+                                name="gst_send_otp"
+                                type="object"/>
+                        <button special="cancel" data-hotkey="x" string="Cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_validate_otp_gstr" model="ir.ui.view">
+        <field name="name">l10n_in.gst.otp.validation.wizard.validate.otp</field>
+        <field name="model">l10n_in.gst.otp.validation</field>
+        <field name="arch" type="xml">
+            <form string="Validate OTP">
+                <sheet>
+                    <div>
+                        <span>An OTP has been sent to the mobile number registered with the company's GST Portal.</span>
+                        <group>
+                            <field name="gst_otp" class="oe_inline" required="1"/>
+                            <field name="gst_token" groups="base.group_no_one"/>
+                        </group>
+                    </div>
+                    <footer>
+                        <button string="Validate"
+                                class="btn btn-primary"
+                                name="validate_otp_and_do_next_action"
+                                type="object"/>
+                        <button special="cancel" data-hotkey="x" string="Cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

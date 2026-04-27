@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ch_employee_is_line_view_tree" model="ir.ui.view">
+        <field name="name">hr.employee.is.line.tree</field>
+        <field name="model">hr.employee.is.line</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll.l10n_ch_employee_is_line_view_tree"/>
+        <field name="arch" type="xml">
+            <list position="replace">
+                <list>
+                    <field name="employee_id"/>
+                    <field name="reason"/>
+                    <field name="correction_type"/>
+                    <field name="correction_method"/>
+                    <field name="payslips_to_correct"/>
+                </list>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_ch_employee_is_line_form" model="ir.ui.view">
+        <field name="name">hr.employee.is.line.view.form</field>
+        <field name="model">hr.employee.is.line</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll.l10n_ch_employee_is_line_form"/>
+        <field name="arch" type="xml">
+            <form position="replace">
+                <form>
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                        <button name="action_pending" class="btn btn-primary" invisible="state in ['pending', 'confirmed']" string="Confirm" type="object"/>
+                        <button name="action_draft" class="btn btn-secondary" invisible="state in ['confirmed']" string="Set to Draft" type="object"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="employee_id" readonly="state != 'draft'"/>
+                            <field name="reason" readonly="state != 'draft'"/>
+                            <field name="correction_type" readonly="state != 'draft'"/>
+                            <field name="correction_method" readonly="state != 'draft'" widget="radio" options="{'horizontal': True}"/>
+                            <field name="payslips_to_correct" readonly="state != 'draft'" invisible="correction_method == 'manual'">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="l10n_ch_is_code" string="Original ST Code"/>
+                                </list>
+                            </field>
+                        </group>
+                        <group string="Corrections" invisible="correction_method == 'auto'">
+                            <field name="manual_correction_ids" readonly="state != 'draft'">
+                                <list>
+                                    <field name="payslip_id"/>
+                                    <field name="tax_code"/>
+                                    <field name="source_tax_salary"/>
+                                    <field name="rate_determinant_salary"/>
+                                    <field name="source_tax_amount"/>
+                                </list>
+                            </field>
+                        </group>
+                        <group string="Source Tax Values" invisible="not is_log_line_ids">
+                            <field name="is_log_line_ids" nolabel="1" colspan="2" readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="source_tax_canton"/>
+                                    <field name="is_code"/>
+                                    <field name="code"/>
+                                    <field name="amount"/>
+                                    <field name="allowed_correction_payslips_ids" column_invisible="1"/>
+                                    <field name="corrected_slip_id" options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="correction_type"/>
+                                </list>
+                            </field>
+                        </group>
+                        <group string="Source Tax Entry / Withdrawal / Mutations" invisible="not employee_id">
+                            <field name="is_ema_ids" context="{'default_employee_id': employee_id}" nolabel="1" colspan="2" readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="employee_id" column_invisible="1"/>
+                                    <field name="reason" required="1"/>
+                                    <field name="qst_canton" required="1"/>
+                                    <field name="qst_municipality" required="1"/>
+                                    <field name="valid_as_of" required="1"/>
+                                </list>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_ch_employee_is_manual_correction_form" model="ir.ui.view">
+        <field name="name">hr.employee.is.line.correction.view.form</field>
+        <field name="model">hr.employee.is.line.correction</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="payslip_id" readonly="state != 'draft'"/>
+                    </group>
+                    <group string="Correction">
+                        <field name="state" invisible="1"/>
+                        <field name="employee_id" invisible="1"/>
+                        <field name="l10n_ch_tax_scale_type" widget="radio" readonly="state != 'draft'"/>
+                        <field name="l10n_ch_tax_scale" invisible="l10n_ch_tax_scale_type != 'TaxAtSourceCode'" readonly="state != 'draft'"/>
+                        <field name="l10n_ch_church_tax" invisible="l10n_ch_tax_scale_type != 'TaxAtSourceCode'" readonly="state != 'draft'"/>
+                        <field name="children" invisible="l10n_ch_tax_scale_type != 'TaxAtSourceCode'" readonly="state != 'draft'"/>
+                        <field name="l10n_ch_pre_defined_tax_scale" invisible="l10n_ch_tax_scale_type != 'CategoryPredefined'" readonly="state != 'draft'"/>
+                        <field name="l10n_ch_open_tax_scale" invisible="l10n_ch_tax_scale_type != 'CategoryOpen'" readonly="state != 'draft'"/>
+                        <field name="l10n_ch_source_tax_canton" readonly="state != 'draft'"/>
+                        <field name="l10n_ch_source_tax_municipality" readonly="state != 'draft'"/>
+                        <field name="tax_code"/>
+                    </group>
+                    <group string="Source-Tax Values">
+                        <group>
+                            <field name="insurance_days"/>
+                            <field name="worked_days"/>
+                            <field name="worked_days_in_switzerland"/>
+                        </group>
+                        <group>
+                            <field name="source_tax_periodic_determinant_salary"/>
+                            <field name="source_tax_aperiodic_determinant_salary"/>
+                            <field name="source_tax_salary"/>
+                            <field name="rate_determinant_salary"/>
+                            <field name="source_tax_amount"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

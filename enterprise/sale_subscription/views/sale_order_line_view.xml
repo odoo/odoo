@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_subscription_sale_order_line_list" model="ir.ui.view">
+        <field name="name">sale.subscription.plan.inherit.line.tree</field>
+        <field name="model">sale.order.line</field>
+        <field name="arch" type="xml">
+            <list string="Subscription Items" multi_edit="1">
+                <field name="name" string="Product"/>
+                <field name="product_template_variant_value_ids" string="Product Varient" widget="many2many_tags" groups="product.group_product_variant"/>
+                <field name="order_id" string="Subscription" readonly="1"/>
+                <field name="order_partner_id"/>
+                <field name="pricelist_id" groups="product.group_product_pricelist"/>
+                <field name="price_unit" string="Price"/>
+                <field name="next_invoice_date"/>
+                <field name="subscription_start_date" optional="hide"/>
+                <field name="subscription_end_date" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="sale_subscription_sales_order_line_filter" model="ir.ui.view">
+        <field name="name">sale.subscription.sale.order.line.select</field>
+        <field name="model">sale.order.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Sales Order">
+                <field name="order_id" string="Sale order"/>
+                <field name="order_partner_id" operator="child_of"/>
+                <field name="name" string="Product"/>
+                <group expand="0" string="Group By">
+                    <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
+                    <filter string="Product Variant" name="product variant" domain="[]" context="{'group_by':'product_template_variant_value_ids'}"/>
+                    <filter string="Pricelist" name="pricelist" domain="[]" context="{'group_by':'pricelist_id'}"/>
+                    <filter string="Customer" name="customer" domain="[]" context="{'group_by':'order_partner_id'}"/>
+                    <filter string="Next Invoice Date" name="next invoice date" domain="[]" context="{'group_by':'next_invoice_date'}"/>
+                    <filter string="Start Date" name="start date" domain="[]" context="{'group_by':'subscription_start_date'}"/>
+                    <filter string="End Date" name="end date" domain="[]" context="{'group_by':'subscription_end_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

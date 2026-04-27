@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="product_template_form" model="ir.ui.view">
+            <field name="name">product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <group name="accounting" position="inside">
+                    <group string="Reporting" name="reporting">
+                        <field name="account_tag_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+    </data>
+</odoo>

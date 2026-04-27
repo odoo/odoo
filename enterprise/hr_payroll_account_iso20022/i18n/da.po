@@ -1,0 +1,194 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_payroll_account_iso20022
+#
+# Translators:
+# lhmflexerp <lhm@flexerp.dk>, 2024
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
+# Martin Trigaux, 2024
+# JonathanStein <jstein@image.dk>, 2024
+# Sammi Iversen <sammi@vkdata.dk>, 2025
+# Kira Petersen, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:47+0000\n"
+"PO-Revision-Date: 2026-03-20 14:23+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/"
+"hr_payroll_account_iso20022/da/>\n"
+"Language: da\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.16.2\n"
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.view_employee_form
+msgid ""
+"<span class=\"d-flex gap-2 w-50\">\n"
+"                            <span invisible=\"is_trusted_bank_account\" "
+"class=\"text-muted\">Untrusted</span>\n"
+"                            <span invisible=\"not is_trusted_bank_account\" "
+"class=\"text-success\">Trusted</span>\n"
+"                        </span>"
+msgstr ""
+"<span class=\"d-flex gap-2 w-50\">\n"
+"                            <span invisible=\"is_trusted_bank_account\" "
+"class=\"text-muted\">Ikke pålidelig</span>\n"
+"                            <span invisible=\"not is_trusted_bank_account\" "
+"class=\"text-success\">Pålidelig</span>\n"
+"                        </span>"
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.view_employee_form
+msgid "Bank Account"
+msgstr "Bankkonto"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,field_description:hr_payroll_account_iso20022.field_hr_payroll_payment_report_wizard__journal_id
+msgid "Bank Journal"
+msgstr "Bankjournal"
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.hr_payslip_view_form
+msgid "Create Payment Report"
+msgstr "Opret betalingsrapport"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model,name:hr_payroll_account_iso20022.model_hr_employee
+msgid "Employee"
+msgstr "Medarbejder"
+
+#. module: hr_payroll_account_iso20022
+#: model:hr.payroll.dashboard.warning,name:hr_payroll_account_iso20022.hr_payroll_dashboard_warning_employee_invalid_bank_account
+msgid "Employees With Invalid Bank Accounts"
+msgstr ""
+
+#. module: hr_payroll_account_iso20022
+#: model:hr.payroll.dashboard.warning,name:hr_payroll_account_iso20022.hr_payroll_dashboard_warning_employee_no_country
+msgid "Employees Without Any Country"
+msgstr "Medarbejder uden land"
+
+#. module: hr_payroll_account_iso20022
+#: model:hr.payroll.dashboard.warning,name:hr_payroll_account_iso20022.hr_payroll_dashboard_warning_untrusted_bank_accounts
+msgid "Employees with untrusted Bank Account numbers"
+msgstr "Medarbejdere med ikke-godkendte kontonumre"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,field_description:hr_payroll_account_iso20022.field_hr_payroll_payment_report_wizard__export_format
+msgid "Export Format"
+msgstr "Eksportformat"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model,name:hr_payroll_account_iso20022.model_hr_payroll_payment_report_wizard
+msgid "HR Payroll Payment Report Wizard"
+msgstr "Guide til betalingsrapporter relateret til lønudbetalinger"
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.hr_payslip_view_form
+msgid "Mark as paid"
+msgstr "Markér som betalt"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model,name:hr_payroll_account_iso20022.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Lønseddel"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model,name:hr_payroll_account_iso20022.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "Lønseddel batches"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields.selection,name:hr_payroll_account_iso20022.selection__hr_payroll_payment_report_wizard__export_format__sepa
+msgid "SEPA"
+msgstr "SEPA"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,field_description:hr_payroll_account_iso20022.field_hr_employee__is_trusted_bank_account
+msgid "Send Money"
+msgstr "Send penge"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,help:hr_payroll_account_iso20022.field_hr_employee__is_trusted_bank_account
+msgid ""
+"Sending fake invoices with a fraudulent account number is a common phishing "
+"practice. To protect yourself, always verify new bank account numbers, "
+"preferably by calling the vendor, as phishing usually happens when their "
+"emails are compromised. Once verified, you can activate the ability to send "
+"money."
+msgstr ""
+"At sende falske fakturaer med et svigagtigt kontonummer er en almindelig "
+"phishing-praksis. For at beskytte dig selv skal du altid bekræfte nye "
+"bankkontonumre, helst ved at ringe til leverandøren, da phishing normalt "
+"sker, når deres e-mails er kompromitteret. Når du er verificeret, kan du "
+"aktivere muligheden for at sende penge."
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/wizard/hr_payroll_payment_report_wizard.py:0
+msgid "Some employees (%s) don't have a valid name on the work contact."
+msgstr ""
+"Nogle medarbejdere (%s) har ikke et gyldigt navn på ansættelseskontrakten."
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/wizard/hr_payroll_payment_report_wizard.py:0
+msgid "Some employees (%s) don't have a work contact."
+msgstr "Nogle medarbejdere (%s) har ikke en ansættelseskontrakt."
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields.selection,name:hr_payroll_account_iso20022.selection__hr_payroll_payment_report_wizard__export_format__iso20022_ch
+msgid "Swiss ISO20022"
+msgstr "Schweizisk: ISO20022"
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/models/hr_employee.py:0
+msgid ""
+"The following employees have invalid bank accounts and could not be "
+"trusted:\n"
+"%s"
+msgstr ""
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/wizard/hr_payroll_payment_report_wizard.py:0
+msgid ""
+"The journal '%s' requires a proper IBAN account to pay via SEPA. Please "
+"configure it first."
+msgstr ""
+"Journalen '%s' kræver en gyldig IBAN konto for at betale via SEPA. Opsæt den "
+"venligst først."
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.view_employee_form
+msgid "Trust Bank Account"
+msgstr "Pålidelig bankkonto"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,field_description:hr_payroll_account_iso20022.field_hr_payslip__iso20022_uetr
+msgid "UETR"
+msgstr "UETR"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,help:hr_payroll_account_iso20022.field_hr_payslip__iso20022_uetr
+msgid "Unique end-to-end transaction reference"
+msgstr "Unik transaktionsreference fra start til slut (UETR)"
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.view_employee_form
+msgid "Untrust Bank Account"
+msgstr "Ikke pålidelig bankkonto"
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/models/hr_employee.py:0
+msgid "You do not have the right to trust or un-trust a bank account."
+msgstr "Du har ikke ret til at vurdere, om en bankkonto er pålidelig eller ej."

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.actions.server" id="hr_payroll.action_hr_payroll_confirm_payroll">
+        <field name="name">Create Draft Entry</field>
+    </record>
+
+    <data noupdate="1">
+        <record id="hr_payroll.default_deduction_salary_rule" model="hr.salary.rule">
+            <field name="split_move_lines" eval="True"/>
+        </record>
+
+        <record id="hr_payroll.default_attachment_of_salary_rule" model="hr.salary.rule">
+            <field name="split_move_lines" eval="True"/>
+        </record>
+
+        <record id="hr_payroll.default_assignment_of_salary_rule" model="hr.salary.rule">
+            <field name="split_move_lines" eval="True"/>
+        </record>
+
+        <record id="hr_payroll.default_child_support" model="hr.salary.rule">
+            <field name="split_move_lines" eval="True"/>
+        </record>
+
+        <record id="hr_payroll.default_reimbursement_salary_rule" model="hr.salary.rule">
+            <field name="split_move_lines" eval="True"/>
+        </record>
+    </data>
+</odoo>

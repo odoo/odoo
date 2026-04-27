@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id='fleet_vehicle_view_form_inherit_documents_fleet' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.form.inherit.documents.fleet</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="documents_fleet_settings" invisible="1"/>
+                <button class="oe_stat_button" name="action_open_attachments" groups="documents.group_documents_user"
+                    type="object" icon="fa-file-text-o" invisible="not documents_fleet_settings">
+                    <field string="Documents" name="document_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_product_view_form_normalized_account" model="ir.ui.view">
+        <field name="name">product.product.view.form.normalized.account.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_view_form_normalized"/>
+        <field name="arch" type="xml">
+            <field name="barcode" position="attributes">
+                <attribute name="widget">productScanner</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

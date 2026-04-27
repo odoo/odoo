@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="iot_box_view_form_self_order_iot" model="ir.ui.view">
+        <field name="name">self.order.iot.box.view.form.inherit.iot</field>
+        <field name="model">iot.box</field>
+        <field name="inherit_id" ref="iot.iot_box_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Link js class to IoT Box element -->
+            <xpath expr="//form" position="attributes">
+                <attribute name="js_class">iot_box_form</attribute>
+            </xpath>
+
+            <!-- Add can_be_kiosk in 'Technical Info' tab -->
+            <xpath expr="//form/sheet/notebook/page[last()]/group/field[last()]" position="after">
+                <field name="can_be_kiosk" groups="base.group_no_one"/>
+            </xpath>
+
+            <!-- Add screen_orientation to IoT form view -->
+            <xpath expr="//form/sheet/group/group/field[last()]" position="after">
+                <field name="screen_orientation" invisible="not can_be_kiosk"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

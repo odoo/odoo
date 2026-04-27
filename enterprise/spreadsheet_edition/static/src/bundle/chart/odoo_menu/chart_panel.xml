@@ -1,0 +1,57 @@
+<odoo>
+
+    <t t-name="spreadsheet_edition.OdooMenuChartPanelSection">
+        <Section>
+            <t t-set-slot="title">Link to Odoo menu</t>
+            <IrMenuSelector
+                menuId="odooMenuId"
+                onValueChanged.bind="updateOdooLink"/>
+        </Section>
+    </t>
+
+    <t t-name="spreadsheet_edition.GenericChartConfigPanel"
+        t-inherit="o-spreadsheet-GenericChartConfigPanel"
+        t-inherit-mode="extension"
+       >
+        <xpath expr="//ChartErrorSection" position="before">
+            <t t-call="spreadsheet_edition.OdooMenuChartPanelSection"/>
+        </xpath>
+    </t>
+
+    <t t-name="spreadsheet_edition.BarConfigPanel"
+        t-inherit="o-spreadsheet-BarConfigPanel"
+        t-inherit-mode="extension"
+       >
+        <xpath expr="//ChartErrorSection" position="before">
+            <t t-call="spreadsheet_edition.OdooMenuChartPanelSection"/>
+        </xpath>
+    </t>
+
+    <t t-name="spreadsheet_edition.LineConfigPanel"
+        t-inherit="o-spreadsheet-LineConfigPanel"
+        t-inherit-mode="extension"
+       >
+        <xpath expr="//ChartErrorSection" position="before">
+            <t t-call="spreadsheet_edition.OdooMenuChartPanelSection"/>
+        </xpath>
+    </t>
+
+    <t t-name="spreadsheet_edition.ScorecardChartConfigPanel"
+        t-inherit="o-spreadsheet-ScorecardChartConfigPanel"
+        t-inherit-mode="extension"
+       >
+        <xpath expr="//ChartErrorSection" position="before">
+            <t t-call="spreadsheet_edition.OdooMenuChartPanelSection"/>
+        </xpath>
+    </t>
+
+    <t t-name="spreadsheet_edition.GaugeChartConfigPanel"
+        t-inherit="o-spreadsheet-GaugeChartConfigPanel"
+        t-inherit-mode="extension"
+       >
+        <xpath expr="//ChartErrorSection" position="before">
+            <t t-call="spreadsheet_edition.OdooMenuChartPanelSection"/>
+        </xpath>
+    </t>
+
+</odoo>

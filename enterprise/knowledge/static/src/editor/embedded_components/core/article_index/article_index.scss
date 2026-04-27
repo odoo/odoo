@@ -1,0 +1,34 @@
+$embedded-article-index-bg--active: #1ba1e4;
+
+[data-embedded="articleIndex"] {
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    outline: 1px solid $o-gray-300;
+    outline-offset: -1px;
+    border-radius: 5px;
+    padding: 8px;
+    .o_embedded_articles_index_content {
+        min-height: 30px;
+        ol {
+            list-style-type: none;
+            li {
+                a {
+                    font-family: $font-family-base !important;
+                    font-weight: $font-weight-bolder !important;
+                    border-radius: 5px;
+                }
+                a:hover {
+                    background-color: rgba($embedded-article-index-bg--active, 0.2);
+                    text-decoration: none;
+                }
+            }
+        }
+
+        > ol {
+            padding: 0;
+            margin: 0;
+        }
+    }
+}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="demo_partner_l10n_ec_edi" model="res.partner">
+        <field name="name">Amigo Andrés</field>
+        <field name="street">42 Avenida Machala</field>
+        <field name="city">Guayaquil</field>
+        <field name="country_id" ref="base.ec"/>
+        <field name="zip">090514</field>
+        <field name="phone">+593 4 3731742</field>
+        <field name="email">info@company.ecexample.com</field>
+        <field name="website">www.ecexample.com</field>
+        <field name="vat">0931077481</field>
+        <field name="l10n_latam_identification_type_id" ref="l10n_ec.ec_dni"/>
+        <field name="l10n_ec_taxpayer_type_id" ref="l10n_ec_taxpayer_type_06"/>
+    </record>
+
+    <record id="l10n_ec.ec_social_security" model="res.partner" >
+        <field name="street">Av. 10 de Agosto</field>
+        <field name="city">Quito</field>
+        <field name="l10n_latam_identification_type_id" ref="l10n_ec.ec_ruc"/>
+        <field name="l10n_ec_taxpayer_type_id" ref="l10n_ec_taxpayer_type_01"/>
+    </record>
+</odoo>

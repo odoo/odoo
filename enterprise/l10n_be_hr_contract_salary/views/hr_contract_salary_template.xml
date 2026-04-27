@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="salary_package_canteen" inherit_id="hr_contract_salary.salary_package">
+        <xpath expr="//input[@name='token']" position="after">
+            <input type="hidden" name="l10n_be_canteen_cost" t-att-value="l10n_be_canteen_cost"/>
+        </xpath>
+    </template>
+
+    <template id="salary_package_wishlist_sidebar" inherit_id="hr_contract_salary.salary_package_benefits">
+        <xpath expr="//div[@id='hr_cs_configurator']" position="inside">
+           <div role="dialog" id="hr_cs_modal_wishlist" class="modal fade" tabindex="-1" aria-hidden="true">
+                <div id="hr_wishlist_car_simulation" class="modal-dialog" role="document" style="overflow-y: initial;">
+                    <div class="modal-content">
+                        <header class="modal-header">
+                            <h3 class="modal-title">Simulation with Car to Order</h3>
+                            <a role="button" class="btn btn-secondary close fa fa-close" data-bs-dismiss="modal" aria-label="close"/>
+                        </header>
+                        <main name="wishlist_modal_body" class="p-3"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

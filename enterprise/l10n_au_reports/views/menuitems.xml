@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_account_report_l10n_au_tpar" model="ir.actions.client">
+        <field name="name">Taxable Payments Annual Reports (TPAR)</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('l10n_au_reports.tpar_report')}" />
+    </record>
+
+    <menuitem
+        id="menu_action_account_report_l10n_au_tpar"
+        name="Taxable Payments Annual Reports (TPAR)"
+        action="action_account_report_l10n_au_tpar"
+        parent="l10n_au.account_reports_au_statements_menu"
+    />
+</odoo>

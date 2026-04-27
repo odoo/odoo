@@ -1,0 +1,15 @@
+.o_font_awesome_icon_selector_menu {
+    min-width: 0; // Force the items to wrap, instead of allowing the dropdown to expand horizontally
+    min-height: 350px; // Avoid having the panel resizing when doing a search, we use the same 350px value SelectMenu uses
+
+    .o_select_menu_item {
+        display: inline-block !important;
+        padding: .5em;
+        width: auto;
+        line-height: 1;
+    }
+    .o_font_awesome_icon_selector_value {
+        width: 22px;
+        height: 22px;
+    }
+}

@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="BASIC" model="hr.salary.rule.category">
+            <field name="name">Basic</field>
+            <field name="code">BASIC</field>
+        </record>
+
+        <record id="ALW" model="hr.salary.rule.category">
+            <field name="name">Allowance</field>
+            <field name="code">ALW</field>
+        </record>
+
+        <record id="GROSS" model="hr.salary.rule.category">
+            <field name="name">Taxable Salary</field>
+            <field name="code">GROSS</field>
+        </record>
+
+        <record id="DED" model="hr.salary.rule.category">
+            <field name="name">Deduction</field>
+            <field name="code">DED</field>
+        </record>
+
+        <record id="NET" model="hr.salary.rule.category">
+            <field name="name">Net</field>
+            <field name="code">NET</field>
+        </record>
+
+        <record id="COMP" model="hr.salary.rule.category">
+            <field name="name">Company Contribution</field>
+            <field name="code">COMP</field>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <!--Default structure -->
+        <record id="default_structure" model="hr.payroll.structure">
+            <field name="name">Default Structure Rules Set</field>
+            <field name="type_id" ref="hr_contract.structure_type_employee"/>
+            <field name="country_id" eval="False"/>
+            <field name="active">False</field>
+        </record>
+
+        <!--default salary rules -->
+        <record id="default_basic_salary_rule" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll.BASIC"/>
+            <field name="name">Basic Salary</field>
+            <field name="sequence">1</field>
+            <field name="code">BASIC</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = payslip.paid_amount
+            </field>
+            <field name="struct_id" ref="hr_payroll.default_structure"/>
+        </record>
+
+        <record id="default_gross_salary_rule" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll.GROSS"/>
+            <field name="name">Taxable Salary</field>
+            <field name="sequence">100 </field>
+            <field name="code">GROSS</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = categories['BASIC'] + categories['ALW']
+            </field>
+            <field name="struct_id" ref="hr_payroll.default_structure"/>
+        </record>
+
+        <record id="default_deduction_salary_rule" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="name">Deduction</field>
+            <field name="sequence">198</field>
+            <field name="code">DEDUCTION</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = 'DEDUCTION' in inputs</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = -inputs['DEDUCTION'].amount
+result_name = inputs['DEDUCTION'].name
+            </field>
+            <field name="struct_id" ref="hr_payroll.default_structure"/>
+        </record>
+
+        <record id="default_attachment_of_salary_rule" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="name">Attachment of Salary</field>
+            <field name="sequence">174</field>
+            <field name="code">ATTACH_SALARY</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = 'ATTACH_SALARY' in inputs</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = -inputs['ATTACH_SALARY'].amount
+result_name = inputs['ATTACH_SALARY'].name
+            </field>
+            <field name="struct_id" ref="hr_payroll.default_structure"/>
+        </record>
+
+        <record id="default_assignment_of_salary_rule" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="name">Assignment of Salary</field>
+            <field name="sequence">174</field>
+            <field name="code">ASSIG_SALARY</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = 'ASSIG_SALARY' in inputs</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = -inputs['ASSIG_SALARY'].amount
+result_name = inputs['ASSIG_SALARY'].name
+            </field>
+            <field name="struct_id" ref="hr_payroll.default_structure"/>
+        </record>
+
+        <record id="default_child_support" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="name">Child Support</field>
+            <field name="code">CHILD_SUPPORT</field>
+            <field name="amount_select">code</field>
+            <field name="sequence">174</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = 'CHILD_SUPPORT' in inputs</field>
+            <field name="amount_python_compute">
+result = -inputs['CHILD_SUPPORT'].amount
+result_name = inputs['CHILD_SUPPORT'].name
+            </field>
+            <field name="struct_id" ref="hr_payroll.default_structure"/>
+        </record>
+
+        <record id="default_reimbursement_salary_rule" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="name">Reimbursement</field>
+            <field name="sequence">199</field>
+            <field name="code">REIMBURSEMENT</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = 'REIMBURSEMENT' in inputs</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = inputs['REIMBURSEMENT'].amount
+result_name = inputs['REIMBURSEMENT'].name
+            </field>
+            <field name="struct_id" ref="hr_payroll.default_structure"/>
+        </record>
+
+        <record id="default_net_salary" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll.NET"/>
+            <field name="name">Net Salary</field>
+            <field name="sequence">200</field>
+            <field name="code">NET</field>
+            <field name="appears_on_employee_cost_dashboard">True</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = categories['BASIC'] + categories['ALW'] + categories['DED']
+            </field>
+            <field name="struct_id" ref="hr_payroll.default_structure"/>
+        </record>
+    </data>
+
+    <data noupdate="0">
+        <!-- Salary Structure -->
+        <record id="structure_002" model="hr.payroll.structure">
+            <field name="name">Regular Pay</field>
+            <field name="type_id" ref="hr_contract.structure_type_employee"/>
+            <field name="unpaid_work_entry_type_ids" eval="[(4, ref('hr_work_entry_contract.work_entry_type_unpaid_leave'))]"/>
+            <field name="country_id" eval="False"/>
+        </record>
+        <record id="hr_contract.structure_type_employee" model="hr.payroll.structure.type">
+            <field name="default_struct_id" ref="structure_002"/>
+        </record>
+
+        <record id="structure_worker_001" model="hr.payroll.structure">
+            <field name="name">Worker Pay</field>
+            <field name="type_id" ref="hr_contract.structure_type_worker"/>
+            <field name="country_id" eval="False"/>
+        </record>
+        <record id="hr_contract.structure_type_worker" model="hr.payroll.structure.type">
+            <field name="default_struct_id" ref="structure_worker_001"/>
+        </record>
+
+        <!-- Decimal Precision -->
+        <record forcecreate="True" id="decimal_payroll" model="decimal.precision">
+            <field name="name">Payroll</field>
+            <field name="digits">2</field>
+        </record>
+
+        <record forcecreate="True" id="decimal_payroll_rate" model="decimal.precision">
+            <field name="name">Payroll Rate</field>
+            <field name="digits">4</field>
+        </record>
+
+        <!-- Work Entry Type -->
+         <record id="hr_work_entry_contract.work_entry_type_leave" model="hr.work.entry.type">
+            <field name="round_days">HALF</field>
+            <field name="round_days_type">DOWN</field>
+        </record>
+
+        <record id="hr_work_entry_contract.work_entry_type_compensatory" model="hr.work.entry.type">
+            <field name="round_days">HALF</field>
+            <field name="round_days_type">DOWN</field>
+        </record>
+
+        <record id="hr_work_entry_contract.work_entry_type_home_working" model="hr.work.entry.type">
+            <field name="round_days">HALF</field>
+            <field name="round_days_type">DOWN</field>
+        </record>
+
+        <record id="hr_work_entry_contract.work_entry_type_unpaid_leave" model="hr.work.entry.type">
+            <field name="round_days">HALF</field>
+            <field name="round_days_type">DOWN</field>
+        </record>
+
+        <record id="hr_work_entry_contract.work_entry_type_sick_leave" model="hr.work.entry.type">
+            <field name="round_days">HALF</field>
+            <field name="round_days_type">DOWN</field>
+        </record>
+
+         <record id="hr_work_entry_contract.work_entry_type_legal_leave" model="hr.work.entry.type">
+            <field name="round_days">HALF</field>
+            <field name="round_days_type">DOWN</field>
+        </record>
+
+        <record id="hr_work_entry_type_out_of_contract" model="hr.work.entry.type">
+            <field name="name">Out of Contract</field>
+            <field name="color">0</field>
+            <field name="code">OUT</field>
+            <field name="is_leave" eval="False"/>
+            <field name="is_unforeseen" eval="False"/>
+            <field name="round_days">HALF</field>
+            <field name="round_days_type">HALF-UP</field>
+        </record>
+
+        <record id="input_deduction" model="hr.payslip.input.type">
+            <field name="name">Deduction</field>
+            <field name="code">DEDUCTION</field>
+            <field name="country_id" eval="False"/>
+        </record>
+
+        <record id="input_reimbursement" model="hr.payslip.input.type">
+            <field name="name">Reimbursement</field>
+            <field name="code">REIMBURSEMENT</field>
+            <field name="country_id" eval="False"/>
+        </record>
+
+        <record id="input_attachment_salary" model="hr.payslip.input.type">
+            <field name="name">Attachment of Salary</field>
+            <field name="code">ATTACH_SALARY</field>
+            <field name="country_id" eval="False"/>
+            <field name="available_in_attachments" eval="True"/>
+        </record>
+
+        <record id="input_assignment_salary" model="hr.payslip.input.type">
+            <field name="name">Assignment of Salary</field>
+            <field name="code">ASSIG_SALARY</field>
+            <field name="country_id" eval="False"/>
+            <field name="available_in_attachments" eval="True"/>
+        </record>
+
+        <record id="input_child_support" model="hr.payslip.input.type">
+            <field name="name">Child Support</field>
+            <field name="code">CHILD_SUPPORT</field>
+            <field name="country_id" eval="False"/>
+            <field name="available_in_attachments" eval="True"/>
+            <field name="default_no_end_date" eval="True"/>
+        </record>
+
+        <record model="ir.actions.server" id="action_reset_work_entries">
+                <field name="name">Payroll - Technical: Reset Work Entries</field>
+                <field name="model_id" ref="hr_work_entry.model_hr_work_entry"/>
+                <field name="state">code</field>
+                <field name="groups_id" eval="[(4,ref('base.group_system'))]"/>
+                <field name="code">
+# Don't call this server action if you don't want to loose all your work entries
+env['hr.work.entry'].search([]).unlink()
+now = datetime.datetime.now()
+env['hr.contract'].write({
+    'date_generated_from': now,
+    'date_generated_to': now
+})
+                </field>
+        </record>
+
+        <record id="action_edit_payslip_lines" model="ir.actions.server">
+            <field name="name">Edit Payslip Lines</field>
+            <field name="model_id" ref="hr_payroll.model_hr_payslip"/>
+            <field name="binding_model_id" ref="hr_payroll.model_hr_payslip"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.action_edit_payslip_lines()
+            </field>
+        </record>
+    </data>
+</odoo>

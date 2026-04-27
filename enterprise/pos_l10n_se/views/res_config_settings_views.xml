@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.pos_l10n_se</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="pos_iot.res_config_view_form_inherit_pos_iot"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='row_scale']" position="after">
+                <div class="row">
+                    <label string="Swedish Fiscal Data Module" for="pos_iface_sweden_fiscal_data_module" class="col-lg-4 o_light_label"/>
+                    <field name="pos_iface_sweden_fiscal_data_module"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

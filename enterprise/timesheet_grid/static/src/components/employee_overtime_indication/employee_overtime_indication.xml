@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="timesheet_grid.EmployeeOvertimeIndication">
+        <small t-if="overtimeIndication"
+               t-attf-class="o_timesheet_overtime_indication align-self-center mx-1 opacity-75 {{ colorClasses }}"
+               title="Difference between the number of hours recorded and the number of hours the employee was supposed to work according to his contract"
+        >
+            <t t-out="overtimeIndication"/>
+        </small>
+    </t>
+</templates>

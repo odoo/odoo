@@ -1,0 +1,45 @@
+<templates>
+
+    <t t-name="web_studio.ViewEditor.FormEditorSidebar">
+        <InteractiveEditorSidebar>
+            <t t-set-slot="new" isDefault="true">
+                <ViewStructures structures="constructor.viewStructures" />
+                <NewFields />
+                <ExistingFields resModel="env.viewEditorModel.resModel" fields="env.viewEditorModel.fields" fieldsInArch="env.viewEditorModel.fieldsInArch"/>
+            </t>
+            <t t-set-slot="view">
+                <Property
+                    name="'create'"
+                    value="getActiveAction('create')"
+                    type="'boolean'"
+                    onChange.bind="onAttributeChanged"
+                >
+                    Can Create
+                </Property>
+                <Property
+                    name="'edit'"
+                    value="getActiveAction('edit')"
+                    type="'boolean'"
+                    onChange.bind="onAttributeChanged"
+                >
+                    Can Edit
+                </Property>
+                <Property
+                    name="'delete'"
+                    value="getActiveAction('delete')"
+                    type="'boolean'"
+                    onChange.bind="onAttributeChanged"
+                >
+                    Can Delete
+                </Property>
+                <t t-call="web_studio.ViewEditor.ShowInvisibleToggler" />
+                <SidebarViewToolbox onMore="props.openViewInForm" canEditXml="!env.viewEditorModel.isEditingSubview" openDefaultValues="props.openDefaultValues" />
+            </t>
+
+            <t t-set-slot="properties">
+                <Properties propertiesComponents="propertiesComponents"/>
+            </t>
+        </InteractiveEditorSidebar>
+    </t>
+
+</templates>

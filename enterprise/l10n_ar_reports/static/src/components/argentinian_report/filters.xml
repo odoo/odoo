@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="l10n_ar_reports.L10nArReportsFiltersCustomizable" t-inherit="account_reports.GenericTaxReportFiltersCustomizable">
+        <xpath expr="//div[@id='filter_variant']" position="after">
+            <div class="acc_rep_filter_tax_unit">
+                <t t-call="l10n_ar_reports.L10nArReportsFilterTaxType"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

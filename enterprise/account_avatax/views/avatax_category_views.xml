@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="avatax_category_tree" model="ir.ui.view">
+        <field name="name">product.avatax.category.list</field>
+        <field name="model">product.avatax.category</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="code"/>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="avatax_category_search" model="ir.ui.view">
+        <field name="name">product.avatax.category.search</field>
+        <field name="model">product.avatax.category</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="description"/>
+                <field name="code"/>
+            </search>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_recruitment_integration_base.IntegrationStateSelection">
+        <t t-if="props.ribbon">
+            <div class="ribbon ribbon-top-right">
+                <span t-att-class="ribbonClassNames">
+                    <t t-esc="title"/>
+                </span>
+            </div>
+        </t>
+        <t t-else="">
+            <div t-att-title="title">
+                <img t-att-class="imgClassNames"/>
+            </div>
+        </t>
+    </t>
+
+</templates>

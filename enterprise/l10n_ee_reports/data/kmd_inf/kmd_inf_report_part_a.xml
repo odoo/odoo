@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="kmd_inf_report_part_a" model="account.report">
+        <field name="name">VAT Report Annex KMD INF Part A</field>
+        <field name="country_id" ref="base.ee"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="availability_condition">country</field>
+        <field name="custom_handler_model_id" ref="model_l10n_ee_kmd_inf_report_handler"/>
+        <field name="column_ids">
+            <record id="kmd_inf_a_report_buyer_reg_code" model="account.report.column">
+                <field name="name">Buyer Register Code</field>
+                <field name="expression_label">partner_reg_code</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="kmd_inf_a_report_buyer_name" model="account.report.column">
+                <field name="name">Buyer Name</field>
+                <field name="expression_label">buyer_name</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="kmd_inf_a_report_invoice_number" model="account.report.column">
+                <field name="name">Invoice Number</field>
+                <field name="expression_label">invoice_number</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="kmd_inf_a_report_invoice_date" model="account.report.column">
+                <field name="name">Invoice Date</field>
+                <field name="expression_label">invoice_date</field>
+                <field name="figure_type">date</field>
+                <field name="sortable" eval="True"/>
+            </record>
+            <record id="kmd_inf_a_report_invoice_sum" model="account.report.column">
+                <field name="name">Invoice Total without VAT</field>
+                <field name="expression_label">invoice_total</field>
+                <field name="blank_if_zero" eval="True"/>
+            </record>
+            <record id="kmd_inf_a_report_tax_rate" model="account.report.column">
+                <field name="name">Tax Rate</field>
+                <field name="expression_label">tax_rate</field>
+                <field name="figure_type">percentage</field>
+                <field name="sortable" eval="True"/>
+                <field name="blank_if_zero" eval="True"/>
+            </record>
+            <record id="kmd_inf_a_report_sum_for_rate_in_period" model="account.report.column">
+                <field name="name">Taxable Supply for the Taxation Period</field>
+                <field name="expression_label">sum_for_rate_in_period</field>
+                <field name="blank_if_zero" eval="True"/>
+            </record>
+            <record id="kmd_inf_a_report_comments" model="account.report.column">
+                <field name="name">Special Code</field>
+                <field name="expression_label">comments</field>
+                <field name="figure_type">string</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="kmd_inf_report_a" model="account.report.line">
+                <field name="name">Part A - Invoices Issued</field>
+                <field name="groupby">move_id, id</field>
+                <field name="expression_ids">
+                    <record id="kmd_inf_report_a_buyer_reg_code" model="account.report.expression">
+                        <field name="label">partner_reg_code</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_kmd_inf_a</field>
+                        <field name="subformula">partner_reg_code</field>
+                    </record>
+                    <record id="kmd_inf_report_a_buyer_name" model="account.report.expression">
+                        <field name="label">buyer_name</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_kmd_inf_a</field>
+                        <field name="subformula">partner_name</field>
+                    </record>
+                    <record id="kmd_inf_report_a_invoice_number" model="account.report.expression">
+                        <field name="label">invoice_number</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_kmd_inf_a</field>
+                        <field name="subformula">invoice_number</field>
+                    </record>
+                    <record id="kmd_inf_report_a_invoice_date" model="account.report.expression">
+                        <field name="label">invoice_date</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_kmd_inf_a</field>
+                        <field name="subformula">invoice_date</field>
+                    </record>
+                    <record id="kmd_inf_report_a_invoice_sum" model="account.report.expression">
+                        <field name="label">invoice_total</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_kmd_inf_a</field>
+                        <field name="subformula">invoice_total</field>
+                    </record>
+                    <record id="kmd_inf_report_a_tax_rate" model="account.report.expression">
+                        <field name="label">tax_rate</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_kmd_inf_a</field>
+                        <field name="subformula">tax_rate</field>
+                    </record>
+                    <record id="kmd_inf_report_a_sum_for_rate_in_period" model="account.report.expression">
+                        <field name="label">sum_for_rate_in_period</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_kmd_inf_a</field>
+                        <field name="subformula">sum_for_rate_in_period</field>
+                    </record>
+                    <record id="kmd_inf_report_a_comments" model="account.report.expression">
+                        <field name="label">comments</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_kmd_inf_a</field>
+                        <field name="subformula">comments</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

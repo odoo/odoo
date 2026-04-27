@@ -1,0 +1,66 @@
+.o_web_studio_editor_manager .o_web_studio_view_renderer .o_kanban_view .o_web_studio_kanban_view_editor_legacy {
+    .o_kanban_record {
+        &.o_kanban_demo {
+            min-height: 70px;
+            opacity: 0.2;
+            padding: 0;
+            & > div  {
+                height: unset;
+            }
+        }
+        &.o_kanban_ghost {
+            opacity: 0;
+        }
+
+        // display the dropdown in kanban editor
+        .o_dropdown_kanban {
+            visibility: visible;
+        }
+
+        .o_web_studio_kanban_hook {
+            &:not(:hover) {
+                opacity: .2;
+            }
+        }
+
+        .o-web-studio-editor--element-clickable {
+            // HOVER HANDLING
+            &:hover {
+                cursor: pointer;
+                outline: 1px dashed $o-brand-primary;
+            }
+
+            // CLICK HANDLING
+            &.o-web-studio-editor--element-clicked {
+                outline: 2px solid $o-brand-primary;
+                &.btn {
+                    outline: 2px solid darken($o-brand-primary, 5%);
+                }
+                &:not(.o_statusbar_status) {
+                    outline-offset: -2px;
+                }
+            }
+        }
+
+        .o_web_studio_hook {
+            border: 0px dashed transparent;
+
+            &.o_web_studio_nearest_hook {
+                display: block;
+                cursor: pointer;
+                background-color: rgba($o-brand-primary, 0.02);
+                border: 1px dashed rgba($o-brand-primary, 0.5);
+                padding: 10px;
+                margin: 10px 0;
+            }
+        }
+    }
+
+    .o_kanban_group {
+        background-color: $o-webclient-background-color;
+
+        &:nth-child(even) {
+            background-color: darken($o-webclient-background-color, 3%);
+        }
+    }
+}

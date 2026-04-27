@@ -1,0 +1,266 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_payroll_expense
+#
+# Translators:
+# Lyall Kindmurr, 2024
+# Wil Odoo, 2024
+# Larisa_nexterp, 2025
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2025-11-17 14:13+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-18/"
+"hr_payroll_expense/ro/>\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: hr_payroll_expense
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.view_account_payment_register_form_inherit_hr_payroll_expense
+msgid ""
+"<span class=\"fw-bold\">\n"
+"                            The expenses will already be reimbursed in a "
+"payslip. Make sure this payment is intended.\n"
+"                        </span>"
+msgstr ""
+"<span class=\"fw-bold\">\n"
+"                            Cheltuielile vor fi deja rambursate într-un "
+"fluturaș de salariu. Asigurați-vă că această plată este intenționată.\n"
+"                        </span>"
+
+#. module: hr_payroll_expense
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_expense_sheet_view_form_inherit_payroll
+msgid "<span class=\"o_stat_text\">Payslip</span>"
+msgstr "<span class=\"o_stat_text\">Fluturaș de salariu</span>"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_expense_sheet
+msgid "Expense Report"
+msgstr "Raport de cheltuieli"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"Expense reimbursement rule needs to be configured to add expenses to "
+"payslips.\n"
+"Please create one salary rule with the \"%(code)s\" code on the relevant "
+"salary structures."
+msgstr ""
+"Regula de rambursare a cheltuielilor trebuie configurată pentru a adăuga "
+"cheltuieli la fluturașii de salariu.\n"
+"Vă rugăm să creați o regulă de salariu cu codul \"%(code)s\" pe structurile "
+"de salariu relevante."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "Expense report (\"%(name)s\") was removed from the next payslip."
+msgstr ""
+"Raportul de cheltuieli (\"%(name)s\") a fost eliminat din următorul fluturaș "
+"de salariu."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "Expense report (\"%(name)s\") will be added to the next payslip."
+msgstr ""
+"Raportul de cheltuieli (\"%(name)s\") va fi adăugat la următorul fluturaș de "
+"salariu."
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_payslip__expense_sheet_ids
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_payslip_view_form_inherit_expense
+msgid "Expenses"
+msgstr "Cheltuieli"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_payslip__expenses_count
+msgid "Expenses Count"
+msgstr "Număr de cheltuieli"
+
+#. module: hr_payroll_expense
+#: model:hr.salary.rule,name:hr_payroll_expense.hr_salary_rule_expense_refund
+msgid "Expenses Reimbursement"
+msgstr "Rambursarea cheltuielilor"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,help:hr_payroll_expense.field_hr_payslip__expense_sheet_ids
+msgid "Expenses to reimburse to employee."
+msgstr "Cheltuieli de rambursat angajatului."
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_payslip_employees
+msgid "Generate payslips for all selected employees"
+msgstr "Generează fluturași de salariu pentru toți angajații selectați"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "Go to salary rules"
+msgstr "Mergeți la regulile de salariu"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_account_payment_register__is_already_paid_through_a_payslip
+msgid "Is Already Paid Through A Payslip"
+msgstr "Este deja plătit printr-un fluturaș de salariu"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_account_move
+msgid "Journal Entry"
+msgstr "Înregistrare de jurnal "
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payroll_structure.py:0
+msgid ""
+"No debit account found in the '%(rule_name)s' payslip salary rule. Please "
+"add a payable debit account to be able to create an accounting entry for the "
+"expense reports linked to this payslip."
+msgstr ""
+"Nu s-a găsit niciun cont de debit în regula de salariu '%(rule_name)s' a "
+"fluturașului de salariu. Vă rugăm să adăugați un cont de debit plătibil "
+"pentru a putea crea o înregistrare contabilă pentru rapoartele de cheltuieli "
+"legate de acest fluturaș de salariu."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid ""
+"No salary rule was found to handle expenses in structure '%"
+"(structure_name)s'."
+msgstr ""
+"Nu s-a găsit nicio regulă de salariu pentru gestionarea cheltuielilor în "
+"structura '%(structure_name)s'."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"Only approved expense reports that were paid by an employee can be "
+"reimbursed in a payslip."
+msgstr ""
+"Doar rapoartele de cheltuieli aprobate care au fost plătite de un angajat "
+"pot fi rambursate într-un fluturaș de salariu."
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_account_payment_register
+msgid "Pay"
+msgstr "Plată"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Fluturaș de salariu"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_expense_sheet__payslip_id
+msgid "Payslip"
+msgstr "Fluturaș de salariu"
+
+#. module: hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_payroll_expense.field_hr_expense_sheet__refund_in_payslip
+msgid "Reimburse In Next Payslip"
+msgstr "Rambursați în următorul fluturaș de salariu"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid "Reimbursed Expenses"
+msgstr "Cheltuieli rambursate"
+
+#. module: hr_payroll_expense
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_expense_sheet_view_form_inherit_payroll
+msgid "Remove from Payslip"
+msgstr "Eliminați din fluturașul de salariu"
+
+#. module: hr_payroll_expense
+#: model:ir.actions.server,name:hr_payroll_expense.hr_expense_add_to_payslip_action_server
+#: model_terms:ir.ui.view,arch_db:hr_payroll_expense.hr_expense_sheet_view_form_inherit_payroll
+msgid "Report in Next Payslip"
+msgstr "Raportați în următorul fluturaș de salariu"
+
+#. module: hr_payroll_expense
+#: model:ir.model,name:hr_payroll_expense.model_hr_payroll_structure
+msgid "Salary Structure"
+msgstr "Structura salariu"
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payroll_structure.py:0
+msgid ""
+"The '%(account_name)s' account for the salary rule '%(rule_name)s' must be "
+"of type 'Payable'."
+msgstr ""
+"Contul '%(account_name)s' pentru regula de salariu '%(rule_name)s' trebuie "
+"să fie de tip 'Plătibil'."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid ""
+"The salary rules with the code 'EXPENSES' must have a debit account set to "
+"be able to properly reimburse the linked expenses. This must be an account "
+"of type 'Payable'."
+msgstr ""
+"Regulile de salariu cu codul 'EXPENSES' trebuie să aibă un cont de debit "
+"setat pentru a putea rambursa corect cheltuielile legate. Acesta trebuie să "
+"fie un cont de tip 'Plătibil'."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"The state of the accounting entries linked to this expense report do not "
+"allow it to be reimbursed through a payslip."
+msgstr ""
+"Starea înregistrărilor contabile legate de acest raport de cheltuieli nu "
+"permite rambursarea printr-un fluturaș de salariu."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid "There are no valid expense sheets selected."
+msgstr "Nu sunt selectate foi de cheltuieli valide."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_expense_sheet.py:0
+msgid ""
+"You cannot remove an expense from a payslip that has already been "
+"validated.\n"
+"Expenses can only be removed from draft or canceled payslips."
+msgstr ""
+"Nu puteți elimina o cheltuială dintr-un fluturaș de salariu care a fost deja "
+"validat.\n"
+"Cheltuielile pot fi eliminate doar din fluturașii de salariu în stadiu de "
+"ciornă sau anulați."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/hr_payslip.py:0
+msgid ""
+"You don't have the access rights to link an expense report to a payslip. You "
+"need to be a payroll officer to do that."
+msgstr ""
+"Nu aveți drepturile de acces pentru a lega un raport de cheltuieli la un "
+"fluturaș de salariu. Trebuie să fiți responsabil de salarizare pentru a face "
+"acest lucru."
+
+#. module: hr_payroll_expense
+#. odoo-python
+#: code:addons/hr_payroll_expense/models/account_move.py:0
+msgid "You don't have the access rights to post an invoice."
+msgstr "Nu aveți drepturile de acces pentru a posta o factură."

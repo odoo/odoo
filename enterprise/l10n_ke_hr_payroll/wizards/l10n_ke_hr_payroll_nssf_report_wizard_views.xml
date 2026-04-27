@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ke_hr_payroll_nssf_report_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n.ke.hr.payroll.nssf.report.wizard.view.form</field>
+        <field name="model">l10n.ke.hr.payroll.nssf.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="NSSF Report">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="company_id" invisible="True"/>
+                            <field name="reference_month" class="o_hr_narrow_field"/>
+                            <field name="reference_year" class="o_hr_narrow_field" options="{'type': 'number'}"/>
+                        </group>
+                        <field name="line_ids">
+                            <list editable="bottom">
+                                <field name="payslip_number"/>
+                                <field name="employee_id" widget="many2one_avatar_user"/>
+                                <field name="employee_nssf_number"/>
+                                <field name="employee_kra_pin"/>
+                                <field name="employee_identification_id" column_invisible="True"/>
+                                <field name="payslip_nssf_code"/>
+                                <field name="payslip_nssf_amount_employee"/>
+                                <field name="payslip_nssf_amount_employer"/>
+                                <field name="payslip_income"/>
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Export XLSX" name="action_export_xlsx" class="btn-primary" type="object" data-hotkey="q"/>
+                    <button string="Discard" special="cancel" type="object" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_ke_hr_payroll_nssf_report_wizard_action" model="ir.actions.act_window">
+        <field name="name">NSSF Report</field>
+        <field name="res_model">l10n.ke.hr.payroll.nssf.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="l10n_us_reports.CheckRegisterLineName" t-inherit="account_reports.AccountReportLineNameCustomizable">
+        <xpath expr="//td[@data-id='line_name']" position="attributes">
+            <t t-if="props.line.unfoldable">
+                <attribute name="class" add="more" separator=" "/>
+            </t>
+        </xpath>
+
+        <xpath expr="//t[@data-id='line_buttons']" position="inside">
+            <t t-if="props.line.unfoldable">
+                <Dropdown position="'right-start'">
+                    <button class="btn btn_more">
+                        <i class="fa fa-ellipsis-v"/>
+                    </button>
+
+                    <t t-set-slot="content">
+                        <DropdownItem onSelected="(ev) => controller.reportAction(ev, 'open_journal_items', {
+                            line_id: props.line.id,
+                            view_ref: 'account.view_move_line_tree_grouped_partner',
+                        })">
+                            Journal Items
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+            </t>
+        </xpath>
+    </t>
+</templates>

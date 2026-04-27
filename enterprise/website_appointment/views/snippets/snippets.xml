@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="snippet_options" inherit_id="website.snippet_options" name="Appointment Snippet Options">
+    <xpath expr="." position="inside">
+        <div data-selector="main:has(.o_appointment_index)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Appointments Page">
+            <we-checkbox string="Card Design"
+                         data-customize-website-views="website_appointment.opt_appointments_list_cards"
+                         data-no-preview="true"
+                         data-reload="/"/>
+        </div>
+
+        <div data-js="AppointmentTypeOptions"
+             data-selector="main:has(.o_wappointment_type_options)"
+             data-page-options="true"
+             groups="website.group_website_designer"
+             data-no-check="true"
+             string="Appointment Type">
+            <we-checkbox string="Show Time Zone"
+                         data-toggle-hide-timezone="true"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Show Duration"
+                         data-toggle-hide-duration="true"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Show User/Resource Pictures"
+                         data-toggle-avatars-display="true"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Allow Guests"
+                         data-toggle-allow-guests="true"
+                         data-no-preview="true"
+                         data-reload="/"/>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

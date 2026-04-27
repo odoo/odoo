@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name="quality_control_spreadsheet.QualityCheckSpreadsheetAction" class="o_action">
+        <SpreadsheetNavbar t-props="navbarProps">
+            <t t-set-slot="navbar-additional-actions">
+                <button
+                    t-if="qualityCheckWizardId or qualityCheckId"
+                    class="btn btn-primary mx-1 py-0 px-1"
+                    t-on-click="writeToQualityCheck"
+                    data-hotkey="s"
+                >
+                    Save in <t t-esc="data.quality_check_display_name"/>
+                </button>
+            </t>
+        </SpreadsheetNavbar>
+        <SpreadsheetComponent model="model"/>
+    </div>
+
+</templates>

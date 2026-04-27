@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportDeferredGroupBy">
+        <Dropdown>
+            <button class="btn btn-secondary">
+                <i class="fa fa-list me-1"/>Group by
+                <t t-if="controller.options.deferred_grouping_field === 'account_id'">
+                    Account
+                </t>
+                <t t-elif="controller.options.deferred_grouping_field === 'product_category_id'">
+                    Product Category
+                </t>
+                <t t-else="">
+                    Product
+                </t>
+            </button>
+
+            <t t-set-slot="content">
+                <DropdownItem
+                    class="{ 'selected': controller.options.deferred_grouping_field === 'account_id' }"
+                    onSelected="() => this.filterClicked({ optionKey: 'deferred_grouping_field', optionValue: 'account_id', reload: true})"
+                >
+                    Account
+                </DropdownItem>
+
+                <DropdownItem
+                    class="{ 'selected': controller.options.deferred_grouping_field === 'product_category_id' }"
+                    onSelected="() => this.filterClicked({ optionKey: 'deferred_grouping_field', optionValue: 'product_category_id', reload: true})"
+                >
+                    Product Category
+                </DropdownItem>
+
+                <DropdownItem
+                    class="{ 'selected': controller.options.deferred_grouping_field === 'product_id' }"
+                    onSelected="() => this.filterClicked({ optionKey: 'deferred_grouping_field', optionValue: 'product_id', reload: true})"
+                >
+                    Product
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

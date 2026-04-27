@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.demo_company_my" model="res.company" forcecreate="1">
+        <field name="name">My Malaysian Company</field>
+        <field name="currency_id" ref="base.MYR"/>
+        <field name="street">2 Wisma Stephens Jln Raja Chulan</field>
+        <field name="zip">50200</field>
+        <field name="city">Kuala Lumpur</field>
+        <field name="country_id" ref="base.my"/>
+    </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_my'))]"/>
+    </record>
+
+    <record id="base.user_demo" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_my'))]"/>
+    </record>
+
+    <record id="hr_department_rdmy" model="hr.department">
+        <field name="name">RD MY</field>
+        <field name="company_id" ref="base.demo_company_my"/>
+    </record>
+
+    <record id="job_developer_malaysia" model="hr.job">
+        <field name="name">Experienced Developer MY</field>
+        <field name="department_id" ref="hr_department_rdmy"/>
+        <field name="no_of_recruitment">5</field>
+        <field name="company_id" ref="base.demo_company_my"/>
+    </record>
+
+    <record id="hr_employee_kah_yoon_ooi" model="hr.employee">
+        <field name="name">Kah Yoon Ooi</field>
+        <field name="job_id" ref="job_developer_malaysia"/>
+        <field name="country_id" ref="base.my"/>
+        <field name="company_id" ref="base.demo_company_my"/>
+        <field name="image_1920" type="base64" file="l10n_my_hr_payroll/static/img/hr_employee_kah_yoon_ooi.jpg"/>
+        <field name="gender">male</field>
+    </record>
+
+    <record id="res_partner_xiu_mei_lee" model="res.partner">
+        <field name="name">Xiu Mei Lee</field>
+        <field name="street">11 Jalan Bunga Melati 16A Taman Seraya Cheras</field>
+        <field name="city">Kuala Lumpur</field>
+        <field name="zip">56100</field>
+        <field name="country_id" ref="base.my"/>
+        <field name="phone">(603) 42915114</field>
+        <field name="email">xiu_mei_lee@example.com</field>
+        <field name="company_id" ref="base.demo_company_my"/>
+    </record>
+
+    <record id="user_xiu_mei_lee" model="res.users">
+        <field name="partner_id" ref="l10n_my_hr_payroll.res_partner_xiu_mei_lee"/>
+        <field name="login">xiu_mei_lee@example.com</field>
+        <field name="password">xiu_mei_lee</field>
+        <field name="signature" type="html"><span>--<br/>+Xiu Mei Lee</span></field>
+        <field name="company_ids" eval="[(4, ref('base.demo_company_my'))]"/>
+        <field name="company_id" ref="base.demo_company_my"/>
+        <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
+        <field name="image_1920" type="base64" file="l10n_my_hr_payroll/static/img/hr_employe_xiu_mei_lee.jpg"/>
+    </record>
+
+    <record id="res_partner_xiu_mei_lee_work_address" model="res.partner">
+        <field name="name">MY Offices</field>
+        <field name="street">M 10 Jln Ss21/39 Ss21 Petaling Jaya</field>
+        <field name="city">Petaling Jaya</field>
+        <field name="zip">47400</field>
+        <field name="country_id" ref="base.my"/>
+        <field name="company_id" ref="base.demo_company_my"/>
+    </record>
+
+    <record id="res_partner_xiu_mei_lee_private_address" model="res.partner">
+        <field name="name">Xiu Mei Lee</field>
+        <field name="company_id" ref="base.demo_company_my"/>
+    </record>
+
+    <record id="res_partner_bank_account_norberta" model="res.partner.bank">
+        <field name="acc_number">MY3193779311764615225576</field>
+        <field name="bank_id" ref="base.bank_ing"/>
+        <field name="partner_id" ref="l10n_my_hr_payroll.res_partner_xiu_mei_lee_private_address"/>
+        <field name="company_id" ref="base.demo_company_my"/>
+    </record>
+
+    <record id="hr_employee_xiu_mei_lee" model="hr.employee">
+        <field name="name">Xiu Mei Lee (XML)</field>
+        <field name="gender">female</field>
+        <field name="marital">single</field>
+        <field name="job_title">Software Developer</field>
+        <field name="private_street">no 15-1 kuchai business centre jalan kuchai lama</field>
+        <field name="private_city">Kuala Lumpur</field>
+        <field name="private_zip">58200</field>
+        <field name="private_country_id" ref="base.my"/>
+        <field name="private_phone">012 3200 599</field>
+        <field name="private_email">xiu_mei_lee@example.com</field>
+        <field name="address_id" ref="l10n_my_hr_payroll.res_partner_xiu_mei_lee_work_address"/>
+        <field name="emergency_contact">Yan Nie Chan</field>
+        <field name="emergency_phone">+60 (0)3 4251-0670</field>
+        <field name="birthday">1991-07-28</field>
+        <field name="distance_home_work">25</field>
+        <field name="place_of_birth">Muar</field>
+        <field name="country_of_birth" ref="base.my"/>
+        <field name="certificate">master</field>
+        <field name="study_field">Civil Engineering</field>
+        <field name="study_school">Kuala Lumpur University</field>
+        <field name="parent_id" ref="l10n_my_hr_payroll.hr_employee_kah_yoon_ooi"/>
+        <field name="country_id" ref="base.my"/>
+        <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+        <field name="identification_id">8752027365496</field>
+        <field name="bank_account_id" ref="l10n_my_hr_payroll.res_partner_bank_account_norberta"/>
+        <field name="image_1920" type="base64" file="l10n_my_hr_payroll/static/img/hr_employe_xiu_mei_lee.jpg"/>
+        <field name="company_id" ref="base.demo_company_my"/>
+        <field name="user_id" ref="l10n_my_hr_payroll.user_xiu_mei_lee"/>
+    </record>
+
+    <record id="hr_contract_cdi_xiu_mei_lee_previous" model="hr.contract">
+        <field name="name">CDI - Xiu Mei Lee - Experienced Developer</field>
+        <field name="department_id" ref="hr_department_rdmy"/>
+        <field name="employee_id" ref="hr_employee_xiu_mei_lee"/>
+        <field name="job_id" ref="l10n_my_hr_payroll.job_developer_malaysia"/>
+        <field name="structure_type_id" ref="l10n_my_hr_payroll.structure_type_employee_my"/>
+        <field name="wage">7000</field>
+        <field name="state">close</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="company_id" ref="base.demo_company_my"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-2, month=1, day=1))"/>
+        <field name="date_end" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1, days=-2))"/>
+        <field name="resource_calendar_id" model="resource.calendar" eval="obj().search([('company_id', '=', obj().env.ref('base.demo_company_my').id)], limit=1)"/>
+    </record>
+
+    <record id="hr_contract_cdi_xiu_mei_lee" model="hr.contract">
+        <field name="name">CDI - Xiu Mei Lee - Experienced Developer</field>
+        <field name="department_id" ref="hr_department_rdmy"/>
+        <field name="employee_id" ref="hr_employee_xiu_mei_lee"/>
+        <field name="job_id" ref="l10n_my_hr_payroll.job_developer_malaysia"/>
+        <field name="structure_type_id" ref="l10n_my_hr_payroll.structure_type_employee_my"/>
+        <field name="wage">10000</field>
+        <field name="state">open</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="company_id" ref="base.demo_company_my"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1, days=-1))"/>
+        <field name="resource_calendar_id" model="resource.calendar" eval="obj().search([('company_id', '=', obj().env.ref('base.demo_company_my').id)], limit=1)"/>
+    </record>
+
+    <record id="hr_employee_xiu_mei_lee" model="hr.employee">
+        <field name="contract_id" ref="l10n_my_hr_payroll.hr_contract_cdi_xiu_mei_lee"/>
+    </record>
+</odoo>

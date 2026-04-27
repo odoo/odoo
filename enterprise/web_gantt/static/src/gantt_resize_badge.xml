@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web_gantt.GanttResizeBadge">
+        <span
+            t-if="props.reactive.position"
+            class="o_gantt_pill_resize_badge badge rounded-pill bg-view position-fixed"
+            t-att-class="{ 'text-success': diff &gt; 0, 'text-danger': diff &lt; 0 }"
+            t-att-style="positionStyle"
+            t-esc="diffText"
+        />
+    </t>
+
+</templates>

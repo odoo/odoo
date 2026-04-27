@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_delivery_carrier_form" model="ir.ui.view">
+        <field name="name">delivery.carrier.form.inherit.delivery.starshipit</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='title']" position="after">
+                <div colspan="2" class="alert alert-warning" invisible="delivery_type != 'starshipit' or prod_environment" role="status">
+                    <p class="mb-0">
+                        <i class="fa fa-exclamation-triangle"/> In <b>Test Environment</b>, your shippings are automatically <b>archived</b> after the label creation. <br/>
+                        Please note that charges can still occur for label creations and some shipping carriers may automatically validate the shipment when printing labels.
+                    </p>
+                </div>
+            </xpath>
+            <page name="destination" position="before">
+                <page string="Starshipit Configuration" name="starshipit_configuration" invisible="delivery_type != 'starshipit'">
+                    <group>
+                        <group string="Integration">
+                            <field name="starshipit_service_code" invisible="1"/>
+                            <field name="starshipit_api_key" required="delivery_type == 'starshipit'"/>
+                            <field name="starshipit_subscription_key" required="delivery_type == 'starshipit'"/>
+                            <field name="starshipit_origin_address" context="{'show_address': 1}"/>
+                            <field name="starshipit_service_name" invisible="not starshipit_service_name"/>
+                            <div colspan="2" invisible="not starshipit_api_key or not starshipit_subscription_key">
+                                <button name="starshipit_action_load_shipping_carriers" string="Select a service linked to your starshipit account" type="object" class="oe_inline fa fa-arrow-right oe_link"/>
+                            </div>
+                            <div colspan="2" class="alert alert-warning" invisible="not starshipit_api_key or not starshipit_subscription_key or starshipit_service_code" role="status">
+                                <p class="mb-0"><i class="fa fa-exclamation-triangle"/> Do not forget to select a service for a valid configuration.</p>
+                            </div>
+                        </group>
+                        <group string="Options">
+                            <field name="starshipit_default_package_type_id" string="Default Package Type"/>
+                        </group>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>

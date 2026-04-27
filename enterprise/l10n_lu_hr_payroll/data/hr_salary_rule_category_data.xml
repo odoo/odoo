@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="hr_salary_rule_category_vpa" model="hr.salary.rule.category">
+        <field name="name">Vehicle Package Allowance</field>
+        <field name="code">VPA</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+
+    <record id="hr_salary_rule_category_supplements_accessories" model="hr.salary.rule.category">
+        <field name="name">Supplements and accessories payable monthly in cash</field>
+        <field name="code">SUPPLEMENTS_ACCESSORIES</field>
+    </record>
+
+    <record id="hr_salary_rule_category_overtime_pay" model="hr.salary.rule.category">
+        <field name="name">Overtime pay, excluding overtime premiums</field>
+        <field name="code">OVERTIME_PAY</field>
+    </record>
+
+    <record id="hr_salary_rule_category_overtime_premiums" model="hr.salary.rule.category">
+        <field name="name">Overtime premiums</field>
+        <field name="code">OVERTIME_PREMIUMS</field>
+    </record>
+
+    <record id="hr_salary_rule_category_bonuses_bic_bik" model="hr.salary.rule.category">
+        <field name="name">Bonuses, profit-sharing, benefits in cash and in kind</field>
+        <field name="code">BONUSES_BIC_BIK</field>
+    </record>
+
+    <record id="hr_salary_rule_category_unemployment_weather_cyclical" model="hr.salary.rule.category">
+        <field name="name">Bad weather unemployment / cyclical</field>
+        <field name="code">UNEMPLOYMENT_WEATHER_CYCLICAL</field>
+    </record>
+
+    <record id="hr_salary_rule_category_contribution" model="hr.salary.rule.category">
+        <field name="name">Contribution</field>
+        <field name="code">CONTRIBUTION</field>
+    </record>
+
+    <record id="hr_salary_rule_category_taxes" model="hr.salary.rule.category">
+        <field name="name">Taxes</field>
+        <field name="code">TAXES</field>
+        <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="hr_salary_rule_category_tax_credit" model="hr.salary.rule.category">
+        <field name="name">Tax Credit</field>
+        <field name="code">TAX_CREDIT</field>
+    </record>
+
+    <record id="hr_salary_rule_category_removed_from_net" model="hr.salary.rule.category">
+        <field name="name">Removed From Net</field>
+        <field name="code">REMOVED_FROM_NET</field>
+    </record>
+
+    <record id="hr_salary_rule_category_meal_vouchers" model="hr.salary.rule.category">
+        <field name="name">Meal Vouches</field>
+        <field name="code">MEAL_VOUCHERS</field>
+        <field name="parent_id" ref="hr_salary_rule_category_removed_from_net"/>
+    </record>
+
+    <record id="hr_salary_rule_category_total_contributions" model="hr.salary.rule.category">
+        <field name="name">Total Contributions</field>
+        <field name="code">TOTAL_CONTRIBUTIONS</field>
+    </record>
+
+    <record id="hr_salary_rule_category_total_allowances" model="hr.salary.rule.category">
+        <field name="name">Total Allowances</field>
+        <field name="code">TOTAL_ALLOWANCES</field>
+    </record>
+
+    <record id="hr_salary_rule_category_taxable_amount" model="hr.salary.rule.category">
+        <field name="name">Taxable Amount</field>
+        <field name="code">TAXABLE_AMOUNT</field>
+    </record>
+
+    <record id="hr_salary_rule_category_ded_net" model="hr.salary.rule.category">
+        <field name="name">Net Deductions</field>
+        <field name="code">DED_NET</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_salary_rule_category_net_to_pay" model="hr.salary.rule.category">
+        <field name="name">Net To Pay</field>
+        <field name="code">NET_TO_PAY</field>
+    </record>
+
+    <record id="hr_salary_rule_category_bik" model="hr.salary.rule.category">
+        <field name="name">Benefit in Kind</field>
+        <field name="code">BIK</field>
+    </record>
+
+    <record id="hr_salary_rule_category_gratification" model="hr.salary.rule.category">
+        <field name="name">Gratification</field>
+        <field name="code">GRAT</field>
+    </record>
+
+    <record id="hr_salary_rule_category_net_gratification" model="hr.salary.rule.category">
+        <field name="name">Net Gratification</field>
+        <field name="code">NET_GRAT</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+</odoo>

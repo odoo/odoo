@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.SystrayItem">
+    <div t-attf-class="o_web_studio_navbar_item {{ buttonDisabled ? 'o_disabled' : ''}} d-none d-md-inline-block" t-ref="root" t-on-click.prevent="_onClick">
+        <button title="Toggle Studio" aria-label="Toggle Studio" class="o_nav_entry">
+            <i class="oi oi-studio" role="img"/>
+        </button>
+    </div>
+</t>
+
+</templates>

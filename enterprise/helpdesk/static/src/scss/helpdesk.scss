@@ -1,0 +1,40 @@
+@include media-breakpoint-up(md) {
+    .o_helpdesk_team_kanban_view_view .o_kanban_renderer {
+        --KanbanGroup-width: #{map-get($grid-breakpoints, 'xl') * 0.35};
+        --KanbanRecord-width: #{map-get($grid-breakpoints, 'xl') * 0.35};
+    }
+}
+
+.o_helpdesk_wrap_kanban_view {
+    flex-basis: 100%;
+    min-height: auto;
+}
+
+.o_helpdesk_content {
+    .o_kanban_group:not(.o_column_folded) {
+        width: inherit;
+    }
+    .o_helpdesk_banner_table {
+        border-spacing: map-get($spacers, 1);
+        border-collapse: separate;
+        table-layout: fixed;
+    }
+
+    .o_target_to_set:hover .fa {
+        opacity: 1 !important;
+    }
+
+    .o_highlight {
+        @include media-breakpoint-down(md) {
+            font-size: 1em;
+        }
+    }
+
+    .o_star {
+        color: $o-main-favorite-color;
+    }
+}
+
+.o_helpdesk_activity_box_title {
+    min-width: 0;
+}

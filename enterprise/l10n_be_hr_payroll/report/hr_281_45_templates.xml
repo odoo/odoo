@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="report_281_45">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div t-if="report_data" class="page">
+                        <div class="row">
+                            <div class="col-10 border text-center text-uppercase fw-bold">
+                                281.45 Sheet - Year <span t-esc="report_data['f2002_inkomstenjaar']"/>
+                            </div>
+                            <div class="col-2 border text-center" t-esc="datetime.datetime.now().date()"/>
+                        </div>
+                        <div class="row border">
+                            <div class="col-12">
+                                <strong>1. Nᵒ:</strong> <span t-esc="report_data['f2009_volgnummer']"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 border">
+                                <div>
+                                    <span class="fw-bold">2a. Company number: </span>
+                                    <t t-esc="report_data['v0024_nationaalnr']"/>
+                                </div>
+                                <div class="fw-bold">2b. Name and address of income debtor:</div>
+                                <div class="ms-4" t-esc="report_data['v0014_naam']"></div>
+                                <div class="ms-4" t-esc="report_data['v0015_adres']"></div>
+                                <div class="ms-4">
+                                    <span t-esc="report_data['v0016_postcode']"/>
+                                    <span t-esc="report_data['v0017_gemeente']"/>
+                                </div>
+                            </div>
+                            <div class="col-6 border">
+                                <div>
+                                    <span class="fw-bold">3a. Nature of beneficiary: </span>
+                                    <span>Natural Person</span>
+                                </div>
+                                <div class="fw-bold">3b. Income recipient</div>
+                                <div class="ms-4" t-esc="report_data['employee'].legal_name"/>
+                                <div class="ms-4" t-esc="report_data['f2015_adres']"/>
+                                <div class="ms-4" >
+                                    <span t-esc="report_data['employee_city']"/>
+                                    <span t-if="'f2016_postcodebelgisch' in report_data" t-esc="report_data['f2016_postcodebelgisch']"/>
+                                </div>
+                                <div>
+                                    <span class="fw-bold">3c. NISS: </span>
+                                    <t t-esc="report_data['f2011_nationaalnr']"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row border border-top-0">
+                            <div class="col-12">
+                                <div class="row border-0">
+                                    <div class="col-12">
+                                        <span class="text-start fw-bold">4. Gross amount of income referred to in art. 17, § 1, 3°, CIR 92, with regard to copyright and related rights:</span>
+                                    </div>
+                                </div>
+                                <div class="row border-0">
+                                    <div class="col-9">a) Amount of income paid or attributed:</div>
+                                    <div class="col-3 text-end"><span t-esc="report_data['f45_2067_paidamount4']"/></div>
+                                </div>
+                                <div class="row border-0">
+                                    <div class="col-9">b) Amount recognized as an expense in 2024 if this amount does not correspond to the amount indicated in section 4.a:</div>
+                                    <div class="col-3 text-end"><span t-esc="report_data['f45_2068_bookedamount4']"/></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row border border-top-0">
+                            <div class="col-12">
+                                <div class="row border-0">
+                                    <div class="col-12">
+                                        <span class="text-start fw-bold">5. Gross amount of revenue from copyright and related rights referred to in art. 17, § 1, 5°, CIR 92:</span>
+                                    </div>
+                                </div>
+                                <div class="row border-0">
+                                    <div class="col-12">a) Amount of income paid or allocated, broken down according to the applicable withholding tax rate:</div>
+                                </div>
+                                <div class="row border-0">
+                                    <div class="col-8 offset-1">1) Amount which does not exceed the thresholds set in art. 269, § 1, 4°, CIR 92:</div>
+                                    <div class="col-3 text-end"><span t-esc="report_data['f45_2069_paidamount51']"/></div>
+                                </div>
+                                <div class="row border-0">
+                                    <div class="col-8 offset-1">2) Amount that exceeds the thresholds set in art. 269, § 1, 4°, CIR 92:</div>
+                                    <div class="col-3 text-end"><span t-esc="report_data['f45_2070_paidamount52']"/></div>
+                                </div>
+                                <div class="row border-0">
+                                    <div class="col-9">b) Amount recognized as an expense in 2024 if this amount does not correspond to the total of the amounts indicated in sections 5.a.1) and 5.a.2):</div>
+                                    <div class="col-3 text-end"><span t-esc="report_data['f45_2071_bookedamount5']"/></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row border">
+                            <div class="col-7 fw-bold">6. Amount of retained withholding tax:</div>
+                            <div class="col-5 text-end"><span t-esc="report_data['f45_2063_roerendevoorheffing']"/></div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

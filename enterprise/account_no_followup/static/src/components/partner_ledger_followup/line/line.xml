@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="account_no_followup.PartnerLedgerFollowupLine" t-inherit="account_reports.AccountReportLineCustomizable">
+        <xpath expr="//t[@data-id='line_column']" position="before">
+            <PartnerLedgerFollowupLineCell
+                t-if="props.line.id.includes('account.move.line')"
+                t-props="{ line: props.line, cell: {} }"
+            />
+            <td t-else="" data-id="line_cell" class="line_cell"/>
+        </xpath>
+    </t>
+</templates>

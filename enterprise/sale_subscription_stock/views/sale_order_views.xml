@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_subscription_order_view_form" model="ir.ui.view">
+        <field name="name">sale.subscription.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_subscription.sale_subscription_order_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                <div role="alert" class="alert alert-info mb-0 p-3 text-center"
+                     invisible="not display_recurring_stock_delivery_warning">
+                    The delivery order of the recurring product(s) will be created soon. If another delivery order exists,
+                    recurring product will be added to it automatically.
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

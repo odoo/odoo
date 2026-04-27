@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting id="pos_default_journals" position="after">
+                <setting id="l10n_br_edi_settings" string="Brazilian EDI"
+                         help="Configure the Brazilian Avalara EDI integration" invisible="country_code != 'BR'">
+                    <div class="content-group mt16">
+                        <div class="row mt16" invisible="not pos_l10n_br_is_nfce">
+                            <label string="Series" for="pos_l10n_br_invoice_serial" class="col-lg-3 o_light_label"/>
+                            <field name="pos_l10n_br_invoice_serial"/>
+                        </div>
+                        <div class="row mt16" invisible="not pos_l10n_br_is_nfce">
+                            <label string="Next number" for="l10n_br_nfce_next_number"
+                                   class="col-lg-3 o_light_label"/>
+                            <field name="l10n_br_nfce_next_number"/>
+                        </div>
+                        <div class="row" groups="base.group_no_one">
+                            <div>
+                                <field name="pos_l10n_br_is_nfce"/>
+                                <label string="Create NFC-e for each order" for="pos_l10n_br_is_nfce"
+                                       class="fw-normal me-1"/>
+                            </div>
+                        </div>
+                    </div>
+                </setting>
+            </setting>
+            <xpath expr="//setting[@id='l10n_br_edi_avatax_settings']/div[hasclass('content-group')]" position="after">
+                <span class="o_form_label">NFC-e configuration</span>
+                <div class="content-group">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <label string="CSC ID" for="l10n_br_edi_csc_identifier" class="o_light_label"/>
+                            <div class="fa fa-question-circle" title="The CSC ID or CSC Token is an identification of the Taxpayer Security Code, which can have 1 to 6 digits and is available on the website of the State Department of Finance (SEFAZ) of your state."/>
+                        </div>
+                        <field name="l10n_br_edi_csc_identifier" class="w-50"/>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <label string="CSC Number" for="l10n_br_edi_csc_number" class="o_light_label"/>
+                            <div class="fa fa-question-circle" title="The CSC number is a code of up to 36 characters that only you and the Department of Finance know. It is used to generate the QR Code of the NFC-e and ensure the authenticity of the DANFE."/>
+                        </div>
+                        <field name="l10n_br_edi_csc_number" class="w-50"/>
+                    </div>
+                    <div class="row" groups="base.group_no_one">
+                        <div class="col-lg-5">
+                            <label string="URL Key Override" for="l10n_br_edi_url_key_override" class="o_light_label"/>
+                            <div class="fa fa-question-circle" title="This is the website shown to the user for her to access the NFC-e online. If not set we will send the default for your state."/>
+                        </div>
+                        <field name="l10n_br_edi_url_key_override" class="w-50"/>
+                    </div>
+                    <div class="row" groups="base.group_no_one">
+                        <div class="col-lg-5">
+                            <label string="QR URL Override" for="l10n_br_edi_qr_url_override" class="o_light_label"/>
+                            <div class="fa fa-question-circle" title="This is the URL used on the QR code for scanning. If not set we will send the default for your state."/>
+                        </div>
+                        <field name="l10n_br_edi_qr_url_override" class="w-50"/>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='point_of_sale_use_ticket_qr_code']/.." position="attributes">
+                <attribute name="invisible" add="pos_l10n_br_is_nfce" separator=" or "/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

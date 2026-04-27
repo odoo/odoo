@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sign_duplicate_template_with_pdf_view_form" model="ir.ui.view">
+        <field name="name">sign.duplicate.template.pdf.view.form</field>
+        <field name="model">sign.duplicate.template.pdf</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="original_template_id" options="{'no_open': True}"/>
+                    <field name="new_pdf" filename="new_template" options="{'accepted_file_extensions': '.pdf'}" />
+                    <field name="new_template" invisible="not new_template"/>
+                </group>
+                <footer>
+                    <button string="Confirm" class="btn-primary" name="duplicate_template_with_pdf" type="object"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sign_duplicate_template_with_pdf" model="ir.actions.act_window">
+        <field name="name">Use the layout of fields on a new PDF</field>
+        <field name="res_model">sign.duplicate.template.pdf</field>
+        <field name="target">new</field>
+        <field name="view_mode">form</field>
+    </record>
+</odoo>

@@ -1,0 +1,33 @@
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">View Contract Form</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <group name="salary" position="inside">
+                <field name="country_code" invisible="1"/>
+                <label for="l10n_jo_tax_exemption" invisible="country_code != 'JO'" string="Tax Exemption"/>
+                <div class="o_row mw-50" name="l10n_jo_tax_exemption" invisible="country_code != 'JO'">
+                    <field name="l10n_jo_tax_exemption" nolabel="1"/>
+                    <span>/ year</span>
+                </div>
+                <label for="l10n_jo_housing_allowance" invisible="country_code != 'JO'" string="Housing Allowance"/>
+                <div class="o_row mw-50" name="l10n_jo_housing_allowance" invisible="country_code != 'JO'">
+                    <field name="l10n_jo_housing_allowance" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <label for="l10n_jo_transportation_allowance" invisible="country_code != 'JO'" string="Transportation Allowances"/>
+                <div class="o_row mw-50" name="l10n_jo_transportation_allowance" invisible="country_code != 'JO'">
+                    <field name="l10n_jo_transportation_allowance" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <label for="l10n_jo_other_allowances" invisible="country_code != 'JO'" string="Other Allowances"/>
+                <div class="o_row mw-50" name="l10n_jo_other_allowances" invisible="country_code != 'JO'">
+                    <field name="l10n_jo_other_allowances" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+            </group>
+
+        </field>
+    </record>
+</odoo>

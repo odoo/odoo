@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="rule_parameter_l10n_tr_lower_boundary" model="hr.rule.parameter">
+            <field name="name">Türkiye Minimum Wage</field>
+            <field name="code">l10n_tr_min_wage</field>
+            <field name="country_id" ref="base.tr"/>
+        </record>
+        <record id="rule_parameter_l10n_tr_lower_boundary_value_2024" model="hr.rule.parameter.value">
+            <field name="parameter_value">20002.50</field>
+            <field name="rule_parameter_id" ref="rule_parameter_l10n_tr_lower_boundary"/>
+            <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+        </record>
+
+        <record id="rule_parameter_l10n_tr_ssi_base_ceiling" model="hr.rule.parameter">
+            <field name="name">Türkiye SSI Base Amount Ceiling</field>
+            <field name="code">l10n_tr_ssi_base_ceiling</field>
+            <field name="country_id" ref="base.tr"/>
+        </record>
+        <record id="rule_parameter_l10n_tr_ssi_base_ceiling_value_2024" model="hr.rule.parameter.value">
+            <field name="parameter_value">150018.90</field>
+            <field name="rule_parameter_id" ref="rule_parameter_l10n_tr_ssi_base_ceiling"/>
+            <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+        </record>
+
+        <record id="rule_parameter_l10n_tr_tax_exempt_amount" model="hr.rule.parameter">
+            <field name="name">Türkiye Tax Exemption Amount</field>
+            <field name="code">l10n_tr_tax_exempt</field>
+            <field name="country_id" ref="base.tr"/>
+        </record>
+        <record id="rule_parameter_l10n_tr_tax_exempt_amount_value_2024" model="hr.rule.parameter.value">
+            <field name="parameter_value">2550.32</field>
+            <field name="rule_parameter_id" ref="rule_parameter_l10n_tr_tax_exempt_amount"/>
+            <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+        </record>
+
+        <record id="rule_parameter_l10n_tr_stamp_tax_pcnt" model="hr.rule.parameter">
+            <field name="name">Türkiye Stamp Tax Percentage</field>
+            <field name="code">l10n_tr_stamp_tax_pcnt</field>
+            <field name="country_id" ref="base.tr"/>
+        </record>
+        <record id="rule_parameter_l10n_tr_stamp_tax_exempt_pcnt_value_2024" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.00759</field>
+            <field name="rule_parameter_id" ref="rule_parameter_l10n_tr_stamp_tax_pcnt"/>
+            <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+        </record>
+
+        <record id="rule_parameter_l10n_tr_stamp_tax_exempt_amount" model="hr.rule.parameter">
+            <field name="name">Türkiye Stamp Tax Exemption Amount</field>
+            <field name="code">l10n_tr_stamp_tax_exempt</field>
+            <field name="country_id" ref="base.tr"/>
+        </record>
+        <record id="rule_parameter_l10n_tr_stamp_tax_exempt_amount_value_2024" model="hr.rule.parameter.value">
+            <field name="parameter_value">151.82</field>
+            <field name="rule_parameter_id" ref="rule_parameter_l10n_tr_stamp_tax_exempt_amount"/>
+            <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+        </record>
+
+        <!-- Tax Rates -->
+        <record id="rule_parameter_l10_tr_tax_rates" model="hr.rule.parameter">
+            <field name="name">Türkiye Tax Bracket Rates</field>
+            <field name="code">l10_tr_tax_rates</field>
+            <field name="country_id" ref="base.tr"/>
+        </record>
+        <record id="rule_parameter_l10_tr_tax_rates_value_2024" model="hr.rule.parameter.value">
+            <field name="parameter_value">[
+    # TAXB_from, TAXB_to, tax_pcnt
+    (0.00, 110_000.00, 0.15),
+    (110_000.01, 230_000.00, 0.20),
+    (230_000.01, 870_000.00, 0.27),
+    (870_000.01, 3_000_000.00, 0.35),
+    (3_000_000.01, 0.00, 0.40),
+]</field>
+            <field name="rule_parameter_id" ref="rule_parameter_l10_tr_tax_rates"/>
+            <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+        </record>
+    </data>
+</odoo>

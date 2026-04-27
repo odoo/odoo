@@ -1,0 +1,73 @@
+<odoo>
+    <record id="view_l10n_ch_master_data_report_wizard_form" model="ir.ui.view">
+        <field name="name">l10n.ch.master.data.report.form</field>
+        <field name="model">l10n.ch.master.data.report</field>
+        <field name="arch" type="xml">
+            <form string="Swiss Master Data Report">
+                <header>
+                    <button string="Generate Data" type="object" name="action_generate_pdf" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="year" class="o_hr_narrow_field" options="{'type': 'number'}"/>
+                        <field name="month" class="o_hr_narrow_field"/>
+                        <field name="company_id"/>
+                        <field name="master_report_pdf_file" filename="master_report_pdf_filename"/>
+                        <field name="master_report_pdf_filename" invisible="1"/>
+                        <field name="wage_type_pdf_file" filename="wage_type_pdf_filename"/>
+                        <field name="wage_type_pdf_filename" invisible="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_l10n_ch_master_data_report_wizard_tree" model="ir.ui.view">
+        <field name="name">l10n.ch.master.data.report.tree</field>
+        <field name="model">l10n.ch.master.data.report</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="year"/>
+                <field name="month"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_l10n_ch_master_data_report_wizard" model="ir.actions.act_window">
+        <field name="name">Swiss Master Data Report</field>
+        <field name="res_model">l10n.ch.master.data.report</field>
+        <field name="view_mode">list,form</field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_ch_master_data_report"
+        name="Master Data"
+        parent="l10n_ch_hr_payroll.menu_reporting_l10n_ch"
+        action="action_l10n_ch_master_data_report_wizard"
+        sequence="10"
+    />
+
+
+    <record id="action_l10n_ch_company_master_data_report" model="ir.actions.report">
+        <field name="name">Company Master Data Report</field>
+        <field name="model">l10n.ch.master.data.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_ch_hr_payroll_elm_transmission.report_company_master_data_document</field>
+        <field name="report_file">l10n_ch_hr_payroll_elm_transmission.report_company_master_data_document</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_l10n_ch_company_wage_type_report" model="ir.actions.report">
+        <field name="name">Company Wage Type Report</field>
+        <field name="model">l10n.ch.master.data.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_ch_hr_payroll_elm_transmission.report_wage_types_document</field>
+        <field name="report_file">l10n_ch_hr_payroll_elm_transmission.report_wage_types_document</field>
+        <field name="paperformat_id" ref="l10n_ch_hr_payroll_elm_transmission.report_paperformat_wage_types"/>
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

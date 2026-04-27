@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_payslip_run_view_form" model="ir.ui.view">
+        <field name="name">hr.payslip.run.view.form</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group//group[last()]" position="after">
+                <group string="WPS" id="l10n_sa_wps_info" invisible="country_code != 'SA' or not l10n_sa_wps_file_reference or state not in ['close', 'paid']">
+                    <field name="l10n_sa_wps_file_reference" string="Reference" readonly="1" invisible="not l10n_sa_wps_file_reference or state not in ['close', 'paid']" />
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='l10n_sa_wps_file_reference']" position="after">
+                <!-- To align with the WPS section -->
+                <xpath expr="//field[@name='payment_report']" position="move"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_bank_form" model="ir.ui.view">
+        <field name="name">res.partner.bank.form.inherit</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="base.view_partner_bank_form"/>
+        <field name="arch" type="xml">
+            <field name="bank_id" position="after">
+                <field name="l10n_ca_financial_institution_number" invisible="acc_type == 'iban'"/>
+            </field>
+        </field>
+    </record>
+</odoo>

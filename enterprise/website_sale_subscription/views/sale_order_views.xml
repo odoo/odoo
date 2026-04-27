@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_subscription_view_tree_inherit_website_sale_subscription" model='ir.ui.view'>
+        <field name='name'>sale.order.subscription.list.inherit.website.sale.subscription</field>
+        <field name='model'>sale.order</field>
+        <field name="inherit_id" ref="sale_subscription.sale_subscription_view_tree" />
+        <field name='arch' type='xml'>
+            <field name="plan_id" position="after">
+                <field name="website_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+</odoo>

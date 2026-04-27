@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_users_request_sign_view_form" model="ir.ui.view">
+        <field name="name">res.users.request.sign.view.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+        <field name="arch" type="xml">
+        <xpath expr="//div[@name='button_box']" position="inside">
+            <button name="open_employee_sign_requests"
+                class="oe_stat_button"
+                icon="fa-pencil"
+                type="object"
+                invisible="sign_request_count == 0"
+                groups="sign.group_sign_user">
+                <div class="o_field_widget o_stat_info">
+                    <span class="o_stat_value"><field name="sign_request_count"/></span>
+                        <span class="o_stat_text">Signature Requests</span>
+                </div>
+            </button>
+        </xpath>
+        </field>
+    </record>
+</odoo>

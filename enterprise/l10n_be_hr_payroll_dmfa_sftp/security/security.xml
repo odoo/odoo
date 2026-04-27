@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="ir_rule_l10n_be_onss_file_multi_company" model="ir.rule">
+        <field name="name">HR Payroll BE ONSS File: Multi Company</field>
+        <field name="model_id" ref="model_l10n_be_onss_file"/>
+        <field name="domain_force">[('company_id', 'in', [False] + company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_l10n_be_onss_declaration_multi_company" model="ir.rule">
+        <field name="name">HR Payroll BE ONSS Declaration: Multi Company</field>
+        <field name="model_id" ref="model_l10n_be_onss_declaration"/>
+        <field name="domain_force">[('company_id', 'in', [False] + company_ids)]</field>
+    </record>
+</odoo>

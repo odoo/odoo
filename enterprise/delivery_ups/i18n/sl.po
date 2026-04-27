@@ -1,0 +1,781 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_ups
+#
+# Translators:
+# Wil Odoo, 2024
+# Aleš Pipan, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:50+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Aleš Pipan, 2025\n"
+"Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
+"Language: sl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3);\n"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid ""
+"A shipment cannot have a KGS/IN or LBS/CM as its unit of measurements. "
+"Configure it from the delivery method."
+msgstr ""
+"Pošiljka ne more imeti KGS/IN ali LBS/CM kot merske enote. Konfigurirajte jo "
+"v načinu dostave."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid ""
+"Access License number is Invalid. Provide a valid number (Length should be "
+"0-35 alphanumeric characters)"
+msgstr ""
+"Številka licence za dostop ni veljavna. Navedite veljavno številko (dolžina "
+"mora biti od 0 do 35 alfanumeričnih znakov)"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Access License number is invalid for this delivery provider."
+msgstr "Številka licence za dostop ni veljavna za tega ponudnika dostave."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Access License number is invalid for this provider.Please re-license."
+msgstr ""
+"Številka licence za dostop ni veljavna za tega ponudnika. Prosimo, ponovno "
+"licencirajte."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Access License number is revoked contact UPS to get access."
+msgstr "Številka licence za dostop je preklicana. Za dostop se obrnite na UPS."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Authorization system is currently unavailable , try again later."
+msgstr "Sistem avtorizacije trenutno ni na voljo, poskusite znova pozneje."
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_bill_my_account
+#: model:ir.model.fields,field_description:delivery_ups.field_res_partner__bill_my_account
+#: model:ir.model.fields,field_description:delivery_ups.field_res_users__bill_my_account
+#: model:ir.model.fields,field_description:delivery_ups.field_sale_order__ups_bill_my_account
+msgid "Bill My Account"
+msgstr "Izdaja računov"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_cod_funds_code
+msgid "COD Funding Option"
+msgstr "COD - Možnost financiranja po povzetju"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Cancel shipment not available at this time , Please try again Later."
+msgstr "Preklic pošiljke trenutno ni mogoč. Poskusite znova pozneje."
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_stock_package_type__package_carrier_type
+msgid "Carrier"
+msgstr "Prevoznik"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_cod_funds_code__8
+msgid "Cashier's Check or MoneyOrder"
+msgstr "Blagajniški ček ali denarna nakaznica"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_package_dimension_unit__cm
+msgid "Centimeters"
+msgstr "Centimetri"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_cod_funds_code__0
+msgid "Check, Cashier's Check or MoneyOrder"
+msgstr "Ček, blagajniški ček ali denarna nakaznica"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_cod
+msgid "Collect on Delivery"
+msgstr "Prevzem ob dostavi"
+
+#. module: delivery_ups
+#: model:ir.model,name:delivery_ups.model_res_partner
+msgid "Contact"
+msgstr "Stik"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Duties paid by"
+msgstr "Dajatve plača"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_label_file_type__epl
+msgid "EPL"
+msgstr "EPL"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+msgid ""
+"Error:\n"
+"%s"
+msgstr ""
+"Napaka:\n"
+"%s"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Exceeds Total Number of allowed pieces per World Wide Express Shipment."
+msgstr "Presega skupno dovoljeno število kosov na pošiljko World Wide Express."
+
+#. module: delivery_ups
+#: model:ir.model.fields,help:delivery_ups.field_delivery_carrier__ups_bill_my_account
+#: model:ir.model.fields,help:delivery_ups.field_res_partner__bill_my_account
+#: model:ir.model.fields,help:delivery_ups.field_res_users__bill_my_account
+#: model:ir.model.fields,help:delivery_ups.field_sale_order__ups_bill_my_account
+msgid ""
+"If checked, ecommerce users will be prompted their UPS account number\n"
+"and delivery fees will be charged on it."
+msgstr ""
+"Če je označeno, bodo uporabniki e-trgovine pozvani k številki svojega računa "
+"UPS\n"
+"in za to se bodo zaračunali stroški dostave."
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_package_dimension_unit__in
+msgid "Inches"
+msgstr "centimetri"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_package_weight_unit__kgs
+msgid "Kilograms"
+msgstr "Kilogrami"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Label Format"
+msgstr "Oblika oznake"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Options"
+msgstr "Možnosti"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_label_file_type__gif
+msgid "PDF"
+msgstr "PDF"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_package_dimension_unit
+msgid "Package Size Unit"
+msgstr "Velikost paketa Enota"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Package Weight Unit"
+msgstr "Teža paketa Enota"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Packages %s do not have a positive shipping weight."
+msgstr "Presega skupno dovoljeno število kosov na pošiljko World Wide Express."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+msgid "Packages:"
+msgstr "Paketi:"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid City in the warehouse address."
+msgstr "V naslovu skladišča navedite veljaven kraj."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid Country in recipient's address."
+msgstr "V naslovu prejemnika navedite veljavno državo."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid Country in the warehouse address."
+msgstr "V naslovu skladišča navedite veljavno državo."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid State in the warehouse address."
+msgstr "Navedite veljaven naslov skladišča (državo)."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid Zip in the warehouse address."
+msgstr "Prosimo, navedite veljavno poštno številko v naslovu skladišča."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid city in the recipient address."
+msgstr "V naslovu prejemnika navedite veljavno mesto."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid city in the shipper's address."
+msgstr "V naslovu pošiljatelja navedite veljavno mesto."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid country in the shipper's address."
+msgstr "V naslovu pošiljatelja navedite veljavno državo."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid ""
+"Please provide a valid package type available for service and selected "
+"locations."
+msgstr ""
+"Navedite veljavno vrsto paketa, ki je na voljo za storitev in izbrane "
+"lokacije."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid phone number for the recipient."
+msgstr "Prosimo, navedite veljavno telefonsko številko prejemnika."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid shipper Number/Carrier Account."
+msgstr "Prosimo, navedite veljavno številko pošiljatelja/račun prevoznika."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid shipper number/Carrier Account."
+msgstr "Prosimo, navedite veljavno številko pošiljatelja/račun prevoznika."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid shipper phone number."
+msgstr "Prosimo, navedite veljavno telefonsko številko pošiljatelja."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid state in the recipient address."
+msgstr "V naslovu prejemnika navedite veljavno zvezno državo."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid state in the shipper's address."
+msgstr "V naslovu pošiljatelja navedite veljavno državo."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid street in shipper's address."
+msgstr "Prosimo, navedite veljavno ulico v naslovu pošiljatelja."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid street in the recipient address."
+msgstr "V naslovu prejemnika navedite veljavno ulico."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid street in the warehouse address."
+msgstr "Prosimo, navedite veljavno ulico v naslovu skladišča."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid warehouse Phone Number"
+msgstr "Prosimo, navedite veljavno telefonsko številko skladišča"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid zip code in the recipient address."
+msgstr "V naslovu prejemnika navedite veljavno poštno številko."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid zip code in the shipper's address."
+msgstr "V naslovu pošiljatelja navedite veljavno poštno številko."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid zip code in the warehouse address."
+msgstr "Prosimo, navedite veljavno poštno številko v naslovu skladišča."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide a valid zipcode in the recipient address."
+msgstr "V naslovu prejemnika navedite veljavno poštno številko."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide at least one item to ship"
+msgstr "Prosimo, navedite vsaj en artikel za pošiljanje"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please provide at least one item to ship."
+msgstr "Prosimo, navedite vsaj en artikel za pošiljanje."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please set a valid country in the recipient address."
+msgstr "V naslovu prejemnika nastavite veljavno državo."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Please set a valid country in the warehouse address."
+msgstr "V naslovu skladišča nastavite veljavno državo."
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_package_weight_unit__lbs
+msgid "Pounds"
+msgstr "Funti"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Provided Access License Number not found in the UPS database"
+msgstr ""
+"Navedene številke licence za dostop ni bilo mogoče najti v zbirki podatkov "
+"UPS."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Provided Tracking Ref. Number is invalid."
+msgstr "Navedena referenčna številka za sledenje je neveljavna."
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "Ponudnik"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_duty_payment__recipient
+msgid "Recipient"
+msgstr "Prejemnik"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Recipient Phone must be at least 10 alphanumeric characters."
+msgstr ""
+"Telefonska številka prejemnika mora imeti vsaj 10 alfanumeričnih znakov."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Recipient PhoneExtension cannot exceed the length of 4."
+msgstr "Prejemnikova telefonska številka ne sme presegati dolžine 4 znakov."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Recipient PhoneExtension must contain only numbers."
+msgstr "Telefonska razširitev prejemnika mora vsebovati samo številke."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+msgid "Return label generated"
+msgstr "Ustvarjena etiketa za vračilo"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_label_file_type__spl
+msgid "SPL"
+msgstr "SPL"
+
+#. module: delivery_ups
+#: model:ir.model,name:delivery_ups.model_sale_order
+msgid "Sales Order"
+msgstr "Prodajni nalog"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Saturday Delivery"
+msgstr "Dostava v soboto"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_duty_payment__sender
+msgid "Sender"
+msgstr "Pošiljatelj"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+msgid "Shipment #%s has been cancelled"
+msgstr "Pošiljka #%s je bila preklicana"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+msgid "Shipment created into UPS"
+msgstr "Pošiljka ustvarjena v UPS"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Shipper Phone must be at least 10 alphanumeric characters."
+msgstr ""
+"Telefonska številka pošiljatelja mora imeti vsaj 10 alfanumeričnih znakov."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Shipper number must contain alphanumeric characters only."
+msgstr "Številka pošiljatelja mora vsebovati samo alfanumerične znake."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Shipper phone extension cannot exceed the length of 4."
+msgstr "Telefonska številka pošiljatelja ne sme presegati dolžine 4 znakov."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Shipper phone extension must contain only numbers."
+msgstr "Telefonska številka pošiljatelja mora vsebovati samo številke."
+
+#. module: delivery_ups
+#: model:ir.model,name:delivery_ups.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "Metode odpreme"
+
+#. module: delivery_ups
+#: model:ir.model,name:delivery_ups.model_stock_package_type
+msgid "Stock package type"
+msgstr "Tip paketa zaloge"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "The UserId is currently locked out; please try again in 24 hours."
+msgstr "Uporabniško ime je trenutno zaklenjeno; poskusite znova čez 24 ur."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid ""
+"The address of your company is missing or wrong.\n"
+"(Missing field(s) : %s)"
+msgstr ""
+"Naslov vašega podjetja manjka ali je napačen.\n"
+"(Manjkajoče polje(-a): %s)"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid ""
+"The address of your warehouse is missing or wrong.\n"
+"(Missing field(s) : %s)"
+msgstr ""
+"Naslov vašega skladišča manjka ali je napačen.\n"
+"(Manjkajoča polja : %s)"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid ""
+"The delivery cannot be done because the weight of your product is missing."
+msgstr "Dostava ni mogoča, ker manjka teža vašega izdelka."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid ""
+"The estimated shipping price cannot be computed because the weight is "
+"missing for the following product(s): \n"
+" %s"
+msgstr ""
+"Ocenjene cene pošiljanja ni mogoče izračunati, ker za naslednje izdelke "
+"manjka teža: \n"
+" %s"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid ""
+"The maximum number of user access attempts was exceeded. So please try again "
+"later"
+msgstr ""
+"Največje dovoljeno število poskusov dostopa uporabnikov je bilo preseženo. "
+"Poskusite znova pozneje."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "The name of the customer should be no more than 35 characters."
+msgstr "Ime stranke ne sme biti daljše od 35 znakov."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid ""
+"The recipient address is missing or wrong.\n"
+"(Missing field(s) : %s)"
+msgstr ""
+"Naslov prejemnika manjka ali je napačen.\n"
+"(Manjkajoča polja : %s)"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "The requested service is unavailable between the selected locations."
+msgstr "Zahtevana storitev ni na voljo med izbranimi lokacijami."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid ""
+"The selected service is invalid from the requested warehouse, please choose "
+"another service."
+msgstr ""
+"Izbrana storitev ni veljavna iz zahtevanega skladišča, izberite drugo "
+"storitev."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid ""
+"The selected service is invalid to the recipient address, please choose "
+"another service."
+msgstr ""
+"Izbrana storitev ni veljavna za naslov prejemnika, izberite drugo storitev."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid ""
+"The selected service is not possible from your warehouse to the recipient "
+"address, please choose another service."
+msgstr ""
+"Izbrana storitev ni mogoča iz vašega skladišča na naslov prejemnika, "
+"izberite drugo storitev."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "The selected service is not valid with the selected packaging."
+msgstr "Izbrana storitev ni veljavna z izbranim paketom."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid ""
+"This measurement system is not valid for the selected country. Please switch "
+"from LBS/IN to KGS/CM (or vice versa). Configure it from delivery method"
+msgstr ""
+"Ta merski sistem ni veljaven za izbrano državo. Preklopite iz LBS/IN na KGS/"
+"CM (ali obratno). Konfigurirajte ga iz načina dostave."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid ""
+"This measurement system is not valid for the selected country. Please switch "
+"from LBS/IN to KGS/CM (or vice versa). Configure it from the delivery method."
+msgstr ""
+"Ta merski sistem ni veljaven za izbrano državo. Preklopite iz LBS/IN na KGS/"
+"CM (ali obratno). Konfigurirajte ga z načinom dostave."
+
+#. module: delivery_ups
+#: model:ir.model.fields,help:delivery_ups.field_delivery_carrier__ups_cod
+msgid ""
+"This value added service enables UPS to collect the payment of the shipment "
+"from your customer."
+msgstr ""
+"Ta storitev z dodano vrednostjo omogoča podjetju UPS, da od vaše stranke "
+"prevzame plačilo pošiljke."
+
+#. module: delivery_ups
+#: model:ir.model.fields,help:delivery_ups.field_delivery_carrier__ups_saturday_delivery
+msgid ""
+"This value added service will allow you to ship the package on saturday also."
+msgstr ""
+"Ta storitev z dodano vrednostjo vam bo omogočila, da paket odpremite tudi v "
+"soboto."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+msgid "Tracking Numbers:"
+msgstr "Številke za sledenje:"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__stock_package_type__package_carrier_type__ups
+msgid "UPS"
+msgstr "UPS"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_access_number
+msgid "UPS Access Key"
+msgstr "UPS Dostopni ključ"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_shipper_number
+#: model:ir.model.fields,field_description:delivery_ups.field_res_partner__property_ups_carrier_account
+#: model:ir.model.fields,field_description:delivery_ups.field_res_users__property_ups_carrier_account
+msgid "UPS Account Number"
+msgstr "UPS Številka računa "
+
+#. module: delivery_ups
+#: model:delivery.carrier,name:delivery_ups.delivery_carrier_ups_be
+#: model:product.template,name:delivery_ups.product_product_delivery_ups_be_product_template
+msgid "UPS BE"
+msgstr "UPS BE"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "UPS Configuration"
+msgstr "UPS Konfiguracija"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_label_file_type
+msgid "UPS Label File Type"
+msgstr "UPS Vrsta datoteke z oznako"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__delivery_type__ups
+msgid "UPS Legacy"
+msgstr "UPS Legacy"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_default_package_type_id
+msgid "UPS Legacy Package Type"
+msgstr "UPS Legacy Vrsta paketa"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_passwd
+msgid "UPS Password"
+msgstr "UPS Geslo"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_saturday_delivery
+msgid "UPS Saturday Delivery"
+msgstr "UPS Dostava v soboto"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "UPS Server Not Found"
+msgstr "UPS Strežnik ni bil najden"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_default_service_type
+msgid "UPS Service Type"
+msgstr "UPS Vrsta storitve"
+
+#. module: delivery_ups
+#: model:delivery.carrier,name:delivery_ups.delivery_carrier_ups_us
+#: model:product.template,name:delivery_ups.product_product_delivery_ups_us_product_template
+msgid "UPS US"
+msgstr "UPS US"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_username
+msgid "UPS Username"
+msgstr "UPS Uporabniško ime"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_sale_order__partner_ups_carrier_account
+msgid "UPS account number"
+msgstr "UPS številka računa"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid ""
+"UPS address lines can only contain a maximum of 35 characters. You can split "
+"the contacts addresses on multiple lines to try to avoid this limitation."
+msgstr ""
+"Naslovne vrstice UPS lahko vsebujejo največ 35 znakov. Naslove stikov lahko "
+"razdelite v več vrstic, da se izognete tej omejitvi."
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_duty_payment
+msgid "Ups Duty Payment"
+msgstr "UPS Plačilo dajatev"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_package_weight_unit
+msgid "Ups Package Weight Unit"
+msgstr "UPS Teža paketa enota"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Username/Password is invalid for this delivery provider."
+msgstr "Uporabniško ime/geslo ni veljavno za tega ponudnika dostave."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Warehouse Phone must be at least 10 alphanumeric characters."
+msgstr ""
+"Telefonska številka skladišča mora imeti vsaj 10 alfanumeričnih znakov."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Warehouse Phone must contain only numbers."
+msgstr "Telefonska številka skladišča mora vsebovati samo številke."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+msgid "Warehouse PhoneExtension cannot exceed the length of 4."
+msgstr "Razširitev telefona v skladišču ne sme presegati dolžine 4."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/sale.py:0
+msgid "You must enter an UPS account number."
+msgstr "Vnesti morate številko računa UPS."
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_label_file_type__zpl
+msgid "ZPL"
+msgstr "ZPL"

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Allow read access to vehicles of active companies or orphan ones -->
+    <record id="l10n_pe_edi_vehicle" model="ir.rule">
+        <field name="name">Vehicles PE</field>
+        <field name="model_id" ref="l10n_pe_edi_stock.model_l10n_pe_edi_vehicle"/>
+        <field name="active">True</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="whatsapp_preview_view_form" model="ir.ui.view">
+        <field name="name">whatsapp.preview.view.form</field>
+        <field name="model">whatsapp.preview</field>
+        <field name="arch" type="xml">
+            <form string="Preview WhatsApp">
+                <sheet>
+                    <div colspan="2">
+                        <field name="preview_whatsapp" no_label="1"/>
+                    </div>
+                    <field name="wa_template_id" invisible="1"/>
+                </sheet>
+                <footer>
+                    <button name="cancel" special="cancel" data-hotkey="z" string="Close" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="whatsapp_preview_action_from_template" model="ir.actions.act_window">
+        <field name="name">Template Preview</field>
+        <field name="res_model">whatsapp.preview</field>
+        <field name="binding_model_id" eval="False"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="whatsapp_preview_view_form"/>
+        <field name="target">new</field>
+        <field name="context">{'default_wa_template_id': active_id}</field>
+    </record>
+</odoo>

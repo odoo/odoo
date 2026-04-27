@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_account_journal_form_inherit_l10n_co_edi_pos" model="ir.ui.view">
+        <field name="name">account.journal.form.inherit.l10n_co_edi_pos</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="l10n_co_dian.view_account_journal_form_inherit_l10n_co_dian"/>
+        <field name="arch" type="xml">
+            <field name="l10n_co_dian_technical_key" position="after">
+                <field name="l10n_co_edi_pos_is_final_consumer"
+                       invisible="l10n_co_dian_provider == 'cavajal' or type != 'sale'"/>
+                <field name="l10n_co_edi_pos_sequence_id"
+                       invisible="l10n_co_dian_provider == 'carvajal' or not l10n_co_edi_pos_is_final_consumer or not l10n_co_edi_pos_sequence_id"
+                       readonly="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="spreadsheet_edition.SidePanelDomain">
+        <Section class="'o-section'">
+            <t t-set-slot="title">Domain</t>
+            <DomainSelector resModel="props.resModel" domain="getStringifiedDomain()"/>
+            <div class="btn btn-link o_edit_domain" t-on-click="openDomainEdition">
+                <i class="oi oi-arrow-right me-1"/>Edit domain
+            </div>
+        </Section>
+    </t>
+</templates>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web_gantt.GanttController">
+        <div t-att-class="className" t-ref="root">
+            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="props.display">
+                <t t-set-slot="control-panel-create-button">
+                    <button t-if="model.metaData.canCreate" class="o_gantt_button_add btn btn-primary" data-hotkey="r" t-on-click="onAddClicked">
+                        New
+                    </button>
+                </t>
+                <t t-set-slot="control-panel-additional-actions">
+                    <CogMenu/>
+                </t>
+                <t t-set-slot="layout-buttons">
+                    <t t-call="{{ props.buttonTemplate }}"/>
+                </t>
+                <t t-set-slot="layout-actions">
+                    <SearchBar toggler="searchBarToggler"/>
+                </t>
+                <t t-set-slot="control-panel-navigation-additional">
+                    <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
+                </t>
+                <t t-set-slot="default" t-slot-scope="layout">
+                    <t t-if="showNoContentHelp">
+                        <t t-if="props.info.noContentHelp" t-call="web.ActionHelper">
+                            <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
+                        </t>
+                        <t t-else="" t-call="web.NoContentHelper"/>
+                    </t>
+                    <t t-component="props.Renderer"
+                        class="model.useSampleModel ? 'o_sample_data_disabled' : ''"
+                        model="model"
+                        arch="props.arch"
+                        create.bind="create"
+                        openDialog.bind="openDialog"
+                        scrollPosition="props.scrollPosition"
+                        contentRef="layout.contentRef"
+                    />
+                </t>
+            </Layout>
+        </div>
+    </t>
+
+    <t t-name="web_gantt.GanttView.Buttons">
+        <div class="d-flex flex-wrap o_gantt_buttons_container">
+        </div>
+    </t>
+
+</templates>

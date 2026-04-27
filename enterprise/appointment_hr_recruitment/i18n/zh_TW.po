@@ -1,0 +1,141 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * appointment_hr_recruitment
+#
+# Translators:
+# Wil Odoo, 2024
+# Tony Ng, 2025
+#
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2025-08-12 22:20+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-18/appointment_hr_recruitment/zh_Hant/>\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,body_html:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; "
+"border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <h2>Hello,</h2>\n"
+"            <div style=\"font-size: 13px;\">\n"
+"                Thanks for your application and interest in <t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t>.<br/>\n"
+"                <br/>\n"
+"                I would like to organize a phone interview with you, it "
+"should last about 30 min.\n"
+"                We'll go through your resume and motivations to join the <t "
+"t-out=\"object.company_id.name or ''\">YourCompany</t> team.\n"
+"                You can book a slot in our agenda by cliking on the button "
+"below.<br/>\n"
+"            </div>\n"
+"            <br/>\n"
+"            <a t-att-"
+"href=\"env['ir.config_parameter'].sudo().get_param('web.base.url') + '/book/"
+"interview'\" style=\"background-color: #875a7b; text-decoration: none; "
+"color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Schedule my "
+"interview</a><br/>\n"
+"            <br/>\n"
+"            Best regards,\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; "
+"border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <h2>你好！</h2>\n"
+"            <div style=\"font-size: 13px;\">\n"
+"                感謝你提出申請以及對 <t t-out=\"object.company_id.name or "
+"''\">YourCompany</t> 感興趣。<br/>\n"
+"                <br/>\n"
+"                我想安排與你進行一次電話面試，大約需時 30 分鐘。\n"
+"                屆時我們會檢閱你的履歷，以及討論你想加入 <t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t> 團隊的原因。\n"
+"                你可按下方按鈕，在我們的時間表內預約一個時段。<br/>\n"
+"            </div>\n"
+"            <br/>\n"
+"            <a t-att-"
+"href=\"env['ir.config_parameter'].sudo().get_param('web.base.url') + '/book/"
+"interview'\" style=\"background-color: #875a7b; text-decoration: none; "
+"color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">預約我的面試</"
+"a><br/>\n"
+"            <br/>\n"
+"            順祝  安康\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
+
+#. module: appointment_hr_recruitment
+#: model:ir.model.fields,field_description:appointment_hr_recruitment.field_appointment_invite__applicant_id
+#: model:ir.model.fields,field_description:appointment_hr_recruitment.field_calendar_event__applicant_id
+msgid "Applicant"
+msgstr "申請人"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model,name:appointment_hr_recruitment.model_appointment_invite
+msgid "Appointment Invite"
+msgstr "預約邀請"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model,name:appointment_hr_recruitment.model_appointment_type
+msgid "Appointment Type"
+msgstr "預約類型"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model,name:appointment_hr_recruitment.model_calendar_event
+msgid "Calendar Event"
+msgstr "日曆活動"
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,subject:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid ""
+"Can we plan an interview together for your {{ (object.job_id.name + ' ') if "
+"object.job_id else '' }}application?"
+msgstr ""
+"可以為你的{{ ('「' + object.job_id.name + '」') if object.job_id else '' }}申"
+"請，安排一次面試嗎？"
+
+#. module: appointment_hr_recruitment
+#: model:appointment.type,name:appointment_hr_recruitment.appointment_type_interviews
+msgid "Interviews availabilities"
+msgstr "可以面試時間"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model.fields,help:appointment_hr_recruitment.field_appointment_invite__applicant_id
+#: model:ir.model.fields,help:appointment_hr_recruitment.field_calendar_event__applicant_id
+msgid ""
+"Link an applicant to the appointment invite created.\n"
+"Used when creating an invitation from the Meeting action in the applicant "
+"form view."
+msgstr ""
+"將申請人和預約邀請關聯。\n"
+"在申請人表單視圖中，通過會議操作創建邀請時使用。"
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,name:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid "Recruitment: Schedule interview"
+msgstr "招聘：安排面試"
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,description:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid "Send this email when you want to schedule an interview with a candidate"
+msgstr "若想預約應徵者面試，請傳送此電郵"

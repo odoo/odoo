@@ -1,0 +1,9 @@
+<templates>
+    <t t-name="web_studio.ViewEditor.InteractiveEditorProperties">
+        <t t-if="node">
+            <h3 t-attf-class="text-capitalize o_web_studio_icon_container position-relative {{ iconClass }}" t-out="node.humanName" />
+            <t t-if="propertiesComponent.component" t-component="propertiesComponent.component" t-props="propertiesComponent.props" node="node"/>
+            <DefaultProperties t-else="" node="node"/>
+        </t>
+    </t>
+</templates>

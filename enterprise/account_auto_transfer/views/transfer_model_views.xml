@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- SEARCH VIEW -->
+    <record model="ir.ui.view" id="view_generated_transfer_search">
+        <field name="name">account.auto.transfer.search</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_move_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="transfer_model_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ACTIONS -->
+    <!--    MOVE MODELS (FROM MENU) -->
+    <record model="ir.actions.act_window" id="transfer_model_action">
+        <field name="name">Automatic Transfers</field>
+        <field name="res_model">account.transfer.model</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!--    GENERATED MOVES -->
+    <record model="ir.actions.act_window" id="generated_transfers_action">
+        <field name="name">Generated Entries</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="account.view_move_tree"/>
+        <field name="search_view_id" ref="view_generated_transfer_search"/>
+    </record>
+
+    <!-- MENU -->
+    <menuitem id="menu_auto_transfer"
+              name="Transfers"
+              action="transfer_model_action"
+              groups="account.group_account_user"
+              parent="account.menu_finance_entries" sequence="30"/>
+
+    <!-- VIEWS -->
+    <!--    LIST -->
+    <record model="ir.ui.view" id="view_transfer_model_tree">
+        <field name="name">account.auto.transfer.model.list</field>
+        <field name="model">account.transfer.model</field>
+        <field name="arch" type="xml">
+            <list string="Move Models" sample="1">
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="date_start"/>
+                <field name="date_stop"/>
+                <field name="frequency"/>
+            </list>
+        </field>
+    </record>
+    <!--    FORM -->
+    <record model="ir.ui.view" id="view_transfer_model_form">
+        <field name="name">account.auto.transfer.model.form</field>
+        <field name="model">account.transfer.model</field>
+        <field name="arch" type="xml">
+            <form string="Move Model" class="o_auto_transfer_form">
+                <header>
+                    <button name="action_activate" type="object"
+                            string="Activate" class="oe_highlight"
+                            invisible="state == 'in_progress' or not active"/>
+                    <button name="action_perform_auto_transfer" type="object"
+                            string="Compute Transfer" class="oe_highlight"
+                            invisible="state != 'in_progress' or not active"/>
+                    <button name="action_disable" type="object"
+                            string="Disable"
+                            invisible="state != 'in_progress' or not active"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div name="button_box" class="oe_button_box" invisible="not id">
+                        <button class="oe_stat_button" type="action"
+                                name="%(generated_transfers_action)d" icon="fa-book"
+                                context="{'search_default_transfer_model_id': id, 'default_transfer_model_id': id}">
+                            <field name="move_ids_count" string="Transfers" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <div class="oe_title">
+                        <label for="name" string="Description"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Monthly Expense Transfer"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <label for="date_start" string="Period"/>
+                            <div>
+                                <field name="date_start" class="oe_inline"/>
+                                <span> to </span>
+                                <field name="date_stop" class="oe_inline"/>
+                            </div>
+                            <field name="frequency"/>
+                        </group>
+                        <group>
+                            <field name="journal_id" string="Journal" domain="[('type', '=', 'general')]"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Origin Accounts">
+                            <field name="account_ids" nolabel="1">
+                                <list>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="account_type"/>
+                                </list>
+                            </field>
+                        </group>
+                        <group string="Automated Transfer">
+                            <field name="line_ids" nolabel="1"
+                                   context="{'default_transfer_model_id': id}">
+                                <list editable="bottom">
+                                    <field name="percent_is_readonly" column_invisible="True"/>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="analytic_account_ids"
+                                           widget="many2many_tags"/>
+                                    <field name="partner_ids" widget="many2many_tags" domain="[('parent_id', '=', False)]"/>
+                                    <field name="percent" string="Percent (%)" readonly="percent_is_readonly"/>
+                                    <field name="account_id"/>
+                                </list>
+                            </field>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_transfer_model_search">
+        <field name="name">account.auto.transfer.model.search</field>
+        <field name="model">account.transfer.model</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <separator/>
+                <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+</odoo>

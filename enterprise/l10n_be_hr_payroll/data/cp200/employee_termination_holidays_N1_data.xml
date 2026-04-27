@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cp200_employees_termination_n1_basic_pay_simple" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays_simple"/>
+        <field name="name">Basic Pay Simple</field>
+        <field name="code">BASIC_PAY_SIMPLE</field>
+        <field name="sequence">5</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if 'ALLOCATION' in inputs and inputs['ALLOCATION'].amount:
+    qty = 1 - (inputs['TIME_OFF_TAKEN'].amount / inputs['ALLOCATION'].amount)
+else:
+    qty = 1
+result_rate = 7.67
+result = (inputs['GROSS_REF'].amount if 'GROSS_REF' in inputs else 0) * qty
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_simple_pay_december" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays_simple"/>
+        <field name="name">Simple Holiday Pay (Lost due to working time reduction)</field>
+        <field name="code">SIMPLE_PAY_DECEMBER</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['SIMPLE_PAY_DECEMBER'].amount if 'SIMPLE_PAY_DECEMBER' in inputs else 0
+if 'SIMPLE_PAY_DECEMBER' in inputs:
+    result_name = inputs['SIMPLE_PAY_DECEMBER'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_pay_simple" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays_simple"/>
+        <field name="name">Pay simple</field>
+        <field name="code">PAY_SIMPLE</field>
+        <field name="sequence">15</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['BASIC_PAY_SIMPLE']['total'] + result_rules['SIMPLE_PAY_DECEMBER']['total']
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_pay_double_basic" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays_double_basic"/>
+        <field name="name">Basic double</field>
+        <field name="code">DOUBLE_BASIC</field>
+        <field name="sequence">20</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty, result_rate, result, result_name = payslip._get_termination_n_basic_double(localdict)
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_additional_leave" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays_additional_leave"/>
+        <field name="name">Additional Time Off</field>
+        <field name="code">EUROPEAN</field>
+        <field name="sequence">25</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result=-inputs['EUROPEAN'].amount if 'EUROPEAN' in inputs else 0
+if 'EUROPEAN' in inputs:
+    result_name=inputs['EUROPEAN'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_double_already_paid" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays_additional_leave"/>
+        <field name="name">Double Holiday (Already Paid)</field>
+        <field name="code">DHALREADYPAID</field>
+        <field name="sequence">30</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result=-inputs['DHALREADYPAID'].amount if 'DHALREADYPAID' in inputs else 0
+if 'DHALREADYPAID' in inputs:
+    result_name=inputs['DHALREADYPAID'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_double_pay_december" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays_additional_leave"/>
+        <field name="name">Double Holiday Pay (Lost due to working time reduction)</field>
+        <field name="code">DOUBLE_PAY_DECEMBER</field>
+        <field name="sequence">35</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result=inputs['DOUBLE_PAY_DECEMBER'].amount if 'DOUBLE_PAY_DECEMBER' in inputs else 0
+if 'DOUBLE_PAY_DECEMBER' in inputs:
+    result_name=inputs['DOUBLE_PAY_DECEMBER'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_pay_double" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays_double"/>
+        <field name="name">Pay double</field>
+        <field name="code">PAY DOUBLE</field>
+        <field name="sequence">40</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result= max(0, result_rules['DOUBLE_BASIC']['total'] + result_rules['EUROPEAN']['total'] + result_rules['DHALREADYPAID']['total'] + result_rules['DOUBLE_PAY_DECEMBER']['total'])
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_pay_double_complementary_basic" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays_double"/>
+        <field name="name">Basic Complementary Double Holiday</field>
+        <field name="code">CDHBASIC</field>
+        <field name="sequence">45</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 1
+result_rate = 0.87
+result = result_rules['PAY DOUBLE']['total'] / 0.068
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_pay_double_complementary_already_paid" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays_double"/>
+        <field name="name">Complementary Double Holidays (Already Paid)</field>
+        <field name="code">CDHALREADYPAID</field>
+        <field name="sequence">50</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result=-inputs['CDHALREADYPAID'].amount if 'CDHALREADYPAID' in inputs else 0
+if 'CDHALREADYPAID' in inputs:
+    result_name=inputs['CDHALREADYPAID'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_pay_double_complementary_december" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays_double"/>
+        <field name="name">Complementary Double Holidays (Lost due to working time reduction)</field>
+        <field name="code">COMP_DOUBLE_PAY_DECEMBER</field>
+        <field name="sequence">55</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result=inputs['COMP_DOUBLE_PAY_DECEMBER'].amount if 'COMP_DOUBLE_PAY_DECEMBER' in inputs else 0
+if 'COMP_DOUBLE_PAY_DECEMBER' in inputs:
+    result_name=inputs['COMP_DOUBLE_PAY_DECEMBER'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_pay_double_complementary" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays_double"/>
+        <field name="name">Pay double complementary</field>
+        <field name="code">PAY DOUBLE COMPLEMENTARY</field>
+        <field name="sequence">60</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = max(0, result_rules['CDHBASIC']['total'] + result_rules['CDHALREADYPAID']['total'] + result_rules['COMP_DOUBLE_PAY_DECEMBER']['total'])
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_total_n" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays"/>
+        <field name="name">Total</field>
+        <field name="code">BASIC</field>
+        <field name="sequence">65</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['PAY_SIMPLE']['total'] + result_rules['PAY DOUBLE']['total'] + result_rules['PAY DOUBLE COMPLEMENTARY']['total']
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_rules_onss_termination" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_onss"/>
+        <field name="name">ONSS (Simple Holiday)</field>
+        <field name="code">ONSS1</field>
+        <field name="sequence">70</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result=not contract.no_onss</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">PAY_SIMPLE</field>
+        <field name="amount_percentage">-13.07</field>
+        <field name="partner_id" ref="res_partner_onss"/>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_rules_special_contribution_termination" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_onss"/>
+        <field name="name">ONSS (Double Holiday)</field>
+        <field name="code">ONSS2</field>
+        <field name="sequence">80</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result=not contract.no_onss</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['PAY DOUBLE']['total']
+result_rate = -13.07
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_rules_special_contribution_onss_total" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_total"/>
+        <field name="name">ONSS (TOTAL)</field>
+        <field name="code">ONSSTOTAL</field>
+        <field name="sequence">85</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="amount_python_compute">
+result = - result_rules['ONSS1']['total'] - result_rules['ONSS2']['total']
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_rules_taxable_termination" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_onss"/>
+        <field name="name">Taxable Termination Amount</field>
+        <field name="code">GROSS</field>
+        <field name="sequence">90</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = BASIC + result_rules['ONSS1']['total'] + result_rules['ONSS2']['total']
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_rules_professional_tax_termination" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_onss"/>
+        <field name="name">Professional Tax</field>
+        <field name="code">PROF_TAX</field>
+        <field name="sequence">95</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result=not contract.no_withholding_taxes</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = GROSS
+children = employee.dependent_children
+children_exoneration = payslip._rule_parameter('holiday_pay_pp_exoneration')
+annual_taxable = inputs['ANNUAL_TAXABLE'].amount if 'ANNUAL_TAXABLE' in inputs else 0
+if children and annual_taxable &lt;= children_exoneration.get(children, children_exoneration[12]):
+    result -= children_exoneration.get(children, children_exoneration[12]) - annual_taxable
+result_rate = - payslip._get_be_termination_withholding_rate(localdict)
+result = max(result, 0)
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_rules_withholding_taxes_total" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_withholding_taxes_total"/>
+        <field name="name">Withholding Taxes (Total)</field>
+        <field name="code">PPTOTAL</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">100</field>
+        <field name="condition_select">none</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -result_rules['PROF_TAX']['total']
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_attachment_salary" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Attachment of Salary</field>
+        <field name="code">ATTACH_SALARY</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">174</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'ATTACH_SALARY' in inputs</field>
+        <field name="amount_python_compute">
+result = -inputs['ATTACH_SALARY'].amount
+result_name = inputs['ATTACH_SALARY'].name
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_asignment_salary" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Assignment of Salary</field>
+        <field name="code">ASSIG_SALARY</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">174</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'ASSIG_SALARY' in inputs</field>
+            <field name="amount_python_compute">
+result = -inputs['ASSIG_SALARY'].amount
+result_name = inputs['ASSIG_SALARY'].name
+            </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_child_support" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Child Support</field>
+        <field name="code">CHILD_SUPPORT</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">174</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'CHILD_SUPPORT' in inputs</field>
+        <field name="amount_python_compute">
+result = -inputs['CHILD_SUPPORT'].amount
+result_name = inputs['CHILD_SUPPORT'].name
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_deduction" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Deduction</field>
+        <field name="code">DEDUCTION</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">198</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'DEDUCTION' in inputs</field>
+        <field name="amount_python_compute">
+result = -inputs['DEDUCTION'].amount
+result_name = inputs['DEDUCTION'].name
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_reimbursement" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Reimbursement</field>
+        <field name="code">REIMBURSEMENT</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">199</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'REIMBURSEMENT' in inputs</field>
+        <field name="amount_python_compute">
+result = inputs['REIMBURSEMENT'].amount
+result_name = inputs['REIMBURSEMENT'].name
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_pay_net_termination" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="name">Net</field>
+        <field name="code">NET</field>
+        <field name="sequence">200</field>
+        <field name="appears_on_employee_cost_dashboard">True</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+assignment_types = [
+    'ATTACH_SALARY', 'ASSIG_SALARY', 'CHILD_SUPPORT', 'DEDUCTION', 'REIMBURSEMENT']
+assignment_amount = sum(
+    result_rules[assignment_type]['total'] for assignment_type in assignment_types)
+result = GROSS + result_rules['PROF_TAX']['total'] + assignment_amount
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_pay_onss_employer_basic" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS Basic (Employer)</field>
+        <field name="code">ONSSEMPLOYERBASIC</field>
+        <field name="sequence">501</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_global_rate') - 13.07
+result = result_rules['PAY_SIMPLE']['total']</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_pay_onss_employer_ffe" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS FFE (Employer)</field>
+        <field name="code">ONSSEMPLOYERFFE</field>
+        <field name="sequence">501</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+worker_count = payslip.company_id._get_workers_count()
+result_rate = payslip._get_ffe_contribution_rate(worker_count)
+result = result_rules['PAY_SIMPLE']['total']</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_pay_onss_employer_special_ffe" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS Special FFE (Employer)</field>
+        <field name="code">ONSSEMPLOYERMFFE</field>
+        <field name="sequence">501</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_special_ffe_rate')
+result = result_rules['PAY_SIMPLE']['total']</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_pay_onss_employer_cpae" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS CPAE (Employer)</field>
+        <field name="code">ONSSEMPLOYERCPAE</field>
+        <field name="sequence">501</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_cpae_rate')
+result = result_rules['PAY_SIMPLE']['total']</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_pay_onss_employer_wage_restreint" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS Wage Restreint (Employer)</field>
+        <field name="code">ONSSEMPLOYERRESTREINT</field>
+        <field name="sequence">501</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_wage_restreint')
+result = result_rules['PAY_SIMPLE']['total']</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_pay_onss_employer_temporary_unemployment" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS Temporary Unemployment (Employer)</field>
+        <field name="code">ONSSEMPLOYERUNEMP</field>
+        <field name="sequence">501</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_temporary_unemployment_rate')
+result = result_rules['PAY_SIMPLE']['total']</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_pay_onss_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer"/>
+        <field name="name">Accounting: ONSS (Employer)</field>
+        <field name="code">ONSSEMPLOYER</field>
+        <field name="sequence">502</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['ONSSEMPLOYERBASIC']['total'] + result_rules['ONSSEMPLOYERFFE']['total'] + result_rules['ONSSEMPLOYERMFFE']['total'] + result_rules['ONSSEMPLOYERCPAE']['total'] + result_rules['ONSSEMPLOYERRESTREINT']['total'] + result_rules['ONSSEMPLOYERUNEMP']['total']</field>
+        <field name="partner_id" ref="res_partner_onss"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+</odoo>

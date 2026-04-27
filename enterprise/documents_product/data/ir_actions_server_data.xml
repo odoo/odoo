@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="ir_actions_server_create_product_template" model="ir.actions.server" forcecreate="0">
+            <field name="name">Create Product Template</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.create_product_template()
+            </field>
+        </record>
+
+        <function model="documents.document" name="action_folder_embed_action" eval="[
+            ref('document_product_folder'),
+            ref('ir_actions_server_create_product_template'),
+        ]"/>
+    </data>
+</odoo>

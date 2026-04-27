@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<!-- NOTEBOOK -->
+  <t t-name="web_studio.Notebook.Hook" t-inherit="web.Notebook">
+    <xpath expr="//li[@t-foreach='navItems']" position="attributes" >
+      <attribute name="t-att-class">{o_web_studio_show_invisible: !navItem[1].studioIsVisible, "o-web-studio-editor--element-clickable": true}</attribute>
+      <attribute name="t-on-click">(ev) => env.config.onNodeClicked(navItem[1].studioXpath)</attribute>
+      <attribute name="t-att-data-studio-xpath">navItem[1].studioXpath</attribute>
+    </xpath>
+    <xpath expr="//li[@t-foreach='navItems']" position="after" >
+      <li class="nav-item" t-on-click.prevent="onNewPageClicked">
+        <a href="#" class="nav-link" >
+          <i class="fa fa-plus-square" />
+        </a>
+      </li>
+    </xpath>
+    <xpath expr="//div[contains(@class,'tab-pane')]/t[2]" position="after">
+      <t t-set="studioHookProps" t-value="props.slots[state.currentPage].studioHookProps" />
+      <StudioHook t-if="studioHookProps" t-props="studioHookProps" />
+    </xpath>
+  </t>
+
+  <t t-name="web_studio.FormViewAddButtonAction" t-inherit="web.StatusBarButtons">
+    <xpath expr="//div/t" position="after">
+      <div class="mt-2 mb-2">
+        <AddButtonAction/>
+      </div>
+    </xpath>
+  </t>
+
+  <t t-name="web_studio.AddElementHook">
+    <button t-attf-class="o_web_studio_add_element btn btn-secondary d-flex align-items-center justify-content-center text-center bg-secondary text-primary fw-bolder py-3 {{ classNames || '' }}" t-att-data-tooltip="tooltip" t-on-click.stop="onClick" t-out="title" />
+  </t>
+
+  <t t-name="web_studio.FormLabel" t-inherit="web.FormLabel">
+    <xpath expr="./label" position="attributes" >
+      <attribute name="t-ref">rootRef</attribute>
+    </xpath>
+  </t>
+
+  <t t-name="web_studio.ButtonBox">
+    <div class="d-flex justify-content-end my-2">
+      <div class="o-form-buttonbox o_menu_item d-flex w-md-auto justify-content-end" t-attf-class="{{this.props.class}}">
+        <t t-slot="{{ button_value }}" t-foreach="visibleButtons" t-as="button" t-key="button_value"/>
+        <button
+          t-ref="toggleRef"
+          t-if="additionalButtons.length" t-on-click="toggle" type="button" aria-expanded="false"
+          class="o_button_more o-dropdown o-dropdown-caret oe_stat_button btn btn-outline-secondary d-flex justify-content-center align-items-center"
+        >
+          More
+        </button>
+      </div>
+    </div>
+    <div t-if="expanded.value and additionalButtons.length" class="o-form-buttonbox d-flex flex-wrap justify-content-end" t-attf-class="{{this.props.class}}">
+      <t t-slot="{{ button_value }}" t-foreach="additionalButtons" t-as="button" t-key="button_value"/>
+    </div>
+</t>
+
+</templates>

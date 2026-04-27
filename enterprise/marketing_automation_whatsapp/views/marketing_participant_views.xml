@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="marketing_participant_view_form" model="ir.ui.view">
+        <field name="name">marketing.participant.view.form</field>
+        <field name="model">marketing.participant</field>
+        <field name="inherit_id" ref="marketing_automation.marketing_participant_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//span[hasclass('o_ma_type')]/i" position="after">
+                <i class="fa fa-whatsapp pe-1" t-elif="record.activity_type.raw_value == 'whatsapp'" title=" WhatsApp" role="img" aria-label="WhatsApp"/>
+            </xpath>
+
+            <xpath expr="//div[hasclass('o_ma_timeline')]/t[@t-else='']" position="inside">
+                <t t-if="record.trigger_type.raw_value == 'whatsapp_click'">
+                    <span class="text-primary">
+                        <i class="fa fa-hand-pointer-o" /> Not clicked yet
+                    </span>
+                </t>
+                <t t-if="record.trigger_type.raw_value == 'whatsapp_read'">
+                    <span class="text-primary">
+                        <i class="fa fa-check-circle" /> Not opened yet
+                    </span>
+                </t>
+                <t t-if="record.trigger_type.raw_value == 'whatsapp_replied'">
+                    <span class="text-primary">
+                        <i class="fa fa-reply" /> Not replied
+                    </span>
+                </t>
+                <t t-if="record.trigger_type.raw_value == 'whatsapp_bounced'">
+                    <span class="text-primary">
+                        <i class="fa fa-exclamation-circle" /> Didn't bounce yet
+                    </span>
+                </t>
+            </xpath>
+        </field>
+    </record>
+</odoo>

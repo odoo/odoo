@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="approval_category_action_new_request" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="path">approvals</field>
+        <field name="res_model">approval.category</field>
+        <field name="view_mode">kanban</field>
+    </record>
+
+    <record id="approval_category_action" model="ir.actions.act_window">
+        <field name="name">Approvals Types</field>
+        <field name="res_model">approval.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="approval_request_action_to_review_category" model="ir.actions.act_window">
+        <field name="name">Approvals to review</field>
+        <field name="res_model">approval.request</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="domain">[('approver_ids.user_id', '=', uid), ('request_status', '=', 'pending'), ('category_id', '=', active_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No new approvals to review 
+            </p>
+        </field>
+
+    </record>
+
+    <record id="approval_category_view_tree" model="ir.ui.view">
+        <field name="name">approval.category.view.list</field>
+        <field name="model">approval.category</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle" />
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="approval_category_view_search" model="ir.ui.view">
+        <field name="name">approval.category.search</field>
+        <field name="model">approval.category</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="approval_category_view_form" model="ir.ui.view">
+        <field name="name">approval.category.view.form</field>
+        <field name="model">approval.category</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="image" widget="image" class="oe_avatar" options='{"preview_image": "image", "size": [80, 80]}'/>
+                    <div class="oe_title">
+                        <label for="name" string="Approval Type"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Procurement"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="description"/>
+                        <field name="approval_type" invisible="1"/>
+                        <field name="automated_sequence"/>
+                        <field name="sequence_code" invisible="not automated_sequence" required="automated_sequence"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    </group>
+                    <notebook>
+                        <page string="Options" name="options">
+                            <group>
+                                <group string="Fields" name="option_settings">
+                                    <field name="active" invisible="1"/>
+                                    <field name="requirer_document" string="Document" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="has_partner" string="Contact" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="has_date" string="Date" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="has_period" string="Period" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="has_product" string="Product" force_save="1"
+                                        widget="radio" options="{'horizontal': true}"/>
+                                    <field name="has_quantity" string="Quantity" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="has_amount" string="Amount" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="has_reference" string="Reference" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="has_payment_method" string="Payment" widget="radio" options="{'horizontal': true}" invisible="1"/>
+                                    <field name="has_location" string="Location" widget="radio" options="{'horizontal': true}"/>
+                                </group>
+                                <group string="Approvers" name="approvers">
+                                    <field name="manager_approval"/>
+                                    <separator colspan="2"/>
+                                    <field name="approver_ids"/>
+                                    <field name="approver_sequence" invisible="approval_minimum == 0"/>
+                                    <field name="approval_minimum"/>
+                                    <field name="invalid_minimum" invisible="1"/>
+                                    <div class="text-warning" colspan="2" invisible="not invalid_minimum">
+                                        <span class="fa fa-warning" title="Invalid minimum approvals"/><field name="invalid_minimum_warning" nolabel="1"/>
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_open_approval_category" model="ir.actions.server">
+        <field name="name">Open Approval Category</field>
+        <field name="model_id" ref="model_approval_category"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = {
+                "type": "ir.actions.act_window",
+                "res_model": "approval.category",
+                "views": [[False, "form"]],
+                "target": "new",
+                "res_id": records.id,
+            }
+        </field>
+    </record>
+
+    <record id="approval_category_view_kanban" model="ir.ui.view">
+        <field name="name">approval.category.views.kanban</field>
+        <field name="model">approval.category</field>
+        <field name="arch" type="xml">
+            <kanban create="false" can_open="0" class="o_modules_kanban" js_class="approvals_category_kanban">
+                <field name="active"/>
+                <templates>
+                    <t t-name="menu" groups="approvals.group_approval_user">
+                        <a t-if="widget.editable"
+                            role="menuitem"
+                            type="action"
+                            name="%(approvals.action_open_approval_category)d"
+                            class="dropdown-item">Edit</a>
+                        <a t-if="record.active.raw_value"
+                            role="menuitem" 
+                            type="archive"
+                            class="dropdown-item">Archive</a>
+                        <a t-if="!record.active.raw_value"
+                            role="menuitem"
+                            type="unarchive"
+                            class="dropdown-item">Unarchive</a>
+                    </t>
+                    <t t-name="card" class="flex-row">
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <aside>
+                            <field name="image" widget="image" class="mt-2"/>
+                        </aside>
+                        <main class="ms-4">
+                            <field name="name" class="fw-bold fs-5"/>
+                            <field name="description" class="text-muted lh-1 mb-1 mt-1"/>
+                            <footer t-if="!selection_mode">
+                                <button type="object" class="btn btn-primary btn-sm" name="create_request" context="{'category_id':id}">New Request</button>
+                                <button type="action" class="btn btn-sm btn-secondary ms-auto" name="%(approvals.approval_request_action_to_review_category)d" groups="approvals.group_approval_user">To Review: <field name="request_to_validate_count"/></button>
+                            </footer>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="inline_form">
+        <div class="px-4 pb-4">
+            <label for="o_sdd_iban" class="form-label">IBAN</label>
+            <div class="input-group">
+                <div class="input-group-text">
+                    <i class="fa fa-fw fa-bank"/>
+                </div>
+                <input id="o_sdd_iban"
+                       type="text"
+                       class="form-control"
+                       required=""
+                />
+            </div>
+        </div>
+    </template>
+
+    <template id="sepa_state_header" inherit_id="payment_custom.custom_state_header">
+        <xpath expr="//div[@id='o_payment_status_message_details']" position="inside">
+            <div t-if="tx.provider_id.sudo().custom_mode == 'sepa_direct_debit'">
+                <strong>Amount: </strong><span t-out="tx.amount"/> €
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,52 @@
+.whelpdesk_tags_dropdown {
+    // Show a maximum of 7 items. 
+    max-height: $dropdown-padding-y * 2 + ($dropdown-font-size * $o-line-height-base + $dropdown-item-padding-y * 2) * 7;
+}
+
+.whelpdesk_search_description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    
+    p {
+        margin-bottom: 0;
+    }
+}
+
+#about_team [data-oe-field="description"] *:last-child {
+    margin-bottom: 0;
+}
+
+.team_navbar {
+    min-height: 65px;
+}
+
+.team_card {
+    transition: transform 0.3s;
+}
+
+.team_card:hover {
+    transform: scale(1.02);
+}
+
+.team_list_columns {
+    .card {
+        header {
+            min-height: 150px;
+            height: 25vh;
+        }
+        .card-body {
+            padding: 1.25rem 1.5rem;
+            h2 {
+                font-size: 28px;
+            }
+            .navbar-brand {
+                bottom: 10px;
+                left: 1.5rem;
+                &:hover {
+                    color: darken($o-brand-primary, 10%) !important;
+                }
+            }
+        }
+    }
+}

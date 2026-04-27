@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="l10n_pe_edi_guiaremision_report_delivery_document" inherit_id="stock.report_delivery_document">
+        <xpath expr="//div[@name='signature']" position="after">
+            <t t-if="o.l10n_pe_edi_status == 'sent'">
+                <div class="row border-top mt-3" t-if="o.l10n_pe_edi_transport_type" id="delivery_guide_details">
+                    <div class="col-12">
+                        <div class="row mt-3">
+                            <div class="col-3">
+                                <strong>Delivery Guide Number</strong>
+                                <p t-field="o.l10n_latam_document_number"/>
+                            </div>
+                            <div class="col-3" t-if="o.l10n_pe_edi_transport_type">
+                                <strong>Transport Type</strong>
+                                <p t-field="o.l10n_pe_edi_transport_type"/>
+                            </div>
+                            <div class="col-3">
+                                <strong>Transfer Start Date</strong>
+                                <p t-field="o.l10n_pe_edi_departure_start_date"/>
+                            </div>
+                            <div class="col-3">
+                                <strong>Reason for Transfer</strong>
+                                <p t-field="o.l10n_pe_edi_reason_for_transfer"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row border-top mt-3" t-if="o.l10n_pe_edi_transport_type" id="delivery_guide_details2">
+                    <div class="col-12">
+                        <div class="row mt-3">
+                            <div class="col-6" t-if="o.l10n_pe_edi_operator_id">
+                                <strong>Operator</strong>
+                                <p>
+                                    <span t-field="o.l10n_pe_edi_operator_id"/>
+                                    <br/>
+                                    <strong><span t-field="o.l10n_pe_edi_operator_id.l10n_latam_identification_type_id" t-if="o.l10n_pe_edi_operator_id.l10n_latam_identification_type_id"/></strong>
+                                    <span t-field="o.l10n_pe_edi_operator_id.vat" t-if="o.l10n_pe_edi_operator_id.vat"/>
+                                </p>
+                            </div>
+                            <div class="col-4" t-if="o.l10n_pe_edi_vehicle_id.license_plate">
+                                <strong>Licence</strong>
+                                <p t-field="o.l10n_pe_edi_vehicle_id.license_plate"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row border-top mt-3" t-if="o.l10n_pe_edi_vehicle_id" id="delivery_guide_20">
+                    <div class="col-12">
+                        <div class="row mt-3">
+                            <div class="col-4">
+                                <strong>Transfer indicator in M1 or L category vehicles:</strong>
+                                <p>
+                                    <span t-if="o.l10n_pe_edi_vehicle_id.is_m1l">Yes</span>
+                                    <span t-else="">No</span>
+                                </p>
+                            </div>
+                            <div class="col-4" t-if="o.l10n_pe_edi_vehicle_id.authorization_issuing_entity">
+                                <strong>Issuing entity of the special authorization:</strong>
+                                <p t-field="o.l10n_pe_edi_vehicle_id.authorization_issuing_entity"/>
+                            </div>
+                            <div class="col-4" t-if="o.l10n_pe_edi_vehicle_id.authorization_issuing_entity_number">
+                                <strong>Special authorization number:</strong>
+                                <p t-field="o.l10n_pe_edi_vehicle_id.authorization_issuing_entity_number"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row avoid-page-break-inside border-top mt-3" id="delivery_guide_20_qr">
+                    <div class="col-12">
+                        <div class="row avoid-page-break-inside mt-3">
+                            <t t-set="qr_url" t-value="o._l10n_pe_edi_get_qr()"/>
+                            <div t-if="qr_url" class="barcode col-3">
+                                <img alt="Barcode" t-att-src="'/report/barcode/?barcode_type=QR&amp;value=%s&amp;width=180&amp;height=180' % quote_plus(qr_url)"/>
+                            </div>
+                            <div class="col-6" t-if="o.l10n_pe_edi_related_document_type">
+                                <strong>Related Documents:</strong>
+                                <p>
+                                    <span t-field="o.l10n_pe_edi_related_document_type"/> -
+                                    <span t-field="o.l10n_pe_edi_document_number"/>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3" id='pe_notes' t-if="o.l10n_pe_edi_observation">
+                    <div class="col-12">
+                        <div class="text-center">
+                            <strong t-if="o.l10n_pe_edi_observation">Notes: </strong> <span t-out="o.l10n_pe_edi_observation" t-if="o.l10n_pe_edi_observation"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row border-bottom mt-3 pb-3" id='complement'>
+                    <div class="complement-details col-12">
+                        <div class="digital-stamp-content text-center">
+                            <strong>This document is a printed representation of a Guía de Remisión. Please review in www.sunat.gob.pe</strong>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,32 @@
+.o_social_subtle_btn_readonly {
+    color: lighten($o-main-text-color, 10%);
+}
+
+.o_social_instagram_preview {
+    .o_social_preview_author {
+        line-height: 2em;
+    }
+
+    .fa-instagram {
+        color: #E1306C;
+    }
+
+    .o_social_instagram_font_size {
+        font-size: 1rem;
+        &.small {
+            font-size: .8rem;
+        }
+    }
+}
+
+.o_social_comments_modal_instagram {
+    --social-instagram-color: #0094f6;
+    a:not(.btn-outline-secondary):not(.o_social_comment_published_date):not(.o_social_post_published_date):not(.dropdown-item) {
+        color: var(--social-instagram-color);
+
+        &:hover, &:focus {
+            color: var(--social-instagram-color);
+            text-decoration: underline;
+        }
+    }
+}

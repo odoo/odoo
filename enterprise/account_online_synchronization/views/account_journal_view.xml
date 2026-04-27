@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_journal_form" model="ir.ui.view">
+            <field name="name">account.journal.form.online.sync</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='bank_account_number']" position="inside">
+                    <field name="account_online_account_id" invisible="1"/>
+                    <field name="renewal_contact_email" groups="account.group_account_readonly" invisible="not account_online_account_id"/>
+                    <!-- Take one cell in order to have the button aligned with the field and not its label -->
+                    <div class="o_cell flex-grow-1 flex-sm-grow-0" invisible="not account_online_account_id"/>
+                    <button name="action_send_reminder" class="oe_link oe_inline ps-0 py-0" type="object"
+                            invisible="not account_online_account_id">
+                            <i class="oi oi-arrow-right me-2"/> Send Now
+                    </button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

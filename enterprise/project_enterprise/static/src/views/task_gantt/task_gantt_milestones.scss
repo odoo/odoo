@@ -1,0 +1,128 @@
+:root {
+    --o-project-milestone-diamond-center: calc(var(--o-project-milestone-diamond-size) / 2);
+    --o-project-milestone-diamond-size: 20px;
+    // 0.707106781186548 being cos(45°), 1.414213562373095 is the length of a diagonal of a square of side length 1
+    // As such the border height needed to construct a triangle is the half of it, so 0.707106781186548.
+    --o-project-milestone-half-diamond-border-border-size: calc(0.707106781186548 * var(--o-project-milestone-diamond-size));
+    --o-project-milestone-half-diamond-border-size: calc(var(--o-project-milestone-half-diamond-border-border-size) - 2px);
+    --o-project-deadline-circle-center: calc(var(--o-project-deadline-circle-size) / 2);
+    --o-project-deadline-circle-size: 10px;
+}
+@mixin o_project_milestone {
+    position: absolute;
+    z-index: 1;
+}
+.o_milestones_reached {
+    color: #00a09d;
+}
+.o_unreached_milestones {
+    color: #d3413b;
+}
+.o_project_milestone_diamond {
+    @include o_project_milestone;
+    .o_milestones_reached {
+        font-size: 10px;
+    }
+    &:not(.edge_slot) {
+        background-color: mix(#00a09d, $o-view-background-color, 10%);
+        border: solid #00a09d 1px;
+        bottom: calc( -1 * var(--o-project-milestone-diamond-center));
+        height: var(--o-project-milestone-diamond-size);
+        right: calc( -1 * var(--o-project-milestone-diamond-center));
+        transform: rotate(45deg);
+        transform-origin: center;
+        width: var(--o-project-milestone-diamond-size);
+        &.o_unreached_milestones {
+            background-color: mix(#d3413b, $o-view-background-color, 10%);
+            border: solid #d3413b 1px;
+        }
+        .o_milestones_reached {
+            position: absolute;
+            margin: 0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            transform-origin: center;
+        }
+        &.o_project_deadline_milestone, &.o_project_startdate_milestone {
+            border-radius: 50%;
+        }
+    }
+    &.edge_slot {
+        border-bottom: var(--o-project-milestone-half-diamond-border-border-size) solid transparent;
+        border-right: var(--o-project-milestone-half-diamond-border-border-size) solid #00a09d;
+        border-top: var(--o-project-milestone-half-diamond-border-border-size) solid transparent;
+        bottom: calc(-1 * var(--o-project-milestone-half-diamond-border-border-size));
+        height: 0;
+        right: 0;
+        width: 0;
+        &.o_unreached_milestones {
+            border-right-color: #d3413b;
+            &:after {
+                border-right-color: #fbeceb;
+            }
+        }
+        &:after{
+            @include o_project_milestone;
+            border-bottom: var(--o-project-milestone-half-diamond-border-size) solid transparent;
+            border-right: var(--o-project-milestone-half-diamond-border-size) solid #e6f6f5;
+            border-top: var(--o-project-milestone-half-diamond-border-size) solid transparent;
+            content: '';
+            height: 0;
+            left: 1px;
+            top: calc(-1 * var(--o-project-milestone-half-diamond-border-size));
+            width: 0;
+        }
+        .o_milestones_reached {
+            position: absolute;
+            z-index: 2;
+            top: calc(-0.5 * var(--o-project-milestone-half-diamond-border-size));
+            left: 3px;
+        }
+    }
+}
+
+.o_project_deadline_circle, .o_project_startdate_circle, .o_project_edge_startdate_circle {
+    @include o_project_milestone;
+    bottom: calc( -1 * var(--o-project-deadline-circle-center));
+    height: var(--o-project-deadline-circle-size);
+    width: var(--o-project-deadline-circle-size);
+    border-radius: 50%;
+
+    &.o_project_deadline_circle {
+        right: calc( -1 * var(--o-project-deadline-circle-center));
+        background-color: $o-danger;
+    }
+
+    &.o_project_startdate_circle {
+        right: calc( -1 * var(--o-project-deadline-circle-center));
+        background-color: $o-success;
+    }
+
+    &.o_project_edge_startdate_circle {
+        left: calc( -1 * var(--o-project-deadline-circle-center));
+        background-color: $o-success;
+    }
+}
+
+.o_gantt_row_total,.o_gantt_cells {
+    .o_project_milestone {
+        pointer-events: none;
+        position: relative;
+        @include o-gantt-zindex(interact);
+        border-right: 2px #00a09d solid;
+        &.o_unreached_milestones {
+            border-right: 2px #d3413b solid;
+        }
+        &.o_startdate_pin {
+            border-right: 2px $o-success solid;
+        }
+    }
+
+    .o_edge_startdate_pin {
+        pointer-events: none;
+        position: relative;
+        @include o-gantt-zindex(interact);
+        border-left: 2px $o-success solid;
+    }
+}

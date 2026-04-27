@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="document_view_form" model="ir.ui.view">
+        <field name="name">documents.view.form.inherit.website</field>
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents.document_view_form"/>
+        <field name="arch" type="xml">
+            <field name="mimetype" position="after">
+                <field name="website_id" groups="website.group_multi_website"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="documents_view_list" model="ir.ui.view">
+        <field name="name">documents.view.list.inherit.website</field>
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents.documents_view_list"/>
+        <field name="arch" type="xml">
+            <field name="document_count" position="after">
+                <field name="website_id" groups="website.group_multi_website" optional="hide"/>
+            </field>
+        </field>
+    </record>
+</odoo>

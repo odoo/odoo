@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.GeneralLedgerLineName" t-inherit="account_reports.AccountReportLineNameCustomizable">
+        <xpath expr="//t[@data-id='line_buttons']" position="inside">
+            <t t-if="props.line.unfoldable">
+                <button
+                    class="btn btn_action"
+                    t-on-click="(ev) => controller.reportAction(ev, 'open_journal_items', {
+                        line_id: props.line.id,
+                        view_ref: 'account.view_move_line_tree_grouped_partner',
+                    })"
+                >
+                    Journal Items
+                </button>
+            </t>
+        </xpath>
+    </t>
+</templates>

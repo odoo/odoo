@@ -1,0 +1,690 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cp200_employees_termination_fees_basic_12_92" model="hr.salary.rule">
+        <field name="name">Gross Yearly Salary</field>
+        <field name="sequence" eval="1"/>
+        <field name="code">BASIC2</field>
+        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12.92
+result = contract._get_contract_wage()
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_year_end_bonus" model="hr.salary.rule">
+        <field name="name">Year-end bonus</field>
+        <field name="sequence" eval="2"/>
+        <field name="code">YEAREND_BONUS</field>
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">input</field>
+        <field name="amount_other_input_id" ref="l10n_be_hr_payroll.cp200_other_input_yearend_bonus"/>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_residence" model="hr.salary.rule">
+        <field name="name">Home/Residence Allowance</field>
+        <field name="sequence" eval="3"/>
+        <field name="code">RESIDENCE</field>
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 13.92
+result = inputs['RESIDENCE'].amount if 'RESIDENCE' in inputs else 0
+if 'RESIDENCE' in inputs:
+    result_name = inputs['RESIDENCE'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_expatriate" model="hr.salary.rule">
+        <field name="name">Expatriate Allowance</field>
+        <field name="sequence" eval="4"/>
+        <field name="code">EXPATRIATE</field>
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12
+result = inputs['EXPATRIATE'].amount if 'EXPATRIATE' in inputs else 0
+if 'EXPATRIATE' in inputs:
+    result_name = inputs['EXPATRIATE'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_ch_year" model="hr.salary.rule">
+        <field name="name">Meal Voucher</field>
+        <field name="sequence" eval="5"/>
+        <field name="code">MEAL_VOUCHER</field>
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 220
+result = contract.meal_voucher_amount * (1 - 0.1463)
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_eco_checks" model="hr.salary.rule">
+        <field name="name">Eco Vouchers</field>
+        <field name="sequence" eval="6"/>
+        <field name="code">ECO_VOUCHER</field>
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = contract.eco_checks
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_annual_variable_salary" model="hr.salary.rule">
+        <field name="name">Annual variable salary</field>
+        <field name="sequence" eval="7"/>
+        <field name="code">VARIABLE_SALARY</field>
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">input</field>
+        <field name="amount_other_input_id" ref="l10n_be_hr_payroll.cp200_other_input_variable_salary"/>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_pay_variable_salary" model="hr.salary.rule">
+        <field name="name">Pay on variable salary (15.34 of the annual amount)</field>
+        <field name="sequence" eval="8"/>
+        <field name="code">PAY_VARIABLE_SALARY</field>
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = 15.34
+result = VARIABLE_SALARY
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_benefit_in_kind" model="hr.salary.rule">
+        <field name="name">Monthly benefit in kind</field>
+        <field name="sequence">9</field>
+        <field name="code">BENEFIT_IN_KIND</field>
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['BENEFIT_IN_KIND'].amount if 'BENEFIT_IN_KIND' in inputs else 0
+if 'BENEFIT_IN_KIND' in inputs:
+    result_name = inputs['BENEFIT_IN_KIND'].name
+result_qty = 12.92
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_advantage_any_kind" model="hr.salary.rule">
+        <field name="name">ATN</field>
+        <field name="sequence">10</field>
+        <field name="code">ADVANTAGE_ANY_KIND</field>
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12.92
+result = 0
+if contract.internet:
+    result += 5.0
+if contract.mobile and not contract.internet:
+    result += 4.0 + 5.0
+if contract.mobile and contract.internet:
+    result += 4.0
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_company_car_annual" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">Benefit in Kind (Company Car)</field>
+        <field name="code">ATN.CAR</field>
+        <field name="sequence">11</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12
+result = contract.car_atn if contract.transport_mode_car else 0
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_hospital_insurance" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">Monthly hospital insurance (employer's share)</field>
+        <field name="code">HOSPITAL_INSURANCE</field>
+        <field name="sequence">12</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12
+result = inputs['HOSPITAL_INSURANCE'].amount if 'HOSPITAL_INSURANCE' in inputs else 0
+if 'HOSPITAL_INSURANCE' in inputs:
+    result_name = inputs['HOSPITAL_INSURANCE'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_ambulatory_insurance" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_be_hr_payroll.hr_payroll_head_div_impos"/>
+        <field name="name">Monthly ambulatory insurance (employer's share)</field>
+        <field name="code">AMBULATORY_INSURANCE</field>
+        <field name="sequence">12</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12
+result = inputs['AMBULATORY_INSURANCE'].amount if 'AMBULATORY_INSURANCE' in inputs else 0
+if 'AMBULATORY_INSURANCE' in inputs:
+    result_name = inputs['AMBULATORY_INSURANCE'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_group_insurance" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_be_hr_payroll.hr_payroll_head_div_impos"/>
+        <field name="name">Monthly group insurance (employer's share)</field>
+        <field name="code">GROUP_INSURANCE</field>
+        <field name="sequence">12</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12
+result = inputs['GROUP_INSURANCE'].amount if 'GROUP_INSURANCE' in inputs else 0
+if 'GROUP_INSURANCE' in inputs:
+    result_name = inputs['GROUP_INSURANCE'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_group_insurance" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">Monthly group insurance (employer's share)</field>
+        <field name="code">GROUP_INSURANCE</field>
+        <field name="sequence">13</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12
+result = inputs['GROUP_INSURANCE'].amount if 'GROUP_INSURANCE' in inputs else 0
+if 'GROUP_INSURANCE' in inputs:
+    result_name = inputs['GROUP_INSURANCE'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_stock_option" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">Stock Option</field>
+        <field name="code">STOCK_OPTION</field>
+        <field name="sequence">14</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12
+result = inputs['STOCK_OPTION'].amount if 'STOCK_OPTION' in inputs else 0
+if 'STOCK_OPTION' in inputs:
+    result_name = inputs['STOCK_OPTION'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_specific_CP" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">Rules specific to Auxiliary Joint Committee</field>
+        <field name="code">SPECIFIC RULES</field>
+        <field name="sequence">15</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12
+result = inputs['SPECIFIC_RULES'].amount if 'SPECIFIC_RULES' in inputs else 0
+if 'SPECIFIC_RULES' in inputs:
+    result_name = inputs['SPECIFIC_RULES'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_other_annual" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">Other monthly/yearly</field>
+        <field name="code">OTHER</field>
+        <field name="sequence">16</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12
+result = inputs['OTHER'].amount if 'OTHER' in inputs else 0
+if 'OTHER' in inputs:
+    result_name = inputs['OTHER'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_annual_salary_revalued" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination"/>
+        <field name="name">Annual salary revalued</field>
+        <field name="code">ANNUAL_SALARY_REVALUED</field>
+        <field name="sequence">17</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories['BASIC'] + categories['ALW']</field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_notice_duration_month" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_notice_duration"/>
+        <field name="name">months</field>
+        <field name="code">ND_MONTH</field>
+        <field name="sequence">18</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = ANNUAL_SALARY_REVALUED / 12
+result_qty = inputs['MONTHS'].amount if 'MONTHS' in inputs else 0
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_notice_duration_week" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_notice_duration"/>
+        <field name="name">weeks</field>
+        <field name="code">ND_WEEK</field>
+        <field name="sequence">19</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = ANNUAL_SALARY_REVALUED * 3 / (12 * 13)
+result_qty = inputs['WEEKS'].amount if 'WEEKS' in inputs else 0
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_notice_duration_day" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_notice_duration"/>
+        <field name="name">days</field>
+        <field name="code">ND_DAY</field>
+        <field name="sequence">20</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = ANNUAL_SALARY_REVALUED / 365
+result_qty = inputs['DAYS'].amount if 'DAYS' in inputs else 0
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_termination_total" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_salary"/>
+        <field name="name">Total</field>
+        <field name="code">TOTALFEES</field>
+        <field name="sequence">21</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories['NOTICE_DURATION']</field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_termination_outplacement" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_salary"/>
+        <field name="name">Outplacement (if more than 30 weeks notice duration)</field>
+        <field name="code">OUTPLACEMENT</field>
+        <field name="sequence">22</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if 'MONTHS' in inputs and 'WEEKS' in inputs and 'DAYS' in inputs and (inputs['MONTHS'].amount / 3 * 13 + inputs['WEEKS'].amount + inputs['DAYS'].amount / 7) &gt;= 30:
+    result = - 4 * ANNUAL_SALARY_REVALUED * 3 / (12 * 13)
+else:
+    result = 0
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_onss_employer_basic" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS Basic (Employer)</field>
+        <field name="code">ONSSEMPLOYERBASIC</field>
+        <field name="sequence">22</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_global_rate') - 13.07
+result = TOTALFEES - OUTPLACEMENT</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_termination_fees"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_onss_employer_ffe" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS FFE (Employer)</field>
+        <field name="code">ONSSEMPLOYERFFE</field>
+        <field name="sequence">22</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+worker_count = payslip.company_id._get_workers_count()
+result_rate = payslip._get_ffe_contribution_rate(worker_count)
+result = TOTALFEES - OUTPLACEMENT</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_termination_fees"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_onss_employer_special_ffe" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS Special FFE (Employer)</field>
+        <field name="code">ONSSEMPLOYERMFFE</field>
+        <field name="sequence">22</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_special_ffe_rate')
+result = TOTALFEES - OUTPLACEMENT</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_termination_fees"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_onss_employer_cpae" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS CPAE (Employer)</field>
+        <field name="code">ONSSEMPLOYERCPAE</field>
+        <field name="sequence">22</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_cpae_rate')
+result = TOTALFEES - OUTPLACEMENT</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_termination_fees"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_onss_employer_wage_restreint" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS Wage Restreint (Employer)</field>
+        <field name="code">ONSSEMPLOYERRESTREINT</field>
+        <field name="sequence">22</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_wage_restreint')
+result = TOTALFEES - OUTPLACEMENT</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_termination_fees"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_onss_employer_temporary_unemployment" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS Temporary Unemployment (Employer)</field>
+        <field name="code">ONSSEMPLOYERUNEMP</field>
+        <field name="sequence">22</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_temporary_unemployment_rate')
+result = TOTALFEES - OUTPLACEMENT</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_termination_fees"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_termination_ONSS" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer"/>
+        <field name="name">Accounting: ONSS (Employer)</field>
+        <field name="code">ONSSEMPLOYER</field>
+        <field name="sequence">23</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['ONSSEMPLOYERBASIC']['total'] + result_rules['ONSSEMPLOYERFFE']['total'] + result_rules['ONSSEMPLOYERMFFE']['total'] + result_rules['ONSSEMPLOYERCPAE']['total'] + result_rules['ONSSEMPLOYERRESTREINT']['total'] + result_rules['ONSSEMPLOYERUNEMP']['total']</field>
+        <field name="partner_id" ref="res_partner_onss"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_termination_fees"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_termination_unreasonable_dismissal" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_salary"/>
+        <field name="name">Unreasonable dismissal</field>
+        <field name="code">UNREASONABLE_DISMISSAL</field>
+        <field name="sequence">24</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = inputs['UNREASONABLE_DISMISSAL'].amount if 'UNREASONABLE_DISMISSAL' in inputs else 0
+result = ANNUAL_SALARY_REVALUED * 3 / (12 * 13)
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_termination_non_respect_motivation" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_salary"/>
+        <field name="name">Non respect motivation (= 2 weeks)</field>
+        <field name="code">NON_RESPECT_MOTIVATION</field>
+        <field name="sequence">25</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = inputs['NON_RESPECT_MOTIVATION'].amount if 'NON_RESPECT_MOTIVATION' in inputs else 0
+result = ANNUAL_SALARY_REVALUED * 3 / (12 * 13)
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_termination_total_cost" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_salary"/>
+        <field name="name">Total cost employer</field>
+        <field name="code">EMPLOYERCOST</field>
+        <field name="sequence">50</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = TOTALFEES + ONSSEMPLOYER + OUTPLACEMENT + UNREASONABLE_DISMISSAL + NON_RESPECT_MOTIVATION
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_basic" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="name">Basic Salary</field>
+        <field name="code">BASIC</field>
+        <field name="sequence">55</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = TOTALFEES - OUTPLACEMENT
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_onss" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_onss"/>
+        <field name="name">ONSS</field>
+        <field name="code">ONSS</field>
+        <field name="sequence">60</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result=not contract.no_onss</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['BASIC']['total']
+result_rate = -13.07
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_onss_total" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_total"/>
+        <field name="name">ONSS (TOTAL)</field>
+        <field name="code">ONSSTOTAL</field>
+        <field name="sequence">65</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="amount_python_compute">
+result = - result_rules['ONSS']['total']
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_gross" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.GROSS"/>
+        <field name="name">Taxable Salary</field>
+        <field name="sequence">70</field>
+        <field name="code">GROSS</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['BASIC']['total'] - result_rules['ONSSTOTAL']['total']
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+   <record id="cp200_employees_termination_fees_withholding_taxes" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_pp"/>
+        <field name="name">Withholding Tax</field>
+        <field name="code">P.P</field>
+        <field name="sequence">75</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result=not contract.no_withholding_taxes</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = payslip._get_termination_fees_withholding_taxes(localdict)
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_withholding_taxes_total" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_withholding_taxes_total"/>
+        <field name="name">Withholding Taxes (Total)</field>
+        <field name="code">PPTOTAL</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">80</field>
+        <field name="condition_select">none</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -categories['PP']
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_remuneration" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_remuneration"/>
+        <field name="name">Accounting: Remuneration</field>
+        <field name="code">REMUNERATION</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">180</field>
+        <field name="condition_select">none</field>
+        <field name="amount_python_compute">
+result = result_rules['BASIC']['total']</field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_attachment_salary" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Attachment of Salary</field>
+        <field name="code">ATTACH_SALARY</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">185</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'ATTACH_SALARY' in inputs</field>
+        <field name="amount_python_compute">
+result = -inputs['ATTACH_SALARY'].amount
+result_name = inputs['ATTACH_SALARY'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_asignment_salary" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Assignment of Salary</field>
+        <field name="code">ASSIG_SALARY</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">185</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'ASSIG_SALARY' in inputs</field>
+            <field name="amount_python_compute">
+result = -inputs['ASSIG_SALARY'].amount
+result_name = inputs['ASSIG_SALARY'].name
+            </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_child_support" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Child Support</field>
+        <field name="code">CHILD_SUPPORT</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">185</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'CHILD_SUPPORT' in inputs</field>
+        <field name="amount_python_compute">
+result = -inputs['CHILD_SUPPORT'].amount
+result_name = inputs['CHILD_SUPPORT'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_deduction" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Deduction</field>
+        <field name="code">DEDUCTION</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">185</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'DEDUCTION' in inputs</field>
+        <field name="amount_python_compute">
+result = -inputs['DEDUCTION'].amount
+result_name = inputs['DEDUCTION'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_reimbursement" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Reimbursement</field>
+        <field name="code">REIMBURSEMENT</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">185</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'REIMBURSEMENT' in inputs</field>
+        <field name="amount_python_compute">
+result = inputs['REIMBURSEMENT'].amount
+result_name = inputs['REIMBURSEMENT'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+    </record>
+
+    <record id="cp200_employees_termination_fees_net" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="name">Net Salary</field>
+        <field name="code">NET</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">200</field>
+        <field name="appears_on_employee_cost_dashboard">True</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+assignment_types = [
+    'ATTACH_SALARY', 'ASSIG_SALARY', 'CHILD_SUPPORT', 'DEDUCTION', 'REIMBURSEMENT']
+assignment_amount = sum(
+    result_rules[assignment_type]['total'] for assignment_type in assignment_types)
+result = result_rules['GROSS']['total'] - result_rules['PPTOTAL']['total'] + assignment_amount
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_termination_fees"/>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+    </record>
+
+</odoo>

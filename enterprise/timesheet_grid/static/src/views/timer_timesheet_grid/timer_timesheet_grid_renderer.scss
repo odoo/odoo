@@ -1,0 +1,32 @@
+@include media-breakpoint-up(sm) {
+    .o_timer_timesheet_grid_view .o_grid_column_total:not(.o_grid_highlighted) span.o_grid_bar_chart_overtime {
+        opacity: 0;
+    }
+}
+
+@include media-breakpoint-up(md) {
+    // since the `o_grid_row_title` and the cell in the same rows has `position-md-sticky`
+    // we just move that column to 48px to let the o_grid_row_timer be also sticky before
+    // that column.
+    .o_grid_with_row_timer {
+        left: 48px !important;
+    }
+}
+
+// This is a trick setting a max-width on the first column of the grid to avoid the
+// overlap on the first row and its column_title because of the extra width of the
+// o_grid_navigation_wrap.
+.o_grid_row_timer {
+    @include o-grid-zindex(interact);
+
+    width: $o-web-grid-first-column-width;
+}
+
+.o_grid_column_timer_button {
+    min-width: 48px;
+}
+
+.o_grid_column_timer_button + .o_grid_navigation_wrap .o_grid_navigation_buttons {
+    margin-left: -$o-web-grid-first-column-width;
+    left: map-get($spacers, 3);
+}

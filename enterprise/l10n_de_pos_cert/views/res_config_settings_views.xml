@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_de_pos_cert</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='pos_interface_section']" position="before">
+                <field name="pos_is_company_country_germany" invisible="1"/>
+                <div invisible="not pos_is_company_country_germany">
+                    <block title="Fiskaly API" invisible="pos_l10n_de_fiskaly_tss_id">
+                        <setting string="Create TSS" help="Create a Technical Security System which is mandatory by the new regulations of Germany.">
+                            <field name="pos_l10n_de_create_tss_flag"/>
+                        </setting>
+                    </block>
+                    <block title="Fiskaly API" invisible="not pos_l10n_de_fiskaly_tss_id">
+                        <setting>
+                            <field name="pos_l10n_de_fiskaly_tss_id"/>
+                        </setting>
+                        <setting>
+                            <field name="pos_l10n_de_fiskaly_client_id"/>
+                        </setting>
+                    </block>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

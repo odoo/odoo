@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="web_studio.StudioNavbar" t-inherit="web_enterprise.EnterpriseNavBar" t-inherit-mode="primary">
+      <xpath expr="//nav" position="attributes">
+        <attribute name="class" add="o_studio_navbar" separator=" "/>
+      </xpath>
+
+      <xpath expr="//a[contains(@class, 'o_menu_toggle')]" position="attributes">
+        <attribute name="t-on-click.prevent">onMenuToggle</attribute>
+      </xpath>
+
+      <xpath expr='//nav' position="inside">
+        <t t-call="web_studio.menuButtons" />
+        <t t-call="web_studio.masterButtons" />
+      </xpath>
+
+      <xpath expr="//div[contains(@class, 'o_menu_systray')]" position="replace"/>
+  </t>
+
+  <t t-name="web_studio.menuButtons">
+    <div class="o-studio--menu ms-auto">
+      <t t-foreach="menuButtons" t-as="element" t-key="element">
+        <t t-component="element_value.Component" t-props="element_value.props || {}" />
+      </t>
+    </div>
+  </t>
+
+  <t t-name="web_studio.masterButtons">
+    <div class="o_studio_buttons">
+      <HomeMenuCustomizer t-if="studio.mode === studio.MODES.HOME_MENU"/>
+      <div class="o_web_studio_leave d-flex" t-on-click="closeStudio">
+          <a class="btn btn-primary d-flex align-items-center rounded-0 border-0">Close</a>
+      </div>
+    </div>
+  </t>
+
+</templates>

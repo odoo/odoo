@@ -1,0 +1,1275 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:sie="http://www.sie.se/sie5"
+            elementFormDefault="qualified" targetNamespace="http://www.sie.se/sie5">
+    <xsd:import
+            schemaLocation="xmldsig-core-schema.xsd"
+            namespace="http://www.w3.org/2000/09/xmldsig#"/>
+    <xsd:element name="Sie">
+        <xsd:annotation>
+            <xsd:documentation>Root element</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence maxOccurs="1" minOccurs="1">
+                <xsd:element name="FileInfo" type="sie:FileInfoType">
+                    <xsd:annotation>
+                        <xsd:documentation>General information about the file</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="Accounts" type="sie:AccountsType">
+                    <xsd:annotation>
+                        <xsd:documentation>Chart of accounts</xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:unique name="AccountIdUnique">
+                        <xsd:selector xpath="sie:Account"/>
+                        <xsd:field xpath="@id"/>
+                    </xsd:unique>
+                </xsd:element>
+                <xsd:element name="Dimensions" minOccurs="0" type="sie:DimensionsType">
+                    <xsd:annotation>
+                        <xsd:documentation>Container for dimensions</xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:unique name="DimensiontIdUnique">
+                        <xsd:selector xpath="sie:Dimension"/>
+                        <xsd:field xpath="@id"/>
+                    </xsd:unique>
+                </xsd:element>
+                <xsd:element name="CustomerInvoices" minOccurs="0" type="sie:CustomerInvoicesType"
+                             maxOccurs="unbounded"></xsd:element>
+                <xsd:element name="SupplierInvoices" minOccurs="0" type="sie:SupplierInvoicesType"
+                             maxOccurs="unbounded"></xsd:element>
+                <xsd:element name="FixedAssets" minOccurs="0" type="sie:FixedAssetsType"
+                             maxOccurs="unbounded"></xsd:element>
+                <xsd:element name="GeneralSubdividedAccount" minOccurs="0"
+                             type="sie:GeneralSubdividedAccountType" maxOccurs="unbounded"></xsd:element>
+                <xsd:element minOccurs="0" name="Customers" type="sie:CustomersType">
+                    <xsd:annotation>
+                        <xsd:documentation>Container for customers</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" name="Suppliers" type="sie:SuppliersType">
+                    <xsd:annotation>
+                        <xsd:documentation>Container for suppliers</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+
+                <xsd:element minOccurs="0" name="AccountAggregations" type="sie:AccountAggregationsType"></xsd:element>
+                <xsd:element name="Journal" maxOccurs="unbounded" minOccurs="0" type="sie:JournalType">
+                    <xsd:annotation>
+                        <xsd:documentation>Container for individual journal</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="Documents" minOccurs="0" type="sie:DocumentsType">
+                    <xsd:annotation>
+                        <xsd:documentation>Container for documents</xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:unique name="DocumentIdUnique">
+                        <xsd:selector xpath="sie:*"/>
+                        <xsd:field xpath="@id"/>
+                    </xsd:unique>
+                </xsd:element>
+                <xsd:element ref="dsig:Signature"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="SieEntry">
+        <xsd:annotation>
+            <xsd:documentation>Root elment for entry file</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence maxOccurs="1" minOccurs="1">
+                <xsd:element name="FileInfo" type="sie:FileInfoTypeEntry">
+                    <xsd:annotation>
+                        <xsd:documentation>General information about the file</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="Accounts" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>Chart of accounts</xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="Account" minOccurs="0" maxOccurs="unbounded"
+                                         type="sie:AccountTypeEntry">
+                                <xsd:annotation>
+                                    <xsd:documentation>Container element for individual accounts</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="Dimensions" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>Container for dimensions</xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="Dimension" minOccurs="0" maxOccurs="unbounded"
+                                         type="sie:DimensionTypeEntry">
+                                <xsd:annotation>
+                                    <xsd:documentation/>
+                                </xsd:annotation>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="CustomerInvoices" minOccurs="0" maxOccurs="unbounded"
+                             type="sie:CustomerInvoicesTypeEntry"></xsd:element>
+                <xsd:element minOccurs="0" name="Customers" type="sie:CustomersType">
+                    <xsd:annotation>
+                        <xsd:documentation>Container for customers</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="SupplierInvoices" minOccurs="0" maxOccurs="unbounded"
+                             type="sie:SupplierInvoicesTypeEntry"></xsd:element>
+                <xsd:element minOccurs="0" name="Suppliers" type="sie:SuppliersType">
+                    <xsd:annotation>
+                        <xsd:documentation>Container for suppliers</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="FixedAssets" minOccurs="0" maxOccurs="unbounded"
+                             type="sie:FixedAssetsTypeEntry"></xsd:element>
+                <xsd:element name="GeneralSubdividedAccount" minOccurs="0" maxOccurs="unbounded"
+                             type="sie:GeneralSubdividedAccountTypeEntry"></xsd:element>
+                <xsd:element name="Journal" maxOccurs="unbounded" type="sie:JournalTypeEntry" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>Container for individual journal</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="Documents" minOccurs="0" type="sie:DocumentsType">
+                    <xsd:annotation>
+                        <xsd:documentation>Container for documents</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element ref="dsig:Signature" minOccurs="0"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:simpleType name="Amount">
+        <xsd:restriction base="xsd:decimal">
+            <xsd:fractionDigits value="2"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="AccountNumber">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[0-9]+"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="Currency">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[A-Z][A-Z][A-Z]"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="AccountType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="OpeningBalance" type="sie:BaseBalanceType"/>
+            <xsd:element name="ClosingBalance" type="sie:BaseBalanceType"/>
+            <xsd:element name="Budget" type="sie:BudgetType"></xsd:element>
+            <xsd:element name="OpeningBalanceMultidim" type="sie:BaseBalanceMultidimType"/>
+            <xsd:element name="ClosingBalanceMultidim" type="sie:BaseBalanceMultidimType"/>
+            <xsd:element name="BudgetMultidim" type="sie:BudgetMultidimType"></xsd:element>
+        </xsd:choice>
+        <xsd:attribute name="id" type="sie:AccountNumber" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Unique account identifier. The account number.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="name" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation> Account name</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="type" use="required">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="asset"/>
+                    <xsd:enumeration value="liability"/>
+                    <xsd:enumeration value="equity"/>
+                    <xsd:enumeration value="cost"/>
+                    <xsd:enumeration value="income"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="unit" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation> Unit for quantities</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="AccountTypeEntry">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="Budget">
+                <xsd:complexType>
+                    <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                        <xsd:element name="ObjectReference" minOccurs="0" maxOccurs="unbounded">
+                            <xsd:annotation>
+                                <xsd:documentation> List of objects associated with this balance
+                                </xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:complexType>
+                                <xsd:attribute name="dimId" type="xsd:string" use="required">
+                                    <xsd:annotation>
+                                        <xsd:documentation>Dimension identifier. The same DimensionId value cannot be
+                                            repeated inside a LedgerEntry element
+                                        </xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:attribute>
+                                <xsd:attribute name="objectId" type="xsd:string" use="required">
+                                    <xsd:annotation>
+                                        <xsd:documentation>Object identifier</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:attribute>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:choice>
+                    <xsd:attribute name="month" type="xsd:gYearMonth">
+                        <xsd:annotation>
+                            <xsd:documentation>If month is omitted the budget amount is for the full primary
+                                fiscal year.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                    <xsd:attribute name="amount" type="sie:Amount" use="required">
+                        <xsd:annotation>
+                            <xsd:documentation> Amount. Positive for debit, negative for credit.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                    <xsd:attribute name="quantity" type="xsd:decimal"/>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:choice>
+        <xsd:attribute name="id" type="sie:AccountNumber" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Unique account identifier. The account number.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="name" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation> Account name</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="type" use="required">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="asset"/>
+                    <xsd:enumeration value="liability"/>
+                    <xsd:enumeration value="equity"/>
+                    <xsd:enumeration value="cost"/>
+                    <xsd:enumeration value="income"/>
+                    <xsd:enumeration value="statistics"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="unit" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation> Unit for quantities</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="CompanyType">
+        <xsd:attribute name="organizationId" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Organization identifier. In Sweden the assigned
+                    "Organisationsnummer/personnummer" must be used. För organisationer som verkligen saknar
+                    organisationsnummer, t ex syföreningar, anges "000000-0000".
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="multiple" default="1" type="xsd:int">
+            <xsd:annotation>
+                <xsd:documentation>A serial number if more than one company exists with the same
+                    organization identifier, which can be the case when many sole propietorships are run
+                    seperately by the same proprietor.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="name" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Name of the company/organization</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="clientId" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>???: Should be mandatory in a total file from an accounting system, but
+                    optional in case of an "import file"
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="CompanyTypeEntry">
+        <xsd:attribute name="organizationId" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Organization identifier. In Sweden the assigned
+                    "Organisationsnummer/personnummer" must be used. För organisationer som verkligen saknar
+                    organisationsnummer, t ex syföreningar, anges "000000-0000".
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="multiple" default="1" type="xsd:int">
+            <xsd:annotation>
+                <xsd:documentation>A serial number if more than one company exists with the same
+                    organization identifier, which can be the case when many sole propietorships are run
+                    seperately by the same proprietor.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="name" type="xsd:string" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>Name of the company/organization</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="clientId" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>???: Should be mandatory in a total file from an accounting system, but
+                    optional in case of an "import file"
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="CustomerInvoiceType">
+        <xsd:complexContent>
+            <xsd:extension base="sie:SubdividedAccountObjectType">
+                <xsd:attribute name="customerId" type="xsd:string" use="required"/>
+                <xsd:attribute name="invoiceNumber" type="xsd:string"/>
+                <xsd:attribute name="ocrNumber" type="xsd:string"/>
+                <xsd:attribute name="dueDate" type="xsd:date"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="CustomerType">
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="organizationId" type="xsd:string"/>
+        <xsd:attribute name="vatNr" type="xsd:string"/>
+        <xsd:attribute name="address1" type="xsd:string"/>
+        <xsd:attribute name="address2" type="xsd:string"/>
+        <xsd:attribute name="zipcode" type="xsd:string"/>
+        <xsd:attribute name="city" type="xsd:string"/>
+        <xsd:attribute name="country" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="SoftwareProductType">
+        <xsd:attribute name="name" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Name of the software tat has created the file</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="version" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Version of the software that has created the file</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="SubdividedAccountObjectType">
+        <xsd:sequence maxOccurs="1" minOccurs="1">
+            <xsd:element name="Balances" maxOccurs="unbounded" minOccurs="0" type="sie:BalancesType"></xsd:element>
+            <xsd:element name="OriginalAmount" maxOccurs="1" minOccurs="1" type="sie:OriginalAmountType">
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Item identifier</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="name" type="xsd:string" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>Item name</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="SubdividedAccountObjectTypeEntry">
+        <xsd:attribute name="id" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Item identifier</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="name" type="xsd:string" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>Item name</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="FileInfoType">
+        <xsd:all minOccurs="1">
+            <xsd:element name="SoftwareProduct" type="sie:SoftwareProductType">
+                <xsd:annotation>
+                    <xsd:documentation>Name of the software that has created the file</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="FileCreation" type="sie:FileCreationType"></xsd:element>
+            <xsd:element name="Company" type="sie:CompanyType">
+                <xsd:annotation>
+                    <xsd:documentation>General information about the company (or other organization) whose
+                        fiscal data is represented in the file
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="FiscalYears" type="sie:FiscalYearsType">
+                <xsd:annotation>
+                    <xsd:documentation>Container for fiscal years</xsd:documentation>
+                </xsd:annotation>
+                <xsd:unique name="FiscalYearIdUnique">
+                    <xsd:selector xpath="sie:FiscalYear"/>
+                    <xsd:field xpath="@id"/>
+                </xsd:unique>
+            </xsd:element>
+            <xsd:element name="AccountingCurrency" type="sie:AccountingCurrencyType">
+                <xsd:annotation>
+                    <xsd:documentation/>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:all>
+    </xsd:complexType>
+    <xsd:complexType name="FileInfoTypeEntry">
+        <xsd:all minOccurs="1">
+            <xsd:element name="SoftwareProduct" type="sie:SoftwareProductType">
+                <xsd:annotation>
+                    <xsd:documentation>Name of the software that has created the file</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="FileCreation" type="sie:FileCreationType"></xsd:element>
+            <xsd:element name="Company" type="sie:CompanyTypeEntry">
+                <xsd:annotation>
+                    <xsd:documentation>General information about the company (or other organization) whose
+                        fiscal data is represented in the file
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="AccountingCurrency" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation/>
+                </xsd:annotation>
+                <xsd:complexType>
+                    <xsd:attribute name="currency" use="required" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation> ISO 4217 code of the default accounting currency used by the
+                                company. Any monetary amount in this file, except when currency is explicitly
+                                declared, implicitly refers to this currency
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:all>
+    </xsd:complexType>
+    <xsd:complexType name="BaseBalanceType">
+        <xsd:sequence maxOccurs="unbounded" minOccurs="0">
+            <xsd:element name="ForeignCurrencyAmount" minOccurs="0" maxOccurs="1"
+                         type="sie:ForeignCurrencyAmountType"></xsd:element>
+            <xsd:element name="ObjectReference" minOccurs="0" maxOccurs="1" type="sie:ObjectReferenceType">
+                <xsd:annotation>
+                    <xsd:documentation>List of objects associated with this balance</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="month" type="xsd:gYearMonth" use="required"/>
+        <xsd:attribute name="amount" type="sie:Amount" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Amount. Positive for debit, negative for credit.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="quantity" type="xsd:decimal"/>
+    </xsd:complexType>
+    <xsd:complexType name="BaseBalanceMultidimType">
+        <xsd:sequence maxOccurs="unbounded" minOccurs="0">
+            <xsd:element name="ForeignCurrencyAmount" minOccurs="0" maxOccurs="1"
+                         type="sie:ForeignCurrencyAmountType"></xsd:element>
+            <xsd:element name="ObjectReference" minOccurs="2" maxOccurs="unbounded"
+                         type="sie:ObjectReferenceType">
+                <xsd:annotation>
+                    <xsd:documentation>List of objects associated with this balance</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="month" type="xsd:gYearMonth" use="required"/>
+        <xsd:attribute name="amount" type="xsd:decimal" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Amount. Positive for debit, negative for credit.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="quantity" type="xsd:decimal"/>
+    </xsd:complexType>
+    <xsd:complexType name="BaseSubdividedAccountType">
+        <xsd:sequence>
+            <xsd:element name="SecondaryAccountRef" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>The account (or accounts) that this subdivided account
+                        specifies
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                    <xsd:attribute name="accountId" type="sie:AccountNumber"/>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="primaryAccountId" type="sie:AccountNumber" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Subordinate account identifier. The primary account ofthe subdivided
+                    account.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="name" type="xsd:string" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>Name of the subdivided account or account group. If omitted the acount
+                    name of the referenced account may be used.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="BaseSubdividedAccountTypeEntry">
+        <xsd:attribute name="primaryAccountId" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Subordinate account identifier. The primary account ofthe subordinary
+                    account.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="name" type="xsd:string" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>Name of the subordinated acount och account group. If omitted the acount
+                    name of the referenced account may be used.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="FixedAssetType">
+        <xsd:complexContent>
+            <xsd:extension base="sie:SubdividedAccountObjectType"></xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="GeneralObjectType">
+        <xsd:complexContent>
+            <xsd:extension base="sie:SubdividedAccountObjectType"></xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="FileCreationType">
+        <xsd:attribute name="time" type="xsd:dateTime" use="required">
+            <xsd:annotation>
+                <xsd:documentation>UTC time when the file was generated in ISO 8601 extended format
+                    (YYYY-MM-DDThh:mm:ssZ)
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="by" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Name of the person, routine or system which has generated the
+                    file
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="DimensionType">
+        <xsd:sequence>
+            <xsd:element name="Object" minOccurs="0" maxOccurs="unbounded" type="sie:ObjectType">
+                <xsd:annotation>
+                    <xsd:documentation/>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:positiveInteger" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="DimensionTypeEntry">
+        <xsd:sequence>
+            <xsd:element name="Object" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation/>
+                </xsd:annotation>
+                <xsd:complexType>
+                    <xsd:attribute name="id" type="xsd:string" use="required"/>
+                    <xsd:attribute name="name" type="xsd:string" use="required"/>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+    <xsd:complexType name="LedgerEntryTypeEntry">
+        <xsd:sequence maxOccurs="unbounded" minOccurs="0">
+            <xsd:element name="ForeignCurrencyAmount" minOccurs="0" type="sie:ForeignCurrencyAmountType"></xsd:element>
+            <xsd:element name="ObjectReference" minOccurs="0" maxOccurs="unbounded"
+                         type="sie:ObjectReferenceType">
+                <xsd:annotation>
+                    <xsd:documentation>List of objects associated with this ledger entry</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="SubdividedAccountObjectReference" minOccurs="0" maxOccurs="1"
+                         type="sie:SubdividedAccountObjectReferenceType"></xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="accountId" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Account identifier. Must exist in the chart of
+                    accounts
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="amount" type="xsd:decimal" use="required">
+            <xsd:annotation>
+                <xsd:documentation> Amount. Positive for debit, negative for credit. May not be zero???
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="quantity" type="xsd:decimal"/>
+        <xsd:attribute name="text" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>Optional text describing the individual ledger entry.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="ledgerDate" type="xsd:date" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>The date used for posting to the general ledger if different from the
+                    journal date specified for the entire journal entry.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="LedgerEntryType">
+        <xsd:sequence maxOccurs="unbounded" minOccurs="0">
+            <xsd:element name="ForeignCurrencyAmount" minOccurs="0" type="sie:ForeignCurrencyAmountType"></xsd:element>
+            <xsd:element name="ObjectReference" minOccurs="0" maxOccurs="unbounded"
+                         type="sie:ObjectReferenceType">
+                <xsd:annotation>
+                    <xsd:documentation>List of objects associated with this ledger entry</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="SubdividedAccountObjectReference" minOccurs="0" maxOccurs="1"
+                         type="sie:SubdividedAccountObjectReferenceType"></xsd:element>
+            <xsd:element name="EntryInfo" minOccurs="0" type="sie:EntryInfoType">
+                <xsd:annotation>
+                    <xsd:documentation>Information abot how and when this record was entered (registered) into
+                        the system. If omitted the entry date is considered to be the entry date given in the
+                        journal entry element
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="Overstrike" minOccurs="0" type="sie:OverstrikeType"></xsd:element>
+            <xsd:element name="LockingInfo" minOccurs="0" type="sie:LockingInfoType">
+                <xsd:annotation>
+                    <xsd:documentation>Information abot how and when this record achieved status as "enetered"
+                        according to BFN AR 2013:2.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="accountId" type="sie:AccountNumber" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Account identifier. Must exist in the chart of
+                    accounts
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="amount" type="xsd:decimal" use="required">
+            <xsd:annotation>
+                <xsd:documentation> Amount. Positive for debit, negative for credit. May not be zero???
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="quantity" type="xsd:decimal"/>
+        <xsd:attribute name="text" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>Optional text describing the individual ledger entry.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="ledgerDate" type="xsd:date" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>The date used for posting to the general ledger if different from the
+                    journal date specified for the entire journal entry.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="JournalEntryType">
+        <xsd:sequence>
+            <xsd:element name="EntryInfo" type="sie:EntryInfoType">
+                <xsd:annotation>
+                    <xsd:documentation>Information abot how and when this record was entered (registered) into
+                        the system. Applies to all subitems if not otherwise soecified.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="OriginalEntryInfo" minOccurs="0" type="sie:OriginalEntryInfoType">
+                <xsd:annotation>
+                    <xsd:documentation>Information abot how and when this record originally was entered
+                        (registered) into some pre-system.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="LedgerEntry" minOccurs="0" maxOccurs="unbounded" type="sie:LedgerEntryType">
+                <xsd:annotation>
+                    <xsd:documentation>Container for ledger entries</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="LockingInfo" minOccurs="0" type="sie:LockingInfoType">
+                <xsd:annotation>
+                    <xsd:documentation>Information abot how and when this record achieved status as "enetered"
+                        according to BFN AR 2013:2. Applies to all subitems if not otherwise
+                        specified.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="VoucherReference" minOccurs="0" maxOccurs="unbounded"
+                         type="sie:VoucherReferenceType">
+                <xsd:annotation>
+                    <xsd:documentation>Reference to voucher or other document related to the journal
+                        entry
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="CorrectedBy" minOccurs="0" maxOccurs="unbounded" type="sie:CorrectedByType">
+                <xsd:annotation>
+                    <xsd:documentation>If this entry is corrected by other entries, this is a reference to one
+                        correcting journal entry
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:nonNegativeInteger" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Journal entry identifier</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="journalDate" type="xsd:date" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Journal date. The date assigned to the entire journal entry at entry
+                    time. Normally used as the date for posting to all subitems (ledger entries) to the
+                    general ledger.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="text" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>Optional text describing the journal entry.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="referenceId" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>Optional reference to identifier assigned befor the entry reached the
+                    accounting system.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="JournalType">
+        <xsd:sequence>
+            <xsd:element name="JournalEntry" maxOccurs="unbounded" type="sie:JournalEntryType">
+                <xsd:annotation>
+                    <xsd:documentation>Journal entry</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Journal identifier</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="name" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Journal name</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="JournalEntryTypeEntry">
+        <xsd:sequence>
+            <xsd:element name="OriginalEntryInfo" minOccurs="0" type="sie:OriginalEntryInfoType">
+                <xsd:annotation>
+                    <xsd:documentation>Information abot how and when this record originally was entered
+                        (registered) into some pre-system.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="LedgerEntry" minOccurs="0" maxOccurs="unbounded"
+                         type="sie:LedgerEntryTypeEntry">
+                <xsd:annotation>
+                    <xsd:documentation>Container for ledger entries</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="VoucherReference" minOccurs="0" maxOccurs="unbounded"
+                         type="sie:VoucherReferenceType">
+                <xsd:annotation>
+                    <xsd:documentation>Reference to voucher or other source document(s)</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:nonNegativeInteger" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>Journal identifier</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="journalDate" type="xsd:date" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Journal date. The date assignde to the entire journal entry at entry
+                    time. Normally used as the date for posting to all subitems (ledger entries) to the
+                    general ledger.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="text" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>Optional text describing the journal entry.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="referenceId" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>Optional reference to identifier assigned befor the entry reached the
+                    accounting system.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="JournalTypeEntry">
+        <xsd:sequence>
+            <xsd:element name="JournalEntry" maxOccurs="unbounded" type="sie:JournalEntryTypeEntry">
+                <xsd:annotation>
+                    <xsd:documentation>Journal entry</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>Journal identifier</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="SupplierType">
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="organizationId" type="xsd:string"/>
+        <xsd:attribute name="vatNr" type="xsd:string"/>
+        <xsd:attribute name="address1" type="xsd:string"/>
+        <xsd:attribute name="address2" type="xsd:string"/>
+        <xsd:attribute name="zipcode" type="xsd:string"/>
+        <xsd:attribute name="city" type="xsd:string"/>
+        <xsd:attribute name="country" type="xsd:string"/>
+        <xsd:attribute name="BgAccount" type="xsd:string"/>
+        <xsd:attribute name="PgAccount" type="xsd:string"/>
+        <xsd:attribute name="BIC" type="xsd:string"/>
+        <xsd:attribute name="IBAN" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="BudgetType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="ObjectReference" minOccurs="0" maxOccurs="1" type="sie:ObjectReferenceType">
+                <xsd:annotation>
+                    <xsd:documentation> List of objects associated with this balance</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:choice>
+        <xsd:attribute name="month" type="xsd:gYearMonth">
+            <xsd:annotation>
+                <xsd:documentation>If month is omitted the budget amount is for the full primary fiscal
+                    year.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="amount" type="xsd:decimal" use="required">
+            <xsd:annotation>
+                <xsd:documentation> Amount. Positive for debit, negative for credit.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="quantity" type="xsd:decimal"/>
+    </xsd:complexType>
+    <xsd:complexType name="BudgetMultidimType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="ObjectReference" minOccurs="2" maxOccurs="unbounded"
+                         type="sie:ObjectReferenceType">
+                <xsd:annotation>
+                    <xsd:documentation> List of objects associated with this balance</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:choice>
+        <xsd:attribute name="month" type="xsd:gYearMonth">
+            <xsd:annotation>
+                <xsd:documentation>If month is omitted the budget amount is for the full primary fiscal
+                    year.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="amount" type="xsd:decimal" use="required">
+            <xsd:annotation>
+                <xsd:documentation> Amount. Positive for debit, negative for credit.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="quantity" type="xsd:decimal"/>
+    </xsd:complexType>
+    <xsd:complexType name="AccountAggregationType">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="1" name="Tag">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element maxOccurs="unbounded" minOccurs="0" name="AccountRef">
+                            <xsd:complexType>
+                                <xsd:attribute name="accountId" use="required" type="sie:AccountNumber"/>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                    <xsd:attribute name="name" type="xsd:string" use="required"/>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="taxonomy" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+    <xsd:complexType name="DimensionsType">
+        <xsd:sequence>
+            <xsd:element name="Dimension" minOccurs="0" maxOccurs="unbounded" type="sie:DimensionType">
+                <xsd:annotation>
+                    <xsd:documentation/>
+                </xsd:annotation>
+                <xsd:unique name="DimensionObjectIdUnique">
+                    <xsd:selector xpath="sie:Object"/>
+                    <xsd:field xpath="@id"/>
+                </xsd:unique>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ObjectType">
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="SuppliersType">
+        <xsd:sequence>
+            <xsd:element name="Supplier" minOccurs="0" maxOccurs="unbounded" type="sie:SupplierType">
+                <xsd:annotation>
+                    <xsd:documentation>Individual supplier</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="AccountAggregationsType">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" name="AccountAggregation" type="sie:AccountAggregationType"
+            ></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="LockingInfoType">
+        <xsd:attribute name="date" type="xsd:date" use="required">
+            <xsd:annotation>
+                <xsd:documentation/>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="by" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation> Name of the person, routine or system who/which locked the record.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="OriginalEntryInfoType">
+        <xsd:attribute name="date" type="xsd:date" use="required">
+            <xsd:annotation>
+                <xsd:documentation/>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="by" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation> Name of the person, routine or system who/which enterded the record.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="EntryInfoType">
+        <xsd:attribute name="date" type="xsd:date" use="required">
+            <xsd:annotation>
+                <xsd:documentation/>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="by" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation> Name of the person, routine or system who/which enterded the record.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="VoucherReferenceType">
+        <xsd:attribute name="documentId" type="xsd:positiveInteger" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="CorrectedByType">
+        <xsd:attribute name="fiscalYearId" type="xsd:gYearMonth"/>
+        <xsd:attribute name="journalId" type="xsd:string" use="required"/>
+        <xsd:attribute name="journalEntryId" type="xsd:nonNegativeInteger" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="EmbeddedFileType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:base64Binary">
+                <xsd:attribute name="id" type="xsd:positiveInteger" use="required"/>
+                <xsd:attribute name="fileName" type="xsd:string" use="required"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="FileReferenceType">
+        <xsd:attribute name="id" type="xsd:positiveInteger" use="required"/>
+        <xsd:attribute name="URI" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="CustomersType">
+        <xsd:sequence>
+            <xsd:element name="Customer" type="sie:CustomerType" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>Individual customer</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="GeneralSubdividedAccountType">
+        <xsd:complexContent>
+            <xsd:extension base="sie:BaseSubdividedAccountType">
+                <xsd:sequence maxOccurs="unbounded" minOccurs="0">
+                    <xsd:element name="GeneralObject" type="sie:GeneralObjectType" minOccurs="0"
+                                 maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="FixedAssetsType">
+        <xsd:complexContent>
+            <xsd:extension base="sie:BaseSubdividedAccountType">
+                <xsd:sequence maxOccurs="unbounded" minOccurs="0">
+                    <xsd:element name="FixedAsset" minOccurs="0" maxOccurs="unbounded"
+                                 type="sie:FixedAssetType"></xsd:element>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="SupplierInvoicesType">
+        <xsd:complexContent>
+            <xsd:extension base="sie:BaseSubdividedAccountType">
+                <xsd:sequence maxOccurs="unbounded" minOccurs="0">
+                    <xsd:element name="SupplierInvoice" minOccurs="0" maxOccurs="unbounded"
+                                 type="sie:SupplierInvoiceType"></xsd:element>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="CustomerInvoicesType">
+        <xsd:complexContent>
+            <xsd:extension base="sie:BaseSubdividedAccountType">
+                <xsd:sequence maxOccurs="unbounded" minOccurs="0">
+                    <xsd:element name="CustomerInvoice" minOccurs="0" maxOccurs="unbounded"
+                                 type="sie:CustomerInvoiceType"></xsd:element>
+
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="AccountingCurrencyType">
+        <xsd:attribute name="currency" use="required" type="sie:Currency">
+            <xsd:annotation>
+                <xsd:documentation> ISO 4217 code of the default accounting currency used by the company.
+                    Any monetary amount in this file, except when currency is explicitly declared, implicitly
+                    refers to this currency
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="FiscalYearsType">
+        <xsd:sequence>
+            <xsd:element name="FiscalYear" maxOccurs="unbounded" type="sie:FiscalYearType">
+                <xsd:annotation>
+                    <xsd:documentation>Declaration of a fiscal years</xsd:documentation>
+                </xsd:annotation>
+                <xsd:unique name="idUnique">
+                    <xsd:selector xpath="."/>
+                    <xsd:field xpath="id"/>
+                </xsd:unique>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="AccountsType">
+        <xsd:sequence>
+            <xsd:element name="Account" minOccurs="0" maxOccurs="unbounded" type="sie:AccountType">
+                <xsd:annotation>
+                    <xsd:documentation>Container element for individual accounts</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="SupplierInvoiceType">
+        <xsd:complexContent>
+            <xsd:extension base="sie:SubdividedAccountObjectType">
+                <xsd:attribute name="supplierId" type="xsd:string" use="required"/>
+                <xsd:attribute name="invoiceNumber" type="xsd:string"/>
+                <xsd:attribute name="ocrNumber" type="xsd:string"/>
+                <xsd:attribute name="dueDate" type="xsd:date"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="DocumentsType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="EmbeddedFile" maxOccurs="unbounded" type="sie:EmbeddedFileType">
+                <xsd:annotation>
+                    <xsd:documentation>Individual source document</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="FileReference" type="sie:FileReferenceType"></xsd:element>
+        </xsd:choice>
+    </xsd:complexType>
+    <xsd:complexType name="FiscalYearType">
+        <xsd:attribute name="start" type="xsd:gYearMonth" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Fiscal year start date in ISO 8601 format. This is also the unique
+                    identifier for the fiscal yea, and is used as a key for references when opening and
+                    closing balances are presented in other parts of the file
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="end" type="xsd:gYearMonth" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Fiscal year end date in ISO 8601 format</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="primary" default="false" type="xsd:boolean">
+            <xsd:annotation>
+                <xsd:documentation>Indicates that this is the primary fiscal year in the SIE file. Exactly
+                    one year must be marked as primary.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="closed" default="false" type="xsd:boolean">
+            <xsd:annotation>
+                <xsd:documentation>"true" if fiscal year is closed, otherwise "false".</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="hasLedgerEntries" type="xsd:boolean"/>
+        <xsd:attribute name="hasSubordinateAccounts" type="xsd:boolean"/>
+        <xsd:attribute name="hasAttachedVoucherFiles" type="xsd:boolean"/>
+        <xsd:attribute name="lastCoveredDate" type="xsd:date" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>The last date on the fiscal yeare where all transactions are
+                    available.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="BalancesType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="OpeningBalance" type="sie:BaseBalanceType"/>
+            <xsd:element name="ClosingBalance" type="sie:BaseBalanceType"/>
+        </xsd:choice>
+        <xsd:attribute name="accountId" type="sie:AccountNumber" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>The account that the balances specify. If ommitted this element contains
+                    the balances for the object on th primary account of the subdivided account
+                    group.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="ObjectReferenceType">
+        <xsd:attribute name="dimId" type="xsd:positiveInteger" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Dimension identifier. Must correspond to a dimension specified under
+                    Dimensions
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="objectId" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Object identifier</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="ForeignCurrencyAmountType">
+        <xsd:attribute name="amount" type="sie:Amount" use="required"/>
+        <xsd:attribute name="currency" type="sie:Currency" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="SubdividedAccountObjectReferenceType">
+        <xsd:attribute name="objectId" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Object identifier</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="OverstrikeType">
+        <xsd:attribute name="date" type="xsd:date" use="required">
+            <xsd:annotation>
+                <xsd:documentation/>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="by" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation> Name of the person, routine or system who/which performed the
+                    overstrike.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="OriginalAmountType">
+        <xsd:sequence maxOccurs="1" minOccurs="0">
+            <xsd:element name="ForeignCurrencyAmount" minOccurs="0" type="sie:ForeignCurrencyAmountType">
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="date" type="xsd:date" use="required"/>
+        <xsd:attribute name="amount" type="sie:Amount" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Amount. Positive for debit, negative for credit.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="CustomerInvoicesTypeEntry">
+        <xsd:complexContent>
+            <xsd:extension base="sie:BaseSubdividedAccountTypeEntry">
+                <xsd:sequence maxOccurs="unbounded" minOccurs="0">
+                    <xsd:element name="CustomerInvoice" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:complexType>
+                            <xsd:complexContent>
+                                <xsd:extension base="sie:SubdividedAccountObjectTypeEntry">
+                                    <xsd:attribute name="customerId" type="xsd:string" use="required"/>
+                                    <xsd:attribute name="invoiceNumber" type="xsd:string"/>
+                                    <xsd:attribute name="ocrNumber" type="xsd:string"/>
+                                    <xsd:attribute name="dueDate" type="xsd:date"/>
+                                </xsd:extension>
+                            </xsd:complexContent>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="SupplierInvoicesTypeEntry">
+        <xsd:complexContent>
+            <xsd:extension base="sie:BaseSubdividedAccountTypeEntry">
+                <xsd:sequence maxOccurs="unbounded" minOccurs="0">
+                    <xsd:element name="SupplierInvoice" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:complexType>
+                            <xsd:complexContent>
+                                <xsd:extension base="sie:SubdividedAccountObjectTypeEntry">
+                                    <xsd:attribute name="supplierId" type="xsd:string" use="required"/>
+                                    <xsd:attribute name="invoiceNumber" type="xsd:string"/>
+                                    <xsd:attribute name="ocrNumber" type="xsd:string"/>
+                                    <xsd:attribute name="dueDate" type="xsd:date"/>
+                                </xsd:extension>
+                            </xsd:complexContent>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="FixedAssetsTypeEntry">
+        <xsd:complexContent>
+            <xsd:extension base="sie:BaseSubdividedAccountTypeEntry">
+                <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                    <xsd:element name="FixedAsset" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:complexType>
+                            <xsd:complexContent>
+                                <xsd:extension base="sie:SubdividedAccountObjectTypeEntry">
+                                    <xsd:attribute name="HarSkaSpecifikaAttributLaggasTill"/>
+                                </xsd:extension>
+                            </xsd:complexContent>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="GeneralSubdividedAccountTypeEntry">
+        <xsd:complexContent>
+            <xsd:extension base="sie:BaseSubdividedAccountTypeEntry">
+                <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                    <xsd:element name="GeneralObject" type="sie:SubdividedAccountObjectTypeEntry"
+                                 minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:choice>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+</xsd:schema>

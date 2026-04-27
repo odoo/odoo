@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Budgets -->
+    <data noupdate="1">
+        <record id="budget_analytic_optimistic" model="budget.analytic">
+            <field name="name" eval="'Budget Optimistic '+str(datetime.now().year)"/>
+            <field name="date_from" eval="str(datetime.now().year)+'-01-01'"/>
+            <field name="state" eval="&quot;&quot;&quot;draft&quot;&quot;&quot;"/>
+            <field name="date_to" eval="str(datetime.now().year)+'-12-31'"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="budget_line_ids">
+                <record id="budget_line_optimistic_1" model="budget.line">
+                    <field name="account_id" ref="analytic.analytic_active_account"/>
+                    <field name="budget_amount">2000</field>
+                </record>
+                <record id="budget_line_optimistic_2" model="budget.line">
+                    <field name="account_id" ref="analytic.analytic_partners_camp_to_camp"/>
+                    <field name="budget_amount">8000</field>
+
+                </record>
+                <record id="budget_line_optimistic_3" model="budget.line">
+                    <field name="account_id" ref="analytic.analytic_think_big_systems"/>
+                    <field name="budget_amount">4000</field>
+
+                </record>
+            </field>
+        </record>
+
+        <record id="budget_analytic_pessimistic" model="budget.analytic">
+            <field name="name" eval="'Budget Pessimistic '+str(datetime.now().year)"/>
+            <field name="date_from" eval="str(datetime.now().year)+'-01-01'"/>
+            <field name="state" eval="&quot;&quot;&quot;draft&quot;&quot;&quot;"/>
+            <field name="date_to" eval="str(datetime.now().year)+'-12-31'"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="budget_line_ids">
+                <record id="budget_line_pessimistic_1" model="budget.line">
+                    <field name="account_id" ref="analytic.analytic_active_account"/>
+                    <field name="budget_amount">3000</field>
+
+                </record>
+                <record id="budget_line_pessimistic_2" model="budget.line">
+                    <field name="account_id" ref="analytic.analytic_partners_camp_to_camp"/>
+                    <field name="budget_amount">10000</field>
+
+                </record>
+                <record id="budget_line_pessimistic_3" model="budget.line">
+                    <field name="account_id" ref="analytic.analytic_think_big_systems"/>
+                    <field name="budget_amount">5000</field>
+
+                </record>
+            </field>
+        </record>
+
+        <function model="budget.analytic" name="action_budget_confirm" eval="[ref('budget_analytic_optimistic')]"/>
+        <function model="budget.analytic" name="action_budget_confirm" eval="[ref('budget_analytic_pessimistic')]"/>
+
+        <!-- Purchase -->
+
+        <function model="purchase.order.line" name="write">
+            <value model="purchase.order.line" search="[('product_id', 'in', [ref('product.product_product_8'), ref('product.product_delivery_01')]), ('order_id', '=', ref('purchase.purchase_order_9'))]"/>
+            <value eval="{'analytic_distribution': {ref('analytic.analytic_active_account'): 100}}"/>
+        </function>
+    </data>
+</odoo>

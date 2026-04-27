@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data noupdate="1">
+        <record id="ir_actions_server_create_activity" model="ir.actions.server" forcecreate="0">
+            <field name="name">Create Activity</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="state">next_activity</field>
+            <field name="activity_type_id" ref="documents.mail_documents_activity_data_tv"/>
+        </record>
+
+        <record id="ir_actions_server_remove_activities" model="ir.actions.server" forcecreate="0">
+            <field name="name">Mark activities as completed</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+for record in records:
+    record.activity_ids.action_feedback(feedback="completed")
+            </field>
+        </record>
+
+        <record id="ir_actions_server_remove_tags" model="ir.actions.server" forcecreate="0">
+            <field name="name">Remove all tags</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="state">object_write</field>
+            <field name="update_m2m_operation">clear</field>
+            <field name="update_path">tag_ids</field>
+        </record>
+
+        <record id="ir_actions_server_send_to_finance" model="ir.actions.server" forcecreate="0">
+            <field name="name">Send To Finance</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+target = env.ref('documents.document_finance_folder', raise_if_not_found=False)
+if target:
+    permissions = records.mapped('user_permission')
+    records.action_move_documents(target.id)
+    for record, permission in zip(records, permissions):
+        record.sudo().action_update_access_rights(partners={env.user.partner_id: (permission, None)})
+    action = {
+        'type': 'ir.actions.client',
+        'tag': 'display_notification',
+        'params': {
+            'message': env._("%(nb_records)s document(s) sent to Finance", nb_records=len(records)),
+            'type': 'success',
+        }
+    }
+            </field>
+        </record>
+
+        <function model="documents.document" name="action_folder_embed_action" eval="[
+            ref('documents.document_internal_folder'),
+            ref('documents.ir_actions_server_send_to_finance'),
+        ]"/>
+
+
+        <record id="ir_actions_server_tag_remove_inbox" model="ir.actions.server" forcecreate="0">
+            <field name="name">Remove Tag Inbox</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="update_path">tag_ids</field>
+            <field name="usage">ir_actions_server</field>
+            <field name="state">object_write</field>
+            <field name="update_m2m_operation">remove</field>
+            <field name="resource_ref" ref="documents.documents_tag_inbox"/>
+        </record>
+
+        <record id="ir_actions_server_tag_remove_to_validate" model="ir.actions.server" forcecreate="0">
+            <field name="name">Remove Tag To Validate</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="update_path">tag_ids</field>
+            <field name="usage">ir_actions_server</field>
+            <field name="state">object_write</field>
+            <field name="update_m2m_operation">remove</field>
+            <field name="resource_ref" ref="documents.documents_tag_to_validate"/>
+        </record>
+
+        <record id="ir_actions_server_tag_add_validated" model="ir.actions.server" forcecreate="0">
+            <field name="name">Add Tag Validated</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="update_path">tag_ids</field>
+            <field name="usage">ir_actions_server</field>
+            <field name="state">object_write</field>
+            <field name="update_m2m_operation">add</field>
+            <field name="resource_ref" ref="documents.documents_tag_validated"/>
+        </record>
+
+        <record id="ir_actions_server_tag_add_bill" model="ir.actions.server" forcecreate="0">
+            <field name="name">Add Tag Bill</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="update_path">tag_ids</field>
+            <field name="usage">ir_actions_server</field>
+            <field name="state">object_write</field>
+            <field name="update_m2m_operation">add</field>
+            <field name="resource_ref" ref="documents.documents_tag_bill"/>
+        </record>
+    </data>
+</odoo>

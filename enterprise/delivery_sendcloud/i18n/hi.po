@@ -1,0 +1,756 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * delivery_sendcloud
+#
+# Translators:
+# Martin Trigaux, 2024
+# Wil Odoo, 2024
+# Jaisal Shah <jaisal13shah@gmail.com>, 2025
+# Manav Shah, 2025
+# Ujjawal Pathak, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-10 18:47+0000\n"
+"PO-Revision-Date: 2025-11-17 14:10+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/"
+"delivery_sendcloud/hi/>\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid ""
+"\n"
+"Additionally, some individual product(s) are too heavy for the heaviest "
+"available shipping method.\n"
+"                             \n"
+"Divide the quantity of the following product(s) across your packages if "
+"possible or choose another carrier:\n"
+"\t%s"
+msgstr ""
+"\n"
+"इसके अलावा, कुछ प्रॉडक्ट, सबसे ज़्यादा वज़न वाली उपलब्ध शिपिंग सेवा के लिए भी बहुत भारी "
+"हैं.\n"
+"                             \n"
+"अगर मुमकिन हो, तो निम्नलिखित प्रॉडक्ट (प्रॉडक्ट्स) की मात्रा को अपने पैकेजों में बांट दें या "
+"कोई दूसरा कैरियर चुनें:\n"
+"\t%s"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid ""
+"\n"
+"Try to distribute your products across your packages so that they weigh less "
+"than %(max_weight)s %(unit)s or choose another carrier."
+msgstr ""
+"\n"
+"अपने प्रॉडक्ट को अपने पैकेजों में बांटने करने की कोशिश करें, ताकि उनका वज़न %(max_weight)s %"
+"(unit)s से कम हो या कोई दूसरा कैरियर चुनें।"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid ""
+" Please make sure there is an address with the same name under \"Address "
+"Name (optional)\" in your Sendcloud Address configuration."
+msgstr ""
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid "%(partner_name)s email required"
+msgstr "%(partner_name)s ईमेल ज़रूरी है"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid "%(partner_name)s phone required"
+msgstr "%(partner_name)s फ़ोन ज़रूरी है"
+
+#. module: delivery_sendcloud
+#: model_terms:ir.ui.view,arch_db:delivery_sendcloud.view_delivery_carrier_form
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/> Do not forget to load your "
+"SendCloud shipping products for a valid configuration."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/> अपनी SendCloud शिपिंग सेवा लोड करना "
+"न भूलें, ताकि कॉन्फ़िगरेशन सही रहे।"
+
+#. module: delivery_sendcloud
+#: model_terms:ir.ui.view,arch_db:delivery_sendcloud.view_delivery_carrier_form
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/> In test environment, to avoid "
+"charges, your shippings are automatically <b>cancelled</b> after the label "
+"creation."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/> टेस्ट माहौल में, शुल्क से बचने के लिए, लेबल "
+"बनाने के बाद आपकी शिपिंग अपने-आप <b>रद्द</b> हो जाती है।"
+
+#. module: delivery_sendcloud
+#: model_terms:ir.ui.view,arch_db:delivery_sendcloud.view_delivery_carrier_form
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/> Only administrators can configure "
+"the public and private keys."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/> सिर्फ़ एडमिनिस्ट्रेटर ही सार्वजनिक और "
+"निजी कुंजियों को कॉन्फ़िगर कर सकते हैं।"
+
+#. module: delivery_sendcloud
+#: model_terms:ir.ui.view,arch_db:delivery_sendcloud.view_shipping_method_sendcloud
+msgid ""
+"<i class=\"fa fa-info-circle\"/> Available shipping products depend on "
+"enabled carriers in your Sendcloud account."
+msgstr ""
+"<i class=\"fa fa-info-circle\"/> उपलब्ध शिपिंग प्रॉडक्ट आपके Sendcloud खाते में चालू "
+"किए गए कैरियर पर निर्भर करते हैं।"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_wizard__sendcloud_products_code
+msgid "Active Products Code"
+msgstr "प्रॉडक्ट कोड ऐक्टिव करें"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_product__functionalities
+msgid "Available Functionalities"
+msgstr "उपलब्ध सुविधाएं"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_delivery_carrier__sendcloud_has_custom_functionalities
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_product__can_customize_functionalities
+msgid "Can Customize Functionalities"
+msgstr "सुविधाओं में बदलाव कर सकता है"
+
+#. module: delivery_sendcloud
+#: model_terms:ir.ui.view,arch_db:delivery_sendcloud.view_shipping_method_sendcloud
+msgid "Cancel"
+msgstr "रद्द"
+
+#. module: delivery_sendcloud
+#. odoo-javascript
+#: code:addons/delivery_sendcloud/static/src/views/sendcloud_product_selection_widget.xml:0
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_stock_package_type__package_carrier_type
+msgid "Carrier"
+msgstr "कैरियर"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/delivery_carrier.py:0
+msgid "Choose Sendcloud Shipping Products"
+msgstr "Sendcloud शिपिंग प्रॉडक्ट चुनें"
+
+#. module: delivery_sendcloud
+#: model:ir.model,name:delivery_sendcloud.model_sendcloud_shipping_wizard
+msgid "Choose from the available sendcloud shipping methods"
+msgstr "उपलब्ध Sendcloud शिपिंग तरीके चुनें"
+
+#. module: delivery_sendcloud
+#: model:ir.model,name:delivery_sendcloud.model_sendcloud_shipping_product
+msgid "Choose from the available sendcloud shipping products"
+msgstr "उपलब्ध Sendcloud शिपिंग प्रॉडक्ट चुनें"
+
+#. module: delivery_sendcloud
+#: model_terms:ir.ui.view,arch_db:delivery_sendcloud.view_shipping_method_sendcloud
+msgid "Confirm"
+msgstr "पुष्टि करें"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid "Could not find currency %s"
+msgstr "करेंसी %s नहीं मिली"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid "Could not get document!"
+msgstr "दस्तावेज़ नहीं मिल सका!"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_product__create_uid
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_wizard__create_uid
+msgid "Created by"
+msgstr "द्वारा निर्मित"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_product__create_date
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_wizard__create_date
+msgid "Created on"
+msgstr "इस तारीख को बनाया गया"
+
+#. module: delivery_sendcloud
+#: model_terms:ir.ui.view,arch_db:delivery_sendcloud.view_delivery_carrier_form
+msgid "Default Package Type"
+msgstr "डिफ़ॉल्ट पैकेज टाइप"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_delivery_carrier__sendcloud_default_package_type_id
+msgid "Default Package Type for Sendcloud"
+msgstr "Sendcloud के लिए डिफ़ॉल्ट पैकेज टाइप"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_wizard__carrier_id
+msgid "Delivery"
+msgstr "डिलीवरी"
+
+#. module: delivery_sendcloud
+#: model_terms:ir.ui.view,arch_db:delivery_sendcloud.view_shipping_method_sendcloud
+msgid "Delivery Product"
+msgstr "डिलीवरी प्रॉडक्ट"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,help:delivery_sendcloud.field_delivery_carrier__sendcloud_shipping_rules
+msgid ""
+"Depending your Sendcloud account type, through rules you can define the "
+"shipping method to use depending on different conditions like destination, "
+"weight, value, etc.\n"
+"Rules can override shipping product selected in Odoo"
+msgstr ""
+"आप अपने सेंडक्लाउड खाते में कुछ नियम बना सकते हैं. इन नियमों की मदद से आप यह तय कर सकते हैं "
+"कि सामान को कहां भेजना है, उसका वज़न कितना है और उसकी कीमत कितनी है. इसके अलावा, \n"
+"इन नियमों से आप Odoo में पहले से तय किए गए शिपिंग प्रॉडक्ट की जानकारी को भी बदल सकते हैं"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_product__display_name
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_wizard__display_name
+msgid "Display Name"
+msgstr "डिस्प्ले नाम"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid ""
+"Each address line can only contain a maximum of 75 characters. You can split "
+"the address into multiple lines to try to avoid this limitation."
+msgstr ""
+"पते की हर लाइन में ज़्यादा से ज़्यादा 75 अक्षर हो सकते हैं. इस सीमा से बचने के लिए, आप पते "
+"को कई लाइनों में बांट सकते हैं।"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid ""
+"Ensure picking has shipping weight, if using packages, each package should "
+"have a shipping weight"
+msgstr ""
+"पक्का करें कि पिकिंग में शिपिंग वज़न है, अगर पैकेज इस्तेमाल कर रहे हैं, तो हर पैकेज का एक "
+"शिपिंग वज़न होना चाहिए"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/delivery_carrier.py:0
+msgid "Failed to create the return label!"
+msgstr "रिटर्न लेबल नहीं बन पाया!"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/delivery_carrier.py:0
+msgid "Failed to get the actual price!"
+msgstr "सही कीमत नहीं मिल पाई!"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_delivery_carrier__sendcloud_product_functionalities
+msgid "Functionalities"
+msgstr "सुविधाएं"
+
+#. module: delivery_sendcloud
+#: model_terms:ir.ui.view,arch_db:delivery_sendcloud.view_delivery_carrier_form
+msgid "Functionality Filters"
+msgstr "सुविधाओं के लिए फ़िल्टर"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/delivery_carrier.py:0
+msgid "Go to the shipping product"
+msgstr "शिपिंग प्रॉडक्ट पर जाएं"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_delivery_carrier__sendcloud_can_batch_shipping
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_product__has_multicollo
+msgid "Has Multicollo"
+msgstr "Multicollo उपलब्ध है"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_product__id
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_wizard__id
+msgid "ID"
+msgstr "आईडी"
+
+#. module: delivery_sendcloud
+#: model_terms:ir.ui.view,arch_db:delivery_sendcloud.view_delivery_carrier_form
+msgid "Integration"
+msgstr "इंटिग्रेशन"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_product__write_uid
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_wizard__write_uid
+msgid "Last Updated by"
+msgstr "इन्होंने आखिरी बार अपडेट किया"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_product__write_date
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_wizard__write_date
+msgid "Last Updated on"
+msgstr "आखिरी बार अपडेट हुआ"
+
+#. module: delivery_sendcloud
+#: model_terms:ir.ui.view,arch_db:delivery_sendcloud.view_delivery_carrier_form
+msgid "Load your products"
+msgstr "अपने प्रॉडक्ट लोड करें"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid ""
+"Make sure country codes are set in partner country and warehouse country"
+msgstr "पक्का करें कि पार्टनर देश और वेयरहाउस देश में देश कोड सेट हैं"
+
+#. module: delivery_sendcloud
+#. odoo-javascript
+#: code:addons/delivery_sendcloud/static/src/views/sendcloud_product_selection_widget.xml:0
+msgid "Max height"
+msgstr "अधिकतम ऊंचाई"
+
+#. module: delivery_sendcloud
+#. odoo-javascript
+#: code:addons/delivery_sendcloud/static/src/views/sendcloud_product_selection_widget.xml:0
+msgid "Max length"
+msgstr "अधिकतम लंबाई"
+
+#. module: delivery_sendcloud
+#. odoo-javascript
+#: code:addons/delivery_sendcloud/static/src/views/sendcloud_product_selection_widget.xml:0
+msgid "Max width"
+msgstr "अधिकतम चौड़ाई"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_product__max_weight
+msgid "Maximum Weight"
+msgstr "अधिकतम वज़न"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_product__min_weight
+msgid "Minimum Weight"
+msgstr "न्यूनतम वज़न"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/delivery_carrier.py:0
+msgid "Must be a Sendcloud carrier!"
+msgstr "Sendcloud कैरियर ज़रूरी है!"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid "No address found with contact name %s on your sendcloud account."
+msgstr "आपके Sendcloud खाते पर, संपर्क नाम %s के साथ कोई पता नहीं मिला।"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid "No picking or order provided"
+msgstr "पिकिंग या ऑर्डर उपलब्ध नहीं है"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/delivery_carrier.py:0
+msgid ""
+"Note that a unit of the product '%s' is heavier than the maximum weight "
+"allowed by the shipping method."
+msgstr ""
+"ध्यान दें कि प्रॉडक्ट '%s' की एक इकाई का वज़न, शिपिंग तरीके से तय किए गए अधिकतम वज़न से "
+"ज़्यादा है।"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/delivery_carrier.py:0
+msgid ""
+"Note that this price is for %s packages since the order weight is more than "
+"the maximum weight allowed by the shipping method."
+msgstr ""
+"ध्यान दें कि यह कीमत %s पैकेजों के लिए है, क्योंकि ऑर्डर का वज़न शिपिंग तरीके से तय किए गए "
+"अधिकतम वज़न से ज़्यादा है।"
+
+#. module: delivery_sendcloud
+#: model_terms:ir.ui.view,arch_db:delivery_sendcloud.view_delivery_carrier_form
+msgid "Options"
+msgstr "विकल्प"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid "Order below minimum weight of carrier"
+msgstr "कैरियर के न्यूनतम वज़न से कम का ऑर्डर"
+
+#. module: delivery_sendcloud
+#. odoo-javascript
+#: code:addons/delivery_sendcloud/static/src/views/sendcloud_product_selection_widget.xml:0
+msgid "Other Functionalities"
+msgstr "अन्य सुविधाएं"
+
+#. module: delivery_sendcloud
+#. odoo-javascript
+#: code:addons/delivery_sendcloud/static/src/views/sendcloud_product_selection_widget.xml:0
+msgid ""
+"Please check SendCloud return product documentation before selecting return "
+"product. For some products, you can be charged for return labels printed but "
+"not used."
+msgstr ""
+"रिटर्न प्रॉडक्ट चुनने से पहले कृपया SendCloud रिटर्न प्रॉडक्ट दस्तावेज़ देखें. कुछ प्रॉडक्ट के "
+"लिए, आपको बनाए गए लेकिन इस्तेमाल न किए गए रिटर्न लेबल के लिए शुल्क लिया जा सकता है।"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "प्रोवाइडर"
+
+#. module: delivery_sendcloud
+#: model_terms:ir.ui.view,arch_db:delivery_sendcloud.view_shipping_method_sendcloud
+msgid "Return Product"
+msgstr "प्रॉडक्ट रिटर्न करें"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_wizard__return_products
+msgid "Return Products"
+msgstr "प्रॉडक्ट रिटर्न करें"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,help:delivery_sendcloud.field_delivery_carrier__country_id
+msgid "Select the country to be used by this delivery method"
+msgstr "इस डिलीवरी तरीके के लिए इस्तेमाल होने वाले देश को चुनें"
+
+#. module: delivery_sendcloud
+#: model_terms:ir.ui.view,arch_db:delivery_sendcloud.view_delivery_carrier_form
+msgid "SendCloud Configuration"
+msgstr "SendCloud कॉन्फ़िगरेशन"
+
+#. module: delivery_sendcloud
+#: model_terms:ir.ui.view,arch_db:delivery_sendcloud.res_config_settings_view_form_sale
+msgid "SendCloud Shipping Methods"
+msgstr "SendCloud शिपिंग के तरीके"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields.selection,name:delivery_sendcloud.selection__delivery_carrier__delivery_type__sendcloud
+#: model:ir.model.fields.selection,name:delivery_sendcloud.selection__stock_package_type__package_carrier_type__sendcloud
+msgid "Sendcloud"
+msgstr "Sendcloud"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,help:delivery_sendcloud.field_delivery_carrier__sendcloud_public_key
+msgid "Sendcloud API Integration Public key"
+msgstr "SendCloud एपीआई इंटिग्रेशन पब्लिक कुंजी"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,help:delivery_sendcloud.field_delivery_carrier__sendcloud_secret_key
+msgid "Sendcloud API Integration Secret key"
+msgstr "SendCloud एपीआई इंटिग्रेशन सीक्रेट कुंजी"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_stock_picking__sendcloud_parcel_ref
+msgid "Sendcloud Parcel Reference"
+msgstr "SendCloud पार्सल रेफ़रेंस"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_product__sendcloud_code
+msgid "Sendcloud Product Identifier"
+msgstr "SendCloud प्रॉडक्ट आइडेंटिफ़ॉयर"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_delivery_carrier__sendcloud_public_key
+msgid "Sendcloud Public Key"
+msgstr "SendCloud पब्लिक कुंजी"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_delivery_carrier__sendcloud_return_id
+msgid "Sendcloud Return"
+msgstr "SendCloud रिटर्न"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_stock_picking__sendcloud_return_parcel_ref
+msgid "Sendcloud Return Parcel Ref"
+msgstr "SendCloud रिटर्न पार्सल रेफ़रेंस"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_delivery_carrier__sendcloud_return_name
+msgid "Sendcloud Return Shipping Product"
+msgstr "SendCloud रिटर्न शिपिंग प्रॉडक्ट"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_delivery_carrier__sendcloud_secret_key
+msgid "Sendcloud Secret Key"
+msgstr "SendCloud सीक्रेट कुंजी"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_delivery_carrier__sendcloud_shipping_id
+msgid "Sendcloud Shipping"
+msgstr "SendCloud शिपिंग"
+
+#. module: delivery_sendcloud
+#: model_terms:ir.ui.view,arch_db:delivery_sendcloud.res_config_settings_view_form_stock
+msgid "Sendcloud Shipping Methods"
+msgstr "SendCloud शिपिंग के तरीके"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_delivery_carrier__sendcloud_shipping_name
+msgid "Sendcloud Shipping Product"
+msgstr "SendCloud शिपिंग प्रॉडक्ट"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid "Sendcloud is not responding. Check your credentials and/or retry later."
+msgstr ""
+"SendCloud सिस्टम अभी काम नहीं कर रहा है. अपने लॉगिन की जानकारी (क्रेडेंशियल) जाँच करें "
+"या थोड़ी देर बाद दोबारा कोशिश करें।"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_delivery_carrier__country_id
+msgid "Ship From"
+msgstr "यहां से भेजा गया"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/delivery_carrier.py:0
+msgid "Shipment %s cancelled"
+msgstr "शिपमेंट %s रद्द हो गया"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_product__carrier
+msgid "Shipping Carrier"
+msgstr "शिपिंग कैरियर"
+
+#. module: delivery_sendcloud
+#: model:ir.model,name:delivery_sendcloud.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "शिपिंग के तरीके"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_product__name
+#: model_terms:ir.ui.view,arch_db:delivery_sendcloud.view_shipping_method_sendcloud
+msgid "Shipping Product"
+msgstr "शिपिंग प्रॉडक्ट"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_sendcloud_shipping_wizard__shipping_products
+msgid "Shipping Products"
+msgstr "शिपिंग प्रॉडक्ट"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,help:delivery_sendcloud.field_delivery_carrier__sendcloud_default_package_type_id
+msgid ""
+"Some carriers require package dimensions, you can define these in a package "
+"type that you set as default"
+msgstr ""
+"कुछ कैरियर को पैकेज के डाइमेंशन की ज़रूरत होती है, आप इन्हें एक पैकेज प्रकार में तय कर सकते हैं "
+"जिसे आप डिफ़ॉल्ट के तौर पर सेट करते हैं"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid ""
+"Some packages in your transfer are too heavy for the heaviest available "
+"shipping method."
+msgstr "आपके ट्रांसफर में कुछ पैकेज, सबसे भारी उपलब्ध शिपिंग तरीके के लिए भी बहुत भारी हैं।"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid ""
+"Something went wrong, parcel not returned from Sendcloud:\n"
+" %s'."
+msgstr ""
+"कुछ गड़बड़ी हुई, Sendcloud से पार्सल वापस नहीं आया:\n"
+" %s'।"
+
+#. module: delivery_sendcloud
+#: model:ir.model,name:delivery_sendcloud.model_stock_package_type
+msgid "Stock package type"
+msgstr "स्टॉक पैकेज टाइप"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid "The %s address needs to have the street, city, zip, and country"
+msgstr "%s पते में सड़क, शहर, पिन कोड और देश का नाम होना ज़रूरी है"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid ""
+"The delivery address of the customer has been removed from the pickup "
+"location. This information is required by Sendcloud. Please go to the "
+"delivery partner via the delivery order and make sure the parent of the "
+"delivery partner is the partner you want to ship to."
+msgstr ""
+"ग्राहक का डिलीवरी पता, पिकअप जगह से हटा दिया गया है. SendCloudको इस जानकारी की "
+"ज़रूरत है. कृपया डिलीवरी ऑर्डर के ज़रिए डिलीवरी पार्टनर पर जाएं और पक्का करें कि डिलीवरी "
+"पार्टनर का पैरेंट, वही पार्टनर है जिसे आप सामान भेजना चाहते हैं।"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid ""
+"The estimated shipping price cannot be computed because the weight is "
+"missing for the following product(s): \n"
+" %s"
+msgstr ""
+"अनुमानित शिपिंग कीमत की गणना नहीं की जा सकती, क्योंकि निम्नलिखित प्रॉडक्ट (प्रॉडक्ट्स) "
+"का वज़न उपलब्ध नहीं है: \n"
+" %s"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/delivery_carrier.py:0
+msgid "The shipping product actually configured can't handle this delivery"
+msgstr "सही तरीके से कॉन्फ़िगर किया गया शिपिंग प्रॉडक्ट इस डिलीवरी को नहीं संभाल सकता"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid ""
+"The total weight of your transfer is too heavy for the heaviest available "
+"shipping method."
+msgstr ""
+"आपके ट्रांसफर का कुल वज़न, सबसे ज़्यादा वज़न वाली उपलब्ध शिपिंग सेवा के लिए भी बहुत भारी है।"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/delivery_carrier.py:0
+msgid ""
+"There are no shipping products available, please update the 'Shipping From' "
+"field or activate suitable carriers in your sendcloud account"
+msgstr ""
+"कोई शिपिंग प्रॉडक्ट उपलब्ध नहीं है, कृपया 'यहां से शिप करें' फ़ील्ड अपडेट करें या अपने "
+"SendCloud खाते में सही कैरियर को चालू करें"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/delivery_carrier.py:0
+msgid ""
+"There is no rate available for this order with the selected shipping product."
+msgstr "चुने गए शिपिंग प्रॉडक्ट के साथ इस ऑर्डर के लिए कोई रेट उपलब्ध नहीं है।"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid ""
+"There is no shipping method available for this order with the selected "
+"carrier"
+msgstr "चुने गए कैरियर के साथ इस ऑर्डर के लिए कोई शिपिंग तरीका उपलब्ध नहीं है"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid ""
+"There is no shipping method available for this picking with the selected "
+"carrier"
+msgstr "चुने गए कैरियर के साथ इस पिकिंग के लिए कोई शिपिंग तरीका उपलब्ध नहीं है"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid ""
+"There's no method with matching weight range for packages :\n"
+"%s\n"
+"You can either choose another carrier, change your filters or redefine the "
+"content of your package(s)."
+msgstr ""
+"पैकेजों के लिए, वज़न सीमा से मेल खाने वाला कोई तरीका नहीं है :\n"
+"%s\n"
+"आप या तो कोई दूसरा कैरियर चुन सकते हैं, अपने फ़िल्टर बदल सकते हैं या अपने पैकेज की सामग्री "
+"को फिर से तय कर सकते हैं।"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/sendcloud_service.py:0
+msgid ""
+"There's no shipping method matching all your selected filters for this "
+"picking/order."
+msgstr ""
+"इस पिकिंग/ऑर्डर के लिए, आपके चुने गए सभी फ़िल्टर से मेल खाने वाला कोई शिपिंग तरीका नहीं है।"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/delivery_carrier.py:0
+msgid "There's no unit of measure with the name \"%s\"."
+msgstr "\"%s\" नाम की कोई माप की इकाई नहीं है।"
+
+#. module: delivery_sendcloud
+#: model:ir.model,name:delivery_sendcloud.model_stock_picking
+msgid "Transfer"
+msgstr "स्थानांतरण"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_delivery_carrier__sendcloud_use_batch_shipping
+msgid "Use Batch Shipping"
+msgstr "बैच शिपिंग का इस्तेमाल करें"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,field_description:delivery_sendcloud.field_delivery_carrier__sendcloud_shipping_rules
+msgid "Use Sendcloud shipping rules"
+msgstr "SendCloud शिपिंग के नियमों का इस्तेमाल करें"
+
+#. module: delivery_sendcloud
+#. odoo-javascript
+#: code:addons/delivery_sendcloud/static/src/views/sendcloud_product_selection_widget.xml:0
+msgid "Weight range"
+msgstr "वज़न का रेंज"
+
+#. module: delivery_sendcloud
+#: model:ir.model.fields,help:delivery_sendcloud.field_delivery_carrier__sendcloud_use_batch_shipping
+msgid ""
+"When sending multiple parcels, combine them in one shipment. Not supported "
+"for international shipping requiring customs' documentation"
+msgstr ""
+"एक से ज़्यादा पार्सल भेजते समय, उन्हें एक ही शिपमेंट में मिला लें. यह कस्टम दस्तावेज़ों की ज़रूरत "
+"वाली अंतरराष्ट्रीय शिपिंग के लिए काम नहीं करता है"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/delivery_carrier.py:0
+msgid "You must add your public and secret key for sendcloud delivery type!"
+msgstr "SendCloud डिलीवरी के लिए, अपनी सार्वजनिक और गोपनीय कुंजी डालना ज़रूरी है!"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/delivery_carrier.py:0
+msgid ""
+"You must assign the required 'Shipping From' field in order to search for "
+"available products"
+msgstr "उपलब्ध प्रॉडक्ट खोजने के लिए, आपको ज़रूरी 'शिपिंग कहां से' फ़ील्ड असाइन करना होगा"
+
+#. module: delivery_sendcloud
+#. odoo-python
+#: code:addons/delivery_sendcloud/models/delivery_carrier.py:0
+msgid "You must have a shipping product configured!"
+msgstr "आपको एक शिपिंग प्रॉडक्ट कॉन्फ़िगर करना होगा!"
+
+#. module: delivery_sendcloud
+#. odoo-javascript
+#: code:addons/delivery_sendcloud/static/src/views/sendcloud_product_selection_widget.xml:0
+msgid "cm"
+msgstr "सेमी."
+
+#. module: delivery_sendcloud
+#: model_terms:ir.ui.view,arch_db:delivery_sendcloud.sendcloud_label_tracking
+msgid ""
+"created in Sendcloud. <br/>\n"
+"            <b>Tracking Numbers:</b>"
+msgstr ""
+"Sendcloud में बनाया गया. <br/>\n"
+"            <b>ट्रैकिंग नंबर:</b>"
+
+#. module: delivery_sendcloud
+#. odoo-javascript
+#: code:addons/delivery_sendcloud/static/src/views/sendcloud_product_selection_widget.xml:0
+msgid "g"
+msgstr ""

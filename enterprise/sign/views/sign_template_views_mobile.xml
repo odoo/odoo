@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Signature Request Template Views -->
+    <record id="sign_template_view_kanban_mobile" model="ir.ui.view">
+        <field name="name">sign.template.kanban.mobile</field>
+        <field name="model">sign.template</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <div t-name="card">
+                        <field name="attachment_id"/>
+                        <field name="create_date" class="fst-italic d-block"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    </div>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

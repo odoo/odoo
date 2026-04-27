@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<odoo>
+    <data>
+        <template id="intrastat_report_export_xml_services">
+            <fichier_des>
+                <t t-foreach="declarations" t-as="declaration">
+                    <declaration_des>
+                        <num_des t-out="declaration['declaration_number']"/>
+                        <num_tvaFr t-out="declaration['vat']"/>
+                        <mois_des t-out="declaration['invoice_date_month']"/>
+                        <an_des t-out="declaration['invoice_date_year']"/>
+                        <t t-foreach="declaration['items']" t-as="item">
+                            <ligne_des>
+                                <numlin_des t-out="item['line_number']"/>
+                                <valeur t-out="item['amount']"/>
+                                <partner_des t-out="item['partner_vat']"/>
+                            </ligne_des>
+                        </t>
+                    </declaration_des>
+                </t>
+            </fichier_des>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="report_social_security_certificate">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="wizard">
+                <t t-call="web.external_layout">
+                    <t t-set="wizard" t-value="wizard.with_context(lang=wizard.env.lang)"/>
+                    <div class="page container-fluid">
+                        <div class="mt-4 row text-center fw-bold">
+                            <div class="col-12">
+                                <div>SOCIAL SECURITY CERTIFICATE</div>
+                            </div>
+                        </div>
+                         <div class="mt-4 row">
+                            <div class="col-12">
+                                <div class="fw-bold">Identification of the company</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 border p-2">
+                                <div class="mb-2">VAT Number: <t t-esc="wizard.company_id.vat"/></div>
+                                <div class="mb-2">ONSS Number: <t t-esc="wizard.company_id.onss_registration_number"/></div>
+                                <div class="mb-2">Numbers of joint committees: 20000</div>
+                                <div class="mb-2">Established on: <span t-field="wizard.create_date"/></div>
+                                <div class="mb-2">Period: From <span t-field="wizard.date_from"/> To <span t-field="wizard.date_to"/></div>
+                                <div class="mb-2">Currency: <t t-esc="wizard.company_id.currency_id.name"/></div>
+                            </div>
+                        </div>
+                        <t t-foreach="data['report_data']" t-as="report_data">
+                            <t t-set="aggragate_name" t-value="report_data[0]"/>
+                            <t t-set="aggregate_data" t-value="report_data[1]"/>
+                            <h3>Data for: <t t-esc="aggragate_name"/></h3>
+                            <h5>Workers</h5>
+                            <table class="o_ignore_layout_styling table table-sm table-striped">
+                              <thead>
+                                <tr>
+                                  <th scope="col"></th>
+                                  <th scope="col">Total</th>
+                                  <th scope="col">Employee</th>
+                                  <th scope="col">Worker</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <th>Gross salary before ONSS</th>
+                                  <td><t t-esc="round(aggregate_data['gross_before_onss'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['gross_before_onss'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Benefits in kind submitted to ONSS</th>
+                                  <td><t t-esc="round(aggregate_data['atn'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['atn'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Termination fees</th>
+                                  <td><t t-esc="round(aggregate_data['termination_fees'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['termination_fees'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Thirteen Month</th>
+                                  <td><t t-esc="round(aggregate_data['thirteen_month'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['thirteen_month'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Double Holiday</th>
+                                  <td><t t-esc="round(aggregate_data['double_pay'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['double_pay'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Students</th>
+                                  <td><t t-esc="round(aggregate_data['student'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['student'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Total Basic before ONSS</th>
+                                  <td><t t-esc="round(aggregate_data['total_gross_before_onss'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['total_gross_before_onss'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Benefits in kind without ONSS</th>
+                                  <td><t t-esc="round(aggregate_data['atn_without_onss'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['atn_without_onss'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Early holiday pay</th>
+                                  <td><t t-esc="round(aggregate_data['early_holiday_pay'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['early_holiday_pay'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Holiday pay supplement</th>
+                                  <td><t t-esc="round(aggregate_data['holiday_pay_supplement'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['holiday_pay_supplement'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Other exempted amount from ONSS</th>
+                                  <td><t t-esc="round(aggregate_data['other_exempted_amount'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['other_exempted_amount'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Double Holiday Gross</th>
+                                  <td><t t-esc="round(aggregate_data['double_gross'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['double_gross'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr style="color:#875A7B;">
+                                  <th>Sub-total Gross</th>
+                                  <td><t t-esc="round(aggregate_data['subtotal_gross'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['subtotal_gross'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>ONSS Cotisation</th>
+                                  <td><t t-esc="round(aggregate_data['onss_cotisation'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['onss_cotisation'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>ONSS Cotisation on termination fees</th>
+                                  <td><t t-esc="round(aggregate_data['onss_cotisation_termination_fees'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['onss_cotisation_termination_fees'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Anticipated Holiday Pay Retenue</th>
+                                  <td><t t-esc="round(aggregate_data['anticipated_holiday_pay_retenue'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['anticipated_holiday_pay_retenue'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Holiday Pay Supplement Retenue</th>
+                                  <td><t t-esc="round(aggregate_data['holiday_pay_supplement_retenue'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['holiday_pay_supplement_retenue'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>ONSS Thirteen Month</th>
+                                  <td><t t-esc="round(aggregate_data['onss_thirteen_month'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['onss_thirteen_month'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>ONSS Double Holiday</th>
+                                  <td><t t-esc="round(aggregate_data['onss_double'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['onss_double'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>ONSS Student</th>
+                                  <td><t t-esc="round(aggregate_data['onss_student'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['onss_student'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Taxable Adaptation</th>  <!-- No info - Keep empty -->
+                                  <td><t t-esc="round(aggregate_data['taxable_adaptation'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['taxable_adaptation'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Taxable Amounts (325)</th>  <!-- No info - Keep empty -->
+                                  <td><t t-esc="round(aggregate_data['taxable_325'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['taxable_325'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Gifts in kind</th>  <!-- No info - Keep empty -->
+                                  <td><t t-esc="round(aggregate_data['gift_in_kind'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['gift_in_kind'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Reimbursed Expenses (Representation Fees)</th>
+                                  <td><t t-esc="round(aggregate_data['representation_fees'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['representation_fees'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Private Car</th>
+                                  <td><t t-esc="round(aggregate_data['private_car'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['private_car'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Public Transportation</th>
+                                  <td><t t-esc="round(aggregate_data['public_transport'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['public_transport'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Cycle Allowance</th>
+                                  <td><t t-esc="round(aggregate_data['cycle_allowance'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['cycle_allowance'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Benefits in kind (Company Car)</th>
+                                  <td><t t-esc="round(aggregate_data['atn_car'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['atn_car'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Canteen Costs</th>
+                                  <td><t t-esc="round(aggregate_data['canteen_costs'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['canteen_costs'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Withholding Taxes</th>
+                                  <td><t t-esc="round(aggregate_data['withholding_taxes'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['withholding_taxes'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Special Social Cotisation</th>
+                                  <td><t t-esc="round(aggregate_data['misc_onss'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['misc_onss'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Salary Attachments</th> <!-- Saisies -->
+                                  <td><t t-esc="round(aggregate_data['salary_attachment'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['salary_attachment'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Benefit in kind deduction</th>
+                                  <td><t t-esc="round(aggregate_data['atn_deduction'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['atn_deduction'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Meal Vouchers (Employee Part)</th>
+                                  <td><t t-esc="round(aggregate_data['meal_voucher_employee'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['meal_voucher_employee'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Net salary paid by third party</th>
+                                  <td><t t-esc="round(aggregate_data['net_third_party'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['net_third_party'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Salary Assignment</th>  <!-- Cession -->
+                                  <td><t t-esc="round(aggregate_data['salary_assignment'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['salary_assignment'], 2)"/></td>
+                                  <td></td>
+                                </tr>                      
+                                <tr>
+                                  <th>Salary Advance</th>
+                                  <td><t t-esc="round(aggregate_data['salary_advance'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['salary_advance'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Net Salary</th>
+                                  <td><t t-esc="round(aggregate_data['net'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['net'], 2)"/></td>
+                                  <td></td>
+                                </tr>                            
+                                <tr>
+                                  <th>Total Net (Advance included)</th>
+                                  <td><t t-esc="round(aggregate_data['total_net'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['total_net'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                              </tbody>
+                            </table>
+                            <h5>Employer</h5>
+                            <table class="o_ignore_layout_styling table table-sm table-striped">
+                              <thead>
+                                <tr>
+                                  <th scope="col"></th>
+                                  <th scope="col">Total</th>
+                                  <th scope="col">Employee</th>
+                                  <th scope="col">Worker</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <th>ONSS cotisation</th>
+                                  <td><t t-esc="round(aggregate_data['emp_onss'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['emp_onss'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>ONSS termination fees cotisation</th>
+                                  <td><t t-esc="round(aggregate_data['emp_termination_onss'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['emp_termination_onss'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr> <!-- Cotisation Fond de fermeture -->
+                                  <th>Business closure fund cotisation</th>
+                                  <td><t t-esc="round(aggregate_data['closure_fund'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['closure_fund'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr> <!-- Redistribution des charges -->
+                                  <th>ONSS Cotisation: Charges redistribution</th>
+                                  <td><t t-esc="round(aggregate_data['charges_redistribution'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['charges_redistribution'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr> <!-- CO2 Fee -->
+                                  <th>Solidarity Cotisation: Company Cars</th>
+                                  <td><t t-esc="round(aggregate_data['co2_fees'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['co2_fees'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr> <!-- Réductions Structurelles -->
+                                  <th>Structural reductions</th>
+                                  <td><t t-esc="round(aggregate_data['structural_reductions'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['structural_reductions'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Meal Vouchers (Employer Part)</th>
+                                  <td><t t-esc="round(aggregate_data['meal_voucher_employer'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['meal_voucher_employer'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Retenue de versement: précompte professionnel (salaires)</th>
+                                  <td><t t-esc="round(aggregate_data['withholding_taxes_deduction'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['withholding_taxes_deduction'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Total Employer Cost</th>
+                                  <td><t t-esc="round(aggregate_data['total_employer_cost'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['total_employer_cost'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Holiday Pay Provision</th>  <!-- No data -->
+                                  <td><t t-esc="round(aggregate_data['holiday_pay_provision'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['holiday_pay_provision'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Withholding Taxes Exemption (Scientific Research) - Doctors / Civil Engineers</th>  <!-- No data -->
+                                  <td><t t-esc="round(aggregate_data['withholding_taxes_exemption_32'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['withholding_taxes_exemption_32'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Withholding Taxes Exemption (Scientific Research) - Masters</th>  <!-- No data -->
+                                  <td><t t-esc="round(aggregate_data['withholding_taxes_exemption_33'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['withholding_taxes_exemption_33'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Withholding Taxes Exemption (Scientific Research) - Bachelors</th>  <!-- No data -->
+                                  <td><t t-esc="round(aggregate_data['withholding_taxes_exemption_34'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['withholding_taxes_exemption_34'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>Withholding Taxes Capping (Bachelors)</th>  <!-- No data -->
+                                  <td><t t-esc="round(aggregate_data['withholding_taxes_capping'], 2)"/></td>
+                                  <td><t t-esc="round(aggregate_data['withholding_taxes_capping'], 2)"/></td>
+                                  <td></td>
+                                </tr>
+                              </tbody>
+                            </table>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

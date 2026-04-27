@@ -1,0 +1,92 @@
+$wo-border-separation: $border-width solid $border-color;
+
+.o_tablet_popups {
+
+    &.o_unblock {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        background-color: rgba(60, 60, 60, 0.4);
+
+        .popup {
+            z-index: 1200;
+            top: 5%;
+            left: 20%;
+            width: 60%;
+            position: fixed;
+            background: $o-gray-100;
+        }
+    }
+
+    .popup {
+        .body.traceback {
+            height: 238px;
+            overflow: auto;
+            font-size: 14px;
+            white-space: pre-wrap;
+            text-align: left;
+            font-family: 'Inconsolata';
+            -webkit-user-select: text;
+            -moz-user-select: text;
+                    user-select: text;
+        }
+
+        @include media-breakpoint-down(sm) {
+            top: 0;
+            left: 0;
+            width: auto;
+            max-height: 100%;
+            overflow: auto;
+        }
+
+        &.popup-selection .selection {
+            line-height: 50px;
+
+            &-item {
+                background: $o-gray-100;
+                cursor: pointer;
+                text-align: left;
+                padding: 0px 16px;
+                color: $o-black;
+
+                &:nth-child(odd) {
+                    background: $o-view-background-color;
+                }
+                &.selected {
+                    background: #6EC89B;
+                }
+            }
+        }
+
+        .popup-input {
+            width: 70%;
+            margin: 20px auto;
+            padding: 10px;
+            box-shadow: 0px 0px 0px 3px #6ec89b;
+            min-height: 50px;
+            background: white;
+            border-radius: 3px;
+            text-align: center;
+            font-size: 20px;
+            font-family: "Lato";
+        }
+
+        .popup-numpad {
+            width: 70%;
+            margin: 12px auto;
+
+            button {
+                height: 50px;
+                width: 50px;
+                border-radius: 25px;
+                margin: 4px;
+                border: 1px solid #cacaca;
+                background: none;
+                font-size: large;
+            }
+        }
+    }
+}

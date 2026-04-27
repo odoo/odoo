@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Main menu -->
+
+    <record id="stock_barcode_action_main_menu" model="ir.actions.client">
+        <field name="name">Barcode</field>
+        <field name="path">barcode</field>
+        <field name="tag">stock_barcode_main_menu</field>
+        <field name="target">fullscreen</field>
+    </record>
+
+    <menuitem
+        id="stock_barcode_menu"
+        action="stock_barcode_action_main_menu"
+        web_icon="stock_barcode,static/description/icon.png"
+        sequence="155"
+        groups="stock.group_stock_user" />
+
+
+    <!-- Actions -->
+
+    <record id="stock_picking_action_kanban" model="ir.actions.act_window">
+        <field name="name">Operations</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="stock_barcode.stock_picking_view_kanban"/>
+        <field name="path">barcode-operations</field>
+        <field name="target">fullscreen</field>
+        <field name="context">{
+            'contact_display': 'partner_address',
+            'search_default_available': 1,
+            'search_default_to_do_transfers': 1,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new transfer
+            </p><p>
+                Transfers allow you to move products from one location to another.
+            </p>
+        </field>
+    </record>
+
+    <!-- Editable list to set product barcodes -->
+
+    <record id="product_view_list_barcodes" model="ir.ui.view">
+        <field name="name">product.list.barcodes</field>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <list string="Product Barcodes" editable="top" create="false" delete="false">
+                <field name="name" readonly="1"/>
+                <field name="code" readonly="1"/>
+                <field name="barcode"/>
+                <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="product_action_barcodes" model="ir.actions.act_window">
+        <field name="name">Product Barcodes</field>
+        <field name="res_model">product.product</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="product_view_list_barcodes"/>
+    </record>
+
+</odoo>

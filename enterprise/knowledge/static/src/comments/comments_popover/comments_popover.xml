@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="knowledge.KnowledgeCommentsPopover">
+        <div t-ref="rootRef" class="o_knowledge_comment_scrollable o_knowledge_comment_box">
+            <t t-if="props.threadId !== 'undefined'">
+                <KnowledgeThread
+                    thread="thread"
+                    order="'asc'"
+                    showDates="false"
+                    showEmptyMessage="false"
+                    showJumpPresent="false"
+                    scrollRef="rootRef"
+                />
+                <div class="o_knowledge_sticky_composer rounded px-2">
+                    <Composer
+                        composer="thread.composer" mode="'extended'" type="'note'"
+                        showFullComposer="false" placeholder.translate="Add a comment..."
+                    />
+                </div>
+            </t>
+            <div t-else="" class="pt-2 px-2">
+                <KnowledgeCommentCreatorComposer placeholder.translate="Add a comment..."
+                    composer="thread.composer" type="'note'" showFullComposer="false" autofocus="true"
+                    mode="'extended'" allowUpload="false" onPostCallback.bind="onPostCallback"
+                    onCreateThreadCallback.bind="onCreateThreadCallback"/>
+            </div>
+        </div>
+    </t>
+</templates>

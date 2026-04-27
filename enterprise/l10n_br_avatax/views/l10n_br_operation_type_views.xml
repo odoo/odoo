@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_br_operation_type_form" model="ir.ui.view">
+            <field name="name">l10n_br.operation.type.form</field>
+            <field name="model">l10n_br.operation.type</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name" readonly="True"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="l10n_br_operation_type_tree" model="ir.ui.view">
+            <field name="name">l10n_br.operation.type.list</field>
+            <field name="model">l10n_br.operation.type</field>
+            <field name="arch" type="xml">
+                <list editable="bottom">
+                    <field name="name" readonly="True"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="l10n_br_operation_type_action" model="ir.actions.act_window">
+            <field name="name">Operation Types</field>
+            <field name="res_model">l10n_br.operation.type</field>
+            <field name="context">{'active_test': False}</field>
+        </record>
+
+        <menuitem id="l10n_br_operation_type_menu"
+                  parent="l10n_br.brazilian_accounting_menu"
+                  action="l10n_br_avatax.l10n_br_operation_type_action"/>
+    </data>
+</odoo>

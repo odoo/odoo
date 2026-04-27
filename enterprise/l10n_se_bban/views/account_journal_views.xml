@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_journal_form" model="ir.ui.view">
+            <field name="name">account.journal.form</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@invisible='not has_sepa_ct_payment_method']" position="attributes">
+                    <attribute name="invisible">not has_sepa_ct_payment_method and not has_iso_se_payment_method</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

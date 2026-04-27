@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record id="view_account_tax_inh_l10n_mx" model="ir.ui.view">
+            <field name="name">view.account.tax.inh.l10n.mx</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='analytic']" position="before">
+                    <field name="l10n_mx_factor_type"
+                           invisible="country_code != 'MX'"
+                           required="country_code == 'MX'"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

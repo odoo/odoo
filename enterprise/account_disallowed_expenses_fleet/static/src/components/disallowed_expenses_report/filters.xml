@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_disallowed_expenses_fleet.DisallowedExpensesFleetReportFilters" t-inherit="account_reports.AccountReportFiltersCustomizable">
+        <xpath expr="//div[@id='filter_extra_options']" position="replace">
+            <t t-call="account_disallowed_expenses_fleet.DisallowedExpensesFleetReportFilterExtraOptions"/>
+        </xpath>
+    </t>
+</templates>

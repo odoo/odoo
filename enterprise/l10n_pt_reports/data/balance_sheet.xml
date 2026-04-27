@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_financial_report_line_pt_balanco" model="account.report">
+        <field name="name">Balanço</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.pt"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_line_pt_balanco_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_line_pt_balanco_ativo" model="account.report.line">
+                <field name="name">ATIVO</field>
+                <field name="code">ATIVO</field>
+                <field name="hierarchy_level">0</field>
+                <field name="sequence" eval="10"/>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_pt_balanco_ativo_nao_corrente" model="account.report.line">
+                        <field name="name">Ativo não corrente</field>
+                        <field name="code">ATIVO_NAO_CORRENTE</field>
+                        <field name="sequence" eval="20"/>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_pt_balanco_ativo_nao_corrente_fixos_tangiveis" model="account.report.line">
+                                <field name="name">Ativos fixos tangíveis</field>
+                                <field name="code">ANC1</field>
+                                <field name="sequence" eval="30"/>
+                                <field name="account_codes_formula">43 + 453 + 4553 + 4593 + 45953</field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_ativo_nao_corrente_propriedades_de_investimento" model="account.report.line">
+                                <field name="name">Propriedades de investimento</field>
+                                <field name="code">ANC2</field>
+                                <field name="sequence" eval="40"/>
+                                <field name="account_codes_formula">42 + 452 + 4552 + 4592 + 45952</field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_ativo_nao_corrente_goodwill" model="account.report.line">
+                                <field name="name">Trespasse (goodwill)</field>
+                                <field name="code">ANC3</field>
+                                <field name="sequence" eval="50"/>
+                                <field name="account_codes_formula">41112 + 41212 + 41312 + 418 + 419112 + 419212 + 419312 + 441 + 4481 + 4491</field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_ativo_nao_corrente_ativos_intangiveis" model="account.report.line">
+                                <field name="name">Ativos intangíveis</field>
+                                <field name="code">ANC4</field>
+                                <field name="sequence" eval="60"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_pt_balanco_ativo_nao_corrente_ativos_intangiveis_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">44\(441,4481,4491) + 454 + 4554 + 4594 + 45954</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_ativo_nao_corrente_ativos_biologicos" model="account.report.line">
+                                <field name="name">Ativos biológicos</field>
+                                <field name="code">ANC5</field>
+                                <field name="sequence" eval="70"/>
+                                <field name="account_codes_formula">372 + 3782 + 3792 + 397</field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_ativo_nao_corrente_participacoes_financeiras_metodo_da_equivalencia_patrimonial" model="account.report.line">
+                                <field name="name">Participações financeiras - método da equivalência patrimonial</field>
+                                <field name="code">ANC6</field>
+                                <field name="sequence" eval="80"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_pt_balanco_ativo_nao_corrente_participacoes_financeiras_metodo_da_equivalencia_patrimonial_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">41111 + 41211 + 41311 + 419111 + 419211 + 419311</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_ativo_nao_corrente_outros_ativos_financeiros" model="account.report.line">
+                                <field name="name">Outros investimentos financeiros</field>
+                                <field name="code">ANC9</field>
+                                <field name="sequence" eval="90"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_pt_balanco_ativo_nao_corrente_outros_ativos_financeiros_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">41\(4111,4121,4131,418,41911,41921,41931) + 451 + 4551 + 4591 + 45951</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_ativo_nao_corrente_creditos_a_receber" model="account.report.line">
+                                <field name="name">Créditos a receber - não corrente</field>
+                                <field name="code">ANC9a</field>
+                                <field name="sequence" eval="100"/>
+                                <field name="account_codes_formula">
+                                    23312D + 23322D + 23412D + 23422D + 23512D + 23522D + 23612D + 23622D + 23812D + 23822D
+                                    + 239212 + 239222 + 2662 + 2672D + 2682D + 26962 + 26972
+                                    + 27112D + 27122D + 27132 + 2772D + 2782D + 27912 + 27942
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_ativo_nao_corrente_ativos_por_impostos_diferidos" model="account.report.line">
+                                <field name="name">Ativos por impostos diferidos</field>
+                                <field name="code">ANC10</field>
+                                <field name="sequence" eval="110"/>
+                                <field name="account_codes_formula">2741 + 2793</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_pt_balanco_ativo_corrente" model="account.report.line">
+                        <field name="name">Ativo corrente</field>
+                        <field name="code">ATIVO_CORRENTE</field>
+                        <field name="sequence" eval="120"/>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_pt_balanco_ativo_corrente_inventarios" model="account.report.line">
+                                <field name="name">Inventários</field>
+                                <field name="code">AC1</field>
+                                <field name="sequence" eval="130"/>
+                                <field name="account_codes_formula">31\(313,3173,3183) + 32 + 33 + 34 + 35 + 36 + 38\(387) + 39\(396,397)</field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_ativo_corrente_ativos_biologicos" model="account.report.line">
+                                <field name="name">Ativos biológicos</field>
+                                <field name="code">AC2</field>
+                                <field name="sequence" eval="140"/>
+                                <field name="account_codes_formula">313 + 3173 + 3183 + 371 + 3781 + 3791 + 387 + 396</field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_ativo_corrente_clientes" model="account.report.line">
+                                <field name="name">Clientes</field>
+                                <field name="code">AC3</field>
+                                <field name="sequence" eval="150"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_pt_balanco_ativo_corrente_clientes_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">21\(218,219)D + 219</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_ativo_corrente_estado_e_outros_entes_publicos" model="account.report.line">
+                                <field name="name">Estado e outros entes públicos</field>
+                                <field name="code">AC5</field>
+                                <field name="sequence" eval="160"/>
+                                <field name="account_codes_formula">24\(242,243)D + 2431 + 2432 + 2434D + 2435D + 2437 + 2438 + 2439D</field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_ativo_corrente_accionistas_socios" model="account.report.line">
+                                <field name="name">Capital subscrito e não realizado</field>
+                                <field name="code">AC6</field>
+                                <field name="sequence" eval="170"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_pt_balanco_ativo_corrente_accionistas_socios_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">261 + 262 + 2691 + 2692</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_ativo_corrente_outras_contas_a_receber" model="account.report.line">
+                                <field name="name">Outras créditos a receber - corrente</field>
+                                <field name="code">AC7</field>
+                                <field name="sequence" eval="180"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_pt_balanco_ativo_corrente_outras_contas_a_receber_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">
+                                            22\(228,229)D + 228 + 229 + 232
+                                            + 23311D + 23321D + 23411D + 23421D + 23511D + 23521D + 23611D + 23621D + 23811D + 23821D
+                                            + 2391 + 239211 + 239221
+                                            + 263 + 264D + 265D + 2661 + 2671D + 2681D + 2693 + 2694 + 2695 + 26961 + 26971
+                                            + 27111D + 27121D + 27131 + 2721 + 2771D + 2781D + 27911 + 2792 + 27941
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_ativo_corrente_diferimentos" model="account.report.line">
+                                <field name="name">Diferimentos</field>
+                                <field name="code">AC8</field>
+                                <field name="sequence" eval="190"/>
+                                <field name="account_codes_formula">281</field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_ativo_corrente_ativos_financeiros_detidos_para_negociacao" model="account.report.line">
+                                <field name="name">Ativos financeiros detidos para negociação</field>
+                                <field name="code">AC9</field>
+                                <field name="sequence" eval="200"/>
+                                <field name="account_codes_formula">1411 + 1421</field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_ativo_corrente_outros_ativos_financeiros" model="account.report.line">
+                                <field name="name">Outros ativos financeiros</field>
+                                <field name="code">AC10</field>
+                                <field name="sequence" eval="210"/>
+                                <field name="account_codes_formula">1431</field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_ativo_corrente_ativos_nao_correntes_detidos_para_venda" model="account.report.line">
+                                <field name="name">Ativos não correntes detidos para venda</field>
+                                <field name="code">AC10a</field>
+                                <field name="sequence" eval="220"/>
+                                <field name="account_codes_formula">46\(466)</field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_ativo_corrente_caixa_e_depositos_bancarios" model="account.report.line">
+                                <field name="name">Caixa e depósitos bancários</field>
+                                <field name="code">AC11</field>
+                                <field name="sequence" eval="230"/>
+                                <field name="account_codes_formula">11 + 12D + 13D</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_pt_balanco_total_do_ativo" model="account.report.line">
+                <field name="name">Total do Ativo</field>
+                <field name="code">TOTAL_DO_ATIVO</field>
+                <field name="sequence" eval="240"/>
+                <field name="aggregation_formula">ANC1.balance + ANC2.balance + ANC3.balance + ANC4.balance + ANC5.balance + ANC6.balance + ANC9.balance + ANC9a.balance + ANC10.balance + AC1.balance + AC2.balance + AC3.balance + AC5.balance + AC6.balance + AC7.balance + AC8.balance + AC9.balance + AC10.balance + AC10a.balance + AC11.balance</field>
+            </record>
+            <record id="account_financial_report_line_pt_balanco_capital_proprio_e_passivo" model="account.report.line">
+                <field name="name">CAPITAL PRÓPRIO E PASSIVO</field>
+                <field name="code">CAPITAL_PROPRIO_E_PASSIVO</field>
+                <field name="hierarchy_level">0</field>
+                <field name="sequence" eval="250"/>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_pt_balanco_capital_proprio" model="account.report.line">
+                        <field name="name">Capital próprio</field>
+                        <field name="code">CAPITAL_PROPRIO</field>
+                        <field name="sequence" eval="260"/>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_pt_balanco_capital_proprio_capital_realizado" model="account.report.line">
+                                <field name="name">Capital realizado</field>
+                                <field name="code">CP1</field>
+                                <field name="sequence" eval="270"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_pt_balanco_capital_proprio_capital_realizado_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-51</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_capital_proprio_acoes_proprias" model="account.report.line">
+                                <field name="name">Ações (quotas) próprias</field>
+                                <field name="code">CP2</field>
+                                <field name="sequence" eval="280"/>
+                                <field name="account_codes_formula">-52</field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_capital_proprio_outros_instrumentos_de_capital_proprio" model="account.report.line">
+                                <field name="name">Outros instrumentos de capital próprio</field>
+                                <field name="code">CP3</field>
+                                <field name="sequence" eval="290"/>
+                                <field name="account_codes_formula">-53</field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_capital_proprio_premios_de_emissao" model="account.report.line">
+                                <field name="name">Prémios de emissão</field>
+                                <field name="code">CP4</field>
+                                <field name="sequence" eval="300"/>
+                                <field name="account_codes_formula">-54</field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_capital_proprio_reservas_legais" model="account.report.line">
+                                <field name="name">Reservas legais</field>
+                                <field name="code">CP5</field>
+                                <field name="sequence" eval="310"/>
+                                <field name="account_codes_formula">-551</field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_capital_proprio_outras_reservas" model="account.report.line">
+                                <field name="name">Outras reservas</field>
+                                <field name="code">CP6</field>
+                                <field name="sequence" eval="320"/>
+                                <field name="account_codes_formula">-55\(551)</field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_capital_proprio_resultados_transitados" model="account.report.line">
+                                <field name="name">Resultados transitados</field>
+                                <field name="code">CP10</field>
+                                <field name="sequence" eval="330"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_pt_balanco_capital_proprio_resultados_transitados_cross_report" model="account.report.expression">
+                                        <field name="label">cross_report</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">REG_RESULTADO_LIQUIDO_DO_PERIODO.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                        <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                    </record>
+                                    <record id="account_financial_report_line_pt_balanco_capital_proprio_resultados_transitados_accounts" model="account.report.expression">
+                                        <field name="label">accounts</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-56 - 818</field>
+                                    </record>
+                                    <record id="account_financial_report_line_pt_balanco_capital_proprio_resultados_transitados_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">CP10.cross_report + CP10.accounts</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_capital_proprio_excedentes_de_revalorizacao" model="account.report.line">
+                                <field name="name">Excedentes de revalorização</field>
+                                <field name="code">CP7</field>
+                                <field name="sequence" eval="340"/>
+                                <field name="account_codes_formula">-58</field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_capital_proprio_outras_variacoes_no_capital_proprio" model="account.report.line">
+                                <field name="name">Outras variações no capital próprio</field>
+                                <field name="code">CP9</field>
+                                <field name="sequence" eval="350"/>
+                                <field name="account_codes_formula">-57 - 59</field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_capital_proprio_resultado_liquido_do_periodo" model="account.report.line">
+                                <field name="name">Resultado líquido do período</field>
+                                <field name="code">CP11</field>
+                                <field name="action_id" eval="ref('action_account_financial_report_pt_pnl')"/>
+                                <field name="sequence" eval="360"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_pt_balanco_capital_proprio_resultado_liquido_do_periodo_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">REG_RESULTADO_LIQUIDO_DO_PERIODO.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                        <field name="date_scope">from_fiscalyear</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_capital_proprio_dividendos_antecipados" model="account.report.line">
+                                <field name="name">Dividendos antecipados</field>
+                                <field name="code">CP12</field>
+                                <field name="sequence" eval="370"/>
+                                <field name="account_codes_formula">-89</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_pt_balanco_total_do_capital_proprio" model="account.report.line">
+                        <field name="name">Total do capital próprio</field>
+                        <field name="code">TOTAL_DO_CAPITAL_PROPRIO</field>
+                        <field name="sequence" eval="380"/>
+                        <field name="aggregation_formula">CP1.balance + CP2.balance + CP3.balance + CP4.balance + CP5.balance + CP6.balance + CP7.balance + CP9.balance + CP10.balance + CP11.balance + CP12.balance</field>
+                    </record>
+                    <record id="account_financial_report_line_pt_balanco_passivo" model="account.report.line">
+                        <field name="name">Passivo</field>
+                        <field name="code">PASSIVO</field>
+                        <field name="sequence" eval="390"/>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_pt_balanco_passivo_nao_corrente" model="account.report.line">
+                                <field name="name">Passivo não corrente</field>
+                                <field name="code">PASSIVO_NAO_CORRENTE</field>
+                                <field name="sequence" eval="400"/>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_pt_balanco_passivo_nao_corrente_provisoes" model="account.report.line">
+                                        <field name="name">Provisões</field>
+                                        <field name="code">PNC1</field>
+                                        <field name="sequence" eval="410"/>
+                                        <field name="account_codes_formula">-29</field>
+                                    </record>
+                                    <record id="account_financial_report_line_pt_balanco_passivo_nao_corrente_financiamentos_obtidos" model="account.report.line">
+                                        <field name="name">Financiamentos obtidos</field>
+                                        <field name="code">PNC2</field>
+                                        <field name="sequence" eval="420"/>
+                                        <field name="account_codes_formula">
+                                            -25112 - 25122 - 25132 - 25142 - 25152 - 25162 - 25172 - 25182 - 25192
+                                            - 25212 - 25222 - 25232 - 25242 - 25252 - 25262 - 25272 - 25282 - 25292
+                                            - 25312 - 25322 - 25332 - 25342 - 25352 - 25362 - 25372 - 25382 - 25392
+                                            - 2542 - 2552 - 2562 - 2572 - 2582
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_pt_balanco_passivo_nao_corrente_responsabilidades_por_beneficios_pos_emprego" model="account.report.line">
+                                        <field name="name">Responsabilidades por benefícios pós-emprego</field>
+                                        <field name="code">PNC3</field>
+                                        <field name="sequence" eval="430"/>
+                                        <field name="account_codes_formula">-273</field>
+                                    </record>
+                                    <record id="account_financial_report_line_pt_balanco_passivo_nao_corrente_passivos_por_impostos_diferidos" model="account.report.line">
+                                        <field name="name">Passivos por impostos diferidos</field>
+                                        <field name="code">PNC4</field>
+                                        <field name="sequence" eval="440"/>
+                                        <field name="account_codes_formula">-2742</field>
+                                    </record>
+                                    <record id="account_financial_report_line_pt_balanco_passivo_nao_corrente_outras_contas_a_pagar" model="account.report.line">
+                                        <field name="name">Outras dívidas a pagar</field>
+                                        <field name="code">PNC5</field>
+                                        <field name="sequence" eval="450"/>
+                                        <field name="account_codes_formula">
+                                            -23712 - 23722 - 23312C - 23322C - 23412C - 23422C - 23512C - 23522C - 23612C - 23622C - 23812C - 23822C
+                                            - 2672C - 2682C - 27112C - 27122C - 2752 - 2782C
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_pt_balanco_passivo_corrente" model="account.report.line">
+                                <field name="name">Passivo corrente</field>
+                                <field name="code">PASSIVO_CORRENTE</field>
+                                <field name="sequence" eval="460"/>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_pt_balanco_passivo_corrente_fornecedores" model="account.report.line">
+                                        <field name="name">Fornecedores</field>
+                                        <field name="code">PC1</field>
+                                        <field name="sequence" eval="470"/>
+                                        <field name="account_codes_formula">-22\(228,229)C</field>
+                                    </record>
+                                    <record id="account_financial_report_line_pt_balanco_passivo_corrente_adiantamentos_de_clientes" model="account.report.line">
+                                        <field name="name">Adiantamentos de clientes</field>
+                                        <field name="code">PC2</field>
+                                        <field name="sequence" eval="480"/>
+                                        <field name="account_codes_formula">-21\(218,219)C - 218 - 276</field>
+                                    </record>
+                                    <record id="account_financial_report_line_pt_balanco_passivo_corrente_estado_e_outros_entes_publicos" model="account.report.line">
+                                        <field name="name">Estado e outros entes públicos</field>
+                                        <field name="code">PC3</field>
+                                        <field name="sequence" eval="490"/>
+                                        <field name="account_codes_formula">-24\(242,243)C - 242 - 2433 - 2434C - 2435C - 2436 - 2439C</field>
+                                    </record>
+                                    <record id="account_financial_report_line_pt_balanco_passivo_corrente_financiamentos_obtidos" model="account.report.line">
+                                        <field name="name">Financiamentos obtidos</field>
+                                        <field name="code">PC5</field>
+                                        <field name="sequence" eval="500"/>
+                                        <field name="account_codes_formula">
+                                            -12C - 13C
+                                            - 25111 - 25121 - 25131 - 25141 - 25151 - 25161 - 25171 - 25181 - 25191
+                                            - 25211 - 25221 - 25231 - 25241 - 25251 - 25261 - 25271 - 25281 - 25291
+                                            - 25311 - 25321 - 25331 - 25341 - 25351 - 25361 - 25371 - 25381 - 25391
+                                            - 2541 - 2551 - 2561 - 2571 - 2581
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_pt_balanco_passivo_corrente_outras_contas_a_pagar" model="account.report.line">
+                                        <field name="name">Outras dívidas a pagar</field>
+                                        <field name="code">PC6</field>
+                                        <field name="sequence" eval="510"/>
+                                        <field name="account_codes_formula">
+                                            -231 - 23711 - 23721
+                                            - 23311C - 23321C - 23411C - 23421C - 23511C - 23521C - 23611C - 23621C - 23811C - 23821C
+                                            - 264C - 265C - 2681C - 27111C - 27121C - 2722 - 2751 - 2771C - 2781C
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_pt_balanco_passivo_corrente_diferimentos" model="account.report.line">
+                                        <field name="name">Diferimentos</field>
+                                        <field name="code">PC9</field>
+                                        <field name="sequence" eval="520"/>
+                                        <field name="account_codes_formula">-282</field>
+                                    </record>
+                                    <record id="account_financial_report_line_pt_balanco_passivo_corrente_passivos_financeiros_detidos_para_negociacao" model="account.report.line">
+                                        <field name="name">Passivos financeiros detidos para negociação</field>
+                                        <field name="code">PC7</field>
+                                        <field name="sequence" eval="530"/>
+                                        <field name="account_codes_formula">-1412 - 1422</field>
+                                    </record>
+                                    <record id="account_financial_report_line_pt_balanco_passivo_corrente_outros_passivos_financeiros" model="account.report.line">
+                                        <field name="name">Outros passivos financeiros</field>
+                                        <field name="code">PC8</field>
+                                        <field name="sequence" eval="540"/>
+                                        <field name="account_codes_formula">-1432</field>
+                                    </record>
+                                    <record id="account_financial_report_line_pt_balanco_passivo_nao_correntes_detidos_para_venda" model="account.report.line">
+                                        <field name="name">Passivos não correntes detidos para venda</field>
+                                        <field name="code">PC10</field>
+                                        <field name="sequence" eval="550"/>
+                                        <field name="account_codes_formula">-466</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_pt_balanco_total_do_passivo" model="account.report.line">
+                        <field name="name">Total do passivo</field>
+                        <field name="code">TOTAL_DO_PASSIVO</field>
+                        <field name="sequence" eval="560"/>
+                        <field name="aggregation_formula">PNC1.balance + PNC2.balance + PNC3.balance + PNC4.balance + PNC5.balance + PC1.balance + PC2.balance + PC3.balance + PC5.balance + PC6.balance + PC7.balance + PC8.balance + PC9.balance + PC10.balance</field>
+                    </record>
+                    <record id="account_financial_report_line_pt_balanco_total_do_capital_proprio_e_do_passivo" model="account.report.line">
+                        <field name="name">Total do Capital Próprio e do Passivo</field>
+                        <field name="code">TOTAL_DO_CAPITAL_PROPRIO_E_DO_PASSIVO</field>
+                        <field name="sequence" eval="570"/>
+                        <field name="aggregation_formula">TOTAL_DO_CAPITAL_PROPRIO.balance + TOTAL_DO_PASSIVO.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- B2CS -->
+
+    <record id="l10n_in_reports.account_report_gstr1_b2cs_taxable_amount_balance" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+        '&amp;',
+            ('move_id.move_type', 'in', ['out_invoice', 'out_refund', 'out_receipt']), ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer']),
+        '&amp;',
+            ('move_id.move_type', '=', 'entry'),
+            '|',
+                ('move_id.pos_session_ids', '!=', False),
+                ('move_id.reversed_pos_order_id', '!=', False),
+
+            ('tax_tag_ids', 'in', [ref('l10n_in.tax_tag_base_sgst'), ref('l10n_in.tax_tag_base_cgst'), ref('l10n_in.tax_tag_base_igst'), ref('l10n_in.tax_tag_base_cess')]),
+        '|',
+            ('move_id.l10n_in_transaction_type', '=', 'intra_state'),
+        '&amp;',
+            ('move_id.l10n_in_transaction_type', '=', 'inter_state'),
+        '|',
+        '&amp;',
+            ('date', '&lt;', '2024-11-01'), ('move_id.amount_total', '&lt;=', 250000),
+        '&amp;',
+            ('date', '&gt;=', '2024-11-01'), ('move_id.amount_total', '&lt;=', 100000)]"/>
+    </record>
+
+    <record id="l10n_in_reports.account_report_gstr1_b2cs_sgst_balance" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+        '&amp;',
+            ('move_id.move_type', 'in', ['out_invoice', 'out_refund', 'out_receipt']), ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer']),
+        '&amp;',
+            ('move_id.move_type', '=', 'entry'),
+            '|',
+                ('move_id.pos_session_ids', '!=', False),
+                ('move_id.reversed_pos_order_id', '!=', False),
+            ('tax_tag_ids', '=', ref('l10n_in.tax_tag_sgst')),
+        '|',
+            ('move_id.l10n_in_transaction_type', '=', 'intra_state'),
+        '&amp;',
+            ('move_id.l10n_in_transaction_type', '=', 'inter_state'),
+        '|',
+        '&amp;',
+            ('date', '&lt;', '2024-11-01'), ('move_id.amount_total', '&lt;=', 250000),
+        '&amp;',
+            ('date', '&gt;=', '2024-11-01'), ('move_id.amount_total', '&lt;=', 100000)]"/>
+    </record>
+
+    <record id="l10n_in_reports.account_report_gstr1_b2cs_cgst_balance" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+        '&amp;',
+            ('move_id.move_type', 'in', ['out_invoice', 'out_refund', 'out_receipt']), ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer']),
+        '&amp;',
+            ('move_id.move_type', '=', 'entry'),
+            '|',
+                ('move_id.pos_session_ids', '!=', False),
+                ('move_id.reversed_pos_order_id', '!=', False),
+            ('tax_tag_ids', '=', ref('l10n_in.tax_tag_cgst')),
+        '|',
+            ('move_id.l10n_in_transaction_type', '=', 'intra_state'),
+        '&amp;',
+            ('move_id.l10n_in_transaction_type', '=', 'inter_state'),
+        '|',
+        '&amp;',
+            ('date', '&lt;', '2024-11-01'), ('move_id.amount_total', '&lt;=', 250000),
+        '&amp;',
+            ('date', '&gt;=', '2024-11-01'), ('move_id.amount_total', '&lt;=', 100000)]"/>
+    </record>
+
+    <record id="l10n_in_reports.account_report_gstr1_b2cs_igst_balance" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+        '&amp;',
+            ('move_id.move_type', 'in', ['out_invoice', 'out_refund', 'out_receipt']), ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer']),
+        '&amp;',
+            ('move_id.move_type', '=', 'entry'),
+            '|',
+                ('move_id.pos_session_ids', '!=', False),
+                ('move_id.reversed_pos_order_id', '!=', False),
+            ('tax_tag_ids', '=', ref('l10n_in.tax_tag_igst')),
+        '|',
+            ('move_id.l10n_in_transaction_type', '=', 'intra_state'),
+        '&amp;',
+            ('move_id.l10n_in_transaction_type', '=', 'inter_state'),
+        '|',
+        '&amp;',
+            ('date', '&lt;', '2024-11-01'), ('move_id.amount_total', '&lt;=', 250000),
+        '&amp;',
+            ('date', '&gt;=', '2024-11-01'), ('move_id.amount_total', '&lt;=', 100000)]"/>
+    </record>
+
+    <record id="l10n_in_reports.account_report_gstr1_b2cs_cess_balance" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+        '&amp;',
+            ('move_id.move_type', 'in', ['out_invoice', 'out_refund', 'out_receipt']), ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer']),
+        '&amp;',
+            ('move_id.move_type', '=', 'entry'),
+            '|',
+                ('move_id.pos_session_ids', '!=', False),
+                ('move_id.reversed_pos_order_id', '!=', False),
+            ('tax_tag_ids', '=', ref('l10n_in.tax_tag_cess')),
+        '|',
+            ('move_id.l10n_in_transaction_type', '=', 'intra_state'),
+        '&amp;',
+            ('move_id.l10n_in_transaction_type', '=', 'inter_state'),
+        '|',
+        '&amp;',
+            ('date', '&lt;', '2024-11-01'), ('move_id.amount_total', '&lt;=', 250000),
+        '&amp;',
+            ('date', '&gt;=', '2024-11-01'), ('move_id.amount_total', '&lt;=', 100000)]"/>
+    </record>
+
+    <!-- NIL -->
+
+    <record id="l10n_in_reports.account_report_gstr1_nil_taxable_amount_balance" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+        '&amp;',
+            ('move_id.move_type', '=', 'entry'),
+            '|',
+                ('move_id.pos_session_ids', '!=', False),
+                ('move_id.reversed_pos_order_id', '!=', False),
+            ('move_id.move_type', 'in', ['out_invoice', 'out_refund']),
+        ('move_id.l10n_in_gst_treatment', 'not in', ['overseas','special_economic_zone']), ('tax_tag_ids', 'in', [ref('l10n_in.tax_tag_exempt'), ref('l10n_in.tax_tag_nil_rated'), ref('l10n_in.tax_tag_non_gst_supplies')])]"/>
+    </record>
+
+    <!-- HSN -->
+
+    <record id="l10n_in_reports.account_report_gstr1_hsn_taxable_amount_balance" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+        '&amp;',
+            ('move_id.move_type', '=', 'entry'),
+            '|',
+                ('move_id.pos_session_ids', '!=', False),
+                ('move_id.reversed_pos_order_id', '!=', False),
+            ('move_id.move_type', 'in', ['out_invoice', 'out_refund']),
+        ('tax_tag_ids', 'in', [ref('l10n_in.tax_tag_base_sgst'), ref('l10n_in.tax_tag_base_cgst'), ref('l10n_in.tax_tag_base_igst'), ref('l10n_in.tax_tag_base_cess'), ref('l10n_in.tax_tag_exempt'), ref('l10n_in.tax_tag_nil_rated'), ref('l10n_in.tax_tag_non_gst_supplies'), ref('l10n_in.tax_tag_zero_rated')])]"/>
+    </record>
+
+    <record id="l10n_in_reports.account_report_gstr1_hsn_sgst_balance" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+        '&amp;',
+            ('move_id.move_type', '=', 'entry'),
+            '|',
+                ('move_id.pos_session_ids', '!=', False),
+                ('move_id.reversed_pos_order_id', '!=', False),
+            ('move_id.move_type', 'in', ['out_invoice', 'out_refund']),
+        ('tax_tag_ids', '=', ref('l10n_in.tax_tag_sgst'))]"/>
+    </record>
+
+    <record id="l10n_in_reports.account_report_gstr1_hsn_cgst_balance" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+        '&amp;',
+            ('move_id.move_type', '=', 'entry'),
+            '|',
+                ('move_id.pos_session_ids', '!=', False),
+                ('move_id.reversed_pos_order_id', '!=', False),
+            ('move_id.move_type', 'in', ['out_invoice', 'out_refund']),
+        ('tax_tag_ids', '=', ref('l10n_in.tax_tag_cgst'))]"/>
+    </record>
+
+    <record id="l10n_in_reports.account_report_gstr1_hsn_igst_balance" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+        '&amp;',
+            ('move_id.move_type', '=', 'entry'),
+            '|',
+                ('move_id.pos_session_ids', '!=', False),
+                ('move_id.reversed_pos_order_id', '!=', False),
+            ('move_id.move_type', 'in', ['out_invoice', 'out_refund']),
+        ('tax_tag_ids', '=', ref('l10n_in.tax_tag_igst'))]"/>
+    </record>
+
+    <record id="l10n_in_reports.account_report_gstr1_hsn_cess_balance" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+        '&amp;',
+            ('move_id.move_type', '=', 'entry'),
+            '|',
+                ('move_id.pos_session_ids', '!=', False),
+                ('move_id.reversed_pos_order_id', '!=', False),
+            ('move_id.move_type', 'in', ['out_invoice', 'out_refund']),
+        ('tax_tag_ids', '=', ref('l10n_in.tax_tag_cess'))]"/>
+    </record>
+
+</odoo>

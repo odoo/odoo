@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2017 sp2 (x64) (http://www.altova.com) by rsiino (Sogei S.p.A.) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="urn:www.agenziaentrate.gov.it:specificheTecniche:common" xmlns:sc="urn:www.agenziaentrate.gov.it:specificheTecniche:sco:common" xmlns:iv="urn:www.agenziaentrate.gov.it:specificheTecniche:sco:ivp" xmlns:ns1="www.agenziaentrate.gov.it:specificheTecniche:telent:v1" targetNamespace="urn:www.agenziaentrate.gov.it:specificheTecniche:sco:ivp" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<xs:annotation>
+		<xs:documentation xml:lang="it"><![CDATA[
+		Versione 1.0 - 13/02/16]]></xs:documentation>
+	</xs:annotation>
+	<xs:import namespace="urn:www.agenziaentrate.gov.it:specificheTecniche:common" schemaLocation="fornitura_v3.xsd"/>
+	<xs:element name="Comunicazione" type="iv:Comunicazione_IVP_Type"/>
+	<xs:complexType name="Comunicazione_IVP_Type">
+		<xs:complexContent>
+			<xs:extension base="cm:Documento_Type">
+				<xs:sequence>
+					<xs:element name="Frontespizio" type="iv:Frontespizio_IVP_Type"/>
+					<xs:element name="DatiContabili" type="iv:DatiContabili_IVP_Type"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Frontespizio_IVP_Type">
+		<xs:sequence>
+			<xs:element name="CodiceFiscale" type="cm:DatoCF_Type"/>
+			<xs:element name="AnnoImposta" type="cm:DatoDA_Type"/>
+			<xs:element name="PartitaIVA" type="cm:DatoPI_Type"/>
+			<xs:element name="PIVAControllante" type="cm:DatoPI_Type" minOccurs="0"/>
+			<xs:element name="UltimoMese" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="cm:DatoNP_Type">
+						<xs:enumeration value="1"/>
+						<xs:enumeration value="2"/>
+						<xs:enumeration value="3"/>
+						<xs:enumeration value="4"/>
+						<xs:enumeration value="5"/>
+						<xs:enumeration value="6"/>
+						<xs:enumeration value="7"/>
+						<xs:enumeration value="8"/>
+						<xs:enumeration value="9"/>
+						<xs:enumeration value="10"/>
+						<xs:enumeration value="11"/>
+						<xs:enumeration value="12"/>
+						<xs:enumeration value="13"/>
+						<xs:enumeration value="99"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="LiquidazioneGruppo" type="cm:DatoCB_Type" minOccurs="0"/>
+			<xs:element name="CFDichiarante" type="cm:DatoCF_Type" minOccurs="0"/>
+			<xs:element name="CodiceCaricaDichiarante" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="cm:DatoNP_Type">
+						<xs:enumeration value="1"/>
+						<xs:enumeration value="2"/>
+						<xs:enumeration value="3"/>
+						<xs:enumeration value="4"/>
+						<xs:enumeration value="5"/>
+						<xs:enumeration value="6"/>
+						<xs:enumeration value="7"/>
+						<xs:enumeration value="8"/>
+						<xs:enumeration value="9"/>
+						<xs:enumeration value="11"/>
+						<xs:enumeration value="12"/>
+						<xs:enumeration value="13"/>
+						<xs:enumeration value="14"/>
+						<xs:enumeration value="15"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CodiceFiscaleSocieta" type="cm:DatoCN_Type" minOccurs="0"/>
+			<xs:element name="FirmaDichiarazione" type="cm:DatoCB_Type"/>
+			<xs:element name="CFIntermediario" type="cm:DatoCF_Type" minOccurs="0"/>
+			<xs:element name="ImpegnoPresentazione" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="cm:DatoN1_Type">
+						<xs:enumeration value="1"/>
+						<xs:enumeration value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DataImpegno" type="cm:DatoDT_Type" minOccurs="0"/>
+			<xs:element name="FirmaIntermediario" type="cm:DatoCB_Type" minOccurs="0"/>
+			<xs:element name="FlagConferma" type="cm:DatoCB_Type" minOccurs="0"/>
+			<xs:element name="IdentificativoProdSoftware" type="cm:DatoAN_Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DatiContabili_IVP_Type">
+		<xs:sequence>
+			<xs:element name="Modulo" maxOccurs="5">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="NumeroModulo">
+							<xs:simpleType>
+								<xs:restriction base="cm:DatoN1_Type">
+									<xs:enumeration value="1"/>
+									<xs:enumeration value="2"/>
+									<xs:enumeration value="3"/>
+									<xs:enumeration value="4"/>
+									<xs:enumeration value="5"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="Mese" minOccurs="0">
+							<xs:simpleType>
+								<xs:restriction base="cm:DatoNP_Type">
+									<xs:enumeration value="1"/>
+									<xs:enumeration value="2"/>
+									<xs:enumeration value="3"/>
+									<xs:enumeration value="4"/>
+									<xs:enumeration value="5"/>
+									<xs:enumeration value="6"/>
+									<xs:enumeration value="7"/>
+									<xs:enumeration value="8"/>
+									<xs:enumeration value="9"/>
+									<xs:enumeration value="10"/>
+									<xs:enumeration value="11"/>
+									<xs:enumeration value="12"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="Trimestre" minOccurs="0">
+							<xs:simpleType>
+								<xs:restriction base="cm:DatoN1_Type">
+									<xs:enumeration value="1"/>
+									<xs:enumeration value="2"/>
+									<xs:enumeration value="3"/>
+									<xs:enumeration value="4"/>
+									<xs:enumeration value="5"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="Subfornitura" type="cm:DatoCB_Type" minOccurs="0"/>
+						<xs:element name="EventiEccezionali" type="iv:Eventi_Ecc_Type" minOccurs="0"/>
+						<xs:element name="OperazioniStraordinarie" type="cm:DatoCB_Type" minOccurs="0"/>
+						<xs:element name="TotaleOperazioniAttive" type="iv:DatoVN_Type" minOccurs="0"/>
+						<xs:element name="TotaleOperazioniPassive" type="iv:DatoVN_Type" minOccurs="0"/>
+						<xs:element name="IvaEsigibile" type="iv:DatoVN_Type" minOccurs="0"/>
+						<xs:element name="IvaDetratta" type="iv:DatoVN_Type" minOccurs="0"/>
+						<xs:element name="IvaDovuta" type="cm:DatoVP_Type" minOccurs="0"/>
+						<xs:element name="IvaCredito" type="cm:DatoVP_Type" minOccurs="0"/>
+						<xs:element name="DebitoPrecedente" type="cm:DatoVP_Type" minOccurs="0"/>
+						<xs:element name="CreditoPeriodoPrecedente" type="cm:DatoVP_Type" minOccurs="0"/>
+						<xs:element name="CreditoAnnoPrecedente" type="iv:DatoVN_Type" minOccurs="0"/>
+						<xs:element name="VersamentiAutoUE" type="cm:DatoVP_Type" minOccurs="0"/>
+						<xs:element name="CreditiImposta" type="cm:DatoVP_Type" minOccurs="0"/>
+						<xs:element name="InteressiDovuti" type="cm:DatoVP_Type" minOccurs="0"/>
+						<xs:element name="Metodo" minOccurs="0">
+							<xs:simpleType>
+								<xs:restriction base="cm:DatoN1_Type">
+									<xs:enumeration value="1"/>
+									<xs:enumeration value="2"/>
+									<xs:enumeration value="3"/>
+									<xs:enumeration value="4"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="Acconto" type="cm:DatoVP_Type" minOccurs="0"/>
+						<xs:element name="ImportoDaVersare" type="cm:DatoVP_Type" minOccurs="0"/>
+						<xs:element name="ImportoACredito" type="cm:DatoVP_Type" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="Eventi_Ecc_Type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="9"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DatoVN_Type">
+		<xs:annotation>
+			<xs:documentation>Tipo semplice che identifica numeri positivi con 2 cifre decimali. La lunghezza massima prevista è di 16 caratteri, il separatore decimale previsto è la virgola.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="16"/>
+			<xs:pattern value="[\-]{0,1}[0-9]+,[0-9]{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

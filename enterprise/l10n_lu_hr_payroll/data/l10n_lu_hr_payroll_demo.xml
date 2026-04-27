@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.demo_company_lu" model="res.company" forcecreate="1">
+        <field name="name">My Lux Company</field>
+        <field name="currency_id" ref="base.EUR"/>
+        <field name="l10n_lu_official_social_security">123456789</field>
+        <field name="l10n_lu_seculine">987654</field>
+        <field name="street">14 Rixegoard</field>
+        <field name="zip">8353</field>
+        <field name="city">Garnech</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_lu'))]"/>
+    </record>
+
+    <record id="base.user_demo" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_lu'))]"/>
+    </record>
+
+    <record id="hr_department_rdlu" model="hr.department">
+        <field name="name">RD LU</field>
+        <field name="company_id" ref="base.demo_company_lu"/>
+    </record>
+
+    <record id="job_developer_luxembourg" model="hr.job">
+        <field name="name">Experienced Developer LU</field>
+        <field name="department_id" ref="hr_department_rdlu"/>
+        <field name="no_of_recruitment">5</field>
+        <field name="company_id" ref="base.demo_company_lu"/>
+    </record>
+
+    <record id="hr_employee_tom" model="hr.employee">
+        <field name="name">Tom Schmit</field>
+        <field name="job_id" ref="job_developer_luxembourg"/>
+        <field name="country_id" ref="base.lu"/>
+        <field name="company_id" ref="base.demo_company_lu"/>
+        <field name="image_1920" type="base64" file="l10n_lu_hr_payroll/static/img/hr_employee_tom_schmit.jpg"/>
+        <field name="gender">male</field>
+        <field name="identification_id">8752321365496</field>
+    </record>
+
+    <record id="res_partner_frida_poirish" model="res.partner">
+        <field name="name">Frida Poirish</field>
+        <field name="street">67 Rue De Luxembourg</field>
+        <field name="city">Bertrange</field>
+        <field name="zip">1348</field>
+        <field name="country_id" ref="base.lu"/>
+        <field name="phone">+0032476543210</field>
+        <field name="email">laurie.poiret@example.com</field>
+        <field name="company_id" ref="base.demo_company_lu"/>
+    </record>
+
+    <record id="user_frida_poirish" model="res.users">
+        <field name="partner_id" ref="l10n_lu_hr_payroll.res_partner_frida_poirish"/>
+        <field name="login">fridapoirish@example.com</field>
+        <field name="password">fridapoirish</field>
+        <field name="signature" type="html"><span>--<br/>+F. Poirish</span></field>
+        <field name="company_ids" eval="[(4, ref('base.demo_company_lu'))]"/>
+        <field name="company_id" ref="base.demo_company_lu"/>
+        <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
+        <field name="image_1920" type="base64" file="l10n_lu_hr_payroll/static/img/hr_employe_frida_poirish.jpg"/>
+    </record>
+
+    <record id="res_partner_frida_poirish_work_address" model="res.partner">
+        <field name="name">Lux Offices</field>
+        <field name="street">14 Rixegoard</field>
+        <field name="city">Garnech</field>
+        <field name="zip">8353</field>
+        <field name="country_id" ref="base.lu"/>
+        <field name="company_id" ref="base.demo_company_lu"/>
+    </record>
+
+    <record id="res_partner_frida_poirish_private_address" model="res.partner">
+        <field name="name">Frida Poirish</field>
+        <field name="company_id" ref="base.demo_company_lu"/>
+    </record>
+
+    <record id="res_partner_bank_account_frida_poirish" model="res.partner.bank">
+        <field name="acc_number">LU030103599935698356</field>
+        <field name="bank_id" ref="base.bank_ing"/>
+        <field name="partner_id" ref="l10n_lu_hr_payroll.res_partner_frida_poirish_private_address"/>
+        <field name="company_id" ref="base.demo_company_lu"/>
+    </record>
+
+    <record id="hr_employee_frida_poirish" model="hr.employee">
+        <field name="name">Frida Poirish (fpo)</field>
+        <field name="gender">female</field>
+        <field name="marital">single</field>
+        <field name="job_title">Software Developer</field>
+        <field name="private_street">71, Montée d'Ernzen</field>
+        <field name="private_city">Ernzen</field>
+        <field name="private_zip">7636</field>
+        <field name="private_country_id" ref="base.lu"/>
+        <field name="private_phone">+0032476543210</field>
+        <field name="private_email">frida.poirish@example.com</field>
+        <field name="address_id" ref="l10n_lu_hr_payroll.res_partner_frida_poirish_work_address"/>
+        <field name="emergency_contact">Knutt Poirish</field>
+        <field name="emergency_phone">+0032498765432</field>
+        <field name="birthday">1991-07-28</field>
+        <field name="distance_home_work">25</field>
+        <field name="place_of_birth">Luxembourg</field>
+        <field name="country_of_birth" ref="base.lu"/>
+        <field name="certificate">master</field>
+        <field name="study_field">Civil Engineering</field>
+        <field name="study_school">Université Catholique de Louvain-la-Neuve</field>
+        <field name="parent_id" ref="l10n_lu_hr_payroll.hr_employee_tom"/>
+        <field name="country_id" ref="base.lu"/>
+        <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+        <field name="identification_id">8752027365496</field>
+        <field name="bank_account_id" ref="l10n_lu_hr_payroll.res_partner_bank_account_frida_poirish"/>
+        <field name="image_1920" type="base64" file="l10n_lu_hr_payroll/static/img/hr_employe_frida_poirish.jpg"/>
+        <field name="company_id" ref="base.demo_company_lu"/>
+        <field name="user_id" ref="l10n_lu_hr_payroll.user_frida_poirish"/>
+        <field name="l10n_lu_deduction_fd_daily">8.58</field>
+        <field name="l10n_lu_deduction_ac_ae_daily">7.26</field>
+        <field name="l10n_lu_tax_id_number">29489284</field>
+        <field name="l10n_lu_tax_credit_cis">True</field>
+    </record>
+
+    <record id="hr_contract_cdi_frida_poirish_previous" model="hr.contract">
+        <field name="name">CDI - Frida Poirish - Experienced Developer</field>
+        <field name="department_id" ref="hr_department_rdlu"/>
+        <field name="employee_id" ref="hr_employee_frida_poirish"/>
+        <field name="job_id" ref="l10n_lu_hr_payroll.job_developer_luxembourg"/>
+        <field name="structure_type_id" ref="l10n_lu_hr_payroll.structure_type_employee_lux"/>
+        <field name="wage">5000</field>
+        <field name="state">close</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="company_id" ref="base.demo_company_lu"/>
+        <field name="date_start" eval="DateTime.today() + relativedelta(years=-2, month=1, day=1)"/>
+        <field name="date_end" eval="DateTime.today() + relativedelta(day=1, days=-1)"/>
+        <field name="resource_calendar_id" model="resource.calendar" eval="obj().search([('company_id', '=', obj().env.ref('base.demo_company_lu').id)], limit=1)"/>
+    </record>
+
+    <record id="hr_contract_cdi_frida_poirish" model="hr.contract">
+        <field name="name">CDI - Frida Poirish - Experienced Developer</field>
+        <field name="department_id" ref="hr_department_rdlu"/>
+        <field name="employee_id" ref="hr_employee_frida_poirish"/>
+        <field name="job_id" ref="l10n_lu_hr_payroll.job_developer_luxembourg"/>
+        <field name="structure_type_id" ref="l10n_lu_hr_payroll.structure_type_employee_lux"/>
+        <field name="wage">4250</field>
+        <field name="state">open</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="company_id" ref="base.demo_company_lu"/>
+        <field name="date_start" eval="DateTime.today() + relativedelta(day=1)"/>
+        <field name="resource_calendar_id" model="resource.calendar" eval="obj().search([('company_id', '=', obj().env.ref('base.demo_company_lu').id)], limit=1)"/>
+        <field name="l10n_lu_alw_vehicle">300</field>
+        <field name="l10n_lu_bik_vehicle">500</field>
+        <field name="l10n_lu_bik_vehicle_vat_included">False</field>
+        <field name="l10n_lu_meal_voucher_amount">2.8</field>
+    </record>
+
+    <record id="base.partner_demo" model="res.partner">
+        <field name="phone">+0032 81 00 10</field>
+    </record>
+
+    <record id="hr_department_ktlu" model="hr.department">
+        <field name="name">Kitchen Team LU</field>
+        <field name="company_id" ref="base.demo_company_lu"/>
+    </record>
+
+    <record id="job_cook_luxembourg" model="hr.job">
+        <field name="name">Cook LU</field>
+        <field name="department_id" ref="hr_department_ktlu"/>
+        <field name="no_of_recruitment">1</field>
+        <field name="company_id" ref="base.demo_company_lu"/>
+    </record>
+
+    <record id="hr_employee_simone_jambon" model="hr.employee">
+        <field name="name">Simone Jambon (sija)</field>
+        <field name="country_id" ref="base.lu"/>
+        <field name="company_id" ref="base.demo_company_lu"/>
+        <field name="image_1920" type="base64" file="l10n_lu_hr_payroll/static/img/hr_employee_simon_jambon.jpg"/>
+        <field name="gender">female</field>
+        <field name="l10n_lu_tax_id_number">35135122</field>
+        <field name="l10n_lu_tax_credit_cip">True</field>
+        <field name="identification_id">8752027361236</field>
+    </record>
+
+    <record id="hr_contract_cdi_simone_jambon" model="hr.contract">
+        <field name="name">CDI - Simone Jambon - Cook</field>
+        <field name="department_id" ref="hr_department_ktlu"/>
+        <field name="employee_id" ref="hr_employee_simone_jambon"/>
+        <field name="job_id" ref="l10n_lu_hr_payroll.job_cook_luxembourg"/>
+        <field name="structure_type_id" ref="l10n_lu_hr_payroll.structure_type_employee_lux"/>
+        <field name="wage">2000</field>
+        <field name="state">open</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="company_id" ref="base.demo_company_lu"/>
+        <field name="date_start" eval="DateTime(2024, 1, 1)"/>
+        <field name="resource_calendar_id" model="resource.calendar" eval="obj().search([('company_id', '=', obj().env.ref('base.demo_company_lu').id)], limit=1)"/>
+    </record>
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="urn:www.agenziaentrate.gov.it:specificheTecniche:common" targetNamespace="urn:www.agenziaentrate.gov.it:specificheTecniche:common" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.0">
+	<xs:annotation>
+		<xs:documentation xml:lang="it"><![CDATA[
+		Versione 3.0 - 10/12/13
+		- modificato import typesDati_v3.xsd
+		- modificato targetNamespace
+
+		Versione 2.1 - 10/07/13
+		- rimossi gli elementi complessi Fornitura e Intestazione
+
+		Versione 2.0 - 15/02/12
+		- modificato il tipo Intestazione_Type: introdotto il tipo complesso Dati_Intestazione_Type
+		- modificato il tipo Codice_Fornitura_Type
+		- modificato l'elemento TipoFornitore: associato il type DatoNP_Type
+		- modificato targetNamespace
+		]]></xs:documentation>
+	</xs:annotation>
+	<xs:include schemaLocation="typesDati_v3.xsd"/>
+	<xs:element name="Documento" type="Documento_Type" abstract="true"/>
+	<xs:complexType name="Documento_Type">
+		<xs:annotation>
+			<xs:documentation xml:lang="it">Documento trasmesso</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="identificativo" type="Identificativo_Type" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="Identificativo_Type">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{4}[1-9]|[0-9]{3}[1-9][0-9]|[0-9]{2}[1-9][0-9]{2}|[0-9][1-9][0-9]{3}|[1-9][0-9]{4}
+"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

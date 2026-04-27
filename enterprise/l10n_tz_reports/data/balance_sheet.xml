@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_tz_balance_sheet" model="account.report">
+        <field name="name">Balance sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_period_comparison" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="country_id" ref="base.tz"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_tz_balance_sheet_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_tz_active" model="account.report.line">
+                <field name="name">Active</field>
+                <field name="code">tz_active</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_tz_active_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">tz_current.balance + tz_non_current.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_tz_non_current" model="account.report.line">
+                        <field name="name">Non currents assets</field>
+                        <field name="code">tz_non_current</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_tz_non_current_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">tz_infra_plant_equipment.balance + tz_goodwill.balance + tz_advance_capital_assets.balance + tz_intangible_assets.balance + tz_investments.balance
+                                    + tz_investments_associate.balance + tz_available_sale_investments.balance + tz_receivables_other_non_current.balance + tz_deferred_tax_assets.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_tz_infra_plant_equipment" model="account.report.line">
+                                <field name="name">Property, plant and equipment and Investment Property</field>
+                                <field name="code">tz_infra_plant_equipment</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_infra_plant_equipment_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">11 + 12</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_tz_goodwill" model="account.report.line">
+                                <field name="name">Goodwill</field>
+                                <field name="code">tz_goodwill</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_goodwill_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">13\(135)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_tz_advance_capital_assets" model="account.report.line">
+                                <field name="name">Advances for Capital Assets</field>
+                                <field name="code">tz_advance_capital_assets</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_advance_capital_assets_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">135</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_tz_intangible_assets" model="account.report.line">
+                                <field name="name">Intangible assets</field>
+                                <field name="code">tz_intangible_assets</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_intangible_assets_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">14\(146, 148, 149)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_tz_investments" model="account.report.line">
+                                <field name="name">Investments</field>
+                                <field name="code">tz_investments</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_investments_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">150 + 154</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_tz_investments_associate" model="account.report.line">
+                                <field name="name">Investments in associate</field>
+                                <field name="code">tz_investments_associate</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_investments_associate_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">156</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_tz_available_sale_investments" model="account.report.line">
+                                <field name="name">Available for sale investments</field>
+                                <field name="code">tz_available_sale_investments</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_available_sale_investments_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">149</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_tz_receivables_other_non_current" model="account.report.line">
+                                <field name="name">Receivables and other non-current asstes</field>
+                                <field name="code">tz_receivables_other_non_current</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_receivables_other_non_current_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">146</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_tz_deferred_tax_assets" model="account.report.line">
+                                <field name="name">Deferred tax assets</field>
+                                <field name="code">tz_deferred_tax_assets</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_deferred_tax_assets_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">148</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_tz_current" model="account.report.line">
+                        <field name="name">Currents assets</field>
+                        <field name="code">tz_current</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_tz_current_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">tz_inventories.balance + tz_trade_receivables.balance + tz_other_financial_assets.balance + tz_income_tax_assets.balance +
+                                    tz_investments_financial_receivables.balance + tz_cash.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_tz_inventories" model="account.report.line">
+                                <field name="name">Inventories</field>
+                                <field name="code">tz_inventories</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_inventories_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">17\(176)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_tz_trade_receivables" model="account.report.line">
+                                <field name="name">Trade receivables</field>
+                                <field name="code">tz_trade_receivables</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_trade_receivables_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">151 + 152 + 155 + 183 + 190 + 191 + 193</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_tz_other_current_assets" model="account.report.line">
+                                <field name="name">Other current assets</field>
+                                <field name="code">tz_other_financial_assets</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_other_current_assets_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">106 + 107 + 108 + 16 + 180 + 181 + 182 + 192 + 104 + 105</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_tz_income_tax_assets" model="account.report.line">
+                                <field name="name">Income tax assets</field>
+                                <field name="code">tz_income_tax_assets</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_income_tax_assets_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">176</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_tz_investments_financial_receivables" model="account.report.line">
+                                <field name="name">Investments and financial receivables</field>
+                                <field name="code">tz_investments_financial_receivables</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_investments_financial_receivables_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">184</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_tz_cash" model="account.report.line">
+                                <field name="name">Cash and cash equivalents</field>
+                                <field name="code">tz_cash</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_cash_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">153 + 101 + 102 + 103</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_tz_passive" model="account.report.line">
+                <field name="name">Passive</field>
+                <field name="code">tz_passive</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_tz_passive_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">tz_liabilities.balance + tz_equity.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_tz_equity" model="account.report.line">
+                        <field name="name">Equity</field>
+                        <field name="code">tz_equity</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_tz_equity_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">tz_shared_capital.balance + tz_reserve.balance + tz_retained_earnings.balance + tz_profit_loss.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_tz_shared_capital" model="account.report.line">
+                                <field name="name">Share capital</field>
+                                <field name="code">tz_shared_capital</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_shared_capital_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-270</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_tz_reserve" model="account.report.line">
+                                <field name="name">Reserves</field>
+                                <field name="code">tz_reserve</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_reserve_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-21\(212) - 22 - 23 - 24 - 25 - 26</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_tz_retained_earnings" model="account.report.line">
+                                <field name="name">Retained earnings</field>
+                                <field name="code">tz_retained_earnings</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_retained_earnings_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-212 - 999999</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_tz_profit_loss" model="account.report.line">
+                                <field name="name">Current Year Earnings</field>
+                                <field name="code">tz_profit_loss</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_profit_loss_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">tz_profit_loss_year.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_tz_liabilities" model="account.report.line">
+                        <field name="name">Liabilities</field>
+                        <field name="code">tz_liabilities</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_tz_liabilities_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">tz_current_liabilities.balance + tz_non_current_liabilities.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_tz_non_current_liabilities" model="account.report.line">
+                                <field name="name">Non current Liabilities</field>
+                                <field name="code">tz_non_current_liabilities</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_non_current_liabilities_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">tz_interest_bearing_loans_0.balance + tz_employee_benefits.balance + tz_provisions_0.balance + tz_deferred_tax_liabilities.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_tz_interest_bearing_loans_0" model="account.report.line">
+                                        <field name="name">Interest-bearing loans and short term borrowings</field>
+                                        <field name="code">tz_interest_bearing_loans_0</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_tz_interest_bearing_loans_0_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-380</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_tz_employee_benefits" model="account.report.line">
+                                        <field name="name">Employee benefits liabilities</field>
+                                        <field name="code">tz_employee_benefits</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_tz_employee_benefits_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-390</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_tz_provisions_0" model="account.report.line">
+                                        <field name="name">Provisions</field>
+                                        <field name="code">tz_provisions_0</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_tz_provisions_0_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-395</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_tz_deferred_tax_liabilities" model="account.report.line">
+                                        <field name="name">Deferred tax liabilities</field>
+                                        <field name="code">tz_deferred_tax_liabilities</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_tz_deferred_tax_liabilities_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-396</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_tz_current_liabilities" model="account.report.line">
+                                <field name="name">Current Liabilities</field>
+                                <field name="code">tz_current_liabilities</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_tz_current_liabilities_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">tz_bank_overdraft.balance + tz_interest_bearing_loans_1.balance + tz_trade_payables.balance + tz_provisions_1.balance +
+                                            tz_income_tax_liabilities.balance + tz_other_liabilities.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_tz_bank_overdraft" model="account.report.line">
+                                        <field name="name">Banks overdrafts and short-term borrowings</field>
+                                        <field name="code">tz_bank_overdraft</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_tz_bank_overdraft_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-350</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_tz_interest_bearing_loans_1" model="account.report.line">
+                                        <field name="name">Interest-bearing loans and short term borrowings</field>
+                                        <field name="code">tz_interest_bearing_loans_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_tz_interest_bearing_loans_1_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-360</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_tz_trade_payables" model="account.report.line">
+                                        <field name="name">Trade payables</field>
+                                        <field name="code">tz_trade_payables</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_tz_trade_payables_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-31 - 331 - 332</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_tz_provisions_1" model="account.report.line">
+                                        <field name="name">Provisions</field>
+                                        <field name="code">tz_provisions_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_tz_provisions_1_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-32</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_tz_income_tax_liabilities" model="account.report.line">
+                                        <field name="name">Income tax liabilities</field>
+                                        <field name="code">tz_income_tax_liabilities</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_tz_income_tax_liabilities_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-370</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_tz_other_liabilities" model="account.report.line">
+                                        <field name="name">Other liabilities</field>
+                                        <field name="code">tz_other_liabilities</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_tz_other_liabilities_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-330 - 333 - 334 - 335 - 336 - 34 - 307 - 308</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

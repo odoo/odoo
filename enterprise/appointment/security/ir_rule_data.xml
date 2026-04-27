@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- appointment.type -->
+    <record id="appointment_type_rule_internal" model="ir.rule">
+        <field name="name">appointment.type: apt internal rule (read self-staff and resources)</field>
+        <field name="model_id" ref="model_appointment_type"/>
+        <field name="domain_force">[
+            '|', '|',
+                ('staff_user_ids.id', '=', user.id),
+                ('staff_user_ids', '=', False),
+                ('schedule_based_on', '=', 'resources')]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="appointment_type_rule_internal_published" model="ir.rule">
+        <field name="name">appointment.type: apt internal rule (read published)</field>
+        <field name="model_id" ref="model_appointment_type"/>
+        <field name="domain_force">[('is_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="appointment_type_rule_user" model="ir.rule">
+        <field name="name">appointment.type: apt user rule (read self-create, self-staff and resources)</field>
+        <field name="model_id" ref="model_appointment_type"/>
+        <field name="domain_force">[
+            '|', '|', '|',
+                ('create_uid', '=', user.id),
+                ('staff_user_ids.id', '=', user.id),
+                ('staff_user_ids', '=', False),
+                ('schedule_based_on', '=', 'resources')]</field>
+        <field name="groups" eval="[(4, ref('appointment.group_appointment_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="appointment_type_rule_user_write_unlink" model="ir.rule">
+            <field name="name">appointment.type: apt user rule (write/unlink = own only)</field>
+            <field name="model_id" ref="model_appointment_type"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('appointment.group_appointment_user'))]"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="appointment_type_rule_admin" model="ir.rule">
+        <field name="name">appointment.type: apt administrator rule</field>
+        <field name="model_id" ref="model_appointment_type"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('appointment.group_appointment_manager'))]"/>
+    </record>
+
+    <!-- appointment.slot -->
+    <record id="appointment_slot_rule_internal" model="ir.rule">
+        <field name="name">appointment.slot: apt internal rule (read self-staff and resources)</field>
+        <field name="model_id" ref="model_appointment_slot"/>
+        <field name="domain_force">[
+            '|', '|',
+                ('appointment_type_id.staff_user_ids.id', '=', user.id),
+                ('appointment_type_id.staff_user_ids', '=', False),
+                ('appointment_type_id.schedule_based_on', '=', 'resources')]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="appointment_slot_rule_internal_published" model="ir.rule">
+        <field name="name">appointment.slot: apt internal rule (read published)</field>
+        <field name="model_id" ref="model_appointment_slot"/>
+        <field name="domain_force">[('appointment_type_id.is_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="appointment_slot_rule_user" model="ir.rule">
+        <field name="name">appointment.slot: apt user rule (read self-create, self-staff and resources)</field>
+        <field name="model_id" ref="model_appointment_slot"/>
+        <field name="domain_force">[
+            '|', '|', '|',
+                ('appointment_type_id.create_uid', '=', user.id),
+                ('appointment_type_id.staff_user_ids.id', '=', user.id),
+                ('appointment_type_id.staff_user_ids', '=', False),
+                ('appointment_type_id.schedule_based_on', '=', 'resources')]</field>
+        <field name="groups" eval="[(4, ref('appointment.group_appointment_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Need to explicitly set perms to False to prevent the union between this rule domain and the appointment_slot_rule_user domain at operation -->
+    <record id="appointment_slot_rule_user_write_unlink" model="ir.rule">
+        <field name="name">appointment.slot: apt user rule (write/unlink = own only)</field>
+        <field name="model_id" ref="model_appointment_slot"/>
+        <field name="domain_force">[
+            '|',
+                ('appointment_type_id.create_uid', '=', user.id),
+                ('create_uid', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('appointment.group_appointment_user'))]"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="appointment_slot_rule_admin" model="ir.rule">
+        <field name="name">appointment.slot: apt administrator rule</field>
+        <field name="model_id" ref="model_appointment_slot"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('appointment.group_appointment_manager'))]"/>
+    </record>
+
+    <!-- appointment.invite -->
+    <record id="appointment_invite_rule_user_internal" model="ir.rule">
+        <field name="name">appointment.invite: user and internal rule (read self-create and self-staff)</field>
+        <field name="model_id" ref="model_appointment_invite"/>
+        <field name="domain_force">['|', ('create_uid', '=', user.id), ('staff_user_ids.id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('appointment.group_appointment_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="appointment_invite_rule_user_internal_write_unlink" model="ir.rule">
+        <field name="name">appointment.invite: apt user and internal rule (write/unlink = own only)</field>
+        <field name="model_id" ref="model_appointment_invite"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('appointment.group_appointment_user'))]"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="appointment_invite_rule_admin" model="ir.rule">
+        <field name="name">appointment.invite: apt administrator rule</field>
+        <field name="model_id" ref="model_appointment_invite"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('appointment.group_appointment_manager'))]"/>
+    </record>
+</odoo>

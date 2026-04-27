@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<templates>
+    <t t-name="voip.DeviceSelectionDialog">
+        <Dialog t-props="dialogProps">
+            <label for="device-select">Choose a device:</label>
+            <select id="device-select" t-ref="select">
+                <option t-foreach="devices" t-as="device" t-key="device.deviceId" t-esc="device.label" t-att-value="device.deviceId"/>
+            </select>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="onClickConfirm">Confirm</button>
+                <button class="btn btn-secondary" t-on-click="onClickCancel">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

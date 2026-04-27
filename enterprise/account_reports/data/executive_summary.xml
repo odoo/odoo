@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="executive_summary" model="account.report">
+        <field name="name">Executive Summary</field>
+        <field name="filter_multi_company">selector</field>
+        <field name="default_opening_date_filter">this_year</field>
+        <field name="column_ids">
+            <record id="executive_summary_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_executivesummary_cash0" model="account.report.line">
+                <field name="name">Cash</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_executivesummary_cash_received0" model="account.report.line">
+                        <field name="name">Cash received</field>
+                        <field name="code">CR</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_executivesummary_cash_received0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.account_type', 'in', ('asset_cash', 'liability_credit_card')), ('debit', '&gt;', 0.0)]"/>
+                                <field name="subformula">sum</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_executivesummary_cash_spent0" model="account.report.line">
+                        <field name="name">Cash spent</field>
+                        <field name="code">CS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_executivesummary_cash_spent0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.account_type', 'in', ('asset_cash', 'liability_credit_card')), ('credit', '&gt;', 0.0)]"/>
+                                <field name="subformula">sum</field>
+                                <field name="green_on_positive" eval="False"/>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_executivesummary_cash_surplus0" model="account.report.line">
+                        <field name="name">Cash surplus</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_executivesummary_cash_surplus0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CR.balance + CS.balance</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_executivesummary_closing_bank_balance0" model="account.report.line">
+                        <field name="name">Closing bank balance</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_executivesummary_closing_bank_balance0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.account_type', 'in', ('asset_cash', 'liability_credit_card'))]"/>
+                                <field name="date_scope">from_beginning</field>
+                                <field name="subformula">sum</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_executivesummary_profitability0" model="account.report.line">
+                <field name="name">Profitability</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_executivesummary_income0" model="account.report.line">
+                        <field name="name">Revenue</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_executivesummary_income0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">REV.balance</field>
+                                <field name="date_scope">strict_range</field>
+                                <field name="subformula">cross_report</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_executivesummary_direct_costs0" model="account.report.line">
+                        <field name="name">Cost of Revenue</field>
+                        <field name="code">EXEC_COS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_executivesummary_direct_costs0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">COS.balance</field>
+                                <field name="date_scope">strict_range</field>
+                                <field name="subformula">cross_report</field>
+                                <field name="green_on_positive" eval="False"/>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_executivesummary_gross_profit0" model="account.report.line">
+                        <field name="name">Gross profit</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_executivesummary_gross_profit0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">GRP.balance</field>
+                                <field name="date_scope">strict_range</field>
+                                <field name="subformula">cross_report</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_executivesummary_expenses0" model="account.report.line">
+                        <field name="name">Expenses</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_executivesummary_expenses0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">EXP.balance</field>
+                                <field name="date_scope">strict_range</field>
+                                <field name="subformula">cross_report</field>
+                                <field name="green_on_positive" eval="False"/>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_executivesummary_profit0" model="account.report.line">
+                        <field name="name">Net Profit</field>
+                        <field name="code">EXEC_NEP</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_executivesummary_profit0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">NEP.balance</field>
+                                <field name="date_scope">strict_range</field>
+                                <field name="subformula">cross_report</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_executivesummary_balancesheet0" model="account.report.line">
+                <field name="name">Balance Sheet</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_executivesummary_debtors0" model="account.report.line">
+                        <field name="name">Receivables</field>
+                        <field name="code">DEB</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_executivesummary_debtors0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.account_type', '=', 'asset_receivable')]"/>
+                                <field name="date_scope">from_beginning</field>
+                                <field name="subformula">sum</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_executivesummary_creditors0" model="account.report.line">
+                        <field name="name">Payables</field>
+                        <field name="code">CRE</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_executivesummary_creditors0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.account_type', '=', 'liability_payable')]"/>
+                                <field name="date_scope">from_beginning</field>
+                                <field name="subformula">sum</field>
+                                <field name="green_on_positive" eval="False"/>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_executivesummary_net_assets0" model="account.report.line">
+                        <field name="name">Net assets</field>
+                        <field name="code">EXEC_SUMMARY_NA</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_executivesummary_net_assets0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TA.balance - L.balance</field>
+                                <field name="date_scope">from_beginning</field>
+                                <field name="subformula">cross_report</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_executivesummary_performance0" model="account.report.line">
+                <field name="name">Performance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_executivesummary_gpmargin0" model="account.report.line">
+                        <field name="name">Gross profit margin (gross profit / operating income)</field>
+                        <field name="code">GPMARGIN0</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_executivesummary_gpmargin0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">GPMARGIN0.grp / GPMARGIN0.opinc * 100</field>
+                                <field name="subformula">ignore_zero_division</field>
+                                <field name="figure_type">percentage</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                            <record id="account_financial_report_executivesummary_gpmargin0_grp" model="account.report.expression">
+                                <field name="label">grp</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">GRP.balance</field>
+                                <field name="date_scope">strict_range</field>
+                                <field name="subformula">cross_report</field>
+                            </record>
+                            <record id="account_financial_report_executivesummary_gpmargin0_opinc" model="account.report.expression">
+                                <field name="label">opinc</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">REV.balance</field>
+                                <field name="date_scope">strict_range</field>
+                                <field name="subformula">cross_report</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_executivesummary_npmargin0" model="account.report.line">
+                        <field name="name">Net profit margin (net profit / revenue)</field>
+                        <field name="code">NPMARGIN0</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_executivesummary_npmargin0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">NPMARGIN0.nep / NPMARGIN0.rev * 100</field>
+                                <field name="subformula">ignore_zero_division</field>
+                                <field name="figure_type">percentage</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                            <record id="account_financial_report_executivesummary_npmargin0_nep" model="account.report.expression">
+                                <field name="label">nep</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">NEP.balance</field>
+                                <field name="date_scope">strict_range</field>
+                                <field name="subformula">cross_report</field>
+                            </record>
+                            <record id="account_financial_report_executivesummary_npmargin0_inc" model="account.report.expression">
+                                <field name="label">rev</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">REV.balance</field>
+                                <field name="date_scope">strict_range</field>
+                                <field name="subformula">cross_report</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_executivesummary_return_investment0" model="account.report.line">
+                        <field name="name">Return on investments (net profit / assets)</field>
+                        <field name="code">ROI</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_executivesummary_return_investment0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ROI.nep / ROI.ta * 100</field>
+                                <field name="subformula">ignore_zero_division</field>
+                                <field name="figure_type">percentage</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                            <record id="account_financial_report_executivesummary_return_investment0_nep" model="account.report.expression">
+                                <field name="label">nep</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">NEP.balance</field>
+                                <field name="date_scope">strict_range</field>
+                                <field name="subformula">cross_report</field>
+                            </record>
+                            <record id="account_financial_report_executivesummary_return_investment0_ta" model="account.report.expression">
+                                <field name="label">ta</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TA.balance</field>
+                                <field name="date_scope">from_beginning</field>
+                                <field name="subformula">cross_report</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_executivesummary_position0" model="account.report.line">
+                <field name="name">Position</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_executivesummary_avdebt0" model="account.report.line">
+                        <field name="name">Average debtors days</field>
+                        <field name="code">AVG_DEBT_DAYS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_executivesummary_avdebt0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">DEB.balance / AVG_DEBT_DAYS.opinc * AVG_DEBT_DAYS.NDays</field>
+                                <field name="subformula">ignore_zero_division</field>
+                                <field name="green_on_positive" eval="False"/>
+                                <field name="figure_type">float</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                            <record id="account_financial_report_executivesummary_avdebt0_opinc" model="account.report.expression">
+                                <field name="label">opinc</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">REV.balance</field>
+                                <field name="date_scope">strict_range</field>
+                                <field name="subformula">cross_report</field>
+                            </record>
+                            <record id="account_financial_report_executivesummary_avdebt0_ndays" model="account.report.expression">
+                                <field name="label">NDays</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_executive_summary_ndays</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_executivesummary_avgcre0" model="account.report.line">
+                        <field name="name">Average creditors days</field>
+                        <field name="code">AVG_CRED_DAYS</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_executivesummary_avgcre0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">-CRE.balance / (AVG_CRED_DAYS.cos + AVG_CRED_DAYS.exp) * AVG_CRED_DAYS.NDays</field>
+                                <field name="subformula">ignore_zero_division</field>
+                                <field name="green_on_positive" eval="False"/>
+                                <field name="figure_type">float</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                            <record id="account_financial_report_executivesummary_avgcre0_cos" model="account.report.expression">
+                                <field name="label">cos</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">COS.balance</field>
+                                <field name="date_scope">strict_range</field>
+                                <field name="subformula">cross_report</field>
+                            </record>
+                            <record id="account_financial_report_executivesummary_avgcre0_exp" model="account.report.expression">
+                                <field name="label">exp</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">EXP.balance</field>
+                                <field name="date_scope">strict_range</field>
+                                <field name="subformula">cross_report</field>
+                            </record>
+                            <record id="account_financial_report_executivesummary_avgcre0_ndays" model="account.report.expression">
+                                <field name="label">NDays</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_executive_summary_ndays</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_executivesummary_st_cash_forecast0" model="account.report.line">
+                        <field name="name">Short term cash forecast</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_executivesummary_st_cash_forecast0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">DEB.balance + CRE.balance</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_executivesummary_ca_to_l0" model="account.report.line">
+                        <field name="name">Current assets to liabilities</field>
+                        <field name="code">CATL</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_executivesummary_ca_to_l0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CATL.ca / CATL.cl</field>
+                                <field name="subformula">ignore_zero_division</field>
+                                <field name="figure_type">float</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                            <record id="account_financial_report_executivesummary_ca_to_l0_ca" model="account.report.expression">
+                                <field name="label">ca</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CA.balance</field>
+                                <field name="date_scope">from_beginning</field>
+                                <field name="subformula">cross_report</field>
+                            </record>
+                            <record id="account_financial_report_executivesummary_ca_to_l0_cl" model="account.report.expression">
+                                <field name="label">cl</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CL.balance</field>
+                                <field name="date_scope">from_beginning</field>
+                                <field name="subformula">cross_report</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

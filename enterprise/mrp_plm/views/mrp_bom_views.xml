@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_bom_view_form_inherit_plm" model="ir.ui.view">
+        <field name="name">mrp.bom.view.form.inherit.plm</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="priority" eval="1000"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button groups="mrp_plm.group_plm_user" class="oe_stat_button" name="button_mrp_eco" type="object" icon="fa-cogs">
+                    <field string="ECO(s)" name="eco_count" widget="statinfo" />
+                </button>
+            </div>
+            <field name="ready_to_produce" position="after">
+                <field name="version" string="Version" groups="mrp_plm.group_plm_user"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="mrp_bom_view_form_inherit_plm_components" model="ir.ui.view">
+        <field name="name">mrp.bom.view.form.inherit.plm.components</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp_plm.mrp_bom_view_form_inherit_plm"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="999"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='components']" position="attributes">
+                <attribute name="autofocus">autofocus</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_bom_view_form_inherit_plm_byproducts" model="ir.ui.view">
+        <field name="name">mrp.bom.view.form.inherit.plm.byproducts</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp_plm.mrp_bom_view_form_inherit_plm"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="999"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='by_products']" position="attributes">
+                <attribute name="autofocus">autofocus</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_bom_tree_view_tree" model="ir.ui.view">
+        <field name="name">mrp.bom.list.inherit.mrp.plm</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='type']" position="after">
+                <field name="version" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="mrp_bom_action_kanban">
+        <field name="name">Bill of Materials</field>
+        <field name="res_model">mrp.bom</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              No bill of materials found. Let's create one!
+            </p><p>
+              Bills of materials allow you to define the list of required components
+              used to make a finished product; through a manufacturing
+              order or a pack of products.
+            </p>
+        </field>
+    </record>
+
+</odoo>

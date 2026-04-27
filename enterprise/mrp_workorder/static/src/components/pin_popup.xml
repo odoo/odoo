@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="mrp_workorder.PinPopup">
+        <Dialog size="'md'" title.translate="Password?" modalRef="modalRef" withBodyPadding="false">
+            <div class="popup">
+                <div class="popup-input">
+                    <span class="highlight"><t t-esc="inputBuffer"/></span>
+                </div>
+                <div class="popup-numpad text-center">
+                    <button t-on-mousedown.prevent="() => this.sendInput('1')">1</button>
+                    <button t-on-mousedown.prevent="() => this.sendInput('2')">2</button>
+                    <button t-on-mousedown.prevent="() => this.sendInput('3')">3</button>
+                    <br/>
+                    <button t-on-mousedown.prevent="() => this.sendInput('4')">4</button>
+                    <button t-on-mousedown.prevent="() => this.sendInput('5')">5</button>
+                    <button t-on-mousedown.prevent="() => this.sendInput('6')">6</button>
+                    <br/>
+                    <button t-on-mousedown.prevent="() => this.sendInput('7')">7</button>
+                    <button t-on-mousedown.prevent="() => this.sendInput('8')">8</button>
+                    <button t-on-mousedown.prevent="() => this.sendInput('9')">9</button>
+                    <br/>
+                    <button t-on-mousedown.prevent="() => this.sendInput('Delete')">C</button>
+                    <button t-on-mousedown.prevent="() => this.sendInput('0')">0</button>
+                    <button t-on-mousedown.prevent="() => this.sendInput('Backspace')"><span class="fa fa-long-arrow-left"/></button>
+                    <br/>
+                </div>
+                <t t-set-slot="footer">
+                    <div class="btn btn-primary" t-on-click="confirm">Confirm</div>
+                    <div class="btn btn-secondary" t-on-click="cancel">Cancel</div>
+                </t>
+            </div>
+        </Dialog>
+    </t>
+</templates>

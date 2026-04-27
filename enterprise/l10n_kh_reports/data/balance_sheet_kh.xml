@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_kh_balance_sheet" model="account.report">
+        <field name="name">Balance Sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="country_id" ref="base.kh"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="default_opening_date_filter">today</field>
+        <field name="filter_hierarchy">by_default</field>
+        <field name="column_ids">
+            <record id="l10n_kh_balance_sheet_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_kh_balance_sheet_kh_bs_a" model="account.report.line">
+                <field name="name">A0. Assets</field>
+                <field name="code">KH_BS_A</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_balance_sheet_kh_bs_a_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KH_BS_NCA.balance + KH_BS_CA.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_kh_balance_sheet_kh_bs_nca" model="account.report.line">
+                        <field name="name">A1. Non-Current Assets / Fixed Assets</field>
+                        <field name="code">KH_BS_NCA</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_kh_balance_sheet_kh_bs_nca_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">12 + 13</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kh_balance_sheet_kh_bs_ca" model="account.report.line">
+                        <field name="name">A13. Current Assets</field>
+                        <field name="code">KH_BS_CA</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_kh_balance_sheet_kh_bs_ca_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">10 + 11</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kh_balance_sheet_kh_bs_el" model="account.report.line">
+                <field name="name">A28. Equity and Liabilities</field>
+                <field name="code">KH_BS_EL</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_balance_sheet_kh_bs_el_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KH_BS_CL.balance + KH_BS_NCL.balance + KH_BS_E.balance + KH_BS_CYRE.balance + KH_BS_PYRE.balance + KH_BS_CYUE.balance + KH_BS_PYUE.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_kh_balance_sheet_kh_bs_e" model="account.report.line">
+                        <field name="name">A29. Equity</field>
+                        <field name="code">KH_BS_E</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_kh_balance_sheet_kh_bs_e_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">- 3\(31, 32)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kh_balance_sheet_kh_bs_uae" model="account.report.line">
+                        <field name="name">Unallocated Earnings</field>
+                        <field name="code">KH_BS_UAE</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="children_ids">
+                            <record id="l10n_kh_balance_sheet_kh_bs_cyue" model="account.report.line">
+                                <field name="name">Current Year Unallocated Earnings</field>
+                                <field name="code">KH_BS_CYUE</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_kh_balance_sheet_kh_bs_cyue_pnl" model="account.report.expression">
+                                        <field name="label">pnl</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">KH_PL_NEP.balance</field>
+                                        <field name="date_scope">from_fiscalyear</field>
+                                        <field name="subformula">cross_report</field>
+                                    </record>
+                                    <record id="l10n_kh_balance_sheet_kh_bs_cyue_alloc" model="account.report.expression">
+                                        <field name="label">alloc</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">- 99</field>
+                                        <field name="date_scope">from_fiscalyear</field>
+                                    </record>
+                                    <record id="l10n_kh_balance_sheet_kh_bs_cyue_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">KH_BS_CYUE.pnl + KH_BS_CYUE.alloc</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kh_balance_sheet_kh_bs_pyue" model="account.report.line">
+                                <field name="name">Previous Years Unallocated Earnings</field>
+                                <field name="code">KH_BS_PYUE</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_kh_balance_sheet_kh_bs_pyue_allocated_earnings" model="account.report.expression">
+                                        <field name="label">allocated_earnings</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">- 99</field>
+                                        <field name="date_scope">from_beginning</field>
+                                    </record>
+                                    <record id="l10n_kh_balance_sheet_kh_bs_pyue_balance_domain" model="account.report.expression">
+                                        <field name="label">balance_domain</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">KH_PL_NEP.balance</field>
+                                        <field name="date_scope">from_beginning</field>
+                                        <field name="subformula">cross_report</field>
+                                    </record>
+                                    <record id="l10n_kh_balance_sheet_kh_bs_pyue_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">KH_BS_PYUE.balance_domain + KH_BS_PYUE.allocated_earnings - KH_BS_CYUE.balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kh_balance_sheet_kh_bs_re" model="account.report.line">
+                        <field name="name">Retained Earnings</field>
+                        <field name="code">KH_BS_RE</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="children_ids">
+                            <record id="l10n_kh_balance_sheet_kh_bs_cyre" model="account.report.line">
+                                <field name="name">Current Year Retained Earnings</field>
+                                <field name="code">KH_BS_CYRE</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_kh_balance_sheet_kh_bs_cyre_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">- 31</field>
+                                        <field name="date_scope">from_beginning</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kh_balance_sheet_kh_bs_pyre" model="account.report.line">
+                                <field name="name">Previous Years Retained Earnings</field>
+                                <field name="code">KH_BS_PYRE</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_kh_balance_sheet_kh_bs_pyre_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">- 32</field>
+                                        <field name="date_scope">from_beginning</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kh_balance_sheet_kh_bs_ncl" model="account.report.line">
+                        <field name="name">A37. Non-Current Liabilities</field>
+                        <field name="code">KH_BS_NCL</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_kh_balance_sheet_kh_bs_ncl_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">- 22</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kh_balance_sheet_kh_bs_cl" model="account.report.line">
+                        <field name="name">A42. Current Liabilities</field>
+                        <field name="code">KH_BS_CL</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_kh_balance_sheet_kh_bs_cl_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">- 20 - 21</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

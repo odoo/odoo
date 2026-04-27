@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_headcount_line_view_tree" model="ir.ui.view">
+        <field name="name">hr.payroll.headcount.line.view.list</field>
+        <field name="model">hr.payroll.headcount.line</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payroll_headcount_line_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="wage_on_payroll" position="before">
+                <field name="employer_cost"/>
+            </field>
+        </field>
+    </record>
+</odoo>

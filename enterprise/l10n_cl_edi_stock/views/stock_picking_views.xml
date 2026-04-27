@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_edi_form" model="ir.ui.view">
+        <field name="model">stock.picking</field>
+        <field name="name">stock.picking.edi.form</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header//button[@name='action_cancel']" position="after">
+                <field name="l10n_cl_sii_send_file" invisible="1"/>
+                <button name="create_delivery_guide" string="Create Delivery Guide" type="object" invisible="state != 'done' or l10n_cl_dte_status in ['accepted', 'objected', 'ask_for_status', 'rejected', 'cancelled'] or picking_type_code != 'outgoing' or l10n_cl_draft_status or country_code != 'CL'"/>
+                <button name="print_delivery_guide_pdf" string="Print Delivery Guide" type="object" invisible="not l10n_cl_sii_send_file"/>
+            </xpath>
+            <xpath expr="//header" position="after">
+                <field name="l10n_cl_dte_file" invisible="1"/>
+                <field name="l10n_cl_is_return" invisible="1"/>
+                <div class="alert alert-warning text-center" role="alert" invisible="l10n_cl_is_return or l10n_cl_dte_file or not l10n_cl_draft_status">Sequence not found for delivery guide. Please, set the first number into Delivery Guide Number field</div>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="l10n_cl_draft_status" invisible="1"/>
+                <label for="l10n_latam_document_number" invisible="l10n_cl_is_return or not l10n_cl_draft_status and not l10n_latam_document_number"/>
+                <div invisible="l10n_cl_is_return or not l10n_cl_draft_status and not l10n_latam_document_number">
+                    <field name="l10n_latam_document_number" readonly="(l10n_cl_is_return or not l10n_cl_draft_status) and country_code == 'CL'"/>
+                    <button name="l10n_cl_set_delivery_guide_to_draft" type="object" invisible="l10n_cl_dte_status not in ['not_sent', 'rejected']" string="⇒ Set to Draft" class="oe_inline oe_link" groups="base.group_user"/>
+                    <button name="l10n_cl_confirm_draft_delivery_guide" type="object" invisible="not l10n_cl_draft_status or not l10n_latam_document_number" string="⇒ Confirm" class="oe_inline oe_link" groups="base.group_user"/>
+                </div>
+                <label for="l10n_cl_dte_status" invisible="not l10n_cl_dte_status"/>
+                <div invisible="not l10n_cl_dte_status">
+                    <field name="l10n_cl_dte_status" readonly="1" class="oe_inline" />
+                    <button name="l10n_cl_send_dte_to_sii" type="object" invisible="l10n_cl_dte_status != 'not_sent'" string="⇒ Send Now to SII" class="oe_inline oe_link" groups="base.group_user"/>
+                    <button name="l10n_cl_verify_dte_status" type="object" invisible="l10n_cl_dte_status != 'ask_for_status'" string="⇒ Verify on SII" class="oe_inline oe_link" groups="base.group_user"/>
+                </div>
+                <field name="l10n_cl_delivery_guide_reason" invisible="country_code != 'CL'" readonly="l10n_cl_dte_status not in [False, 'cancelled']"/>
+            </xpath>
+            <xpath expr="//notebook//page[@name='note']" position="after">
+                <page string="Delivery Guide" name="electronic_invoice" invisible="(country_code != 'CL' or not l10n_cl_dte_status) and not l10n_latam_document_number">
+                    <group>
+                        <field name="l10n_latam_document_type_id" readonly="1"/>
+                        <field name="l10n_cl_sii_send_ident" readonly="state != 'draft'"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_edi_tree" model="ir.ui.view">
+        <field name="model">stock.picking</field>
+        <field name="name">stock.picking.edi.list</field>
+        <field name="inherit_id" ref="stock.vpicktree" />
+        <field name="arch" type="xml">
+            <field name="json_popover" position="after">
+                <field name="country_code" column_invisible="True"/>
+                <field name="l10n_cl_dte_status" widget="badge" decoration-success="l10n_cl_dte_status == 'accepted'"
+                       decoration-info="l10n_cl_dte_status == 'objected'"
+                       decoration-warning="l10n_cl_dte_status == 'ask_for_status'"
+                       decoration-danger="l10n_cl_dte_status == 'rejected'"
+                       invisible="country_code != 'CL'" optional="hide"/>
+                <field name="l10n_latam_document_number" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

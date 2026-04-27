@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="helpdesk.helpdesk_team3" model="helpdesk.team">
+        <field name="use_product_returns" eval="True"/>
+    </record>
+
+    <!-- Product Lot/Serial Number Tracking -->
+    <record id="product.product_product_10" model="product.product">
+        <field name="tracking">serial</field>
+    </record>
+    <record id="lot_product_10_helpdesk" model="stock.lot">
+        <field name="name">0000000000500</field>
+        <field name="product_id" ref="product.product_product_10"/>
+    </record>
+    <record id="helpdesk_stock_inventory_1" model="stock.quant">
+        <field name="product_id" ref="product.product_product_10"/>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        <field name="inventory_quantity">1.00</field>
+        <field name="lot_id" ref="lot_product_10_helpdesk"/>
+    </record>
+    <function model="stock.quant" name="action_apply_inventory" eval="[ref('helpdesk_stock_inventory_1')]"/>
+
+    <!-- confirm sale order and validate the delivery -->
+    <function model="sale.order" name="action_confirm" eval="[ref('helpdesk_sale.sale_order_helpdesk_1')]"/>
+    <function model="stock.move.line" name="write">
+        <value model="stock.move" eval="obj().search([('sale_line_id', '=', obj().env.ref('helpdesk_sale.sale_order_line_helpdesk_1').id)]).move_line_ids.id"/>
+         <value eval="{'quantity': 1}"/>
+    </function>
+    <function model="stock.picking" name="button_validate">
+        <value model="stock.move" eval="obj().env.ref('helpdesk_sale.sale_order_helpdesk_1').picking_ids.ids"/>
+    </function>
+
+    <function model="sale.order" name="action_confirm" eval="[ref('helpdesk_sale.sale_order_helpdesk_2')]"/>
+    <function model="stock.move.line" name="write">
+        <value model="stock.move" eval="obj().search([('sale_line_id', '=', obj().env.ref('helpdesk_sale.sale_order_line_helpdesk_2').id)]).move_line_ids.id"/>
+         <value eval="{'quantity': 1, 'lot_name': '0000000000500', 'lot_id': ref('lot_product_10_helpdesk')}"/>
+    </function>
+    <function model="stock.picking" name="button_validate">
+        <value model="stock.move" eval="obj().env.ref('helpdesk_sale.sale_order_helpdesk_2').picking_ids.ids"/>
+    </function>
+
+    <function model="sale.order" name="action_confirm" eval="[ref('helpdesk_sale.sale_order_helpdesk_3')]"/>
+    <function model="stock.move.line" name="write">
+        <value model="stock.move" eval="obj().search([('sale_line_id', '=', obj().env.ref('helpdesk_sale.sale_order_line_helpdesk_3').id)]).move_line_ids.id"/>
+         <value eval="{'quantity': 1}"/>
+    </function>
+    <function model="stock.picking" name="button_validate">
+        <value model="stock.move" eval="obj().env.ref('helpdesk_sale.sale_order_helpdesk_3').picking_ids.ids"/>
+    </function>
+
+    <!-- create return delivery order for the ticket -->
+    <record id="helpdesk.helpdesk_ticket_13" model="helpdesk.ticket">
+        <field name="product_id" ref="product.product_product_10"/>
+        <field name="lot_id" ref="lot_product_10_helpdesk"/>
+    </record>
+    <record id="helpdesk_stock_return_order_1" model="stock.picking">
+        <field name="partner_id" ref="base.partner_demo"/>
+        <field name="scheduled_date" eval="time.strftime('%Y-01-01 00:01:00')"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_output"/>
+        <field name="picking_type_id" ref="stock.picking_type_in"/>
+        <field name="sale_id" ref="helpdesk_sale.sale_order_helpdesk_2"/>
+        <field name="origin" model="stock.picking" eval="'Return of %s' % obj().env.ref('helpdesk_sale.sale_order_helpdesk_2').picking_ids.mapped('name')[:1]"/>
+    </record>
+    <record id="helpdesk_stock_return_order_line_1" model="stock.move">
+        <field name="name">A first stock move</field>
+        <field name="picking_id" ref="helpdesk_stock_return_order_1"/>
+        <field name="picking_type_id" ref="stock.picking_type_in"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_output"/>
+        <field name="product_uom_qty">1</field>
+        <field name="product_uom" ref="uom.product_uom_unit" />
+        <field name="quantity">0.0</field>
+        <field name="product_id" ref="product.product_product_10"/>
+    </record>
+    <record id="helpdesk.helpdesk_ticket_13" model="helpdesk.ticket">
+        <field name="picking_ids" eval="[(6, 0, [ref('helpdesk_stock_return_order_1')])]"/>
+    </record>
+
+    <record id="helpdesk.helpdesk_ticket_10" model="helpdesk.ticket">
+        <field name="product_id" ref="product.product_product_12"/>
+    </record>
+    <record id="helpdesk_stock_return_order_2" model="stock.picking">
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="scheduled_date" eval="time.strftime('%Y-01-01 00:01:00')"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_output"/>
+        <field name="picking_type_id" ref="stock.picking_type_in"/>
+        <field name="sale_id" ref="helpdesk_sale.sale_order_helpdesk_3"/>
+        <field name="origin" model="stock.picking" eval="'Return of %s' % obj().env.ref('helpdesk_sale.sale_order_helpdesk_3').picking_ids.mapped('name')[:1]"/>
+    </record>
+    <record id="helpdesk_stock_return_order_line_2" model="stock.move">
+        <field name="name">A second stock move</field>
+        <field name="picking_id" ref="helpdesk_stock_return_order_2"/>
+        <field name="picking_type_id" ref="stock.picking_type_in"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_output"/>
+        <field name="product_uom_qty">1</field>
+        <field name="product_uom" ref="uom.product_uom_unit" />
+        <field name="quantity">0.0</field>
+        <field name="product_id" ref="product.product_product_12"/>
+    </record>
+    <record id="helpdesk.helpdesk_ticket_10" model="helpdesk.ticket">
+        <field name="picking_ids" eval="[(6, 0, [ref('helpdesk_stock_return_order_2')])]"/>
+    </record>
+
+</odoo>

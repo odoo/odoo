@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="mail.ActivityListPopoverItem" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('o-mail-ActivityListPopoverItem-markAsDone')]" position="after">
+            <Approval t-if="props.activity.approval" activity="this.props.activity" onChange="this.props.onActivityChanged"/>
+        </xpath>
+    </t>
+
+</templates>

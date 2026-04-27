@@ -1,0 +1,81 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_project_forecast
+#
+# Translators:
+# Tamás Németh <ntomasz81@gmail.com>, 2024
+# krnkris, 2024
+# gezza <geza.nagy@oregional.hu>, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:48+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2025\n"
+"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,help:sale_project_forecast.field_product_product__planning_enabled
+#: model:ir.model.fields,help:sale_project_forecast.field_product_template__planning_enabled
+msgid ""
+"If enabled, a shift will automatically be generated for the selected role "
+"when confirming the Sales Order.                 With the 'auto plan' "
+"feature, only employees with this role will be automatically assigned shifts "
+"for Sales Orders containing this service.                 The system will "
+"consider employee availability and the remaining time to be "
+"planned.                 You can also manually schedule open shifts for your "
+"Sales Order or assign them to any employee you prefer."
+msgstr ""
+"Ha be van kapcsolva, akkor a műszak automatikusan generálásra kerül a "
+"kiválasztott szerepre a vevői rendelés megerősítésekor.                 Az "
+"'automatikus terv' funkcióval csak az adott szerepben lévő alkalmazottak "
+"kerülnek automatikusan hozzárendelésre a szolgáltatást tartalmazó vevői "
+"rendelésekhez kapcsolt műszakokhoz.                 A rendszer figyelembe "
+"veszi az alkalmazott elérhetőségét és a maradék tervezésre váró "
+"időt.                 Manuálisan is lehet ütemezni nyitott műszakokat a "
+"vevői rendeléshez, vagy hozzá lehet rendelni tetszőleges alkalmazotthoz."
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,field_description:sale_project_forecast.field_product_product__planning_enabled
+#: model:ir.model.fields,field_description:sale_project_forecast.field_product_template__planning_enabled
+msgid "Plan Services"
+msgstr "Szolgáltatások tervezése"
+
+#. module: sale_project_forecast
+#: model:ir.model,name:sale_project_forecast.model_planning_slot
+msgid "Planning Shift"
+msgstr "Műszaktervezés"
+
+#. module: sale_project_forecast
+#: model:ir.model,name:sale_project_forecast.model_product_template
+msgid "Product"
+msgstr "Termék"
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,field_description:sale_project_forecast.field_planning_slot__sale_line_id
+msgid "Sales Order Item"
+msgstr "Vevői rendelés tétel"
+
+#. module: sale_project_forecast
+#: model:ir.model,name:sale_project_forecast.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Vevői rendelés sor"
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,help:sale_project_forecast.field_planning_slot__sale_line_id
+msgid ""
+"Sales order item for which this shift will be performed. When sales orders "
+"are automatically planned, the remaining hours of the sales order item, as "
+"well as the role defined on the service, are taken into account."
+msgstr ""
+"Vevői rendelés tétel, mely kapcsán a műszak elvégzésre kerül. Ha a vevői "
+"rendelések automatikusan tervezésre kerülnek, akkor a vevői rendelés tétel "
+"maradék órái és a szolgáltatáson megadott szerep egyaránt figyelembe lesznek "
+"véve."

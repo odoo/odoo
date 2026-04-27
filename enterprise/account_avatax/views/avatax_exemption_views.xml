@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="avatax_exemption_tree" model="ir.ui.view">
+        <field name="name">avatax.exemption.list</field>
+        <field name="model">avatax.exemption</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="description"/>
+                <field name="valid_country_ids" widget="many2many_tags"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="avatax_exemption_search" model="ir.ui.view">
+        <field name="name">avatax.exemption.search</field>
+        <field name="model">avatax.exemption</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="description"/>
+                <field name="valid_country_ids"/>
+                <field name="company_id"/>
+            </search>
+        </field>
+    </record>
+</odoo>

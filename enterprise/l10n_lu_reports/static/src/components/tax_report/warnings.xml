@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="l10n_lu_reports.annual_tax_report_warning_checks">
+        <strong>The following controls failed:</strong>
+        <ul>
+            <t t-foreach="warningParams['failed_controls']" t-as="failed_control" t-key="failed_control">
+                <p t-out="failed_control"/>
+            </t>
+        </ul>
+    </t>
+</templates>

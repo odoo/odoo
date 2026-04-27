@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_urban_piper.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//div/span[hasclass('tracking-number')]" position="before">
+            <t t-if="props.data.deliveryChannel and props.data.providerOrderId">
+                <span class="fs-3"><t t-esc="props.data.deliveryChannel"/></span>
+                <span class="fs-3">
+                    <span>: </span><t t-esc="props.data.providerOrderId.slice(0, -4)"/>
+                    <span class="fw-bolder"><t t-esc="props.data.providerOrderId.slice(-4)"/></span>
+                </span><br/>
+            </t>
+            <t t-if="props.data.deliveryId">
+                <span class="fs-3">UrbanPiper: </span><span class="fs-3" t-esc="props.data.deliveryId" />
+            </t>
+        </xpath>
+        <xpath expr="//div/span[hasclass('tracking-number')]" position="attributes">
+            <attribute name="t-if">!props.data.deliveryId</attribute>
+        </xpath>
+    </t>
+</templates>

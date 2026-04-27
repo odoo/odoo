@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="ir_rule_sms_template_helpdesk_manager" model="ir.rule">
+        <field name="name">SMS Template: helpdesk manager CUD on Helpdesk Ticket</field>
+        <field name="model_id" ref="sms.model_sms_template"/>
+        <field name="groups" eval="[(4, ref('helpdesk.group_helpdesk_manager'))]"/>
+        <field name="domain_force">[('model_id.model', '=', 'helpdesk.ticket')]</field>
+        <field name="perm_read" eval="False"/>
+    </record>
+</odoo>

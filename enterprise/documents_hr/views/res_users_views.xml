@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- user preferences -->
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">res.users.view.form.inherit.documents</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_see_documents"
+                    class="oe_stat_button"
+                    icon="fa-file-text"
+                    type="object">
+                    <field name="document_count" widget="statinfo" string="Documents"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

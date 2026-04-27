@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_lu_annual_tax_report_section_appendix_d" model="account.report">
+        <field name="name">Appendix D</field>
+        <field name="sequence">6</field>
+        <field name="country_id" ref="base.lu"/>
+        <field name="availability_condition">country</field>
+        <field name="custom_handler_model_id" ref="model_l10n_lu_annual_tax_report_handler"/>
+        <field name="column_ids">
+            <record id="l10n_lu_annual_tax_report_appendix_d_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_lu_annual_tax_report_total_stock_entry" model="account.report.line">
+                <field name="name">154 - Total entry of stock for business purposes</field>
+                <field name="code">L10N_LU_TAX_154</field>
+                <field name="hierarchy_level">0</field>
+                <field name="aggregation_formula">L10N_LU_TAX_148.balance + L10N_LU_TAX_150.balance + L10N_LU_TAX_151.balance</field>
+                <field name="children_ids">
+                    <record id="l10n_lu_annual_tax_report_section_appendix_d_155" model="account.report.line">
+                        <field name="name">155 - of which goods for resale</field>
+                        <field name="code">L10N_LU_TAX_155</field>
+                        <field name="external_formula">monetary</field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_d_148" model="account.report.line">
+                        <field name="name">148 - Purchases of goods which give rise to a chargeable event for the supplier or for the taxable person acquiring the goods</field>
+                        <field name="code">L10N_LU_TAX_148</field>
+                        <field name="aggregation_formula">L10N_LU_TAX_131.balance + L10N_LU_TAX_139.balance + L10N_LU_TAX_147.balance</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_d_131" model="account.report.line">
+                                <field name="name">131 - Purchases within the country</field>
+                                <field name="code">L10N_LU_TAX_131</field>
+                                <field name="aggregation_formula">L10N_LU_TAX_129.balance + L10N_LU_TAX_130.balance</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="children_ids">
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_d_129" model="account.report.line">
+                                        <field name="name">129 - Purchases other than manufactured tobacco</field>
+                                        <field name="code">L10N_LU_TAX_129</field>
+                                        <field name="aggregation_formula">L10N_LU_TAX_771.balance + L10N_LU_TAX_971.balance + L10N_LU_TAX_772.balance + L10N_LU_TAX_972.balance + L10N_LU_TAX_774.balance + L10N_LU_TAX_773.balance + L10N_LU_TAX_973.balance + L10N_LU_TAX_124.balance + L10N_LU_TAX_128.balance + L10N_LU_TAX_197.balance</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_771" model="account.report.line">
+                                                <field name="name">771 - rate of 17%</field>
+                                                <field name="code">L10N_LU_TAX_771</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_971" model="account.report.line">
+                                                <field name="name">971 - rate of 16%</field>
+                                                <field name="code">L10N_LU_TAX_971</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_772" model="account.report.line">
+                                                <field name="name">772 - rate of 14%</field>
+                                                <field name="code">L10N_LU_TAX_772</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_972" model="account.report.line">
+                                                <field name="name">972 - rate of 13%</field>
+                                                <field name="code">L10N_LU_TAX_972</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_774" model="account.report.line">
+                                                <field name="name">774 - rate of 12%</field>
+                                                <field name="code">L10N_LU_TAX_774</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_773" model="account.report.line">
+                                                <field name="name">773 - rate of 8%</field>
+                                                <field name="code">L10N_LU_TAX_773</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_973" model="account.report.line">
+                                                <field name="name">973 - rate of 7%</field>
+                                                <field name="code">L10N_LU_TAX_973</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_124" model="account.report.line">
+                                                <field name="name">124 - rate of 3%</field>
+                                                <field name="code">L10N_LU_TAX_124</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_394" model="account.report.line">
+                                                <field name="name">394 - Custom rate (%)</field>
+                                                <field name="code">L10N_LU_TAX_394</field>
+                                                <field name="external_formula">percentage</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_128" model="account.report.line">
+                                                <field name="name">128 - Custom rate (value)</field>
+                                                <field name="code">L10N_LU_TAX_128</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_197" model="account.report.line">
+                                                <field name="name">197 - Exempt</field>
+                                                <field name="code">L10N_LU_TAX_197</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_d_130" model="account.report.line">
+                                        <field name="name">130 - Manufactured tobacco</field>
+                                        <field name="code">L10N_LU_TAX_130</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_d_139" model="account.report.line">
+                                <field name="name">139 - Intra-Community acquisitions</field>
+                                <field name="code">L10N_LU_TAX_139</field>
+                                <field name="aggregation_formula">L10N_LU_TAX_137.balance + L10N_LU_TAX_138.balance</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="children_ids">
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_d_137" model="account.report.line">
+                                        <field name="name">137 - Acquisitions other than manufactured tobacco</field>
+                                        <field name="code">L10N_LU_TAX_137</field>
+                                        <field name="aggregation_formula">L10N_LU_TAX_776.balance + L10N_LU_TAX_976.balance + L10N_LU_TAX_777.balance + L10N_LU_TAX_977.balance + L10N_LU_TAX_778.balance + L10N_LU_TAX_978.balance + L10N_LU_TAX_134.balance + L10N_LU_TAX_136.balance + L10N_LU_TAX_198.balance</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_776" model="account.report.line">
+                                                <field name="name">776 - rate of 17%</field>
+                                                <field name="code">L10N_LU_TAX_776</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_976" model="account.report.line">
+                                                <field name="name">976 - rate of 16%</field>
+                                                <field name="code">L10N_LU_TAX_976</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_777" model="account.report.line">
+                                                <field name="name">777 - rate of 14%</field>
+                                                <field name="code">L10N_LU_TAX_777</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_977" model="account.report.line">
+                                                <field name="name">977 - rate of 13%</field>
+                                                <field name="code">L10N_LU_TAX_977</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_778" model="account.report.line">
+                                                <field name="name">778 - rate of 8%</field>
+                                                <field name="code">L10N_LU_TAX_778</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_978" model="account.report.line">
+                                                <field name="name">978 - rate of 7%</field>
+                                                <field name="code">L10N_LU_TAX_978</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_134" model="account.report.line">
+                                                <field name="name">134 - rate of 3%</field>
+                                                <field name="code">L10N_LU_TAX_134</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_153" model="account.report.line">
+                                                <field name="name">153 - Custom rate (%)</field>
+                                                <field name="code">L10N_LU_TAX_153</field>
+                                                <field name="external_formula">percentage</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_136" model="account.report.line">
+                                                <field name="name">136 - Custom rate (value)</field>
+                                                <field name="code">L10N_LU_TAX_136</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_198" model="account.report.line">
+                                                <field name="name">198 - Exempt</field>
+                                                <field name="code">L10N_LU_TAX_198</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_d_138" model="account.report.line">
+                                        <field name="name">138 - Manufactured tobacco</field>
+                                        <field name="code">L10N_LU_TAX_138</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_d_147" model="account.report.line">
+                                <field name="name">147 - Imports</field>
+                                <field name="code">L10N_LU_TAX_147</field>
+                                <field name="aggregation_formula">L10N_LU_TAX_145.balance + L10N_LU_TAX_146.balance</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="children_ids">
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_d_145" model="account.report.line">
+                                        <field name="name">145 - Imports other than manufactured tobacco</field>
+                                        <field name="code">L10N_LU_TAX_145</field>
+                                        <field name="aggregation_formula">L10N_LU_TAX_781.balance + L10N_LU_TAX_981.balance + L10N_LU_TAX_782.balance + L10N_LU_TAX_982.balance + L10N_LU_TAX_783.balance + L10N_LU_TAX_983.balance + L10N_LU_TAX_142.balance + L10N_LU_TAX_144.balance + L10N_LU_TAX_199.balance</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_781" model="account.report.line">
+                                                <field name="name">781 - rate of 17%</field>
+                                                <field name="code">L10N_LU_TAX_781</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_981" model="account.report.line">
+                                                <field name="name">981 - rate of 16%</field>
+                                                <field name="code">L10N_LU_TAX_981</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_782" model="account.report.line">
+                                                <field name="name">782 - rate of 14%</field>
+                                                <field name="code">L10N_LU_TAX_782</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_982" model="account.report.line">
+                                                <field name="name">982 - rate of 13%</field>
+                                                <field name="code">L10N_LU_TAX_982</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_783" model="account.report.line">
+                                                <field name="name">783 - rate of 8%</field>
+                                                <field name="code">L10N_LU_TAX_783</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_983" model="account.report.line">
+                                                <field name="name">983 - rate of 7%</field>
+                                                <field name="code">L10N_LU_TAX_983</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_142" model="account.report.line">
+                                                <field name="name">142 - rate of 3%</field>
+                                                <field name="code">L10N_LU_TAX_142</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_149" model="account.report.line">
+                                                <field name="name">149 - Custom rate (%)</field>
+                                                <field name="code">L10N_LU_TAX_149</field>
+                                                <field name="external_formula">percentage</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_144" model="account.report.line">
+                                                <field name="name">144 - Custom rate (value)</field>
+                                                <field name="code">L10N_LU_TAX_144</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_d_199" model="account.report.line">
+                                                <field name="name">199 - Exempt</field>
+                                                <field name="code">L10N_LU_TAX_199</field>
+                                                <field name="external_formula">monetary</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_d_146" model="account.report.line">
+                                        <field name="name">146 - Manufactured tobacco</field>
+                                        <field name="code">L10N_LU_TAX_146</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_d_150" model="account.report.line">
+                        <field name="name">150 - Purchases of goods which don't give rise to a chargeable event neither for the supplier nor for the taxable person acquiring the goods</field>
+                        <field name="code">L10N_LU_TAX_150</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="external_formula">monetary</field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_d_151" model="account.report.line">
+                        <field name="name">151 - Purchases of goods abroad which are not brought to Luxembourg</field>
+                        <field name="code">L10N_LU_TAX_151</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="external_formula">monetary</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

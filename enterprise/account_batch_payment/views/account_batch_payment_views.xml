@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record model="ir.actions.server" id="action_account_create_batch_payment">
+            <field name="name">Create batch payment</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="binding_model_id" ref="account.model_account_payment"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+if records:
+    action = records.create_batch_payment()
+            </field>
+        </record>
+
+        <record id="view_batch_payment_form" model="ir.ui.view">
+            <field name="name">account.batch.payment.form</field>
+            <field name="model">account.batch.payment</field>
+            <field name="arch" type="xml">
+                <form string="Batch Payment">
+                <header>
+                    <field name="id" invisible="1"/>
+                    <field name="file_generation_enabled" invisible="1"/>
+                    <button id="print_button" name="print_batch_payment" string="Print" type="object" invisible="state != 'sent'"/>
+                    <button id="regenerate_file_button" name="validate_batch_button" string="Re-generate Export File" type="object" invisible="not file_generation_enabled or state != 'sent' or not payment_ids"/>
+                    <button id="validate_button" name="validate_batch_button" class="oe_highlight" string="Validate" type="object" invisible="state != 'draft' or not payment_ids"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <field name="invalid_sct_partners_ids" invisible="1"/>
+                <div class="alert alert-danger" invisible="not invalid_sct_partners_ids" role="alert">
+                    The country or city of <a type="object" name="action_invalid_partners_from_sct">these partners</a>
+                    is not set, which could cause the file to be refused by the bank.
+                </div>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="batch_type" readonly="payment_ids.length" force_save="1"/>
+                            <field name="journal_id" domain="[('type', '=', 'bank')]" options="{'no_open': True, 'no_create': True}" readonly="state != 'draft'"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="available_payment_method_ids" invisible="1"/>
+                            <field name="payment_method_id" options="{'no_create': True, 'no_open': True}"
+                                   required="1"
+                                   readonly="state != 'draft' or payment_ids"/>
+                            <field name="payment_method_code" invisible="1"/> <!--For use in modules depending on this one-->
+                        </group><group>
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="name" placeholder="Leave empty to generate automatically..." required="0" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Batch Content" name="batch_content">
+                            <field name="payment_ids"
+                                   readonly="state != 'draft'"
+                                   force_save="1"
+                                   widget="many2many"
+                                   domain="payment_ids_domain"
+                                   options="{'no_create': True}">
+                                <list string="Payments" decoration-muted="state == 'draft'" decoration-danger="state in ('rejected', 'canceled')" create="false" editable="top" open_form_view="True">
+                                    <field name="name" readonly="1"/>
+                                    <field name="date" readonly="1"/>
+                                    <field name="partner_id" readonly="1"/>
+                                    <field name="memo" readonly="1"/>
+                                    <field name="payment_method_name" optional="hide" string="Payment method" readonly="1"/>
+                                    <field name="amount_signed" sum="Total" string="Amount" readonly="1"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="state" column_invisible="True"/>
+                                    <field name="payment_method_id" column_invisible="True"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_batch_payment_search" model="ir.ui.view">
+            <field name="name">account.batch.payment.search</field>
+            <field name="model">account.batch.payment</field>
+            <field name="arch" type="xml">
+                <search string="Batch Payment">
+                    <field name="journal_id" />
+                    <field name="name" />
+                    <field name="amount" />
+                    <filter string="Unreconciled" domain="[('state','!=','reconciled')]" name="open"/>
+
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_journal_id" string="Bank Journal" context="{'group_by':'journal_id'}"/>
+                        <filter name="group_by_state" string="State" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_batch_payment_tree" model="ir.ui.view">
+            <field name="name">account.batch.payment.list</field>
+            <field name="model">account.batch.payment</field>
+            <field name="arch" type="xml">
+                <list decoration-muted="state == 'reconciled'" decoration-info="state == 'draft'" sample="1">
+                    <field name="name" readonly="state != 'draft'"/>
+                    <field name="journal_id" readonly="state != 'draft'"/>
+                    <field name="date" readonly="state != 'draft'"/>
+                    <field name="amount"/>
+                    <field name="activity_ids" widget="list_activity" optional="show"/>
+                    <field name="currency_id" column_invisible="True"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'sent'" />
+                </list>
+            </field>
+        </record>
+
+        <record id="action_batch_payment_in" model="ir.actions.act_window">
+            <field name="name">Customer Batch Payments</field>
+            <field name="res_model">account.batch.payment</field>
+            <field name="view_mode">list,form,kanban,activity</field>
+            <field name="view_id" ref="view_batch_payment_tree"/>
+            <field name="search_view_id" ref="view_batch_payment_search"/>
+            <field name="domain">[('batch_type', '=', 'inbound')]</field>
+            <field name="context">{'search_default_open': 1, 'default_batch_type': 'inbound'}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new customer batch payment
+                </p><p>
+                    Batch payments allow you grouping different payments to ease
+                    reconciliation. They are also useful when depositing checks
+                    to the bank.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_batch_payment_out" model="ir.actions.act_window">
+            <field name="name">Vendor Batch Payments</field>
+            <field name="res_model">account.batch.payment</field>
+            <field name="view_mode">list,form,kanban,activity</field>
+            <field name="view_id" ref="view_batch_payment_tree"/>
+            <field name="search_view_id" ref="view_batch_payment_search"/>
+            <field name="domain">[('batch_type', '=', 'outbound')]</field>
+            <field name="context">{'search_default_open': 1, 'default_batch_type': 'outbound'}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new vendor batch payment
+                </p><p>
+                    Batch payments allow you grouping different payments to ease
+                    reconciliation. They are also useful when depositing checks
+                    to the bank.
+                </p>
+            </field>
+        </record>
+
+         <record id="view_account_move_kanban" model="ir.ui.view">
+            <field name="name">account.batch.payment.move.kanban</field>
+            <field name="model">account.batch.payment</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" sample="1" js_class="account_documents_kanban">
+                    <field name="currency_id"/>
+                    <templates>
+                        <t t-name="card">
+                            <div class="row mb4 fw-bold">
+                                <field name="name" class="col-6" readonly="state != 'draft'"/>
+                                <div class="col-6 text-end">
+                                    <i class="fa fa-clock-o" aria-label="Date" role="img" title="Date"/> <field name="date"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <field name="amount" class="col-6" widget='monetary'/>
+                                <div class="col-6">
+                                    <field name="state" class="float-end" widget="label_selection" options="{'classes': {'new': 'default', 'sent': 'default', 'reconciled': 'success'}}"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <menuitem action="action_batch_payment_in" name="Batch Payments" id="menu_batch_payment_sales" parent="account.menu_finance_receivables" sequence="18" groups="account.group_account_basic,account.group_account_readonly"/>
+        <menuitem action="action_batch_payment_out" name="Batch Payments" id="menu_batch_payment_purchases" parent="account.menu_finance_payables" sequence="21" groups="account.group_account_basic,account.group_account_readonly"/>
+
+</odoo>

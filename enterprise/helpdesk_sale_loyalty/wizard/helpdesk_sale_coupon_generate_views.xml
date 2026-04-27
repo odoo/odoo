@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="helpdesk_sale_coupon_generate_view_form" model="ir.ui.view">
+            <field name="name">helpdesk.sale.coupon.generate.form</field>
+            <field name="model">helpdesk.sale.coupon.generate</field>
+            <field name="arch" type="xml">
+                <form string="Generate a Coupon">
+                    <sheet>
+                        <group>
+                            <field name="ticket_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="program" required="1" options="{'no_create': True}" domain="[('program_type', '=', 'coupons'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
+                            <label for="points_granted" groups="base.group_no_one"/>
+                            <span groups="base.group_no_one">
+                                <field name="points_granted" class="oe_inline"/>
+                                <field name="points_name" class="oe_inline"/>
+                            </span>
+                            <field name="valid_until"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_coupon_generate_send" type="object" string="Send by Email" class="oe_highlight"/>
+                        <button special="cancel" data-hotkey="x" string="Discard"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="helpdesk_sale_coupon_generate_action" model="ir.actions.act_window">
+            <field name="name">Generate a Coupon</field>
+            <field name="res_model">helpdesk.sale.coupon.generate</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'dialog_size': 'medium'}</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="helpdesk_sale_coupon_generate_view_form"/>
+        </record>
+    </data>
+</odoo>

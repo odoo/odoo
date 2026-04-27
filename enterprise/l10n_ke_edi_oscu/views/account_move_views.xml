@@ -1,0 +1,45 @@
+<odoo>
+    <data>
+        <record id="invoice_form_inherit_l10n_ke_oscu" model="ir.ui.view">
+            <field name="name">invoice.form.inherit.l10n.ke.oscu</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <field name="l10n_ke_oscu_invoice_number" invisible="1"/>
+                    <button
+                        name="action_l10n_ke_oscu_confirm_vendor_bill" type="object" string="Send to eTIMS"
+                        invisible="move_type not in ('in_invoice', 'in_refund') or l10n_ke_oscu_invoice_number or state != 'posted' or country_code != 'KE'"/>
+                </xpath>
+                <xpath expr="//header" position="after">
+                    <div class="m-0" name="warnings">
+                        <field name="l10n_ke_validation_message" class="o_field_html" widget="actionable_errors" invisible="country_code != 'KE'"/>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='payment_reference']" position="after">
+                    <field name="l10n_ke_payment_method_id" widget="selection" invisible="country_code != 'KE'"/>
+                </xpath>
+                <notebook position="inside">
+                    <page string="eTIMS Details" invisible="country_code != 'KE'">
+                        <group>
+                            <group string="eTIMS Details">
+                                <field name="l10n_ke_reason_code_id"
+                                       widget="selection"
+                                       invisible="move_type not in ('in_refund', 'out_refund')"
+                                       readonly="l10n_ke_oscu_invoice_number"/>
+                                <field name="reversed_entry_id"
+                                       invisible="move_type not in ('in_refund', 'out_refund')"
+                                       readonly="l10n_ke_oscu_invoice_number"/>
+                                <field name="l10n_ke_oscu_invoice_number" readonly="1"/>
+                                <field name="l10n_ke_oscu_receipt_number" readonly="1" invisible="move_type not in ('out_invoice', 'out_refund')"/>
+                                <field name="l10n_ke_oscu_signature" readonly="1" invisible="move_type not in ('out_invoice', 'out_refund')"/>
+                                <field name="l10n_ke_oscu_datetime" readonly="1" invisible="move_type not in ('out_invoice', 'out_refund')"/>
+                                <field name="l10n_ke_oscu_internal_data" readonly="1" invisible="move_type not in ('out_invoice', 'out_refund')"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+    </data>
+</odoo>

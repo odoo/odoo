@@ -1,0 +1,135 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* documents_sign
+#
+# Translators:
+# Wil Odoo, 2024
+# Daye Jeong, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:47+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Daye Jeong, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: documents_sign
+#: model_terms:ir.ui.view,arch_db:documents_sign.res_config_settings_view_form_inherit_documents_sign
+msgid ""
+"Base folder for the folders created on-the-fly in the Sign App. Permission "
+"of the created folders will be inherited from this base folder."
+msgstr ""
+"서명 앱에서 즉석에서 만든 폴더의 기본 폴더입니다. 생성된 폴더의 권한은 이 기"
+"본 폴더에서 상속됩니다."
+
+#. module: documents_sign
+#: model:ir.model,name:documents_sign.model_res_company
+msgid "Companies"
+msgstr "회사"
+
+#. module: documents_sign
+#: model:ir.model,name:documents_sign.model_res_config_settings
+msgid "Config Settings"
+msgstr "환경설정"
+
+#. module: documents_sign
+#: model:ir.model,name:documents_sign.model_documents_document
+msgid "Document"
+msgstr "문서"
+
+#. module: documents_sign
+#: model_terms:ir.ui.view,arch_db:documents_sign.res_config_settings_view_form_inherit_documents_sign
+msgid ""
+"Each document template can be configured to centralize signed documents into "
+"a specific folder."
+msgstr ""
+"서명된 문서를 지정된 폴더로 중앙 집중화하도록 각 문서 템플릿을 구성할 수 있습"
+"니다."
+
+#. module: documents_sign
+#: model_terms:ir.ui.view,arch_db:documents_sign.res_config_settings_view_form_inherit_documents_sign
+msgid "Folder"
+msgstr "폴더"
+
+#. module: documents_sign
+#: model_terms:ir.ui.view,arch_db:documents_sign.res_config_settings_view_form_inherit_documents_sign
+msgid "Go to Sign Document Templates"
+msgstr "문서 서식 파일 서명으로 이동"
+
+#. module: documents_sign
+#. odoo-python
+#: code:addons/documents_sign/models/documents_document.py:0
+msgid "Invalid model %s"
+msgstr "잘못된 모델 %s"
+
+#. module: documents_sign
+#. odoo-python
+#: code:addons/documents_sign/models/documents_document.py:0
+msgid "New templates"
+msgstr "새 서식"
+
+#. module: documents_sign
+#: model:ir.actions.server,name:documents_sign.ir_actions_server_create_sign_template_direct
+#: model_terms:ir.ui.view,arch_db:documents_sign.res_config_settings_view_form_inherit_documents_sign
+msgid "Sign"
+msgstr "서명"
+
+#. module: documents_sign
+#: model:ir.model.fields,field_description:documents_sign.field_res_config_settings__documents_sign_folder_id
+#: model_terms:ir.ui.view,arch_db:documents_sign.res_config_settings_view_form_inherit_documents_sign
+msgid "Sign Base Folder"
+msgstr "서명 기본 폴더"
+
+#. module: documents_sign
+#: model:ir.model.fields,field_description:documents_sign.field_res_company__documents_sign_folder_id
+msgid "Sign Folder"
+msgstr "서명 폴더"
+
+#. module: documents_sign
+#: model:ir.actions.server,name:documents_sign.ir_actions_server_create_sign_template_direct_create
+msgid "Sign create"
+msgstr "서명 만들기"
+
+#. module: documents_sign
+#: model:ir.model,name:documents_sign.model_sign_request
+msgid "Signature Request"
+msgstr "서명 요청"
+
+#. module: documents_sign
+#: model:ir.model,name:documents_sign.model_sign_request_item
+msgid "Signature Request Item"
+msgstr "서명 요청 항목"
+
+#. module: documents_sign
+#: model:ir.model,name:documents_sign.model_sign_template
+msgid "Signature Template"
+msgstr "서명 서식"
+
+#. module: documents_sign
+#: model:ir.model.fields,field_description:documents_sign.field_sign_template__folder_id
+msgid "Signed Document Folder"
+msgstr "서명된 문서 폴더"
+
+#. module: documents_sign
+#: model:ir.model.fields,field_description:documents_sign.field_sign_template__documents_tag_ids
+msgid "Signed Document Tags"
+msgstr "서명된 문서 태그"
+
+#. module: documents_sign
+#. odoo-python
+#: code:addons/documents_sign/models/documents_document.py:0
+msgid "This action can only be applied on a single record."
+msgstr "이 작업은 하나의 레코드에만 적용할 수 있습니다."
+
+#. module: documents_sign
+#. odoo-python
+#: code:addons/documents_sign/models/documents_document.py:0
+msgid "This action can only be applied on pdf document."
+msgstr "이 작업은 PDF 문서에만 적용할 수 있습니다."

@@ -1,0 +1,435 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_payroll_account
+#
+# Translators:
+# Wil Odoo, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
+# Manon Rondou, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:47+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Manon Rondou, 2025\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_bank_statement_line__payslip_count
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_move__payslip_count
+msgid "# of Payslips"
+msgstr "# Loonstroken"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_view_form
+msgid ""
+"<span class=\"o_stat_text\" invisible=\"move_state != 'draft'\">Journal "
+"Entry <br/>(Draft)</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"move_state !"
+"= 'posted'\">Journal Entry <br/>(Posted)</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"move_state !"
+"= 'cancel'\">Journal Entry <br/>(Canceled)</span>"
+msgstr ""
+"<span class=\"o_stat_text\" invisible=\"move_state != 'draft'\">Boeking <br/"
+">(Concept)</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"move_state !"
+"= 'posted'\">Boeking <br/>(Geboekt)</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"move_state !"
+"= 'cancel'\">Boeking <br/>(Geannuleerd)</span>"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.view_move_form_inherit
+msgid "<span class=\"o_stat_text\">Payslip</span>"
+msgstr "<span class=\"o_stat_text\">Loonstrook</span>"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "Grootboekschema sjabloon"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_chart_template.py:0
+msgid "Account Payslip Houserental"
+msgstr "Rekening Loonstrook Huurwoning"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_salary_rule_view_form
+msgid "Accounting"
+msgstr "Boekhouding"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__move_id
+msgid "Accounting Entry"
+msgstr "Boeking"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "Adjustment Entry"
+msgstr "Aanpassingsboeking"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract__analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract_history__analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__analytic_account_id
+msgid "Analytic Account"
+msgstr "Analytische rekening"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_view_form
+msgid "Are you sure you want to proceed?"
+msgstr "Weet je zeker dat je wilt doorgaan?"
+
+#. module: hr_payroll_account
+#: model:ir.actions.act_window,name:hr_payroll_account.action_res_partner_bank_account_form
+#: model:ir.model,name:hr_payroll_account.model_res_partner_bank
+#: model:ir.ui.menu,name:hr_payroll_account.menu_hr_employee_bank_account
+msgid "Bank Accounts"
+msgstr "Bankrekeningen"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.res_config_settings_view_form
+msgid "Batch Account Move Lines"
+msgstr "Batchboekingsregel"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__batch_payroll_move_lines
+#: model:ir.model.fields,field_description:hr_payroll_account.field_res_company__batch_payroll_move_lines
+#: model:ir.model.fields,field_description:hr_payroll_account.field_res_config_settings__batch_payroll_move_lines
+msgid "Batch Payroll Move Lines"
+msgstr "Loonadministratie batchboekingsregels"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_res_company
+msgid "Companies"
+msgstr "Bedrijven"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuratie-instellingen"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_contract_history
+msgid "Contract history"
+msgstr "Contractgeschiedenis"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_view_form
+msgid "Create Draft Entry"
+msgstr "Maak conceptboeking"
+
+#. module: hr_payroll_account
+#: model_terms:ir.actions.act_window,help:hr_payroll_account.action_res_partner_bank_account_form
+msgid "Create a Bank Account"
+msgstr "Maak een bankrekening"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__account_credit
+msgid "Credit Account"
+msgstr "Creditrekening"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__credit_tag_ids
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__credit_tag_ids
+msgid "Credit Tax Grids"
+msgstr "Roosters btw-krediet"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__date
+msgid "Date Account"
+msgstr "Datum rekening"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__account_debit
+msgid "Debit Account"
+msgstr "Debetrekening"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__debit_tag_ids
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__debit_tag_ids
+msgid "Debit Tax Grids"
+msgstr "Roosters btw-debet"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_contract
+msgid "Employee Contract"
+msgstr "Arbeidsovereenkomst"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.view_partner_bank_search_inherit
+msgid "Employees"
+msgstr "Werknemers"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_res_config_settings__batch_payroll_move_lines
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.res_config_settings_view_form
+msgid ""
+"Enable this option to merge all the accounting entries for the same period "
+"into a single account move line. This will anonymize the accounting entries "
+"but also disable single payment generations."
+msgstr ""
+"Schakel deze optie in om alle boekingen voor dezelfde periode in een enkele "
+"boekingsregel samen te brengen. Dit anonimiseert de boekingen, maar schakelt "
+"ook de generatie van een enkele betaling uit."
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_salary_rule__split_move_lines
+msgid ""
+"Enable this option to split the accountig entries for this rule according to "
+"the payslip line name. It could be useful for deduction/reimbursement or "
+"salary attachments for instance."
+msgstr ""
+"Schakel deze optie in om de boekingen voor deze regel op te splitsen op "
+"basis van de naam van de loonstrookregel. Dit kan bijvoorbeeld handig zijn "
+"voor inhoudingen/vergoedingen of loonbijlagen."
+
+#. module: hr_payroll_account
+#: model_terms:ir.actions.act_window,help:hr_payroll_account.action_res_partner_bank_account_form
+msgid ""
+"From here you can manage all bank accounts linked to you and your contacts."
+msgstr ""
+"Vanaf hier kun je alle bankrekeningen beheren die aan je en je contacten "
+"zijn gekoppeld."
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payroll_payment_report_wizard
+msgid "HR Payroll Payment Report Wizard"
+msgstr "Wizard HR-Loonrapportage"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_setup_bank_manual_config__has_alt_bank_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_res_partner_bank__has_alt_bank_account
+msgid "Has Alt Bank Account"
+msgstr "Heeft Alt Bankrekening"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payroll_structure.py:0
+msgid ""
+"Incorrect journal: The journal must be in the same currency as the company"
+msgstr ""
+"Onjuiste dagboek: Het dagboek moet in dezelfde valuta zijn als het bedrijf"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/wizard/hr_payroll_payment_report_wizard.py:0
+msgid ""
+"Invalid IBAN for the following employees:\n"
+"%s"
+msgstr ""
+"Ongeldig IBAN voor de volgende werknemers:\n"
+"%s"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_journal
+msgid "Journal"
+msgstr "Dagboek"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+#: code:addons/hr_payroll_account/models/hr_payslip_run.py:0
+#: model:ir.model,name:hr_payroll_account.model_account_move
+msgid "Journal Entry"
+msgstr "Boeking"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip__date
+msgid "Keep empty to use the period of the validation(Payslip) date."
+msgstr ""
+"Laat leeg om de periode van de controledatum (loonstrook) te gebruiken."
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_run__move_id
+msgid "Move"
+msgstr "Boeking"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_run__move_state
+msgid "Move State"
+msgstr "Staat verplaatsen"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__not_computed_in_net
+msgid "Not computed in net accountably"
+msgstr "Niet netto berekend"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "One of the contract for these payslips has no structure type."
+msgstr "Een van de contracten voor deze loonstroken heeft geen structuurtype."
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_payment_register
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_view_form
+msgid "Pay"
+msgstr "Betaal"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Loonstrook"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/wizard/account_payment_register.py:0
+msgid "Payment done at %s"
+msgstr "Betaling uitgevoerd bij %s"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_payment
+msgid "Payments"
+msgstr "Betalingen"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "Loonstrookbatches"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_line
+msgid "Payslip Line"
+msgstr "Loonstrookregel"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_bank_statement_line__payslip_ids
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_move__payslip_ids
+msgid "Payslips"
+msgstr "Loonstroken"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_chart_template.py:0
+msgid "SLR"
+msgstr "SLR"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_chart_template.py:0
+msgid "Salaries"
+msgstr "Lonen"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payroll_structure__journal_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__journal_id
+msgid "Salary Journal"
+msgstr "Loon dagboek"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr "Salarisregel"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payroll_structure
+msgid "Salary Structure"
+msgstr "Loonstructuur"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__split_move_lines
+msgid "Split account line based on name"
+msgstr "Rekeningregel splitsen op basis van naam"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip_line__credit_tag_ids
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_salary_rule__credit_tag_ids
+msgid ""
+"Tags assigned to this line will impact financial reports when translated "
+"into an accounting journal entry.They will be applied on the credit account "
+"line in the journal entry."
+msgstr ""
+"Labels die aan deze regel zijn toegewezen, hebben invloed op financiële "
+"rapporten wanneer ze in boekingen worden omgezet. Ze worden toegepast op de "
+"creditrekeningregel in de boeking."
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip_line__debit_tag_ids
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_salary_rule__debit_tag_ids
+msgid ""
+"Tags assigned to this line will impact financial reports when translated "
+"into an accounting journal entry.They will be applied on the debit account "
+"line in the journal entry."
+msgstr ""
+"Labels die aan deze regel zijn toegewezen, hebben invloed op financiële "
+"rapporten wanneer ze in boekingen worden omgezet. Ze worden toegepast op de "
+"debetrekeningregel in de boeking."
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the default Account!"
+msgstr "Bij de kostenrekening \"%s\" is geen correcte rekening ingesteld!"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "The credit account on the NET salary rule is not reconciliable"
+msgstr "De creditrekening op de NETTO salarisregel kan niet worden afgeletterd"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "The employee bank account is untrusted"
+msgstr "De bankrekening van de werknemer is niet vertrouwd"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_salary_rule__not_computed_in_net
+msgid ""
+"This field allows you to delete the value of this rule in the \"Net Salary\" "
+"rule at the accounting level to explicitly display the value of this rule in "
+"the accounting. For example, if you want to display the value of your "
+"representation fees, you can check this field."
+msgstr ""
+"In dit veld kun je de waarde van deze regel in de regel \"Nettosalaris\" op "
+"het niveau van de boekhouding verwijderen om de waarde van deze regel "
+"expliciet weer te geven in de boekhouding. Als je bijvoorbeeld de waarde van "
+"je representatiekosten wilt weergeven, kun je dit veld controleren."
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.view_partner_bank_form_inherit_hr_payroll_account
+msgid "This will replace the employee existing bank account."
+msgstr "Deze vervangt de bestaande bankrekening van de werknemer."
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "You can only register payment for posted journal entries."
+msgstr "Je kunt alleen betalingen registreren voor geboekte boekingen."
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "You can only register payments for unpaid documents."
+msgstr "Je kunt alleen betalingen registreren voor onbetaalde documenten."
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "You can't create a journal entry for a paid payslip."
+msgstr "Je kunt geen boeking voor een reeds betaalde loonstrook aanmaken."
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_journal.py:0
+msgid "You cannot delete the journal linked to a Salary Structure"
+msgstr ""
+"Je kunt het dagboek dat aan een loonstructuur gekoppeld is, niet verwijderen"
+
+#~ msgid "One of the payroll structures has no account journal defined on it."
+#~ msgstr ""
+#~ "In een van de loonadministratiestructuren is geen rekening gedefinieerd."

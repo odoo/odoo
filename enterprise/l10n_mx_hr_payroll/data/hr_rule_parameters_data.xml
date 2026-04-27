@@ -1,0 +1,792 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="rule_parameter_days_per_month" model="hr.rule.parameter">
+        <field name="name">Mexico: Days Per Month</field>
+        <field name="code">l10n_mx_days_per_month</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p>The number of days considered per month in most computations.</p>
+
+<h3 class="mt-5">Source</h3>
+<a href="#" target="_blank">#</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre><em>Value</em> -> <strong>Int</strong></pre>
+        </field>
+    </record>
+    <record id="rule_parameter_days_per_month_2000" model="hr.rule.parameter.value">
+        <field name="parameter_value">30</field>
+        <field name="rule_parameter_id" ref="rule_parameter_days_per_month"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_compensation_factor" model="hr.rule.parameter">
+        <field name="name">Mexico: Compensation Factor</field>
+        <field name="code">l10n_mx_compensation_factor</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p>The number of days for the compensation factor.</p>
+
+<h3 class="mt-5">Source</h3>
+<a href="#" target="_blank">#</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre><em>Value</em> -> <strong>Int</strong></pre>
+        </field>
+    </record>
+    <record id="rule_parameter_compensation_factor_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">90</field>
+        <field name="rule_parameter_id" ref="rule_parameter_compensation_factor"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_salary_limit_annual_declaration" model="hr.rule.parameter">
+        <field name="name">Mexico: Salary Limit for the Annual Declaration</field>
+        <field name="code">l10n_mx_salary_limit_annual_declaration</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p>If the annual salary is higher than this limit, there will be no annual declaration.</p>
+
+<h3 class="mt-5">Source</h3>
+<a href="#" target="_blank">#</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre><em>Value</em> -> <strong>Float</strong></pre>
+        </field>
+    </record>
+    <record id="rule_parameter_l10n_mx_salary_limit_annual_declaration_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">400000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_salary_limit_annual_declaration"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_imss_limit_with_uma" model="hr.rule.parameter">
+        <field name="name">Mexico: IMSS Limit with the UMA</field>
+        <field name="code">l10n_mx_imss_limit_with_uma</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p>The IMSS contribution limit is determined at this number of days times the daily UMA.</p>
+
+<h3 class="mt-5">Source</h3>
+<a href="#" target="_blank">#</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre><em>Value</em> -> <strong>Int</strong></pre>
+        </field>
+    </record>
+    <record id="rule_parameter_imss_limit_with_uma_2016" model="hr.rule.parameter.value">
+        <field name="parameter_value">25</field>
+        <field name="rule_parameter_id" ref="rule_parameter_imss_limit_with_uma"/>
+        <field name="date_from" eval="datetime(2016, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_risk_bonus_rate" model="hr.rule.parameter">
+        <field name="name">Mexico: Risk Bonus Rate</field>
+        <field name="code">l10n_mx_risk_bonus_rate</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p>The risk bonus rate for the IMSS is a contribution that employers must inform to the social security system,
+     to finance the expenses from the company accidents and illnesses.</p>
+
+<h3 class="mt-5">Source</h3>
+<a href="#" target="_blank">#</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre><em>Value</em> -> <strong>Percentage</strong> [0: 1]</pre>
+        </field>
+    </record>
+    <record id="rule_parameter_risk_bonus_rate_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.005</field>
+        <field name="rule_parameter_id" ref="rule_parameter_risk_bonus_rate"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <!-- Christmas Bonus -->
+    <record id="rule_parameter_christmas_bonus" model="hr.rule.parameter">
+        <field name="name">Mexico: Christmas Bonus</field>
+        <field name="code">l10n_mx_christmas_bonus</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p>Quantity in days for the Christmas bonus</p>
+
+<h3 class="mt-5">Source</h3>
+<a href="#" target="_blank">#</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre><em>Value</em> -> <strong>Int</strong></pre>
+        </field>
+    </record>
+    <record id="rule_parameter_christmas_bonus_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">15</field>
+        <field name="rule_parameter_id" ref="rule_parameter_christmas_bonus"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_christmas_bonus_exemption" model="hr.rule.parameter">
+        <field name="name">Mexico: Christmas Bonus Exemption</field>
+        <field name="code">l10n_mx_christmas_bonus_exemption</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p>Quantity in days for the Christmas bonus that are exempt from taxes</p>
+
+<h3 class="mt-5">Source</h3>
+<a href="#" target="_blank">#</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre><em>Value</em> -> <strong>Int</strong></pre>
+        </field>
+    </record>
+    <record id="rule_parameter_christmas_bonus_exemption_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">15</field>
+        <field name="rule_parameter_id" ref="rule_parameter_christmas_bonus_exemption"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <!-- DAILY -->
+    <record id="rule_parameter_uma" model="hr.rule.parameter">
+        <field name="name">Mexico: Daily UMA</field>
+        <field name="code">l10n_mx_uma</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p>UMA: Unidad de Medida y Actualización</p>
+
+<h3 class="mt-5">Source</h3>
+<a href="https://www.littler.com/publication-press/publication/mexico-increase-uma-value-announced-2024" target="_blank">https://www.littler.com/publication-press/publication/mexico-increase-uma-value-announced-2024</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre><em>Value</em> -> <strong>Float</strong></pre>
+        </field>
+    </record>
+    <record id="rule_parameter_uma_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">96.22</field>
+        <field name="rule_parameter_id" ref="rule_parameter_uma"/>
+        <field name="date_from" eval="datetime(2022, 2, 1).date()"/>
+    </record>
+    <record id="rule_parameter_uma_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">103.74</field>
+        <field name="rule_parameter_id" ref="rule_parameter_uma"/>
+        <field name="date_from" eval="datetime(2023, 2, 1).date()"/>
+    </record>
+    <record id="rule_parameter_uma_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">108.57</field>
+        <field name="rule_parameter_id" ref="rule_parameter_uma"/>
+        <field name="date_from" eval="datetime(2024, 2, 1).date()"/>
+    </record>
+    <record id="rule_parameter_uma_2025" model="hr.rule.parameter.value">
+        <field name="parameter_value">113.14</field>
+        <field name="rule_parameter_id" ref="rule_parameter_uma"/>
+        <field name="date_from" eval="datetime(2025, 2, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_umi" model="hr.rule.parameter">
+        <field name="name">Mexico: Daily UMI</field>
+        <field name="code">l10n_mx_umi</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p>UMI: Infonavit Mixed Unit</p>
+
+<h3 class="mt-5">Source</h3>
+<a href="https://kpmg.com/us/en/taxnewsflash/news/2024/01/tnf-mexico-updated-value-umi-2024.html" target="_blank">https://kpmg.com/us/en/taxnewsflash/news/2024/01/tnf-mexico-updated-value-umi-2024.html</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre><em>Value</em> -> <strong>Float</strong></pre>
+        </field>
+    </record>
+    <record id="rule_parameter_umi_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">100.81</field>
+        <field name="rule_parameter_id" ref="rule_parameter_umi"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_daily_minimum_wage" model="hr.rule.parameter">
+        <field name="name">Mexico: Daily Minimum Wage</field>
+        <field name="code">l10n_mx_daily_min_wage</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p></p>
+
+<h3 class="mt-5">Source</h3>
+<a href="https://start-ops.com.mx/minimum-wage-in-mexico-2024/" target="_blank">https://start-ops.com.mx/minimum-wage-in-mexico-2024/</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre><em>Value</em> -> <strong>Float</strong></pre>
+        </field>
+    </record>
+    <record id="rule_parameter_daily_minimum_wage_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">248.93</field>
+        <field name="rule_parameter_id" ref="rule_parameter_daily_minimum_wage"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_daily_minimum_wage_2025" model="hr.rule.parameter.value">
+        <field name="parameter_value">278.80</field>
+        <field name="rule_parameter_id" ref="rule_parameter_daily_minimum_wage"/>
+        <field name="date_from" eval="datetime(2025, 1, 1).date()"/>
+    </record>
+
+    <!-- EXEMPTIONS -->
+    <record id="rule_parameter_exemption_saving_fund_salary" model="hr.rule.parameter">
+        <field name="name">Mexico: Exemption for Savings Fund (Salary)</field>
+        <field name="code">l10n_mx_exemption_saving_fund_salary</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p>This is used to find the non-taxable part of the saving fund by multiplying this percentage by the monthly salary.</p>
+
+<h3 class="mt-5">Source</h3>
+<a href="#" target="_blank">#</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre><em>Value</em> -> <strong>Percentage</strong> [0: 1]</pre>
+        </field>
+    </record>
+    <record id="rule_parameter_exemption_saving_fund_salary_1986" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.13</field>
+        <field name="rule_parameter_id" ref="rule_parameter_exemption_saving_fund_salary"/>
+        <field name="date_from" eval="datetime(1986, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_exemption_saving_fund_monthly_uma" model="hr.rule.parameter">
+        <field name="name">Mexico: Exemption for Savings Fund (by Monthly UMA)</field>
+        <field name="code">l10n_mx_exemption_saving_fund_monthly_uma</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p>This is used to find the non-taxable part of the saving fund by multiplying this coefficient by the monthly UMA.</p>
+
+<h3 class="mt-5">Source</h3>
+<a href="#" target="_blank">#</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre><em>Value</em> -> <strong>Float</strong></pre>
+        </field>
+    </record>
+    <record id="rule_parameter_exemption_saving_fund_monthly_uma_2014" model="hr.rule.parameter.value">
+        <field name="parameter_value">1.3</field>
+        <field name="rule_parameter_id" ref="rule_parameter_exemption_saving_fund_monthly_uma"/>
+        <field name="date_from" eval="datetime(2014, 1, 1).date()"/>
+    </record>
+
+    <!-- CEAV -->
+    <record id="rule_parameter_ceav_lower_upper" model="hr.rule.parameter">
+        <field name="name">Mexico: Ceav Lower / Upper Limits</field>
+        <field name="code">l10n_mx_ceav_lower_upper</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p></p>
+
+<h3 class="mt-5">Source</h3>
+<a href="#" target="_blank">#</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre>
+# uma: UMA
+# mdw: Minimum Daily Wage
+# inf: Infinity
+
+<em>Value</em> -> <strong>List</strong>[(
+    <em>Lower Limit Coefficient</em> -> <strong>Float</strong>,
+    <em>Lower Limit Variable</em> -> <strong>String</strong> [uma|mdw|inf],
+    <em>Upper Limit Coefficient</em> -> <strong>Float</strong>,
+    <em>Upper Limit Variable</em> -> <strong>String</strong> [uma|mdw|inf],
+)]</pre>
+        </field>
+    </record>
+
+    <record id="rule_parameter_ceav_lower_upper_value_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            (1.00 , 'mdw', 1.00 , 'mdw'),
+            (1.01 , 'mdw', 1.50 , 'uma'),
+            (1.51 , 'uma', 2.00 , 'uma'),
+            (2.01 , 'uma', 2.50 , 'uma'),
+            (2.51 , 'uma', 3.00 , 'uma'),
+            (3.01 , 'uma', 3.50 , 'uma'),
+            (3.51 , 'uma', 4.00 , 'uma'),
+            (4.01 , 'uma', 10.00, 'inf')
+        ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ceav_lower_upper"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ceav_percentage" model="hr.rule.parameter">
+        <field name="name">Mexico: Ceav Percentages</field>
+        <field name="code">l10n_mx_ceav_percentage</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p>Each row of this table is used for the corresponding row in the rule parameter 'l10n_mx_ceav_lower_upper'</p>
+
+<h3 class="mt-5">Source</h3>
+<a href="#" target="_blank">#</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre><em>Value</em> -> <strong>List</strong>[
+    <em>Percentage</em> -> <strong>Percentage</strong> [0: 1],
+]</pre>
+        </field>
+    </record>
+    <record id="rule_parameter_ceav_percentage_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            0.03150,
+            0.03281,
+            0.03575,
+            0.03751,
+            0.03869,
+            0.03953,
+            0.04016,
+            0.04241,
+        ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ceav_percentage"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_ceav_percentage_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            0.03150,
+            0.03413,
+            0.04000,
+            0.04353,
+            0.04588,
+            0.04756,
+            0.04882,
+            0.05331,
+        ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ceav_percentage"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_ceav_percentage_2025" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            0.03150,
+            0.03544,
+            0.04426,
+            0.04954,
+            0.05307,
+            0.05559,
+            0.05747,
+            0.06422,
+        ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ceav_percentage"/>
+        <field name="date_from" eval="datetime(2025, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_ceav_percentage_2026" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            0.03150,
+            0.03676,
+            0.04851,
+            0.05556,
+            0.06026,
+            0.06361,
+            0.06613,
+            0.07513,
+        ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ceav_percentage"/>
+        <field name="date_from" eval="datetime(2026, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_ceav_percentage_2027" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            0.03150,
+            0.03807,
+            0.05276,
+            0.06157,
+            0.06755,
+            0.07164,
+            0.07479,
+            0.08603,
+        ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ceav_percentage"/>
+        <field name="date_from" eval="datetime(2027, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_ceav_percentage_2028" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            0.03150,
+            0.03939,
+            0.05701,
+            0.06759,
+            0.07464,
+            0.07967,
+            0.08345,
+            0.09694,
+        ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ceav_percentage"/>
+        <field name="date_from" eval="datetime(2028, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_ceav_percentage_2029" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            0.03150,
+            0.04070,
+            0.06126,
+            0.07360,
+            0.08183,
+            0.08770,
+            0.09211,
+            0.10784,
+        ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ceav_percentage"/>
+        <field name="date_from" eval="datetime(2029, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_ceav_percentage_2030" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            0.03150,
+            0.04202,
+            0.06552,
+            0.07962,
+            0.08902,
+            0.09573,
+            0.10077,
+            0.11875,
+         ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ceav_percentage"/>
+        <field name="date_from" eval="datetime(2030, 1, 1).date()"/>
+    </record>
+
+    <!-- TABLES -->
+    <record id="rule_parameter_isr_table" model="hr.rule.parameter">
+        <field name="name">Mexico: ISR Table</field>
+        <field name="code">l10n_mx_isr_tables</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p></p>
+
+<h3 class="mt-5">Source</h3>
+<a href="#" target="_blank">#</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre><em>Value</em> -> <strong>Dict</strong>{
+    <em>Period</em> -> <strong>String</strong>: <strong>List</strong>[(
+        <em>Lower Limit</em> -> <strong>Float</strong>,
+        <em>Upper Limit</em> -> <strong>Float</strong>,
+        <em>Flat Rate</em> -> <strong>Float</strong>,
+        <em>ISR Percentage over the Excess of the Lower Limit</em> -> <strong>Percentage</strong> [0: 1],
+    )]
+}</pre>
+        </field>
+    </record>
+    <record id="rule_parameter_isr_table_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">{
+            'daily': [
+                (0.01, 24.54, 0.00, 0.0192),
+                (24.54, 208.29, 0.47, 0.0640),
+                (208.30, 366.05, 12.23, 0.1088),
+                (366.06, 425.52, 29.40, 0.1600),
+                (425.53, 509.46, 38.91, 0.1792),
+                (509.47, 1027.52, 53.95, 0.2136),
+                (1027.53, 1619.51, 164.61, 0.2352),
+                (1619.52, 3091.90, 303.85, 0.3000),
+                (3091.91, 4122.54, 745.56, 0.3200),
+                (4122.55, 12367.62, 1075.37, 0.3400),
+                (12367.63, 999999999, 3878.69, 0.3500)],
+            'weekly': [
+                (0.01, 171.78, 0.00, 0.0192),
+                (171.79, 1458.03, 3.29, 0.0640),
+                (1458.04, 2562.35, 85.61, 0.1088),
+                (2562.36, 2978.64, 205.80, 0.1600),
+                (2978.65, 3566.22, 272.37, 0.1792),
+                (3566.23, 7192.64, 377.65, 0.2136),
+                (7192.65, 11336.57, 1152.27, 0.2352),
+                (11336.58, 21643.30, 2126.95, 0.3000),
+                (21643.31, 28857.78, 5218.92, 0.3200),
+                (28857.79, 86573.34, 7527.59, 0.3400),
+                (86573.35, 999999999, 27150.83, 0.3500)],
+            '10_days': [
+                (0.01, 245.40, 0.00, 0.0192),
+                (245.41, 2082.90, 4.70, 0.0640),
+                (2082.91, 3660.50, 122.30, 0.1088),
+                (3660.51, 4255.20, 294.00, 0.1600),
+                (4255.21, 5094.60, 389.10, 0.1792),
+                (5094.61, 10275.20, 539.50, 0.2136),
+                (10275.21, 16195.10, 1646.10, 0.2352),
+                (16195.11, 30919.00, 3038.50, 0.3000),
+                (30919.01, 41225.40, 7455.60, 0.3200),
+                (41225.41, 123676.20, 10753.70, 0.3400),
+                (123676.21, 999999999, 38786.90, 0.3500)],
+            '14_days': [
+                (0.01, 368.10, 0.00, 0.0192),
+                (368.11, 3124.35, 7.05, 0.0640),
+                (3124.36, 5490.75, 183.45, 0.1088),
+                (5490.76, 6382.80, 441.00, 0.1600),
+                (6382.81, 7641.90, 583.65, 0.1792),
+                (7641.91, 15412.80, 809.25, 0.2136),
+                (15412.81, 24292.65, 2469.15, 0.2352),
+                (24292.66, 46378.50, 4557.75, 0.3000),
+                (46378.51, 61838.10, 11183.40, 0.3200),
+                (61838.11, 185514.30, 16130.55, 0.3400),
+                (185514.31, 999999999, 58180.35, 0.3500)],
+            'bi_weekly': [
+                (0.01, 368.10, 0.00, 0.0192),
+                (368.11, 3124.35, 7.05, 0.0640),
+                (3124.36, 5490.75, 183.45, 0.1088),
+                (5490.76, 6382.80, 441.00, 0.1600),
+                (6382.81, 7641.90, 583.65, 0.1792),
+                (7641.91, 15412.80, 809.25, 0.2136),
+                (15412.81, 24292.65, 2469.15, 0.2352),
+                (24292.66, 46378.50, 4557.75, 0.3000),
+                (46378.51, 61838.10, 11183.40, 0.3200),
+                (61838.11, 185514.30, 16130.55, 0.3400),
+                (185514.31, 999999999, 58180.35, 0.3500)],
+            'monthly': [
+                (0.01, 746.04, 0.00, 0.0192),
+                (746.05, 6332.05, 14.32, 0.0640),
+                (6332.06, 11128.01, 371.83, 0.1088),
+                (11128.02, 12935.82, 893.63, 0.1600),
+                (12935.83, 15487.71, 1182.88, 0.1792),
+                (15487.72, 31236.49, 1640.18, 0.2136),
+                (31236.50, 49233.00, 5004.12, 0.2352),
+                (49233.01, 93993.90, 9236.89, 0.3000),
+                (93993.91, 125325.20, 22665.17, 0.3200),
+                (125325.21, 375975.61, 32691.18, 0.3400),
+                (375975.62, 999999999, 117912.32, 0.3500)],
+            'bi_monthly': [
+                (0.01, 746.04, 0.00, 0.0192),
+                (746.05, 6332.05, 14.32, 0.0640),
+                (6332.06, 11128.01, 371.83, 0.1088),
+                (11128.02, 12935.82, 893.63, 0.1600),
+                (12935.83, 15487.71, 1182.88, 0.1792),
+                (15487.72, 31236.49, 1640.18, 0.2136),
+                (31236.50, 49233.00, 5004.12, 0.2352),
+                (49233.01, 93993.90, 9236.89, 0.3000),
+                (93993.91, 125325.20, 22665.17, 0.3200),
+                (125325.21, 375975.61, 32691.18, 0.3400),
+                (375975.62, 999999999, 117912.32, 0.3500)],
+            'yearly': [
+                (0.01, 8952.49, 0, 0.0192),
+                (8952.50, 75984.55, 171.88, 0.0640),
+                (75984.56, 133536.07, 4461.94, 0.1088),
+                (133536.08, 155229.80, 10723.55, 0.1600),
+                (155229.81, 185852.57, 14194.54, 0.1792),
+                (185852.58, 374837.88, 19682.13, 0.2136),
+                (374837.89, 590795.99, 60049.40, 0.2352),
+                (590796.00, 1127926.84, 110842.74, 0.3000),
+                (1127926.85, 1503902.46, 271981.99, 0.3200),
+                (1503902.47, 4511707.37, 392294.17, 0.3400),
+                (4511707.38, 999999999, 1414947.85, 0.3500)]
+        }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_isr_table"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_uma_percentage_for_subsidy" model="hr.rule.parameter">
+        <field name="name">Mexico: UMA Percentage for Subsidy</field>
+        <field name="code">l10n_mx_uma_percentage_for_subsidy</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p></p>
+
+<h3 class="mt-5">Source</h3>
+<a href="#" target="_blank">#</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre><em>Value</em> -> <strong>Percentage</strong> [0: 1]</pre>
+        </field>
+    </record>
+    <record id="rule_parameter_uma_percentage_for_subsidy_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.1182</field>
+        <field name="rule_parameter_id" ref="rule_parameter_uma_percentage_for_subsidy"/>
+        <field name="date_from" eval="datetime(2024, 5, 1).date()"/>
+    </record>
+    <record id="rule_parameter_uma_percentage_for_subsidy_2025_january" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.1439</field>
+        <field name="rule_parameter_id" ref="rule_parameter_uma_percentage_for_subsidy"/>
+        <field name="date_from" eval="datetime(2025, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_uma_percentage_for_subsidy_2025_february" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.1380</field>
+        <field name="rule_parameter_id" ref="rule_parameter_uma_percentage_for_subsidy"/>
+        <field name="date_from" eval="datetime(2025, 2, 1).date()"/>
+    </record>
+
+    <!-- TODO: remove in master -->
+    <record id="rule_parameter_subsidy_table" model="hr.rule.parameter">
+        <field name="name">Mexico: Subsidy Table</field>
+        <field name="code">l10n_mx_subsidy_tables</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p></p>
+
+<h3 class="mt-5">Source</h3>
+<a href="#" target="_blank">#</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre><em>Value</em> -> <strong>Dict</strong>{
+    <em>Period</em> -> <strong>String</strong>: <strong>List</strong>[(
+        <em>Lower Limit</em> -> <strong>Float</strong>,
+        <em>Upper Limit</em> -> <strong>Float</strong>,
+        <em>Amount Subsidy</em> -> <strong>Float</strong>,
+    )]
+}</pre>
+        </field>
+    </record>
+    <record id="rule_parameter_subsidy_table_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">{
+            'daily': [
+                (0.01, 58.19, 13.39),
+                (58.20, 87.28, 13.38),
+                (87.29, 114.24, 13.38),
+                (114.25, 116.38, 12.92),
+                (116.39, 146.25, 12.58),
+                (146.26, 155.17, 11.65),
+                (155.18, 175.51, 10.69),
+                (175.52, 204.76, 9.69),
+                (204.77, 234.01, 8.34),
+                (234.02, 242.84, 7.16),
+                (242.85, 999999999, 0.00)],
+            'weekly': [
+                (0.01, 407.33 , 93.73),
+                (407.34, 610.96 , 93.66),
+                (610.97, 799.68 , 93.66),
+                (799.69, 814.66 , 90.44),
+                (814.67, 1023.75, 88.06),
+                (1023.76, 1086.19, 81.55),
+                (1086.20, 1228.57, 74.83),
+                (1228.58, 1433.32, 67.83),
+                (1433.33, 1638.07, 58.38),
+                (1638.08, 1699.88, 50.12),
+                (1699.89, 999999999, 0.00)],
+            '10_days': [
+                (0.01, 581.90, 133.90),
+                (581.91, 872.80, 133.80),
+                (872.81, 1142.40, 133.80),
+                (1142.41, 1163.80, 129.20),
+                (1163.81, 1462.50, 125.80),
+                (1462.51, 1551.70, 116.50),
+                (1551.71, 1755.10, 106.90),
+                (1755.11, 2047.60, 96.90),
+                (2047.61, 2340.10, 83.40),
+                (2340.11, 2428.40, 71.60),
+                (2428.41, 999999999, 0.00)],
+            '14_days': [
+                (0.01, 872.85, 200.85),
+                (872.86, 1309.20, 200.70),
+                (1309.21, 1713.60, 200.70),
+                (1713.61, 1745.70, 193.80),
+                (1745.71, 2193.75, 188.70),
+                (2193.76, 2327.55, 174.75),
+                (2327.56, 2632.65, 160.35),
+                (2632.66, 3071.40, 145.35),
+                (3071.41, 3510.15, 125.10),
+                (3510.16, 3642.60, 107.40),
+                (3642.61, 999999999, 0.00)],
+            'bi_weekly': [
+                (0.01, 872.85, 200.85),
+                (872.86, 1309.20, 200.70),
+                (1309.21, 1713.60, 200.70),
+                (1713.61, 1745.70, 193.80),
+                (1745.71, 2193.75, 188.70),
+                (2193.76, 2327.55, 174.75),
+                (2327.56, 2632.65, 160.35),
+                (2632.66, 3071.40, 145.35),
+                (3071.41, 3510.15, 125.10),
+                (3510.16, 3642.60, 107.40),
+                (3642.61, 999999999, 0.00)],
+            'monthly': [
+                (0.01, 1768.96, 407.02),
+                (1768.97, 2653.38, 406.83),
+                (2653.39, 3472.84, 406.62),
+                (3472.85, 3537.87, 392.77),
+                (3537.88, 4446.15, 382.46),
+                (4446.16, 4717.18, 354.23),
+                (4717.19, 5335.42, 324.87),
+                (5335.43, 6224.67, 294.63),
+                (6224.68, 7113.90, 253.54),
+                (7113.91, 7382.33, 217.61),
+                (7382.34, 999999999, 0.00)],
+            'bi_monthly': [
+                (0.01, 1768.96, 407.02),
+                (1768.97, 2653.38, 406.83),
+                (2653.39, 3472.84, 406.62),
+                (3472.85, 3537.87, 392.77),
+                (3537.88, 4446.15, 382.46),
+                (4446.16, 4717.18, 354.23),
+                (4717.19, 5335.42, 324.87),
+                (5335.43, 6224.67, 294.63),
+                (6224.68, 7113.90, 253.54),
+                (7113.91, 7382.33, 217.61),
+                (7382.34, 999999999, 0.00)],
+        }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_subsidy_table"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_holiday_table" model="hr.rule.parameter">
+        <field name="name">Mexico: Holiday Table</field>
+        <field name="code">l10n_mx_holiday_tables</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p></p>
+
+<h3 class="mt-5">Source</h3>
+<a href="#" target="_blank">#</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre><em>Value</em> -> <strong>Dict</strong>{
+    <em>Years Worked</em> -> <strong>Int</strong>: <em>Holiday Weeks</em> -> <strong>Int</strong>
+}</pre>
+        </field>
+    </record>
+    <record id="rule_parameter_holiday_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">{
+            1: 12,
+            2: 14,
+            3: 16,
+            4: 18,
+            5: 20,
+            6: 22,
+            7: 22,
+            8: 22,
+            9: 22,
+            10: 22,
+            11: 24,
+            12: 24,
+            13: 24,
+            14: 24,
+            15: 24,
+            16: 26,
+            17: 26,
+            18: 26,
+            19: 26,
+            20: 26,
+            21: 28,
+            22: 28,
+            23: 28,
+            24: 28,
+            25: 28,
+            26: 30,
+            27: 30,
+            28: 30,
+            29: 30,
+            30: 30,
+            31: 32,
+            32: 32,
+            33: 32,
+            34: 32,
+            35: 32,
+        }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_holiday_table"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_schedule_table" model="hr.rule.parameter">
+        <field name="name">Mexico: Schedule Table</field>
+        <field name="code">l10n_mx_schedule_table</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="description" type="html">
+<p></p>
+
+<h3 class="mt-5">Source</h3>
+<a href="#" target="_blank">#</a>
+
+<h3 class="mt-5">Data Format</h3>
+<pre><em>Value</em> -> <strong>Dict</strong>{
+    <em>Period</em> -> <strong>String</strong>: <em>Days</em> -> <strong>Int</strong>
+}</pre>
+        </field>
+    </record>
+    <record id="rule_parameter_schedule_table_2000" model="hr.rule.parameter.value">
+        <field name="parameter_value">{
+            'daily': 1,
+            'weekly': 7,
+            '10_days': 10,
+            '14_days': 14,
+            'bi_weekly': 15,
+            'monthly': 30,
+            'bi_monthly': 60,
+        }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_schedule_table"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+</odoo>

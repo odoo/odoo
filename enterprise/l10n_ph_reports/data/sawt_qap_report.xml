@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sawt_report" model="account.report">
+        <field name="name">SAWT</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="filter_show_draft" eval="True"/>
+        <field name="filter_partner" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_unreconciled" eval="True"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="default_opening_date_filter">this_quarter</field>
+        <field name="search_bar" eval="False"/>
+        <field name="load_more_limit" eval="80"/>
+        <field name="custom_handler_model_id" ref="model_l10n_ph_sawt_report_handler"/>
+        <field name="column_ids">
+            <record id="sawt_report_taxpayer_id" model="account.report.column">
+                <field name="name">Taxpayer ID Number</field>
+                <field name="expression_label">partner_vat</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="sawt_report_register_name" model="account.report.column">
+                <field name="name">Register Name</field>
+                <field name="expression_label">register_name</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="sawt_report_atc_code" model="account.report.column">
+                <field name="name">ATC Code</field>
+                <field name="expression_label">atc</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="sawt_report_amount_income_payment" model="account.report.column">
+                <field name="name">Amount of Income Payment</field>
+                <field name="expression_label">tax_base_amount</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="sawt_report_tax_rate" model="account.report.column">
+                <field name="name">Tax Rate</field>
+                <field name="expression_label">tax_rate</field>
+                <field name="figure_type">percentage</field>
+            </record>
+            <record id="sawt_report_amount_tax" model="account.report.column">
+                <field name="name">Amount Tax Withheld</field>
+                <field name="expression_label">withholding_tax_amount</field>
+                <field name="figure_type">monetary</field>
+            </record>
+        </field>
+    </record>
+
+    <record id="qap_report" model="account.report">
+        <field name="name">QAP</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="filter_show_draft" eval="True"/>
+        <field name="filter_partner" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_unreconciled" eval="True"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="default_opening_date_filter">this_quarter</field>
+        <field name="search_bar" eval="False"/>
+        <field name="load_more_limit" eval="80"/>
+        <field name="custom_handler_model_id" ref="model_l10n_ph_qap_report_handler"/>
+        <field name="column_ids">
+            <record id="qap_report_taxpayer_id" model="account.report.column">
+                <field name="name">Taxpayer ID Number</field>
+                <field name="expression_label">partner_vat</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="qap_report_register_name" model="account.report.column">
+                <field name="name">Register Name</field>
+                <field name="expression_label">register_name</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="qap_report_atc_code" model="account.report.column">
+                <field name="name">ATC Code</field>
+                <field name="expression_label">atc</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="qap_report_amount_income_payment" model="account.report.column">
+                <field name="name">Amount of Income Payment</field>
+                <field name="expression_label">tax_base_amount</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="qap_report_tax_rate" model="account.report.column">
+                <field name="name">Tax Rate</field>
+                <field name="expression_label">tax_rate</field>
+                <field name="figure_type">percentage</field>
+            </record>
+            <record id="qap_report_amount_tax" model="account.report.column">
+                <field name="name">Amount Tax Withheld</field>
+                <field name="expression_label">withholding_tax_amount</field>
+                <field name="figure_type">monetary</field>
+            </record>
+        </field>
+    </record>
+
+    <record id="sawt_qap_report" model="account.report">
+        <field name="name">SAWT &amp; QAP</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.ph"/>
+        <field name="filter_show_draft" eval="True"/>
+        <field name="filter_partner" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_unreconciled" eval="True"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="default_opening_date_filter">this_quarter</field>
+        <field name="search_bar" eval="True"/>
+        <field name="load_more_limit" eval="80"/>
+        <field name="use_sections" eval="True"/>
+        <field name="custom_handler_model_id" ref="model_l10n_ph_sawt_qap_report_handler"/>
+        <field name="section_report_ids" eval="[(6, 0, [ref('l10n_ph_reports.sawt_report'), ref('l10n_ph_reports.qap_report')])]"/>
+    </record>
+
+</odoo>

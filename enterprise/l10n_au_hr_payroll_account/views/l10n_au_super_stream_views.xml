@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_au_super_stream_view_form" model="ir.ui.view">
+        <field name="name">l10n_au.super.stream.view.form</field>
+        <field name="model">l10n_au.super.stream</field>
+        <field name="arch" type="xml">
+            <form string="Super Contribution">
+                <header>
+                    <button name="action_register_super_payment" string="Register Super Payment"
+                        type="object" class="btn-primary" invisible="state != 'locked'" />
+                    <button name="action_confirm" string="Lock" type="object"
+                        class="btn btn-primary" invisible="state != 'draft'" />
+                    <button name="action_draft" string="Reset to Draft" type="object"
+                        class="btn btn-secondary" invisible="state != 'locked'" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,locked,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <field name="payment_id" invisible="1" />
+                        <button class="oe_stat_button" type="object" name="action_open_payment"
+                            icon="fa-dollar" invisible="not payment_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Payments</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group class="row">
+                        <group>
+                            <field name="company_id"  readonly="state != 'draft'"/>
+                            <field name="source_entity_id"/>
+                            <field name="source_entity_id_type"  readonly="state != 'draft'"/>
+                            <field name="journal_id" domain="[('type', '=', 'bank')]" readonly="state != 'draft'"/>
+                            <field name="currency_id" />
+                        </group>
+                        <group>
+                            <field name="file_version" readonly="state != 'draft'"/>
+                            <field name="super_stream_file" groups="base.group_no_one"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="lines" string="SuperStream Lines">
+                            <field name="l10n_au_super_stream_lines" readonly="state != 'draft'"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_au_super_stream_view_tree" model="ir.ui.view">
+        <field name="name">l10n_au.super.stream.view.list</field>
+        <field name="model">l10n_au.super.stream</field>
+        <field name="arch" type="xml">
+            <list string="SuperStream">
+                <field name="display_name" />
+                <field name="company_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_au_super_stream_line_view_form" model="ir.ui.view">
+        <field name="name">l10n_au.super.stream.line.view.form</field>
+        <field name="model">l10n_au.super.stream.line</field>
+        <field name="arch" type="xml">
+            <form string="Super Contribution Line">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employer_id" />
+                            <field name="sender_id" />
+                        </group>
+                        <group>
+                            <field name="employee_id" />
+                            <field name="allowed_super_account_ids" invisible="1"/>
+                            <label for="super_account_id"/>
+                            <div class="o_row">
+                                <field name="super_account_id" options="{'no_create_edit': True}"/>
+                                <field name="proportion" widget="percentage" invisible="not proportion"/>
+                            </div>
+                            <field name="payee_id" />
+                        </group>
+                    </group>
+                    <h2>Super Fund Member</h2>
+                    <group>
+                        <field name="payslip_id" domain="[('employee_id', '=', employee_id)]"/>
+                    </group>
+                        <group name="contribution" string="Contribution">
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date" />
+                        </group>
+                        <group>
+                            <field name="superannuation_guarantee_amount" />
+                            <field name="award_or_productivity_amount" />
+                            <field name="personal_contributions_amount" invisible="1"/>
+                            <field name="salary_sacrificed_amount" />
+                            <field name="voluntary_amount" />
+                            <field name="spouse_contributions_amount" invisible="1"/>
+                            <field name="child_contributions_amount" invisible="1"/>
+                            <field name="other_third_party_contributions_amount" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_au_super_stream_line_view_tree" model="ir.ui.view">
+        <field name="name">l10n_au.super.stream.line.view.list</field>
+        <field name="model">l10n_au.super.stream.line</field>
+        <field name="arch" type="xml">
+            <list string="SuperStream Lines" default_order="payslip_id asc, proportion desc">
+                <field name="payslip_id" column_invisible="True"/>
+                <field name="name"/>
+                <field name="employer_id"/>
+                <field name="payee_id"/>
+                <field name="employee_id"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="amount_total" sum="Total Contribution"/>
+                <field name="proportion" widget="percentage" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_au_super_stream_action" model="ir.actions.act_window">
+        <field name="name">Super Contributions</field>
+        <field name="res_model">l10n_au.super.stream</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        name="Super Contributions"
+        id="l10n_au_super_stream"
+        sequence="30"
+        action="l10n_au_super_stream_action"
+        parent="l10n_au_hr_payroll.menu_reporting_l10n_au"
+    />
+</odoo>

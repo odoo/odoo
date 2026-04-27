@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="social_stream_post_view_kanban" model="ir.ui.view">
+        <field name="name">social.stream.post.view.kanban.inherit.facebook</field>
+        <field name="model">social.stream.post</field>
+        <field name="inherit_id" ref="social.social_stream_post_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stream_post_image_urls']" position="after">
+                <field name="facebook_author_id"/>
+                <field name="facebook_user_likes"/>
+                <field name="facebook_is_event_post"/>
+            </xpath>
+            <xpath expr="//span[hasclass('o_social_stream_post_author_image')]" position="inside">
+                <img t-if="record.facebook_author_id.raw_value" t-attf-src="https://graph.facebook.com/v17.0/#{record.facebook_author_id.raw_value}/picture" alt="Author Image" class="rounded"/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_social_author_information')]" position="inside">
+                <span t-if="record.facebook_is_event_post.raw_value" class="text-muted ms-2">added an event</span>
+            </xpath>
+
+            <xpath expr="//div[hasclass('o_social_stream_post_message')]" position="inside">
+                <div class="o_social_stream_post_facebook_stats px-2 d-flex justify-content-around"
+                    t-if="record.media_type.raw_value === 'facebook'">
+                    <div t-attf-class="o_social_facebook_likes o_social_subtle_btn d-flex ps-2 pe-2 #{record.facebook_user_likes.raw_value ? 'o_social_facebook_user_likes' : ''}">
+                        <field name="facebook_reactions_count" invisible="not facebook_likes_count" widget="social_facebook_reactions"/>
+                        <span invisible="facebook_likes_count" class="fa fa-thumbs-o-up" title="Like"
+                            t-att-class="{'me-1': record.facebook_likes_count.value !== '0'}"/>
+                        <field invisible="not facebook_likes_count" name="facebook_likes_count" class="fw-bolder ms-1"/>
+                    </div>
+                    <div class="o_social_facebook_comments o_social_comments o_social_subtle_btn px-2">
+                        <i class="fa fa-comments me-1" title="Comments"/>
+                        <field t-if="record.facebook_comments_count.value !== '0'" name="facebook_comments_count" class="fw-bold"/>
+                    </div>
+                    <div class="flex-grow-1 d-flex text-muted justify-content-end">
+                        <field name="facebook_shares_count" class="me-1"/>Shares
+                        <field name="facebook_reach" class="ms-2 me-1"/>Views
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</data>
+</odoo>

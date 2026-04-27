@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <!-- Dynamic Appointments Snippet -->
+    <record id="ir_filters_appointments_snippet" model="ir.filters">
+        <field name="name">Public Appointments</field>
+        <field name="model_id">appointment.type</field>
+        <field name="user_id" eval="False"/>
+        <field name="domain">[
+            '|', ('end_datetime', '=', False), ('end_datetime', '>=', datetime.datetime.now())
+        ]</field>
+    </record>
+
+    <record id="website_snippet_filter_appointments" model="website.snippet.filter">
+        <field name="filter_id" ref="website_appointment.ir_filters_appointments_snippet"/>
+        <field name="field_names">name,category</field>
+        <field name="limit" eval="4"/>  <!-- Default number of elements per row on desktop resolution -->
+        <field name="name">Public Appointments</field>
+    </record>
+
+</data></odoo>

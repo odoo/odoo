@@ -1,0 +1,16 @@
+<odoo>
+    <data noupdate="1">
+        <record id="product_product_tyro_surcharge" model="product.product">
+            <field name="name">Tyro Surcharge</field>
+            <field name="categ_id" ref="point_of_sale.product_category_pos"/>
+            <field name="default_code">TYRO</field>
+            <field name="weight">0.01</field>
+            <field name="available_in_pos">False</field>
+            <field name="taxes_id" eval="[(5,)]"/>
+        </record>
+    </data>
+    <record id="ir_config_parameter_tyro_api_key" model="ir.config_parameter">
+        <field name="key">pos_tyro.api_key</field>
+        <field name="value">F2qEGvy1zhGGoqak0KRfFUVT432sw0C</field>
+    </record>
+</odoo>

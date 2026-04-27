@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data noupdate="1">
+        <record id="ir_actions_server_create_hr_candidate" model="ir.actions.server" forcecreate="0">
+            <field name="name">Create a Candidate</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="usage">ir_actions_server</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.document_hr_recruitment_create_hr_candidate()
+            </field>
+        </record>
+        <function model="documents.document" name="action_folder_embed_action" eval="[
+            ref('documents_hr_recruitment.document_recruitment_folder'),
+            ref('documents_hr_recruitment.ir_actions_server_create_hr_candidate'),
+        ]"/>
+    </data>
+</odoo>

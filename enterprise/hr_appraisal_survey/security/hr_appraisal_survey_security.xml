@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    <!--
+        Specific survey access rules for appraisal
+        - The appraisal manager can CRUD survey / questions / question answers for survey_type == 'appraisal'
+        - The appraisal manager can see all the answers
+        - The appraisal officer can see answers from survey type 'appraisal' unrestricted or in restricted users
+        - The asked-feedback-employee can see their answers
+        - The employee themselves can't see any answers
+        - The employees should see surveys, questions, labels from survey_type 'appraisal' and
+        (unrestricted or in restricted users or when they are appointed (simple) manager)
+    -->
+        <!--special rights for appraisal manager on appraisal surveys-->
+        <record id="survey_user_input_rule_appraisal_manager" model="ir.rule">
+            <field name="name">Survey user input: appraisal manager: all</field>
+            <field name="model_id" ref="survey.model_survey_user_input"/>
+            <field name="domain_force">[('survey_id.survey_type', '=', 'appraisal')]</field>
+            <field name="groups" eval="[(4, ref('hr_appraisal.group_hr_appraisal_manager'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+        <record id="survey_user_input_line_rule_appraisal_manager" model="ir.rule">
+            <field name="name">Survey user input line: appraisal manager: all</field>
+            <field name="model_id" ref="survey.model_survey_user_input_line"/>
+            <field name="domain_force">[('survey_id.survey_type', '=', 'appraisal')]</field>
+            <field name="groups" eval="[(4, ref('hr_appraisal.group_hr_appraisal_manager'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+        <record id="survey_survey_rule_appraisal_manager" model="ir.rule">
+            <field name="name">Survey survey: appraisal manager: all</field>
+            <field name="model_id" ref="survey.model_survey_survey"/>
+            <field name="domain_force">[('survey_type', '=', 'appraisal')]</field>
+            <field name="groups" eval="[(4, ref('hr_appraisal.group_hr_appraisal_manager'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+        <record id="survey_question_rule_appraisal_manager" model="ir.rule">
+            <field name="name">Survey question: appraisal manager: all</field>
+            <field name="model_id" ref="survey.model_survey_question"/>
+            <field name="domain_force">[('survey_id.survey_type', '=', 'appraisal')]</field>
+            <field name="groups" eval="[(4, ref('hr_appraisal.group_hr_appraisal_manager'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+        <record id="survey_question_answer_rule_appraisal_manager" model="ir.rule">
+            <field name="name">Survey question answer: appraisal manager: all</field>
+            <field name="model_id" ref="survey.model_survey_question_answer"/>
+            <field name="domain_force">['|', ('survey_id.survey_type', '=', 'appraisal'),
+                ('matrix_question_id.survey_id.survey_type', '=', 'appraisal')]</field>
+            <field name="groups" eval="[(4, ref('hr_appraisal.group_hr_appraisal_manager'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+
+        <!--special rights for appraisal officer on appraisal surveys-->
+        <record id="survey_user_input_rule_appraisal_user" model="ir.rule">
+            <field name="name">Survey user input: appraisal officer: unrestricted or in restricted users</field>
+            <field name="model_id" ref="survey.model_survey_user_input"/>
+            <field name="domain_force">[
+                '&amp;', ('survey_id.survey_type', '=', 'appraisal'),
+                '|',  ('survey_id.restrict_user_ids', 'in', user.id),
+                      ('survey_id.restrict_user_ids', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('hr_appraisal.group_hr_appraisal_user'))]"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+        </record>
+        <record id="survey_user_input_line_rule_appraisal_user" model="ir.rule">
+            <field name="name">Survey user input line: appraisal officer: unrestricted or in restricted users</field>
+            <field name="model_id" ref="survey.model_survey_user_input_line"/>
+            <field name="domain_force">[
+                '&amp;', ('survey_id.survey_type', '=', 'appraisal'),
+                '|',  ('survey_id.restrict_user_ids', 'in', user.id),
+                      ('survey_id.restrict_user_ids', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('hr_appraisal.group_hr_appraisal_user'))]"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+        </record>
+
+        <!--special rights for internal user on appraisal surveys-->
+        <record id="survey_user_input_rule_appraisal_employee_manager" model="ir.rule">
+            <field name="name">Survey user input: employee manager on appraisal: read</field>
+            <field name="model_id" ref="survey.model_survey_user_input"/>
+            <field name="domain_force">[('survey_id.survey_type', '=', 'appraisal'), ('appraisal_id.manager_ids.user_id', 'in', user.ids) ]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+        </record>
+        <record id="survey_user_input_line_rule_appraisal_employee_manager" model="ir.rule">
+            <field name="name">Survey user input line: employee manager on appraisal: read</field>
+            <field name="model_id" ref="survey.model_survey_user_input_line"/>
+            <field name="domain_force">[('survey_id.survey_type', '=', 'appraisal'), ('user_input_id.appraisal_id.manager_ids.user_id', 'in', user.ids) ]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+        </record>
+        <record id="survey_question_rule_appraisal_employee_manager" model="ir.rule">
+            <field name="name">Survey question: employee manager on appraisal: read</field>
+            <field name="model_id" ref="survey.model_survey_question"/>
+            <field name="domain_force">[('survey_id.survey_type', '=', 'appraisal'),
+                '|', '|', ('survey_id.appraisal_manager_user_ids', 'in', user.ids),
+                ('survey_id.restrict_user_ids', 'in', user.id),
+                ('survey_id.restrict_user_ids', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+        </record>
+        <record id="survey_rule_appraisal_employee_manager" model="ir.rule">
+            <field name="name">Survey: employee manager on appraisal: read</field>
+            <field name="model_id" ref="survey.model_survey_survey"/>
+            <field name="domain_force">[('survey_type', '=', 'appraisal'),
+                '|', '|', ('appraisal_manager_user_ids', 'in', user.ids),
+                ('restrict_user_ids', 'in', user.id),
+                ('restrict_user_ids', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+        </record>
+    </data>
+</odoo>

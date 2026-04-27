@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_bank_sync_update_payment_status" model="ir.cron">
+        <field name="name">Account: Update payment status</field>
+        <field name="model_id" ref="model_account_batch_payment"/>
+        <field name="interval_number">6</field>
+        <field name="interval_type">hours</field>
+        <field name="code">model._cron_check_payment_status()</field>
+        <field name="state">code</field>
+    </record>
+
+    <record model="ir.actions.server" id="action_account_online_payment_check_status">
+        <field name="name">Check Status</field>
+        <field name="model_id" ref="model_account_batch_payment"/>
+        <field name="binding_model_id" ref="model_account_batch_payment"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.check_online_payment_status()
+        </field>
+    </record>
+</odoo>

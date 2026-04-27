@@ -1,0 +1,814 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="operation_type_1" model="l10n_br.operation.type">
+            <field name="name">Sale of goods</field>
+            <field name="technical_name">standardSales</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_2" model="l10n_br.operation.type">
+            <field name="name">Complementary invoice</field>
+            <field name="technical_name">complementary</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_3" model="l10n_br.operation.type">
+            <field name="name">Complementary invoice of amount</field>
+            <field name="technical_name">amountComplementary</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_4" model="l10n_br.operation.type">
+            <field name="name">Simple billing - future delivery w/ stock</field>
+            <field name="technical_name">salesForFutureDeliveryBillingStockAvailable</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_5" model="l10n_br.operation.type">
+            <field name="name">Sales remittance for future delivery w/ stock</field>
+            <field name="technical_name">salesForFutureDeliveryDeliveryStockAvailable</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_6" model="l10n_br.operation.type">
+            <field name="name">Simple billing - future delivery without stock</field>
+            <field name="technical_name">salesForFutureDeliveryBillingStockNotAvailable</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_7" model="l10n_br.operation.type">
+            <field name="name">Sales remittance for future delivery without stock</field>
+            <field name="technical_name">salesForFutureDeliveryDeliveryStockNotAvailable</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_8" model="l10n_br.operation.type">
+            <field name="name">Simple billing w/ stock</field>
+            <field name="technical_name">dropshipSalesShippersInvoicetoSeller</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_9" model="l10n_br.operation.type">
+            <field name="name">Simple billing without stock</field>
+            <field name="technical_name">dropshipSalesShippersInvoicetoSellerStockNA</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_10" model="l10n_br.operation.type">
+            <field name="name">Purchase of merchandise delivered by third parties</field>
+            <field name="technical_name">purchaseDeliveredbyThirdParties</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_11" model="l10n_br.operation.type">
+            <field name="name">Sale of goods delivered by third parties</field>
+            <field name="technical_name">dropshipSalesSellersInvoiceToFinalBuyerWithTaxesDemonstration</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_12" model="l10n_br.operation.type">
+            <field name="name">Shipment on account and order of third parties</field>
+            <field name="technical_name">dropshipSalesShippersInvoiceToFinalBuyerForGoodsDelivery</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_13" model="l10n_br.operation.type">
+            <field name="name">Received merchandise received in sale to order</field>
+            <field name="technical_name">goodsReceiptReceivedSendingSellerOnOrderSale</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_14" model="l10n_br.operation.type">
+            <field name="name">Consignment shipment</field>
+            <field name="technical_name">shippingFromConsignorToconsignee</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_15" model="l10n_br.operation.type">
+            <field name="name">Sale of merchandise received in consignment</field>
+            <field name="technical_name">consigneeSalesInvoiceToBuyer</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_16" model="l10n_br.operation.type">
+            <field name="name">Sale of merchandise previously shipped in consignment</field>
+            <field name="technical_name">salesInvoiceByConsignorInConsignee</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_17" model="l10n_br.operation.type">
+            <field name="name">Symbolic return of goods sold or used in an industrial process</field>
+            <field name="technical_name">consigneeSymbolicReturnOfSoldGoods</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_18" model="l10n_br.operation.type">
+            <field name="name">Return of goods received in merchant or industrial consignment</field>
+            <field name="technical_name">consigneeReturnsOfUnsoldGoods</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_19" model="l10n_br.operation.type">
+            <field name="name">Sale of fixed assets</field>
+            <field name="technical_name">fixedAssetsItemSales</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_20" model="l10n_br.operation.type">
+            <field name="name">Return of sale of fixed assets</field>
+            <field name="technical_name">fixedAssetsItemSalesReturn</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_21" model="l10n_br.operation.type">
+            <field name="name">Transfer of fixed assets</field>
+            <field name="technical_name">fixedAssetsItemTransfer</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_22" model="l10n_br.operation.type">
+            <field name="name">Input transfer of fixed assets</field>
+            <field name="technical_name">fixedAssetsItemTransferInBound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_23" model="l10n_br.operation.type">
+            <field name="name">Transfer of material for use or consumption</field>
+            <field name="technical_name">useConsumptionTransferOut</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_24" model="l10n_br.operation.type">
+            <field name="name">Entry transfer of material for use or consumption</field>
+            <field name="technical_name">useConsumptionTransferInBound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_25" model="l10n_br.operation.type">
+            <field name="name">Shipment to general warehouse</field>
+            <field name="technical_name">generalStorageShippingOutbound</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_26" model="l10n_br.operation.type">
+            <field name="name">Shipment to closed deposit</field>
+            <field name="technical_name">companyStorageShippingOutbound</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_27" model="l10n_br.operation.type">
+            <field name="name">Entry for deposit in general warehouse</field>
+            <field name="technical_name">generalStorageShippingInbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_28" model="l10n_br.operation.type">
+            <field name="name">Entry for warehouse in closed warehouse</field>
+            <field name="technical_name">companyStorageShippingInbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_29" model="l10n_br.operation.type">
+            <field name="name">Return merch. deposited in closed warehouse/general warehouse</field>
+            <field name="technical_name">generalStorageShippingReturnOutBound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_30" model="l10n_br.operation.type">
+            <field name="name">Return merch. sent to closed warehouse/general warehouse</field>
+            <field name="technical_name">generalStorageShippingReturnInBound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_31" model="l10n_br.operation.type">
+            <field name="name">Purchase return</field>
+            <field name="technical_name">standardPurchaseReturnShippingOutbound</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_32" model="l10n_br.operation.type">
+            <field name="name">Shipment for demonstration used</field>
+            <field name="technical_name">demonstrationUsedMaterialOutbound</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_33" model="l10n_br.operation.type">
+            <field name="name">Shipment for demonstration</field>
+            <field name="technical_name">demonstrationShippingOutbound</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_34" model="l10n_br.operation.type">
+            <field name="name">Shipment of merchandise or goods for showcasing or training</field>
+            <field name="technical_name">showcaseShippingOutbound</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_35" model="l10n_br.operation.type">
+            <field name="name">Goods entry or goods received for demonstration</field>
+            <field name="technical_name">demonstrationShippingInbound</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_36" model="l10n_br.operation.type">
+            <field name="name">Shipment for exhibition or fair</field>
+            <field name="technical_name">fairShippingOutbound</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_37" model="l10n_br.operation.type">
+            <field name="name">Return of goods or goods sent for exhibitions or fairs</field>
+            <field name="technical_name">fairShippingInbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_38" model="l10n_br.operation.type">
+            <field name="name">Demonstration return entry</field>
+            <field name="technical_name">returnOfDemonstrationShippingInbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_39" model="l10n_br.operation.type">
+            <field name="name">Shipment for industrialization by order</field>
+            <field name="technical_name">itemsForManufacturingShippingOutbound</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_40" model="l10n_br.operation.type">
+            <field name="name">Shipment entry for industrialization</field>
+            <field name="technical_name">itemsForManufacturingShippingInbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_41" model="l10n_br.operation.type">
+            <field name="name">Return of merchandise shipped for industrialization</field>
+            <field name="technical_name">itemsForManufacturingReturnsShippingIncoming</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_42" model="l10n_br.operation.type">
+            <field name="name">Industrialization return by order</field>
+            <field name="technical_name">itemsForManufacturingReturnsShippingOutbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_43" model="l10n_br.operation.type">
+            <field name="name">Return of merchandise received for industrialization and not applied</field>
+            <field name="technical_name">itemsNotUsedForManufacReturnsShippingOutbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_44" model="l10n_br.operation.type">
+            <field name="name">Merch return input received for industrialization and not applied</field>
+            <field name="technical_name">itemsNotUsedForManufacReturnsShippingIncoming</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_45" model="l10n_br.operation.type">
+            <field name="name">Industrialization carried out by another company - labor</field>
+            <field name="technical_name">itemsManufacturedByOtherCompany</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_46" model="l10n_br.operation.type">
+            <field name="name">Entry of items manufactured by another company - labor</field>
+            <field name="technical_name">itemsManufByOtherCompanyInbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_47" model="l10n_br.operation.type">
+            <field name="name">Shipment for sale out of the establishment</field>
+            <field name="technical_name">salesOutsideTheEstablishmentShippingInvoice</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_48" model="l10n_br.operation.type">
+            <field name="name">Sale of goods made outside the establishment</field>
+            <field name="technical_name">salesOutsideTheEstablishmentSaleInvoice</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_49" model="l10n_br.operation.type">
+            <field name="name">Demonstration return</field>
+            <field name="technical_name">returnOfDemonstrationShippingOutbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_50" model="l10n_br.operation.type">
+            <field name="name">Return goods/goods shipped for showcase or training</field>
+            <field name="technical_name">showcaseItemsReturnsShippingInbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_51" model="l10n_br.operation.type">
+            <field name="name">Shipment for repair</field>
+            <field name="technical_name">itemsForRepairShippingOutbound</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_52" model="l10n_br.operation.type">
+            <field name="name">Repair or repair return</field>
+            <field name="technical_name">itemsForRepairReturnShippingInbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_53" model="l10n_br.operation.type">
+            <field name="name">Transfer of goods between ipi taxpayer outbound</field>
+            <field name="technical_name">itemTransferShippingOutboundBetweenIPITaxPayer</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_54" model="l10n_br.operation.type">
+            <field name="name">Transfer of goods between ipi taxpayer incoming</field>
+            <field name="technical_name">itemTransferShippingIncomingBetweenIPITaxPayer</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_55" model="l10n_br.operation.type">
+            <field name="name">Transfer of goods</field>
+            <field name="technical_name">itemTransferShippingOutbound</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_56" model="l10n_br.operation.type">
+            <field name="name">Return of goods received in transfer</field>
+            <field name="technical_name">itemTransferReturnOutbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_57" model="l10n_br.operation.type">
+            <field name="name">Return entry of merchandise received in transfer</field>
+            <field name="technical_name">itemTransferReturnInComing</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_58" model="l10n_br.operation.type">
+            <field name="name">Goods transfer entry</field>
+            <field name="technical_name">itemTransferShippingInComing</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_59" model="l10n_br.operation.type">
+            <field name="name">Standard purchase</field>
+            <field name="technical_name">standardPurchase</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_60" model="l10n_br.operation.type">
+            <field name="name">Sales return</field>
+            <field name="technical_name">salesReturn</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_61" model="l10n_br.operation.type">
+            <field name="name">Gifts-distr. through another establishment</field>
+            <field name="technical_name">giftThroughOtherEstablishment</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_62" model="l10n_br.operation.type">
+            <field name="name">Gifts</field>
+            <field name="technical_name">gift</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_63" model="l10n_br.operation.type">
+            <field name="name">Shipping for distribution of gifts</field>
+            <field name="technical_name">giftEffectiveShipping</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_64" model="l10n_br.operation.type">
+            <field name="name">Shipment entry for distribution of gifts</field>
+            <field name="technical_name">giftEffectiveShippingInBound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_65" model="l10n_br.operation.type">
+            <field name="name">Bonus shipment</field>
+            <field name="technical_name">bonus</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_66" model="l10n_br.operation.type">
+            <field name="name">Bonus entry</field>
+            <field name="technical_name">bonusInComing</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_67" model="l10n_br.operation.type">
+            <field name="name">Gifts - distribution on account and order of third parties</field>
+            <field name="technical_name">giftsDropship</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_68" model="l10n_br.operation.type">
+            <field name="name">Shipment of goods on account of lending agreement</field>
+            <field name="technical_name">shippingLending</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_69" model="l10n_br.operation.type">
+            <field name="name">Entry of good sent on account of lending agreement</field>
+            <field name="technical_name">shippingRetLendingIncoming</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_70" model="l10n_br.operation.type">
+            <field name="name">Return of goods received by contract account</field>
+            <field name="technical_name">shippingLendingReturnOut</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_71" model="l10n_br.operation.type">
+            <field name="name">Return of goods shipped on account of lending agreement</field>
+            <field name="technical_name">shippingLendingReturnIn</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_72" model="l10n_br.operation.type">
+            <field name="name">Bomb packaging delivery vasil. sac. similar pallets</field>
+            <field name="technical_name">shippingReturnablePackaging</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_73" model="l10n_br.operation.type">
+            <field name="name">Return bomb packaging vasil sac similar pallets</field>
+            <field name="technical_name">returnReturnablePackaging</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_74" model="l10n_br.operation.type">
+            <field name="name">Entry bomb packaging vasil. sac. similar pallets</field>
+            <field name="technical_name">inBoundReturnablePackaging</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_75" model="l10n_br.operation.type">
+            <field name="name">Return bomb packaging vasil sac similar pallets</field>
+            <field name="technical_name">shippingReturnReturnablePackaging</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_76" model="l10n_br.operation.type">
+            <field name="name">Free sample shipping</field>
+            <field name="technical_name">freeTrialPack</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_77" model="l10n_br.operation.type">
+            <field name="name">Free sample shipping entry</field>
+            <field name="technical_name">freeTrialPackInBound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_78" model="l10n_br.operation.type">
+            <field name="name">Purchase for ind. of merchandise early received on consignment ind.</field>
+            <field name="technical_name">purchaseForIndustrializationByConsignorInConsigneeInBoundFullTax</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_118" model="l10n_br.operation.type">
+            <field name="name">Purchase by com</field>
+            <field name="technical_name">purchaseForCommercializationByConsignorInConsigneeInBoundFullTax</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_119" model="l10n_br.operation.type">
+            <field name="name">Purchase of merchandise for sale to order</field>
+            <field name="technical_name">inBoundDropshipSymbolicSalesShippersInvoicetoSeller</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_120" model="l10n_br.operation.type">
+            <field name="name">Merchandise entry received in mercantil or industrial consig</field>
+            <field name="technical_name">shippingFromConsignorToconsigneeInBoundFullTax</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_121" model="l10n_br.operation.type">
+            <field name="name">Symbolic shipment - sale to order</field>
+            <field name="technical_name">dropshipSymbolicSalesShippersInvoicetoSellerFullTax</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_122" model="l10n_br.operation.type">
+            <field name="name">Shipment on account and order of third parties</field>
+            <field name="technical_name">dropshipSalesShippersInvoiceToFinalBuyerForGoodsDeliveryFullTax</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_123" model="l10n_br.operation.type">
+            <field name="name">Simple billing - future delivery</field>
+            <field name="technical_name">salesForFutureDeliveryBillingStockAvailableFullTax</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_124" model="l10n_br.operation.type">
+            <field name="name">Sales shipment for future delivery</field>
+            <field name="technical_name">salesForFutureDeliveryDeliveryStockAvailableFullTax</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_125" model="l10n_br.operation.type">
+            <field name="name">Indust by terc with merc non trans acquirer</field>
+            <field name="technical_name">itemsManuFByOtherCompNotTransitAcquiring</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_126" model="l10n_br.operation.type">
+            <field name="name">Ind entry by non-trans merchant purchaser</field>
+            <field name="technical_name">itemsManufByOtherCompNotTransitAcqInbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_127" model="l10n_br.operation.type">
+            <field name="name">Industrialization carried out for another company - inputs</field>
+            <field name="technical_name">materialManufacturedByOtherCompany</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_128" model="l10n_br.operation.type">
+            <field name="name">Products manufactured by another company</field>
+            <field name="technical_name">productManufacturedByOtherCompany</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_129" model="l10n_br.operation.type">
+            <field name="name">Entry industrialization made for another company - inputs</field>
+            <field name="technical_name">materialManufByOtherCompanyInbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_130" model="l10n_br.operation.type">
+            <field name="name">Entry of products manufactured by another company</field>
+            <field name="technical_name">productManufByOtherCompanyInbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_131" model="l10n_br.operation.type">
+            <field name="name">Indust by terc with merc non-trans purchaser inputs</field>
+            <field name="technical_name">materialManufByOtherCompNotTransitAcquiring</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_132" model="l10n_br.operation.type">
+            <field name="name">Entr ind by terc merch not trans purchaser inputs</field>
+            <field name="technical_name">materialManufByOtherCompNotTransitAcqInbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_133" model="l10n_br.operation.type">
+            <field name="name">Shipment to merchandise ind not transported by the purchasing station</field>
+            <field name="technical_name">itemsForManufactShippingNotTransitAcqOutbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_134" model="l10n_br.operation.type">
+            <field name="name">Return input industr. on acquirer account/order merc</field>
+            <field name="technical_name">itemsForManufactShippingNotTransitAcqInbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_135" model="l10n_br.operation.type">
+            <field name="name">Sale without transit by the establishment</field>
+            <field name="technical_name">generalStorageSalesWithoutReturnToEstablishment</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_136" model="l10n_br.operation.type">
+            <field name="name">Transfer of goods without transit through the establishment</field>
+            <field name="technical_name">generalStorageItemTransferWithoutReturnToEstablishment</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_137" model="l10n_br.operation.type">
+            <field name="name">Remittance of fixed assets for use outside the establishment</field>
+            <field name="technical_name">fixedAssetShippingForUseOutsideEstablishmentOut</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_138" model="l10n_br.operation.type">
+            <field name="name">Shipment return asset imob p use outside establishment</field>
+            <field name="technical_name">fixedAssetShippingReturnForUseOutsideEstab</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_139" model="l10n_br.operation.type">
+            <field name="name">Third-party fixed asset entry</field>
+            <field name="technical_name">fixedAssetThirdPartyInBoundForUseInEstab</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_140" model="l10n_br.operation.type">
+            <field name="name">Return of assets from imob assets. sent for use outside the station</field>
+            <field name="technical_name">fixedAssetInboundOfReturnForUseOutsideEstab</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_141" model="l10n_br.operation.type">
+            <field name="name">Sale of item sent by ind. on account/order of the purchase</field>
+            <field name="technical_name">itemsForManufactSalesNotTransitAcqOutbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_142" model="l10n_br.operation.type">
+            <field name="name">Purchase of item shipped by ind. without trans. stab. of purchase</field>
+            <field name="technical_name">itemsForManufactPurchaseNotTransitAcq</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_143" model="l10n_br.operation.type">
+            <field name="name">Sale of merchandise previously shipped in consignment - sap</field>
+            <field name="technical_name">salesInvoiceByConsignorInConsigneeFullTax</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="operation_type_144" model="l10n_br.operation.type">
+            <field name="name">Consignment shipment - sap</field>
+            <field name="technical_name">shippingFromConsignorToconsigneeFullTax</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_145" model="l10n_br.operation.type">
+            <field name="name">Launch made as a reduction of inventory</field>
+            <field name="technical_name">writeDownsOfInventories</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_146" model="l10n_br.operation.type">
+            <field name="name">Cancellation of values related to transport service</field>
+            <field name="technical_name">voidingFreight</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_147" model="l10n_br.operation.type">
+            <field name="name">Special customs regime for temporary admission</field>
+            <field name="technical_name">temporaryAdmission</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_148" model="l10n_br.operation.type">
+            <field name="name">Partial import shipment</field>
+            <field name="technical_name">importPartialShipment</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_149" model="l10n_br.operation.type">
+            <field name="name">Single entry invoice. from purchase to receipt. future with stock</field>
+            <field name="technical_name">purchaseForFutureDeliveryBillingStockAvailable</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_150" model="l10n_br.operation.type">
+            <field name="name">Sale shipment entry for future delivery with stock</field>
+            <field name="technical_name">purchaseForFutureDeliveryDeliveryStockAvailable</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_151" model="l10n_br.operation.type">
+            <field name="name">Single entry invoice. from purchase to receipt. future without stock</field>
+            <field name="technical_name">purchaseForFutureDeliveryBillingStockNotAvailable</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_152" model="l10n_br.operation.type">
+            <field name="name">Sale entry for future delivery without stock</field>
+            <field name="technical_name">purchaseForFutureDeliveryDeliveryStockNotAvailable</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_153" model="l10n_br.operation.type">
+            <field name="name">Shipment with specific export purpose</field>
+            <field name="technical_name">shipmentForExportPurpose</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_154" model="l10n_br.operation.type">
+            <field name="name">Industr. return on account/order of the purchaser of the merchandise</field>
+            <field name="technical_name">x925ManufactoringReturn</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_155" model="l10n_br.operation.type">
+            <field name="name">Return input industr. on account/order of the purchaser of the merchandise</field>
+            <field name="technical_name">x925ManufactoringInBoundReturn</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_156" model="l10n_br.operation.type">
+            <field name="name">Other merchandise output not specified above</field>
+            <field name="technical_name">gOut949</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_157" model="l10n_br.operation.type">
+            <field name="name">Other goods receipt not specified above</field>
+            <field name="technical_name">gin949</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_158" model="l10n_br.operation.type">
+            <field name="name">999 - reversal of nf-e not cancelled within the legal period</field>
+            <field name="technical_name">reverseStandardSales</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_159" model="l10n_br.operation.type">
+            <field name="name">Receipt of goods or goods received for repair or repair</field>
+            <field name="technical_name">itemsForRepairShippingInbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_160" model="l10n_br.operation.type">
+            <field name="name">Return of goods or goods received for repair or repair</field>
+            <field name="technical_name">itemsForRepairReturnShippingOutbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_161" model="l10n_br.operation.type">
+            <field name="name">Purchase for use in providing services</field>
+            <field name="technical_name">standardPurchaseForService</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_162" model="l10n_br.operation.type">
+            <field name="name">Purchase for use in providing services subject to issqn</field>
+            <field name="technical_name">standardPurchaseForIssService</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_163" model="l10n_br.operation.type">
+            <field name="name">Simple entry billing sales to order with stock</field>
+            <field name="technical_name">purchaseSOForFutureDeliveryBillingStockAvailable</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_164" model="l10n_br.operation.type">
+            <field name="name">Simple entry billing sales to order without stock</field>
+            <field name="technical_name">purchaseSOForFutureDeliveryBillingStockNotAvailable</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_165" model="l10n_br.operation.type">
+            <field name="name">Symbolic ret of merchandise sent to closed dep/general warehouse</field>
+            <field name="technical_name">symbolicReturnFromGeneralStorage</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_166" model="l10n_br.operation.type">
+            <field name="name">Return of shipment for sale out of the establishment</field>
+            <field name="technical_name">salesOutsideTheEstablishmentReturnOfUnsoldGoods</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_167" model="l10n_br.operation.type">
+            <field name="name">Symbolic shipment of merchandise sent to general warehouse</field>
+            <field name="technical_name">symbolicShippingToGeneralStorage</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_168" model="l10n_br.operation.type">
+            <field name="name">Symbolic remittance of merch remitted to closed warehouse</field>
+            <field name="technical_name">symbolicShippingToCompanyStorage</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_169" model="l10n_br.operation.type">
+            <field name="name">Symbolic return merc deposited in closed dep/general arm</field>
+            <field name="technical_name">symbolicTransferBackFormGeneralStorage</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_170" model="l10n_br.operation.type">
+            <field name="name">Symbolic entry of merchandise received for general warehouse</field>
+            <field name="technical_name">symbolicShippingToGeneralStorageInbound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_171" model="l10n_br.operation.type">
+            <field name="name">Symbolic merch input received for closed deposit</field>
+            <field name="technical_name">symbolicShippingToCompanyStorageInBound</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_172" model="l10n_br.operation.type">
+            <field name="name">Merchandise return output not specified</field>
+            <field name="technical_name">gOut949TransferBack</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_173" model="l10n_br.operation.type">
+            <field name="name">Merchandise return entry not specified</field>
+            <field name="technical_name">gin949TransferBack</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="operation_type_174" model="l10n_br.operation.type">
+            <field name="name">Release as a result of the issuance of a tax receipt - ecf</field>
+            <field name="technical_name">dfemod55fromecf</field>
+            <field name="active" eval="False"/>
+        </record>
+    </data>
+</odoo>

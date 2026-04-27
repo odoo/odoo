@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.DocumentsViews.ChatterOverlay">
+        <div class="documents_chatter_disabled_overlay light position-sticky w-100 h-100"/>
+        <div class="documents_chatter_disabled_overlay dark position-sticky w-100 h-100">
+            <h1 class="d-block text-center text-white">
+                <t t-if="itemsNumber">
+                    <t t-out="itemsNumber"/> items selected
+                </t>
+                <t t-else="">
+                    No item selected
+                </t>
+                <i class="fa fa-files-o d-block mt-3"/>  
+            </h1>
+        </div>
+    </t>
+</templates>

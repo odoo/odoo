@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+<template id="ckus_check">
+    <div class="ckus_check">
+        <t t-if="page['state'] == 'cancelled'">
+            <div class="o-watermark">VOID</div>
+        </t>
+        <div class="sequence_number" t-if="page['sequence_number'] and page['manual_sequencing']" t-out="page['sequence_number']" />
+        <div class="ckus_date" t-out="page['date']"/>
+        <div class="ckus_payee_name" t-out="page['partner_name']"/>
+        <div class="ckus_amount">
+            <t t-out="page['amount'].replace(o.currency_id.symbol, '')"/>
+        </div>
+        <div class="ckus_amount_in_word" t-out="page['amount_in_word']"/>
+        <div class="ckus_payee_addr" t-out="page['partner_id']" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+        <div class="ckus_memo" t-out="page['memo']"/>
+    </div>
+</template>
+
+<template id="ckus_stub">
+    <div t-attf-class="ckus_stub ckus_stub_{{ stub_num }}">
+        <div class="row summary_line">
+            <div class="col-4 text-start">
+                <span t-if="page['manual_sequencing']" t-out="page['company']"/>
+            </div>
+            <div class="col-4 text-center date">
+                <span t-out="page['date']"/>
+            </div>
+            <div class="col-4 text-end sequence_number">
+                <span t-if="page['manual_sequencing'] and page['sequence_number']" t-out="page['sequence_number']"/>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-sm stub_lines" t-if="page['stub_lines']">
+            <thead><tr>
+                <th class="text-start">Due Date</th>
+                <th class="text-start">Description</th>
+                <th class="text-end">Invoice Amount</th>
+                <th class="text-end">Balance Due</th>
+                <th class="text-end">Payment</th>
+            </tr></thead>
+            <tbody>
+                <t t-foreach="page['stub_lines']" t-as="stub_line">
+                    <t t-if="stub_line.get('header')">
+                        <tr><th colspan="6"><t t-out="stub_line['name']"/></th></tr>
+                    </t>
+                    <t t-if="not stub_line.get('header')"><tr>
+                        <td class="text-start"><t t-if="stub_line['due_date']" t-out="stub_line['due_date']"/></td>
+                        <td class="text-start text-truncate" style="max-width: 500px;"><t t-out="stub_line['number']"/></td>
+                        <td class="text-end"><t t-out="stub_line['amount_total']"/></td>
+                        <td class="text-end">
+                            <t t-out="stub_line['amount_residual']"/>
+                        </td>
+                        <td class="text-end"><t t-out="stub_line['amount_paid']"/></td>
+                    </tr></t>
+                </t>
+                <tr t-if="page['stub_cropped']"><td colspan="6" class="text-end">...</td></tr>
+            </tbody>
+        </table>
+        <div class="stub_total_amount">Check Amount:
+            <span class="text-nowrap"><t t-out="page['amount']"/></span>
+        </div>
+    </div>
+</template>
+
+<template id="ckus_check_blank">
+    <div t-attf-class="ckus_check ckus_check_blank">
+        <img class="ckus_company_logo" t-if="page['company_logo']" t-att-src="image_data_uri(page['company_logo'])" alt="company logo"/>
+        <div class="ckus_company_block">
+            <div class="ckus_company_name" t-out="page['company_name']"/>
+            <div class="ckus_company_street" t-out="page['company_street']"/>
+            <div class="ckus_company_city_state" t-out="page['company_city_state']"/>
+        </div>
+        <div class="ckus_pay_order">PAY TO THE<br/>ORDER OF</div>
+        <div class="ckus_payee_name" t-out="page['partner_name']"/>
+        <div class="ckus_amount_in_word" t-out="page['ckus_amount_in_word']"/>
+        <hr class="ckus_amount_in_word_line ckus_hr_line"/>
+        <div class="ckus_payee_addr">
+            <div t-out="page['partner_name']"/>
+            <div t-out="page['partner_street']"/>
+            <div t-out="page['partner_city_state']"/>
+        </div>
+        <div class="ckus_memo_blank">MEMO</div>
+        <div class="ckus_memo" t-out="page['memo']"/>
+        <div class="ckus_number sequence_number" t-if="page['sequence_number']" t-out="page['sequence_number']"/>
+        <div class="ckus_blank_date" t-out="page['date']"/>
+        <div class="ckus_bank_block">
+            <div class="fw-bold" t-out="page['bank_name']"/>
+            <div t-if="page['bank_street']" t-out="page['bank_street']"/>
+            <div t-if="page['bank_city_state']" t-out="page['bank_city_state']"/><br/>
+            <div class="ckus_bank_routing" t-if="page['bank_routing']" t-out="page['bank_routing']"/>
+        </div>
+        <div class="ckus_dollar_symbol">$</div>
+        <div class="ckus_amount" t-out="page['amount'].replace(o.currency_id.symbol, '')"/>
+        <div class="ckus_dollar_text">DOLLARS</div>
+        <hr class="ckus_signature_line ckus_hr_line"/>
+        <div class="ckus_signature">AUTHORIZED SIGNATURE</div>
+        <div class="ckus_special_line" t-out="page['ckus_special_line']"/>
+    </div>
+</template>
+
+<template id="ckus_stub_blank">
+    <div t-attf-class="ckus_stub_blank ckus_stub_blank_{{ stub_num }}">
+        <div class="ckus_name" t-out="page['company_name']"/>
+        <div class="ckus_number sequence_number" t-if="page['sequence_number']" t-out="page['sequence_number']"/>
+    </div>
+</template>
+
+</data>
+</odoo>

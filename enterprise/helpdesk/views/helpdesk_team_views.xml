@@ -1,0 +1,454 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="helpdesk_team_view_tree" model="ir.ui.view">
+        <field name="name">helpdesk.team.list</field>
+        <field name="model">helpdesk.team</field>
+        <field name="arch" type="xml">
+            <list string="Helpdesk Team" multi_edit="1" sample="1">
+                <field name="sequence" widget="handle"/>
+                <field name="name" class="field_name" string="Name"/>
+                <field name="use_alias" column_invisible="True"/>
+                <field name="alias_email" string="Email Alias" widget="email" readonly="1" invisible="not use_alias"/>
+                <field name="company_id" groups="base.group_multi_company" readonly="1" context="{'create': False}"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="helpdesk_sla_action" model="ir.actions.act_window">
+        <field name="name">SLA Policies</field>
+        <field name="res_model">helpdesk.sla</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="context">{'default_team_id': active_id, 'search_default_team_id': active_id}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No SLA policies found. Let's create one!
+            </p><p>
+                Make sure tickets are handled in a timely manner by using SLA Policies.<br/>
+            </p>
+        </field>
+    </record>
+
+    <record id="email_template_action_helpdesk" model="ir.actions.act_window" >
+            <field name="name">Templates</field>
+            <field name="res_model">mail.template</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('team_id', '=', active_id)]</field>
+            <field name="context">{'default_team_id': active_id}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new template
+                </p>
+            </field>
+    </record>
+
+    <record id="helpdesk_team_view_form" model="ir.ui.view">
+        <field name="name">helpdesk.team.form</field>
+        <field name="model">helpdesk.team</field>
+        <field name="arch" type="xml">
+            <form string="team search" class="oe_form_configuration" js_class="helpdesk_team_form">
+                <sheet>
+                    <div class="oe_button_box" name="button_box" groups="base.group_user">
+                        <button name="action_view_open_ticket_view" type="object" icon="fa-life-ring" class="oe_stat_button">
+                            <field name="open_ticket_count" string="Tickets" widget="statinfo"/>
+                        </button>
+                        <field name="rating_count" invisible="1"/>
+                        <button name="action_view_team_rating" type="object" class="oe_stat_button" icon="" invisible="not use_rating or rating_count == 0" groups="helpdesk.group_use_rating" title="Average Rating">
+                            <i class="fa fa-fw o_button_icon fa-smile-o text-success" invisible="rating_avg &lt; 3.66" title="Satisfied"/>
+                            <i class="fa fa-fw o_button_icon fa-meh-o text-warning" invisible="rating_avg &lt; 2.33 or rating_avg &gt;= 3.66" title="Okay"/>
+                            <i class="fa fa-fw o_button_icon fa-frown-o text-danger" invisible="rating_avg &gt;= 2.33" title="Dissatisfied"/>
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="rating_avg" nolabel="1" widget="float" digits="[1, 1]"/> / 5
+                                </span>
+                                <span class="o_stat_text">
+                                    Avg. Rating
+                                </span>
+                            </div>
+                        </button>
+                        <button name="action_view_sla_policy" type="object" icon="fa-calendar-check-o" class="oe_stat_button" invisible="not use_sla">
+                            <field name="sla_policy_count" string="SLA Policies" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title" id='title'>
+                        <label for="name" string="Name"/>
+                        <h1 id="name"><field name="name" options="{'line_breaks': False}" widget="text" placeholder="e.g. Customer Care"/></h1>
+                    </div>
+                    <field name="active" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="description" placeholder="Describe your team to your colleagues and customers..."/>
+                    <field name="company_id" groups="base.group_multi_company" required="1" nolabel="1" options="{'no_create': True}" context="{'create': False}" placeholder="e.g. My Company"/>
+                    <h2>Visibility &amp; Assignment </h2>
+                    <div class="row mt16 o_settings_container" id="productivity">
+                        <setting
+                            help="People to whom this team and its tickets will be visible"
+                            documentation="/applications/services/helpdesk.html#visibility-assignment"
+                        >
+                            <field name="privacy_visibility" class="mt16 o_light_label" widget="radio"/>
+                            <div>
+                                <span class="text-muted o_row ps-1" invisible="access_instruction_message == ''">
+                                    <i class="fa fa-lightbulb-o"/>&amp;nbsp;<field class="align-top d-inline ms-2" name="access_instruction_message" nolabel="1"/>
+                                </span>
+                            </div>
+                            <div>
+                                <span class="text-muted o_row ps-1" invisible="privacy_visibility_warning == ''">
+                                    <i class="fa fa-warning"/>&amp;nbsp;<field class="align-top d-inline ms-2" name="privacy_visibility_warning" nolabel="1"/>
+                                </span>
+                            </div>
+                        </setting>
+                        <div class="col-lg-6">
+                            <setting class="col-lg-12">
+                                <label for="message_partner_ids"/>
+                                <div class="text-muted">
+                                    Receive notifications whenever tickets are created, rated or discussed on in this team
+                                </div>
+                                <div class="mt16">
+                                    <span><b>Followers </b></span>
+                                    <field name="message_partner_ids" string="Follow All Team's Tickets" widget="many2many_tags_email"/>
+                                </div>
+                            </setting>
+                            <setting class="col-lg-12" help="Automate the assignment of new tickets to the right people, and make sure all tickets are being handled">
+                                <field name="auto_assignment"/>
+                                <div invisible="not auto_assignment" class="mt16">
+                                    <field name="assign_method" class="o_light_label w-100" widget="radio"/>
+                                    <div class="mt16 d-flex" name="member_ids">
+                                        <label for="member_ids"/>
+                                        <field name="member_ids" widget="many2many_avatar_user" required="auto_assignment"
+                                        class="ms-3" options="{'no_quick_create': True}"/>
+                                    </div>
+                                </div>
+                            </setting>
+                        </div>
+                    </div>
+                    <h2>Channels</h2>
+                    <div class="row mt16 o_settings_container" id="channels">
+                        <setting id="alias_channels" help="Create tickets by sending an email to an alias"
+                            documentation="/applications/services/helpdesk/overview/receiving_tickets.html#email-alias">
+                            <field name="use_alias" string="Email Alias"/>
+                            <div invisible="not use_alias" class="mt16">
+                                <div class="oe_edit_only" dir="ltr">
+                                    <strong>Alias </strong>
+                                    <field name="alias_name" placeholder="alias" class="w-25"/>@
+                                    <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
+                                           options="{'no_create': True, 'no_open': True}"/>
+                                    <br/>
+                                    <label for="alias_contact"/>
+                                    <field name="alias_contact" string="Accept Emails From"/>
+                                </div>
+                                <p class="oe_read_only">
+                                    <strong>Alias </strong>
+                                    <field name="alias_id" class="oe_read_only oe_inline" required="False"/>
+                                </p>
+                                <field name="has_external_mail_server" invisible="1"/>
+                                <p class="text-muted o_row ps-1" invisible="alias_domain_id or has_external_mail_server">
+                                    <i class="fa fa-lightbulb-o" role='img'/><span class="ms-2">To use an email alias, the first step is to configure an Alias Domain. You can achieve this by navigating to the General Settings and configuring the corresponding field.</span>
+                                </p>
+                                <p invisible="alias_domain_id">
+                                    <a href="/odoo/settings#email-alias-setting" class="btn-link mt-2" role="button"><i class="oi oi-arrow-right"/> Set an Alias Domain</a>
+                                </p>
+                            </div>
+                        </setting>
+                        <setting help="Get in touch with your website visitors, and engage them with scripted chatbot conversations. Create and search tickets from your conversations.">
+                            <field name="use_website_helpdesk_livechat"/>
+                            <div class="text-muted o_row ps-1 mt16" invisible="not use_website_helpdesk_livechat">
+                                <i class="fa fa-lightbulb-o"/>
+                                <span class="ms-2">
+                                    Type <b>/ticket</b> to create tickets<br/>
+                                    Type <b>/search_tickets</b> to find tickets<br/>
+                                </span>
+                            </div>
+                        </setting>
+                    </div>
+                    <h2>Help Center</h2>
+                    <div class="row mt16 o_settings_container" id="website_form_channel">
+                        <setting help="Get tickets through an online form">
+                            <field name="use_website_helpdesk_form"/>
+                        </setting>
+                        <setting help="Centralize, manage, share and grow your knowledge library. Allow customers to search your articles in the help center for answers to their questions." documentation="/applications/services/helpdesk/overview/help_center.html#knowledge">
+                            <field name="use_website_helpdesk_knowledge"/>
+                        </setting>
+                        <setting help="Allow customers to help each other on a forum. Share answers from your tickets directly." documentation="/applications/services/helpdesk/overview/help_center.html#community-forum">
+                            <field name="use_website_helpdesk_forum"/>
+                        </setting>
+                        <setting help="Share presentations and videos, and organize them into courses. Allow customers to search your eLearning courses in the help center for answers to their questions." documentation="/applications/services/helpdesk/overview/help_center.html#elearning">
+                            <field name="use_website_helpdesk_slides"/>
+                        </setting>
+                    </div>
+                    <h2 class="mt32">Track &amp; Bill Time</h2>
+                    <div class="row mt16 o_settings_container">
+                        <setting id="timesheet"
+                                 help="Track the time spent on tickets"
+                                 documentation="/applications/services/helpdesk/advanced/track_and_bill.html">
+                            <field name="use_helpdesk_timesheet"/>
+                        </setting>
+                        <setting id="sale_timesheet"
+                                 help="Bill the time spent on your tickets to your customers"
+                                 documentation="/applications/services/helpdesk/advanced/track_and_bill.html">
+                            <field name="use_helpdesk_sale_timesheet"/>
+                        </setting>
+                    </div>
+                    <h2>Performance</h2>
+                    <div class="row mt16 o_settings_container">
+                        <setting id="sla"
+                                  help="Make sure tickets are handled on time"
+                                  documentation="/applications/services/helpdesk/overview/sla.html">
+                            <field name="use_sla"/>
+                            <div class="mt16" invisible="not use_sla">
+                                <label for="resource_calendar_id"/>
+                                <field name="resource_calendar_id" required="use_sla"/>
+                            </div>
+                        </setting>
+                        <setting id="rating" help="Track customer satisfaction on tickets"
+                            documentation="/applications/services/helpdesk/overview/ratings.html">
+                            <field name="use_rating"/>
+                            <div id="use_rating" invisible="not use_rating">
+                                <p class="text-muted o_row ps-1">
+                                    <i class="fa fa-lightbulb-o"/>
+                                    <span class="ms-2">A rating request will automatically be sent by email to the customer when their ticket reaches the corresponding stage with the email template set.</span>
+                                </p>
+                                <div class="mt-3">
+                                    <button name="%(helpdesk.helpdesk_stage_team_action)d" type="action" string="Set an Email Template on Stages" icon="oi-arrow-right" class="btn-link" context="{'search_default_team_ids': name}"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </div>
+                    <h2>Self-Service</h2>
+                    <div class="row mt16 o_settings_container" id="self-Service">
+                        <setting help="Allow your customers to close their own tickets" documentation="/applications/services/helpdesk/advanced/close_tickets.html">
+                            <field name="allow_portal_ticket_closing"/>
+                        </setting>
+                        <setting help="Close inactive tickets automatically">
+                            <field name="auto_close_ticket"/>
+                            <div class="content-group" invisible="not auto_close_ticket">
+                                <field name="stage_ids" invisible="1"/>
+                                <div class="mt16">
+                                    <label for="to_stage_id"/>
+                                    <field name="to_stage_id" class="ms-2 oe_inline" required="auto_close_ticket" context="{'default_team_id': id}"/>
+                                </div>
+                                <div class="mt8">
+                                    <strong>After</strong><field name="auto_close_day" class="mx-2 oe_inline text-center" required="1"/><span>days of inactivity</span>
+                                </div>
+                                <div class="mt8">
+                                    <label for="from_stage_ids"/>
+                                    <field name="from_stage_ids" widget="many2many_tags" class="ms-2" context="{'default_team_id': id}"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </div>
+                    <h2>After-Sales <widget name="documentation_link" path="/applications/services/helpdesk/advanced/after_sales.html" icon="fa-question-circle"/></h2>
+                    <div class="row mt32 o_settings_container" id="after-sales">
+                        <setting help="Issue credits notes">
+                            <field name="use_credit_notes"/>
+                        </setting>
+                        <setting help="Grant discounts, free products or free shipping">
+                            <field name="use_coupons"/>
+                        </setting>
+                        <setting help="Return faulty products">
+                            <field name="use_product_returns"/>
+                        </setting>
+                        <setting help="Send broken products for repair">
+                            <field name="use_product_repairs"/>
+                        </setting>
+                        <setting help="Plan onsite interventions">
+                            <field name="use_fsm"/>
+                        </setting>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="helpdesk_team_view_search" model="ir.ui.view">
+        <field name="name">helpdesk.team.search</field>
+        <field name="model">helpdesk.team</field>
+        <field name="arch" type="xml">
+            <search string="Helpdesk Team Search">
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <separator/>
+                <filter string="Archived" domain="[('active', '=', False)]" name="archived"/>
+                <group expand="0" string="Group By">
+                    <filter string="Company" name="company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="helpdesk_team_view_kanban" model="ir.ui.view" >
+        <field name="name">helpdesk.team.dashboard</field>
+        <field name="model">helpdesk.team</field>
+        <field name="priority">200</field>
+        <field name="arch" type="xml">
+            <kanban highlight_color="color"
+                    group_create="0" create="0" js_class="helpdesk_team_kanban_view" sample="1"
+                    action="action_view_ticket" type="object"
+            >
+                <field name="sequence" widget="handle"/>
+                <field name="use_alias"/>
+                <field name="use_rating"/>
+                <field name="use_sla"/>
+                <field name="rating_count"/>
+                <templates>
+                    <t t-name="menu">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6">
+                                    <h5 role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>View</span>
+                                    </h5>
+                                    <div role="menuitem">
+                                        <a name="action_view_ticket" type="object">Tickets</a>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <h5 role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>Reporting</span>
+                                    </h5>
+                                    <div role="menuitem" class="text-nowrap">
+                                        <a name="%(helpdesk.helpdesk_ticket_analysis_dashboard_action)d" type="action" context="{'search_default_team_id': id}">Tickets Analysis</a>
+                                    </div>
+                                    <div role="menuitem" class="text-nowrap">
+                                        <a name="%(helpdesk.helpdesk_sla_report_analysis_dashboard_action)d" type="action" context="{'search_default_team_id': id}">SLA Status Analysis</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                <div role="menuitem" aria-haspopup="true" class="col-8">
+                                    <field name="color" widget="kanban_color_picker"/>
+                                </div>
+                                <div role="menuitem" class="col-4">
+                                    <a class="dropdown-item" role="menuitem" type="open">Settings</a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-name="card" class="px-3">
+                        <field name="display_name" class="fw-bold fs-4"/>
+                        <small t-if="record.use_alias.value and record.alias_email.value" class="ms-2">
+                            <a t-att-href="'mailto:' + record.alias_email.value"><i class="fa fa-envelope-o" title="Domain alias" role="img" aria-label="Domain alias"></i>&amp;nbsp; <field name="alias_email"/></a>
+                        </small>
+                        <div class="row mt-3" t-if="!selection_mode">
+                            <div class="col-4">
+                                <button class="btn btn-primary o_helpdesk_ticket_btn" name="action_view_ticket" type="object" context="{'default_team_id': id}">Tickets</button>
+                            </div>
+                            <div class="col-8">
+                                <a name="action_view_closed_ticket" type="object" title="Number of tickets closed in the past 7 days." class="justify-content-between flex-nowrap d-inline-flex w-100 mb4">
+                                    <span>Tickets Closed</span>
+                                    <field name="ticket_closed" class="ms-3 text-nowrap"/>
+                                </a>
+                                <a name="action_view_success_rate" type="object" groups="helpdesk.group_use_sla" invisible="not use_sla or success_rate &lt; 0.0" title="Percentage of tickets whose SLAs have successfully been reached on time over the total number of tickets closed within the past 7 days." class="justify-content-between flex-nowrap d-inline-flex w-100 mb4">
+                                    <span>SLA Success Rate</span>
+                                    <span class="ms-3 text-nowrap">
+                                        <field name="success_rate"/> %
+                                    </span>
+                                </a>
+                                <a name="action_view_customer_satisfaction" type="object" t-if="record.use_rating.raw_value and record.rating_count.raw_value &gt; 0" groups="helpdesk.group_use_rating" title="Average rating for the last 7 days" class="justify-content-between flex-nowrap d-inline-flex w-100 mb4">
+                                    <span>Average Rating</span>
+                                    <span class="d-flex ms-3 text-nowrap">
+                                        <strong class="fa fa-fw mt4 fa-smile-o text-success fw-bolder" t-if="record.rating_avg.raw_value &gt;= 3.66" title="Average Rating: Satisfied" role="img" aria-label="Happy face"/>
+                                        <strong class="fa fa-fw mt4 fa-meh-o text-warning fw-bolder" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Okay" role="img" aria-label="Neutral face"/>
+                                        <strong class="fa fa-fw mt4 fa-frown-o text-danger fw-bolder" t-else="" title="Average Rating: Dissatisfied" role="img" aria-label="Sad face"/>
+                                        <field name="rating_avg" nolabel="1" widget="float" digits="[1, 1]" class="me-1"/> / 5
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row pt-5 mt-auto">
+                            <a name="action_view_open_ticket" type="object" class="d-flex flex-column align-items-center col">
+                                <field name="open_ticket_count" class="fw-bold"/>
+                                <span class="text-muted text-nowrap">Open</span>
+                            </a>
+                            <a name="%(helpdesk.helpdesk_ticket_action_unassigned)d" type="action" context="{'default_team_id': id}" class="d-flex flex-column align-items-center col border-start">
+                                <field name="unassigned_tickets" class="fw-bold"/>
+                                <span class="text-muted text-nowrap">Unassigned</span>
+                            </a>
+                            <a name="action_view_urgent" type="object" class="d-flex flex-column align-items-center col border-start">
+                                <field name="urgent_ticket" class="fw-bold"/>
+                                <span class="text-muted text-nowrap">Urgent</span>
+                            </a>
+                            <a name="action_view_sla_failed" type="object" class="d-flex flex-column align-items-center col border-start" groups="helpdesk.group_use_sla" invisible="not use_sla" title="Number of open tickets with at least one SLA failed.">
+                                <field name="sla_failed" class="fw-bold"/>
+                                <span class="text-muted text-nowrap">Failed</span>
+                            </a>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="helpdesk_team_kanban_view" model="ir.ui.view">
+        <field name="name">helpdesk.team.kanban.view</field>
+        <field name="model">helpdesk.team</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_team_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="js_class"></attribute>
+                <attribute name="create">1</attribute>
+             </xpath>
+        </field>
+    </record>
+
+    <record id="helpdesk_team_action" model="ir.actions.act_window">
+        <field name="name">Helpdesk Teams</field>
+        <field name="res_model">helpdesk.team</field>
+        <field name="path">helpdesk-teams</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="context">{'default_use_sla': True}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+                No teams found. Let's create one!
+            </p>
+            <p>
+                Create teams to organize your tickets by expertise or geographical region, and define a different workflow for each team.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_team_action_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="helpdesk.helpdesk_team_view_tree"/>
+        <field name="act_window_id" ref="helpdesk_team_action"/>
+    </record>
+
+    <record id="helpdesk_team_action_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="helpdesk.helpdesk_team_kanban_view"/>
+        <field name="act_window_id" ref="helpdesk_team_action"/>
+    </record>
+
+    <record id="helpdesk_team_dashboard_action_main" model="ir.actions.act_window">
+        <field name="name">Helpdesk Overview</field>
+        <field name="path">helpdesk</field>
+        <field name="res_model">helpdesk.team</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="context">{}</field>
+        <field name="view_id" ref="helpdesk.helpdesk_team_view_kanban"/>
+        <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+                No teams found
+            </p>
+            <p>
+                Create teams to organize your tickets by expertise or geographical region, and define a different workflow for each team.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_team_view_kanban_mobile" model="ir.ui.view">
+        <field name="name">helpdesk.team.view.kanban.mobile</field>
+        <field name="model">helpdesk.team</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="fw-bolder"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

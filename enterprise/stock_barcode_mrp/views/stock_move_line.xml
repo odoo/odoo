@@ -1,0 +1,35 @@
+<odoo>
+    <record id="stock_move_line_product_selector" model="ir.ui.view">
+        <field name="name">move.line.product.selector.inherit</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock_barcode.stock_move_line_product_selector"/>
+        <field name="mode">primary</field>
+        <field name="priority">2000</field>
+        <field name="arch" type="xml">
+            <field name="picked" position="after">
+                <field name="manual_consumption" force_save="1" invisible="1"/>
+                <field name="production_id" invisible="1"/>
+            </field>
+            <xpath expr="(//field[@name='product_id'])" position="attributes">
+                <attribute name="domain">[('id', '!=', context.get('final_product_id')),('type', '=', 'consu'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]</attribute>
+            </xpath>
+            <field name="lot_id" position="replace">
+                <field name="lot_id" placeholder="Serial/Lot Number" invisible="hide_lot or (not pick_type_create_components_lots and not context.get('newByProduct'))"
+                       options="{'no_open': True}"
+                       context="{'default_product_id': product_id, 'active_picking_id': picking_id}"/>
+                <field name="lot_id" placeholder="Serial/Lot Number" invisible="hide_lot or pick_type_create_components_lots or context.get('newByProduct')"
+                       options="{'no_open': True, 'no_create': True}"
+                       context="{'default_product_id': product_id, 'active_picking_id': picking_id}"/>
+            </field>
+            <xpath expr="//div[@groups='stock.group_tracking_lot']" position="attributes">
+                <attribute name="invisible">(context.get('newByProduct')) or (picking_code == 'mrp_operation')</attribute>
+            </xpath>
+            <xpath expr="//widget[@name='stock_barcode_unlink_button']" position="attributes">
+                <attribute name="invisible">context.get('newByProduct') or context.get('hide_unlink_button')</attribute>
+            </xpath>
+            <xpath expr="//div[@name='location_src']" position="attributes">
+                <attribute name="invisible">context.get('newByProduct') or picking_code == 'incoming'</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

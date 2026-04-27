@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="social.StreamPostCommentsOriginalPost" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_social_manage_post')]" position="attributes">
+            <attribute name="t-if" add="isConvertibleToLead?.()" separator=" or "/>
+        </xpath>
+        <xpath expr="//div[hasclass('dropdown-menu')]/a[1]" position="before">
+            <a t-if="isConvertibleToLead?.()" href="#" t-on-click="generateLeadFromPost"
+                class="o_social_generate_lead_post dropdown-item text-decoration-none">
+                Create Lead
+            </a>
+        </xpath>
+    </t>
+
+    <t t-inherit="social.StreamPostComment" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_social_manage_comment')]/div[hasclass('dropdown-menu')]/a[1]" position="before">
+            <a t-if="isConvertibleToLead?.()"
+                class="o_social_generate_lead_comment dropdown-item text-decoration-none" href="#"
+                t-on-click="generateLeadFromComment">Create Lead</a>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_actions_server_view_form_whatsapp"  model="ir.ui.view">
+        <field name="name">ir.actions.server.view.form.inherit.whatsapp</field>
+        <field name="model">ir.actions.server</field>
+        <field name="inherit_id" ref="base.view_server_action_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='link_field_id']" position="after">
+                <field name="wa_template_id"
+                    placeholder="Choose a template..."
+                    invisible="state != 'whatsapp'"
+                    required="state == 'whatsapp'"
+                    options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

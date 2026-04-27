@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <function model="sale.order.line" name="_planning_slot_generation">
+            <value model="sale.order.line" eval="obj().search([
+                ('product_id.planning_enabled', '=', True),
+                ('planning_slot_ids', '=', False),
+                ('state', '=', 'sale'),
+                ('planning_hours_to_plan', '>', 0.0),
+            ]).ids"/>
+        </function>
+    </data>
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_move_form_inherit_l10n_co_edi_mandate" model="ir.ui.view">
+            <field name="name">account.move.form.inherit.l10n_co_edi_mandate</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="l10n_co_edi.invoice_form_inherit_l10n_co_edi"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@id='header_left_group']" position="inside">
+                    <field
+                        name="l10n_co_dian_mandate_principal"
+                        invisible="l10n_co_edi_operation_type != '11'"
+                        required="l10n_co_edi_operation_type == '11'"
+                        readonly="state != 'draft'"
+                    />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

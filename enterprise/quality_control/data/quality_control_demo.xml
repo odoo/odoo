@@ -1,0 +1,35 @@
+<odoo>
+    <!-- Quality Control From Stock Picking -->
+
+    <!-- For Drawer -->
+    <record id="quality_point1" model="quality.point">
+        <field name="product_ids" eval="[(4, ref('product.product_product_27'))]"/>
+        <field name="picking_type_ids" eval="[(4, ref('stock.picking_type_in'))]"/>
+        <field name="note">Quality Control For Drawer's Parts By Manufacturing Department.</field>
+    </record>
+
+    <!-- For Office Lamp -->
+    <record id="quality_point2" model="quality.point">
+        <field name="product_ids" eval="[(4, ref('product.product_delivery_02'))]"/>
+        <field name="picking_type_ids" eval="[(4, ref('stock.picking_type_in'))]"/>
+        <field name="note">Quality Control For Office Lamp By Manufacturing Department.</field>
+    </record>
+
+    <record id="quality_spreadsheet_template_cabinet" model="quality.spreadsheet.template">
+        <field name="name">Quality Control Spreadsheet</field>
+        <field name="check_cell">B17</field>
+        <field name="spreadsheet_binary_data" type="base64" file="quality_control/data/quality_spreadsheet_template_demo.json"/>
+    </record>
+
+    <record id="quality_point_with_spreadsheet" model="quality.point">
+        <field name="product_ids" eval="[(4, ref('product.product_product_10')),(4, ref('product.product_delivery_01'))]"/>
+        <field name="test_type_id" ref="test_type_spreadsheet"/>
+        <field name="picking_type_ids" eval="[(4, ref('stock.picking_type_in'))]"/>
+        <field name="spreadsheet_template_id" ref="quality_spreadsheet_template_cabinet"/>
+        <field name="note">Please fill in the attached spreadsheet to complete the quality check.</field>
+    </record>
+
+    <function model="stock.move" name="_create_quality_checks">
+        <function eval="[[('state', 'in', ('waiting', 'confirmed', 'partially_available', 'assigned'))]]" model="stock.move" name="search"/>
+    </function>
+</odoo>

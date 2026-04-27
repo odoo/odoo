@@ -1,0 +1,141 @@
+<odoo>
+    <data>
+        <record id="turkey_salary_rule_ssie" model="hr.salary.rule">
+            <field name="name">SSI Employee Contribution</field>
+            <field name="category_id" ref="l10n_tr_hr_payroll.hr_salary_rule_category_tr_ssid"/>
+            <field name="code">SSIEDED</field>
+            <field name="sequence">10</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">
+result = contract.wage &gt; payslip._rule_parameter('l10n_tr_min_wage')
+            </field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = -min(contract.wage, payslip._rule_parameter('l10n_tr_ssi_base_ceiling'))
+result_rate = 14
+            </field>
+            <field name="struct_id" ref="l10n_tr_hr_payroll.hr_payroll_structure_tr_employee_salary"/>
+        </record>
+
+        <record id="turkey_salary_rule_ssie_unemployment" model="hr.salary.rule">
+            <field name="name">SSI (unemployment) Employee Contribution</field>
+            <field name="category_id" ref="l10n_tr_hr_payroll.hr_salary_rule_category_tr_ssid" />
+            <field name="code">SSIDED</field>
+            <field name="sequence">20</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">
+result = contract.wage &gt; payslip._rule_parameter('l10n_tr_min_wage')
+            </field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = -min(contract.wage, payslip._rule_parameter('l10n_tr_ssi_base_ceiling'))
+result_rate = 1
+            </field>
+            <field name="struct_id" ref="l10n_tr_hr_payroll.hr_payroll_structure_tr_employee_salary"/>
+        </record>
+
+        <record id="turkey_ssi_company_contribution" model="hr.salary.rule">
+            <field name="name">SSI Company Contribution</field>
+            <field name="category_id" ref="hr_payroll.COMP"/>
+            <field name="code">SSICDED</field>
+            <field name="sequence">30</field>
+            <field name="amount_select">code</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">
+result = contract.wage &gt; payslip._rule_parameter('l10n_tr_min_wage')
+            </field>
+            <field name="amount_python_compute">
+result = min(contract.wage, payslip._rule_parameter('l10n_tr_ssi_base_ceiling'))
+result_rate = 20.5
+            </field>
+            <field name="struct_id" ref="l10n_tr_hr_payroll.hr_payroll_structure_tr_employee_salary"/>
+        </record>
+
+        <record id="turkey_ssi_unemployment_company_contribution" model="hr.salary.rule">
+            <field name="name">SSI (unemployment) Company Contribution</field>
+            <field name="category_id" ref="hr_payroll.COMP"/>
+            <field name="code">SSIUCDED</field>
+            <field name="sequence">40</field>
+            <field name="amount_select">code</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">
+result = contract.wage &gt; payslip._rule_parameter('l10n_tr_min_wage')
+            </field>
+            <field name="amount_python_compute">
+result = min(contract.wage, payslip._rule_parameter('l10n_tr_ssi_base_ceiling'))
+result_rate = 2
+            </field>
+            <field name="struct_id" ref="l10n_tr_hr_payroll.hr_payroll_structure_tr_employee_salary"/>
+        </record>
+
+        <record id="turkey_tax_bracket_base" model="hr.salary.rule">
+            <field name="name">Tax Bracket Base</field>
+            <field name="category_id" ref="l10n_tr_hr_payroll.hr_salary_rule_category_tr_taxbase"/>
+            <field name="code">TAXB</field>
+            <field name="sequence">125</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = GROSS + categories['SSID']
+            </field>
+            <field name="struct_id" ref="l10n_tr_hr_payroll.hr_payroll_structure_tr_employee_salary"/>
+        </record>
+
+        <record id="turkey_tax_bracket_total" model="hr.salary.rule">
+            <field name="name">TAX Bracket Deduction</field>
+            <field name="category_id" ref="l10n_tr_hr_payroll.hr_salary_rule_category_tr_taxded"/>
+            <field name="code">TOTTB</field>
+            <field name="sequence">150</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = payslip._l10n_tr_get_tax(TAXB)
+            </field>
+            <field name="struct_id" ref="l10n_tr_hr_payroll.hr_payroll_structure_tr_employee_salary"/>
+        </record>
+
+        <record id="turkey_net_tax_deduction" model="hr.salary.rule">
+            <field name="name">Net Tax Deduction</field>
+            <field name="category_id" ref="l10n_tr_hr_payroll.hr_salary_rule_category_tr_net_taxded"/>
+            <field name="code">BTAXNET</field>
+            <field name="sequence">175</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = -max(categories['TAXDED'] - payslip._rule_parameter('l10n_tr_tax_exempt'), 0.0)
+            </field>
+            <field name="struct_id" ref="l10n_tr_hr_payroll.hr_payroll_structure_tr_employee_salary"/>
+        </record>
+
+        <record id="turkey_stamp_tax_deduction" model="hr.salary.rule">
+            <field name="name">Stamp Tax Deduction</field>
+            <field name="category_id" ref="l10n_tr_hr_payroll.hr_salary_rule_category_tr_stamp_tax"/>
+            <field name="code">STAX</field>
+            <field name="sequence">200</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+tax_amount = GROSS * payslip._rule_parameter('l10n_tr_stamp_tax_pcnt')
+tax_exemption = payslip._rule_parameter('l10n_tr_stamp_tax_exempt')
+result = -max(tax_amount - tax_exemption, 0.0)
+            </field>
+            <field name="struct_id" ref="l10n_tr_hr_payroll.hr_payroll_structure_tr_employee_salary"/>
+        </record>
+
+        <record id="turkey_tax_deduction_net" model="hr.salary.rule">
+            <field name="name">Tax Deduction Net</field>
+            <field name="category_id" ref="l10n_tr_hr_payroll.hr_salary_rule_category_tax_deduction_net"/>
+            <field name="code">NETTAX</field>
+            <field name="sequence">225</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = categories['STAXD'] + categories['BNETTAX']
+            </field>
+            <field name="struct_id" ref="l10n_tr_hr_payroll.hr_payroll_structure_tr_employee_salary"/>
+        </record>
+
+        <function model="hr.salary.rule" name="write">
+            <value model="hr.salary.rule" search="[
+                ('struct_id', '=', ref('l10n_tr_hr_payroll.hr_payroll_structure_tr_employee_salary')),
+                ('code', '=', 'NET')]"/>
+            <value eval="{'sequence': '250'}"/>
+        </function>
+    </data>
+</odoo>
+

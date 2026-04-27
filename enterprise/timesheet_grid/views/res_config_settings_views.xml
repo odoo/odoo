@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.timesheet.grid</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="2"/>
+        <field name="inherit_id" ref="hr_timesheet.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='time_encoding_setting_container']" position="inside">
+                <setting invisible="is_encode_uom_days" string="Time Rounding" help="Rounding applied when tracking your time using the timer">
+                    <div class="mt16">
+                        <div class="o_row">
+                            <div class="o_light_label" title="Timesheets encoded via the timer that do not meet the minimal duration will automatically be rounded up to the defined value. For instance, if you stop your timer at 00:04:36, the duration of the timesheet entry will automatically be rounded up to 00:15 (assuming you have a minimal duration of 15 min). We recommend having the same value for the minimal duration and for the round up.">
+                                <label class="fw-bold col-6 col-sm-4 col-md-2 col-lg-4" for="timesheet_min_duration"/>
+                                <field name="timesheet_min_duration" class="w-25 text-center" nolabel="1"/>
+                                <span class="col-auto ms-2">min</span>
+                            </div>
+                        </div>
+                        <div class="o_row">
+                            <div class="o_light_label" title="The duration of timesheets encoded through the timer will automatically be rounded up to this number. For instance, if you stop your timer at 00:16:56, the duration of the timesheet entry will automatically be rounded up to 00:30 (assuming you have a round up of 15 min). We recommend having the same value for the minimal duration and for the round up.">
+                                <label class="fw-bold col-6 col-sm-4 col-md-2 col-lg-4" for="timesheet_rounding"/>
+                                <field name="timesheet_rounding" class="w-25 text-center" nolabel="1"/>
+                                <span class="col-auto ms-2">min</span>
+                            </div>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+            <xpath expr="//setting[@id='reminder_user_allow']" position="inside">
+                <div class="mt16" invisible="not reminder_user_allow">
+                    <label for="reminder_user_interval" string="Frequency"/>
+                    <field name="reminder_user_delay" class="w-25 text-center"/> days
+                    <field name="reminder_user_interval" class="oe_inline ms-2 pe-2"/>
+                </div>
+            </xpath>
+            <xpath expr="//setting[@id='reminder_allow']" position="inside">
+                <div class="mt16" invisible="not reminder_allow">
+                    <label for="reminder_interval" string="Frequency"/>
+                    <field name="reminder_delay" class="w-25 text-center"/> days
+                    <field name="reminder_interval" class="oe_inline ms-2 pe-2"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

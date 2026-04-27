@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_parameter_shif_min_basic" model="hr.rule.parameter">
+        <field name="name">Kenya: SHIF Minimum Gross Amount</field>
+        <field name="code">l10n_ke_shif_min_gross</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_shif_min_basic_amount_2021" model="hr.rule.parameter.value">
+        <field name="parameter_value">0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_shif_min_basic"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_shif_min_basic_amount_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">10909</field>
+        <field name="rule_parameter_id" ref="rule_parameter_shif_min_basic"/>
+        <field name="date_from" eval="datetime(2024, 10, 10).date()"/>
+    </record>
+
+    <record id="rule_parameter_shif_min_amount" model="hr.rule.parameter">
+        <field name="name">Kenya: SHIF Minimum Amount</field>
+        <field name="code">l10n_ke_shif_min_amount</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_shif_min_amount_2021" model="hr.rule.parameter.value">
+        <field name="parameter_value">0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_shif_min_amount"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_shif_min_amount_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">300</field>
+        <field name="rule_parameter_id" ref="rule_parameter_shif_min_amount"/>
+        <field name="date_from" eval="datetime(2024, 10, 10).date()"/>
+    </record>
+
+    <record id="rule_parameter_shif_rate" model="hr.rule.parameter">
+        <field name="name">Kenya: SHIF Rate</field>
+        <field name="code">l10n_ke_shif_rate</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_shif_rate_amount_2021" model="hr.rule.parameter.value">
+        <field name="parameter_value">0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_shif_rate"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_shif_rate_amount_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.0275</field>
+        <field name="rule_parameter_id" ref="rule_parameter_shif_rate"/>
+        <field name="date_from" eval="datetime(2024, 10, 10).date()"/>
+    </record>
+</odoo>

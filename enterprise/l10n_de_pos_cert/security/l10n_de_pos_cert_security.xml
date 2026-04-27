@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_pos_dsfinvk_export_multi_company" model="ir.rule">
+        <field name="name">Point Of Sale DSFinV-K export</field>
+        <field name="model_id" ref="model_l10n_de_pos_dsfinvk_export" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

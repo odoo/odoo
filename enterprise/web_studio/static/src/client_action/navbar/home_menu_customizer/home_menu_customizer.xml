@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="web_studio.HomeMenuCustomizer">
+    <div class="o_web_studio_home_studio_menu d-flex align-items-center mx-1">
+      <div class="o_web_studio_change_background o_nav_entry" role="button">
+        <FileInput
+          acceptedFileExtensions="'image/*'"
+          onUpload.bind="onBackgroundUpload"
+          resId="company.currentCompany.id"
+          resModel="'res.company'"
+        >
+          Change Background
+        </FileInput>
+      </div>
+      <div t-if="menus.getMenu('root').backgroundImage"
+        class="o_web_studio_reset_default_background o_nav_entry"
+        role="button"
+        t-on-click="resetBackground"
+      >
+        Reset Default Background
+      </div>
+      <div class="o_web_studio_export o_nav_entry" role="button" t-on-click="exportCusto">Export</div>
+      <div class="o_web_studio_import o_nav_entry" role="button" t-on-click="importCusto">Import</div>
+    </div>
+  </t>
+
+</templates>

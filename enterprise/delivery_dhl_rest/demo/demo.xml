@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- These credentials work only if the shipper is located in Belgium -->
+        <record id="product_product_delivery_dhl_be_dom" model="product.product">
+            <field name="name">DHL BE</field>
+            <field name="default_code">Delivery_013</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="delivery.product_category_deliveries"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">0.0</field>
+            <field name="invoice_policy">order</field>
+        </record>
+        <record id="delivery_carrier_dhl_be_dom" model="delivery.carrier">
+            <field name="name">DHL BE</field>
+            <field name="product_id" ref="delivery_dhl_rest.product_product_delivery_dhl_be_dom"/>
+            <field name="delivery_type">dhl_rest</field>
+            <field name="dhl_product_code">N</field>
+            <field name="dhl_api_key">apI8zX6vT2hQ9f</field>
+            <field name="dhl_api_secret">S^2eZ$1aL#2nF^0d</field>
+            <field name="dhl_account_number">272699353</field>
+            <field name="dhl_default_package_type_id" ref="dhl_packaging_BOX"/>
+        </record> 
+    </data>
+</odoo>

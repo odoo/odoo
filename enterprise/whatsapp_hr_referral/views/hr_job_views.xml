@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_hr_job_employee_referral_kanban_inherit_referral_whatsapp">
+        <field name="name">hr.job.employee.referral.kanban.inherit.referral.whatsapp</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr_referral.view_hr_job_employee_referral_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//a[hasclass('o_hr_referral_job_url')]" position="before">
+                <a role="button"
+                    name="action_open_whatsapp_composer"
+                    type="object"
+                    class="btn btn-secondary w-25 flex-shrink-1">
+                    <i class="fa fa-2x fa-whatsapp"
+                        role="img"
+                        aria-label="Send by WhatsApp"/>
+                    <br/>
+                    <span title='More info'>Send WhatsApp</span>
+                </a>
+            </xpath>
+
+            <xpath expr="//div[hasclass('flex-shrink-1')]" position="replace"/>
+        </field>
+    </record>
+</odoo>

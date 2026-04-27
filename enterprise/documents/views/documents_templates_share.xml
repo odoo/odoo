@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ====  Direct sharing - Main layout ==== -->
+
+    <template id="documents.not_available">
+        <t t-call="documents.public_page_layout">
+            <h1 class="o_documents_portal_central_message text-center mt160 mb-3">This document does not exist or is not publicly available.</h1>
+            <h4 class="o_documents_portal_central_message text-center">Please login or contact the person that shared this link for more information.</h4>
+        </t>
+    </template>
+
+    <template id="documents.public_page_layout" name="Documents public pages main layout">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <script type="text/javascript">
+                    odoo.__session_info__ = <t t-out="json.dumps({
+                        'is_admin': request.env.user._is_admin(),
+                        'is_system': request.env.user._is_system(),
+                        'user_id': request.env.user.id,
+                    })"/>;
+                </script>
+
+                <t t-call-assets="web.assets_frontend"/>
+                <t t-call="web.conditional_assets_tests"/>
+                <t t-call-assets="documents.public_page_assets"/>
+
+                <style>
+                    html, body {
+                        overflow: auto;
+                    }
+                </style>
+
+                <t t-out="head"/>
+            </t>
+
+            <t t-set="body_classname" t-value="'o_docs_share_page o_home_menu_background'"/>
+            <t t-set="shareType" t-value="shareType or ''"/>
+            <div id="wrap" t-attf-class="h-100 flex-column flex-nowrap d-flex position-relative container #{shareType}">
+                <header class="d-flex justify-content-between align-items-center mt-3">
+                    <span class="o_company_logo" t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
+                    <ul t-if="not is_files_shared" class="list-inline mb-0">
+                        <li class="dropdown hidden-sm hidden-xs" t-ignore="true" t-if="not user_id._is_public()">
+                            <a href="#" class="dropdown-toggle o_docs_btn btn btn-secondary d-flex align-items-center gap-1" data-bs-toggle="dropdown">
+                                <img class="o_object_fit_cover rounded" width="13" height="13" t-attf-src="/web/image?model=res.users&amp;field=avatar_128&amp;id=#{request.env.user.id}" t-att-title="user_id.name"/>
+                                <span t-esc="user_id.name"/><span class="caret"/>
+                            </a>
+                            <ul class="dropdown-menu js_usermenu" role="menu">
+                                <li id="o_logout">
+                                    <a class="dropdown-item"
+                                       t-attf-href="/web/session/logout?redirect=#{request.httprequest.path}"
+                                       role="menuitem">Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li t-ignore="true" t-if="user_id._is_public()">
+                            <a t-attf-href="/web/login?redirect=#{request.httprequest.path}"
+                               class="o_docs_btn btn btn-secondary">Login</a>
+                        </li>
+                    </ul>
+                </header>
+                <main class="d-flex flex-column flex-nowrap">
+                    <t t-out="0"/>
+                </main>
+                <footer class="flex-grow-0 flex-shrink-0 mb16 mt32 ">
+                    <div class="text-center col-sm-12">
+                        <br/>Powered by <a target="_blank" title="Odoo Website" href="http://www.odoo.com/app/documents" class="text-reset"><span class="bg-primary p-1 rounded"><img class="o_object_fit_cover align-text-top" height="15" src="/web/static/img/logo_inverse_white_206px.png" alt="Odoo Logo"/></span><span>&amp;nbsp;Documents.</span></a>
+                    </div>
+                </footer>
+            </div>
+        </t>
+    </template>
+
+    <!-- ====  Workspace sharing ==== -->
+    <template id="documents.public_folder_page" name="Public Folder Page">
+        <t t-call="documents.public_page_layout">
+            <t t-set="document" t-value="folder"/>  <!-- for public_page_layout -->
+            <t t-set="shareType" t-value="'o_share_workspace'"/>
+
+            <t t-set="folder_downloadzip_url" t-valuef="/documents/content/#{quote(folder.access_token)}"/>
+            <t t-set="folder_upload_url" t-valuef="/documents/upload/#{quote(folder.access_token)}"/>
+
+            <section class="o_docs_share_multible_bar d-flex mt-5 mb-4">
+                <div class="flex-grow-1 mb16">
+                    <h2>
+                        <t t-esc="len(documents.filtered(lambda doc: doc.type == 'folder'))"/>
+                        folders,
+                        <t t-esc="len(documents.filtered(lambda doc: doc.type == 'binary' and (doc.shortcut_document_id or doc).attachment_id))"/>
+                        files
+                    </h2>
+                    <span class="align-middle">
+                        shared by
+                        <img class="o_author rounded align-middle o_object_fit_cover"
+                             t-attf-src="/documents/avatar/#{quote(folder.access_token)}"
+                             t-att-alt="author"
+                             t-att-title="author"/>
+                        <b t-esc="folder.owner_id.name"/>
+                    </span>
+                </div>
+                <div class="flex-grow-1 text-end">
+                    <div class="row g-0 justify-content-end">
+                        <div class="col me-3">
+                            <form class="o_docs_upload_wrapper position-relative d-inline-block"
+                                  t-if="folder.access_via_link == 'edit' or folder.user_permission == 'edit'"
+                                  enctype="multipart/form-data"
+                                  t-att-action="folder_upload_url"
+                                  method="POST">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <button title="Upload" class="btn btn-primary"><i class="fa fa-upload"/>  Upload</button>
+                                <input name="ufile" multiple="multiple" type="file" onchange="form.submit()"/>
+                            </form>
+                        </div>
+                        <div>
+                            <a t-att-href="folder_downloadzip_url"
+                               title="Download folder as zip"
+                               t-attf-class="btn  #{(folder.access_via_link == 'edit' or folder.user_permission == 'edit') and 'o_docs_btn' or 'btn-primary'}">
+                                <i class="fa fa-download fa-fw"/> Download All
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="o_docs_cards_container row mb32">
+                <t t-foreach="documents.filtered(lambda doc: doc.type == 'folder')"
+                   t-as="subfolder">
+                    <t t-set="subfolder_open_url" t-valuef="/documents/redirect/#{quote(subfolder.access_token)}"/>
+                    <t t-set="subfolder_downloadzip_url" t-valuef="/documents/content/#{quote(subfolder.access_token)}"/>
+                    <t t-set="subfolder_upload_url" t-valuef="/documents/upload/#{quote(subfolder.access_token)}"/>
+                    <div class="col-sm-6 col-lg-3">
+                        <article id="documents-folder" class="o_card d-flex mb16 border">
+                            <figure class="o_card_left d-flex position-relative flex-column flex-nowrap justify-content-between m-0">
+                                <form t-if="(subfolder.access_via_link == 'edit' or subfolder.user_permission == 'edit')"
+                                      class="o_hidden"
+                                      enctype="multipart/form-data"
+                                      t-att-action="subfolder_upload_url"
+                                      method="POST">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <input name="ufile" class="o_request_upload" type="file" onchange="form.submit()"/>
+                                </form>
+                            </figure>
+                            <div class="o_card_content d-flex flex-column flex-nowrap flex-grow-1 flex-shrink-1 justify-content-between">
+                                <header>
+                                    <h6 class="o_card_title mt0 mb4">
+                                        <a t-att-href="subfolder_open_url"
+                                           t-attf-title="Open folder #{subfolder.name}"
+                                           t-esc="subfolder.name"/>
+                                    </h6>
+                                </header>
+                                <div class="o_card_footer">
+                                    <small class="mb0">
+                                        <b><time t-field="subfolder.write_date" t-options="{'format':'MMM d, yyyy'}"/></b>
+                                        •
+                                        <b>
+                                            <t t-esc="len(subfolders[subfolder.id])"/>
+                                            documents
+                                        </b>
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="o_card_right d-flex flex-column flex-nowrap justify-content-between text-end">
+                                <img t-attf-title="Owner: #{subfolder.owner_id.name}"
+                                     t-att-alt="subfolder.owner_id.name"
+                                     class="o_object_fit_cover rounded"
+                                     width="15"
+                                     height="15"
+                                     t-attf-src="/documents/avatar/#{quote(subfolder.access_token)}"/>
+                                <a t-att-href="subfolder_downloadzip_url"
+                                   t-attf-title="Download zip #{subfolder.name}">
+                                    <i t-attf-class="fa fa-download"/>
+                                </a>
+                            </div>
+                        </article>
+                    </div>
+                </t>
+
+                <t t-foreach="documents.filtered(lambda doc: doc.type == 'binary')"
+                   t-as="document">
+                    <t t-set="document_request"
+                        t-value="document.type == 'binary' and not document.attachment_id and not document.shortcut_document_id.attachment_id"/>
+                    <t t-set="document_content_url" t-valuef="/documents/content/#{quote(document.access_token)}"/>
+                    <div class="col-sm-6 col-lg-3">
+                        <article id="documents-binary" t-attf-class="o_card d-flex mb16 border
+                                               #{'o_request_card' if document_request else ''}">
+                            <figure class="o_card_left d-flex position-relative flex-column flex-nowrap justify-content-between m-0">
+                                <form t-if="(document.access_via_link == 'edit' or document.user_permission == 'edit') and document_request"
+                                      class="o_hidden"
+                                      enctype="multipart/form-data"
+                                      t-attf-action="/documents/upload/#{quote(document.access_token)}"
+                                      method="POST">
+                                    <input name="ufile" t-attf-id="request_{{ document_index }}" type="file" onchange="form.submit()"/>
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                </form>
+                                <div t-if="document_request"
+                                     t-attf-onclick="document.querySelector('#request_{{ document_index }}').click()"
+                                     t-attf-class="d-flex align-items-center justify-content-center o_request_icon
+                                                   #{'o_request_allowed' if document.access_via_link == 'edit' or document.user_permission == 'edit' else ''}">
+                                    <i class="fa fa-upload fa-2x"/>
+                                </div>
+                                <div t-else="" class="o_image" t-att-data-mimetype="document.mimetype" t-attf-style="#{document.mimetype and 'image/' in document.mimetype and 'background-image:None;' ''}"/>
+                                <div t-if="(document.shortcut_document_id or document).mimetype and 'image/' in (document.shortcut_document_id or document).mimetype"
+                                     class="o_image_preview"
+                                     t-attf-style="background-image:url(/documents/thumbnail/#{quote(document.access_token)})"/>
+                            </figure>
+                            <div class="o_card_content d-flex flex-column flex-nowrap flex-grow-1 flex-shrink-1 justify-content-between">
+                                <header>
+                                    <h6 class="o_card_title mt0 mb4">
+                                        <span t-if="document_request" t-esc="document.name"/>
+                                        <a t-else=""
+                                           t-attf-href="#{document_content_url}?download=0"
+                                           target="_blank"
+                                           t-attf-title="Download #{document.name}"
+                                           t-esc="document.name"/>
+                                    </h6>
+                                </header>
+                                <div class="o_card_footer">
+                                    <small class="mb0">
+                                        <b><time t-field="document.write_date" t-options="{'format':'MMM d, yyyy'}"/></b>
+                                        •
+                                        <b>
+                                            <t t-if="document_request"><span title="Requested Document">Requested Document</span></t>
+                                            <t t-else="" t-call="documents.format_file_size"/>
+                                        </b>
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="o_card_right d-flex flex-column flex-nowrap justify-content-between text-end">
+                                <img t-attf-title="Owner: #{document.owner_id.name}"
+                                     t-att-alt="document.owner_id.name"
+                                     class="o_object_fit_cover rounded"
+                                     width="15"
+                                     height="15"
+                                     t-attf-src="/documents/avatar/#{quote(document.access_token)}"/>
+                                <a t-if="not document_request"
+                                   t-attf-href="#{document_content_url}?download=1"
+                                   t-attf-title="Download #{document.name}">
+                                    <i t-attf-class="fa fa-download"/>
+                                </a>
+                            </div>
+                        </article>
+                    </div>
+                </t>
+
+                <t t-foreach="documents.filtered(lambda doc: doc.type == 'url')"
+                   t-as="document_url">
+                    <div class="col-sm-6 col-lg-3">
+                        <article id="documents-url" class="o_card o_url_card d-flex mb16 border">
+                            <figure class="o_card_left d-flex position-relative flex-column flex-nowrap justify-content-between m-0">
+                                <div t-attf-class="d-flex align-items-center justify-content-center o_url_icon">
+                                    <i class="fa fa-external-link fa-2x"/>
+                                </div>
+                            </figure>
+                            <div class="o_card_content d-flex flex-column flex-nowrap flex-grow-1 flex-shrink-1 justify-content-between">
+                                <header>
+                                    <h6 class="o_card_title mt0 mb4">
+                                        <a t-att-href="document_url.url"
+                                           t-attf-title="Open #{document_url.name}"
+                                           target="blank"
+                                           t-esc="document_url.name"/>
+                                    </h6>
+                                </header>
+                                <div class="o_card_footer">
+                                    <small class="mb0">
+                                        <b><time t-field="document_url.write_date" t-options="{'format':'MMM d, yyyy'}"/></b>
+                                        •
+                                        <b>URL</b>
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="o_card_right d-flex flex-column flex-nowrap justify-content-between text-end">
+                                <img t-attf-title="Owner: #{document_url.owner_id.name}"
+                                     t-att-alt="document_url.owner_id.name"
+                                     class="o_object_fit_cover rounded"
+                                     width="15"
+                                     height="15"
+                                     t-attf-src="/documents/avatar/#{quote(document_url.access_token)}"/>
+                            </div>
+                        </article>
+                    </div>
+                </t>
+            </div>
+            <div class="text-center col-sm-12 d-sm-none">
+                <div class="row g-0 justify-content-center">
+                    <div class="me-3">
+                        <form class="o_docs_upload_wrapper position-relative d-inline-block"
+                              t-if="folder.access_via_link == 'edit' or folder.user_permission == 'edit'"
+                              enctype="multipart/form-data"
+                              t-att-action="folder_upload_url"
+                              method="POST">
+                            <button title="Upload" class="btn btn-primary"><i class="fa fa-upload"/>  Upload</button>
+                            <input name="ufile" multiple="multiple" type="file" onchange="form.submit()"/>
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        </form>
+                    </div>
+                    <div>
+                        <a t-att-href="folder_downloadzip_url"
+                           title="Download all files"
+                           t-attf-class="btn #{(folder.access_via_link == 'edit' or folder.user_permission == 'edit') and 'o_docs_btn' or 'btn-primary'}">
+                            <i class="fa fa-download fa-fw"/> Download All
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- ====  File sharing ==== -->
+    <template id="documents.share_file" name="Share a file">
+        <t t-call="documents.public_page_layout">
+            <t t-set="shareType" t-valuef="o_share_files"/>
+            <t t-set="document_content_url"
+               t-valuef="#{document.get_base_url()}/documents/content/#{quote(document.access_token)}"/>
+
+            <div class="shadow-lg text-center bg-white p-3 rounded-3">
+                <span class="fa-stack text-black-25 fa-3x">
+                  <i class="fa fa-circle-thin fa-stack-2x"/>
+                  <i class="fa fa-arrow-down fa-stack-1x"/>
+                </span>
+                <div class="fs-4 text-truncate">
+                    <b t-esc="document.name"/>
+                </div>
+                <div>
+                    Size: <t t-call="documents.format_file_size"/>
+                </div>
+                <div class="mt16 mb8 d-flex flex-column gap-2">
+                    <a t-att-href="document_content_url"
+                       title="Download file"
+                       class="btn btn-primary rounded-pill">
+                        <i class="fa fa-download fa-fw"/> Download file
+                    </a>
+                    <a t-if="document.file_extension in document.get_previewable_file_extensions()"
+                       t-att-href="document_content_url + '?download=0'"
+                       target="new"
+                       title="Preview files"
+                       class="btn btn-primary rounded-pill">
+                        <i class="fa fa-eye"/> Preview file
+                    </a>
+                    <button t-if="document.access_via_link == 'edit' or document.user_permission == 'edit'"
+                            onclick="document.querySelector('.o_request_upload').click()"
+                            class="btn btn-secondary rounded-pill">
+                        <i class="fa fa-upload"/> Replace file
+                    </button>
+                    <form t-if="document.access_via_link == 'edit' or document.user_permission == 'edit'"
+                          enctype="multipart/form-data"
+                          t-attf-action="/documents/upload/#{quote(document.access_token)}"
+                          method="POST">
+                        <input type="hidden"
+                               name="csrf_token"
+                               t-att-value="request.csrf_token()"/>
+                        <input name="ufile"
+                               type="file"
+                               onchange="form.submit()"
+                               class="d-none o_request_upload"/>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- ==== Requested document sharing ==== -->
+    <template id="documents.document_request_page" name="Requested Documents Share">
+        <t t-call="documents.public_page_layout">
+            <t t-set="shareType" t-value="'o_share_files'"/>
+            <h3 class="text-center mb16">
+                This document has been requested.
+                <b onclick="document.querySelector('.o_request_upload').click()" style="cursor:pointer;">Upload it</b>.
+            </h3>
+            <div class="o_docs_single_container">
+                <article class="o_card d-flex mb4 o_request_card " title="">
+                    <figure class="o_card_left d-flex position-relative flex-column flex-nowrap justify-content-between m-0">
+                        <form class="o_hidden" enctype="multipart/form-data" t-attf-action="/documents/upload/#{quote(document.access_token)}" method="POST">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input name="ufile" class="o_request_upload" type="file" onchange="form.submit()"/>
+                        </form>
+                        <div onclick="document.querySelector('.o_request_upload').click()"
+                            class="d-flex align-items-center justify-content-center o_request_icon o_request_allowed">
+                            <i class="fa fa-upload fa-2x"/>
+                        </div>
+                    </figure>
+                    <div class="o_card_content flex-column flex-nowrap d-flex">
+                        <header>
+                            <h3 class="mt4 mb8">
+                                <span t-esc="document.name"/>
+                            </h3>
+                        </header>
+                        <div class="o_card_footer">
+                            <b>
+                                Requested
+                                ∙ <time t-field="document.write_date" t-options="{'format':'MMM d, yyyy'}"/>
+                            </b>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </t>
+    </template>
+
+    <!-- Utils -->
+    <template id="documents.format_file_size" name="Format file size">
+        <t t-set="G" t-value="document.file_size / 1024 / 1024 / 1024"/>
+        <t t-set="M" t-value="document.file_size / 1024 / 1024"/>
+        <t t-set="K" t-value="document.file_size / 1024"/>
+        <t t-set="B" t-value="document.file_size"/>
+
+        <t t-if="G > 1"><t t-esc="round(G, 2)"/> GiB</t>
+        <t t-elif="M > 1"><t t-esc="round(M, 2)"/> MiB</t>
+        <t t-elif="K > 1"><t t-esc="round(K, 2)"/> kiB</t>
+        <t t-else=""><t t-esc="round(B, 2)"/> bytes</t>
+    </template>
+</odoo>

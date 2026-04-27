@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_studio_export_wizard" model="ir.actions.act_window">
+        <field name="name">Studio Export</field>
+        <field name="res_model">studio.export.wizard</field>
+        <field name="target">new</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'dialog_size': 'medium'}</field>
+    </record>
+
+    <record id="view_studio_export_wizard" model="ir.ui.view">
+        <field name="name">studio.export.wizard.form</field>
+        <field name="model">studio.export.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <p class="alert alert-info" role="alert">
+                        Studio Customizations will be exported
+                    </p>
+                    <group invisible="not context.get('studio_export_all', False)">
+                        <field name="additional_models" invisible="1"/>
+                        <field name="include_additional_data"/>
+                        <field name="include_demo_data"/>
+                    </group>
+                    <button
+                        string="Configure data and demo data to export"
+                        type="action"
+                        name="web_studio.action_web_studio_leave_with"
+                        context="{'action_id': 'web_studio.action_models_to_export'}"
+                        class="btn-link"
+                        icon="oi-arrow-right"
+                        invisible="context.get('studio_export_all', False)"
+                    />
+                </sheet>
+                <footer>
+                    <button
+                        string="Export"
+                        type="action"
+                        name="web_studio.studio_export_action"
+                        class="btn-primary"
+                        data-hotkey="q"
+                    />
+                    <button special="cancel" data-hotkey="x" string="Cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="account_reports.JournalDashboardActivity" t-inherit="account.JournalDashboardActivity" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_mail_activity')]//a" position="attributes" type="add">
+            <attribute name="t-attf-class" add="{{ activity.is_tax_report_error and activity.status != 'late' ? 'text-warning' : '' }}" separator=" "/>
+        </xpath>
+
+        <xpath expr="//div[hasclass('o_mail_activity')]//a//t" position="before">
+            <i t-if="activity.is_tax_report_error" class="fa fa-exclamation-triangle me-1"/>
+        </xpath>
+    </t>
+</templates>

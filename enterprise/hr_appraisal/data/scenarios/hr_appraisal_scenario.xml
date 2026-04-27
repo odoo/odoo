@@ -1,0 +1,771 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Employee -->
+        <record id="hr.employee_mw" model="hr.employee" forcecreate="1">
+            <field name="next_appraisal_date" eval="(DateTime.now() + relativedelta(months=4)).strftime('%Y-%m-%d')"/>
+        </record>
+
+        <!-- Appraisal Note -->
+        <record id="note_good" model="hr.appraisal.note" forcecreate="1">
+            <field name="name">Good</field>
+        </record>
+
+        <!-- Appraisal -->
+        <record id="hr_appraisal_0" model="hr.appraisal" forcecreate="1">
+            <field name="active">True</field>
+            <field name="employee_id" ref="hr.employee_sj"/>
+            <field name="state">pending</field>
+            <field name="date_close" eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-1')"/>
+            <field name="manager_ids" eval="[(4, ref('hr.employee_mw'))]"/>
+            <field name="employee_feedback" type="html">
+                <h2>
+                    <span style="font-weight: bolder;">
+                        My work
+                    </span>
+                </h2>
+                <h3>What are my best achievement(s) since my last appraisal?</h3>
+                <p>
+                    <em>
+                        Describe something that made you proud, a piece of work positive for
+                        the company.
+                    </em>
+                </p>
+                <p>
+                    I'm very proud that all the projects that I've done were released in time.
+                </p>
+                <p>
+                    We improved our way to work and thanks to that, the team grown during the last year.
+                </p>
+                <h3>
+                    What has been the most challenging aspect of my work this past year and
+                    why?
+                </h3>
+                <p>
+                    <em>
+                        Did you face new difficulties? Did you confront yourself to new
+                        obstacles?
+                    </em>
+                </p>
+                <p>
+                    With new colleagues we had to find a way to work together and split the tasks and responsibilities.
+                </p>
+                <h3>What would I need to improve my work?</h3>
+                <p>
+                    <em>
+                        How can the company help you with your need and objectives in order
+                        for you to reach your goals and look for the best collaboration.
+                    </em>
+                </p>
+                <p>
+                    I'd like to be better with team management and communication to work more efficiently with the team.
+                </p>
+                <h2>
+                    <span style="font-weight: bolder;">
+                        My future
+                    </span>
+                </h2>
+                <h3>
+                    What are my short and long-term goals with the company, and for my
+                    career?
+                </h3>
+                <ul>
+                    <li>
+                        <em>Give an example of short-term objective (&lt; 6 months)</em>
+                    </li>
+                </ul>
+                <p>
+                    Being recognized as a team-leader and organize a team-building to strangthen the bond of the people.
+                </p>
+                <ul>
+                    <li>
+                        <em>Give an example of long-term objective (&gt; 6 months)</em>
+                    </li>
+                </ul>
+                <p>
+                    Learn about Javascript to be able to cover the front-end requirements.
+                </p>
+                <h3>Which parts of my job do I most / least enjoy?</h3>
+                <p>
+                    <em>
+                        Every job has strong points, what are, in your opinion, the tasks that
+                        you enjoy the most/the least?
+                    </em>
+                </p>
+                <p>
+                    Everything is fine. I enjoy development the most. If I have to find a least enjoyable task, it would
+                    be conflict management. I don't like to face difficult situations.
+                </p>
+                <h2>
+                    <span style="font-weight: bolder;">
+                        My feelings
+                    </span>
+                </h2>
+                <h3>How do I feel about the company...</h3>
+                <ul>
+                    <li>
+                        <em>Culture/Behavior:</em>
+                        <span class="o_stars o_five_stars" id="checkId-1">
+                            <i class="fa fa-star-o" contenteditable="false"></i>
+                            <i class="fa fa-star" contenteditable="false"></i>
+                            <i class="fa fa-star" contenteditable="false"></i>
+                            <i class="fa fa-star" contenteditable="false"></i>
+                            <i class="fa fa-star-o" contenteditable="false"></i>
+                        </span>
+                    </li>
+                    <li>
+                        <em>Internal Communication:</em>
+                        <span class="o_stars o_five_stars" id="checkId-2">
+                            <i class="fa fa-star-o" contenteditable="false"></i>
+                            <i class="fa fa-star" contenteditable="false"></i>
+                            <i class="fa fa-star" contenteditable="false"></i>
+                            <i class="fa fa-star" contenteditable="false"></i>
+                            <i class="fa fa-star-o" contenteditable="false"></i>
+                        </span>
+                    </li>
+                </ul>
+                <h3>How do I feel about my own...</h3>
+                <ul>
+                    <li>
+                        <em>Job's content:</em>
+                        <span class="o_stars o_five_stars" id="checkId-3">
+                            <i class="fa fa-star" contenteditable="false"></i>
+                            <i class="fa fa-star" contenteditable="false"></i>
+                            <i class="fa fa-star" contenteditable="false"></i>
+                            <i class="fa fa-star" contenteditable="false"></i>
+                            <i class="fa fa-star" contenteditable="false"></i>
+                        </span>
+                    </li>
+                    <li>
+                        <em>Work organization:</em>
+                        <span class="o_stars o_five_stars" id="checkId-4">
+                            <i class="fa fa-star" contenteditable="false"></i>
+                            <i class="fa fa-star" contenteditable="false"></i>
+                            <i class="fa fa-star" contenteditable="false"></i>
+                            <i class="fa fa-star-o" contenteditable="false"></i>
+                            <i class="fa fa-star-o" contenteditable="false"></i>
+                        </span>
+                    </li>
+                    <li>
+                        <em>Remuneration:</em>
+                        <span class="o_stars o_five_stars" id="checkId-5">
+                            <i class="fa fa-star" contenteditable="false"></i>
+                            <i class="fa fa-star" contenteditable="false"></i>
+                            <i class="fa fa-star" contenteditable="false"></i>
+                            <i class="fa fa-star-o" contenteditable="false"></i>
+                            <i class="fa fa-star-o" contenteditable="false"></i>
+                        </span>
+                    </li>
+                </ul>
+            </field>
+            <field name="manager_feedback" type="html">
+                <h2>
+                    <span style="font-weight: bolder;">
+                        Feedback
+                    </span>
+                </h2>
+                <h3>
+                    Give one positive achievement that convinced you of the employee's
+                    value.
+                </h3>
+                <p>
+                    <em>
+                        Some achievements comforting you in their strengths to face job's
+                        issues.
+                    </em>
+                </p>
+                <p>
+                    Simon has been able to adapt to the evolution of the team. Moving to a team leader position by
+                    managing additional peapole. It's not an easy task to split the work and give responsabilities to
+                    orthers, but even if it's visible that he had been struggling, it was a success.
+                </p>
+                <h2>
+                    <span style="font-weight: bolder;">
+                        Evaluation
+                    </span>
+                </h2>
+                <p>
+                    <br/>
+                </p>
+                <table class="table table-bordered o_table" style="width: 268.656px;">
+                    <tbody>
+                        <tr>
+                            <td style="width: 172.656px;">
+                                <p>
+                                    <em>Stress Resistance</em>
+                                </p>
+                            </td>
+                            <td style="width: 95px;">
+                                <span class="o_stars o_five_stars" id="checkId-6">
+                                <i class="fa fa-star" contenteditable="false"></i>
+                                <i class="fa fa-star" contenteditable="false"></i>
+                                <i class="fa fa-star" contenteditable="false"></i>
+                                <i class="fa fa-star-o" contenteditable="false"></i>
+                                <i class="fa fa-star-o" contenteditable="false"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 314.078px;">
+                                <p>
+                                    <em>Time Management</em>
+                                </p>
+                            </td>
+                            <td style="width: 314.078px;">
+                                <span class="o_stars o_five_stars" id="checkId-7">
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star-o" contenteditable="false"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 314.078px;">
+                                <p>
+                                    <em>Teamwork</em>
+                                </p>
+                            </td>
+                            <td style="width: 314.078px;">
+                                <span class="o_stars o_five_stars" id="checkId-8">
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star-o" contenteditable="false"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 314.078px;">
+                                <p>
+                                    <em>Autonomy</em>
+                                </p>
+                            </td>
+                            <td style="width: 314.078px;">
+                                <span class="o_stars o_five_stars" id="checkId-9">
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 314.078px;">
+                                <p>
+                                    <em>Pro-activity</em>
+                                </p>
+                            </td>
+                            <td style="width: 314.078px;">
+                                <span class="o_stars o_five_stars" id="checkId-10">
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star-o" contenteditable="false"></i>
+                                    <i class="fa fa-star-o" contenteditable="false"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>
+                    <br/>
+                </p>
+                <h2>
+                    <span style="font-weight: bolder;">
+                        Improvements
+                    </span>
+                </h2>
+                <h3>How could the employee improve?</h3>
+                <p>
+                    <em>
+                        From a manager point of view, how could you help the employee to
+                        overcome their weaknesses?
+                    </em>
+                </p>
+                <p>
+                    Being more confident in what he decides and open to the comments of the team.
+                </p>
+                <h3>Short term (6-months) actions / decisions / objectives</h3>
+                <p>
+                    <em>Do you need rapid answer to the current situation?</em>
+                </p>
+                <p>
+                    We should encourage him to follow a training about conflict management, to avoid painful situations.
+                </p>
+                <h3>
+                    Long term (&gt; 6 months) career discussion, where does the employee
+                    wants to go, how to help them reach this path?
+                </h3>
+                <p>
+                    <em>
+                        How do you see the employee in the future, do your vision follow the
+                        employee's desire?
+                    </em>
+                </p>
+                <p>
+                    We need to hire an additional developper to back-up Simon on back-end tasks, so he'll be able to
+                    have time to keep progressing and learning new things. We could consider to include him in the
+                    recruitment process to be sure that the newcomer will match the rest of the team.
+                </p>
+            </field>
+        </record>
+
+        <record id="hr_appraisal_1" model="hr.appraisal" forcecreate="1">
+            <field name="active">True</field>
+            <field name="employee_id" ref="hr.employee_eg"/>
+            <field name="state">pending</field>
+            <field name="date_close" eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-%d')"/>
+            <field name="manager_ids" eval="[Command.set([ref('hr.employee_mw'), ref('hr.employee_sj')])]"/>
+            <field name="employee_feedback_published">False</field>
+            <field name="manager_feedback" type="html">
+                <h2>
+                    <span style="font-weight: bolder;">
+                        Feedback
+                    </span>
+                </h2>
+                <h3>
+                    Give one positive achievement that convinced you of the employee's
+                    value.
+                </h3>
+                <p>
+                    <em>
+                        Some achievements comforting you in their strengths to face job's
+                        issues.
+                    </em>
+                </p>
+                <p>
+                    Michael : It's been almost a year since Emma joined us and we can say she fit really
+                    well in the team. Simon has given her many responsabilities and the duo is going fine.
+                </p>
+                <p>
+                    Simon : Emma is hard-worker and she really improved her tech skills. I'm impressed.
+                </p>
+                <h2>
+                    <span style="font-weight: bolder;">
+                        Evaluation
+                    </span>
+                </h2>
+                <p>
+                <br/>
+                </p>
+                <table class="table table-bordered o_table" style="width: 268.656px;">
+                    <tbody>
+                        <tr>
+                            <td style="width: 172.656px;">
+                                <p>
+                                    <em>Stress Resistance</em>
+                                </p>
+                            </td>
+                            <td style="width: 95px;">
+                                <span class="o_stars o_five_stars" id="checkId-6">
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star-o" contenteditable="false"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 314.078px;">
+                                <p>
+                                    <em>Time Management</em>
+                                </p>
+                            </td>
+                            <td style="width: 314.078px;">
+                                <span class="o_stars o_five_stars" id="checkId-7">
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star-o" contenteditable="false"></i>
+                                    <i class="fa fa-star-o" contenteditable="false"></i>
+                                    <i class="fa fa-star-o" contenteditable="false"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 314.078px;">
+                                <p>
+                                    <em>Teamwork</em>
+                                </p>
+                            </td>
+                            <td style="width: 314.078px;">
+                                <span class="o_stars o_five_stars" id="checkId-8">
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 314.078px;">
+                                <p>
+                                    <em>Autonomy</em>
+                                </p>
+                            </td>
+                            <td style="width: 314.078px;">
+                                <span class="o_stars o_five_stars" id="checkId-9">
+                                <i class="fa fa-star" contenteditable="false"></i>
+                                <i class="fa fa-star" contenteditable="false"></i>
+                                <i class="fa fa-star" contenteditable="false"></i>
+                                <i class="fa fa-star" contenteditable="false"></i>
+                                <i class="fa fa-star-o" contenteditable="false"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 314.078px;">
+                                <p>
+                                    <em>Pro-activity</em>
+                                </p>
+                            </td>
+                            <td style="width: 314.078px;">
+                                <span class="o_stars o_five_stars" id="checkId-10">
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star" contenteditable="false"></i>
+                                    <i class="fa fa-star-o" contenteditable="false"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>
+                    <br/>
+                </p>
+                <h2>
+                    <span style="font-weight: bolder;">
+                        Improvements
+                    </span>
+                </h2>
+                <h3>
+                    How could the employee improve?
+                </h3>
+                <p>
+                    <em>
+                        From a manager point of view, how could you help the employee to
+                        overcome their weaknesses?
+                    </em>
+                </p>
+                <p>
+                    Simon : Emma is sometimes struggling will all her goodwill, she takes so many topics.
+                    In the end, she can be overwhelmed by so many topics. She need to be better in prioritization and
+                    time management of her deadlines.
+                </p>
+                <h3>
+                    Short term (6-months) actions / decisions / objectives
+                </h3>
+                <p>
+                    <em>
+                        Do you need rapid answer to the current situation?
+                    </em>
+                </p>
+                <p>
+                    Michael : Follow a training about time management
+                    <br/>
+                    Simon : Define priorities among open projects.
+                </p>
+                <h3>
+                    Long term (&gt; 6 months) career discussion, where does the employee
+                    wants to go, how to help them reach this path?
+                </h3>
+                <p>
+                    <em>
+                        How do you see the employee in the future, do your vision follow the
+                        employee's desire?
+                    </em>
+                </p>
+                <p>
+                    Simon : Waiting for the meeting, to see her needs and personal goals.
+                </p>
+            </field>
+        </record>
+
+        <record id="hr_appraisal_2" model="hr.appraisal" forcecreate="1">
+            <field name="active">True</field>
+            <field name="employee_id" ref="hr.employee_eg"/>
+            <field name="state">done</field>
+            <field name="assessment_note" ref="hr_appraisal.note_good"/>
+            <field name="date_close" eval="(datetime.now()+relativedelta(months=-3)).strftime('%Y-%m-1')"/>
+            <field name="manager_ids" eval="[Command.set([ref('hr.employee_mw')])]"/>
+            <field name="employee_feedback" type="html">
+                <h2>
+                    <span style="font-weight: bolder;">
+                        How was the recruitment process ?
+                    </span>
+                </h2>
+                <br/>
+                <p>
+                    Very smooth, the management gave me time and answers when needed. I felt confident about
+                    this new job since the start. Always easy to reach and open to negotiation are a plus.
+                </p>
+                <hr/>
+                <h2>
+                    <span style="font-weight: bolder;">
+                        How do I feel after my first week ?
+                    </span>
+                </h2>
+                <br/>
+                <p>
+                    It's been quite challenging to come into the team of Simon. He's very used to his habits
+                    and a newcomer brought a lot of changes and new habits to find. But he's open to suggestions
+                    and we get along very well.
+                </p>
+                <hr/>
+                <h2>
+                    <span style="font-weight: bolder;">
+                        What are my 3 first objectives ?
+                    </span>
+                </h2>
+                <p>
+                    Improve my Python
+                </p>
+                <p>
+                    Create a documentation for newcomers
+                </p>
+                <p>
+                    I don't know yet :D
+                </p>
+                <hr/>
+            </field>
+            <field name="note" type="html">
+                <p>
+                    This appraisal was mainly done to be sure the start of Emma was successful. I'll try to do that for
+                    every newcomer.
+                </p>
+                <p>
+                    Emma seemed very pleased to be considered as much and initiative was welcomed.
+                </p>
+            </field>
+            <field name="manager_feedback" type="html">
+                <h2>
+                    <span style="font-weight: bolder;">
+                        How was the employee's first week ?
+                    </span>
+                </h2>
+                <p>
+                    Emma's first week showed promise as she adapted well and demonstrated good communication skills.
+                    While she may need some guidance in certain areas, her quick grasp of basics is encouraging.
+                    We're hopeful for her growth in the upcoming weeks.
+                </p>
+            </field>
+        </record>
+
+        <!-- Calendar Event -->
+        <record id="calendar_event_appraisal_1" model="calendar.event" forcecreate="1">
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="name">Appraisal of Emma Granger</field>
+            <field name="partner_ids" eval="[(6,0,[ref('hr.work_contact_sj'), ref('hr.work_contact_mw'),
+                ref('hr.work_contact_eg')])]"/>
+            <field name="start" eval="(DateTime.now() + relativedelta(months=1)).strftime('%Y-%m-%d 07:00:00')"/>
+            <field name="stop" eval="(DateTime.now() + relativedelta(months=1)).strftime('%Y-%m-%d 09:00:00')"/>
+            <field name="res_model_id" ref="hr_appraisal.model_hr_appraisal"/>
+            <field name="res_model">hr.appraisal</field>
+            <field name="res_id" ref="hr_appraisal.hr_appraisal_1"/>
+        </record>
+
+        <!-- Appraisal Goal Type -->
+        <record id="hr_appraisal_goal_tag_softskills" model="hr.appraisal.goal.tag" forcecreate="1">
+            <field name="name">Soft Skills</field>
+        </record>
+        <record id="hr_appraisal_goal_tag_hardskills" model="hr.appraisal.goal.tag" forcecreate="1">
+            <field name="name">Hard Skills</field>
+        </record>
+        <record id="hr_appraisal_goal_tag_training" model="hr.appraisal.goal.tag" forcecreate="1">
+            <field name="name">Training</field>
+        </record>
+        <record id="hr_appraisal_goal_tag_programming" model="hr.appraisal.goal.tag" forcecreate="1">
+            <field name="name">Programming</field>
+        </record>
+        <record id="hr_appraisal_goal_tag_internal" model="hr.appraisal.goal.tag" forcecreate="1">
+            <field name="name">Internal</field>
+        </record>
+        <record id="hr_appraisal_goal_tag_external" model="hr.appraisal.goal.tag" forcecreate="1">
+            <field name="name">External</field>
+        </record>
+
+        <!-- Appraisal Goal -->
+        <record id="hr_appraisal_goal_1" model="hr.appraisal.goal" forcecreate="1">
+            <field name="name">Team Management</field>
+            <field name="employee_id" ref="hr.employee_sj"/>
+            <field name="manager_id" ref="hr.employee_mw"/>
+            <field name="progression">075</field>
+            <field name="deadline" eval="(DateTime.now() + relativedelta(months=8)).strftime('%Y-%m-%d')"/>
+            <field name="tag_ids" eval="[Command.set([ref('hr_appraisal.hr_appraisal_goal_tag_softskills')])]"/>
+            <field name="description" type="html">
+                <p>
+                    In the next quarter, I'm on a mission to enhance my conflict management skills and create a positive
+                    working environment.
+                    Here's my plan:
+                </p>
+                <ul class="o_checklist">
+                    <li class="o_checked">
+                        <strong>Understanding Conflict:</strong>
+                        Dive into the basics of conflict management. Learn about different types of conflicts and their
+                        common triggers.
+                    </li>
+                    <li class="o_checked">
+                        <strong>Effective Communication:</strong>
+                        Focus on improving communication skills to express thoughts and feelings clearly,
+                        fostering better understanding among team members.
+                    </li>
+                    <li class="o_checked">
+                        <strong>Active Listening:</strong>
+                        Practice active listening to grasp others' perspectives, ensuring that everyone
+                        feels heard and valued in times of conflict.
+                    </li>
+                    <li class="o_checked">
+                        <strong>Seeking Solutions:</strong>
+                        Learn problem-solving techniques to address conflicts constructively.
+                        Aim to find win-win solutions that benefit all parties involved.
+                    </li>
+                    <li>
+                        <strong>Feedback Culture:</strong>
+                        Promote a culture of constructive feedback within the team, encouraging open
+                        discussions to prevent conflicts from escalating.
+                    </li>
+                    <li>
+                        <strong>Mediation Skills:</strong>
+                        Explore basic mediation skills to assist in resolving conflicts between team members,
+                        creating a harmonious work environment.
+                    </li>
+                </ul>
+                <p>
+                    This goal is all about developing a foundation in conflict management, making interactions smoother
+                    and promoting a positive team atmosphere. Regular reflections and feedback will guide my progress in
+                    mastering these essential conflict resolution skills.
+                </p>
+            </field>
+        </record>
+
+        <record id="hr_appraisal_goal_2" model="hr.appraisal.goal" forcecreate="1">
+            <field name="name">Javascript</field>
+            <field name="employee_id" ref="hr.employee_sj"/>
+            <field name="manager_id" ref="hr.employee_mw"/>
+            <field name="progression">000</field>
+            <field name="deadline" eval="(DateTime.now() + relativedelta(months=8)).strftime('%Y-%m-%d')"/>
+            <field name="tag_ids" eval="[Command.set([ref('hr_appraisal.hr_appraisal_goal_tag_hardskills'),
+                ref('hr_appraisal.hr_appraisal_goal_tag_programming')])]"/>
+            <field name="description" type="html">
+                <p>
+                    In the coming year, my mission is to supercharge my JavaScript skills and bring a new level of
+                    awesomeness to our code. Here's the game plan:
+                </p>
+                <ol>
+                    <li>
+                        <stronger>Deep Dive:</stronger>
+                        Explore advanced JavaScript concepts, like async/await and closures, to add extra flair to our
+                        code.
+                    </li>
+                    <li>
+                        <stronger>Team Jam Sessions:</stronger>
+                        Let's make code reviews a collaborative jam session! I'm eager to get feedback from the team to
+                        make our codebase sing.
+                    </li>
+                    <li>
+                        <stronger>Testing Cheers:</stronger>
+                        Embrace the power of testing! I'll learn and implement testing strategies, injecting confidence
+                        into our codebase.
+                    </li>
+                    <li>
+                        <stronger>Doc Glow-up:</stronger>
+                        Give our code documentation a makeover. Clear, friendly docs make coding feel like a breeze for
+                        everyone.
+                    </li>
+                    <li>
+                        <stronger>Open Source Adventures:</stronger>
+                        Jump into the JavaScript open-source world. It's like joining a global JavaScript party and
+                        learning from the best in the field.
+                    </li>
+                    <li>
+                        <stronger>Pair Coding Vibes:</stronger>
+                        Team up with fellow developers for some coding adventures. It's like having a
+                        coding buddy to create something magical together.
+                    </li>
+                </ol>
+                <p>
+                    This goal is all about infusing excitement into our JavaScript code. Let's level up our
+                    JavaScript game and make coding a delightful experience for the entire team!
+                </p>
+            </field>
+        </record>
+
+        <record id="hr_appraisal_goal_3" model="hr.appraisal.goal" forcecreate="1">
+            <field name="name">Deadlines</field>
+            <field name="employee_id" ref="hr.employee_eg"/>
+            <field name="manager_id" ref="hr.employee_sj"/>
+            <field name="progression">000</field>
+            <field name="deadline" eval="(DateTime.now() + relativedelta(months=10)).strftime('%Y-%m-%d')"/>
+            <field name="tag_ids" eval="[Command.set([ref('hr_appraisal.hr_appraisal_goal_tag_softskills')])]"/>
+            <field name="description" type="html">
+                <p>
+                    In the upcoming appraisal period, my focus is on enhancing my deadline and time management skills
+                    to boost overall productivity and project efficiency. Recognizing the crucial role these skills play
+                    in our work.
+                </p>
+                <p>
+                    This goal is geared towards creating a more efficient and organized workflow, ultimately
+                    contributing to the overall success of our projects. Regular self-assessment and feedback from peers
+                    will guide continuous improvement in meeting deadlines and managing time effectively.
+                </p>
+            </field>
+        </record>
+
+        <record id="hr_appraisal_goal_4" model="hr.appraisal.goal" forcecreate="1">
+            <field name="name">Python</field>
+            <field name="employee_id" ref="hr.employee_eg"/>
+            <field name="manager_id" ref="hr.employee_sj"/>
+            <field name="progression">050</field>
+            <field name="deadline" eval="(DateTime.now() + relativedelta(months=10)).strftime('%Y-%m-%d')"/>
+            <field name="tag_ids" eval="[Command.set([ref('hr_appraisal.hr_appraisal_goal_tag_hardskills'),
+                ref('hr_appraisal.hr_appraisal_goal_tag_programming')])]"/>
+            <field name="description" type="html">
+                <p>
+                    Until the end of the year, I'm excited to amp up my Python game and make our code even more awesome!
+                    Here's the plan:
+                </p>
+                <ol>
+                    <li>
+                        <strong>Dive Deeper:</strong>
+                        Explore cool Python stuff like decorators and generators to level up our code.
+                    </li>
+                    <li>
+                        <strong>Team Feedback:</strong>
+                        Get input from the team through code reviews. It's like a coding party where we
+                        all learn and make our code snazzier.
+                    </li>
+                    <li>
+                        <strong>Testing TLC:</strong>
+                        Embrace testing love! Learn Test-Driven Development (TDD) and sprinkle it into our workflow for
+                        sturdier code.
+                    </li>
+                    <li>
+                        <strong>Doc Revamp:</strong>
+                        Make our code documentation as friendly as a user manual. Clear docs mean everyone can join the
+                        coding fun.
+                    </li>
+                    <li>
+                        <strong>Open Source Adventures:</strong>
+                        Play with open-source Python projects. It's like joining a coding playground with cool folks
+                        and learning from the best.
+                    </li>
+                    <li>
+                        <strong>Pair Up:</strong>
+                        Buddy up with team stars for some coding duets. It's like sharing the keyboard and creating
+                        magic together.
+                    </li>
+                </ol>
+                <p>
+                    This goal is all about making Python more fun and powerful. Let's level up our code game and
+                    celebrate the wins together!
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

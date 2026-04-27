@@ -1,0 +1,56 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <rate:RateResponse xmlns:rate="http://www.ups.com/XMLSchema/XOLTWS/Rate/v1.1">
+            <common:Response xmlns:common="http://www.ups.com/XMLSchema/XOLTWS/Common/v1.0">
+                <common:ResponseStatus>
+                    <common:Code>1</common:Code>
+                    <common:Description>Success</common:Description>
+                </common:ResponseStatus>
+                <common:Alert>
+                    <common:Code>110971</common:Code>
+                    <common:Description>Your invoice may vary from the displayed reference rates</common:Description>
+                </common:Alert>
+                <common:Alert>
+                    <common:Code>120900</common:Code>
+                    <common:Description>User Id and Shipper Number combination is not qualified to receive negotiated rates</common:Description>
+                </common:Alert>
+                <common:TransactionReference/>
+            </common:Response>
+            <rate:RatedShipment>
+                <rate:Service>
+                    <rate:Code>08</rate:Code>
+                    <rate:Description/>
+                </rate:Service>
+                <rate:RatedShipmentAlert>
+                    <rate:Code>120900</rate:Code>
+                    <rate:Description>User Id and Shipper Number combination is not qualified to receive negotiated rates.</rate:Description>
+                </rate:RatedShipmentAlert>
+                <rate:RatedShipmentAlert>
+                    <rate:Code>110971</rate:Code>
+                    <rate:Description>Your invoice may vary from the displayed reference rates</rate:Description>
+                </rate:RatedShipmentAlert>
+                <rate:BillingWeight>
+                    <rate:UnitOfMeasurement>
+                        <rate:Code>KGS</rate:Code>
+                        <rate:Description>Kilograms</rate:Description></rate:UnitOfMeasurement>
+                    <rate:Weight>4.0</rate:Weight></rate:BillingWeight>
+                <rate:TransportationCharges>
+                    <rate:CurrencyCode>EUR</rate:CurrencyCode>
+                    <rate:MonetaryValue>35.43</rate:MonetaryValue>
+                </rate:TransportationCharges>
+                <rate:ServiceOptionsCharges>
+                    <rate:CurrencyCode>EUR</rate:CurrencyCode>
+                    <rate:MonetaryValue>0.00</rate:MonetaryValue>
+                </rate:ServiceOptionsCharges>
+                <rate:TotalCharges>
+                    <rate:CurrencyCode>EUR</rate:CurrencyCode>
+                    <rate:MonetaryValue>35.43</rate:MonetaryValue>
+                </rate:TotalCharges>
+                <rate:RatedPackage>
+                    <rate:Weight>4.0</rate:Weight>
+                </rate:RatedPackage>
+            </rate:RatedShipment>
+        </rate:RateResponse>
+    </soapenv:Body>
+</soapenv:Envelope>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_cl_edi_pos.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//h1[hasclass('tracking-number')]" position="before">
+            <div t-if="props.data.company.cl_vat" class="chili-ticket-info fw-bolder border border-dark d-flex flex-column align-items-center ">
+                <span>RUT: <t t-out="props.data.company.cl_vat"/></span>
+                <t t-out="props.data.l10n_latam_document_type"/>
+                <span>Nº: <t t-out="props.data.l10n_latam_document_number"/></span>
+            </div>
+            <div t-if="props.data.company.cl_vat" class="chili-regional-office text-center fw-bolder" t-out="props.data.l10n_cl_sii_regional_office"/>
+            <div t-if="props.data.company.cl_vat" class="text-center fw-bolder pb-2" t-esc="props.data.date" />
+            <br/>
+        </xpath>
+        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="after">
+            <div t-if="props.data.company.cl_vat and props.data.partner" class="pos-receipt-partner text-center" style="font-size: 75%;">
+                <div>--------------------------------</div>
+                <!-- partner informations -->
+                <div>Cliente: <t t-esc="props.data.partner.name" /></div>
+                <div>RUT: <t t-esc="props.data.partner.vat" /></div>
+                <div>Dirección: <t t-esc="props.data.partner.street" /> <t t-if="props.data.partner.street2" t-esc="props.data.partner.street2" /></div>
+                <div>Comuna: <t t-esc="props.data.partner.city" /></div>
+                <div>Giro: <t t-esc="props.data.partner.l10n_cl_activity_description" /></div>
+                <div>Teléfono: <t t-esc="props.data.partner.phone" /></div>
+            </div>
+        </xpath>
+    </t>
+</templates>

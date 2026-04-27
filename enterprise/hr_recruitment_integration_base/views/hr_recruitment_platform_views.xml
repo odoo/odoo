@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_recruitment_platform_view_list" model="ir.ui.view">
+        <field name="name">hr.recruitment.platform.view.list</field>
+        <field name="model">hr.recruitment.platform</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="website"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_recruitment_platform_view_form" model="ir.ui.view">
+        <field name="name">hr.recruitment.platform.view.form</field>
+        <field name="model">hr.recruitment.platform</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="website"/>
+                        <field name="price_to_publish"/>
+                        <field name="price_to_get"/>
+                        <field name="price_to_update"/>
+                        <field name="price_to_delete"/>
+                    </group>
+                    <group>
+                        <field name="avatar_128" widget="image"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo>

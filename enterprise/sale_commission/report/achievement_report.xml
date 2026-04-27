@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_achievement_report_view_list" model="ir.ui.view">
+        <field name="name">sale.commission.achievement.report.view.list</field>
+        <field name="model">sale.commission.achievement.report</field>
+        <field name="arch" type="xml">
+            <list create="0" delete="0" action="open_related" type="object">
+                <field name="user_id"/>
+                <field name="team_id" optional="hide"/>
+                <field name="plan_id" optional="visible"/>
+                <field name="date" optional="hide"/>
+                <field name="target_id"/>
+                <field name="related_res_id" string="Source"/>
+                <field name="currency_id" optional="hide"/>
+                <field name="achieved"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="sale_achievement_report_view_pivot" model="ir.ui.view">
+        <field name="name">sale.commission.achievement.report.view.pivot</field>
+        <field name="model">sale.commission.achievement.report</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="target_id" type="row"/>
+                <field name="achieved" type="col"/>
+                <field name="achieved" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="sale_achievement_report_view_graph" model="ir.ui.view">
+        <field name="name">sale.commission.achievement.report.view.graph</field>
+        <field name="model">sale.commission.achievement.report</field>
+        <field name="arch" type="xml">
+            <graph>
+                <field name="plan_id" type="row"/>
+                <field name="user_id" type="row"/>
+                <field name="target_id" type="col"/>
+                <field name="achieved" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="sale_achievement_report_view_search" model="ir.ui.view">
+        <field name="name">sale.commission.achievement.report.view.search</field>
+        <field name="model">sale.commission.achievement.report</field>
+        <field name="arch" type="xml">
+            <search string="Achievement Report">
+                <field name="user_id"/>
+                <field name="team_id"/>
+                <field name="plan_id" groups="sales_team.group_sale_manager"/>
+                <field name="target_id"/>
+                <field name="company_id"/>
+                <filter string="My Achievements" name="my"
+                            domain="[('user_id', '=', uid)]"/>
+                <filter string="Current Period" name="current"
+                        domain="[('target_id.date_from', '&lt;', context_today().strftime('%Y-%m-%d')), ('target_id.date_to', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}"/>
+                    <filter string="Sales Team" name="salesteam" context="{'group_by':'team_id'}"/>
+                    <filter string="Period" name="target" context="{'group_by':'target_id'}"/>
+                    <filter string="Commission Plan" name="plan" context="{'group_by':'plan_id'}" groups="sales_team.group_sale_manager"/>
+                    <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="sale_achievement_action_report" model="ir.actions.act_window">
+        <field name="name">Achievements</field>
+        <field name="res_model">sale.commission.achievement.report</field>
+        <field name="view_mode">list,graph,pivot</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" eval='sale_achievement_report_view_search'/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face"/>
+        </field>
+    </record>
+</odoo>

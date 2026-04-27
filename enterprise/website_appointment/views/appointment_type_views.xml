@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<odoo>
+<data>
+    <record id="appointment_type_view_kanban" model="ir.ui.view">
+        <field name="name">appointment.type.view.kanban.inherit.website</field>
+        <field name="model">appointment.type</field>
+        <field name="inherit_id" ref="appointment.appointment_type_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates" position="before">
+                <field name="is_published"/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_appointment_kanban_card_ungrouped')]/widget[@name='web_ribbon']" position="before">
+                <widget name="web_ribbon" title="Published" bg_color="text-bg-success" invisible="not is_published or not active"/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_appointment_kanban_card_grouped')]/widget[@name='web_ribbon']" position="before">
+                <widget name="web_ribbon" title="Published" bg_color="text-bg-success" invisible="not is_published or not active"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="appointment_type_view_form" model="ir.ui.view">
+        <field name="name">appointment.type.view.form.inherit.website</field>
+        <field name="model">appointment.type</field>
+        <field name="inherit_id" ref="appointment.appointment_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='appointment_tz']" position="before">
+                <field name="website_id" groups="website.group_multi_website"/>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]/button[@name='action_calendar_meetings']" position="after">
+                <field name="website_url" invisible="1"/>
+                <field name="is_published" widget="website_redirect_button"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="appointment_type_view_form_add_simplified" model="ir.ui.view">
+            <field name="name">appointment.type.view.form.add.simplified</field>
+            <field name="model">appointment.type</field>
+            <field name="inherit_id" ref="appointment.appointment_type_view_form_add_simplified"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="js_class">website_new_content_form</attribute>
+                </xpath>
+                <xpath expr="//form" position="inside">
+                    <field name="website_url" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='appointment_duration']" position="attributes">
+                    <attribute name="style" add="max-width: 40%;" separator=" "/>
+                </xpath>
+                <xpath expr="//field[@name='min_schedule_hours']" position="attributes">
+                    <attribute name="style" add="max-width: 40%;" separator=" "/>
+                </xpath>
+                <xpath expr="//field[@name='max_schedule_days']" position="attributes">
+                    <attribute name="style" add="max-width: 40%;" separator=" "/>
+                </xpath>
+                <xpath expr="//field[@name='min_cancellation_hours']" position="attributes">
+                    <attribute name="style" add="max-width: 40%;" separator=" "/>
+                </xpath>
+            </field>
+    </record>
+
+    <record id="appointment_type_action_add_simplified" model="ir.actions.act_window">
+        <field name="name">New Appointment Type</field>
+        <field name="res_model">appointment.type</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_is_published':True}</field>
+        <field name="view_id" ref="appointment_type_view_form_add_simplified"/>
+    </record>
+
+    <record id="appointment_type_view_search" model="ir.ui.view">
+        <field name="name">appointment.type.search.inherit.website</field>
+        <field name="model">appointment.type</field>
+        <field name="inherit_id" ref="appointment.appointment_type_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='filter_category_anytime']" position="after">
+                <separator/>
+                <filter name="filter_is_published" string="Published" domain="[('is_published', '=', True)]"/>
+            </xpath>
+            <xpath expr="//filter[@name='group_by_timezone']" position="after">
+                <separator />
+                <filter string="Website" name="group_by_website" groups="website.group_multi_website" context="{'group_by': 'website_id'}"/>
+                <separator />
+                <filter string="Published" name="group_by_is_published" context="{'group_by': 'is_published'}"/>
+            </xpath>
+        </field>
+    </record>
+</data>
+</odoo>

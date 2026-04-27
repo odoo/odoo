@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="input_other_allowances" model="hr.payslip.input.type">
+        <field name="name">Other Allowances</field>
+        <field name="code">OTHER_ALLOW</field>
+        <field name="country_id" ref="base.bd"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_bd_hr_payroll.hr_payroll_structure_bd_employee_salary'))]"/>
+    </record>
+
+    <record id="input_salary_arrears" model="hr.payslip.input.type">
+        <field name="name">Salary Arrears</field>
+        <field name="code">SALARY_ARREARS</field>
+        <field name="country_id" ref="base.bd"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_bd_hr_payroll.hr_payroll_structure_bd_employee_salary'))]"/>
+    </record>
+
+    <record id="input_extra_hours" model="hr.payslip.input.type">
+        <field name="name">Extra Hours</field>
+        <field name="code">EXTRA_HOURS</field>
+        <field name="country_id" ref="base.bd"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_bd_hr_payroll.hr_payroll_structure_bd_employee_salary'))]"/>
+    </record>
+
+    <record id="input_tax_credits" model="hr.payslip.input.type">
+        <field name="name">Tax Credits (Investments)</field>
+        <field name="code">TAX_CREDITS</field>
+        <field name="country_id" ref="base.bd"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_bd_hr_payroll.hr_payroll_structure_bd_employee_salary'))]"/>
+    </record>
+
+    <record id="input_provident_fund" model="hr.payslip.input.type">
+        <field name="name">Provident Fund</field>
+        <field name="code">PROV_FUND</field>
+        <field name="country_id" ref="base.bd"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_bd_hr_payroll.hr_payroll_structure_bd_employee_salary'))]"/>
+    </record>
+
+    <record id="input_gratuity_fund" model="hr.payslip.input.type">
+        <field name="name">Gratuity Fund</field>
+        <field name="code">GRAT_FUND</field>
+        <field name="country_id" ref="base.bd"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_bd_hr_payroll.hr_payroll_structure_bd_employee_salary'))]"/>
+    </record>
+</odoo>

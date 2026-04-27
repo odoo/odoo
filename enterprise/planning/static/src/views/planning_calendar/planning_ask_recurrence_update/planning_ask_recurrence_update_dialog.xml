@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="planning.PlanningAskRecurrenceUpdateDialog">
+        <Dialog size="'sm'" title.translate="Edit Recurrent Shift">
+            <t t-foreach="Object.entries(possibleValues)" t-as="value" t-key="value[0]">
+                <t t-set="name" t-value="value[0]"/>
+                <t t-set="state" t-value="value[1]"/>
+                <div class="form-check o_radio_item">
+                    <input name="recurrence-update" type="radio" class="form-check-input o_radio_input" t-att-checked="state.checked" t-att-value="name" t-att-id="name" t-on-click="(ev) => this.selected = ev.target.value"/>
+                    <label class="form-check-label o_form_label" t-att-for="name" t-esc="state.label"/>
+                </div>
+            </t>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="confirm">
+                    Confirm
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

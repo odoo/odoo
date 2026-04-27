@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="intrastat_report_services" model="account.report">
+            <field name="name">Intrastat (Services)</field>
+            <field name="root_report_id" ref="account_intrastat.intrastat_report"/>
+            <field name="filter_show_draft" eval="False"/>
+            <field name="filter_unreconciled" eval="False"/>
+            <field name="filter_unfold_all"/>
+            <field name="filter_period_comparison" eval="True"/>
+            <field name="filter_growth_comparison" eval="False"/>
+            <field name="filter_journals" eval="False"/>
+            <field name="custom_handler_model_id" ref="model_account_intrastat_services_report_handler"/>
+            <field name="load_more_limit" eval="80"/>
+            <field name="column_ids">
+                <record id="intrastat_report_column_services_system" model="account.report.column">
+                    <field name="name">System</field>
+                    <field name="expression_label">system</field>
+                    <field name="figure_type">string</field>
+                </record>
+                <record id="intrastat_report_column_services_country_code" model="account.report.column">
+                    <field name="name">Country</field>
+                    <field name="expression_label">country_name</field>
+                    <field name="figure_type">string</field>
+                </record>
+                <record id="intrastat_report_column_services_region_code" model="account.report.column">
+                    <field name="name">Region</field>
+                    <field name="expression_label">region_code</field>
+                    <field name="figure_type">string</field>
+                </record>
+                <record id="intrastat_report_column_services_commodity_code" model="account.report.column">
+                    <field name="name">Service</field>
+                    <field name="expression_label">commodity_code</field>
+                    <field name="figure_type">string</field>
+                </record>
+                <record id="intrastat_report_column_services_product_origin_country" model="account.report.column">
+                    <field name="name">Origin Country</field>
+                    <field name="expression_label">intrastat_product_origin_country_code</field>
+                    <field name="figure_type">string</field>
+                </record>
+                <record id="intrastat_report_column_services_partner_vat" model="account.report.column">
+                    <field name="name">Partner VAT</field>
+                    <field name="expression_label">partner_vat</field>
+                    <field name="figure_type">string</field>
+                </record>
+                <record id="intrastat_report_column_services_value" model="account.report.column">
+                    <field name="name">Value</field>
+                    <field name="expression_label">value</field>
+                </record>
+                <record id="intrastat_report_column_services_value_currency" model="account.report.column">
+                    <field name="name">In Currency</field>
+                    <field name="expression_label">value_currency</field>
+                </record>
+            </field>
+            <field name="line_ids">
+                <record id="intrastat_line_services" model="account.report.line">
+                    <field name="name">Intrastat</field>
+                    <field name="groupby">intrastat_grouping, id</field>
+                    <field name="foldable" eval="False"/>
+                    <field name="expression_ids">
+                        <record id="intrastat_report_line_services_system" model="account.report.expression">
+                            <field name="label">system</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_intrastat</field>
+                            <field name="subformula">system</field>
+                        </record>
+                        <record id="intrastat_report_line_services_country_name" model="account.report.expression">
+                            <field name="label">country_name</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_intrastat</field>
+                            <field name="subformula">country_name</field>
+                        </record>
+                        <record id="intrastat_report_line_services_country_code" model="account.report.expression">
+                            <field name="label">country_code</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_intrastat</field>
+                            <field name="subformula">country_code</field>
+                        </record>
+                        <record id="intrastat_report_line_services_region_code" model="account.report.expression">
+                            <field name="label">region_code</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_intrastat</field>
+                            <field name="subformula">region_code</field>
+                        </record>
+                        <record id="intrastat_report_line_services_commodity_code" model="account.report.expression">
+                            <field name="label">commodity_code</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_intrastat</field>
+                            <field name="subformula">commodity_code</field>
+                        </record>
+                        <record id="intrastat_report_line_services_product_origin_country" model="account.report.expression">
+                            <field name="label">intrastat_product_origin_country_code</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_intrastat</field>
+                            <field name="subformula">intrastat_product_origin_country_code</field>
+                        </record>
+                        <record id="intrastat_report_line_services_partner_vat" model="account.report.expression">
+                            <field name="label">partner_vat</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_intrastat</field>
+                            <field name="subformula">partner_vat</field>
+                        </record>
+                        <record id="intrastat_report_line_services_value" model="account.report.expression">
+                            <field name="label">value</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_intrastat</field>
+                            <field name="subformula">value</field>
+                        </record>
+                        <record id="intrastat_report_line_services_value_currency" model="account.report.expression">
+                            <field name="label">value_currency</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_intrastat</field>
+                            <field name="subformula">value_currency</field>
+                        </record>
+                        <record id="intrastat_report_line_services_value_currency_forced_currency" model="account.report.expression">
+                            <field name="label">_currency_value_currency</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_intrastat</field>
+                            <field name="subformula">currency_id_of_value_currency</field>
+                        </record>
+                    </field>
+                </record>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_order_form" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.l10n.ke.edi.oscu.stock</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <field name="l10n_ke_customs_import_ids" invisible="1" groups="account.group_account_invoice"/>
+                <button type="object"
+                        name="action_view_l10n_ke_edi_customs_import"
+                        class="oe_stat_button"
+                        icon="fa-anchor"
+                        invisible="not l10n_ke_customs_import_ids"
+                        groups="account.group_account_invoice">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Customs Imports</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

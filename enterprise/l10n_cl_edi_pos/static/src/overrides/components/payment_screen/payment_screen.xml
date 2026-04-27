@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="PaymentScreen" t-inherit="point_of_sale.PaymentScreenButtons" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('js_invoice')]" position="attributes">
+            <attribute name="t-att-class">{ 'highlight active': highlightInvoiceButton() }</attribute>
+        </xpath>
+        <xpath expr="//button[hasclass('js_invoice')]/i" position="attributes">
+            <attribute name="t-attf-class">{{ highlightInvoiceButton() ? 'fa-check-square text-action' : 'fa-square-o' }}</attribute>
+       </xpath>
+    </t>
+</templates>

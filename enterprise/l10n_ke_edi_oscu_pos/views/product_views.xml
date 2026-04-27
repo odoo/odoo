@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_template_form_view_inherit_account_l10n_ke_edi_oscu_pos" model="ir.ui.view">
+            <field name="name">product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="after">
+                    <div class="alert alert-warning" style="text-align: left;" role="alert" invisible="not l10n_ke_validation_message">
+                        <field name="l10n_ke_validation_message"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="l10n_ke_pos_kra_product_list" model="ir.ui.view">
+            <field name="name">product.product.list.l10n.ke.edi.oscu.pos</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <list editable="top" multi_edit="1" js_class="product_list_view">
+                    <field name="display_name"/>
+                    <field name="standard_price" decoration-danger="standard_price == 0"/>
+                    <field name="taxes_id" widget="many2many_tags" options="{'no_create_edit': True, 'no_create': True}"/>
+                    <field name="l10n_ke_packaging_unit_id"/>
+                    <field name="l10n_ke_packaging_quantity" decoration-danger="l10n_ke_packaging_quantity == 0"/>
+                    <field name="l10n_ke_origin_country_id"/>
+                    <field name="l10n_ke_product_type_code"/>
+                    <field name="unspsc_code_id"/>
+                </list>
+            </field>
+        </record>
+    </data>
+</odoo>

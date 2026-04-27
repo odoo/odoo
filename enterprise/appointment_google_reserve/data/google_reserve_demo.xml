@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- APPOINTMENT TYPE - LOCATION -->
+    <record id="res_partner_appointment_type_restaurant" model="res.partner">
+        <field name="name">Rest'Odoo</field>
+        <field name="is_company" eval="True"/>
+        <field name="street">Rue des Bourlottes 9</field>
+        <field name="city">Ramillies</field>
+        <field name="zip">1367</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="phone">+32 81 81 37 00</field>
+    </record>
+
+    <!-- APPOINTMENT TYPE - RESTAURANT -->
+    <record id="appointment_type_restaurant" model="appointment.type">
+        <field name="name">Rest'Odoo</field>
+        <field name="location_id" ref="res_partner_appointment_type_restaurant"/>
+        <field name="appointment_duration">2</field>
+        <field name="appointment_tz">Europe/Brussels</field>
+        <field name="max_schedule_days">45</field>
+        <field name="schedule_based_on">resources</field>
+        <field name="assign_method">time_auto_assign</field>
+        <field name="resource_manage_capacity" eval="True"/>
+        <field name="google_reserve_enable" eval="False"/>
+        <field name="event_videocall_source" eval="False"/>
+        <field name="slot_ids" eval="[(5, 0, 0)] + [
+            (0, 0, {'weekday': weekday, 'start_hour': start_hour, 'end_hour': start_hour + 2.0})
+            for weekday in list(map(str, range(1, 8)))
+            for start_hour in (18, 18.50, 19, 19.50, 20, 20.50)
+        ] + [
+            (0, 0, {'weekday': weekday, 'start_hour': start_hour, 'end_hour': start_hour + 2.0})
+            for weekday in list(map(str, range(1, 6)))
+            for start_hour in (12, 12.50)
+        ]"/>
+    </record>
+
+    <!-- RESOURCES - TABLES -->
+    <record id="appointment_type_restaurant_table_01" model="appointment.resource">
+        <field name="name">Table 1</field>
+        <field name="capacity">2</field>
+        <field name="appointment_type_ids" eval="[(6, 0, [ref('appointment_type_restaurant')])]"/>
+    </record>
+    <record id="appointment_type_restaurant_table_02" model="appointment.resource">
+        <field name="name">Table 2</field>
+        <field name="capacity">2</field>
+        <field name="appointment_type_ids" eval="[(6, 0, [ref('appointment_type_restaurant')])]"/>
+    </record>
+    <record id="appointment_type_restaurant_table_03" model="appointment.resource">
+        <field name="name">Table 3</field>
+        <field name="capacity">2</field>
+        <field name="appointment_type_ids" eval="[(6, 0, [ref('appointment_type_restaurant')])]"/>
+    </record>
+    <record id="appointment_type_restaurant_table_04" model="appointment.resource">
+        <field name="name">Table 4</field>
+        <field name="capacity">4</field>
+        <field name="appointment_type_ids" eval="[(6, 0, [ref('appointment_type_restaurant')])]"/>
+    </record>
+    <record id="appointment_type_restaurant_table_05" model="appointment.resource">
+        <field name="name">Table 5</field>
+        <field name="capacity">4</field>
+        <field name="appointment_type_ids" eval="[(6, 0, [ref('appointment_type_restaurant')])]"/>
+    </record>
+    <record id="appointment_type_restaurant_table_06" model="appointment.resource">
+        <field name="name">Table 6</field>
+        <field name="capacity">6</field>
+        <field name="appointment_type_ids" eval="[(6, 0, [ref('appointment_type_restaurant')])]"/>
+    </record>
+    <record id="appointment_type_restaurant_table_07" model="appointment.resource">
+        <field name="name">Table 7</field>
+        <field name="capacity">8</field>
+        <field name="appointment_type_ids" eval="[(6, 0, [ref('appointment_type_restaurant')])]"/>
+    </record>
+</odoo>

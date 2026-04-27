@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="l10n_cl_demo_certificate" model="certificate.certificate">
+            <field name="name">Demo Certificate CL</field>
+            <field name="content" type="base64" file="certificate/tests/data/cert.pfx"/>
+            <field name="pkcs12_password">example</field>
+            <field name="company_id" eval="ref('base.demo_company_cl')"/>
+            <field name="subject_serial_number">23841194-7</field>
+        </record>
+
+        <record id="base.demo_company_cl" model="res.company">
+            <field name="l10n_cl_dte_service_provider">SIIDEMO</field>
+            <field name="l10n_cl_dte_email">dtecl@example.com</field>
+            <field name="l10n_cl_sii_regional_office">ur_SaO</field>
+            <field name="l10n_cl_dte_resolution_number">0</field>
+            <field name="l10n_cl_dte_resolution_date">2014-01-20</field>
+            <field name="l10n_cl_activity_description">FURNITURE MANUFACTURING</field>
+            <field name="l10n_cl_company_activity_ids" eval="[ref('eco_new_acti_310001')]"/>
+        </record>
+
+        <function model="res.company" name="_prepare_cl_demo_objects">
+            <value eval="[ref('base.demo_company_cl')]"/>
+        </function>
+
+    </data>
+
+</odoo>

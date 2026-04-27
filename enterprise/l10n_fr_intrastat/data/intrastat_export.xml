@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<odoo>
+    <data>
+        <template id="intrastat_report_export_xml">
+            <INSTAT>
+                <Envelope>
+                    <envelopeId t-out="envelope_id"/>
+                    <DateTime>
+                        <date t-out="envelope_date"/>
+                        <time t-out="envelope_time"/>
+                    </DateTime>
+                    <Party t-attf-partyType="{{ party_type }}" t-attf-partyRole="{{ party_role }}">
+                        <partyId t-out="party_id"/>
+                        <partyName t-out="party_name"/>
+                    </Party>
+                    <softwareUsed t-out="software_used"/>
+                    <t t-if="declarations">
+                        <t t-call="l10n_fr_intrastat.intrastat_report_export_xml_declarations">
+                            <t t-set="declarations" t-value="declarations"/>
+                        </t>
+                    </t>
+                </Envelope>
+            </INSTAT>
+        </template>
+
+        <template id="intrastat_report_export_xml_declarations">
+                <!--Long indentation to make the final format well indented -->
+                <t t-foreach="declarations" t-as="declaration">
+                    <Declaration>
+                        <declarationId t-out="str(declaration_index + 1).zfill(6)"/>
+                        <referencePeriod t-out="declaration['reference_period']"/>
+                        <PSIId t-out="declaration['PSI_id']"/>
+                        <Function>
+                            <functionCode t-out="declaration['function_code']"/>
+                        </Function>
+                        <declarationTypeCode t-out="declaration['declaration_type_code']"/>
+                        <flowCode t-out="declaration['flow_code']"/>
+                        <currencyCode t-out="declaration['currency_code']"/>
+                        <t t-if="declaration['items']">
+                            <t t-call="l10n_fr_intrastat.intrastat_report_export_xml_items">
+                                <t t-set="items" t-value="declaration['items']"/>
+                            </t>
+                        </t>
+                    </Declaration>
+                </t>
+        </template>
+
+        <template id="intrastat_report_export_xml_items">
+                    <!--Long indentation to make the final format well indented -->
+                    <t t-foreach="items" t-as="item">
+                        <Item>
+                            <itemNumber t-out="item_index + 1"/>
+                            <CN8 t-if="item.get('commodity_code') or item.get('SU_code') or item.get('additional_goods_code')">
+                                <CN8Code t-if="item.get('commodity_code')" t-out="item['commodity_code']"/>
+                                <SUCode t-if="item.get('SU_code')" t-out="item['SU_code']"/>
+                                <additionalGoodsCode t-if="item.get('additional_goods_code')" t-out="item['additional_goods_code']"/>
+                            </CN8>
+                            <MSConsDestCode t-if="item.get('country_code')" t-out="item['country_code']"/>
+                            <countryOfOriginCode t-if="item.get('intrastat_product_origin_country_code')" t-out="item['intrastat_product_origin_country_code']"/>
+                            <netMass t-if="item.get('weight')" t-out="item['weight']"/>
+                            <quantityInSU t-if="item.get('supplementary_units')" t-out="item['supplementary_units']"/>
+                            <invoicedAmount t-out="item['value']"/>
+                            <partnerId t-if="item.get('partner_vat')" t-out="item['partner_vat']"/>
+                            <statisticalProcedureCode t-out="item['system']"/>
+                            <NatureOfTransaction t-if="item.get('nature_of_transaction_A_code') or item.get('nature_of_transaction_B_code')">
+                                <natureOfTransactionACode t-if="item.get('nature_of_transaction_A_code')" t-out="item['nature_of_transaction_A_code']"/>
+                                <natureOfTransactionBCode t-if="item.get('nature_of_transaction_B_code')" t-out="item['nature_of_transaction_B_code']"/>
+                            </NatureOfTransaction>
+                            <modeOfTransportCode t-if="item.get('transport_code')" t-out="item['transport_code']"/>
+                            <regionCode t-if="item.get('region_code')" t-out="item['region_code']"/>
+                        </Item>
+                    </t>
+        </template>
+
+    </data>
+</odoo>

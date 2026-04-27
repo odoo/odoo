@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="documents.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary">
+        <xpath expr="//t[@t-else='']/Breadcrumbs" position="replace">
+            <DocumentsBreadcrumbs breadcrumbs="pathBreadcrumbs"/>
+        </xpath>
+
+        <xpath expr="//div[hasclass('o_control_panel_actions')]" position="inside">
+            <t t-set="selectionCount" t-value="targetRecords.length"/>
+            <t t-set="singleSelection" t-value="selectionCount === 1 and targetRecords[0]"/>
+            <t t-set="someArchived" t-value="targetRecords.some((r) => !r.data.active)"/>
+            <t t-set="someActive" t-value="targetRecords.some((r) => r.data.active)"/>
+            <t t-set="isInTrash" t-value="currentFolderId === 'TRASH'"/>
+            <t t-set="userIsInternal" t-value="documentService.userIsInternal"/>
+            <t t-set="editMode" t-value="targetRecords.every((r) => r.data.user_permission === 'edit')"/>
+
+            <SearchBar t-if="!selectionCount" toggler="env.searchBarToggler" autofocus="firstLoad"/>
+
+            <div class="btn-group flex-wrap">
+                <div t-if="selectionCount" class="ms-1 o_documents_action_dropdown btn-group">
+                    <div class="dropdown" t-att-class="{'btn-group': singleSelection || targetRecords.some((r) => r.data.attachment_id and r.data?.handler !== 'spreadsheet')}">
+                        <button class="btn btn-secondary o_dropdown_title" type="button"
+                            data-bs-toggle="dropdown" aria-expanded="false"
+                            t-on-click="() => this.onDropdownOpen()">
+                            <i class="fa fa-gear"/>
+                            Action
+                        </button>
+                        <ul class="dropdown-menu">
+                            <button class="dropdown-item w-100 o_documents_export"
+                                t-if="this.canExport and this.documentsState.viewType === 'list'"
+                                t-on-click="() => this.onExport()">
+                                <i class="fa fa-fw fa-upload me-1"/>
+                                <span class="d-inline-block">Export</span>
+                            </button>
+                            <button class="dropdown-item w-100"
+                                t-on-click="() => this.onDuplicate()"
+                                t-if="canDuplicateSelection">
+                                <i class="fa fa-fw fa-copy me-1"/>
+                                <span class="d-inline-block">Duplicate</span>
+                            </button>
+                            <button class="dropdown-item w-100"
+                                t-on-click="() => this.onArchive()"
+                                t-if="userIsInternal and editMode and someActive">
+                                <i class="fa fa-fw fa-trash me-1"/>
+                                <span class="d-inline-block">Move to Trash</span>
+                            </button>
+                            <button class="dropdown-item w-100"
+                                t-on-click="() => this.onRestore()"
+                                t-if="someArchived">
+                                <i class="fa fa-fw fa-history me-1"/>
+                                <span class="d-inline-block">Restore</span>
+                            </button>
+                            <button class="dropdown-item w-100"
+                                t-on-click="() => this.onDelete()"
+                                t-if="areTargetRecordsDeletable">
+                                <i class="fa fa-fw fa-trash me-1"/>
+                                <span class="d-inline-block">Delete</span>
+                            </button>
+                            <div role="separator" class="dropdown-divider"/>
+                            <button class="dropdown-item w-100"
+                                t-on-click="() => this.onRename()"
+                                t-if="(userIsInternal or editMode) and singleSelection and !isInTrash">
+                                <i class="fa fa-fw fa-edit me-1"/>
+                                <span class="d-inline-block">Rename</span>
+                            </button>
+                            <button class="dropdown-item w-100"
+                                t-on-click="() => this.onToggleChatter()"
+                                t-if="userIsInternal and singleSelection"
+                            >
+                                <i class="fa fa-fw fa-info-circle me-1"/>
+                                <span class="d-inline-block">Info &amp; tags </span>
+                            </button>
+                            <button class="dropdown-item w-100"
+                                t-on-click="() => this.onCreateShortcut()"
+                                t-if="userIsInternal and singleSelection and !isInTrash">
+                                <i class="fa fa-fw fa-external-link-square me-1"/>
+                                <span class="d-inline-block">Create Shortcut</span>
+                            </button>
+                            <button class="o_documents_manage_versions dropdown-item w-100"
+                                t-on-click="() => this.onManageVersions()"
+                                t-if="canManageVersions">
+                                <i class="fa fa-fw fa-history me-1"/>
+                                <span class="d-inline-block">Manage Versions</span>
+                            </button>
+                            <button class="dropdown-item w-100"
+                                t-on-click="() => this.onToggleLock()"
+                                t-if="userIsInternal and singleSelection and !isInTrash">
+                                <i class="fa fa-fw fa-lock me-1"/>
+                                <span class="d-inline-block" t-if="singleSelection?.data.lock_uid">Unlock</span>
+                                <span class="d-inline-block" t-else="">Lock</span>
+                            </button>
+                            <button class="dropdown-item w-100"
+                                t-on-click="() => this.onCopyLinks()"
+                                t-if="selectionCount and !isInTrash">
+                                <i class="fa fa-fw fa-link me-1"/>
+                                <span class="d-inline-block">Copy Links</span>
+                            </button>
+                            <button class="dropdown-item w-100"
+                                t-on-click="() => this.onSplitPDF()"
+                                t-if="userIsInternal and selectionCount and targetRecords.every((record) => record.isPdf()) and !isInTrash and editMode">
+                                <i class="fa fa-fw fa-scissors me-1"/>
+                                <span class="d-inline-block" t-if="singleSelection">Split PDF</span>
+                                <span class="d-inline-block" t-else="">Merge PDFs</span>
+                            </button>
+                        </ul>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-secondary o_documents_share_button"
+                    t-if="!isInTrash and documentService.userIsInternal and selectionCount === 1"
+                    t-on-click="() => this.onShare()">
+                    Share
+                </button>
+
+                <button type="button" class="btn btn-secondary o_documents_download_button"
+                    t-if="this.targetRecords.some((r) => !r.isRequest())"
+                    t-on-click="() => this.onDownload()">
+                    Download
+                </button>
+
+                <t t-set="_embeddedActions" t-value="embeddedActions"/>
+                <div t-if="!isInTrash and _embeddedActions.length" class="d-flex flex-row flex-wrap btn-group">
+                    <t t-set="firstEmbeddedActions" t-value="_embeddedActions.slice(0, 2)"/>
+                    <t t-set="lastEmbeddedActions" t-value="_embeddedActions.slice(2)"/>
+
+                    <button t-foreach="firstEmbeddedActions" t-as="action" t-key="action.id"
+                        type="button" class="btn btn-secondary" t-out="action.name"
+                        t-if="!!selectionCount" t-on-click="() => this.onDoAction(action.id)"/>
+
+                    <div class="dropdown btn-group" t-if="lastEmbeddedActions?.length">
+                        <button class="btn btn-secondary o_dropdown_title dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown" aria-expanded="false"
+                            t-if="!!selectionCount">
+                            More
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li t-foreach="lastEmbeddedActions" t-as="action" t-key="action.id"
+                                class="d-flex flex-row">
+                                <button type="button" class="dropdown-item btn btn-secondary mx-1" t-out="action.name"
+                                    t-on-click="() => this.onDoAction(action.id)"/>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+
+        <xpath expr="//*[hasclass('o_cp_switch_buttons')]" position="before">
+            <button t-if="documentService.userIsInternal"
+                t-on-click="() => this.onToggleChatter()"
+                data-tooltip="Info &amp; tags"
+                class="btn btn-secondary o_switch_view o_kanban"
+                t-att-class="{'active': this.documentsState.isChatterVisible}">
+                <i class="fa fa-fw fa-info-circle mt-1"/>
+            </button>
+        </xpath>
+    </t>
+
+</templates>

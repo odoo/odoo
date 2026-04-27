@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file was initially incorrect syntactically and compared to law text and example given with this file, for some reasons:
+    * The beginning of the file contains unwanted extra characters
+    * The end of file was cut, so all the tags were not closed
+    * There was not attributes minOccurs, so all the fields were required. However, the law text indicate that some of these fields are optionnal.
+
+For info, this file was retrieved from https://www.iras.gov.sg/irashome/Businesses/Self-Employed/Getting-it-right/IRAS-Accounting-Software-Register/Information-for-Accounting-Software-Developers/ on 08/2017
+
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    
+    <!-- definition of types -->
+    <xs:simpleType name="String3.Type">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="3" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="String12.Type">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="12" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="String16.Type">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="16" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="String20.Type">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="20" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="String50.Type">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="50" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="String100.Type">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="100" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="String250.Type">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="250" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="HundredBillionWith2Decimal.Type">
+        <xs:restriction base="xs:decimal">
+            <xs:maxInclusive value="999999999999.99" />
+            <xs:minInclusive value="-999999999999.99" />
+            <xs:fractionDigits value="2" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+    
+    <!-- definition of simple elements -->
+    <xs:element name="CompanyName" type="String100.Type"/>
+    <xs:element name="CompanyUEN" type="String16.Type"/>
+    <xs:element name="GSTNo" type="String16.Type"/>
+    <xs:element name="PeriodStart" type="xs:date"/>
+    <xs:element name="PeriodEnd" type="xs:date"/>
+    <xs:element name="IAFCreationDate" type="xs:date"/>
+    <xs:element name="ProductVersion" type="String100.Type"/>
+    <xs:element name="IAFVersion" type="String12.Type"/>
+    
+    <xs:element name="SupplierName" type="String100.Type"/>
+    <xs:element name="SupplierUEN" type="String16.Type"/>
+    <xs:element name="CustomerName" type="String100.Type"/>
+    <xs:element name="CustomerUEN" type="String16.Type"/>
+    <xs:element name="InvoiceDate" type="xs:date"/>
+    <xs:element name="InvoiceNo" type="String50.Type"/>
+    <xs:element name="PermitNo" type="String20.Type"/>
+    <xs:element name="LineNo" type="xs:long"/>
+    <xs:element name="ProductDescription" type="String250.Type"/>
+    <xs:element name="PurchaseValueSGD" type="HundredBillionWith2Decimal.Type"/>
+    <xs:element name="SupplyValueSGD" type="HundredBillionWith2Decimal.Type"/>
+    <xs:element name="GSTValueSGD" type="HundredBillionWith2Decimal.Type"/>
+    <xs:element name="TaxCode" type="String20.Type"/>
+    <xs:element name="Country" type="String50.Type"/>
+    <xs:element name="FCYCode" type="String3.Type"/>
+    <xs:element name="PurchaseFCY" type="HundredBillionWith2Decimal.Type"/>
+    <xs:element name="SupplyFCY" type="HundredBillionWith2Decimal.Type"/>
+    <xs:element name="GSTFCY" type="HundredBillionWith2Decimal.Type"/>
+    
+    <xs:element name="TransactionDate" type="xs:date"/>
+    <xs:element name="AccountID" type="String20.Type"/>
+    <xs:element name="AccountName" type="String100.Type"/>
+    <xs:element name="TransactionDescription" type="String250.Type"/>
+    <xs:element name="Name" type="String100.Type"/>
+    <xs:element name="TransactionID" type="String20.Type"/>
+    <xs:element name="SourceDocumentID" type="String50.Type"/>
+    <xs:element name="SourceType" type="String20.Type"/>
+    <xs:element name="Debit" type="HundredBillionWith2Decimal.Type"/>
+    <xs:element name="Credit" type="HundredBillionWith2Decimal.Type"/>
+    <xs:element name="Balance" type="HundredBillionWith2Decimal.Type"/>
+    
+    
+    <!-- definition of attributes -->
+    <xs:attribute name="PurchaseTotalSGD" type="HundredBillionWith2Decimal.Type"/>
+    <xs:attribute name="SupplyTotalSGD" type="HundredBillionWith2Decimal.Type"/>
+    <xs:attribute name="GSTTotalSGD" type="HundredBillionWith2Decimal.Type"/>
+    <xs:attribute name="TransactionCountTotal" type="xs:long"/>
+    <xs:attribute name="TotalDebit" type="HundredBillionWith2Decimal.Type"/>
+    <xs:attribute name="TotalCredit" type="HundredBillionWith2Decimal.Type"/>
+    <xs:attribute name="GLTCurrency" type="String3.Type"/>
+    
+    
+    <!-- definition of complex elements -->
+    <!-- for complex elements with restriction/length precision defined -->
+    
+    <xs:element name="Company">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="CompanyInfo">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="CompanyName"/>
+                            <xs:element ref="CompanyUEN"/>
+                            <xs:element ref="GSTNo"/>
+                            <xs:element ref="PeriodStart"/>
+                            <xs:element ref="PeriodEnd"/>
+                            <xs:element ref="IAFCreationDate"/>
+                            <xs:element ref="ProductVersion"/>
+                            <xs:element ref="IAFVersion"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Purchase" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="PurchaseLines" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element ref="SupplierName"/>
+                                        <xs:element ref="SupplierUEN"/>
+                                        <xs:element ref="InvoiceDate"/>
+                                        <xs:element ref="InvoiceNo"/>
+                                        <xs:element ref="PermitNo" minOccurs="0"/>
+                                        <xs:element ref="LineNo"/>
+                                        <xs:element ref="ProductDescription"/>
+                                        <xs:element ref="PurchaseValueSGD"/>
+                                        <xs:element ref="GSTValueSGD"/>
+                                        <xs:element ref="TaxCode"/>
+                                        <xs:element ref="FCYCode"/>
+                                        <xs:element ref="PurchaseFCY"/>
+                                        <xs:element ref="GSTFCY"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute ref="PurchaseTotalSGD" use="required"/>
+                        <xs:attribute ref="GSTTotalSGD" use="required"/>
+                        <xs:attribute ref="TransactionCountTotal" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Supply" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="SupplyLines" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element ref="CustomerName"/>
+                                        <xs:element ref="CustomerUEN"/>
+                                        <xs:element ref="InvoiceDate"/>
+                                        <xs:element ref="InvoiceNo"/>
+                                        <xs:element ref="LineNo"/>
+                                        <xs:element ref="ProductDescription"/>
+                                        <xs:element ref="SupplyValueSGD"/>
+                                        <xs:element ref="GSTValueSGD"/>
+                                        <xs:element ref="TaxCode"/>
+                                        <xs:element ref="Country" minOccurs="0"/>
+                                        <xs:element ref="FCYCode"/>
+                                        <xs:element ref="SupplyFCY"/>
+                                        <xs:element ref="GSTFCY"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute ref="SupplyTotalSGD" use="required"/>
+                        <xs:attribute ref="GSTTotalSGD" use="required"/>
+                        <xs:attribute ref="TransactionCountTotal" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="GLData" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="GLDataLines" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element ref="TransactionDate"/>
+                                        <xs:element ref="AccountID"/>
+                                        <xs:element ref="AccountName"/>
+                                        <xs:element ref="TransactionDescription"/>
+                                        <xs:element ref="Name" minOccurs="0"/>
+                                        <xs:element ref="TransactionID" minOccurs="0"/>
+                                        <xs:element ref="SourceDocumentID" minOccurs="0"/>
+                                        <xs:element ref="SourceType" minOccurs="0"/>
+                                        <xs:element ref="Debit"/>
+                                        <xs:element ref="Credit"/>
+                                        <xs:element ref="Balance"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute ref="TotalDebit" use="required"/>
+                        <xs:attribute ref="TotalCredit" use="required"/>
+                        <xs:attribute ref="TransactionCountTotal" use="required"/>
+                        <xs:attribute ref="GLTCurrency" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>              

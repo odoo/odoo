@@ -1,0 +1,186 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_payroll_account_iso20022
+#
+# Translators:
+# Junko Augias, 2025
+# Wil Odoo, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:47+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.view_employee_form
+msgid ""
+"<span class=\"d-flex gap-2 w-50\">\n"
+"                            <span invisible=\"is_trusted_bank_account\" "
+"class=\"text-muted\">Untrusted</span>\n"
+"                            <span invisible=\"not is_trusted_bank_account\" "
+"class=\"text-success\">Trusted</span>\n"
+"                        </span>"
+msgstr ""
+"<span class=\"d-flex gap-2 w-50\">\n"
+"                            <span invisible=\"is_trusted_bank_account\" "
+"class=\"text-muted\">信頼できない</span>\n"
+"                            <span invisible=\"not is_trusted_bank_account\" "
+"class=\"text-success\">信頼できる</span>\n"
+"                        </span>"
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.view_employee_form
+msgid "Bank Account"
+msgstr "銀行口座"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,field_description:hr_payroll_account_iso20022.field_hr_payroll_payment_report_wizard__journal_id
+msgid "Bank Journal"
+msgstr "銀行仕訳帳"
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.hr_payslip_view_form
+msgid "Create Payment Report"
+msgstr "支払報告を作成"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model,name:hr_payroll_account_iso20022.model_hr_employee
+msgid "Employee"
+msgstr "従業員"
+
+#. module: hr_payroll_account_iso20022
+#: model:hr.payroll.dashboard.warning,name:hr_payroll_account_iso20022.hr_payroll_dashboard_warning_employee_invalid_bank_account
+msgid "Employees With Invalid Bank Accounts"
+msgstr "無効な銀行口座を持つ従業員"
+
+#. module: hr_payroll_account_iso20022
+#: model:hr.payroll.dashboard.warning,name:hr_payroll_account_iso20022.hr_payroll_dashboard_warning_employee_no_country
+msgid "Employees Without Any Country"
+msgstr "国がない従業員"
+
+#. module: hr_payroll_account_iso20022
+#: model:hr.payroll.dashboard.warning,name:hr_payroll_account_iso20022.hr_payroll_dashboard_warning_untrusted_bank_accounts
+msgid "Employees with untrusted Bank Account numbers"
+msgstr "信頼できない銀行口座番号を持つ従業員"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,field_description:hr_payroll_account_iso20022.field_hr_payroll_payment_report_wizard__export_format
+msgid "Export Format"
+msgstr "エクスポートフォーマット"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model,name:hr_payroll_account_iso20022.model_hr_payroll_payment_report_wizard
+msgid "HR Payroll Payment Report Wizard"
+msgstr "人事給与明細支払レポートウィザード"
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.hr_payslip_view_form
+msgid "Mark as paid"
+msgstr "支払済にする"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model,name:hr_payroll_account_iso20022.model_hr_payslip
+msgid "Pay Slip"
+msgstr "給与明細"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model,name:hr_payroll_account_iso20022.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "給与明細のバッチ"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields.selection,name:hr_payroll_account_iso20022.selection__hr_payroll_payment_report_wizard__export_format__sepa
+msgid "SEPA"
+msgstr "SEPA"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,field_description:hr_payroll_account_iso20022.field_hr_employee__is_trusted_bank_account
+msgid "Send Money"
+msgstr "支払"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,help:hr_payroll_account_iso20022.field_hr_employee__is_trusted_bank_account
+msgid ""
+"Sending fake invoices with a fraudulent account number is a common phishing "
+"practice. To protect yourself, always verify new bank account numbers, "
+"preferably by calling the vendor, as phishing usually happens when their "
+"emails are compromised. Once verified, you can activate the ability to send "
+"money."
+msgstr ""
+"不正な口座番号から偽の請求書を送るのは、一般的なフィッシングの手法です。"
+"フィッシングは通常、仕入先のEメールが不正にアクセスされた時におきるため、ご自"
+"身の安全のために、常に新しい銀行口座番号を可能であれば仕入先に電話で確認して"
+"下さい。認証されると、送金機能を有効にすることができます。"
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/wizard/hr_payroll_payment_report_wizard.py:0
+msgid "Some employees (%s) don't have a valid name on the work contact."
+msgstr "仕事連絡先に有効な名前を持っていない従業員(%s)がいます。"
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/wizard/hr_payroll_payment_report_wizard.py:0
+msgid "Some employees (%s) don't have a work contact."
+msgstr "仕事連絡先を持っていない従業員(%s)がいます。"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields.selection,name:hr_payroll_account_iso20022.selection__hr_payroll_payment_report_wizard__export_format__iso20022_ch
+msgid "Swiss ISO20022"
+msgstr "スイス ISO20022"
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/models/hr_employee.py:0
+msgid ""
+"The following employees have invalid bank accounts and could not be "
+"trusted:\n"
+"%s"
+msgstr "以下の従業員は無効な銀行口座を持っており、信用できません: %s"
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/wizard/hr_payroll_payment_report_wizard.py:0
+msgid ""
+"The journal '%s' requires a proper IBAN account to pay via SEPA. Please "
+"configure it first."
+msgstr ""
+"仕訳'%s'はSEPA経由での支払いに適切なIBAN口座を必要としています。まずIBAN口座"
+"を設定して下さい。"
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.view_employee_form
+msgid "Trust Bank Account"
+msgstr "信頼できる銀行口座"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,field_description:hr_payroll_account_iso20022.field_hr_payslip__iso20022_uetr
+msgid "UETR"
+msgstr "UETR"
+
+#. module: hr_payroll_account_iso20022
+#: model:ir.model.fields,help:hr_payroll_account_iso20022.field_hr_payslip__iso20022_uetr
+msgid "Unique end-to-end transaction reference"
+msgstr "一意のエンド・ツー・エンドの取引参照"
+
+#. module: hr_payroll_account_iso20022
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_iso20022.view_employee_form
+msgid "Untrust Bank Account"
+msgstr "信頼できない銀行口座"
+
+#. module: hr_payroll_account_iso20022
+#. odoo-python
+#: code:addons/hr_payroll_account_iso20022/models/hr_employee.py:0
+msgid "You do not have the right to trust or un-trust a bank account."
+msgstr "銀行口座を信用する・信用しない権利はありません。"

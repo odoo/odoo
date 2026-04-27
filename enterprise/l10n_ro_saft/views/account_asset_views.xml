@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="view_l10n_ro_saft_account_asset_form" model="ir.ui.view">
+        <field name="name">l10n_ro_saft.account.asset.form</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook/page[@name='main_page']//field[@name='original_value']" position="before">
+                <field name="l10n_ro_saft_account_asset_category_id" invisible="country_code != 'RO'"/>
+            </xpath>
+            <xpath expr="//sheet/notebook/page[@name='main_page']//field[@name='method_period']" position="after">
+                <field name='l10n_ro_saft_account_asset_category_warning' invisible="True"/>
+                <span class="fa fa-exclamation-triangle" style="color: orange;"
+                      title="The depreciation duration is outside the boundaries delimited by the asset category"
+                      invisible="not l10n_ro_saft_account_asset_category_warning"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_asset_missing_l10n_ro_saft_account_asset_category" model="ir.ui.view">
+        <field name="name">account.asset.list.missing.l10n_ro_saft.asset.category</field>
+        <field name="model">account.asset</field>
+        <field name="arch" type="xml">
+            <list string="Assets" multi_edit="1" duplicate="false" editable="bottom" open_form_view="true">
+                <field name="name" readonly="1"/>
+                <field name="l10n_ro_saft_account_asset_category_id"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

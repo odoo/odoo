@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Load the `has_embedded_pdf` field in the views to get its value in the JS components -->
+    <record id="documents_document_view_kanban" model="ir.ui.view">
+        <field name="name">documents.document.view.kanban.inherit.account</field>
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents.document_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates" position="before">
+                <field name="has_embedded_pdf"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="documents_document_view_tree" model="ir.ui.view">
+        <field name="name">documents.document.view.list.inherit.account</field>
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents.documents_view_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="has_embedded_pdf" column_invisible="True"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="documents_document_view_activity" model="ir.ui.view">
+        <field name="name">documents.document.view.activity.inherit.account</field>
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents.documents_view_activity"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="has_embedded_pdf" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

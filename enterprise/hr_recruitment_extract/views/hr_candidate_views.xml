@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_recruitment_extract_view_form" model="ir.ui.view">
+        <field name="name">hr.candidate.extract.view.form</field>
+        <field name="model">hr.candidate</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_candidate_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_manual_send_for_digitization" class="oe_highlight" string="Digitize document" type="object"
+                    invisible="not extract_can_show_send_button" data-hotkey="s"/>
+            </xpath>
+            <xpath expr="//sheet" position='before'>
+                <field name="extract_can_show_send_button" invisible="1"/>
+                <field name="is_in_extractable_state" invisible="1"/>
+                <field name="extract_error_message" invisible="1"/> <!-- extract_error_message required for the extract_state_header -->
+                <field name="extract_document_uuid" invisible="1"/> <!-- extract_document_uuid required for the extract_state_header -->
+                <field name="extract_state" class="d-block" invisible="not is_in_extractable_state or extract_state == 'waiting_validation'" widget="extract_state_header"/>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position='after'>
+                <field name="extract_document_uuid" groups="base.group_no_one" widget="CopyClipboardChar"
+                       invisible="not extract_document_uuid"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_recruitment_extract_view_list" model="ir.ui.view">
+        <field name="name">hr.candidate.extract.view.list</field>
+        <field name="model">hr.candidate</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_candidate_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="decoration-muted">extract_state_processed</attribute>
+            </xpath>
+            <xpath expr="//list" position="inside">
+                <field name="extract_state_processed" column_invisible="True"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

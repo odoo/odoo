@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <menuitem
+        id="menu_hr_job_configuration"
+        name="Jobs"
+        parent="hr_work_entry_contract_enterprise.menu_hr_payroll_configuration"
+        sequence="100"
+        groups="hr_payroll.group_hr_payroll_user"/>
+
+    <menuitem
+        id="menu_hr_job_positions"
+        action="action_hr_job_payroll_configuration"
+        parent="menu_hr_job_configuration"
+        name="Job Positions"
+        sequence="50"/>
+
+</odoo>

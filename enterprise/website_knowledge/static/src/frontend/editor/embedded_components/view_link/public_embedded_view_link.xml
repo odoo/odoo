@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="knowledge.PublicEmbeddedViewLink">
+        <a t-attf-href="/web/login?redirect={{ window.location.pathname }}"
+            t-att-class="getLinkClass()"
+            t-out="props.viewProps.displayName"/>
+    </t>
+</templates>

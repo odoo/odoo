@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.NewButtonBoxDialog">
+    <Dialog size="'sm'" title.translate="Add a Button" contentClass="'o_web_studio_new_button_dialog'">
+        <div>
+            <label>Label</label>
+            <input class="o_input" name="string" type="text" placeholder="My Button" t-on-change="(ev) => this.text = ev.target.value"/>
+        </div>
+        <div>
+            <label>Icon</label>
+            <FontAwesomeIconSelector value="this.state.icon" onSelect="(value) => this.state.icon = value">
+                <i t-att-class="this.state.icon"/>
+            </FontAwesomeIconSelector>
+        </div>
+        <div>
+            <label>Select a related field</label>
+            <Many2XAutocomplete
+                value="this.state.field?.display_name"
+                resModel="'ir.model.fields'"
+                fieldString.translate="Field"
+                update.bind="update"
+                activeActions="{}"
+                getDomain.bind="getDomain"
+                isToMany="false"
+            />
+        </div>
+        <t t-set-slot="footer">
+            <button t-attf-class="btn btn-primary" t-on-click.stop="onConfirm">Confirm</button>
+            <button class="btn btn-secondary" t-on-click.stop="props.close">Cancel</button>
+        </t>
+    </Dialog>
+</t>
+
+</templates>

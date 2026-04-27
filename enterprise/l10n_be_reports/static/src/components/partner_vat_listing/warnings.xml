@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="l10n_be_reports.partner_vat_listing_missing_partners_warning">
+        You have
+        <t t-out="warningParams.count"/>
+        customers with a turnover of more than 250€ or one or more credit notes in the selected period who are not included in the report. Click
+        <a t-on-click="(ev) => controller.reportAction(ev, 'action_warning_partners', warningParams)">here</a>
+        to see the list.
+    </t>
+    <t t-name="l10n_be_reports.duplicate_partner_vat">
+        <a t-on-click="(ev) => controller.reportAction(ev, 'action_warning_partners', warningParams)">
+            Partners sharing the same VAT number
+        </a> will be grouped in the XML export.
+    </t>
+</templates>

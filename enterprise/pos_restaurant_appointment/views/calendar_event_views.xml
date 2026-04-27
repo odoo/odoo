@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="calendar_event_view_form_gantt_booking_inherit" model="ir.ui.view">
+        <field name="name">calendar.event.view.form.gantt.booking.inherited</field>
+        <field name="model">calendar.event</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="appointment.calendar_event_view_form_gantt_booking"/>
+        <field name="arch" type="xml">
+            <xpath expr="//footer/button[@special='cancel']" position="attributes">
+                <attribute name="class">btn-secondary mx-1</attribute>
+            </xpath>
+            <xpath expr='//field[@name="description"]' position="after">
+                <field name="answers"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="calendar_event_view_gantt_booking_resource_inherited" model="ir.ui.view">
+        <field name="name">calendar.event.view.gantt.booking.user</field>
+        <field name="model">calendar.event</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="appointment.calendar_event_view_gantt_booking_resource"/>
+        <field name="arch" type="xml">
+            <xpath expr="//gantt" position="attributes">
+                <attribute name="form_view_id">%(pos_restaurant_appointment.calendar_event_view_form_gantt_booking_inherit)d</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

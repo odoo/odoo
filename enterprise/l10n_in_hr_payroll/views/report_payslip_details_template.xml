@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="l10n_in_to_pay">
+        <div t-if="o.net_wage &gt;= 0">
+            To pay on <strong t-field="o.employee_id.bank_account_id"/> of <i><span t-field="o.employee_id"/></i>: <strong t-field="o.net_wage"/>
+            <br/>
+            Amount In Words Rs: <span t-out="o.currency_id.with_context(lang='en_US').amount_to_text(o.net_wage)"/>
+        </div>
+        <div t-else="">The net amount will be recovered from the first positive remuneration established after this.</div>
+        <div class="mt-2">This is a system generated payslip, hence the signature is not required.</div>
+    </template>
+
+    <template id="report_payslip_details" inherit_id="hr_payroll.report_payslip" primary="True">
+
+        <div id="employee_marital" position="replace"/>
+
+        <div id="employee_private_address" position="replace"/>
+
+        <div id="working_schedule" position="replace">
+            <strong class="me-2">Working Schedule:</strong>
+            <t t-if="o.wage_type == 'monthly'">
+                <span t-out="o._get_l10n_in_company_working_time()"/> Days / Month
+            </t>
+            <t t-else="">
+                <span t-out="o._get_l10n_in_company_working_time(return_hours=True)"/> Hours / Month
+            </t>
+        </div>
+
+        <div id="infos_table" position="inside">
+            <table class="table table-sm table-borderless">
+                <t t-set="timeoff_data_table" t-value="o._get_employee_timeoff_data()"/>
+                <thead class="o_black_border">
+                    <tr>
+                        <th>Bank Information</th>
+                        <th t-if="timeoff_data_table">Time-Off</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div>
+                                <strong>Bank Account:</strong>
+                                <span t-field="o.employee_id.bank_account_id.acc_number"/>
+                            </div>
+                            <div>
+                                <strong>PAN:</strong>
+                                <span t-field="o.employee_id.l10n_in_pan"/>
+                            </div>
+                            <div>
+                                <strong>UAN:</strong>
+                                <span t-field="o.employee_id.l10n_in_uan"/>
+                            </div>
+                            <div>
+                                <strong>ESIC:</strong>
+                                <span t-field="o.employee_id.l10n_in_esic_number"/>
+                            </div>
+                        </td>
+                        <td t-if="timeoff_data_table">
+                            <div t-foreach="timeoff_data_table" t-as="timeoff_data">
+                                <strong t-out="timeoff_data[0] + ':'"></strong>
+                                <t t-out="timeoff_data[1].get('remaining_leaves')"/>
+                                /
+                                <span t-out="timeoff_data[1].get('max_leaves')"/>
+                                <t t-if="timeoff_data[1].get('request_unit') == 'hour'">Hours</t>
+                                <t t-else="">Days</t>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="to_pay" position="replace">
+            <t t-call="l10n_in_hr_payroll.l10n_in_to_pay" t-lang="o.env.lang"/>
+        </div>
+    </template>
+
+    <template id="report_payslip">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="o" t-value="o.with_context(lang=o.employee_id.sudo().lang or o.env.lang)"/>
+                <t t-call="l10n_in_hr_payroll.report_payslip_details" t-lang="o.env.lang"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_light_payslip_details" inherit_id="hr_payroll.report_light_payslip" primary="True">
+        <div id="to_pay" position="replace">
+            <t t-call="l10n_in_hr_payroll.l10n_in_to_pay" t-lang="o.env.lang"/>
+        </div>
+
+        <div id="footer" position="inside">
+            <table class="table table-sm table-borderless">
+                <thead class="o_black_border">
+                    <tr>
+                        <th><strong>Bank Account</strong></th>
+                        <th><strong>PAN</strong></th>
+                        <th><strong>UAN</strong></th>
+                        <th><strong>ESIC</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span t-field="o.employee_id.bank_account_id.acc_number"/></td>
+                        <td><span t-field="o.employee_id.l10n_in_pan"/></td>
+                        <td><span t-field="o.employee_id.l10n_in_uan"/></td>
+                        <td><span t-field="o.employee_id.l10n_in_esic_number"/></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </template>
+
+    <template id="report_light_payslip">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="o" t-value="o.with_context(lang=o.employee_id.sudo().lang or o.env.lang)"/>
+                <t t-call="l10n_in_hr_payroll.report_light_payslip_details" t-lang="o.env.lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>

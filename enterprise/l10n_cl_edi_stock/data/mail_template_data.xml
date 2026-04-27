@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <record id="l10n_cl_edi_email_template_picking" model="mail.template">
+            <field name="name">DTE - Send by Email</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="email_from">{{ (object.company_id.l10n_cl_dte_email or object.company_id.email) }}</field>
+            <field name="email_to">{{ object.partner_id.l10n_cl_dte_email or object.partner_id.commercial_partner_id.l10n_cl_dte_email }}</field>
+            <field name="subject">{{ object.company_id.name }} DTE (Ref {{ (object.name or 'n/a') }})</field>
+            <field name="auto_delete" eval="False"/>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear
+                        <t t-if="object.partner_id.commercial_partner_id">
+                            <t t-out="object.partner_id.name or ''">Brandon Freeman</t> (<t t-out="object.partner_id.commercial_partner_id.name or ''">Brandon Freeman</t>),
+                        </t>
+                        <t t-else="">
+                            <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,
+                        </t>
+                        <br /><br />
+                        Here is your delivery guide <strong t-out="object.l10n_latam_document_number or ''">GDE 000008</strong>
+                        <br /><br />
+                        Do not hesitate to contact us if you have any questions.
+                    </p>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

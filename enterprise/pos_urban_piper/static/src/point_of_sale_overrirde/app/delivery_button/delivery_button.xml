@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_urban_piper.DeliveryButton">
+        <Dropdown>
+            <div class="delivery-icon-container" t-attf-class="{{ this.ui.isSmall ? 'me-2' : ''}}">
+                <div class="d-flex align-items-center justify-content-center position-absolute rounded-circle new-order-badge">
+                    <t t-out="this.pos.total_new_order"/>
+                </div>
+                <i class="oi oi-food-delivery ms-1 fs-2"/>
+            </div>
+            <t t-set-slot="content">
+                <t t-if="this.pos.delivery_providers">
+                    <t t-set="delivery_order_count" t-value="this.pos.delivery_order_count.urbanpiper"/>
+                    <div class="urbanpiper-dropdown-container">
+                        <t t-foreach="this.pos.delivery_providers" t-as="provider" t-key="provider.id">
+                            <DropdownItem>
+                                <div class="d-flex">
+                                    <img class="me-1 provider-image" t-att-src="'/web/image?model=pos.delivery.provider&amp;field=image_128&amp;id=' + provider.id"/>
+                                    <div class="container-fluid flex-grow-1">
+                                        <div class="d-flex gap-2 h-100">
+                                            <div class="button-hover" t-on-click="() => this.goToOrders(provider.name, 'NEW')">
+                                                <div class="d-flex flex-column">
+                                                    <span><b>New</b></span>
+                                                    <span class="text-center">
+                                                        <t t-out="delivery_order_count[provider['code']].awaiting"/>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="button-hover" t-on-click="() => this.goToOrders(provider.name, 'ONGOING')">
+                                                <div class="d-flex flex-column h-100 w-100">
+                                                    <span><b>Ongoing</b></span>
+                                                    <span class="text-center">
+                                                        <t t-out="delivery_order_count[provider['code']].preparing"/>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="button-hover" t-on-click="() => this.goToOrders(provider.name, 'DONE', 'SYNCED')">
+                                                <div class="d-flex flex-column">
+                                                    <span><b>Done</b></span>
+                                                    <span class="text-center">
+                                                        <t t-out="delivery_order_count[provider['code']].done"/>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <div class="form-switch d-flex justify-content-end align-items-center" onclick="event.stopPropagation()">
+                                                    <input type="checkbox" class="form-check-input" t-att-checked="this.pos.enabledProviders[provider.code]" t-on-click="() => this.handleToggle(provider.code)" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </DropdownItem>
+                        </t>
+                    </div>
+                </t>
+                <t t-else="">
+                    <span class="m-2 d-flex justify-content-center"><strong>There are no active delivery providers(s).</strong></span>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

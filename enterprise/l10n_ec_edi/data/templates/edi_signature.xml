@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="ec_edi_signature">
+            <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" t-att-Id="signature_id">
+                <ds:SignedInfo>
+                    <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+                    <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+                    <ds:Reference t-att-Id="signed_properties_id" t-attf-URI="##{signature_property_id}" Type="http://uri.etsi.org/01903#SignedProperties">
+                        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                        <ds:DigestValue></ds:DigestValue>
+                    </ds:Reference>
+                    <ds:Reference t-attf-URI="##{certificate_id}">
+                        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                        <ds:DigestValue></ds:DigestValue>
+                    </ds:Reference>
+                    <ds:Reference t-att-Id="reference_uri" URI="#comprobante">
+                        <ds:Transforms>
+                            <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                        </ds:Transforms>
+                        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                        <ds:DigestValue></ds:DigestValue>
+                    </ds:Reference>
+                </ds:SignedInfo>
+                <ds:SignatureValue></ds:SignatureValue>
+                <ds:KeyInfo t-att-Id="certificate_id">
+                    <ds:X509Data>
+                        <ds:X509Certificate t-out="x509_certificate"/>
+                    </ds:X509Data>
+                    <ds:KeyValue>
+                        <ds:RSAKeyValue>
+                            <ds:Modulus t-out="rsa_modulus"/>
+                            <ds:Exponent t-out="rsa_exponent"/>
+                        </ds:RSAKeyValue>
+                    </ds:KeyValue>
+                </ds:KeyInfo>
+                <ds:Object>
+                    <etsi:QualifyingProperties xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" t-attf-Target="##{signature_id}" t-att-Id="signature_id">
+                        <etsi:SignedProperties t-att-Id="signature_property_id">
+                            <etsi:SignedSignatureProperties>
+                                <etsi:SigningTime t-out="dt_now"/>
+                                <etsi:SigningCertificate>
+                                    <etsi:Cert>
+                                        <etsi:CertDigest>
+                                            <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                                            <ds:DigestValue t-out="sig_certif_digest"/>
+                                        </etsi:CertDigest>
+                                        <etsi:IssuerSerial>
+                                            <ds:X509IssuerName t-out="x509_issuer_description"/>
+                                            <ds:X509SerialNumber t-out="x509_serial_number"/>
+                                        </etsi:IssuerSerial>
+                                    </etsi:Cert>
+                                </etsi:SigningCertificate>
+                                <etsi:SignaturePolicyIdentifier>
+                                    <etsi:SignaturePolicyImplied/>
+                                </etsi:SignaturePolicyIdentifier>
+                            </etsi:SignedSignatureProperties>
+                            <etsi:SignedDataObjectProperties>
+                                <etsi:DataObjectFormat t-attf-ObjectReference="##{reference_uri}">
+                                    <etsi:Description>contenido comprobante</etsi:Description>
+                                    <etsi:MimeType>text/xml</etsi:MimeType>
+                                </etsi:DataObjectFormat>
+                            </etsi:SignedDataObjectProperties>
+                        </etsi:SignedProperties>
+                    </etsi:QualifyingProperties>
+                </ds:Object>
+            </ds:Signature>
+        </template>
+    </data>
+</odoo>

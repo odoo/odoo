@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_tax_deduction_card">
+            <t t-call="web.html_container">
+                <t t-call="web.basic_layout">
+                        <div class="page o_l10n_ke_p9">
+                            <div class="row">
+                                <div class="w-50 mb-3">
+                                    <h5>
+                                        Kenya Revenue Authority<br/>Domestic Taxes Department
+                                    </h5>
+                                    <h4>
+                                        <span>Tax Deduction Card Year </span><t t-esc="report_data['year']"/>
+                                    </h4>
+                                </div>
+                                <table class="table table-bordered w-50">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2">Employer's Name</td>
+                                            <td colspan="3"><t t-esc="employee.company_id.name"/></td>
+                                            <td colspan="2">Employer's PIN</td>
+                                            <td colspan="3"><t t-esc="employee.company_id.vat"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">Employee's Names</td>
+                                            <td colspan="3"><t t-esc="employee.name"/></td>
+                                            <td colspan="2">Employee's PIN</td>
+                                            <td colspan="3"><t t-esc="employee.l10n_ke_pin"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <table class="table table-bordered text-center">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="3">MONTH</th>
+                                        <th>Basic Salary</th>
+                                        <th>Benefits-Non-Cash</th>
+                                        <th>Value Of Quarter</th>
+                                        <th>Total Gross Pay</th>
+                                        <th colspan="3">Defined Contribution<br/>Retirement Scheme</th>
+                                        <th>Owner-Occupied Interest</th>
+                                        <th>Retirement Contribution &amp; Owner Occupied Interest</th>
+                                        <th>Chargeable Pay</th>
+                                        <th>Tax Charged</th>
+                                        <th>Personal Relief</th>
+                                        <th>Insurance Relief</th>
+                                        <th>PAYE Tax (J-K)</th>
+                                    </tr>
+                                    <tr>
+                                        <th>A</th>
+                                        <th>B</th>
+                                        <th>C</th>
+                                        <th>D</th>
+                                        <th colspan="3">E</th>
+                                        <th>F</th>
+                                        <th>G</th>
+                                        <th>H</th>
+                                        <th>J</th>
+                                        <th colspan="2">K</th>
+                                        <th>L</th>
+                                    </tr>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>E1<br/>30% of A</th>
+                                        <th>E2<br/>Actual</th>
+                                        <th>E3<br/>Fixed</th>
+                                        <th>Amount of<br/>Interest</th>
+                                        <th>Lowest of E<br/>added to F</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th colspan="2">Total</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="report_data['p9_lines']" t-as="p9_line" class="o_l10n_ke_p9_line">
+                                        <td class="text-end"><t t-esc="p9_line['month']"/></td>
+                                        <td><t t-esc="round(p9_line['basic_salary'], 2) or '-'"/></td>
+                                        <td><t t-esc="round(p9_line['benefits_non_cash'], 2) or '-'"/></td>
+                                        <td><t t-esc="round(p9_line['value_of_quarter'], 2) or '-'"/></td>
+                                        <td><t t-esc="round(p9_line['total_gross_pay'], 2) or '-'"/></td>
+                                        <td><t t-esc="round(p9_line['defined_contribution_retirement_scheme_1'], 2) or '-'"/></td>
+                                        <td><t t-esc="round(p9_line['defined_contribution_retirement_scheme_2'], 2) or '-'"/></td>
+                                        <td><t t-esc="round(p9_line['defined_contribution_retirement_scheme_3'], 2) or '-'"/></td>
+                                        <td><t t-esc="round(p9_line['owner_occupied_interest'], 2) or '-'"/></td>
+                                        <td><t t-esc="round(p9_line['retirement_contribution_and_owner_occupied_interest'], 2) or '-'"/></td>
+                                        <td><t t-esc="round(p9_line['chargeable_pay'], 2) or '-'"/></td>
+                                        <td><t t-esc="round(p9_line['tax_charged'], 2) or '-'"/></td>
+                                        <td><t t-esc="round(p9_line['personal_relief'], 2) or '-'"/></td>
+                                        <td><t t-esc="round(p9_line['insurance_relief'], 2) or '-'"/></td>
+                                        <td><t t-esc="round(p9_line['paye_tax'], 2) or '-'"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="row w-100">
+                                <div class="w-50">
+                                    <p class="mb-2">IMPORTANT</p>
+                                    <ol class="list_type_1">
+                                        <li>Use P9A
+                                            <ol class="list_type_a">
+                                                <li>For all liable employees and where director/employee received Benefits in addition to cash emoluments.</li>
+                                                <li>Where an employee is eligible to deduction on owner occupier interest.</li>
+                                            </ol>
+                                        </li>
+                                        <li>
+                                            <ol class="list_type_a">
+                                                <li>Deductible interest in respect of any month must not exceed Ksh.25,000 or Ksh.300,000 per year.</li>
+                                                <li>Attach
+                                                    <ol class="list_type_i">
+                                                        <li>Photostat copy of interest certificate and statement of account from the Financial Institution.</li>
+                                                        <li>The DECLARATION duly signed by the employee.</li>
+                                                    </ol>
+                                                </li>
+                                            </ol>
+                                        </li>
+                                    </ol>
+                                </div>
+                                <div class="w-50">
+                                    <p>
+                                        NAMES OF FINANCIAL INSTITUTION ADVANCING MORTGAGE LOAN<br/>
+                                        L R NO. OF OWNER OCCUPIED PROPERTY: <t t-esc=""/><br/>
+                                        DATE OF OCCUPATION OF HOUSE: <t t-esc=""/></p>
+                                    <strong>IMPORTANT INFORMATION REQUIRED FROM EMPLOYER AT END OF YEAR</strong>
+                                    <ol>
+                                        <li>
+                                            Date employee commenced if during year: <t t-esc=""/><br/>
+                                            Name and address of old employer: <t t-esc=""/>
+                                        </li>
+                                        <li>
+                                            Date left if during the year: <t t-esc=""/><br/>
+                                            Name and address of new employer: <t t-esc=""/>
+                                        </li>
+                                        <li>
+                                            Where housing is provided, state monthly rent: <t t-esc=""/>Ksh. per month
+                                        </li>
+                                        <li>
+                                            Where any of the pay relates to a period other than this year,<br/>e.g. gratuity, give details of Amounts, Year and Tax
+                                        </li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

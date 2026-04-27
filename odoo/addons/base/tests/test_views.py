@@ -5258,6 +5258,26 @@ class ViewModifiers(ViewCase):
                 group_repr = str(group_definitions.from_key(groups_key)) if groups_key else ''
                 self.assertEqual(group_repr, add_field_with_groups, arch)
 
+        # Keep base test expectations deterministic on databases where website
+        # adds extra ir.ui.view ACLs (e.g. restricted editor).
+        group_system = self.env.ref('base.group_system')
+        view_model = self.env['ir.model']._get('ir.ui.view')
+        extra_view_accesses = self.env['ir.model.access'].search([
+            ('model_id', '=', view_model.id),
+            ('active', '=', True),
+            ('perm_read', '=', True),
+            ('group_id', '!=', False),
+            ('group_id', '!=', group_system.id),
+        ])
+        if extra_view_accesses:
+            extra_view_accesses.write({
+                'perm_read': False,
+                'perm_write': False,
+                'perm_create': False,
+                'perm_unlink': False,
+            })
+            self.env['ir.model.access'].clear_caches()
+
         arch = """
             <form string="View">
                 <field name="name"/>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_auto_reconcile_wizard" model="ir.ui.view">
+        <field name="name">account.auto.reconcile.wizard.form</field>
+        <field name="model">account.auto.reconcile.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reconcile automatically">
+                <field name="company_id" invisible="1"/>
+                <field name="line_ids" invisible="1"/>
+                <group>
+                    <field name="search_mode" widget="radio" options="{'horizontal': true}"/>
+                    <field name="account_ids" widget="many2many_tags" options="{'no_create': True, 'no_edit':True}"/>
+                    <field name="partner_ids" widget="many2many_tags" options="{'no_create': True, 'no_edit':True}" invisible="not account_ids"/>
+                    <field name="from_date" invisible="search_mode == 'zero_balance'"/>
+                    <field name="to_date"/>
+                </group>
+                <footer>
+                    <button string="Reconcile" class="btn-primary" name="auto_reconcile" type="object" data-hotkey="v"/>
+                    <button string="Discard" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

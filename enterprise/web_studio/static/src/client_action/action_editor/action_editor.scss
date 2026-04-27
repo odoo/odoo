@@ -1,0 +1,29 @@
+.o_web_studio_action_editor {
+    background-color: $o-web-studio-bg-action;
+
+    .o_web_studio_views {
+        flex: 1 1 auto;
+
+        @include media-breakpoint-up(lg) {
+            flex-flow: column wrap;
+        }
+
+        @include media-breakpoint-up(xl) {
+            align-content: center;
+        }
+
+        .o_web_studio_thumbnail_item.disabled {
+            .o_web_studio_view_label {
+                transition: all 0.2s ease 0.1s;
+            }
+
+            &:hover {
+                opacity: 1;
+
+                .o_web_studio_view_label {
+                    transform: translateX(-100%);
+                }
+            }
+        }
+    }
+}

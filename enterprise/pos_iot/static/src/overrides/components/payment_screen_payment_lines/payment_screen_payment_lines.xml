@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.PaymentScreenPaymentLines" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('delete-button')]" position="attributes">
+            <!-- You can't cancel a payment if the card is inserted, so we block deleting it. -->
+            <!-- Otherwise, the line might be deleted while the payment is in progress -->
+            <attribute name="t-if" value="line.payment_method_id.use_payment_terminal !== 'worldline' or ['retry', 'pending', 'waiting', 'force_done'].includes(line.payment_status)" />
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Grid View -->
+        <record id="timesheet_view_grid" model="ir.ui.view">
+            <field name="name">sale_timesheet_enterprise.account.analytic.line.grid.inherit</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="timesheet_grid.timesheet_view_grid" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='employee_id']" position="after">
+                    <field name="so_line" type="row" invisible="1" widget="timesheet_many2one" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="timesheet_view_grid_by_project" model="ir.ui.view">
+            <field name="name">sale_timesheet_enterprise.account.analytic.line.grid.project</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="timesheet_grid.timesheet_view_grid_by_project" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='employee_id']" position="after">
+                    <field name="so_line" type="row" invisible="1" widget="timesheet_many2one" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="timesheet_view_grid_by_employee" model="ir.ui.view">
+            <field name="name">sale_timesheet_enterprise.account.analytic.line.grid.employee</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="timesheet_grid.timesheet_view_grid_by_employee" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='task_id']" position="after">
+                    <field name="so_line" type="row" invisible="1" widget="timesheet_many2one" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="timesheet_view_grid_by_invoice_type" model="ir.ui.view">
+            <field name="name">account.analytic.line.grid.invoice.type</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <grid string="Timesheets"
+                      editable="1"
+                      create="false"
+                      js_class="timesheet_grid"
+                      barchart_total="1"
+                      display_empty="1">
+                    <field name="timesheet_invoice_id" type="row" section="1"/>
+                    <field name="employee_id" type="row" widget="timesheet_many2one_avatar_employee"/>
+                    <field name="so_line" type="row" invisible="1" widget="timesheet_many2one" />
+                    <field name="date" type="col">
+                        <range name="day" string="Day" span="day" step="day"/>
+                        <range name="week" string="Week" span="week" step="day" default="1"/>
+                        <range name="month" string="Month" span="month" step="day"/>
+                    </field>
+                    <field name="unit_amount" string="Time Spent" type="measure" widget="timesheet_uom"/>
+                </grid>
+            </field>
+        </record>
+
+        <record id="timesheet_action_from_sales_order_item_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="15"/>
+            <field name="view_mode">grid</field>
+            <field name="view_id" ref="timesheet_grid.timesheet_view_grid_by_employee"/>
+            <field name="act_window_id" ref="sale_timesheet.timesheet_action_from_sales_order_item"/>
+        </record>
+
+    </data>
+</odoo>

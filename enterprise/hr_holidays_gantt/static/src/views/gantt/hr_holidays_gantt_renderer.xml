@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_holidays_gantt.GanttRenderer.Pill" t-inherit="web_gantt.GanttRenderer.Pill" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('o_gantt_pill_title')]" position="attributes">
+            <attribute name="t-attf-class" separator=" " add="{{ pill.record.state == 'refuse' ? 'text-decoration-line-through' : '' }}"/>
+        </xpath>
+    </t>
+</templates>

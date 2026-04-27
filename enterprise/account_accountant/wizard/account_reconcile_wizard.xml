@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_reconcile_wizard" model="ir.ui.view">
+        <field name="name">account.reconcile.wizard.form</field>
+        <field name="model">account.reconcile.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="company_id" invisible="1"/>
+                <field name="move_line_ids" invisible="1"/>
+                <field name="company_currency_id" invisible="1"/>
+                <field name="single_currency_mode" invisible="1"/>
+                <field name="is_write_off_required" invisible="1"/>
+                <field name="is_transfer_required" invisible="1"/>
+                <field name="display_allow_partials" invisible="1"/>
+                <field name="force_partials" invisible="1"/>
+                <field name="is_rec_pay_account" invisible="1"/>
+                <field name="edit_mode" invisible="1"/>
+                <field name="reco_model_autocomplete_ids" invisible="1"/>
+
+                <!-- Warnings -->
+                <div class="alert alert-warning" role="alert" invisible="not is_transfer_required">
+                    <field name="transfer_warning_message"/>
+                </div>
+                <div class="alert alert-warning" role="alert" invisible="not lock_date_violated_warning_message">
+                    <field name="lock_date_violated_warning_message"/>
+                </div>
+                <div class="alert alert-warning" role="alert" invisible="not force_partials">
+                    <p>Only partial reconciliation is possible. Proceed in multiple steps if you want to full reconcile.</p>
+                </div>
+
+                <!-- Reco models -->
+                <field name="reco_model_id" nolabel="1"
+                       domain="[['id', 'in', reco_model_autocomplete_ids]]"
+                       widget="selection_badge"
+                       options="{'horizontal': true}"
+                       invisible="not reco_model_autocomplete_ids and not reco_model_id"/>
+
+                <group>
+                    <!-- Left side of the form -->
+                    <group>
+                        <field name="allow_partials" invisible="not display_allow_partials" readonly="force_partials"/>
+                        <field name="account_id"
+                               required="not allow_partials or edit_mode"
+                               invisible="allow_partials and not edit_mode"/>
+                        <field name="to_partner_id"
+                               required="not allow_partials or edit_mode"
+                               invisible="not is_rec_pay_account or (allow_partials and not edit_mode)"/>
+                        <field name="tax_id"
+                               context="{'append_type_to_tax_name': True}"
+                               invisible="allow_partials and not edit_mode"/>
+                        <field name="journal_id"
+                               required="not allow_partials or edit_mode"
+                               invisible="allow_partials and not edit_mode"/>
+                        <field name="label"
+                               required="not allow_partials or edit_mode"
+                               invisible="allow_partials and not edit_mode"/>
+                    </group>
+                    <!-- Right side of the form-->
+                    <group invisible="allow_partials and not edit_mode">
+                        <div class="o_td_label">
+                            <label for="amount_currency"
+                                   string="Amount"
+                                   class="o_form_label"
+                                   invisible="edit_mode"/>
+                            <label for="edit_mode_amount_currency"
+                                   string="Amount"
+                                   class="o_form_label"
+                                   invisible="not edit_mode"/>
+                        </div>
+                        <div class="d-flex">
+                            <div name="regular_mode_amounts" invisible="edit_mode">
+                                <div name="amount_div" class="d-flex o-row" style="white-space: pre;">
+                                    <div name="amount_currency_div" class="d-flex o-row">
+                                        <field name="amount_currency"
+                                               required="not allow_partials and not edit_mode"
+                                               options="{'no_symbol': True}"
+                                               class="oe_inline"/>
+                                        <span class="oe_inline o_form_label mx-3"
+                                              invisible="reco_currency_id == company_currency_id"> in </span>
+                                        <field name="reco_currency_id"
+                                               invisible="reco_currency_id == company_currency_id"
+                                               class="oe_inline"/>
+                                    </div>
+                                    <div name="amount_company_div"
+                                         class="d-flex o-row"
+                                         invisible="reco_currency_id == company_currency_id">
+                                        <span> (</span>
+                                        <field name="amount" widget="float"/>
+                                        <span> </span>
+                                        <field name="company_currency_id" nolabel="1"/>
+                                        <span>)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div name="edit_mode_amounts" invisible="not edit_mode">
+                                <field name="edit_mode_amount_currency"
+                                       required="edit_mode"
+                                       options="{'no_symbol': True}"
+                                       class="oe_inline"/>
+                                <span class="oe_inline o_form_label mx-3"
+                                      invisible="single_currency_mode"> in </span>
+                                <field name="reco_currency_id"
+                                       invisible="single_currency_mode"
+                                       class="oe_inline"/>
+                            </div>
+                        </div>
+                        <field name="date" required="not allow_partials or edit_mode"/>
+                        <field name="to_check"/>
+                    </group>
+                </group>
+
+                <footer>
+                    <button string="Reconcile" class="btn-primary" name="reconcile" type="object" data-hotkey="q"/>
+                    <button string="Reconcile &amp; open" class="btn-primary" name="reconcile_open" type="object" data-hotkey="o"/>
+                    <button string="Discard" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

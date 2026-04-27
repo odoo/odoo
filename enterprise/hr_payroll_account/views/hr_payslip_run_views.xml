@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payslip_run_view_form" model="ir.ui.view">
+        <field name="name">hr.payslip.run.inherit.form</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" name="action_open_move" type="object" icon="fa-dollar"
+                        invisible="not move_id" groups="account.group_account_readonly">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text" invisible="move_state != 'draft'">Journal Entry <br/>(Draft)</span>
+                        <span class="o_stat_text" invisible="move_state != 'posted'">Journal Entry <br/>(Posted)</span>
+                        <span class="o_stat_text" invisible="move_state != 'cancel'">Journal Entry <br/>(Canceled)</span>
+                    </div>
+                </button>
+            </div>
+            <xpath expr="//button[@name='action_validate']" position="replace">
+                <button name="action_validate" type="object" string="Create Draft Entry" invisible="state != 'verify'" class="oe_highlight" context="{'payslip_generate_pdf': True}" confirm="Are you sure you want to proceed?"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

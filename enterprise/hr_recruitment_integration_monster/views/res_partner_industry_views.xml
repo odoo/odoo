@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_industry_view_form" model="ir.ui.view">
+        <field name="name">Industry.view.form.inherit.hr.recruitment.integration.monster</field>
+        <field name="model">res.partner.industry</field>
+        <field name="inherit_id" ref="base.res_partner_industry_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='full_name']" position="after">
+                <field name="monster_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

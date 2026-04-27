@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_knowledge.Topbar" t-inherit="knowledge.KnowledgeTopbar" t-inherit-mode="extension">
+        <xpath expr="//a[@t-ref='sharePanel_button']/i[hasclass('o_knowledge_share_panel_icon')]" position="replace">
+            <i t-if="props.record.data.website_published" class="fa fa-fw fs-6 fa-globe text-success me-1"/>
+            <i t-else="" class="fa fa-fw fs-6 fa-share-alt me-1"/>
+        </xpath>
+    </t>
+</templates>

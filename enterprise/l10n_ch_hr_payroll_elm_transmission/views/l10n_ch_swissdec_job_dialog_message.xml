@@ -1,0 +1,56 @@
+<odoo>
+    <record id="view_elm_dialog_message_form" model="ir.ui.view">
+        <field name="name">l10n.ch.dialog.message.form</field>
+        <field name="model">l10n.ch.dialog.message</field>
+        <field name="arch" type="xml">
+            <form string="Dialog Message" create="0" delete="0">
+                <sheet>
+                    <group>
+                        <field name="swissdec_creation"/>
+                        <field name="swissdec_story_id"/>
+                        <field name="swissdec_Title"/>
+                        <field name="swissdec_Description" invisible="not swissdec_Description"/>
+                        <field name="status" invisible="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Message">
+                            <field name="dialog_field_ids" widget="dialog_message">
+                                <list limit="2000" create="0" delete="0">
+                                    <field name="field_type"/>
+                                    <field name="swissdec_label"/>
+                                    <field name="swissdec_value_type"/>
+                                    <field name="swissdec_value"/>
+                                    <field name="swissdec_answer_value_type"/>
+                                    <field name="swissdec_answer_optional"/>
+                                    <field name="swissdec_answer_value_String"/>
+                                    <field name="swissdec_answer_value_Integer"/>
+                                    <field name="swissdec_answer_value_Double"/>
+                                    <field name="swissdec_answer_value_Boolean"/>
+                                    <field name="swissdec_answer_value_Date"/>
+                                    <field name="swissdec_answer_value_DateTime"/>
+                                    <field name="swissdec_answer_value_YesNoUnknown"/>
+                                    <field name="swissdec_answer_value_Amount"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            <footer>
+                <button string="Save" special="save" class="btn btn-primary"/>
+            </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_elm_dialog_message_tree" model="ir.ui.view">
+        <field name="name">l10n.ch.dialog.message.tree</field>
+        <field name="model">l10n.ch.dialog.message</field>
+        <field name="arch" type="xml">
+            <list string="Dialog Message" create="0" delete="0">
+                <field name="swissdec_Title"/>
+                <field name="swissdec_creation"/>
+                <field name="swissdec_story_id"/>
+            </list>
+        </field>
+    </record>
+</odoo>

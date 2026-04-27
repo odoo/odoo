@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="product_template_form_view_rental" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.rental</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <page name="sales" position="after">
+                <page string="Rental prices" name="pricing" invisible="not rent_ok">
+                    <group>
+                        <group name="pricing" string="Pricing">
+                            <field name="product_pricing_ids" nolabel="1">
+                                <list editable="bottom">
+                                    <control>
+                                        <create name="add_product_pricing" string="Add a price"/>
+                                    </control>
+                                    <field name="product_variant_ids"
+                                        widget="many2many_tags"
+                                        groups="product.group_product_variant"
+                                        domain="[('product_tmpl_id', '=', parent.id)]"
+                                        column_invisible="parent.product_variant_count &lt; 2"/>
+                                    <field name="recurrence_id" string="Period"/>
+                                    <field name="pricelist_id" groups="product.group_product_pricelist"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="price"/>
+                                </list>
+                            </field>
+                        </group>
+                        <group string="Reservations" name="extra_rental" invisible="not rent_ok">
+                            <field name="extra_hourly" widget="monetary"/>
+                            <field name="extra_daily" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                </page>
+            </page>
+            <xpath expr="//div[@name='options']" position='inside'>
+                <span class="d-inline-flex">
+                    <field name="rent_ok"/>
+                    <label for="rent_ok"/>
+                </span>
+            </xpath>
+            <xpath expr="//notebook/page[@name='sales']" position="attributes">
+                <attribute name="invisible" add="not rent_ok" separator=" and "/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_tree_view" model="ir.ui.view">
+        <field name="name">product.template.product.list.inherit.rental</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="list_price" position="after">
+                <field name="display_price"/>
+            </field>
+            <field name="list_price" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field name="standard_price" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="rental_product_template_search_view" model="ir.ui.view">
+        <field name="name">product.template.search.inherit.rental</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <filter name="filter_to_purchase" position="after">
+                <filter string="Rental" name="filter_to_rent" domain="[('rent_ok', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="rental_product_template_action" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">product.template</field>
+        <field name="path">rental-products</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{
+            'default_sale_ok': False,
+            'default_rent_ok': True,
+            'default_type': 'consu',
+            'default_purchase_ok': False,
+            'search_default_filter_to_rent': True,
+        }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new rental product!
+            </p>
+            <p>
+                You can also create additional products or services to sell by checking *Can be Sold* in the product form (e.g. insurance).
+            </p>
+        </field>
+    </record>
+
+    <record id="product_template_kanban_view" model="ir.ui.view">
+        <field name="name">product.template.product.kanban.inherit.rental</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_kanban_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="activity_state" position="after">
+                <field name="product_pricing_ids"/>
+            </field>
+            <field name="list_price" position="replace">
+                <t t-if="record.product_pricing_ids.value">
+                  <field name="display_price"/>
+                </t>
+                <t t-else="">
+                    <field name="list_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                </t>
+            </field>
+        </field>
+    </record>
+
+    <record id="rental_product_template_kanban" model="ir.actions.act_window.view">
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="product_template_kanban_view"/>
+        <field name="act_window_id" ref="rental_product_template_action"/>
+    </record>
+
+    <record id="rental_product_template_tree" model="ir.actions.act_window.view">
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="product_template_tree_view"/>
+        <field name="act_window_id" ref="rental_product_template_action"/>
+    </record>
+
+</odoo>

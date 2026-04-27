@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_partner_l10n_cl_edi_form" model="ir.ui.view">
+            <field name="model">res.partner</field>
+            <field name="name">view.partner.l10n.cl.edi.form</field>
+            <field name="inherit_id" ref="account.view_partner_property_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page name="dte" string="Electronic Invoicing" invisible="'CL' not in fiscal_country_codes">
+                        <group colspan="2">
+                            <field name="l10n_cl_dte_email" widget="email"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
+

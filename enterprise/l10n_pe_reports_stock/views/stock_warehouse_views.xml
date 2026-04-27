@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+        <record id="view_warehouse_inherit" model="ir.ui.view">
+            <field name="name">stock.warehouse.inherit</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+                <field name="code" position="after">
+                    <field name="country_code" invisible="1"/>
+                    <field name="l10n_pe_anexo_establishment_code" invisible="country_code != 'PE'"/>
+                </field>
+            </field>
+        </record>
+</odoo>

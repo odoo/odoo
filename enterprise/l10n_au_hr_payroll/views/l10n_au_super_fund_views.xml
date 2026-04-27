@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_au_super_fund_view_form" model="ir.ui.view">
+        <field name="name">l10n_au.super.fund.view.form</field>
+        <field name="model">l10n_au.super.fund</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="abn"/>
+                            <field name="address_id"/>
+                        </group>
+                        <group>
+                            <field name="fund_type"/>
+                            <field name="usi"
+                                invisible="fund_type != 'APRA'"
+                                required="fund_type == 'APRA'"/>
+                            <field name="esa"
+                                invisible="fund_type != 'SMSF'"
+                                required="fund_type == 'SMSF'"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_au_super_fund_view_tree" model="ir.ui.view">
+        <field name="name">l10n_au.super.fund.view.list</field>
+        <field name="model">l10n_au.super.fund</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="display_name"/>
+                <field name="address_id"/>
+                <field name="fund_type"/>
+                <field name="usi"/>
+                <field name="esa"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_au_super_fund_action" model="ir.actions.act_window">
+        <field name="name">Super Funds</field>
+        <field name="res_model">l10n_au.super.fund</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

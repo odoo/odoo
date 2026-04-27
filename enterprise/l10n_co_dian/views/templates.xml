@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="soap_request_dian">
+        <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:wcf="http://wcf.dian.colombia">
+            <soap:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+                <wsse:Security
+                xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+                    <wsu:Timestamp>
+                        <wsu:Created t-out="creation_time"/>
+                        <wsu:Expires t-out="expiration_time"/>
+                    </wsu:Timestamp>
+                    <wsse:BinarySecurityToken
+                        EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary"
+                        ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"
+                        t-att="{'wsu:Id': binary_security_token_id}"
+                        t-out="binary_security_token"/>
+                    <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                        <ds:SignedInfo>
+                            <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+                                <ec:InclusiveNamespaces PrefixList="wsa soap wcf" xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                            </ds:CanonicalizationMethod>
+                            <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+                            <ds:Reference t-attf-URI="##{wsa_node_id}">
+                                <ds:Transforms>
+                                    <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+                                        <ec:InclusiveNamespaces PrefixList="soap wcf" xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                                    </ds:Transform>
+                                </ds:Transforms>
+                                <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                                <ds:DigestValue/>
+                            </ds:Reference>
+                        </ds:SignedInfo>
+                        <ds:SignatureValue/>
+                        <ds:KeyInfo t-att-Id="key_info_id">
+                            <wsse:SecurityTokenReference>
+                                <wsse:Reference
+                                    t-attf-URI="##{binary_security_token_id}"
+                                    ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>
+                            </wsse:SecurityTokenReference>
+                        </ds:KeyInfo>
+                     </ds:Signature>
+                  </wsse:Security>
+                <wsa:Action t-out="action"/>
+                <wsa:To
+                    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                    t-att="{'wsu:Id': wsa_node_id}" t-translation="off">https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc</wsa:To>
+            </soap:Header>
+            <soap:Body>
+                <t t-call="{{soap_body_template}}"/>
+           </soap:Body>
+        </soap:Envelope>
+    </template>
+
+    <template id="send_test_set_async">
+        <wcf:SendTestSetAsync xmlns:wcf="http://wcf.dian.colombia">
+            <wcf:fileName t-out="file_name"/>
+            <wcf:contentFile t-out="content_file"/>
+            <wcf:testSetId t-out="test_set_id"/>
+        </wcf:SendTestSetAsync>
+    </template>
+
+    <template id="send_bill_sync">
+        <wcf:SendBillSync xmlns:wcf="http://wcf.dian.colombia">
+            <wcf:fileName t-out="file_name"/>
+            <wcf:contentFile t-out="content_file"/>
+        </wcf:SendBillSync>
+    </template>
+
+    <template id="get_status_zip">
+        <wcf:GetStatusZip xmlns:wcf="http://wcf.dian.colombia">
+            <wcf:trackId t-out="track_id"/>
+        </wcf:GetStatusZip>
+    </template>
+
+    <template id="get_numbering_range">
+        <wcf:GetNumberingRange xmlns:wcf="http://wcf.dian.colombia">
+            <wcf:accountCode t-out="account_code"/>
+            <wcf:accountCodeT t-out="account_code_t"/>
+            <wcf:softwareCode t-out="software_code"/>
+        </wcf:GetNumberingRange>
+    </template>
+
+    <template id="get_status">
+        <wcf:GetStatus xmlns:wcf="http://wcf.dian.colombia">
+            <wcf:trackId t-out="track_id"/>
+        </wcf:GetStatus>
+    </template>
+
+    <template id="get_acquirer">
+        <wcf:GetAcquirer xmlns:wcf="http://wcf.dian.colombia">
+            <wcf:identificationType t-out="identification_type"/>
+            <wcf:identificationNumber t-out="identification_number"/>
+        </wcf:GetAcquirer>
+    </template>
+
+    <template id="ubl_extension_dian">
+        <ext:UBLExtensions
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+            xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+            xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+            xmlns:sts="dummy"
+            xmlns:xades="http://uri.etsi.org/01903/v1.3.2#"
+            t-att="{'xmlns:sts': sts_namespace}">
+            <ext:UBLExtension>
+                <ext:ExtensionContent>
+                    <sts:DianExtensions>
+                        <sts:InvoiceControl>
+                            <sts:InvoiceAuthorization t-out="journal.l10n_co_edi_dian_authorization_number"/>
+                            <sts:AuthorizationPeriod>
+                                <cbc:StartDate t-out="journal.l10n_co_edi_dian_authorization_date"/>
+                                <cbc:EndDate t-out="journal.l10n_co_edi_dian_authorization_end_date"/>
+                            </sts:AuthorizationPeriod>
+                            <sts:AuthorizedInvoices>
+                                <sts:Prefix t-out="journal.code"/>
+                                <sts:From t-out="journal.l10n_co_edi_min_range_number"/>
+                                <sts:To t-out="journal.l10n_co_edi_max_range_number"/>
+                            </sts:AuthorizedInvoices>
+                        </sts:InvoiceControl>
+                        <sts:InvoiceSource>
+                            <cbc:IdentificationCode
+                                listAgencyID="6"
+                                listAgencyName="United Nations Economic Commission for Europe"
+                                listSchemeURI="urn:oasis:names:specification:ubl:codelist:gc:CountryIdentificationCode-2.1"
+                                t-translation="off">CO</cbc:IdentificationCode>
+                        </sts:InvoiceSource>
+                        <sts:SoftwareProvider>
+                            <sts:ProviderID
+                                schemeAgencyID="195"
+                                schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)"
+                                t-att-schemeID="provider_check_digit"
+                                schemeName="31"
+                                t-out="provider_id"/>
+                            <sts:SoftwareID
+                                schemeAgencyID="195"
+                                schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)"
+                                t-out="software_id"/>
+                        </sts:SoftwareProvider>
+                        <sts:SoftwareSecurityCode
+                            schemeAgencyID="195"
+                            schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)"
+                            t-out="software_security_code"/>
+                        <sts:AuthorizationProvider>
+                            <sts:AuthorizationProviderID
+                                schemeAgencyID="195"
+                                schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)"
+                                schemeID="4"
+                                schemeName="31"
+                                t-translation="off">800197268</sts:AuthorizationProviderID> <!-- p.116, "Anexo-Tecnico-Resolucion[...].pdf" (Resolución No. 000012) -->
+                        </sts:AuthorizationProvider>
+                        <sts:QRCode t-out="qr_code_val"/>
+                    </sts:DianExtensions>
+                </ext:ExtensionContent>
+            </ext:UBLExtension>
+            <ext:UBLExtension>
+                <ext:ExtensionContent>
+                    <ds:Signature t-att-Id="document_id">
+                        <ds:SignedInfo>
+                            <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+                            <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+                            <ds:Reference t-attf-Id="#{document_id}-ref0" URI="">
+                                <ds:Transforms>
+                                    <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                                </ds:Transforms>
+                                <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                                <ds:DigestValue/>
+                            </ds:Reference>
+                            <ds:Reference t-attf-URI="##{key_info_id}">
+                                <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                                <ds:DigestValue/>
+                            </ds:Reference>
+                            <ds:Reference Type="http://uri.etsi.org/01903#SignedProperties"
+                                  t-attf-URI="##{document_id}-signedprops">
+                                <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                                <ds:DigestValue/>
+                            </ds:Reference>
+                        </ds:SignedInfo>
+                        <ds:SignatureValue t-attf-Id="#{document_id}-sigvalue"
+                               t-out="signature_value"/>
+                        <ds:KeyInfo t-att-Id="key_info_id">
+                            <ds:X509Data>
+                                <ds:X509Certificate t-out="x509_certificate"/>
+                            </ds:X509Data>
+                        </ds:KeyInfo>
+                        <ds:Object>
+                            <xades:QualifyingProperties t-attf-Target="##{document_id}">
+                                <xades:SignedProperties t-attf-Id="#{document_id}-signedprops">
+                                    <xades:SignedSignatureProperties>
+                                        <xades:SigningTime t-out="signing_time"/>
+                                        <xades:SigningCertificate>
+                                            <xades:Cert t-foreach="x509_certificates" t-as="cert">
+                                                <xades:CertDigest>
+                                                    <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                                                    <ds:DigestValue t-out="sigcertif_digest"/>
+                                                </xades:CertDigest>
+                                                <xades:IssuerSerial>
+                                                    <ds:X509IssuerName t-out="cert['x509_issuer_description']"/>
+                                                    <ds:X509SerialNumber t-out="cert['x509_serial_number']"/>
+                                                </xades:IssuerSerial>
+                                            </xades:Cert>
+                                        </xades:SigningCertificate>
+                                        <xades:SignaturePolicyIdentifier>
+                                            <xades:SignaturePolicyId>
+                                                <xades:SigPolicyId>
+                                                    <xades:Identifier t-translation="off">https:/facturaelectronica.dian.gov.co/politicadefirma/v2/politicadefirmav2.pdf</xades:Identifier>
+                                                    <xades:Description t-translation="off">Política de firma para facturas electrónicas de la República de Colombia.</xades:Description>
+                                                </xades:SigPolicyId>
+                                                <xades:SigPolicyHash>
+                                                    <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                                                    <ds:DigestValue t-translation="off">dMoMvtcG5aIzgYo0tIsSQeVJBDnUnfSOfBpxXrmor0Y=</ds:DigestValue>
+                                                </xades:SigPolicyHash>
+                                            </xades:SignaturePolicyId>
+                                        </xades:SignaturePolicyIdentifier>
+                                        <xades:SignerRole>
+                                            <xades:ClaimedRoles>
+                                                <xades:ClaimedRole t-out="claimed_role"/>
+                                            </xades:ClaimedRoles>
+                                        </xades:SignerRole>
+                                    </xades:SignedSignatureProperties>
+                                </xades:SignedProperties>
+                            </xades:QualifyingProperties>
+                        </ds:Object>
+                    </ds:Signature>
+                </ext:ExtensionContent>
+            </ext:UBLExtension>
+        </ext:UBLExtensions>
+    </template>
+
+    <template id="attached_document">
+        <AttachedDocument xmlns="urn:oasis:names:specification:ubl:schema:xsd:AttachedDocument-2"
+            xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+            xmlns:ccts="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModule:2"
+            xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+            xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+            xmlns:xades="http://uri.etsi.org/01903/v1.3.2#"
+            xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#">
+            <cbc:UBLVersionID>UBL 2.1</cbc:UBLVersionID>
+            <cbc:CustomizationID>Documentos adjuntos</cbc:CustomizationID>
+            <cbc:ProfileID>DIAN 2.1</cbc:ProfileID>
+            <cbc:ProfileExecutionID t-out="profile_execution_id"/>
+            <cbc:ID t-out="id"/>
+            <cbc:UUID
+                t-att="uuid_attrs"
+                t-out="uuid"/>
+            <cbc:IssueDate t-out="issue_date"/>
+            <cbc:IssueTime t-out="issue_time"/>
+            <cbc:DocumentType t-out="document_type"/>
+            <cbc:ParentDocumentID t-out="parent_document_id"/>
+            <cac:SenderParty/>
+            <cac:ReceiverParty/>
+            <cac:Attachment>
+                <cac:ExternalReference>
+                    <cbc:MimeCode>text/xml</cbc:MimeCode>
+                    <cbc:EncodingCode>UTF-8</cbc:EncodingCode>
+                    <cbc:Description>dummy</cbc:Description> <!-- initial xml representing the move sent to DIAN -->
+                </cac:ExternalReference>
+            </cac:Attachment>
+            <cac:ParentDocumentLineReference>
+                <cbc:LineID>1</cbc:LineID>
+                <cac:DocumentReference>
+                    <cbc:ID t-out="parent_document.get('id')"/>
+                    <cbc:UUID
+                        t-att="parent_document.get('uuid_attrs')"
+                        t-out="parent_document.get('uuid')"/>
+                    <cbc:IssueDate t-out="parent_document.get('issue_date')"/>
+                    <cbc:DocumentType>ApplicationResponse</cbc:DocumentType>
+                    <cac:Attachment>
+                        <cac:ExternalReference>
+                            <cbc:MimeCode>text/xml</cbc:MimeCode>
+                            <cbc:EncodingCode>UTF-8</cbc:EncodingCode>
+                            <cbc:Description>dummy</cbc:Description> <!-- result from GetStatus, node 'XmlBase64Bytes' -->
+                        </cac:ExternalReference>
+                    </cac:Attachment>
+                    <cac:ResultOfVerification>
+                        <cbc:ValidatorID>Unidad Especial Dirección de Impuestos y Aduanas Nacionales</cbc:ValidatorID>
+                        <cbc:ValidationResultCode t-out="parent_document.get('response_code')"/>
+                        <cbc:ValidationDate t-out="parent_document.get('validation_date')"/>
+                        <cbc:ValidationTime t-out="parent_document.get('validation_time')"/>
+                    </cac:ResultOfVerification>
+                </cac:DocumentReference>
+            </cac:ParentDocumentLineReference>
+        </AttachedDocument>
+    </template>
+
+    <template id="ubl_20_Invoice_dian" inherit_id="account_edi_ubl_cii.ubl_20_Invoice" primary="True">
+        <xpath expr="//*[local-name()='Invoice']" position="replace">
+            <Invoice
+                xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+                xmlns:sts="dian:gov:co:facturaelectronica:Structures-2-1"
+                xmlns:xades="http://uri.etsi.org/01903/v1.3.2#"
+                xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2     http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-Invoice-2.1.xsd">
+                <t t-call="{{InvoiceType_template}}"/>
+            </Invoice>
+        </xpath>
+    </template>
+
+    <template id="ubl_20_CreditNote_dian" inherit_id="account_edi_ubl_cii.ubl_20_CreditNote" primary="True">
+        <xpath expr="//*[local-name()='CreditNote']" position="replace">
+            <CreditNote
+                xmlns="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+                xmlns:xades="http://uri.etsi.org/01903/v1.3.2#"
+                xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2    http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-CreditNote-2.1.xsd"
+                t-att="{'xmlns:sts': sts_namespace}">
+                <t t-call="{{CreditNoteType_template}}"/>
+            </CreditNote>
+        </xpath>
+    </template>
+
+    <template id="ubl_20_DebitNote_dian" inherit_id="account_edi_ubl_cii.ubl_20_DebitNote" primary="True">
+        <xpath expr="//*[local-name()='DebitNote']" position="replace">
+            <DebitNote
+                xmlns="urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+                xmlns:sts="http://www.dian.gov.co/contratos/facturaelectronica/v1/Structures"
+                xmlns:xades="http://uri.etsi.org/01903/v1.3.2#"
+                xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2    http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-DebitNote-2.1.xsd">
+                <t t-call="{{DebitNoteType_template}}"/>
+            </DebitNote>
+        </xpath>
+    </template>
+
+    <template id="get_xml_by_document_key">
+        <wcf:GetXmlByDocumentKey xmlns:wcf="http://wcf.dian.colombia">
+            <wcf:trackId t-out="track_id"/>
+        </wcf:GetXmlByDocumentKey>
+    </template>
+</odoo>

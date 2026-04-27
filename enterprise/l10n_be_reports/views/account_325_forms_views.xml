@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="form_325_view_tree" model="ir.ui.view">
+            <field name="name">l10n_be.form.325.view.list</field>
+            <field name="model">l10n_be.form.325</field>
+            <field name="arch" type="xml">
+                <list string="325 Forms" create="0" js_class="account_325_form_tree">
+                    <field name="sender_id" readonly="state == 'generated'"/>
+                    <field name="debtor_id"/>
+                    <field name="reference_year" options="{'format': False}"/>
+                    <field name="is_test" readonly="state == 'generated'"/>
+                    <field name="sending_type" readonly="state == 'generated'"/>
+                    <field name="treatment_type" readonly="state == 'generated'"/>
+                    <field name="state"/>
+                    <field name="form_281_50_count"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="form_325_view_form" model="ir.ui.view">
+            <field name="name">l10n_be.form.325.view.form</field>
+            <field name="model">l10n_be.form.325</field>
+            <field name="arch" type="xml">
+                <form string="325 Form">
+                    <header>
+                        <button name="action_generate_281_50_form_xml"
+                                type="object"
+                                string="Generate 281.50 forms XML"
+                                class="btn-primary"/>
+                        <button name="action_generate_325_form_pdf"
+                                type="object"
+                                string="Generate 325 form PDF"
+                                invisible="state != 'generated'"
+                                class="btn-primary"/>
+                        <button name="action_generate_325_form_pdf"
+                                type="object"
+                                string="Generate 325 form PDF"
+                                invisible="state == 'generated'"
+                                class="btn-secondary"/>
+                        <button name="action_generate_281_50_form_pdf"
+                                type="object"
+                                string="Generate 281.50 forms PDF"
+                                class="btn-secondary"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <field name="form_281_50_count" invisible="1"/>
+                        <group>
+                            <group>
+                                <field name="sender_id" readonly="state == 'generated'"/>
+                                <field name="debtor_id"/>
+                                <field name="reference_year" options="{'format': False}"/>
+                            </group>
+                            <group>
+                                <field name="is_test" readonly="state == 'generated'"/>
+                                <field name="sending_type" readonly="state == 'generated'"/>
+                                <field name="treatment_type" readonly="state == 'generated'"/>
+                                <field name="form_281_50_total_amount"/>
+                            </group>
+                        </group>
+                        <field name="form_281_50_ids" nolabel="1" widget="one2many" mode="list" string="281.50 Forms" invisible="form_281_50_count == 0">
+                            <list create="0" delete="0" edit="1" editable="bottom">
+                                <field name="official_id"/>
+                                <field name="partner_name" readonly="state == 'generated'"/>
+                                <field name="commissions"/>
+                                <field name="fees"/>
+                                <field name="atn"/>
+                                <field name="exposed_expenses"/>
+                                <field name="total_remuneration"/>
+                                <field name="paid_amount"/>
+                                <button name="action_open_281_50_view_form" string="Open" type="object" class="btn-secondary"/>
+                                <field name="state" column_invisible="True"/>
+                            </list>
+                        </field>
+                    </sheet>
+                    <!-- Chatter -->
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id="form_281_50_view_form" model="ir.ui.view">
+            <field name="name">l10n_be.form.281.50.view.form</field>
+            <field name="model">l10n_be.form.281.50</field>
+            <field name="arch" type="xml">
+                <form string="281.50 Form">
+                    <header>
+                        <button name="action_download_281_50_individual_pdf" type="object" string="Download pdf" class="btn-primary"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="partner_name" readonly="state == 'generated'"/>
+                                <field name="partner_address" readonly="state == 'generated'"/>
+                                <field name="partner_zip" readonly="state == 'generated'"/>
+                                <field name="partner_city" readonly="state == 'generated'"/>
+                                <field name="country_id" readonly="state == 'generated'"/>
+                                <field name="partner_job_position" readonly="state == 'generated'"/>
+                                <field name="partner_bce_number" groups="base.group_no_one" readonly="state == 'generated'"/>
+                                <field name="partner_citizen_identification" groups="base.group_no_one" readonly="state == 'generated'"/>
+                            </group>
+                            <group>
+                                <field name="commissions"/>
+                                <field name="fees"/>
+                                <field name="atn"/>
+                                <field name="exposed_expenses"/>
+                                <field name="paid_amount"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <!-- Chatter -->
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_open_create_325_form">
+            <field name="name">Create 325 form</field>
+            <field name="res_model">l10n_be.form.325.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_open_325_tree_view">
+            <field name="name">325 forms</field>
+            <field name="res_model">l10n_be.form.325</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <menuitem
+            id="menu_action_open_325_tree_view"
+            name="Open 325 forms"
+            action="action_open_325_tree_view"
+            sequence="63"
+            groups="account.group_account_user"
+            parent="l10n_be.account_reports_be_statements_menu"/>
+    </data>
+</odoo>

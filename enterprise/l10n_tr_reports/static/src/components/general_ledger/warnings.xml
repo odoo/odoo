@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+
+    <t t-name="l10n_tr_reports.waiting_nilvera_status_warning">
+        <span>
+            There are 
+            <a type="button" t-on-click="(ev) => controller.reportAction(ev, 'action_view_waiting_nilvera_moves', warningParams)">
+                Invoice(s) 
+            </a>
+            that have not been sent or waiting for approval from Nilvera in this period.
+        </span>
+    </t>
+
+</templates>

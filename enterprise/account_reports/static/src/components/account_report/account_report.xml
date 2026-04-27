@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReport">
+        <t t-call="{{ env.template('AccountReport') }}"/>
+    </t>
+
+    <t t-name="account_reports.AccountReportCustomizable">
+        <div class="o_action account_report" t-att-class="cssCustomClass" t-ref="root">
+            <ControlPanel>
+                <!-- Buttons bar -->
+                <t t-set-slot="control-panel-create-button">
+                    <AccountReportButtonsBar/>
+                </t>
+                <t t-set-slot="control-panel-additional-actions">
+                    <AccountReportCogMenu/>
+                </t>
+
+                <!-- Search bar (if configured for report) and filters -->
+                <t t-set-slot="layout-actions">
+                   <div class="d-flex gap-1 flex-wrap">
+                       <t t-if="controller.options.search_bar">
+                           <AccountReportSearchBar initialQuery="initialQuery"/>
+                           <br/>
+                       </t>
+                       <t t-component="env.component('AccountReportFilters')"/>
+                   </div>
+                </t>
+            </ControlPanel>
+
+            <div class="o_content">
+                <!-- Sections -->
+                <t t-if="controller.options.sections.length">
+                    <div id="section_selector" class="section_selector">
+                        <t t-foreach="controller.options.sections" t-as="section" t-key="section_index">
+                            <button
+                                t-att-class="(controller.options.selected_section_id === section.id) ? 'btn btn-secondary' : 'btn btn-primary'"
+                                t-on-click="() => controller.switchToSection(section.id)"
+                                t-out="section.name"
+                            />
+                        </t>
+
+                        <t t-if="controller.options['has_inactive_sections']">
+                            <button class="btn btn-secondary" t-on-click="(ev) => controller.reportAction(ev, 'action_display_inactive_sections')" >+</button>
+                        </t>
+                    </div>
+                </t>
+
+                <!-- Warnings -->
+                <t t-if="controller.warnings">
+                    <div id="warnings" class="warnings d-print-none">
+                        <t t-foreach="controller.warnings" t-as="warningTemplateRef" t-key="warningTemplateRef">
+                            <t t-set="warningParams" t-value="controller.warnings[warningTemplateRef]"/>
+
+                            <div t-att-class="`alert alert-${warningParams['alert_type'] || 'info'} text-center`">
+                                <t t-call="{{ warningTemplateRef }}"/>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+
+                <t t-if="controller.lines.length">
+                    <!-- Table -->
+                    <div class="mx-auto fit-content w-print-100">
+                        <div class="d-flex align-items-start">
+                            <t t-foreach="controller.options['horizontal_split'] ? ['left', 'right'] : [null]" t-as="splitSide" t-key="splitSide">
+                                <table
+                                    class="table table-borderless table-hover w-print-100"
+                                    t-att-class="tableClasses"
+                                >
+                                    <t t-component="env.component('AccountReportHeader')"/>
+                                    <tbody>
+                                        <t t-foreach="controller.lines" t-as="line" t-key="line_index">
+                                            <t t-if="!splitSide || splitSide === (line.horizontal_split_side || 'left')">
+                                                <!--
+                                                    We filter lines directly in the template so that the indices passed to AccountReportLine component
+                                                    correspond to indices in the global lines list ; for genericity of the code.
+                                                -->
+                                                <t t-if="controller.areLinesOrdered()">
+                                                    <t t-set="orderedIndex" t-value="controller.linesOrder[line_index]"/>
+                                                    <t t-set="orderedLine" t-value="controller.lines[orderedIndex]"/>
+
+                                                    <t t-component="env.component('AccountReportLine')" t-props="{ lineIndex: orderedIndex, line: orderedLine }"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-component="env.component('AccountReportLine')" t-props="{ lineIndex: line_index, line: line }"/>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+                <t t-else="">
+                    <!-- No content -->
+                    <div class="o_view_nocontent">
+                        <div class="o_nocontent_help">
+                            <p class="o_view_nocontent_neutral_face">No data to display !</p>
+                            <p>There is no data to display for the given filters.</p>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

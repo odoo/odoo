@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="stock_barcode_picking_batch.KanbanRenderer" t-inherit-mode="extension" t-inherit="stock_barcode.KanbanRenderer">
+        <xpath expr="//div[hasclass('o_kanban_tip_filter')]" position="before">
+            <ul t-if="displayTransferProtip" class="o_stock_barcode_picking_tabs nav nav-tabs flex-nowrap overflow-x-auto overflow-y-hidden">
+                <li class="o_regular_picking nav-item flex-basis-50 text-nowrap text-center">
+                    <a class="nav-link fs-4" href="#" t-on-click="displayPickings"
+                       t-att-class="resModel == 'stock.picking' ? 'active fw-bold' : ''"
+                       t-attf-aria-current="{{resModel == 'stock.picking' &amp;&amp; 'page'}}">
+                        Transfers
+                        <span t-if="resModel != 'stock.picking'" t-out="otherRecordsCount"
+                              class="ms-2 badge rounded-pill text-bg-500"/>
+                    </a>
+                </li>
+                <li class="o_batch_picking nav-item flex-basis-50 text-nowrap text-center">
+                    <a class="nav-link fs-4" href="#" t-on-click="displayBatches"
+                       t-att-class="resModel == 'stock.picking.batch' ? 'active fw-bold' : ''"
+                       t-attf-aria-current="{{resModel == 'stock.picking.batch' &amp;&amp; 'page'}}">
+                        Batches
+                        <span t-if="resModel != 'stock.picking.batch'" t-out="otherRecordsCount"
+                              class="ms-2 badge rounded-pill text-bg-500"/>
+                    </a>
+                </li>
+            </ul>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,892 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_recruitment_integration_base
+#
+# Translators:
+# Martin Trigaux, 2024
+# Wil Odoo, 2024
+# Larissa Manderfeld, 2024
+# Felix Schubert <felix.schubert@go-erp.com>, 2025
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:47+0000\n"
+"PO-Revision-Date: 2025-09-01 21:20+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-18/"
+"hr_recruitment_integration_base/de/>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/models/hr_job_post.py:0
+msgid "%(job)s on %(platform)s"
+msgstr "%(job)s auf %(platform)s"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_kanban
+msgid "<span class=\"px-2\">-</span>"
+msgstr "<span class=\"px-2\">-</span>"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_kanban
+msgid ""
+"<span class=\"text-muted\" invisible=\"campaign_end_date\">No limit</span>"
+msgstr ""
+"<span class=\"text-muted\" invisible=\"campaign_end_date\">Ohne Begrenzung</"
+"span>"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_kanban
+msgid "<strong class=\"o_kanban_label_width\">From:</strong>"
+msgstr "<strong class=\"o_kanban_label_width\">Von:</strong>"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_kanban
+msgid "<strong class=\"o_kanban_label_width\">To:</strong>"
+msgstr "<strong class=\"o_kanban_label_width\">Bis:</strong>"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_form
+msgid "<strong class=\"px-2\">to</strong>"
+msgstr "<strong class=\"px-2\">bis</strong>"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_recruitment_post_job_wizard_view_form
+msgid "<strong>From</strong>"
+msgstr "<strong>Von</strong>"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_recruitment_post_job_wizard_view_form
+msgid "<strong>to</strong>"
+msgstr "<strong>bis</strong>"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__api_data
+msgid "API Data"
+msgstr "API-Daten"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__message_needaction
+msgid "Action Needed"
+msgstr "Aktion notwendig"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__activity_ids
+msgid "Activities"
+msgstr "Aktivitäten"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Aktivitätsausnahme-Dekoration"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__activity_state
+msgid "Activity State"
+msgstr "Status der Aktivität"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Symbol des Aktivitätstyps"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__apply_method
+msgid "Apply Method"
+msgstr "Methode anwenden"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__message_attachment_count
+msgid "Attachment Count"
+msgstr "Anzahl Anhänge"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.actions.server,name:hr_recruitment_integration_base.job_board_campaign_manager_start_ir_actions_server
+msgid "Automatic Job Posting on job boards"
+msgstr "Automatische Stellenanzeige auf Stellenportalen"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.actions.server,name:hr_recruitment_integration_base.job_board_campaign_manager_stop_ir_actions_server
+msgid "Automatic job posting deleting on job boards"
+msgstr "Automatische Löschung von Stellenanzeigen auf Stellenportalen"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__avatar_1920
+msgid "Avatar"
+msgstr "Avatar"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__avatar_1024
+msgid "Avatar 1024"
+msgstr "Avatar 1024"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__avatar_128
+msgid "Avatar 128"
+msgstr "Avatar 128"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__avatar_256
+msgid "Avatar 256"
+msgstr "Avatar 256"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__avatar_512
+msgid "Avatar 512"
+msgstr "Avatar 512"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields.selection,name:hr_recruitment_integration_base.selection__hr_job__payment_interval__biweekly
+msgid "Bi-Week"
+msgstr "Zweiwöchentlich"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_form
+msgid "Campaign Duration"
+msgstr "Kampagnendauer"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__campaign_end_date
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__campaign_end_date
+msgid "Campaign End Date"
+msgstr "Enddatum der Kampagne"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/models/hr_job_post.py:0
+msgid "Campaign End Date:"
+msgstr "Enddatum der Kampagne:"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__campaign_start_date
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__campaign_start_date
+msgid "Campaign Start Date"
+msgstr "Startdatum der Kampagne"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/models/hr_job_post.py:0
+msgid "Campaign Start Date:"
+msgstr "Startdatum der Kampagne:"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/wizard/hr_recruitment_post.py:0
+msgid "Campaign start date can't be after campaign end date"
+msgstr "Das Startdatum der Kampagne darf nicht nach ihrem Enddatum liegen"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/wizard/hr_recruitment_post.py:0
+msgid "Campaign will start on %(start_date)s"
+msgstr "Die Kampagne startet am %(start_date)s"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/wizard/hr_recruitment_post.py:0
+msgid "Can't postpone posts that are already posted"
+msgstr "Sie können Beiträge, die bereits gepostet wurden, nicht verschieben"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_recruitment_post_job_wizard_view_form
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__company_id
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__company_id
+msgid "Company"
+msgstr "Unternehmen"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/models/hr_job_post.py:0
+msgid "Company:"
+msgstr "Unternehmen:"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__apply_method
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_kanban_search
+msgid "Contact Method"
+msgstr "Kontaktform"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/models/hr_job_post.py:0
+msgid "Contact Method:"
+msgstr "Kontaktform:"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__apply_vector
+msgid "Contact Point"
+msgstr "Kontaktperson"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/models/hr_job_post.py:0
+msgid "Contact Point:"
+msgstr "Kontaktperson:"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__create_uid
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__create_uid
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__create_uid
+msgid "Created by"
+msgstr "Erstellt von"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__create_date
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__create_date
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__create_date
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job__currency_id
+msgid "Currency"
+msgstr "Währung"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__api_data
+msgid "Data"
+msgstr "Daten"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields.selection,name:hr_recruitment_integration_base.selection__hr_job__payment_interval__daily
+msgid "Day"
+msgstr "Tag"
+
+#. module: hr_recruitment_integration_base
+#. odoo-javascript
+#: code:addons/hr_recruitment_integration_base/static/src/views/form/job_post_no_save_controller.js:0
+msgid "Delete"
+msgstr "Löschen"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields.selection,name:hr_recruitment_integration_base.selection__hr_job_post__status__deleted
+msgid "Deleted"
+msgstr "Gelöscht"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_recruitment_post_job_wizard_view_form
+msgid "Description"
+msgstr "Beschreibung"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.actions.server,name:hr_recruitment_integration_base.hr_job_post_double_check_action
+msgid "Double Check Job Post"
+msgstr "Doppelte Prüfung von Stellenanzeigen"
+
+#. module: hr_recruitment_integration_base
+#. odoo-javascript
+#: code:addons/hr_recruitment_integration_base/static/src/views/form/job_post_no_save_controller.js:0
+msgid "Duplicate"
+msgstr "Duplizieren"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__job_apply_mail
+#: model:ir.model.fields.selection,name:hr_recruitment_integration_base.selection__hr_job_post__apply_method__email
+msgid "Email"
+msgstr "E-Mail"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_kanban_search
+msgid "Expiration date"
+msgstr "Ablaufdatum"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields.selection,name:hr_recruitment_integration_base.selection__hr_job_post__status__expired
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_kanban_search
+msgid "Expired"
+msgstr "Abgelaufen"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields.selection,name:hr_recruitment_integration_base.selection__hr_job_post__status__failure
+msgid "Failure"
+msgstr "Fehlschlag"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__message_follower_ids
+msgid "Followers"
+msgstr "Follower"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Follower (Partner)"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_job_post__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "FontAwesome-Icon, z. B. fa-tasks"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_kanban_search
+msgid "Group By"
+msgstr "Gruppieren nach"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__has_message
+msgid "Has Message"
+msgstr "Hat eine Nachricht"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields.selection,name:hr_recruitment_integration_base.selection__hr_job__payment_interval__hourly
+msgid "Hour"
+msgstr "Stunde"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__id
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__id
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__activity_exception_icon
+msgid "Icon"
+msgstr "Icon"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_job_post__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Icon, um eine Ausnahmeaktivität anzuzeigen."
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_job_post__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Falls markiert, erfordern neue Nachrichten Ihre Aufmerksamkeit."
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_job_post__message_has_error
+#: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_job_post__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Falls markiert, weisen einige Nachrichten einen Zustellungsfehler auf."
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__image_1920
+msgid "Image"
+msgstr "Bild"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__image_1024
+msgid "Image 1024"
+msgstr "Bild 1024"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__image_128
+msgid "Image 128"
+msgstr "Bild 128"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__image_256
+msgid "Image 256"
+msgstr "Bild 256"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__image_512
+msgid "Image 512"
+msgstr "Bild 512"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__message_is_follower
+msgid "Is Follower"
+msgstr "Ist Follower"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_kanban_search
+msgid "Issue"
+msgstr "Problem"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__job_id
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__job_id
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_kanban_search
+msgid "Job"
+msgstr "Stelle"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__platform_ids
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.view_hr_job_form
+msgid "Job Board"
+msgstr "Stellenportal"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.view_hr_job_kanban
+msgid "Job Board Posts"
+msgstr "Anzeigen auf Stellenportalen"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.view_hr_job_form
+msgid "Job Boards"
+msgstr "Stellenbörsen"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.actions.act_window,name:hr_recruitment_integration_base.action_open_hr_job_post
+#: model:ir.ui.menu,name:hr_recruitment_integration_base.menu_hr_job_boards
+msgid "Job Boards Posts"
+msgstr "Anzeigen auf Stellenportalen"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model,name:hr_recruitment_integration_base.model_hr_job
+msgid "Job Position"
+msgstr "Stelle"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model,name:hr_recruitment_integration_base.model_hr_job_post
+msgid "Job Post"
+msgstr "Stellenanzeige"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/models/hr_job_post.py:0
+msgid "Job Post on %(platform)s has been %(mode)s"
+msgstr "Stellenanzeige auf %(platform)s wurde %(mode)s"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/models/hr_job_post.py:0
+msgid "Job Post on %(platform)s has been modified"
+msgstr "Stellenanzeige auf %(platform)s wurde bearbeitet"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/wizard/hr_recruitment_post.py:0
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job__job_post_ids
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__post_ids
+msgid "Job Posts"
+msgstr "Stellenanzeige"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/models/hr_job_post.py:0
+msgid "Job:"
+msgstr "Job:"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__write_uid
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__write_uid
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert von"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__write_date
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__write_date
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__write_date
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job__salary_max
+msgid "Maximum Salary"
+msgstr "Höchstgehalt"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__message_has_error
+msgid "Message Delivery error"
+msgstr "Nachricht mit Zustellungsfehler"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__message_ids
+msgid "Messages"
+msgstr "Nachrichten"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job__salary_min
+msgid "Minimum Salary"
+msgstr "Mindestgehalt"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields.selection,name:hr_recruitment_integration_base.selection__hr_job__payment_interval__monthly
+msgid "Month"
+msgstr "Monat"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Frist für meine Aktivitäten"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__name
+msgid "Name"
+msgstr "Name"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Nächstes Aktivitätskalenderereignis"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Nächste Aktivitätsfrist"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__activity_summary
+msgid "Next Activity Summary"
+msgstr "Zusammenfassung der nächsten Aktivität"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__activity_type_id
+msgid "Next Activity Type"
+msgstr "Nächster Aktivitätstyp"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/models/hr_recruitment_platform.py:0
+msgid "No API call defined for this platform please contact the administrator"
+msgstr ""
+"Für diese Plattform wurde kein API-Aufruf definiert. Bitte wenden Sie sich "
+"an den Administrator."
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/models/hr_job_post.py:0
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_recruitment_post_job_wizard_view_form
+msgid "No Limit"
+msgstr "Unbegrenzt"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Anzahl der Aktionen"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job__job_post_count
+msgid "Number of Job Posts"
+msgstr "Anzahl Stellenanzeigen"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__message_has_error_counter
+msgid "Number of errors"
+msgstr "Anzahl der Fehler"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_job_post__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_job_post__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Anzahl der Nachrichten mit Zustellungsfehler."
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields.selection,name:hr_recruitment_integration_base.selection__hr_job_post__status__pending
+msgid "Pending"
+msgstr "Ausstehend"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__platform_id
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_kanban_search
+msgid "Platform"
+msgstr "Plattform"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__post_html
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__post_html
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_recruitment_post_job_wizard_view_form
+msgid "Post"
+msgstr "Beitrag"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model,name:hr_recruitment_integration_base.model_hr_recruitment_post_job_wizard
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_recruitment_post_job_wizard_view_form
+msgid "Post Job"
+msgstr "Stelle veröffentlichen"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_list
+msgid "Post Now"
+msgstr "Jetzt posten"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.view_hr_job_form
+msgid "Posts"
+msgstr "Beiträge"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__price_to_delete
+msgid "Price to Delete"
+msgstr "Zu löschender Preis"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__price_to_get
+msgid "Price to Get"
+msgstr "Zu erhaltender Preis"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__price_to_publish
+msgid "Price to Publish"
+msgstr "Zu veröffentlichender Preis"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__price_to_update
+msgid "Price to Update"
+msgstr "Zu aktualisierender Preis"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.view_hr_job_form
+msgid "Publish on Job Board"
+msgstr "Auf Stellenportal veröffentlichen"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/models/hr_job.py:0
+msgid "Publish on a Job Board"
+msgstr "Auf einem Stellenportal veröffentlichen"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_kanban_search
+msgid "Published"
+msgstr "Veröffentlicht"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__rating_ids
+msgid "Ratings"
+msgstr "Bewertungen"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__recruiter_id
+msgid "Recruiter"
+msgstr "Personalvermittler"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model,name:hr_recruitment_integration_base.model_hr_recruitment_platform
+msgid "Recruitment Platform"
+msgstr "Stellenbörse"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__activity_user_id
+msgid "Responsible User"
+msgstr "Verantwortlicher Benutzer"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/models/hr_job_post.py:0
+msgid "Reuse Job Post"
+msgstr "Stellenanzeige wiederverwenden"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS-Zustellungsfehler"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.view_hr_job_form
+msgid "Salary Range"
+msgstr "Gehaltsspanne"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job__payment_interval
+msgid "Salary Time Unit"
+msgstr "Zeiteinheit des Gehalts"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields.selection,name:hr_recruitment_integration_base.selection__hr_recruitment_post_job_wizard__apply_method__email
+msgid "Send an Email"
+msgstr "E-Mail senden"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_list
+msgid "Start Date"
+msgstr "Startdatum"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__status
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_kanban_search
+msgid "Status"
+msgstr "Status"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__status_message
+msgid "Status Message"
+msgstr "Statusmeldung"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/models/hr_job_post.py:0
+msgid "Status Message:"
+msgstr "Statusmeldung"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_job_post__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status basierend auf Aktivitäten\n"
+"Überfällig: Fälligkeitsdatum bereits überschritten\n"
+"Heute: Aktivitätsdatum ist heute\n"
+"Geplant: anstehende Aktivitäten."
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/models/hr_job_post.py:0
+msgid "Status:"
+msgstr "Status:"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_list
+msgid "Stop Campaigns"
+msgstr "Kampagne anhalten"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_list
+msgid "Stop Date"
+msgstr "Enddatum"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields.selection,name:hr_recruitment_integration_base.selection__hr_job_post__status__success
+msgid "Success"
+msgstr "Erfolgreich"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_job_post__recruiter_id
+msgid ""
+"The Recruiter will be the default value for all Applicants Recruiter's field "
+"in this job position. The Recruiter is automatically added to all meetings "
+"with the Applicant."
+msgstr ""
+"Der Personalvermitler ist der Standardwert für alle Bewerber, die das Feld "
+"Personalvermittler in dieser Stelle verwenden. Der Personalvermittler wird "
+"automatisch zu allen Treffen mit dem Bewerber hinzugefügt."
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_job_post__campaign_end_date
+#: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__campaign_end_date
+msgid ""
+"The date when the campaign will end. If not set, the campaign will run "
+"indefinitely or to the maximum allowed by a platform."
+msgstr ""
+"Das Datum, an dem die Kampagne endet. Wenn kein Datum festgelegt wird, läuft "
+"die Kampagne auf unbestimmte Zeit oder bis zum maximalem Datum, das von "
+"einer Plattform erlaubt wird."
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_job_post__campaign_start_date
+#: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_recruitment_post_job_wizard__campaign_start_date
+msgid "The date when the campaign will start."
+msgstr "Das Datum, an dem die Kampagne beginnt."
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_job_post__apply_vector
+msgid "The email address, phone number, url to send applications to."
+msgstr ""
+"E-Mail-Adresse, Telefonnummer, URL, an die Bewerbungen gesendet werden "
+"können."
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/models/hr_job_post.py:0
+msgid ""
+"This action will update the job post on the platform. This action will cost %"
+"(price)s credits. Do you want to continue?"
+msgstr ""
+"Durch diese Aktion wird die Stellenanzeige auf der Plattform aktualisiert. "
+"Diese Aktion kostet %(price)s Guthaben. Möchten Sie fortfahren?"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_job_post__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Typ der Ausnahmeaktivität im Datensatz."
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/models/hr_job_post.py:0
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_form
+msgid "Update"
+msgstr "Aktualisieren"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields.selection,name:hr_recruitment_integration_base.selection__hr_job_post__status__warning
+msgid "Warning"
+msgstr "Warnung"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_recruitment_platform__website
+msgid "Website"
+msgstr "Website"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job_post__website_message_ids
+msgid "Website Messages"
+msgstr "Website-Nachrichten"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,help:hr_recruitment_integration_base.field_hr_job_post__website_message_ids
+msgid "Website communication history"
+msgstr "Website-Kommunikationsverlauf"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields.selection,name:hr_recruitment_integration_base.selection__hr_job__payment_interval__weekly
+msgid "Week"
+msgstr "Woche"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields,field_description:hr_recruitment_integration_base.field_hr_job__schedule_id
+msgid "Working Schedule"
+msgstr "Arbeitsplan"
+
+#. module: hr_recruitment_integration_base
+#: model:ir.model.fields.selection,name:hr_recruitment_integration_base.selection__hr_job__payment_interval__yearly
+msgid "Year"
+msgstr "Jahr"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/models/hr_job_post.py:0
+msgid "created"
+msgstr "erstellt"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/models/hr_recruitment_platform.py:0
+msgid "failure"
+msgstr "Fehler"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.view_hr_job_form
+msgid "per"
+msgstr "pro"
+
+#. module: hr_recruitment_integration_base
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_integration_base.hr_job_post_view_kanban
+msgid "plateform icon"
+msgstr "Plattformsymbol"
+
+#. module: hr_recruitment_integration_base
+#. odoo-python
+#: code:addons/hr_recruitment_integration_base/wizard/hr_recruitment_post.py:0
+msgid "updated"
+msgstr "aktualisiert"
+
+#~ msgid ""
+#~ "The Recruiter will be the default value for all Applicants in this "
+#~ "job             position. The Recruiter is automatically added to all "
+#~ "meetings with the Applicant."
+#~ msgstr ""
+#~ "Der Personalvermitler ist der Standardwert für alle Bewerber in dieser "
+#~ "Stelle verwenden. Der Personalvermittler wird automatisch zu allen "
+#~ "Treffen mit dem Bewerber hinzugefügt."

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_parameter_monthly_taxable_max" model="hr.rule.parameter">
+        <field name="name">Slovakia: Maximum monthly assessment base</field>
+        <field name="code">l10n_sk_monthly_taxable_max</field>
+        <field name="country_id" ref="base.sk"/>
+    </record>
+    <record id="rule_parameter_monthly_taxable_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">8477</field>
+        <field name="rule_parameter_id" ref="rule_parameter_monthly_taxable_max"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_income_tax_threshold" model="hr.rule.parameter">
+        <field name="name">Slovakia: Income Tax Threshold</field>
+        <field name="code">l10n_sk_income_tax_threshold</field>
+        <field name="country_id" ref="base.sk"/>
+    </record>
+    <record id="rule_parameter_income_tax_threshold_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">41445.46</field>
+        <field name="rule_parameter_id" ref="rule_parameter_income_tax_threshold"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+</odoo>

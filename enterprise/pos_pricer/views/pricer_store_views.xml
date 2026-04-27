@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List View -->
+    <record id="pricer_pricer_store_view_list" model="ir.ui.view">
+        <field name="name">pricer_store.list</field>
+        <field name="model">pricer.store</field>
+        <field name="arch" type="xml">
+            <list string="Pricer Store">
+                <header>
+                    <!-- Button used to manually update the necessary pricer tags -->
+                    <!-- The update is only applied to the selected pricer stores -->
+                    <!-- Only visible to point of sale manager -->
+                    <button
+                        name="action_button_update_pricer_tags"
+                        string="Update tags"
+                        type="object"
+                        class="oe_highlight"
+                        groups="point_of_sale.group_pos_manager"
+                        context="{'update_all': False}"
+                    />
+                    <!-- Button used to manually update ALL the pricer tags -->
+                    <!-- The update is only applied to the selected pricer stores -->
+                    <!-- Only visible in debug mode-->
+                    <button
+                        name="action_button_update_pricer_tags"
+                        string="Update all tags"
+                        type="object"
+                        class="oe_highlight"
+                        groups="base.group_no_one"
+                        context="{'update_all': True}"
+                    />
+                </header>
+                <field name="name"/>
+                <field name="pricer_tenant_name"/>
+                <field name="pricer_login"/>
+                <field name="pricer_password" password="True"/>
+                <field name="pricer_store_identifier"/>
+                <field name="pricer_tag_ids" widget="many2many_tags"/>
+
+                <!-- Last Update Time and status only visible on List View -->
+                <field name="last_update_datetime"/>
+                <field name="last_update_status_message"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="pricer_pricer_store_form_view" model="ir.ui.view">
+        <field name="name">pricer_store.form</field>
+        <field name="model">pricer.store</field>
+        <field name="arch" type="xml">
+            <form string="Pricer Store" js_class="pricer_quick_pairing_form">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="pricer_tenant_name"/>
+                        <field name="pricer_login"/>
+                        <field name="pricer_password" password="True"/>
+                        <field name="pricer_store_identifier"/>
+                        <field name="pricer_tag_ids" widget="many2many_tags" readonly="1"/>
+                    </group>
+                </sheet>
+                <sheet invisible="not id">
+                    <group string="Quick pairing">
+                        <group>
+                            <field name="dummy_prod_barcode"/>
+                        </group>
+                        <group>
+                            <field name="dummy_tag_barcode"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Menu Actions -->
+    <record model="ir.actions.act_window" id="action_open_pricer_stores">
+        <field name="name">Pricer Stores</field>
+        <field name="res_model">pricer.store</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

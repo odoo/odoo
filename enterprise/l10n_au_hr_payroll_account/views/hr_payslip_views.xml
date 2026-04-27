@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_hr_payslip_form" model="ir.ui.view">
+        <field name="name">hr.payslip.form.inherit.l10n_au_hr_payroll</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <button name="action_register_payment" position="attributes">
+                <attribute name="invisible" add="country_code == 'AU' and l10n_au_stp_status != 'sent'" separator=" or "/>
+            </button>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="has_superstream" invisible="1"/>
+                <button type="object" class="oe_stat_button" id="open_superstream"
+                    icon="fa-dollar" name="action_open_superstream" invisible="not has_superstream">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">
+                            Super Contributions
+                        </span>
+                    </div>
+                </button>
+                <button type="object" class="oe_stat_button" id="open_payslip_stp"
+                        icon="fa-check" name="action_open_payslip_stp"
+                        invisible="l10n_au_stp_status in ['draft'] or country_code != 'AU'"
+                >
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">STP Submission</span>
+                        <span class="o_stat_value"><field name="l10n_au_stp_count"/></span>
+                    </div>
+                </button>
+            </xpath>
+            <button name="action_payslip_paid" position="attributes">
+                <attribute name="invisible" separator=" or " add="(l10n_au_stp_status != 'sent' and country_code == 'AU')"/>
+            </button>
+            <button name="action_payslip_paid" position="after">
+                <button name="action_open_payslip_stp" string="Submit to ATO" type="object" class="btn-primary" invisible="l10n_au_stp_status in ['draft', 'sent'] or country_code != 'AU'"/>
+            </button>
+            <button name="action_payslip_payment_report" position="attributes">
+                <attribute name="invisible" separator=" or " add="(l10n_au_stp_status != 'sent' and state != 'paid' and country_code == 'AU')"/>
+            </button>
+            <field name="struct_id" position="after">
+                <field name="l10n_au_stp_status" readonly="1" groups="base.group_no_one"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_hr_payslip_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.view.list.inherit</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_tree"/>
+        <field name="arch" type="xml">
+            <list position="inside">
+                <field name="l10n_au_stp_status" optional="hide" widget="badge"
+                    decoration-success="l10n_au_stp_status == 'sent'"
+                    decoration-info="l10n_au_stp_status == 'ready'"
+                    decoration-warning="l10n_au_stp_status == 'error'" />
+                <field name="l10n_au_finalised" optional="hide" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hr_payslip_filter" model="ir.ui.view">
+        <field name="name">hr.payslip.view.search.inherit</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_filter"/>
+        <field name="arch" type="xml">
+            <filter name="final_pay" position="after">
+                <filter name="finalised" string="Finalised" domain="[('l10n_au_finalised', '=', True)]"/>
+                <filter name="not_finalised" string="Yet to be finalised" domain="[('l10n_au_finalised', '=', False)]"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>

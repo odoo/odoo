@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="base.group_user" model="res.groups">
+            <!-- We need to activate product variants needed to use pricer -->
+            <field name="implied_ids" eval="[(4, ref('product.group_product_variant'))]"/>
+            <!-- We want to activate pricelists to allow pricer PROMOs -->
+            <field name="implied_ids" eval="[(4, ref('product.group_product_pricelist'))]"/>
+        </record>
+    </data>
+</odoo>

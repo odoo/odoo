@@ -1,0 +1,36 @@
+<odoo noupdate='1'>
+    <record id="hdfc_bank_selection" model="enet.bank.template">
+        <field name="name">HDFC</field>
+        <field name="image_1920" type="base64" file="l10n_in_enet_batch_payment/static/img/hdfc_logo.png"></field>
+        <field name="bank_configuration" eval="[
+            {'field_name': 'payment_method_line_id.display_name', 'label': 'Transaction Type', 'sequence': 1},
+            {'label': 'Beneficiary Code', 'sequence': 2},
+            {'field_name': 'partner_bank_id.acc_number', 'label': 'Beneficiary Account Number', 'sequence': 3},
+            {'field_name': 'amount', 'label': 'Amount', 'sequence': 4},
+            {'field_name': 'partner_id.name', 'label': 'Beneficiary Name', 'sequence': 5},
+            {'label': 'Drawee Location', 'sequence': 6},
+            {'label': 'DD Printing Location', 'sequence': 7},
+            {'label': 'Beneficiary Address 1', 'sequence': 8},
+            {'label': 'Beneficiary Address 2', 'sequence': 9},
+            {'label': 'Beneficiary Address 3', 'sequence': 10},
+            {'label': 'Beneficiary Address 4', 'sequence': 11},
+            {'label': 'Beneficiary Address 5', 'sequence': 12},
+            {'label': 'Instruction Reference Number', 'sequence': 13},
+            {'field_name': 'name', 'label': 'Customer Reference Number', 'sequence': 13},
+            {'label': 'Payment Details 1', 'sequence': 14},
+            {'label': 'Payment Details 2', 'sequence': 15},
+            {'label': 'Payment Details 3', 'sequence': 16},
+            {'label': 'Payment Details 4', 'sequence': 17},
+            {'label': 'Payment Details 5', 'sequence': 18},
+            {'label': 'Payment Details 6', 'sequence': 19},
+            {'label': 'Payment Details 7', 'sequence': 20},
+            {'label': 'Cheque Number', 'sequence': 21},
+            {'field_name': 'date', 'label': 'Value Date', 'sequence': 22},
+            {'label': 'MICR Number', 'sequence': 23},
+            {'field_name': 'partner_bank_id.bank_bic', 'label': 'IFSC Code', 'sequence': 24},
+            {'field_name': 'partner_bank_id.bank_name', 'label': 'Beneficiary Bank Name', 'sequence': 25},
+            {'label': 'Beneficiary Bank Branch Name', 'sequence': 26},
+            {'field_name': 'partner_id.email', 'label': 'Beneficiary Email Id', 'sequence': 27},
+        ]"/>
+    </record>
+</odoo>

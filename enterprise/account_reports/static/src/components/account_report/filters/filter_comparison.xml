@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="account_reports.AccountReportComparisonPeriod">
+        <div t-att-class="(controller.options.comparison.filter !== filter) ? 'invisible' : ''">
+            <input
+                min="1"
+                type="number"
+                t-att-value="controller.options.comparison.number_period"
+                t-on-change="(ev) => this.setNumberPeriods(ev)"
+            />
+            <label>
+                <t t-out="periodLabel"/>
+            </label>
+        </div>
+    </t>
+
+    <t t-name="account_reports.AccountReportFilterComparison">
+        <Dropdown
+            menuClass="'account_report_filter comparison'"
+            navigationOptions="dropdownProps"
+        >
+            <button class="btn btn-secondary">
+                <i class="fa fa-percent me-1"/>
+                <span>Comparison</span>
+                <t t-if="controller.options.comparison.string">
+                    <span>: </span>
+                    <t t-if="controller.options.comparison.filter === 'previous_period'">
+                        <t t-if="controller.options.comparison.number_period === 1">
+                            <span>Previous Period</span>
+                        </t>
+                        <t t-elif="controller.options.comparison.number_period > 1">
+                            <t t-esc="`${ controller.options.comparison.number_period } `"/>
+                            <span>Previous Periods</span>
+                        </t>
+                    </t>
+                    <t t-elif="controller.options.comparison.filter === 'same_last_year'">
+                        <t t-if="controller.options.comparison.number_period === 1">
+                            <span>Previous Year</span>
+                        </t>
+                        <t t-elif="controller.options.comparison.number_period > 1">
+                            <t t-esc="`${ controller.options.comparison.number_period } `"/>
+                            <span>Previous Years</span>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <t t-esc="`${ controller.options.comparison.string }`"/>
+                    </t>
+                </t>
+            </button>
+
+            <t t-set-slot="content">
+                <DropdownItem
+                    class="{ 'selected': (controller.options.comparison.filter === 'no_comparison') }"
+                    onSelected="() => this.filterClicked({ optionKey: 'comparison.filter', optionValue: 'no_comparison', reload: true})"
+                    closingMode="'none'"
+                >
+                    No Comparison
+                </DropdownItem>
+
+                <DropdownItem
+                    class="{ 'selected': controller.options.comparison.filter === 'previous_period', 'dropdown-item': true, 'period': true }"
+                    onSelected="() => this.filterClicked({ optionKey: 'comparison.filter', optionValue: 'previous_period', reload: true})"
+                    closingMode="'none'"
+                >
+                    <label class="d-flex align-items-center">
+                        Previous Period
+                    </label>
+
+                    <t t-call="account_reports.AccountReportComparisonPeriod">
+                        <t t-set="filter" t-value="'previous_period'"/>
+                    </t>
+                </DropdownItem>
+
+                <DropdownItem
+                    class="{ 'selected': controller.options.comparison.filter === 'same_last_year', 'dropdown-item': true, 'period': true }"
+                    attrs="{ 'name': 'filter_comparison_same_period_last_year' }"
+                    onSelected="() => this.filterClicked({ optionKey: 'comparison.filter', optionValue: 'same_last_year', reload: true})"
+                    closingMode="'none'"
+                >
+                    <label class="d-flex align-items-center">
+                        Same Period Last Year
+                    </label>
+
+                    <t t-call="account_reports.AccountReportComparisonPeriod">
+                        <t t-set="filter" t-value="'same_last_year'"/>
+                    </t>
+                </DropdownItem>
+
+                <t t-if="controller.options.date.mode === 'range'">
+                    <DropdownItem
+                        class="{ 'selected': controller.options.comparison.filter === 'custom', 'dropdown-item': true, 'date': true }"
+                        attrs="{ 'name': 'filter_comparison_custom' }"
+                        onSelected="() => this.filterClicked({ optionKey: 'comparison.filter', optionValue: 'custom'})"
+                        closingMode="'none'"
+                    >
+                        <label class="d-flex align-items-center">
+                            Custom Dates
+                        </label>
+
+                        <div class="d-flex flex-row"
+                             t-att-class="(controller.options.comparison.filter !== 'custom') ? 'invisible' : ''">
+                            <DateTimeInput
+                                type="'date'"
+                                value="dateFrom('comparison')"
+                                onChange="(dateFrom) => this.setDateFrom('comparison', dateFrom)"
+                            />
+                            <label class="d-flex align-items-center">
+                                to
+                            </label>
+                            <DateTimeInput
+                                type="'date'"
+                                value="dateTo('comparison')"
+                                onChange="(dateTo) => this.setDateTo('comparison', dateTo)"
+                            />
+                        </div>
+                    </DropdownItem>
+                </t>
+
+                <t t-if="controller.options.date.mode === 'single'">
+                    <DropdownItem
+                        class="{ 'selected': controller.options.comparison.filter === 'custom', 'dropdown-item': true, 'date': true }"
+                        onSelected="() => this.filterClicked({ optionKey: 'comparison.filter', optionValue: 'custom'})"
+                        closingMode="'none'"
+                    >
+                        <label class="d-flex align-items-center">
+                            Specific Date
+                        </label>
+
+                        <div t-att-class="(controller.options.comparison.filter !== 'custom') ? 'invisible' : ''">
+                            <DateTimeInput
+                                type="'date'"
+                                value="dateTo('comparison')"
+                                onChange="(dateTo) => this.setDateTo('comparison', dateTo)"
+                            />
+                        </div>
+                    </DropdownItem>
+                </t>
+
+                <div class="dropdown-divider"/>
+
+                <div class="dropdown-item period order">
+                    <label class="d-flex align-items-center pe-none">
+                        Period order
+                    </label>
+
+                    <div>
+                        <select name="select_order"
+                                class="o_input pe-3"
+                                t-on-change="(ev) => this.filterClicked({ optionKey: 'comparison.period_order', optionValue: ev.target.value, reload: true})">
+                            <option t-foreach="availablePeriodOrder"
+                                    t-as="order"
+                                    t-key="order_index"
+                                    t-att-value="order"
+                                    t-att-selected="availablePeriodOrder[order] === periodOrder"
+                                    t-out="availablePeriodOrder[order]"
+                            />
+                        </select>
+                    </div>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

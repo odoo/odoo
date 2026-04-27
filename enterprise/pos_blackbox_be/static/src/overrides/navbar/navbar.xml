@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="NavbarPosL10nBe" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-centerheader')]" position="inside">
+            <t t-if="pos.uiState === 'READY'">
+                <t t-if="pos.useBlackBoxBe()">
+                    <table style="display: inline-table;margin-left: 5px;">
+                        <tr>
+                            <td>
+                                POS version: <t t-esc="env.pos.session._server_version.server_serie"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Serial number: <t t-esc="env.pos.config.certified_blackbox_identifier"/>
+                            </td>
+                        </tr>
+                    </table>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//DropdownItem[contains(text(), 'Create Product')]" position="before">
+            <DropdownItem t-if="pos.useBlackBoxBe()" onSelected="() => this.clock()">
+                <t t-esc="this.workButtonName"/>
+            </DropdownItem>
+        </xpath>
+    </t>
+</templates>

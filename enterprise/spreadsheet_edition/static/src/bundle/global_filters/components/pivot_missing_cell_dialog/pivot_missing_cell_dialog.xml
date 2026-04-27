@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+  <t t-name="spreadsheet_edition.PivotMissingCellDialog">
+    <Dialog title.translate="Insert a pivot cell">
+      <PivotHTMLRenderer
+        pivotId="props.pivotId"
+        onCellClicked="props.onCellClicked"
+      />
+      <t t-set-slot="footer">
+        <button class="btn btn-secondary" t-on-click="props.close">Close</button>
+      </t>
+    </Dialog>
+  </t>
+
+</templates>

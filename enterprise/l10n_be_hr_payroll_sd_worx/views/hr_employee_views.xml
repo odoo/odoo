@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_form_l10n_be_hr_payroll_sd_worx" model="ir.ui.view">
+        <field name="name">hr.employee.inherit.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="l10n_be_hr_payroll.hr_employee_form__l10n_be_view_for"/>
+        <field name="priority">40</field>
+        <field name="arch" type="xml">
+            <page name="hr_settings" position="inside">
+                <group string="SD Worx" invisible="company_country_code != 'BE'">
+                    <group>
+                        <field name="sdworx_code"/>
+                    </group>
+                </group>
+            </page>
+        </field>
+    </record>
+</odoo>

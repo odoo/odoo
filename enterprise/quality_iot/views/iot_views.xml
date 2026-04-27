@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="iot_device_view_form_inherit" model="ir.ui.view">
+        <field name="name">iot.device.view.form.inherit</field>
+        <field name="model">iot.device</field>
+        <field name="inherit_id" ref="iot.iot_device_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='type']" position="after">
+                <field name="qcp_test_type" invisible="1"/>
+            </xpath>
+            <xpath expr="//page[@name='reports']" position="before">
+                <page string="Quality Control Points" name="quality_control_points">
+                    <field name="quality_point_ids" widget="many2many" domain="[('test_type', '=', qcp_test_type)]">
+                        <list>
+                            <field name="name"/>
+                            <field name="title"/>
+                            <field name="product_ids" widget="many2many_tags"/>
+                            <field name="picking_type_ids" widget="many2many_tags"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="quality_point_view_form_inherit_quality_control_iot" model="ir.ui.view">
+        <field name="name">quality.point.view.form.inherit.iot.quality.control</field>
+        <field name="model">quality.point</field>
+        <field name="inherit_id" ref="quality.quality_point_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='test_type']" position="after">
+                <field name="device_id" invisible="test_type not in ['picture', 'measure', 'print_label']" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="quality_point_view_tree" model="ir.ui.view">
+        <field name="name">quality.point.view.list.inherit.quality.iot</field>
+        <field name="model">quality.point</field>
+        <field name="inherit_id" ref="quality.quality_point_view_tree"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='test_type_id']" position="before">
+                <field name="device_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

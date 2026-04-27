@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="plan_manager" model="sale.commission.plan">
+            <field name="name">Manager Achievement</field>
+            <field name="date_from" eval="DateTime.today() - relativedelta(years=1, day=1, month=1)"/>
+            <field name="date_to" eval="DateTime.today() + relativedelta(day=31, month=12)"/>
+            <field name="type">achieve</field>
+            <field name="user_type">team</field>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="state">approved</field>
+        </record>
+
+        <record id="plan_manager_user" model="sale.commission.plan.user">
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="date_from" eval="DateTime.today() - relativedelta(years=1, day=1, month=1)"/>
+            <field name="date_to" eval="DateTime.today() + relativedelta(day=31, month=12)"/>
+            <field name="plan_id" ref="plan_manager"/>
+        </record>
+
+        <record id="plan_user" model="sale.commission.plan">
+            <field name="name">Salesperson Targets</field>
+            <field name="date_from" eval="DateTime.today() - relativedelta(years=1, day=1, month=1)"/>
+            <field name="date_to" eval="DateTime.today() + relativedelta(day=31, month=12)"/>
+            <field name="commission_amount">1500</field>
+            <field name="type">target</field>
+            <field name="state">approved</field>
+            <field name="achievement_ids" eval="False"/>
+        </record>
+
+        <record id="plan_user_user" model="sale.commission.plan.user">
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="date_from" eval="DateTime.today() - relativedelta(years=1, day=1, month=1)"/>
+            <field name="date_to" eval="DateTime.today() + relativedelta(day=31, month=12)"/>
+            <field name="plan_id" ref="plan_user"/>
+        </record>
+
+        <function model="sale.commission.plan" name="_compute_targets">
+            <value eval="[ref('plan_user')]"/>
+            <value>45000</value>
+        </function>
+
+        <record id="plan_user_achievement" model="sale.commission.plan.achievement">
+            <field name="type">amount_invoiced</field>
+            <field name="rate">1</field>
+            <field name="plan_id" ref="plan_user"/>
+        </record>
+
+        <record id="plan_user_target_commission_1" model="sale.commission.plan.target.commission">
+            <field name="target_rate">0</field>
+            <field name="amount">0</field>
+            <field name="plan_id" ref="plan_user"/>
+        </record>
+
+        <record id="plan_user_target_commission_2" model="sale.commission.plan.target.commission">
+            <field name="target_rate">0.5</field>
+            <field name="amount">0</field>
+            <field name="plan_id" ref="plan_user"/>
+        </record>
+
+        <record id="plan_user_target_commission_3" model="sale.commission.plan.target.commission">
+            <field name="target_rate">1</field>
+            <field name="amount">1500</field>
+            <field name="amount_rate">1</field>
+            <field name="plan_id" ref="plan_user"/>
+        </record>
+
+        <record id="plan_user_target_commission_4" model="sale.commission.plan.target.commission">
+            <field name="target_rate">1.5</field>
+            <field name="amount">3000</field>
+            <field name="amount_rate">2</field>
+            <field name="plan_id" ref="plan_user"/>
+        </record>
+
+        <record id="plan_user_target_commission_5" model="sale.commission.plan.target.commission">
+            <field name="target_rate">2</field>
+            <field name="amount">6000</field>
+            <field name="amount_rate">4</field>
+            <field name="plan_id" ref="plan_user"/>
+        </record>
+
+        <record id="plan_user_target_commission_6" model="sale.commission.plan.target.commission">
+            <field name="target_rate">3</field>
+            <field name="amount">13500</field>
+            <field name="amount_rate">9</field>
+            <field name="plan_id" ref="plan_user"/>
+        </record>
+    </data>
+</odoo>

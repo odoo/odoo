@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+
+    <!-- DHL Product Packagings -->
+    <record id="dhl_packaging_FLY" model="stock.package.type">
+        <field name="name">DHL Flyer/Smalls</field>
+        <field name="shipper_package_code">FLY</field>
+        <field name="package_carrier_type">dhl_rest</field>
+        <field name="max_weight">0.23</field>
+    </record>
+    <record id="dhl_packaging_COY" model="stock.package.type">
+        <field name="name">DHL Parcels/Conveyables</field>
+        <field name="shipper_package_code">COY</field>
+        <field name="package_carrier_type">dhl_rest</field>
+        <field name="max_weight">31.5</field>
+    </record>
+    <record id="dhl_packaging_NCY" model="stock.package.type">
+        <field name="name">DHL Non-conveyables</field>
+        <field name="shipper_package_code">NCY</field>
+        <field name="package_carrier_type">dhl_rest</field>
+    </record>
+    <record id="dhl_packaging_PAL" model="stock.package.type">
+        <field name="name">DHL Pallets</field>
+        <field name="shipper_package_code">PAL</field>
+        <field name="height">1600</field>
+        <field name="width">1200</field>
+        <field name="packaging_length">1200</field>
+        <field name="package_carrier_type">dhl_rest</field>
+        <field name="max_weight">1000</field>
+    </record>
+    <record id="dhl_packaging_DBL" model="stock.package.type">
+        <field name="name">DHL Double Pallets</field>
+        <field name="shipper_package_code">DBL</field>
+        <field name="package_carrier_type">dhl_rest</field>
+        <field name="max_weight">1000</field>
+    </record>
+    <record id="dhl_packaging_BOX" model="stock.package.type">
+        <field name="name">DHL Box</field>
+        <field name="shipper_package_code">BOX</field>
+        <field name="height">40</field>
+        <field name="width">44</field>
+        <field name="packaging_length">54</field>
+        <field name="package_carrier_type">dhl_rest</field>
+        <field name="max_weight">70</field>
+    </record>
+
+    <!-- DHL Commercial Invoice Sequence -->
+    <record id="dhl_commercial_invoice_seq" model="ir.sequence">
+        <field name="name">DHL Commercial Invoice</field>
+        <field name="code">delivery_dhl_rest.commercial_invoice</field>
+        <field name="prefix">CI</field>
+        <field name="padding">5</field>
+    </record>
+
+</data>
+</odoo>

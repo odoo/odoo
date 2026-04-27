@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="view_account_reconcile_model_widget_wizard" model="ir.ui.view">
+        <field name="name">account.reconcile.model.form</field>
+        <field name="model">account.reconcile.model</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="oe_title">
+                    <label for="name"/>
+                    <h1><field name="name" placeholder="e.g. Bank Fees"/></h1>
+                </div>
+
+                <group>
+                    <group>
+                        <field name="to_check"/>
+                    </group>
+                </group>
+
+                <group string="Counterpart Values">
+                    <field name="line_ids" nolabel="1">
+                        <list editable="bottom">
+                            <field name="account_id"/>
+                            <field name="amount_type"/>
+                            <field name="amount_string"/>
+                            <field name="tax_ids" widget="many2many_tags"/>
+                            <field name="analytic_distribution" widget="analytic_distribution"
+                                   groups="analytic.group_analytic_accounting"
+                                   options="{'account_field': 'account_id', 'business_domain': 'general'}"/>
+                            <field name="show_force_tax_included" column_invisible="True"/>
+                            <field name="force_tax_included" invisible="not show_force_tax_included" widget="boolean_toggle"/>
+                            <field name="company_id" column_invisible="True"/>
+                            <field name="label"/>
+                        </list>
+                    </field>
+                </group>
+
+                <footer>
+                    <button string="Validate" class="btn-primary" special="save" data-hotkey="q"/>
+                    <button string="Cancel" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

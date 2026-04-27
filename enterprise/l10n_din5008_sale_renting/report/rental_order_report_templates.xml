@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <template id="report_rental_order" inherit_id="sale_renting.report_rental_order">
+            <xpath expr="//t/t" position="before">
+                <t t-set="docs" t-value="docs.with_context(pickup_receipt=True)"/>
+            </xpath>
+        </template>
+
+        <template id="report_rental_order_document" inherit_id="sale_renting.report_rental_order_document">
+            <xpath expr="//t[@t-set='address']" position="after">
+                <t t-set="din5008_document_title">
+                    <span t-if="doc and doc._name == 'sale.order'">
+                        <t t-if="doc.state not in {'draft', 'sent'} and doc.env.context.get('pickup_receipt') and not doc.env.context.get('proforma')">Pickup Receipt</t>
+                        <t t-elif="doc.env.context.get('proforma')">Pro Forma Invoice</t>
+                        <t t-elif="doc.state in {'draft', 'sent'}">Quotation</t>
+                        <t t-else="">Sales Order</t>
+                    </span>
+                </t>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

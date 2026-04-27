@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_employee_form_account" model="ir.ui.view">
+            <field name="name">hr.employee.view.form.inherit.mrp.workorder.hr</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='identification_group']" position='attributes'>
+                    <attribute name="string">Attendance/Point of Sale/Manufacturing</attribute>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_employee_tree_workorder">
+            <field name="name">mrp_workorder.hr_employee.list</field>
+            <field name="model">hr.employee</field>
+            <field name="priority" eval="100"/>
+            <field name="arch" type="xml">
+                <list multi_edit="0" create="0" js_class="mrp_employee_tree">
+                    <field name="id" column_invisible="1"/>
+                    <field name="avatar_128" widget="image" class="o_avatar o_m2o_avatar" groups="hr.group_hr_user"/>
+                    <field name="name" readonly="1"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="mrp_view_employee_filter" model="ir.ui.view">
+            <field name="name">mrp_workorder.employee.search</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <search string="Employees">
+                    <field name="name" string="Employee" filter_domain="['|', ('work_email', 'ilike', self), ('name', 'ilike', self)]"/>
+                    <separator/>
+                    <filter name="my_team" string="My Team" domain="[('parent_id.user_id', '=', uid)]"/>
+                    <filter name="my_department" string="My Department" domain="[('member_of_department', '=', True)]"/>
+                    <separator/>
+                    <filter name="newly_hired" string="Newly Hired" domain="[('newly_hired', '=', True)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+    </data>
+</odoo>

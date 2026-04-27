@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="sign.PublicSignerDialog">
+        <Dialog t-props="dialogProps">
+            <div class="mb-3 row">
+                    <label for="o_sign_public_signer_name_input" class="col-lg-3 col-form-label">Your name</label>
+                    <div class="col-lg-9">
+                        <input type="text" t-ref="name" id="o_sign_public_signer_name_input" placeholder="Your name" class="form-control" t-att-value="props.name"/>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="o_sign_public_signer_mail_input" class="col-lg-3 col-form-label">Your email</label>
+                    <div class="col-lg-9">
+                        <input type="email" t-ref="mail" id="o_sign_public_signer_mail_input" placeholder="Your email" class="form-control" t-att-value="props.mail"/>
+                    </div>
+                </div>
+
+                <t t-set-slot="footer">
+                    <button class="btn btn-primary" t-on-click="submit">Validate &amp; Send</button>
+                    <button class="btn btn-link" t-on-click="props.close">Cancel</button>
+                </t>
+        </Dialog>
+    </t>
+</templates>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_urban_piper_enhancements.TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension">
+        <xpath expr="//OrderWidget" position="before">
+            <div t-if="getSelectedOrder()?.delivery_datetime and !isOrderSynced" class="py-2 px-3 rounded-3 bg-info text-center text-white">
+                <i class="fa fa-clock-o pe-1" aria-hidden="true"/>This order is scheduled order. <t t-esc="getSelectedOrder()?.deliveryTime"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

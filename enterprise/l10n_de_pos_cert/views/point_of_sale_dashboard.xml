@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_config_kanban" model="ir.ui.view">
+        <field name="name">pos.config.kanban.view.fiskaly</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates" position="before">
+                <field name="is_company_country_germany"/>
+                <field name="l10n_de_fiskaly_tss_id"/>
+            </xpath>
+            <xpath expr="//div[@name='card_title']" position="inside">
+                <div t-if="record.is_company_country_germany.raw_value &amp; !record.l10n_de_fiskaly_tss_id.raw_value" class="badge text-bg-info d-inline-block" title="In order to use it in a production environment, create a TSS in your POS settings.">
+                    Test
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_helpdesk_ticket_graph_analysis" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.report.analysis.inherited</field>
+        <field name="model">helpdesk.ticket.report.analysis</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_graph_analysis"/>
+        <field name="arch" type="xml">
+            <xpath expr="//graph" position="attributes">
+                <attribute name="js_class">hr_timesheet_graphview</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_helpdesk_ticket_pivot_analysis" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.report.analysis.pivot.inherited</field>
+        <field name="model">helpdesk.ticket.report.analysis</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_pivot_analysis"/>
+        <field name="arch" type="xml">
+            <field name="ticket_open_hours" position="after">
+                <field name="total_hours_spent" widget="float_time" type="measure"/>
+            </field>
+        </field>
+    </record>
+</odoo>

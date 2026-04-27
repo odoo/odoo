@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<odoo>
+    <data>
+        <template id="dd_template">
+            <DD>
+                <RE t-out="format_vat(move.company_id.vat)"/>
+                <TD t-out="move.l10n_latam_document_type_id.code"/>
+                <F t-out="int(move.l10n_latam_document_number)"/>
+                <FE t-out="move.invoice_date"/>
+                <RR t-out="'55555555-5' if move.partner_id._l10n_cl_is_foreign() and move.partner_id.l10n_cl_sii_taxpayer_type == '4' else format_vat(move.commercial_partner_id.vat)"/>
+                <RSR t-out="format_length(move.commercial_partner_id.name, 40)"/>
+                <MNT t-out="float_repr(amounts['total_amount'], 0) if not move.l10n_latam_document_type_id._is_doc_type_export() else float_repr(amounts['total_amount'], 2)"/>
+            <t t-if="move.invoice_line_ids">
+                <t t-set="line" t-value="move.invoice_line_ids[0]"/>
+                <IT1 t-out="format_length(line.product_id.name or line.name, 40)"/>
+            </t>
+                <CAF t-att-version="caf.xpath('//AUTORIZACION/CAF')[0].attrib['version']">
+                    <DA>
+                        <RE t-out="caf.xpath('//AUTORIZACION/CAF/DA/RE')[0].text"/>
+                        <RS t-out="caf.xpath('//AUTORIZACION/CAF/DA/RS')[0].text"/>
+                        <TD t-out="caf.xpath('//AUTORIZACION/CAF/DA/TD')[0].text"/>
+                        <RNG>
+                            <D t-out="caf.xpath('//AUTORIZACION/CAF/DA/RNG/D')[0].text"/>
+                            <H t-out="caf.xpath('//AUTORIZACION/CAF/DA/RNG/H')[0].text"/>
+                        </RNG>
+                        <FA t-out="caf.xpath('//AUTORIZACION/CAF/DA/FA')[0].text"/>
+                        <RSAPK>
+                            <M t-out="caf.xpath('//AUTORIZACION/CAF/DA/RSAPK/M')[0].text"/>
+                            <E t-out="caf.xpath('//AUTORIZACION/CAF/DA/RSAPK/E')[0].text"/>
+                        </RSAPK>
+                        <IDK t-out="caf.xpath('//AUTORIZACION/CAF/DA/IDK')[0].text"/>
+                    </DA>
+                    <FRMA t-att-algoritmo="caf.xpath('//AUTORIZACION/CAF/FRMA')[0].attrib['algoritmo']"
+                          t-out="caf.xpath('//AUTORIZACION/CAF/FRMA')[0].text"/>
+                </CAF>
+                <TSTED t-out="time_stamp"/>
+            </DD>
+        </template>
+    </data>
+</odoo>

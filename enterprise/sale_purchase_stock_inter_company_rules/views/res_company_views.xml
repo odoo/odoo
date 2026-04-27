@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_company_inter_change_inherit_form">
+        <field name="name">res.company.form.inherit</field>
+        <field name="inherit_id" ref="account_inter_company_rules.view_company_inter_change_inherit_form"/>
+        <field name="model">res.company</field>
+        <field name="arch" type="xml">
+            <field name="intercompany_generate_purchase_orders" position="after">
+                <field name="intercompany_warehouse_id"
+                       options="{'no_create_edit': True}"
+                       domain="[('company_id', '=', id)]"
+                       invisible="not intercompany_generate_sales_orders"/>
+                <field name="intercompany_receipt_type_id"
+                       domain="[('company_id', '=', id), ('code', '=', 'incoming')]"
+                       invisible="not intercompany_generate_purchase_orders"/>
+                <field name="intercompany_sync_delivery_receipt"/>
+            </field>
+        </field>
+    </record>
+</odoo>

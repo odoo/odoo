@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="l10n_mx_reports_closing.TrialBalanceFilterDate" t-inherit="account_reports.AccountReportFilterDate">
+
+        <xpath expr="//div[@id='filter_date_divider_range']" position="after">
+            <t t-if="controller.groups.account_user &amp;&amp; 'l10n_mx_month_13' in controller.options &amp;&amp; controller.options.comparison.filter == 'no_comparison'">
+                <DropdownItem
+                    class="{ 'd-flex justify-content-between date_filter': true, 'selected': (this.isPeriodSelected('year13')) }"
+                    onSelected="() => this.selectDateFilter('year13', 'year13' != controller.options.date.period_type)"
+                    closingMode="'none'"
+                >
+                    <div class="filter_name pe-3">
+                        Month 13
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button
+                            class="btn_previous_date fa fa-caret-left"
+                            t-on-click="() => this.selectPreviousPeriod('year13')"
+                        />
+                        <time class="d-flex justify-content-center time_text">
+                            <t t-out="this.displayPeriod('year13')"/>
+                        </time>
+                        <button
+                            class="btn_next_date fa fa-caret-right"
+                            t-on-click="() => this.selectNextPeriod('year13')"
+                        />
+                    </div>
+                </DropdownItem>
+
+                <div class="dropdown-divider"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

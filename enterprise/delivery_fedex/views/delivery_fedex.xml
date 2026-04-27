@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_delivery_carrier_form_with_provider_fedex" model="ir.ui.view">
+        <field name="name">delivery.carrier.form.provider.fedex</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='destination']" position='before'>
+                <page string="Fedex Configuration" name="feded_configuration" invisible="delivery_type != 'fedex'">
+                    <group>
+                        <group>
+                            <field name="fedex_developer_key" required="delivery_type == 'fedex'"/>
+                            <field name="fedex_developer_password" required="delivery_type == 'fedex'"/>
+                            <field name="fedex_account_number" string="Account Number" required="delivery_type == 'fedex'"/>
+                            <field name="fedex_meter_number" required="delivery_type == 'fedex'"/>
+                            <field name="fedex_service_type" required="delivery_type == 'fedex'"/>
+                            <field name="fedex_droppoff_type" required="delivery_type == 'fedex'"/>
+                        </group>
+                        <group>
+                            <field name="fedex_default_package_type_id" required="delivery_type == 'fedex'" domain="[('package_carrier_type', '=', 'fedex')]"/>
+                            <field name="fedex_weight_unit" string="Package Weight Unit" required="delivery_type == 'fedex'"/>
+                            <div class="o_td_label">
+                                <span class="o_form_label">Package Length Unit</span>
+                            </div>
+                            <div class="o_field_widget">
+                                <span invisible="fedex_weight_unit != 'KG'">CM</span>
+                                <span invisible="fedex_weight_unit != 'LB'">IN</span>
+                            </div>
+                            <field name="fedex_label_stock_type" required="delivery_type == 'fedex'"/>
+                            <field name="fedex_label_file_type" string="Label Format" required="delivery_type == 'fedex'"/>
+                            <field name="fedex_document_stock_type" required="delivery_type == 'fedex'"/>
+                        </group>
+                        <group string="Options">
+                            <field name="fedex_saturday_delivery" string="Saturday Delivery" invisible="fedex_service_type not in ['INTERNATIONAL_PRIORITY', 'FEDEX_2_DAY', 'FIRST_OVERNIGHT', 'PRIORITY_OVERNIGHT']" required="delivery_type == 'fedex'"/>
+                            <field name="can_generate_return" invisible="1"/>
+                            <field name="return_label_on_delivery" invisible="not can_generate_return"/>
+                            <field name="get_return_label_from_portal" invisible="not return_label_on_delivery"/>
+                            <field name="fedex_duty_payment" string="Duties paid by" required="delivery_type == 'fedex'"/>
+                        </group>
+                        <group string="Extra Data" name="fedex_extra_data" groups="base.group_no_one">
+                            <field name="fedex_extra_data_rate_request"/>
+                            <field name="fedex_extra_data_ship_request"/>
+                            <field name="fedex_extra_data_return_request"/>
+                        </group>
+                    </group>
+                    <group string='Fedex Tutorial' invisible="delivery_type != 'fedex'">
+                        <ul>
+                            <li>
+                                <b>Go to <a href='https://www.fedex.com/' target='_blank'>Fedex Website</a> to create a FedEx account of the following type:</b>
+                                <br/><br/> <img src='/delivery_fedex/static/src/img/setup_01.png' alt="Screenshot"/>
+                                <br/><br/> <img src='/delivery_fedex/static/src/img/setup_02.png' alt="Screenshot"/>
+                                <br/><br/>
+                            </li>
+
+                            <li>
+                                <b>Once your account is created, go to <a href='https://www.fedex.com/us/developer/web-services/process.html?tab=tab4' target='_blank'>FedEx Web Services "Move to Production"</a>, click on "Get Production Key" and follow all the steps.</b>
+                                <br/> <img src='/delivery_fedex/static/src/img/setup_03.png' alt="Screenshot"/>
+                                <br/><br/>
+                            </li>
+                            <li>
+                                <b>The last step is the <a href='https://www.fedex.com/us/developer/web-services/process.html?tab=tab3' target='_blank'>Certification Process</a></b>
+                                <br/> <img src='/delivery_fedex/static/src/img/setup_04.png' alt="Screenshot"/>
+                                <br/>According to your needs, you will need to contact different certifications:
+                                <ul>
+                                    <li>Standard Services</li>
+                                    <li>Advanced Services without Label Certification</li>
+                                    <li>Advanced Services with Label Certification</li>
+                                </ul>
+                                These certifications usually require that you contact the FedEx support team by email.
+                            </li>
+                        </ul>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

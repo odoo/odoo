@@ -1,0 +1,1051 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_commission
+#
+# Translators:
+# Wil Odoo, 2025
+# Daye Jeong, 2025
+# Sarah Park, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:50+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Sarah Park, 2025\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_commission
+#. odoo-python
+#: code:addons/sale_commission/model/commission_plan.py:0
+msgid "%s (copy)"
+msgstr "%s (사본)"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "<span class=\"o_stat_text\">Commissions</span>"
+msgstr "<span class=\"o_stat_text\">커미션</span>"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__achieved
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__achieved
+msgid "Achieved"
+msgstr "달성"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__achieved_rate
+msgid "Achieved Rate"
+msgstr "달성률"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__achievement_ids
+msgid "Achievement"
+msgstr "달성"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_res_config_settings__group_commission_forecast
+msgid "Achievement Forecast"
+msgstr "업적 예측"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_achievement_report_view_search
+msgid "Achievement Report"
+msgstr "업적 보고서"
+
+#. module: sale_commission
+#: model:ir.actions.act_window,name:sale_commission.sale_achievement_action_report
+#: model:ir.model.fields.selection,name:sale_commission.selection__sale_commission_plan__type__achieve
+#: model:ir.ui.menu,name:sale_commission.sale_commission_achievement_report_menu
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_list
+msgid "Achievements"
+msgstr "달성"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__message_needaction
+msgid "Action Needed"
+msgstr "조치 필요"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__active
+msgid "Active"
+msgstr "활성화"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_search
+msgid "Active Plans"
+msgstr "활성 계획"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_user_wizard
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "Add Multiple Salespersons"
+msgstr "여러 명의 영업 담당자 추가"
+
+#. module: sale_commission
+#: model:ir.actions.act_window,name:sale_commission.sale_subscription_change_customer_wizard_action
+msgid "Add Salespersons"
+msgstr "영업 담당자 추가"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "Add a new Sales Person"
+msgstr "새 영업 담당자 추가"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "Add a new achievement"
+msgstr "새 성과 추가"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "Add a new commission level"
+msgstr "새 커미션 레벨 추가"
+
+#. module: sale_commission
+#. odoo-python
+#: code:addons/sale_commission/model/commission_achievement.py:0
+msgid "Adjustment %s"
+msgstr "조정 %s"
+
+#. module: sale_commission
+#. odoo-python
+#: code:addons/sale_commission/model/commission_achievement.py:0
+msgid "Adjustment: %s"
+msgstr "조정: %s"
+
+#. module: sale_commission
+#: model:ir.actions.act_window,name:sale_commission.sale_commission_action_achievement
+#: model:ir.ui.menu,name:sale_commission.sale_commission_achievement_menu
+msgid "Adjustments"
+msgstr "조정"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "All categories"
+msgstr "전체 카테고리"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "All products"
+msgstr "모든 품목"
+
+#. module: sale_commission
+#: model_terms:ir.actions.act_window,help:sale_commission.sale_commission_action_achievement
+msgid ""
+"Allows you to manually adjust a salesperson's achievements\n"
+"                for a specific period and commission plan."
+msgstr ""
+"특정 기간 및 커미션 플랜에 대한 영업 사원의 업적을\n"
+"                수동으로 조정할 수 있습니다. "
+
+#. module: sale_commission
+#: model_terms:ir.actions.act_window,help:sale_commission.sale_commission_action_forecast
+msgid ""
+"Allows you to manually set a salesperson's forecast\n"
+"                for a specific period and commission plan."
+msgstr ""
+"특정 기간에 대한 영업 담당자의 예측 및 커미션 플랜을\n"
+"                수동으로 설정할 수 있습니다."
+
+#. module: sale_commission
+#: model_terms:ir.actions.act_window,help:sale_commission.sale_commission_action_my_forecast
+msgid ""
+"Allows you to manually set your sales' forecast\n"
+"                for a specific period and commission plan."
+msgstr ""
+"특정 기간의 판매 예측 및 커미션 플랜을\n"
+"                수동으로 설정할 수 있습니다. "
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement__amount
+msgid "Amount"
+msgstr "금액"
+
+#. module: sale_commission
+#: model:ir.model.fields.selection,name:sale_commission.selection__sale_commission_achievement__type__amount_invoiced
+#: model:ir.model.fields.selection,name:sale_commission.selection__sale_commission_plan_achievement__type__amount_invoiced
+msgid "Amount Invoiced"
+msgstr "청구 금액"
+
+#. module: sale_commission
+#: model:ir.model.fields.selection,name:sale_commission.selection__sale_commission_achievement__type__amount_sold
+#: model:ir.model.fields.selection,name:sale_commission.selection__sale_commission_plan_achievement__type__amount_sold
+msgid "Amount Sold"
+msgstr "판매 금액"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "Approve"
+msgstr "결재하기"
+
+#. module: sale_commission
+#: model:ir.model.fields.selection,name:sale_commission.selection__sale_commission_plan__state__approved
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_search
+msgid "Approved"
+msgstr "결재 완료"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "Archived"
+msgstr "보관됨"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__message_attachment_count
+msgid "Attachment Count"
+msgstr "첨부 파일 수"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "Based on"
+msgstr "기준"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_search
+msgid "By Quarter"
+msgstr "분기별"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_user_wizard
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "Cancel"
+msgstr "취소"
+
+#. module: sale_commission
+#: model:ir.model.fields.selection,name:sale_commission.selection__sale_commission_plan__state__cancel
+msgid "Cancelled"
+msgstr "취소됨"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_achievement__product_categ_id
+msgid "Category"
+msgstr "카테고리"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_commission__amount
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__commission
+msgid "Commission"
+msgstr "수수료"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_achievement_view_search
+msgid "Commission Achievement"
+msgstr "커미션 성과"
+
+#. module: sale_commission
+#. odoo-python
+#: code:addons/sale_commission/report/commission_report.py:0
+msgid "Commission Detail: %(name)s"
+msgstr "수수료 세부 내용: %(name)s"
+
+#. module: sale_commission
+#: model:ir.model,name:sale_commission.model_sale_commission_plan
+#: model:ir.model.fields,field_description:sale_commission.field_crm_team__commission_plan_ids
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__plan_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__plan_id
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_achievement_report_view_search
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_search
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_search
+msgid "Commission Plan"
+msgstr "수수료 계획"
+
+#. module: sale_commission
+#: model:ir.model,name:sale_commission.model_sale_commission_plan_achievement
+msgid "Commission Plan Achievement"
+msgstr "수수료 제도 성과"
+
+#. module: sale_commission
+#: model:ir.model,name:sale_commission.model_sale_commission_plan_target
+msgid "Commission Plan Target"
+msgstr "수수료 제도 목표"
+
+#. module: sale_commission
+#: model:ir.model,name:sale_commission.model_sale_commission_plan_target_commission
+msgid "Commission Plan Target Commission"
+msgstr "수수료 제도 목표 수수료"
+
+#. module: sale_commission
+#: model:ir.model,name:sale_commission.model_sale_commission_plan_target_forecast
+msgid "Commission Plan Target Forecast"
+msgstr "수수료 제도 목표 예상"
+
+#. module: sale_commission
+#: model:ir.model,name:sale_commission.model_sale_commission_plan_user
+msgid "Commission Plan User"
+msgstr "수수료 제도 사용자"
+
+#. module: sale_commission
+#: model:ir.actions.act_window,name:sale_commission.sale_commission_action_plan
+#: model:ir.ui.menu,name:sale_commission.sale_commission_plan_menu
+msgid "Commission Plans"
+msgstr "수수료 계획"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_search
+msgid "Commission Report"
+msgstr "커미션 보고서"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_res_users__commission_plan_users_ids
+msgid "Commission plans"
+msgstr "수수료 계획"
+
+#. module: sale_commission
+#: model:ir.actions.act_window,name:sale_commission.sale_commission_action_report
+#: model:ir.actions.act_window,name:sale_commission.sale_commission_action_report_sale
+#: model:ir.ui.menu,name:sale_commission.menu_sale_commission
+#: model:ir.ui.menu,name:sale_commission.sale_commission_plan_report_menu
+#: model:ir.ui.menu,name:sale_commission.sale_commission_plan_report_menu_report
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "Commissions"
+msgstr "수수료"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement__company_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__company_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__company_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__company_id
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_achievement_report_view_search
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_search
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_search
+msgid "Company"
+msgstr "회사"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_search
+msgid "Completed"
+msgstr "완료됨"
+
+#. module: sale_commission
+#: model_terms:ir.actions.act_window,help:sale_commission.sale_commission_action_plan
+msgid ""
+"Compute commissions of your sales people based on their achievements and "
+"targets"
+msgstr "영업 사원의 성과 및 목표에 따라 커미션을 계산합니다."
+
+#. module: sale_commission
+#: model:ir.model,name:sale_commission.model_res_config_settings
+msgid "Config Settings"
+msgstr "환경설정"
+
+#. module: sale_commission
+#: model_terms:ir.actions.act_window,help:sale_commission.sale_commission_action_plan
+msgid "Create a new commission plan"
+msgstr "새 커미션 플랜 만들기"
+
+#. module: sale_commission
+#: model_terms:ir.actions.act_window,help:sale_commission.sale_commission_action_achievement
+msgid "Create an adjustment"
+msgstr "조정 항목 만들기"
+
+#. module: sale_commission
+#: model_terms:ir.actions.act_window,help:sale_commission.sale_commission_action_forecast
+#: model_terms:ir.actions.act_window,help:sale_commission.sale_commission_action_my_forecast
+msgid "Create an forecast"
+msgstr "예상 항목 만들기"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement__create_uid
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__create_uid
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_achievement__create_uid
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target__create_uid
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_commission__create_uid
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_forecast__create_uid
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_user__create_uid
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_user_wizard__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement__create_date
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__create_date
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_achievement__create_date
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target__create_date
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_commission__create_date
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_forecast__create_date
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_user__create_date
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_user_wizard__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement__currency_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__currency_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__currency_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target__currency_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_commission__currency_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_forecast__currency_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__currency_id
+msgid "Currency"
+msgstr "통화"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement__currency_rate
+msgid "Currency Rate"
+msgstr "환율"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_achievement_report_view_search
+msgid "Current Period"
+msgstr "현재 기간"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement__date
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__date
+msgid "Date"
+msgstr "날짜"
+
+#. module: sale_commission
+#: model:ir.model.fields,help:sale_commission.field_crm_team__commission_plan_ids
+msgid "Default commission plan for team members."
+msgstr "기본 수수료 제도 팀원용"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_list
+msgid "Details"
+msgstr "세부 정보"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement__display_name
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__display_name
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__display_name
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_achievement__display_name
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target__display_name
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_commission__display_name
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_forecast__display_name
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_user__display_name
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_user_wizard__display_name
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: sale_commission
+#: model:ir.model.fields.selection,name:sale_commission.selection__sale_commission_plan__state__done
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_search
+msgid "Done"
+msgstr "완료"
+
+#. module: sale_commission
+#: model:ir.model.fields.selection,name:sale_commission.selection__sale_commission_plan__state__draft
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_search
+msgid "Draft"
+msgstr "초안"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "Effective Period"
+msgstr "유효 기간"
+
+#. module: sale_commission
+#: model:res.groups,name:sale_commission.group_commission_forecast
+msgid "Enable Commission Forecast"
+msgstr "수수료 예상 활성화"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_list
+msgid "End Date"
+msgstr "종료일"
+
+#. module: sale_commission
+#: model_terms:ir.actions.act_window,help:sale_commission.sale_commission_action_my_report
+#: model_terms:ir.actions.act_window,help:sale_commission.sale_commission_action_report
+#: model_terms:ir.actions.act_window,help:sale_commission.sale_commission_action_report_sale
+msgid ""
+"Ensure you are assigned to a commission plan and have made sales that "
+"qualify for commissions"
+msgstr ""
+"커미션 플랜에 배정되어 있고 자격을 충족하는 판매를 수행했는지 확인합니다."
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_res_users__filtered_commission_plan_users_ids
+msgid "Filtered Commission Plan Users"
+msgstr "수수료 제도 사용자 필터"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__message_follower_ids
+msgid "Followers"
+msgstr "팔로워"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "팔로워 (협력사)"
+
+#. module: sale_commission
+#: model:ir.actions.act_window,name:sale_commission.sale_commission_action_forecast
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_forecast__amount
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__forecast
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_target_forecast_view_graph
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_target_forecast_view_list
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_target_forecast_view_pivot
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_target_forecast_view_search
+msgid "Forecast"
+msgstr "예측"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__date_from
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target__date_from
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_user__date_from
+msgid "From"
+msgstr "시작 시간"
+
+#. module: sale_commission
+#. odoo-python
+#: code:addons/sale_commission/model/commission_plan_user.py:0
+msgid "From must be before To"
+msgstr "다음에서부터 시작해야 합니다."
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_achievement_report_view_search
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_target_forecast_view_search
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_search
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_search
+msgid "Group By"
+msgstr "그룹별"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__has_message
+msgid "Has Message"
+msgstr "메시지가 있습니다."
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement__id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_achievement__id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target__id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_commission__id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_forecast__id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_user__id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_user_wizard__id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_commission
+#: model:ir.model.fields,help:sale_commission.field_sale_commission_plan__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "선택할 경우, 새로운 메시지에 주의를 기울여야 합니다."
+
+#. module: sale_commission
+#: model:ir.model.fields,help:sale_commission.field_sale_commission_plan__message_has_error
+#: model:ir.model.fields,help:sale_commission.field_sale_commission_plan__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "이 옵션을 선택하면 일부 메시지가 잘못 전달될 수 있습니다."
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__message_is_follower
+msgid "Is Follower"
+msgstr "팔로워입니다."
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_search
+msgid "Last Quarter"
+msgstr "전 분기"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement__write_uid
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__write_uid
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_achievement__write_uid
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target__write_uid
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_commission__write_uid
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_forecast__write_uid
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_user__write_uid
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_user_wizard__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement__write_date
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__write_date
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_achievement__write_date
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target__write_date
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_commission__write_date
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_forecast__write_date
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_user__write_date
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_user_wizard__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_search
+msgid "Last Year"
+msgstr "지난 해"
+
+#. module: sale_commission
+#: model:ir.model.fields,help:sale_commission.field_sale_commission_achievement__team_id
+#: model:ir.model.fields,help:sale_commission.field_sale_commission_plan_target_forecast__team_id
+msgid ""
+"Main user sales team. Used notably for pipeline, or to set sales team in "
+"invoicing or subscription."
+msgstr ""
+"주 사용자인 영업팀입니다. 특히 파이프라인 관리에 사용하거나 영업팀에서 청구"
+"서 발행 또는 구독 업무를 진행할 경우에 사용합니다."
+
+#. module: sale_commission
+#: model:ir.model,name:sale_commission.model_sale_commission_achievement
+msgid "Manual Commission Achievement"
+msgstr "수동 커미션 성과"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "Mark as done"
+msgstr "완료"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__message_has_error
+msgid "Message Delivery error"
+msgstr "메시지 전송 오류"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__message_ids
+msgid "Messages"
+msgstr "메시지"
+
+#. module: sale_commission
+#: model:ir.model.fields.selection,name:sale_commission.selection__sale_commission_plan__periodicity__month
+msgid "Monthly"
+msgstr "월별"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_achievement_report_view_search
+msgid "My Achievements"
+msgstr "내 업적"
+
+#. module: sale_commission
+#: model:ir.actions.act_window,name:sale_commission.sale_commission_action_my_report
+#: model:ir.ui.menu,name:sale_commission.sale_commission_my_menu
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_search
+msgid "My Commissions"
+msgstr "내 수수료"
+
+#. module: sale_commission
+#: model:ir.actions.act_window,name:sale_commission.sale_commission_action_my_forecast
+msgid "My Forecast"
+msgstr "내 예측"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_search
+msgid "My Team"
+msgstr "나의 팀"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__name
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_search
+msgid "Name"
+msgstr "이름"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement__note
+msgid "Note"
+msgstr "노트"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__message_needaction_counter
+msgid "Number of Actions"
+msgstr "작업 수"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__message_has_error_counter
+msgid "Number of errors"
+msgstr "오류 수"
+
+#. module: sale_commission
+#: model:ir.model.fields,help:sale_commission.field_sale_commission_plan__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "조치가 필요한 메시지 수입니다."
+
+#. module: sale_commission
+#: model:ir.model.fields,help:sale_commission.field_sale_commission_plan__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "전송 오류가 발생한 메시지 수입니다."
+
+#. module: sale_commission
+#: model:ir.model.fields,help:sale_commission.field_sale_commission_plan__commission_amount
+msgid "OTC"
+msgstr "장외"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_commission__amount_rate
+msgid "OTC %"
+msgstr "OTC %"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__commission_amount
+msgid "On Target Commission"
+msgstr "목표 커미션"
+
+#. module: sale_commission
+#: model:ir.model.fields,help:sale_commission.field_sale_commission_plan_target_commission__amount_rate
+msgid "On Target Commission rate"
+msgstr "목표 커미션 요금"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_search
+msgid "Ongoing"
+msgstr "진행중"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_user__other_plans
+msgid "Other plans"
+msgstr "다른 계획"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__payment_date
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_search
+msgid "Payment Date"
+msgstr "지불일"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__target_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target__name
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_forecast__target_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__target_id
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_achievement_report_view_search
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_target_forecast_view_search
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_list
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_search
+msgid "Period"
+msgstr "기간"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__periodicity
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_search
+msgid "Periodicity"
+msgstr "주기"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "Periods"
+msgstr "기간"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_achievement__plan_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target__plan_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_commission__plan_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_forecast__plan_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_user__plan_id
+msgid "Plan"
+msgstr "계획"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_achievement__product_id
+msgid "Product"
+msgstr "품목"
+
+#. module: sale_commission
+#: model:ir.model.fields.selection,name:sale_commission.selection__sale_commission_achievement__type__qty_invoiced
+#: model:ir.model.fields.selection,name:sale_commission.selection__sale_commission_plan_achievement__type__qty_invoiced
+msgid "Quantity Invoiced"
+msgstr "청구 수량"
+
+#. module: sale_commission
+#: model:ir.model.fields.selection,name:sale_commission.selection__sale_commission_achievement__type__qty_sold
+#: model:ir.model.fields.selection,name:sale_commission.selection__sale_commission_plan_achievement__type__qty_sold
+msgid "Quantity Sold"
+msgstr "판매 수량"
+
+#. module: sale_commission
+#: model:ir.model.fields.selection,name:sale_commission.selection__sale_commission_plan__periodicity__quarter
+msgid "Quarterly"
+msgstr "분기별"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_achievement__rate
+msgid "Rate"
+msgstr "비율"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__rating_ids
+msgid "Ratings"
+msgstr "평가"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__related_res_id
+msgid "Related"
+msgstr "관련됨"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__related_res_model
+msgid "Related Res Model"
+msgstr "관련 RES 모델"
+
+#. module: sale_commission
+#. odoo-python
+#: code:addons/sale_commission/model/commission_plan.py:0
+msgid "Related commissions"
+msgstr "관련 수수료"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "Reset to draft"
+msgstr "초안으로 재설정"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS 전송 오류"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__team_id
+msgid "Sale team"
+msgstr "판매 팀"
+
+#. module: sale_commission
+#: model:ir.model,name:sale_commission.model_sale_commission_achievement_report
+msgid "Sales Achievement Report"
+msgstr "판매 성과 보고서"
+
+#. module: sale_commission
+#: model:ir.model,name:sale_commission.model_sale_commission_report
+msgid "Sales Commission Report"
+msgstr "판매 수수료 보고서"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "Sales People"
+msgstr "영업 사원"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement__user_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__user_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__user_id
+msgid "Sales Person"
+msgstr "영업 담당자"
+
+#. module: sale_commission
+#: model:ir.model,name:sale_commission.model_crm_team
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement_report__team_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__team_id
+#: model:ir.model.fields.selection,name:sale_commission.selection__sale_commission_plan__user_type__team
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_achievement_report_view_search
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_target_forecast_view_search
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_search
+msgid "Sales Team"
+msgstr "영업팀"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_user__user_id
+#: model:ir.model.fields.selection,name:sale_commission.selection__sale_commission_plan__user_type__person
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_achievement_report_view_search
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_target_forecast_view_search
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_search
+msgid "Salesperson"
+msgstr "영업 담당자"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_list
+msgid "See associated achievements"
+msgstr "관련 성과 보기"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_achievement_report_view_list
+msgid "Source"
+msgstr "지원 경로"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_list
+msgid "Start Date"
+msgstr "시작일"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__state
+msgid "State"
+msgstr "시/도"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_user_wizard
+msgid "Submit"
+msgstr "제출"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__target_ids
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target__amount
+msgid "Target"
+msgstr "목표"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__target_amount
+msgid "Target Amount"
+msgstr "목표 금액"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__target_commission_ids
+msgid "Target Commission"
+msgstr "목표 커미션"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__target_commission_graph
+msgid "Target Commission Graph"
+msgstr "목표 수수료 그래프"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "Target Frequency"
+msgstr "목표 주기"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_commission__target_rate
+msgid "Target completion (%)"
+msgstr "목표 완료율 (%)"
+
+#. module: sale_commission
+#: model:ir.model.fields.selection,name:sale_commission.selection__sale_commission_plan__type__target
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "Targets"
+msgstr "목표"
+
+#. module: sale_commission
+#. odoo-python
+#: code:addons/sale_commission/model/commission_plan.py:0
+msgid "The plan should have at least one target with an achievement rate of 0%"
+msgstr "계획에는 달성률이 0%인 목표가 하나 이상 있어야 합니다."
+
+#. module: sale_commission
+#. odoo-python
+#: code:addons/sale_commission/model/commission_plan.py:0
+msgid "The start date must be before the end date."
+msgstr "시작일은 종료일 이전이어야 합니다"
+
+#. module: sale_commission
+#. odoo-python
+#: code:addons/sale_commission/model/commission_plan.py:0
+msgid "The team is required in team plan."
+msgstr "팀은 팀 플랜에서 필수입니다."
+
+#. module: sale_commission
+#: model:ir.model.constraint,message:sale_commission.constraint_sale_commission_plan_user_user_uniq
+msgid "The user is already present in the plan"
+msgstr "사용자가 이미 요금제에 가입되어 있습니다."
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_target_forecast_view_search
+msgid "This Month"
+msgstr "이번 달"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_target_forecast_view_search
+msgid "This Year"
+msgstr "올해"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__date_to
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target__date_to
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_user__date_to
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__date_to
+msgid "To"
+msgstr "종료 시간"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_list
+msgid "Total Target"
+msgstr "총 목표"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_list
+msgid "Total achieved"
+msgstr "총 달성량"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_report_view_list
+msgid "Total commission"
+msgstr "총 수수료"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement__type
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__type
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_achievement__type
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_search
+msgid "Type"
+msgstr "유형"
+
+#. module: sale_commission
+#: model_terms:ir.actions.act_window,help:sale_commission.sale_commission_action_my_report
+#: model_terms:ir.actions.act_window,help:sale_commission.sale_commission_action_report
+#: model_terms:ir.actions.act_window,help:sale_commission.sale_commission_action_report_sale
+msgid "Unfortunately, there are no commissions for you"
+msgstr "사용할 수 있는 커미션이 없습니다."
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_search
+msgid "Upcoming"
+msgstr "예정"
+
+#. module: sale_commission
+#: model:ir.model,name:sale_commission.model_res_users
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__user_ids
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_forecast__user_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_user_wizard__user_ids
+msgid "User"
+msgstr "사용자"
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_achievement__team_id
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan_target_forecast__team_id
+msgid "User Sales Team"
+msgstr "사용자 영업팀 "
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__user_type
+msgid "User Type"
+msgstr "사용자 유형"
+
+#. module: sale_commission
+#. odoo-python
+#: code:addons/sale_commission/model/commission_plan_user.py:0
+msgid "User period cannot end after the plan."
+msgstr "플랜 이후에는 사용자 기간을 종료할 수 없습니다."
+
+#. module: sale_commission
+#. odoo-python
+#: code:addons/sale_commission/model/commission_plan_user.py:0
+msgid "User period cannot start before the plan."
+msgstr "플랜 이전에는 사용자 기간을 시작할 수 없습니다."
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_plan__website_message_ids
+msgid "Website Messages"
+msgstr "웹사이트 메시지"
+
+#. module: sale_commission
+#: model:ir.model.fields,help:sale_commission.field_sale_commission_plan__website_message_ids
+msgid "Website communication history"
+msgstr "웹사이트 대화 이력"
+
+#. module: sale_commission
+#: model:ir.model,name:sale_commission.model_sale_commission_plan_user_wizard
+msgid "Wizard for selecting multiple users"
+msgstr "여러 사용자를 선택하기 위한 마법사"
+
+#. module: sale_commission
+#: model:ir.model.fields.selection,name:sale_commission.selection__sale_commission_plan__periodicity__year
+msgid "Yearly"
+msgstr "매년"
+
+#. module: sale_commission
+#. odoo-python
+#: code:addons/sale_commission/model/commission_plan_target_forecast.py:0
+msgid "You cannot create a forecast for an user that is not in the plan."
+msgstr "플랜에 가입하지 않은 사용자에 대해서는 예측을 생성할 수 없습니다."
+
+#. module: sale_commission
+#: model:ir.model.fields,field_description:sale_commission.field_sale_commission_report__forecast_id
+msgid "fc"
+msgstr "fc"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "i.e. Commissions plan 2025"
+msgstr "예: 2025 수수료 제도"
+
+#. module: sale_commission
+#: model_terms:ir.ui.view,arch_db:sale_commission.sale_commission_plan_view_form
+msgid "per"
+msgstr "/"

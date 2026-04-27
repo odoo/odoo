@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="website_studio.s_website_form_options" inherit_id="website.s_website_form_options">
+    <xpath expr="//div[@data-js='WebsiteFormEditor']/*[1]" position="before">
+        <we-checkbox string="Form Access" data-name="enable_website_form_access" data-set-form-access="true" />
+    </xpath>
+</template>
+
+</odoo>

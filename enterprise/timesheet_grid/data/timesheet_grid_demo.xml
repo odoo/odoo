@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Validate timesheets if older than 10 days -->
+        <function model="account.analytic.line" name="action_validate_timesheet">
+            <value model="account.analytic.line" eval="obj().search([('date', '&lt;', (DateTime.now() + relativedelta(days=-10)).date()), ('validated', '=', False)]).ids"/>
+        </function>
+    </data>
+</odoo>

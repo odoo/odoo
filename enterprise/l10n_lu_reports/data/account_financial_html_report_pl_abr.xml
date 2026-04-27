@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_financial_report_l10n_lu_pl_abr" model="account.report">
+        <field name="name">Profit &amp; Loss (abridged)</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="True "/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.lu"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="custom_handler_model_id" ref="model_l10n_lu_report_handler"/>
+        <field name="column_ids">
+            <record id="account_financial_report_l10n_lu_pl_abr_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_l10n_lu_pl_abr_line_1" model="account.report.line">
+                <field name="name">1. to 5. Gross profit or loss</field>
+                <field name="code">LU_PLABR_651</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_1_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-71 - 72 - 61 - 70 - 60 - 74</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_l10n_lu_pl_abr_line_6" model="account.report.line">
+                <field name="name">6. Staff costs</field>
+                <field name="code">LU_PLABR_605</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_6_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LU_PLABR_607.balance + LU_PLABR_609.balance + LU_PLABR_613.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_6_1" model="account.report.line">
+                        <field name="name">a) Wages and salaries</field>
+                        <field name="code">LU_PLABR_607</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_lu_pl_abr_line_6_1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-622 - 621</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_6_2" model="account.report.line">
+                        <field name="name">b) Social security costs</field>
+                        <field name="code">LU_PLABR_609</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_lu_pl_abr_line_6_2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LU_PLABR_653.balance + LU_PLABR_655.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_lu_pl_abr_line_6_2_1" model="account.report.line">
+                                <field name="name">i) relating to pensions</field>
+                                <field name="code">LU_PLABR_653</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_l10n_lu_pl_abr_line_6_2_1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-6231</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_pl_abr_line_6_2_2" model="account.report.line">
+                                <field name="name">ii) other social security costs</field>
+                                <field name="code">LU_PLABR_655</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_l10n_lu_pl_abr_line_6_2_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-6232</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_6_3" model="account.report.line">
+                        <field name="name">c) Other staff costs</field>
+                        <field name="code">LU_PLABR_613</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_lu_pl_abr_line_6_3_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-624</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_l10n_lu_pl_abr_line_7" model="account.report.line">
+                <field name="name">7. Value adjustments</field>
+                <field name="code">LU_PLABR_657</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_7_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LU_PLABR_659.balance + LU_PLABR_661.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_7_1" model="account.report.line">
+                        <field name="name">a) in respect of formation expenses and of tangible and intangible fixed assets</field>
+                        <field name="code">LU_PLABR_659</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_lu_pl_abr_line_7_1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-633 - 732 - 632 - 631 - 733</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_7_2" model="account.report.line">
+                        <field name="name">b) in respect of current assets</field>
+                        <field name="code">LU_PLABR_661</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_lu_pl_abr_line_7_2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-635 - 735 - 734 - 634</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_l10n_lu_pl_abr_line_8" model="account.report.line">
+                <field name="name">8. Other operating expenses</field>
+                <field name="code">LU_PLABR_621</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_8_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-64</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_l10n_lu_pl_abr_line_9" model="account.report.line">
+                <field name="name">9. Income from participating interests</field>
+                <field name="code">LU_PLABR_715</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_9_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LU_PLABR_717.balance + LU_PLABR_719.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_9_1" model="account.report.line">
+                        <field name="name">a) derived from affiliated undertakings</field>
+                        <field name="code">LU_PLABR_717</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_lu_pl_abr_line_9_1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-75211 - 75221 - 75481 - 75421</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_9_2" model="account.report.line">
+                        <field name="name">b) other income from participating interests</field>
+                        <field name="code">LU_PLABR_719</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_lu_pl_abr_line_9_2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-75223 - 75423 - 75483 - 75213</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_l10n_lu_pl_abr_line_10" model="account.report.line">
+                <field name="name">10. Income from other investments and loans forming part of the fixed assets</field>
+                <field name="code">LU_PLABR_721</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_10_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LU_PLABR_723.balance + LU_PLABR_725.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_10_1" model="account.report.line">
+                        <field name="name">a) derived from affiliated undertakings</field>
+                        <field name="code">LU_PLABR_723</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_lu_pl_abr_line_10_1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-75212 - 75222</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_10_2" model="account.report.line">
+                        <field name="name">b) other income not included under a)</field>
+                        <field name="code">LU_PLABR_725</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_lu_pl_abr_line_10_2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-75422 - 75488 - 75224 - 75225 - 75226 - 75216 - 75482 - 75215 - 75428 - 75214</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_l10n_lu_pl_abr_line_11" model="account.report.line">
+                <field name="name">11. Other interest receivable and similar income</field>
+                <field name="code">LU_PLABR_727</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_11_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LU_PLABR_729.balance + LU_PLABR_731.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_11_1" model="account.report.line">
+                        <field name="name">a) derived from affiliated undertakings</field>
+                        <field name="code">LU_PLABR_729</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_lu_pl_abr_line_11_1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-75581 - 755231 - 7561 - 75551 - 7581 - 75411 - 75561 - 7591 - 75541</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_11_2" model="account.report.line">
+                        <field name="name">b) other interest and similar income</field>
+                        <field name="code">LU_PLABR_731</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_lu_pl_abr_line_11_2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7553 - 75562 - 75412 - 75542 - 75552 - 7592 - 7582 - 755232 - 75413 - 75582 - 7562 - 75521</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_l10n_lu_pl_abr_line_12" model="account.report.line">
+                <field name="name">12. Share of profit or loss of undertakings accounted for under the equity method</field>
+                <field name="code">LU_PLABR_663</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_12_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-757 - 657</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_l10n_lu_pl_abr_line_13" model="account.report.line">
+                <field name="name">13. Value adjustments in respect of financial assets and of investments held as current assets</field>
+                <field name="code">LU_PLABR_665</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_13_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-753 - 653 - 651 - 751</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_l10n_lu_pl_abr_line_14" model="account.report.line">
+                <field name="name">14. Interest payable and similar expenses</field>
+                <field name="code">LU_PLABR_627</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_14_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LU_PLABR_629.balance + LU_PLABR_631.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_14_1" model="account.report.line">
+                        <field name="name">a) concerning affiliated undertakings</field>
+                        <field name="code">LU_PLABR_629</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_lu_pl_abr_line_14_1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-65211 - 65411 - 6688 - 65581 - 6561 - 65551 - 65561 - 65541 - 65421 - 65511 - 65580 - 6591 - 65222 - 6581 - 655231 - 65212 - 65221 - 6580</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_14_2" model="account.report.line">
+                        <field name="name">b) other interest and similar expenses</field>
+                        <field name="code">LU_PLABR_631</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_l10n_lu_pl_abr_line_14_2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-65522 - 65521 - 6562 - 65413 - 65223 - 65213 -  65552 - 65582 - 65512 - 65214 - 65562 - 65226 - 65215 - 65428 - 6582 - 65224 - 655232 - 6553 - 65225 - 65422 - 65412 - 65216 - 6592 - 65542 - 65423</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_l10n_lu_pl_abr_line_15" model="account.report.line">
+                <field name="name">15. Tax on profit or loss</field>
+                <field name="code">LU_PLABR_635</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_15_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-77 - 67</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_l10n_lu_pl_abr_line_16" model="account.report.line">
+                <field name="name">16. Profit or loss after taxation</field>
+                <field name="code">LU_PLABR_667</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_16_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LU_PLABR_651.balance + LU_PLABR_605.balance + LU_PLABR_657.balance + LU_PLABR_621.balance + LU_PLABR_715.balance + LU_PLABR_721.balance + LU_PLABR_727.balance + LU_PLABR_663.balance + LU_PLABR_665.balance + LU_PLABR_627.balance + LU_PLABR_635.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_l10n_lu_pl_abr_line_17" model="account.report.line">
+                <field name="name">17. Other taxes not shown under items 1 to 16</field>
+                <field name="code">LU_PLABR_637</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_17_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-68 - 78</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_l10n_lu_pl_abr_line_18" model="account.report.line">
+                <field name="name">18. Profit or loss for the financial year</field>
+                <field name="code">LU_PLABR_669</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_l10n_lu_pl_abr_line_18_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LU_PLABR_667.balance + LU_PLABR_637.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+    <record id="account_financial_report_l10n_lu_pl_abr_action" model="ir.actions.client">
+        <field name="name">Profit &amp; Loss (abridged)</field>
+        <field name="context" eval="{'report_id': ref('account_financial_report_l10n_lu_pl_abr')}"/>
+        <field name="tag">account_report</field>
+    </record>
+</odoo>

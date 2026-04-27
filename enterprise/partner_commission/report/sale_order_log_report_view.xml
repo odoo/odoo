@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_log_search" model="ir.ui.view">
+        <field name="name">sale.order.log.report.search.inherit</field>
+        <field name="model">sale.order.log.report</field>
+        <field name="inherit_id" ref="sale_subscription.sale_order_log_report_search"/>
+        <field name="arch" type="xml">
+             <field name="template_id" position="after">
+                <filter name="referer_id"/>
+                <filter name="commission_plan_id"/>
+            </field>
+            <filter name="group_by_plan" position="before">
+                <filter string="Referrer" name="group_by_referrer" domain="[]" context="{'group_by': 'referrer_id'}"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

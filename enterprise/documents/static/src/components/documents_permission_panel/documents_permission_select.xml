@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.PermissionSelect">
+        <t t-if="props.labelHelper">
+            <div class="w-75">
+                <label t-if="props.label" class="col-form-label fs-5 pe-3 pb-0" t-out="props.label"/>
+                <div class="fs-6 text-muted" t-out="props.labelHelper"/>
+            </div>
+        </t>
+        <label t-elif="props.label" class="col-form-label pe-3" t-out="props.label"/>
+        <select t-attf-class="form-select {{selectClass}}"
+            t-att-value="props.value"
+            t-on-change="props.onChange"
+            t-att-disabled="props.disabled"
+            t-att-aria-label="props.ariaLabel">
+            <t t-foreach="props.options" t-as="option" t-key="option_index">
+                <option t-att-value="option[0]"
+                    t-out="option[1]"
+                    t-att-selected="option[0] === props.value ? 'selected' : undefined"
+                    t-att-disabled="props.noEditorMessage and option[0] === 'edit'"
+                    t-att-title="props.noEditorMessage"/>
+            </t>
+        </select>
+    </t>
+
+    <t t-name="documents.PermissionSelectMenu" t-inherit="web.SelectMenu" t-mode="primary">
+        <xpath expr="//TagsList" position="before">
+            <span class="text-muted fw-normal" t-if="multiSelectChoices.length === 0" t-out="props.buttonText"/>
+        </xpath>
+        <xpath expr="//t[@t-if='state.choices.length === 0']" position="replace"/>
+    </t>
+</templates>

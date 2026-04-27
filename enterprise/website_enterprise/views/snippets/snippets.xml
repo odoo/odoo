@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="external_snippets" inherit_id="website.snippets" priority="15">
+        <xpath expr="//snippets[@id='snippet_structure']//t[@id='event_upcoming_snippet_hook']" position="after">
+            <t id="appointments_hook"/>
+        </xpath>
+        <xpath expr="//snippets[@id='snippet_groups']//t[@t-snippet][last()]" position="after">
+            <t id="appointments_snippet" snippet-group="appointments" string="Appointments" t-install="website_appointment"
+                t-thumbnail="/website_enterprise/static/src/img/snippets_thumbs/s_appointments.svg"/>
+        </xpath>
+        <xpath expr="//snippets[@id='snippet_content']//t[@t-snippet][last()]" position="after">
+            <t id="appointment_snippet" t-install="website_appointment" string="Appointment Button"
+                t-thumbnail="/website_enterprise/static/src/img/snippets_thumbs/s_appointment.svg"/>
+        </xpath>
+    </template>
+</odoo>

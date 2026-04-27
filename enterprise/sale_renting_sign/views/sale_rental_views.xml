@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="rental_order_inherit_rental_sign">
+        <field name="name">rental.order.form.inherit.rental.sign</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_renting.rental_order_primary_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button type="action" class="btn" string="Sign Documents"
+                        name="%(rental_sign_documents)d" data-hotkey="o"
+                        invisible="state != 'sale'"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_sign" type="object" class="oe_stat_button" icon="fa-pencil" invisible="sign_request_count == 0">
+                    <field name="sign_request_count" widget="statinfo" string="Document(s) Signed"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

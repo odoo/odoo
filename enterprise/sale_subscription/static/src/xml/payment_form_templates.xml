@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="sale_subscription.deleteTokenDialog">
+        <div>
+            <p>This payment method cannot be deleted, because it is currently linked to the
+                following active subscriptions:
+            </p>
+            <ul>
+                <li t-foreach="linkedRecordsInfo" t-as="documentInfo" t-key="documentInfoIndex">
+                    <a t-att-title="documentInfo.description"
+                        t-att-href="documentInfo.url"
+                        t-esc="documentInfo.name"
+                    />
+                </li>
+            </ul>
+            <p>Please provide another payment method for these subscriptions first.</p>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_view_swissdec_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.l10n.ch.hr.payroll</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll.hr_employee_view_form"/>
+        <field name="priority">0</field>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_absence_swiss_employee"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-calendar"
+                    context="{'search_default_employee_ids': id}"
+                    groups="base.group_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">
+                            Absences
+                        </span>
+                    </div>
+                </button>
+            </div>
+            <page name="personal_information" position="attributes">
+                <attribute name="invisible">company_country_code == 'CH'</attribute>
+            </page>
+            <page name="personal_information" position="before">
+                <page string="Personal Informations" invisible="company_country_code != 'CH'" groups="hr.group_hr_user">
+                    <group>
+                        <group string="Personal Information">
+                            <field name="l10n_ch_legal_first_name"/>
+                            <field name="l10n_ch_legal_last_name"/>
+                            <field name="l10n_ch_sv_as_number" placeholder="Unknown"/>
+                            <field name="registration_number" string="Employee Number"/>
+                            <field name="birthday"/>
+                            <field name="gender"/>
+                            <field name="lang" string="Language"/>
+                            <field name="certificate" string="Study Level"/>
+                            <field name="bank_account_id" context="{'default_partner_id': work_contact_id}" options="{'no_quick_create': True}" readonly="not id"/>
+                            <field name="l10n_ch_agricole_company" invisible="1"/>
+                            <field name="l10n_ch_relationship_ceo" invisible="not l10n_ch_agricole_company"/>
+                            <field name="l10n_ch_flex_profiling"/>
+                        </group>
+                        <group string="Contact Information">
+                            <field name="private_email" string="Email"/>
+                            <field name="private_phone" string="Phone"/>
+                            <field name="emergency_contact"/>
+                            <field name="emergency_phone" class="o_force_ltr"/>
+                        </group>
+                        <group string="Residence Status">
+                            <field name="country_id"/>
+                            <field name="l10n_ch_residence_category" invisible="l10n_ch_country_id_code == 'CH'"/>
+                            <field name="l10n_ch_has_withholding_tax" string="Subject To Source Tax"/>
+                            <field name="l10n_ch_country_id_code" invisible="1"/>
+                            <field name="l10n_ch_no_nationality" invisible="country_id"/>
+                            <field name="l10n_ch_cross_border_commuter"/>
+                        </group>
+                        <group string="Work Permit" name="has_work_permit" invisible="not l10n_ch_residence_category">
+                            <field name="visa_no"/>
+                            <field name="permit_no"/>
+                            <field name="visa_expire"/>
+                        </group>
+                        <group string="Cross Border Information" invisible="not l10n_ch_cross_border_commuter">
+                            <field name="place_of_birth"/>
+                            <field name="l10n_ch_foreign_tax_id"/>
+                            <field name="l10n_ch_cross_border_start"/>
+                        </group>
+                    </group>
+                </page>
+                <page string="Family" invisible="company_country_code != 'CH'" groups="hr.group_hr_user">
+                    <group>
+                    <group string="Family Status">
+                        <field name="marital"/>
+                        <field name="l10n_ch_marital_from"/>
+                        <label string="Children Information" for="l10n_ch_children"/>
+                        <div colspan="2">
+                            <field name="l10n_ch_children" nolabel="1">
+                                <list>
+                                    <field name="name" string="First Name"/>
+                                    <field name="last_name" string="Last Name"/>
+                                    <field name="birthdate" string="Birthdate"/>
+                                    <field name="l10n_ch_sv_as_number" string="SV-AS Number"/>
+                                </list>
+                            </field>
+                        </div>
+                        <field name="l10n_ch_concubinage"
+                               invisible="marital in ['married','registered_partnership']
+                                          or not l10n_ch_has_withholding_tax
+                                          or not children"/>
+                    </group>
+                    <group string="Marriage Partner"
+                               invisible="not l10n_ch_has_withholding_tax or marital not in ['married','registered_partnership']">
+                            <field name="l10n_ch_spouse_sv_as_number" placeholder="Unknown"/>
+                            <label for="l10n_ch_spouse_first_name" string="Spouse"/>
+                            <div class="o_row">
+                                <field name="l10n_ch_spouse_first_name" placeholder="First Name" nolabel="1"/>
+                                <field name="l10n_ch_spouse_last_name" placeholder="Last Name" nolabel="1"/>
+                            </div>
+                            <field name="l10n_ch_spouse_birthday" string="Birthday"/>
+                            <label for="l10n_ch_spouse_street" string="Private Address"/>
+                            <div class="o_address_format">
+                                <field name="l10n_ch_spouse_street" placeholder="street..." class="o_address_street"/>
+                                <field name="l10n_ch_spouse_city" placeholder="City" class="o_address_city"/>
+                                <field name="l10n_ch_spouse_zip" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="l10n_ch_spouse_country_id" placeholder="Country"
+                                       class="o_address_country"
+                                       options='{"no_open": True, "no_create": True}'/>
+                            </div>
+                            <field name="l10n_ch_spouse_residence_canton"/>
+                            <field name="l10n_ch_spouse_revenues"/>
+                            <label for="l10n_ch_spouse_work_start_date"
+                                   string="Period"
+                                   invisible="not l10n_ch_spouse_revenues"/>
+                            <div class="o_row" invisible="not l10n_ch_spouse_revenues">
+                                <field name="l10n_ch_spouse_work_start_date" placeholder="Start Date" nolabel="1"/>
+                                <field name="l10n_ch_spouse_work_end_date" placeholder="End Date" nolabel="1"/>
+                            </div>
+                            <field name="l10n_ch_spouse_work_canton"
+                                   string="Work Canton"
+                                   invisible="not l10n_ch_spouse_revenues"/>
+                        </group>
+                    </group>
+                </page>
+                <page string="Residency" invisible="company_country_code != 'CH'" groups="hr.group_hr_user">
+                    <group>
+                        <group string="Address">
+                            <label for="private_street" string="Private Address"/>
+                            <div class="o_address_format">
+                                <field name="private_street" placeholder="street..." class="o_address_street"/>
+                                <field name="private_street2" placeholder="street 2..." class="o_address_street"/>
+                                <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="private_state_id" class="o_address_state"
+                                       placeholder="State"
+                                       options="{'no_open': True, 'no_quick_create': True}"
+                                       context="{'default_country_id': private_country_id}"/>
+                                <field name="private_city" placeholder="City" class="o_address_city"/>
+                                <field name="private_country_id" placeholder="Country"
+                                       class="o_address_country"
+                                       options='{"no_open": True, "no_create": True}'/>
+                            </div>
+                            <field name="l10n_ch_canton" string="Residence Canton"/>
+                            <field name="l10n_ch_municipality"
+                                   string="Residence Municipality"
+                                   invisible="l10n_ch_canton == 'EX'"/>
+                        </group>
+                        <group string="Residency Type" invisible="l10n_ch_canton != 'EX' or not l10n_ch_has_withholding_tax">
+                            <field name="l10n_ch_residence_type" widget="radio" options="{'horizontal': True}" invisible="l10n_ch_canton != 'EX'"/>
+                            <label for="l10n_ch_weekly_residence_address_street" string="Weekly Residence Address"
+                                   invisible="l10n_ch_residence_type != 'Weekly' or l10n_ch_canton != 'EX'"/>
+                            <div class="o_address_format"
+                                 invisible="l10n_ch_residence_type != 'Weekly' or l10n_ch_canton != 'EX'">
+                                <field name="l10n_ch_weekly_residence_address_zip"
+                                       placeholder="ZIP"
+                                       class="o_address_zip"/>
+                                <field name="l10n_ch_weekly_residence_address_street"
+                                       placeholder="street..."
+                                       class="o_address_street"/>
+                                <field name="l10n_ch_weekly_residence_address_city"
+                                       placeholder="City"
+                                       class="o_address_city"/>
+                                <span class="o_address_country">Switzerland</span>
+                            </div>
+                            <field name="l10n_ch_weekly_residence_canton"
+                                   invisible="l10n_ch_residence_type != 'Weekly' or l10n_ch_canton != 'EX'"/>
+                            <field name="l10n_ch_weekly_residence_municipality"
+                                   invisible="l10n_ch_residence_type != 'Weekly' or l10n_ch_canton != 'EX'"/>
+                        </group>
+                    </group>
+                </page>
+                <page string="Source-tax"  invisible="not l10n_ch_has_withholding_tax or company_country_code != 'CH'" groups="hr.group_hr_user">
+                    <group>
+                        <group string="Tax Scale">
+                            <field name="l10n_ch_tax_scale_type" widget="radio"/>
+                            <field name="l10n_ch_tax_scale" invisible="l10n_ch_tax_scale_type != 'TaxAtSourceCode'"/>
+                            <field name="children" string="Eligible Children Deduction"/>
+                            <field name="l10n_ch_church_tax" invisible="l10n_ch_tax_scale_type != 'TaxAtSourceCode'"/>
+                            <field name="l10n_ch_pre_defined_tax_scale" invisible="l10n_ch_tax_scale_type != 'CategoryPredefined'"/>
+                            <field name="l10n_ch_open_tax_scale" invisible="l10n_ch_tax_scale_type != 'CategoryOpen'"/>
+                            <field name="l10n_ch_tax_specially_approved"/>
+                            <field name="l10n_ch_tax_code"/>
+                            <field name="l10n_ch_source_tax_canton"/>
+                            <field name="l10n_ch_source_tax_municipality"/>
+                        </group>
+
+                        <group string="Additional Informations">
+                            <field name="l10n_ch_religious_denomination"/>
+                            <label for="l10n_ch_working_days_in_ch"/>
+                            <div class="o_row mw-50" name="l10n_ch_working_days_in_ch">
+                                <field name="l10n_ch_working_days_in_ch" nolabel="1"/>
+                                <span>/ 20 Days per Month</span>
+                            </div>
+                            <field name="l10n_ch_other_employment"/>
+                            <field name="l10n_ch_total_activity_type" invisible="not l10n_ch_other_employment"/>
+
+                            <label for="l10n_ch_other_activity_gross"
+                                   invisible="l10n_ch_total_activity_type != 'gross' or not l10n_ch_other_employment"/>
+                            <div class="o_row mw-50" name="l10n_ch_other_activity_gross"
+                                 invisible="l10n_ch_total_activity_type != 'gross' or not l10n_ch_other_employment">
+                                <field name="l10n_ch_other_activity_gross" nolabel="1"/>
+                                <span>CHF / Month</span>
+                            </div>
+                            <label for="l10n_ch_other_activity_percentage"
+                                   invisible="l10n_ch_total_activity_type != 'percentage' or not l10n_ch_other_employment"/>
+                            <div class="o_row mw-50" name="l10n_ch_other_activity_percentage"
+                                 invisible="l10n_ch_total_activity_type != 'percentage' or not l10n_ch_other_employment">
+                                <field name="l10n_ch_other_activity_percentage" nolabel="1"/>
+                                <span>%</span>
+                            </div>
+                        </group>
+                    </group>
+                    <group string="Source Tax Entry / Withdrawal / Mutations"
+                       invisible="not l10n_ch_is_mutations and not l10n_ch_has_withholding_tax" groups="hr_payroll.group_hr_payroll_user">
+                        <field name="l10n_ch_is_mutations" nolabel="1" colspan="2">
+                            <list editable="bottom">
+                                <field name="reason" required="1"/>
+                                <field name="qst_canton" required="1"/>
+                                <field name="qst_municipality" required="1"/>
+                                <field name="valid_as_of" required="1"/>
+                            </list>
+                        </field>
+                    </group>
+
+                </page>
+                <page string="Wage Statement" invisible="company_country_code != 'CH'" groups="hr_payroll.group_hr_payroll_user">
+                    <field name="l10n_ch_salary_certificate_profiles">
+                        <list>
+                            <field name="l10n_ch_certificate_type"/>
+                            <field name="valid_from"/>
+                            <field name="l10n_ch_certificate_type"/>
+                        </list>
+                    </field>
+                </page>
+            </page>
+             <page name="hr_payroll" position="attributes">
+                 <attribute name="invisible">company_country_code == 'CH'</attribute>
+             </page>
+        </field>
+    </record>
+
+    <record id="l10n_ch_hr_employee_children_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.hr.employee.children.view.form</field>
+        <field name="model">l10n.ch.hr.employee.children</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll.l10n_ch_hr_employee_children_view_form"/>
+        <field name="arch" type="xml">
+            <sheet position="replace">
+                <sheet>
+                    <group>
+                        <field name="name" string="First Name"/>
+                        <field name="last_name"/>
+                        <field name="birthdate"/>
+                        <field name="sex"/>
+                        <field name="l10n_ch_sv_as_number" placeholder="Unknown"/>
+                        <field name="deduction_start"/>
+                        <field name="deduction_end"/>
+                    </group>
+                </sheet>
+            </sheet>
+        </field>
+    </record>
+</odoo>

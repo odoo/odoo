@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="rule_category_taxes" model="hr.salary.rule.category">
+        <field name="name">Taxes</field>
+        <field name="code">TAXES</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="rule_category_taxable" model="hr.salary.rule.category">
+        <field name="name">Taxable</field>
+        <field name="code">TAX_BASE</field>
+    </record>
+
+    <record id="rule_category_tax_credits" model="hr.salary.rule.category">
+        <field name="name">Tax Credits (Investments)</field>
+        <field name="code">TAX_CREDITS</field>
+    </record>
+</odoo>

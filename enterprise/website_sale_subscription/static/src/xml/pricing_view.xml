@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <div t-name="website_sale_subscription.SubscriptionPricingTable" id="oe_wsale_subscription_pricing_table">
+        <table class="o_not_editable table w-50">
+            <tbody t-if="combination_info.pricings and combination_info.pricings.length > 1">
+                <t t-foreach="combination_info.pricings" t-as="pricing" t-key="pricing.table_name">
+                    <tr>
+                        <td class="w-50" t-esc="pricing.table_name"/>
+                        <td class="w-50 text-muted" t-esc="pricing.table_price"/>
+                        <td class="w-50 text-muted" t-esc="pricing.to_minimum_billing_period"/>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+    </div>
+    <div t-name="website_sale_subscription.SubscriptionPricingSelect">
+        <select t-if="combination_info.pricings and combination_info.subscription_pricing_select" name="plan_id" class="form-select plan_select fs-5" required="1">
+            <t t-foreach="combination_info.pricings" t-as="pricing" t-key="pricing.plan_id">
+                <option t-att-value="pricing.plan_id" t-att-disabled="pricing.can_be_added == False"
+                        t-att-selected="pricing.plan_id == combination_info.subscription_default_pricing_plan_id">
+                    <t t-esc="pricing.price"/>
+                </option>
+            </t>
+        </select>
+        <h5 t-else="combination_info.pricings" class="no_plan_select">
+            <span class="o_subscription_price"><t t-esc="combination_info.subscription_default_pricing_price"/>&#160;</span>
+            <del t-if="combination_info.compare_list_price and (combination_info.compare_list_price &gt; combination_info.price) and combination_info.formated_compared_price">
+                <bdi dir="inherit">
+                    <span t-esc="combination_info.formated_compared_price"/>
+                </bdi>
+            </del>
+        </h5>
+    </div>
+</templates>

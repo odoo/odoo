@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="custom_header" inherit_id="l10n_cl.custom_header">
+        <span name="company_activity" position="replace">
+            <span name="company_activity" class="fst-italic" t-field="o.company_id.l10n_cl_activity_description"/>
+        </span>
+        <xpath expr="//div[@name='regional-office']" position="inside">
+            <span t-field="o.company_id.l10n_cl_sii_regional_office"/>
+        </xpath>
+    </template>
+
+    <template id="informations" inherit_id="l10n_cl.informations">
+        <span t-out="o.partner_id.industry_id.name or ''" position="replace">
+            <span t-out="o.partner_id.l10n_cl_activity_description or o.commercial_partner_id.l10n_cl_activity_description"/>
+        </span>
+        <xpath expr="//div[@id='references']" position="replace">
+        <t t-if="o.l10n_cl_reference_ids">
+            <table class="table table-sm o_main_table small" name="invoice_references">
+                <thead>
+                    <tr>
+                        <th name="th_reference_origin" class="text-center"><span>Origin Ref</span></th>
+                        <th name="th_reference_doc_type" class="text-start"><span>Reference Doc Type</span></th>
+                        <th name="th_reference_code" class="text-center"><span>Doc Code</span></th>
+                        <th name="th_reference_reason" class="text-start"><span>Reason</span></th>
+                        <th name="th_reference_date" class="text-start"><span>Date</span></th>
+                    </tr>
+                </thead>
+                <tbody class="invoice_tbody">
+                <t t-foreach="o.l10n_cl_reference_ids" t-as="refs">
+                    <tr>
+                        <td class="text-start" name="td_reference_origin"><span t-field="refs.origin_doc_number"/></td>
+                        <td class="text-start" name="td_reference_doc_type"><span t-field="refs.l10n_cl_reference_doc_type_id.code"/></td>
+                        <td class="text-start" name="td_reference_code"><span t-field="refs.reference_doc_code"/></td>
+                        <td class="text-start" name="td_reference_reason"><span t-field="refs.reason"/></td>
+                        <td class="text-start" name="td_reference_date"><span t-field="refs.date"/></td>
+                    </tr>
+                </t>
+                </tbody>
+            </table>
+        </t>
+        </xpath>
+    </template>
+
+    <template id="barcode_stamp_footer" inherit_id="l10n_cl.report_invoice_document">
+        <xpath expr="//div[@name='stamp']" position="inside">
+            <t t-if="o.l10n_cl_sii_barcode">
+                <t t-set="barcode_stamp" t-value="o._pdf417_barcode(o.l10n_cl_sii_barcode)"/>
+                <t t-if="barcode_stamp">
+                    <img class="img-fluid" t-attf-src="data:image/*;base64,{{barcode_stamp}}"/>
+                    <p t-att-style="'color: %s;' % o.company_id.primary_color" class="text-center small">
+                        Timbre Electrónico SII<br />
+                        Resolución Nº: <span t-field="o.company_id.l10n_cl_dte_resolution_number"/>
+                        de Fecha: <span t-field="o.company_id.l10n_cl_dte_resolution_date" t-options='{"widget": "date"}'/><br />
+                        <span name="verification_url">Verifique documento en www.sii.cl</span>
+                    </p>
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

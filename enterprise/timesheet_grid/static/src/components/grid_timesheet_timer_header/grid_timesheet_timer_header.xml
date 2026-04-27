@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="timesheet_grid.GridTimesheetTimerHeader">
+        <t t-if="props.timerRunning and !props.otherCompany">
+            <Record
+                fields="fields"
+                activeFields="activeFields"
+                resModel="props.model.resModel"
+                resId="props.resId"
+                t-slot-scope="data"
+                mode="'edit'"
+                onRecordChanged.bind="onTimesheetChanged"
+            >
+                <TimesheetTimerHeader
+                    timesheet="data.record"
+                    addTimeMode="props.addTimeMode"
+                    timerRunning="props.timerRunning"
+                    otherCompany="props.otherCompany"
+                    fields="activeFields"
+                    stepTimer="props.stepTimer"
+                    timerReactive="timerReactive"
+                    onTimerStarted="props.onTimerStarted"
+                    onTimerStopped="props.onTimerStopped"
+                    onTimerUnlinked="props.onTimerUnlinked"
+                />
+            </Record>
+        </t>
+        <t t-else="">
+            <TimesheetTimerHeader
+                addTimeMode="props.addTimeMode"
+                timerRunning="props.timerRunning"
+                otherCompany="props.otherCompany"
+                fields="activeFields"
+                stepTimer="props.stepTimer"
+                onTimerStarted="props.onTimerStarted"
+                onTimerStopped="props.onTimerStopped"
+                onTimerUnlinked="props.onTimerUnlinked"
+            />
+        </t>
+    </t>
+
+</templates>

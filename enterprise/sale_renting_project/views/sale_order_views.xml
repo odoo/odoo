@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="rental_order_view_search" model="ir.ui.view">
+        <field name="name">rental.order.search.inherit.sale_renting_project</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_renting.rental_order_view_search"/>
+        <field name="arch" type="xml">
+            <field name="order_line" position="after">
+                <field name="project_id" groups="project.group_project_user"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,4031 @@
+{
+    "version": 19,
+    "sheets": [
+        {
+            "id": "f7c6d13e-96b0-476c-99c0-ecb401f2b97a",
+            "name": "Transport & Assembly",
+            "colNumber": 25,
+            "rowNumber": 93,
+            "rows": {
+                "26": {
+                    "size": 19
+                }
+            },
+            "cols": {
+                "0": {
+                    "size": 236
+                },
+                "1": {
+                    "size": 109
+                },
+                "2": {
+                    "size": 44
+                },
+                "4": {
+                    "size": 109
+                },
+                "5": {
+                    "size": 112
+                },
+                "6": {
+                    "size": 94
+                },
+                "7": {
+                    "size": 94
+                },
+                "9": {
+                    "size": 47
+                },
+                "10": {
+                    "size": 202
+                },
+                "11": {
+                    "size": 79
+                }
+            },
+            "merges": [
+                "E1:I1"
+            ],
+            "cells": {
+                "A1": {
+                    "style": 1,
+                    "content": "Transport"
+                },
+                "A2": {
+                    "style": 2,
+                    "content": "Order Total Volume"
+                },
+                "A3": {
+                    "style": 2,
+                    "content": "Extra Volume"
+                },
+                "A4": {
+                    "style": 3,
+                    "content": "Total Volume"
+                },
+                "A5": {
+                    "style": 3,
+                    "content": "Recommended Vehicule"
+                },
+                "A6": {
+                    "style": 2,
+                    "content": "Vehicle"
+                },
+                "A7": {
+                    "style": 4,
+                    "content": "Distance"
+                },
+                "A8": {
+                    "style": 4,
+                    "content": "Fixed Cost"
+                },
+                "A9": {
+                    "style": 4,
+                    "content": "Cost/km"
+                },
+                "A10": {
+                    "style": 5,
+                    "content": "Transport Cost"
+                },
+                "A11": {
+                    "style": 6
+                },
+                "A12": {
+                    "style": 1,
+                    "content": "Assembly"
+                },
+                "A13": {
+                    "style": 2,
+                    "content": "Apprentice Work"
+                },
+                "A14": {
+                    "style": 2,
+                    "content": "Extra Apprentice Time"
+                },
+                "A15": {
+                    "style": 3,
+                    "content": "Total Hours"
+                },
+                "A16": {
+                    "style": 2,
+                    "content": "Apprentice Cost/Hour"
+                },
+                "A17": {
+                    "style": 3,
+                    "content": "Total Apprentice"
+                },
+                "A18": {
+                    "style": 6
+                },
+                "A19": {
+                    "style": 2,
+                    "content": "Carpenter Work"
+                },
+                "A20": {
+                    "style": 2,
+                    "content": "Extra Carpenter time (hours)"
+                },
+                "A21": {
+                    "style": 3,
+                    "content": "Total Hours"
+                },
+                "A22": {
+                    "style": 2,
+                    "content": "Carpenter Cost/Hour"
+                },
+                "A23": {
+                    "style": 3,
+                    "content": "Total Carpenter"
+                },
+                "A24": {
+                    "style": 7
+                },
+                "A25": {
+                    "style": 2,
+                    "content": "Risk factor"
+                },
+                "A26": {
+                    "style": 5,
+                    "content": "Order Total Assembly"
+                },
+                "A27": {
+                    "style": 2,
+                    "content": "Margin"
+                },
+                "B1": {
+                    "style": 6
+                },
+                "B2": {
+                    "style": 6,
+                    "content": "=sum('SO Lines'!N2:N15)"
+                },
+                "B3": {
+                    "style": 8
+                },
+                "B4": {
+                    "style": 9,
+                    "content": "=B2+B3"
+                },
+                "B5": {
+                    "style": 10,
+                    "content": "='SO Lines'!Q2"
+                },
+                "B6": {
+                    "style": 8
+                },
+                "B7": {
+                    "style": 8
+                },
+                "B8": {
+                    "style": 6,
+                    "content": "=IF($B$6=\"\",VLOOKUP($B$5,$G$3:$I$8,2,false),VLOOKUP($B$6,$G$3:$I$8,3,false))"
+                },
+                "B9": {
+                    "style": 6,
+                    "content": "=IF($B$6=\"\",VLOOKUP($B$5,$G$3:$I$8,3,false),VLOOKUP($B$6,$G$3:$I$8,2,false))"
+                },
+                "B10": {
+                    "style": 11,
+                    "content": "='SO Lines'!P2"
+                },
+                "B11": {
+                    "style": 6
+                },
+                "B12": {
+                    "style": 6
+                },
+                "B13": {
+                    "style": 6,
+                    "content": "=SUM('SO Lines'!J2:J15)/60"
+                },
+                "B14": {
+                    "style": 8
+                },
+                "B15": {
+                    "style": 9,
+                    "content": "=B13+B14"
+                },
+                "B16": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "30"
+                },
+                "B17": {
+                    "style": 9,
+                    "content": "=B15*B16"
+                },
+                "B18": {
+                    "style": 6
+                },
+                "B19": {
+                    "style": 6,
+                    "content": "=sum('SO Lines'!K2:K15)/60"
+                },
+                "B20": {
+                    "style": 8
+                },
+                "B21": {
+                    "style": 9,
+                    "content": "=B19+B20"
+                },
+                "B22": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "60"
+                },
+                "B23": {
+                    "style": 9,
+                    "content": "=B21*B22"
+                },
+                "B24": {
+                    "style": 7
+                },
+                "B25": {
+                    "style": 8,
+                    "format": 2,
+                    "content": "0.1"
+                },
+                "B26": {
+                    "style": 11,
+                    "content": "='SO Lines'!M2"
+                },
+                "B27": {
+                    "style": 6,
+                    "format": 2,
+                    "content": "=B26/(sum('SO Lines'!T2:T15)-B10)"
+                },
+                "C1": {
+                    "style": 6
+                },
+                "C2": {
+                    "style": 6,
+                    "content": "m³"
+                },
+                "C3": {
+                    "style": 6,
+                    "content": "m³"
+                },
+                "C4": {
+                    "style": 6,
+                    "content": "m³"
+                },
+                "C5": {
+                    "style": 6
+                },
+                "C6": {
+                    "style": 12
+                },
+                "C7": {
+                    "style": 13,
+                    "content": "km"
+                },
+                "C8": {
+                    "style": 6
+                },
+                "C9": {
+                    "style": 6
+                },
+                "C10": {
+                    "style": 6
+                },
+                "C11": {
+                    "style": 6
+                },
+                "C12": {
+                    "style": 12
+                },
+                "C13": {
+                    "style": 6,
+                    "content": "hours"
+                },
+                "C14": {
+                    "style": 6,
+                    "content": "hours"
+                },
+                "C15": {
+                    "style": 6,
+                    "content": "hours"
+                },
+                "C16": {
+                    "style": 6
+                },
+                "C17": {
+                    "style": 6
+                },
+                "C18": {
+                    "style": 12
+                },
+                "C19": {
+                    "style": 6,
+                    "content": "hours"
+                },
+                "C20": {
+                    "style": 6,
+                    "content": "hours"
+                },
+                "C21": {
+                    "style": 6,
+                    "content": "hours"
+                },
+                "C22": {
+                    "style": 6
+                },
+                "C23": {
+                    "style": 6
+                },
+                "C24": {
+                    "style": 12
+                },
+                "C25": {
+                    "style": 12
+                },
+                "C26": {
+                    "style": 6
+                },
+                "C27": {
+                    "style": 6
+                },
+                "D1": {
+                    "style": 6,
+                    "border": 1
+                },
+                "D2": {
+                    "style": 6,
+                    "border": 1
+                },
+                "D3": {
+                    "style": 6,
+                    "border": 1
+                },
+                "D4": {
+                    "style": 6,
+                    "border": 1
+                },
+                "D5": {
+                    "style": 6,
+                    "border": 1
+                },
+                "D6": {
+                    "style": 6,
+                    "border": 1
+                },
+                "D7": {
+                    "style": 6,
+                    "border": 1
+                },
+                "D8": {
+                    "style": 6,
+                    "border": 1
+                },
+                "D9": {
+                    "style": 6
+                },
+                "E1": {
+                    "style": 14,
+                    "content": "Transport costs",
+                    "border": 2
+                },
+                "E2": {
+                    "style": 3,
+                    "content": "Volume min (m³)",
+                    "border": 3
+                },
+                "E3": {
+                    "style": 2,
+                    "content": "0",
+                    "border": 3
+                },
+                "E4": {
+                    "style": 2,
+                    "format": 3,
+                    "content": "3.1",
+                    "border": 3
+                },
+                "E5": {
+                    "style": 2,
+                    "format": 3,
+                    "content": "6.1",
+                    "border": 3
+                },
+                "E6": {
+                    "style": 2,
+                    "format": 3,
+                    "content": "10.1",
+                    "border": 3
+                },
+                "E7": {
+                    "style": 2,
+                    "format": 3,
+                    "content": "15.1",
+                    "border": 3
+                },
+                "E8": {
+                    "style": 2,
+                    "format": 3,
+                    "content": "25.1",
+                    "border": 4
+                },
+                "E9": {
+                    "style": 6,
+                    "border": 5
+                },
+                "F1": {
+                    "style": 14,
+                    "border": 5
+                },
+                "F2": {
+                    "style": 3,
+                    "content": "Volume max (m³)"
+                },
+                "F3": {
+                    "style": 2,
+                    "content": "3"
+                },
+                "F4": {
+                    "style": 2,
+                    "format": 3,
+                    "content": "6"
+                },
+                "F5": {
+                    "style": 2,
+                    "format": 3,
+                    "content": "10"
+                },
+                "F6": {
+                    "style": 2,
+                    "format": 3,
+                    "content": "15"
+                },
+                "F7": {
+                    "style": 2,
+                    "format": 3,
+                    "content": "25"
+                },
+                "F8": {
+                    "style": 2,
+                    "format": 3,
+                    "content": "40",
+                    "border": 6
+                },
+                "F9": {
+                    "style": 6,
+                    "border": 5
+                },
+                "G1": {
+                    "style": 14,
+                    "border": 5
+                },
+                "G2": {
+                    "style": 3,
+                    "content": "Vehicule"
+                },
+                "G3": {
+                    "style": 2,
+                    "content": "Small Van"
+                },
+                "G4": {
+                    "style": 2,
+                    "content": "Medium Van"
+                },
+                "G5": {
+                    "style": 2,
+                    "content": "Large Van"
+                },
+                "G6": {
+                    "style": 2,
+                    "content": "Light Truck"
+                },
+                "G7": {
+                    "style": 2,
+                    "content": "Medium Truck"
+                },
+                "G8": {
+                    "style": 2,
+                    "content": "Heavy Truck",
+                    "border": 6
+                },
+                "G9": {
+                    "style": 6,
+                    "border": 5
+                },
+                "H1": {
+                    "style": 14,
+                    "border": 5
+                },
+                "H2": {
+                    "style": 3,
+                    "content": "Fixed Cost ($)"
+                },
+                "H3": {
+                    "style": 2,
+                    "format": 1,
+                    "content": "50"
+                },
+                "H4": {
+                    "style": 2,
+                    "format": 1,
+                    "content": "75"
+                },
+                "H5": {
+                    "style": 2,
+                    "format": 1,
+                    "content": "100"
+                },
+                "H6": {
+                    "style": 2,
+                    "format": 1,
+                    "content": "150"
+                },
+                "H7": {
+                    "style": 2,
+                    "format": 1,
+                    "content": "200"
+                },
+                "H8": {
+                    "style": 2,
+                    "format": 1,
+                    "content": "300",
+                    "border": 6
+                },
+                "H9": {
+                    "style": 6,
+                    "border": 5
+                },
+                "I1": {
+                    "style": 14,
+                    "border": 7
+                },
+                "I2": {
+                    "style": 3,
+                    "content": "Cost/km",
+                    "border": 1
+                },
+                "I3": {
+                    "style": 2,
+                    "format": 1,
+                    "content": "0.25",
+                    "border": 1
+                },
+                "I4": {
+                    "style": 2,
+                    "format": 1,
+                    "content": "0.3",
+                    "border": 1
+                },
+                "I5": {
+                    "style": 2,
+                    "format": 1,
+                    "content": "0.35",
+                    "border": 1
+                },
+                "I6": {
+                    "style": 2,
+                    "format": 1,
+                    "content": "0.4",
+                    "border": 1
+                },
+                "I7": {
+                    "style": 2,
+                    "format": 1,
+                    "content": "0.5",
+                    "border": 1
+                },
+                "I8": {
+                    "style": 2,
+                    "format": 1,
+                    "content": "0.6",
+                    "border": 8
+                },
+                "I9": {
+                    "border": 5
+                },
+                "J1": {
+                    "border": 3
+                },
+                "J2": {
+                    "border": 3
+                },
+                "J3": {
+                    "border": 3
+                },
+                "J4": {
+                    "border": 3
+                },
+                "J5": {
+                    "border": 3
+                },
+                "J6": {
+                    "border": 3
+                },
+                "J7": {
+                    "border": 3
+                },
+                "J8": {
+                    "border": 3
+                }
+            },
+            "conditionalFormats": [],
+            "figures": [
+                {
+                    "id": "ea5b6bc6-c56e-4c82-a8fd-4a449e941c1d",
+                    "x": 483,
+                    "y": 214,
+                    "width": 508,
+                    "height": 407,
+                    "tag": "chart",
+                    "data": {
+                        "type": "pie",
+                        "dataSetsHaveTitle": true,
+                        "dataSets": [
+                            {
+                                "dataRange": "'SO Lines'!T1:T15"
+                            }
+                        ],
+                        "legendPosition": "bottom",
+                        "labelRange": "'SO Lines'!S1:S15",
+                        "title": {
+                            "text": "Cost repartition"
+                        },
+                        "aggregated": false,
+                        "isDoughnut": false,
+                        "showValues": false
+                    }
+                },
+                {
+                    "id": "d69711e0-e4aa-4904-aa01-20d412098fae",
+                    "x": 1036,
+                    "y": 0,
+                    "width": 283,
+                    "height": 192,
+                    "tag": "chart",
+                    "data": {
+                        "sectionRule": {
+                            "colors": {
+                                "lowerColor": "#cc0000",
+                                "middleColor": "#f1c232",
+                                "upperColor": "#6aa84f"
+                            },
+                            "rangeMin": "0",
+                            "rangeMax": "1",
+                            "lowerInflectionPoint": {
+                                "type": "percentage",
+                                "value": "20"
+                            },
+                            "upperInflectionPoint": {
+                                "type": "percentage",
+                                "value": "80"
+                            }
+                        },
+                        "title": {
+                            "text": "Truck Load"
+                        },
+                        "type": "gauge",
+                        "dataRange": "'SO Lines'!V2"
+                    }
+                },
+                {
+                    "id": "d936be97-0386-4532-99b0-780c6f2edb9c",
+                    "x": 1036,
+                    "y": 214,
+                    "width": 283,
+                    "height": 192,
+                    "tag": "chart",
+                    "data": {
+                        "sectionRule": {
+                            "colors": {
+                                "lowerColor": "#cc0000",
+                                "middleColor": "#f1c232",
+                                "upperColor": "#6aa84f"
+                            },
+                            "rangeMin": "0",
+                            "rangeMax": "0.4",
+                            "lowerInflectionPoint": {
+                                "type": "percentage",
+                                "value": "25"
+                            },
+                            "upperInflectionPoint": {
+                                "type": "percentage",
+                                "value": "75"
+                            }
+                        },
+                        "title": {
+                            "text": "Margin"
+                        },
+                        "type": "gauge",
+                        "dataRange": "B27"
+                    }
+                },
+                {
+                    "id": "30d8f4c2-aee3-4f26-99fb-919e2f814684",
+                    "x": 1036,
+                    "y": 429,
+                    "width": 283,
+                    "height": 192,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#E06666",
+                        "baselineColorUp": "#6AA84F",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "Your commission"
+                        },
+                        "type": "scorecard",
+                        "keyValue": "'SO Lines'!U2",
+                        "humanize": true
+                    }
+                }
+            ],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [
+                {
+                    "id": "be616836-22e2-44fd-9ec7-747962cd09a5",
+                    "criterion": {
+                        "type": "isValueInRange",
+                        "values": [
+                            "G3:G8"
+                        ],
+                        "displayStyle": "arrow"
+                    },
+                    "ranges": [
+                        "B6"
+                    ]
+                }
+            ],
+            "comments": {}
+        },
+        {
+            "id": "cd67cb68-5e93-4821-ba76-80e6771b4f5e",
+            "name": "Instructions",
+            "colNumber": 26,
+            "rowNumber": 101,
+            "rows": {
+                "0": {
+                    "size": 37
+                }
+            },
+            "cols": {
+                "0": {
+                    "size": 201
+                },
+                "1": {
+                    "size": 83
+                },
+                "4": {
+                    "size": 170
+                }
+            },
+            "merges": [
+                "A1:E1"
+            ],
+            "cells": {
+                "A1": {
+                    "style": 14,
+                    "content": "Shipping and Assembly Cost Form Instructions",
+                    "border": 2
+                },
+                "A2": {
+                    "style": 3,
+                    "border": 3
+                },
+                "A3": {
+                    "style": 2,
+                    "content": "To provide your customer with an accurate quotation, please fill the yellow cells in sheet Transport & Assembly.",
+                    "border": 3
+                },
+                "A4": {
+                    "style": 2,
+                    "border": 3
+                },
+                "A5": {
+                    "style": 3,
+                    "content": "Shipping Info:",
+                    "border": 3
+                },
+                "A6": {
+                    "style": 2,
+                    "content": "- Indicate the additional volume that might be required to secure the shipment.",
+                    "border": 3
+                },
+                "A7": {
+                    "style": 2,
+                    "content": "- In case of a local delivery, insert the number of kilometers to the delivery address.",
+                    "border": 3
+                },
+                "A8": {
+                    "style": 2,
+                    "content": "- If needed, select another truck for the delivery.",
+                    "border": 3
+                },
+                "A9": {
+                    "style": 15,
+                    "border": 3
+                },
+                "A10": {
+                    "style": 3,
+                    "content": "Assembly Requirements:",
+                    "border": 3
+                },
+                "A11": {
+                    "style": 2,
+                    "content": "- Indicate the extra time required for the apprentice to perform his/her work.",
+                    "border": 3
+                },
+                "A12": {
+                    "style": 2,
+                    "content": "- Indicate the extra time required for the carpenter to perform his/her work.",
+                    "border": 3
+                },
+                "A13": {
+                    "style": 2,
+                    "content": "- Indicate the risk factor added to the total assembly cost (10% by default).",
+                    "border": 3
+                },
+                "A14": {
+                    "style": 2,
+                    "border": 3
+                },
+                "A15": {
+                    "style": 2,
+                    "content": "Review and Submit by clicking on",
+                    "border": 3
+                },
+                "A16": {
+                    "style": 2,
+                    "border": 3
+                },
+                "A17": {
+                    "style": 2,
+                    "content": "Thank you for your cooperation.",
+                    "border": 3
+                },
+                "A18": {
+                    "style": 2,
+                    "border": 9
+                },
+                "B1": {
+                    "style": 14,
+                    "border": 5
+                },
+                "B2": {
+                    "style": 3
+                },
+                "B3": {
+                    "style": 2
+                },
+                "B4": {
+                    "style": 2
+                },
+                "B5": {
+                    "style": 2
+                },
+                "B6": {
+                    "style": 2
+                },
+                "B7": {
+                    "style": 2
+                },
+                "B8": {
+                    "style": 2
+                },
+                "B9": {
+                    "style": 15
+                },
+                "B10": {
+                    "style": 3
+                },
+                "B11": {
+                    "style": 2
+                },
+                "B12": {
+                    "style": 2
+                },
+                "B13": {
+                    "style": 2
+                },
+                "B14": {
+                    "style": 2
+                },
+                "B15": {
+                    "style": 5,
+                    "content": "Save to SO"
+                },
+                "B16": {
+                    "style": 2
+                },
+                "B17": {
+                    "style": 2
+                },
+                "B18": {
+                    "style": 2,
+                    "border": 11
+                },
+                "C1": {
+                    "style": 14,
+                    "border": 5
+                },
+                "C2": {
+                    "style": 3
+                },
+                "C3": {
+                    "style": 2
+                },
+                "C4": {
+                    "style": 2
+                },
+                "C5": {
+                    "style": 2
+                },
+                "C6": {
+                    "style": 2
+                },
+                "C7": {
+                    "style": 2
+                },
+                "C8": {
+                    "style": 2
+                },
+                "C9": {
+                    "style": 15
+                },
+                "C10": {
+                    "style": 3
+                },
+                "C11": {
+                    "style": 2
+                },
+                "C12": {
+                    "style": 2
+                },
+                "C13": {
+                    "style": 2
+                },
+                "C14": {
+                    "style": 2
+                },
+                "C15": {
+                    "style": 2,
+                    "content": "at the top of the window."
+                },
+                "C16": {
+                    "style": 2
+                },
+                "C17": {
+                    "style": 2
+                },
+                "C18": {
+                    "style": 2,
+                    "border": 11
+                },
+                "D1": {
+                    "style": 14,
+                    "border": 5
+                },
+                "D2": {
+                    "style": 3
+                },
+                "D3": {
+                    "style": 2
+                },
+                "D4": {
+                    "style": 2
+                },
+                "D5": {
+                    "style": 2
+                },
+                "D6": {
+                    "style": 2,
+                    "format": 1
+                },
+                "D7": {
+                    "style": 2
+                },
+                "D8": {
+                    "style": 2
+                },
+                "D9": {
+                    "style": 15
+                },
+                "D10": {
+                    "style": 3
+                },
+                "D11": {
+                    "style": 2
+                },
+                "D12": {
+                    "style": 2
+                },
+                "D13": {
+                    "style": 2
+                },
+                "D14": {
+                    "style": 2
+                },
+                "D15": {
+                    "style": 2
+                },
+                "D16": {
+                    "style": 2
+                },
+                "D17": {
+                    "style": 2
+                },
+                "D18": {
+                    "style": 2,
+                    "border": 11
+                },
+                "E1": {
+                    "style": 14,
+                    "border": 12
+                },
+                "E2": {
+                    "style": 3,
+                    "border": 13
+                },
+                "E3": {
+                    "style": 2,
+                    "border": 13
+                },
+                "E4": {
+                    "style": 2,
+                    "border": 13
+                },
+                "E5": {
+                    "style": 2,
+                    "border": 13
+                },
+                "E6": {
+                    "style": 2,
+                    "border": 13
+                },
+                "E7": {
+                    "style": 2,
+                    "border": 13
+                },
+                "E8": {
+                    "style": 2,
+                    "border": 13
+                },
+                "E9": {
+                    "style": 15,
+                    "border": 13
+                },
+                "E10": {
+                    "style": 3,
+                    "border": 13
+                },
+                "E11": {
+                    "style": 2,
+                    "border": 13
+                },
+                "E12": {
+                    "style": 2,
+                    "border": 13
+                },
+                "E13": {
+                    "style": 2,
+                    "border": 13
+                },
+                "E14": {
+                    "style": 2,
+                    "border": 13
+                },
+                "E15": {
+                    "style": 2,
+                    "border": 13
+                },
+                "E16": {
+                    "style": 2,
+                    "border": 13
+                },
+                "E17": {
+                    "style": 2,
+                    "border": 13
+                },
+                "E18": {
+                    "style": 2,
+                    "border": 14
+                },
+                "A19": {
+                    "border": 10
+                },
+                "B19": {
+                    "border": 10
+                },
+                "C19": {
+                    "border": 10
+                },
+                "D19": {
+                    "border": 10
+                },
+                "E19": {
+                    "border": 10
+                },
+                "F1": {
+                    "border": 15
+                },
+                "F2": {
+                    "border": 15
+                },
+                "F3": {
+                    "border": 15
+                },
+                "F4": {
+                    "border": 15
+                },
+                "F5": {
+                    "border": 15
+                },
+                "F6": {
+                    "border": 15
+                },
+                "F7": {
+                    "border": 15
+                },
+                "F8": {
+                    "border": 15
+                },
+                "F9": {
+                    "border": 15
+                },
+                "F10": {
+                    "border": 15
+                },
+                "F11": {
+                    "border": 15
+                },
+                "F12": {
+                    "border": 15
+                },
+                "F13": {
+                    "border": 15
+                },
+                "F14": {
+                    "border": 15
+                },
+                "F15": {
+                    "border": 15
+                },
+                "F16": {
+                    "border": 15
+                },
+                "F17": {
+                    "border": 15
+                },
+                "F18": {
+                    "border": 15
+                }
+            },
+            "conditionalFormats": [],
+            "figures": [],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        },
+        {
+            "id": "e69329c4-707a-4649-afb2-a4de6609a8e1",
+            "name": "Products",
+            "colNumber": 21,
+            "rowNumber": 94,
+            "rows": {},
+            "cols": {
+                "0": {
+                    "size": 293
+                },
+                "1": {
+                    "size": 77
+                },
+                "2": {
+                    "size": 59
+                },
+                "3": {
+                    "size": 106
+                },
+                "4": {
+                    "size": 106
+                }
+            },
+            "merges": [
+                "A1:E1",
+                "F1:G1"
+            ],
+            "cells": {
+                "A1": {
+                    "style": 16,
+                    "border": 16
+                },
+                "A2": {
+                    "style": 17,
+                    "content": "Name",
+                    "border": 16
+                },
+                "A3": {
+                    "content": "[DESK0005] Customizable Desk (Custom, White)",
+                    "border": 2
+                },
+                "A4": {
+                    "content": "[DESK0006] Customizable Desk (Custom, Black)",
+                    "border": 3
+                },
+                "A5": {
+                    "content": "[D_0045_B] Stool (Dark Blue)",
+                    "border": 3
+                },
+                "A6": {
+                    "content": "[D_0045_G] Stool (Green)",
+                    "border": 3
+                },
+                "A7": {
+                    "content": "[D_0045_GR] Stool (Grey)",
+                    "border": 3
+                },
+                "A8": {
+                    "content": "[E-COM06] Corner Desk Right Sit",
+                    "border": 3
+                },
+                "A9": {
+                    "content": "[E-COM07] Large Cabinet",
+                    "border": 3
+                },
+                "A10": {
+                    "content": "[E-COM08] Storage Box",
+                    "border": 3
+                },
+                "A11": {
+                    "content": "[E-COM09] Large Desk",
+                    "border": 3
+                },
+                "A12": {
+                    "content": "[E-COM10] Pedal Bin",
+                    "border": 3
+                },
+                "A13": {
+                    "content": "[E-COM11] Cabinet with Doors",
+                    "border": 3
+                },
+                "A14": {
+                    "content": "[E-COM12] Conference Chair (Steel)",
+                    "border": 3
+                },
+                "A15": {
+                    "content": "[E-COM13] Conference Chair (Aluminium)",
+                    "border": 3
+                },
+                "A16": {
+                    "content": "[E-COM98] Customized Cabinet (Metric)",
+                    "border": 3
+                },
+                "A17": {
+                    "content": "[E-COM99] Customized Cabinet (USA)",
+                    "border": 3
+                },
+                "A18": {
+                    "content": "[FURN_0001] Desk Organizer",
+                    "border": 3
+                },
+                "A19": {
+                    "content": "[FURN_0002] Desk Pad",
+                    "border": 3
+                },
+                "A20": {
+                    "content": "[FURN_0003] LED Lamp",
+                    "border": 3
+                },
+                "A21": {
+                    "content": "[FURN_0004] Letter Tray",
+                    "border": 3
+                },
+                "A22": {
+                    "content": "[FURN_0005] Magnetic Board",
+                    "border": 3
+                },
+                "A23": {
+                    "content": "[FURN_0006] Monitor Stand",
+                    "border": 3
+                },
+                "A24": {
+                    "content": "[FURN_0007] Newspaper Rack",
+                    "border": 3
+                },
+                "A25": {
+                    "content": "[FURN_0008] Small Shelf",
+                    "border": 3
+                },
+                "A26": {
+                    "content": "[FURN_0009] Wall Shelf Unit",
+                    "border": 3
+                },
+                "A27": {
+                    "content": "[FURN_0096] Customizable Desk (Steel, White)",
+                    "border": 3
+                },
+                "A28": {
+                    "content": "[FURN_0097] Customizable Desk (Steel, Black)",
+                    "border": 3
+                },
+                "A29": {
+                    "content": "[FURN_0098] Customizable Desk (Aluminium, White)",
+                    "border": 3
+                },
+                "A30": {
+                    "content": "[FURN_0269] Office Chair Black",
+                    "border": 3
+                },
+                "A31": {
+                    "content": "[FURN_0789] Individual Workplace",
+                    "border": 3
+                },
+                "A32": {
+                    "content": "[FURN_1118] Corner Desk Left Sit",
+                    "border": 3
+                },
+                "A33": {
+                    "content": "[FURN_2100] Drawer Black",
+                    "border": 3
+                },
+                "A34": {
+                    "content": "[FURN_2333] Table Leg",
+                    "border": 3
+                },
+                "A35": {
+                    "content": "[FURN_5555] Cable Management Box",
+                    "border": 3
+                },
+                "A36": {
+                    "content": "[FURN_5623] Drawer Case Black",
+                    "border": 3
+                },
+                "A37": {
+                    "content": "[FURN_5800] Cable Management Box",
+                    "border": 3
+                },
+                "A38": {
+                    "content": "[FURN_6666] Acoustic Bloc Screens (White)",
+                    "border": 3
+                },
+                "A39": {
+                    "content": "[FURN_6667] Acoustic Bloc Screens (Wood)",
+                    "border": 3
+                },
+                "A40": {
+                    "content": "[FURN_6741] Large Meeting Table",
+                    "border": 3
+                },
+                "A41": {
+                    "content": "[FURN_7023] Wood Panel",
+                    "border": 3
+                },
+                "A42": {
+                    "content": "[FURN_7111] Ply Layer",
+                    "border": 3
+                },
+                "A43": {
+                    "content": "[FURN_7777] Office Chair",
+                    "border": 3
+                },
+                "A44": {
+                    "content": "[FURN_7800] Desk Combination",
+                    "border": 3
+                },
+                "A45": {
+                    "content": "[FURN_78236] Table Kit",
+                    "border": 3
+                },
+                "A46": {
+                    "content": "[FURN_7888] Desk Stand with Screen",
+                    "border": 3
+                },
+                "A47": {
+                    "content": "[FURN_8111] Wear Layer",
+                    "border": 3
+                },
+                "A48": {
+                    "content": "[FURN_8220] Four Person Desk",
+                    "border": 3
+                },
+                "A49": {
+                    "content": "[FURN_8522] Table Top",
+                    "border": 3
+                },
+                "A50": {
+                    "content": "[FURN_8621] Plastic Laminate",
+                    "border": 3
+                },
+                "A51": {
+                    "content": "[FURN_8855] Drawer",
+                    "border": 3
+                },
+                "A52": {
+                    "content": "[FURN_8888] Office Lamp",
+                    "border": 3
+                },
+                "A53": {
+                    "content": "[FURN_8900] Drawer Black",
+                    "border": 3
+                },
+                "A54": {
+                    "content": "[FURN_8999] Three-Seat Sofa",
+                    "border": 3
+                },
+                "A55": {
+                    "content": "[FURN_9001] Flipover",
+                    "border": 3
+                },
+                "A56": {
+                    "content": "[FURN_9111] Ply Veneer",
+                    "border": 3
+                },
+                "A57": {
+                    "content": "[FURN_9666] Table",
+                    "border": 4
+                },
+                "B1": {
+                    "style": 16,
+                    "border": 17
+                },
+                "B2": {
+                    "style": 17,
+                    "content": "Sales Price",
+                    "border": 17
+                },
+                "B3": {
+                    "content": "750",
+                    "border": 5
+                },
+                "B4": {
+                    "content": "750"
+                },
+                "B5": {
+                    "content": "500"
+                },
+                "B6": {
+                    "content": "500"
+                },
+                "B7": {
+                    "content": "500"
+                },
+                "B8": {
+                    "content": "147"
+                },
+                "B9": {
+                    "content": "320"
+                },
+                "B10": {
+                    "content": "15.8"
+                },
+                "B11": {
+                    "content": "1799"
+                },
+                "B12": {
+                    "content": "47"
+                },
+                "B13": {
+                    "content": "140"
+                },
+                "B14": {
+                    "content": "33"
+                },
+                "B15": {
+                    "content": "39.4"
+                },
+                "B16": {
+                    "content": "210"
+                },
+                "B17": {
+                    "content": "200"
+                },
+                "B18": {
+                    "content": "5.1"
+                },
+                "B19": {
+                    "content": "1.98"
+                },
+                "B20": {
+                    "content": "0.9"
+                },
+                "B21": {
+                    "content": "4.8"
+                },
+                "B22": {
+                    "content": "1.98"
+                },
+                "B23": {
+                    "content": "3.19"
+                },
+                "B24": {
+                    "content": "1.28"
+                },
+                "B25": {
+                    "content": "2.83"
+                },
+                "B26": {
+                    "content": "1.98"
+                },
+                "B27": {
+                    "content": "750"
+                },
+                "B28": {
+                    "content": "750"
+                },
+                "B29": {
+                    "content": "800.4"
+                },
+                "B30": {
+                    "content": "120.5"
+                },
+                "B31": {
+                    "content": "885"
+                },
+                "B32": {
+                    "content": "85"
+                },
+                "B33": {
+                    "content": "24"
+                },
+                "B34": {
+                    "content": "50"
+                },
+                "B35": {
+                    "content": "100"
+                },
+                "B36": {
+                    "content": "20"
+                },
+                "B37": {
+                    "content": "120"
+                },
+                "B38": {
+                    "content": "295"
+                },
+                "B39": {
+                    "content": "295"
+                },
+                "B40": {
+                    "content": "4000"
+                },
+                "B41": {
+                    "content": "100"
+                },
+                "B42": {
+                    "content": "10"
+                },
+                "B43": {
+                    "content": "70"
+                },
+                "B44": {
+                    "content": "450"
+                },
+                "B45": {
+                    "content": "147"
+                },
+                "B46": {
+                    "content": "2100"
+                },
+                "B47": {
+                    "content": "10"
+                },
+                "B48": {
+                    "content": "2350"
+                },
+                "B49": {
+                    "content": "380"
+                },
+                "B50": {
+                    "content": "1000"
+                },
+                "B51": {
+                    "content": "110.5"
+                },
+                "B52": {
+                    "content": "40"
+                },
+                "B53": {
+                    "content": "25"
+                },
+                "B54": {
+                    "content": "1500"
+                },
+                "B55": {
+                    "content": "1950"
+                },
+                "B56": {
+                    "content": "10"
+                },
+                "B57": {
+                    "content": "520",
+                    "border": 6
+                },
+                "C1": {
+                    "style": 16,
+                    "border": 17
+                },
+                "C2": {
+                    "style": 17,
+                    "content": "Cost",
+                    "border": 17
+                },
+                "C8": {
+                    "content": "600"
+                },
+                "C9": {
+                    "content": "800"
+                },
+                "C10": {
+                    "content": "14"
+                },
+                "C11": {
+                    "content": "1299"
+                },
+                "C12": {
+                    "content": "10"
+                },
+                "C13": {
+                    "content": "120.5"
+                },
+                "C16": {
+                    "content": "190.5"
+                },
+                "C17": {
+                    "content": "175.5"
+                },
+                "C27": {
+                    "content": "500"
+                },
+                "C28": {
+                    "content": "500"
+                },
+                "C29": {
+                    "content": "500"
+                },
+                "C30": {
+                    "content": "180"
+                },
+                "C31": {
+                    "content": "876"
+                },
+                "C32": {
+                    "content": "78"
+                },
+                "C33": {
+                    "content": "20"
+                },
+                "C34": {
+                    "content": "10"
+                },
+                "C35": {
+                    "content": "70"
+                },
+                "C36": {
+                    "content": "10"
+                },
+                "C37": {
+                    "content": "90"
+                },
+                "C40": {
+                    "content": "4500"
+                },
+                "C41": {
+                    "content": "80"
+                },
+                "C42": {
+                    "content": "10"
+                },
+                "C43": {
+                    "content": "55"
+                },
+                "C44": {
+                    "content": "300"
+                },
+                "C45": {
+                    "content": "600"
+                },
+                "C46": {
+                    "content": "2010"
+                },
+                "C47": {
+                    "content": "10"
+                },
+                "C48": {
+                    "content": "2500"
+                },
+                "C49": {
+                    "content": "240"
+                },
+                "C50": {
+                    "content": "3000"
+                },
+                "C51": {
+                    "content": "100"
+                },
+                "C52": {
+                    "content": "35"
+                },
+                "C53": {
+                    "content": "20"
+                },
+                "C54": {
+                    "content": "1000"
+                },
+                "C55": {
+                    "content": "1700"
+                },
+                "C56": {
+                    "content": "10"
+                },
+                "C57": {
+                    "content": "290",
+                    "border": 6
+                },
+                "D1": {
+                    "style": 16,
+                    "border": 17
+                },
+                "D2": {
+                    "style": 17,
+                    "content": "Unit of Measure",
+                    "border": 17
+                },
+                "D3": {
+                    "content": "Units",
+                    "border": 5
+                },
+                "D4": {
+                    "content": "Units"
+                },
+                "D5": {
+                    "content": "Units"
+                },
+                "D6": {
+                    "content": "Units"
+                },
+                "D7": {
+                    "content": "Units"
+                },
+                "D8": {
+                    "content": "Units"
+                },
+                "D9": {
+                    "content": "Units"
+                },
+                "D10": {
+                    "content": "Units"
+                },
+                "D11": {
+                    "content": "Units"
+                },
+                "D12": {
+                    "content": "Units"
+                },
+                "D13": {
+                    "content": "Units"
+                },
+                "D14": {
+                    "content": "Units"
+                },
+                "D15": {
+                    "content": "Units"
+                },
+                "D16": {
+                    "content": "m³"
+                },
+                "D17": {
+                    "content": "ft³"
+                },
+                "D18": {
+                    "content": "Units"
+                },
+                "D19": {
+                    "content": "Units"
+                },
+                "D20": {
+                    "content": "Units"
+                },
+                "D21": {
+                    "content": "Units"
+                },
+                "D22": {
+                    "content": "Units"
+                },
+                "D23": {
+                    "content": "Units"
+                },
+                "D24": {
+                    "content": "Units"
+                },
+                "D25": {
+                    "content": "Units"
+                },
+                "D26": {
+                    "content": "Units"
+                },
+                "D27": {
+                    "content": "Units"
+                },
+                "D28": {
+                    "content": "Units"
+                },
+                "D29": {
+                    "content": "Units"
+                },
+                "D30": {
+                    "content": "Units"
+                },
+                "D31": {
+                    "content": "Units"
+                },
+                "D32": {
+                    "content": "Units"
+                },
+                "D33": {
+                    "content": "Units"
+                },
+                "D34": {
+                    "content": "Units"
+                },
+                "D35": {
+                    "content": "Units"
+                },
+                "D36": {
+                    "content": "Units"
+                },
+                "D37": {
+                    "content": "Units"
+                },
+                "D38": {
+                    "content": "Units"
+                },
+                "D39": {
+                    "content": "Units"
+                },
+                "D40": {
+                    "content": "Units"
+                },
+                "D41": {
+                    "content": "Units"
+                },
+                "D42": {
+                    "content": "Units"
+                },
+                "D43": {
+                    "content": "Units"
+                },
+                "D44": {
+                    "content": "Units"
+                },
+                "D45": {
+                    "content": "Units"
+                },
+                "D46": {
+                    "content": "Units"
+                },
+                "D47": {
+                    "content": "Units"
+                },
+                "D48": {
+                    "content": "Units"
+                },
+                "D49": {
+                    "content": "Units"
+                },
+                "D50": {
+                    "content": "Units"
+                },
+                "D51": {
+                    "content": "Units"
+                },
+                "D52": {
+                    "content": "Units"
+                },
+                "D53": {
+                    "content": "Units"
+                },
+                "D54": {
+                    "content": "Units"
+                },
+                "D55": {
+                    "content": "Units"
+                },
+                "D56": {
+                    "content": "Units"
+                },
+                "D57": {
+                    "content": "Units",
+                    "border": 6
+                },
+                "E1": {
+                    "style": 16,
+                    "border": 18
+                },
+                "E2": {
+                    "style": 17,
+                    "content": "Volume (m³)",
+                    "border": 18
+                },
+                "E3": {
+                    "content": "0.5",
+                    "border": 7
+                },
+                "E4": {
+                    "content": "0.5",
+                    "border": 1
+                },
+                "E5": {
+                    "content": "0.2",
+                    "border": 1
+                },
+                "E6": {
+                    "content": "0.2",
+                    "border": 1
+                },
+                "E7": {
+                    "content": "0.2",
+                    "border": 1
+                },
+                "E8": {
+                    "content": "1",
+                    "border": 1
+                },
+                "E9": {
+                    "content": "1.2",
+                    "border": 1
+                },
+                "E10": {
+                    "content": "0.1",
+                    "border": 1
+                },
+                "E11": {
+                    "content": "1.5",
+                    "border": 1
+                },
+                "E12": {
+                    "content": "0.05",
+                    "border": 1
+                },
+                "E13": {
+                    "content": "0.8",
+                    "border": 1
+                },
+                "E14": {
+                    "content": "0.1",
+                    "border": 1
+                },
+                "E15": {
+                    "content": "0.1",
+                    "border": 1
+                },
+                "E16": {
+                    "content": "1",
+                    "border": 1
+                },
+                "E17": {
+                    "content": "0.03",
+                    "border": 1
+                },
+                "E18": {
+                    "content": "0.05",
+                    "border": 1
+                },
+                "E19": {
+                    "content": "0.01",
+                    "border": 1
+                },
+                "E20": {
+                    "content": "0.01",
+                    "border": 1
+                },
+                "E21": {
+                    "content": "0.02",
+                    "border": 1
+                },
+                "E22": {
+                    "content": "0.03",
+                    "border": 1
+                },
+                "E23": {
+                    "content": "0.05",
+                    "border": 1
+                },
+                "E24": {
+                    "content": "0.03",
+                    "border": 1
+                },
+                "E25": {
+                    "content": "0.07",
+                    "border": 1
+                },
+                "E26": {
+                    "content": "0.1",
+                    "border": 1
+                },
+                "E27": {
+                    "content": "0.5",
+                    "border": 1
+                },
+                "E28": {
+                    "content": "0.5",
+                    "border": 1
+                },
+                "E29": {
+                    "content": "0.5",
+                    "border": 1
+                },
+                "E30": {
+                    "content": "0.2",
+                    "border": 1
+                },
+                "E31": {
+                    "content": "0.8",
+                    "border": 1
+                },
+                "E32": {
+                    "content": "1",
+                    "border": 1
+                },
+                "E33": {
+                    "content": "0.1",
+                    "border": 1
+                },
+                "E34": {
+                    "content": "0.02",
+                    "border": 1
+                },
+                "E35": {
+                    "content": "0.03",
+                    "border": 1
+                },
+                "E36": {
+                    "content": "0.05",
+                    "border": 1
+                },
+                "E37": {
+                    "content": "0.03",
+                    "border": 1
+                },
+                "E38": {
+                    "content": "0.4",
+                    "border": 1
+                },
+                "E39": {
+                    "content": "0.4",
+                    "border": 1
+                },
+                "E40": {
+                    "content": "2.5",
+                    "border": 1
+                },
+                "E41": {
+                    "content": "0.2",
+                    "border": 1
+                },
+                "E42": {
+                    "content": "0.1",
+                    "border": 1
+                },
+                "E43": {
+                    "content": "0.2",
+                    "border": 1
+                },
+                "E44": {
+                    "content": "1.5",
+                    "border": 1
+                },
+                "E45": {
+                    "content": "1",
+                    "border": 1
+                },
+                "E46": {
+                    "content": "0.6",
+                    "border": 1
+                },
+                "E47": {
+                    "content": "0.05",
+                    "border": 1
+                },
+                "E48": {
+                    "content": "2",
+                    "border": 1
+                },
+                "E49": {
+                    "content": "0.8",
+                    "border": 1
+                },
+                "E50": {
+                    "content": "1",
+                    "border": 1
+                },
+                "E51": {
+                    "content": "0.1",
+                    "border": 1
+                },
+                "E52": {
+                    "content": "0.05",
+                    "border": 1
+                },
+                "E53": {
+                    "content": "0.1",
+                    "border": 1
+                },
+                "E54": {
+                    "content": "1.2",
+                    "border": 1
+                },
+                "E55": {
+                    "content": "0.3",
+                    "border": 1
+                },
+                "E56": {
+                    "content": "0.1",
+                    "border": 1
+                },
+                "E57": {
+                    "content": "0.5",
+                    "border": 8
+                },
+                "F1": {
+                    "style": 16,
+                    "content": "ASSEMBLING TIME (Minutes)",
+                    "border": 16
+                },
+                "F2": {
+                    "style": 17,
+                    "content": "Apprentice",
+                    "border": 16
+                },
+                "F3": {
+                    "content": "240",
+                    "border": 2
+                },
+                "F4": {
+                    "content": "240",
+                    "border": 3
+                },
+                "F5": {
+                    "content": "60",
+                    "border": 3
+                },
+                "F6": {
+                    "content": "60",
+                    "border": 3
+                },
+                "F7": {
+                    "content": "60",
+                    "border": 3
+                },
+                "F8": {
+                    "content": "180",
+                    "border": 3
+                },
+                "F9": {
+                    "content": "300",
+                    "border": 3
+                },
+                "F10": {
+                    "content": "30",
+                    "border": 3
+                },
+                "F11": {
+                    "content": "360",
+                    "border": 3
+                },
+                "F12": {
+                    "content": "15",
+                    "border": 3
+                },
+                "F13": {
+                    "content": "180",
+                    "border": 3
+                },
+                "F14": {
+                    "content": "60",
+                    "border": 3
+                },
+                "F15": {
+                    "content": "60",
+                    "border": 3
+                },
+                "F16": {
+                    "content": "480",
+                    "border": 3
+                },
+                "F17": {
+                    "content": "480",
+                    "border": 3
+                },
+                "F18": {
+                    "content": "20",
+                    "border": 3
+                },
+                "F19": {
+                    "content": "10",
+                    "border": 3
+                },
+                "F20": {
+                    "content": "15",
+                    "border": 3
+                },
+                "F21": {
+                    "content": "20",
+                    "border": 3
+                },
+                "F22": {
+                    "content": "15",
+                    "border": 3
+                },
+                "F23": {
+                    "content": "20",
+                    "border": 3
+                },
+                "F24": {
+                    "content": "15",
+                    "border": 3
+                },
+                "F25": {
+                    "content": "30",
+                    "border": 3
+                },
+                "F26": {
+                    "content": "60",
+                    "border": 3
+                },
+                "F27": {
+                    "content": "240",
+                    "border": 3
+                },
+                "F28": {
+                    "content": "240",
+                    "border": 3
+                },
+                "F29": {
+                    "content": "240",
+                    "border": 3
+                },
+                "F30": {
+                    "content": "90",
+                    "border": 3
+                },
+                "F31": {
+                    "content": "240",
+                    "border": 3
+                },
+                "F32": {
+                    "content": "180",
+                    "border": 3
+                },
+                "F33": {
+                    "content": "60",
+                    "border": 3
+                },
+                "F34": {
+                    "content": "15",
+                    "border": 3
+                },
+                "F35": {
+                    "content": "20",
+                    "border": 3
+                },
+                "F36": {
+                    "content": "30",
+                    "border": 3
+                },
+                "F37": {
+                    "content": "20",
+                    "border": 3
+                },
+                "F38": {
+                    "content": "60",
+                    "border": 3
+                },
+                "F39": {
+                    "content": "60",
+                    "border": 3
+                },
+                "F40": {
+                    "content": "480",
+                    "border": 3
+                },
+                "F41": {
+                    "content": "45",
+                    "border": 3
+                },
+                "F42": {
+                    "content": "30",
+                    "border": 3
+                },
+                "F43": {
+                    "content": "90",
+                    "border": 3
+                },
+                "F44": {
+                    "content": "300",
+                    "border": 3
+                },
+                "F45": {
+                    "content": "180",
+                    "border": 3
+                },
+                "F46": {
+                    "content": "360",
+                    "border": 3
+                },
+                "F47": {
+                    "content": "20",
+                    "border": 3
+                },
+                "F48": {
+                    "content": "480",
+                    "border": 3
+                },
+                "F49": {
+                    "content": "180",
+                    "border": 3
+                },
+                "F50": {
+                    "content": "240",
+                    "border": 3
+                },
+                "F51": {
+                    "content": "60",
+                    "border": 3
+                },
+                "F52": {
+                    "content": "20",
+                    "border": 3
+                },
+                "F53": {
+                    "content": "60",
+                    "border": 3
+                },
+                "F54": {
+                    "content": "300",
+                    "border": 3
+                },
+                "F55": {
+                    "content": "180",
+                    "border": 3
+                },
+                "F56": {
+                    "content": "30",
+                    "border": 3
+                },
+                "F57": {
+                    "content": "180",
+                    "border": 4
+                },
+                "G1": {
+                    "style": 16,
+                    "border": 18
+                },
+                "G2": {
+                    "style": 17,
+                    "content": "Carpenter",
+                    "border": 18
+                },
+                "G3": {
+                    "content": "360",
+                    "border": 7
+                },
+                "G4": {
+                    "content": "360",
+                    "border": 1
+                },
+                "G5": {
+                    "content": "90",
+                    "border": 1
+                },
+                "G6": {
+                    "content": "90",
+                    "border": 1
+                },
+                "G7": {
+                    "content": "90",
+                    "border": 1
+                },
+                "G8": {
+                    "content": "300",
+                    "border": 1
+                },
+                "G9": {
+                    "content": "480",
+                    "border": 1
+                },
+                "G10": {
+                    "content": "45",
+                    "border": 1
+                },
+                "G11": {
+                    "content": "540",
+                    "border": 1
+                },
+                "G12": {
+                    "content": "20",
+                    "border": 1
+                },
+                "G13": {
+                    "content": "240",
+                    "border": 1
+                },
+                "G14": {
+                    "content": "60",
+                    "border": 1
+                },
+                "G15": {
+                    "content": "60",
+                    "border": 1
+                },
+                "G16": {
+                    "content": "720",
+                    "border": 1
+                },
+                "G17": {
+                    "content": "720",
+                    "border": 1
+                },
+                "G18": {
+                    "content": "30",
+                    "border": 1
+                },
+                "G19": {
+                    "content": "15",
+                    "border": 1
+                },
+                "G20": {
+                    "content": "20",
+                    "border": 1
+                },
+                "G21": {
+                    "content": "30",
+                    "border": 1
+                },
+                "G22": {
+                    "content": "20",
+                    "border": 1
+                },
+                "G23": {
+                    "content": "25",
+                    "border": 1
+                },
+                "G24": {
+                    "content": "20",
+                    "border": 1
+                },
+                "G25": {
+                    "content": "45",
+                    "border": 1
+                },
+                "G26": {
+                    "content": "90",
+                    "border": 1
+                },
+                "G27": {
+                    "content": "360",
+                    "border": 1
+                },
+                "G28": {
+                    "content": "360",
+                    "border": 1
+                },
+                "G29": {
+                    "content": "360",
+                    "border": 1
+                },
+                "G30": {
+                    "content": "120",
+                    "border": 1
+                },
+                "G31": {
+                    "content": "360",
+                    "border": 1
+                },
+                "G32": {
+                    "content": "300",
+                    "border": 1
+                },
+                "G33": {
+                    "content": "90",
+                    "border": 1
+                },
+                "G34": {
+                    "content": "20",
+                    "border": 1
+                },
+                "G35": {
+                    "content": "30",
+                    "border": 1
+                },
+                "G36": {
+                    "content": "45",
+                    "border": 1
+                },
+                "G37": {
+                    "content": "30",
+                    "border": 1
+                },
+                "G38": {
+                    "content": "90",
+                    "border": 1
+                },
+                "G39": {
+                    "content": "90",
+                    "border": 1
+                },
+                "G40": {
+                    "content": "720",
+                    "border": 1
+                },
+                "G41": {
+                    "content": "60",
+                    "border": 1
+                },
+                "G42": {
+                    "content": "45",
+                    "border": 1
+                },
+                "G43": {
+                    "content": "120",
+                    "border": 1
+                },
+                "G44": {
+                    "content": "480",
+                    "border": 1
+                },
+                "G45": {
+                    "content": "300",
+                    "border": 1
+                },
+                "G46": {
+                    "content": "540",
+                    "border": 1
+                },
+                "G47": {
+                    "content": "30",
+                    "border": 1
+                },
+                "G48": {
+                    "content": "720",
+                    "border": 1
+                },
+                "G49": {
+                    "content": "300",
+                    "border": 1
+                },
+                "G50": {
+                    "content": "360",
+                    "border": 1
+                },
+                "G51": {
+                    "content": "90",
+                    "border": 1
+                },
+                "G52": {
+                    "content": "25",
+                    "border": 1
+                },
+                "G53": {
+                    "content": "90",
+                    "border": 1
+                },
+                "G54": {
+                    "content": "480",
+                    "border": 1
+                },
+                "G55": {
+                    "content": "240",
+                    "border": 1
+                },
+                "G56": {
+                    "content": "45",
+                    "border": 1
+                },
+                "G57": {
+                    "content": "300",
+                    "border": 8
+                },
+                "A58": {
+                    "border": 5
+                },
+                "B58": {
+                    "border": 5
+                },
+                "C3": {
+                    "border": 5
+                },
+                "C58": {
+                    "border": 5
+                },
+                "D58": {
+                    "border": 5
+                },
+                "E58": {
+                    "border": 5
+                },
+                "F58": {
+                    "border": 5
+                },
+                "G58": {
+                    "border": 5
+                },
+                "H1": {
+                    "border": 3
+                },
+                "H2": {
+                    "border": 3
+                },
+                "H3": {
+                    "border": 3
+                },
+                "H4": {
+                    "border": 3
+                },
+                "H5": {
+                    "border": 3
+                },
+                "H6": {
+                    "border": 3
+                },
+                "H7": {
+                    "border": 3
+                },
+                "H8": {
+                    "border": 3
+                },
+                "H9": {
+                    "border": 3
+                },
+                "H10": {
+                    "border": 3
+                },
+                "H11": {
+                    "border": 3
+                },
+                "H12": {
+                    "border": 3
+                },
+                "H13": {
+                    "border": 3
+                },
+                "H14": {
+                    "border": 3
+                },
+                "H15": {
+                    "border": 3
+                },
+                "H16": {
+                    "border": 3
+                },
+                "H17": {
+                    "border": 3
+                },
+                "H18": {
+                    "border": 3
+                },
+                "H19": {
+                    "border": 3
+                },
+                "H20": {
+                    "border": 3
+                },
+                "H21": {
+                    "border": 3
+                },
+                "H22": {
+                    "border": 3
+                },
+                "H23": {
+                    "border": 3
+                },
+                "H24": {
+                    "border": 3
+                },
+                "H25": {
+                    "border": 3
+                },
+                "H26": {
+                    "border": 3
+                },
+                "H27": {
+                    "border": 3
+                },
+                "H28": {
+                    "border": 3
+                },
+                "H29": {
+                    "border": 3
+                },
+                "H30": {
+                    "border": 3
+                },
+                "H31": {
+                    "border": 3
+                },
+                "H32": {
+                    "border": 3
+                },
+                "H33": {
+                    "border": 3
+                },
+                "H34": {
+                    "border": 3
+                },
+                "H35": {
+                    "border": 3
+                },
+                "H36": {
+                    "border": 3
+                },
+                "H37": {
+                    "border": 3
+                },
+                "H38": {
+                    "border": 3
+                },
+                "H39": {
+                    "border": 3
+                },
+                "H40": {
+                    "border": 3
+                },
+                "H41": {
+                    "border": 3
+                },
+                "H42": {
+                    "border": 3
+                },
+                "H43": {
+                    "border": 3
+                },
+                "H44": {
+                    "border": 3
+                },
+                "H45": {
+                    "border": 3
+                },
+                "H46": {
+                    "border": 3
+                },
+                "H47": {
+                    "border": 3
+                },
+                "H48": {
+                    "border": 3
+                },
+                "H49": {
+                    "border": 3
+                },
+                "H50": {
+                    "border": 3
+                },
+                "H51": {
+                    "border": 3
+                },
+                "H52": {
+                    "border": 3
+                },
+                "H53": {
+                    "border": 3
+                },
+                "H54": {
+                    "border": 3
+                },
+                "H55": {
+                    "border": 3
+                },
+                "H56": {
+                    "border": 3
+                },
+                "H57": {
+                    "border": 3
+                }
+            },
+            "conditionalFormats": [],
+            "figures": [],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        },
+        {
+            "id": "sheet1",
+            "name": "SO Lines",
+            "colNumber": 23,
+            "rowNumber": 101,
+            "rows": {},
+            "cols": {
+                "0": {
+                    "size": 285
+                },
+                "1": {
+                    "size": 61
+                },
+                "2": {
+                    "size": 106
+                },
+                "3": {
+                    "size": 69
+                },
+                "4": {
+                    "size": 73
+                },
+                "5": {
+                    "size": 79
+                },
+                "6": {
+                    "size": 228
+                },
+                "7": {
+                    "size": 98
+                },
+                "9": {
+                    "size": 106
+                },
+                "10": {
+                    "size": 100
+                },
+                "11": {
+                    "size": 122
+                },
+                "12": {
+                    "size": 103
+                },
+                "13": {
+                    "size": 107
+                },
+                "15": {
+                    "size": 107
+                },
+                "16": {
+                    "size": 149
+                },
+                "17": {
+                    "size": 143
+                },
+                "18": {
+                    "size": 143
+                },
+                "20": {
+                    "size": 86
+                }
+            },
+            "merges": [],
+            "cells": {
+                "A1": {
+                    "style": 17,
+                    "content": "Product",
+                    "border": 10
+                },
+                "A2": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,1,\"product_id\")",
+                    "border": 15
+                },
+                "A3": {
+                    "style": 18,
+                    "format": 2,
+                    "content": "=ODOO.LIST(1,2,\"product_id\")",
+                    "border": 15
+                },
+                "A4": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,3,\"product_id\")",
+                    "border": 15
+                },
+                "A5": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,4,\"product_id\")",
+                    "border": 15
+                },
+                "A6": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,5,\"product_id\")",
+                    "border": 15
+                },
+                "A7": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,6,\"product_id\")",
+                    "border": 15
+                },
+                "A8": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,7,\"product_id\")",
+                    "border": 15
+                },
+                "A9": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,8,\"product_id\")",
+                    "border": 15
+                },
+                "A10": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,9,\"product_id\")",
+                    "border": 15
+                },
+                "A11": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,10,\"product_id\")",
+                    "border": 15
+                },
+                "A12": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,11,\"product_id\")",
+                    "border": 15
+                },
+                "A13": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,12,\"product_id\")",
+                    "border": 15
+                },
+                "A14": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,13,\"product_id\")",
+                    "border": 15
+                },
+                "A15": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,14,\"product_id\")",
+                    "border": 19
+                },
+                "B1": {
+                    "style": 17,
+                    "content": "=ODOO.LIST.HEADER(1,\"product_uom_qty\")",
+                    "border": 10
+                },
+                "B2": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,1,\"product_uom_qty\")"
+                },
+                "B3": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,2,\"product_uom_qty\")"
+                },
+                "B4": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,3,\"product_uom_qty\")"
+                },
+                "B5": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,4,\"product_uom_qty\")"
+                },
+                "B6": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,5,\"product_uom_qty\")"
+                },
+                "B7": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,6,\"product_uom_qty\")"
+                },
+                "B8": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,7,\"product_uom_qty\")"
+                },
+                "B9": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,8,\"product_uom_qty\")"
+                },
+                "B10": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,9,\"product_uom_qty\")"
+                },
+                "B11": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,10,\"product_uom_qty\")"
+                },
+                "B12": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,11,\"product_uom_qty\")"
+                },
+                "B13": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,12,\"product_uom_qty\")"
+                },
+                "B14": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,13,\"product_uom_qty\")"
+                },
+                "B15": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,14,\"product_uom_qty\")",
+                    "border": 11
+                },
+                "C1": {
+                    "style": 17,
+                    "content": "=ODOO.LIST.HEADER(1,\"product_uom\")",
+                    "border": 10
+                },
+                "C2": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,1,\"product_uom\")"
+                },
+                "C3": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,2,\"product_uom\")"
+                },
+                "C4": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,3,\"product_uom\")"
+                },
+                "C5": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,4,\"product_uom\")"
+                },
+                "C6": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,5,\"product_uom\")"
+                },
+                "C7": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,6,\"product_uom\")"
+                },
+                "C8": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,7,\"product_uom\")"
+                },
+                "C9": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,8,\"product_uom\")"
+                },
+                "C10": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,9,\"product_uom\")"
+                },
+                "C11": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,10,\"product_uom\")"
+                },
+                "C12": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,11,\"product_uom\")"
+                },
+                "C13": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,12,\"product_uom\")"
+                },
+                "C14": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,13,\"product_uom\")"
+                },
+                "C15": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,14,\"product_uom\")",
+                    "border": 11
+                },
+                "D1": {
+                    "style": 17,
+                    "content": "=ODOO.LIST.HEADER(1,\"price_unit\")",
+                    "border": 10
+                },
+                "D2": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,1,\"price_unit\")"
+                },
+                "D3": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,2,\"price_unit\")"
+                },
+                "D4": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,3,\"price_unit\")"
+                },
+                "D5": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,4,\"price_unit\")"
+                },
+                "D6": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,5,\"price_unit\")"
+                },
+                "D7": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,6,\"price_unit\")"
+                },
+                "D8": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,7,\"price_unit\")"
+                },
+                "D9": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,8,\"price_unit\")"
+                },
+                "D10": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,9,\"price_unit\")"
+                },
+                "D11": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,10,\"price_unit\")"
+                },
+                "D12": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,11,\"price_unit\")"
+                },
+                "D13": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,12,\"price_unit\")"
+                },
+                "D14": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,13,\"price_unit\")"
+                },
+                "D15": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,14,\"price_unit\")",
+                    "border": 11
+                },
+                "E1": {
+                    "style": 17,
+                    "content": "=ODOO.LIST.HEADER(1,\"price_tax\")",
+                    "border": 10
+                },
+                "E2": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,1,\"price_tax\")"
+                },
+                "E3": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,2,\"price_tax\")"
+                },
+                "E4": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,3,\"price_tax\")"
+                },
+                "E5": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,4,\"price_tax\")"
+                },
+                "E6": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,5,\"price_tax\")"
+                },
+                "E7": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,6,\"price_tax\")"
+                },
+                "E8": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,7,\"price_tax\")"
+                },
+                "E9": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,8,\"price_tax\")"
+                },
+                "E10": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,9,\"price_tax\")"
+                },
+                "E11": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,10,\"price_tax\")"
+                },
+                "E12": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,11,\"price_tax\")"
+                },
+                "E13": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,12,\"price_tax\")"
+                },
+                "E14": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,13,\"price_tax\")"
+                },
+                "E15": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,14,\"price_tax\")",
+                    "border": 11
+                },
+                "F1": {
+                    "style": 17,
+                    "content": "=ODOO.LIST.HEADER(1,\"price_subtotal\")",
+                    "border": 20
+                },
+                "F2": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,1,\"price_subtotal\")",
+                    "border": 13
+                },
+                "F3": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,2,\"price_subtotal\")",
+                    "border": 13
+                },
+                "F4": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,3,\"price_subtotal\")",
+                    "border": 13
+                },
+                "F5": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,4,\"price_subtotal\")",
+                    "border": 13
+                },
+                "F6": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,5,\"price_subtotal\")",
+                    "border": 13
+                },
+                "F7": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,6,\"price_subtotal\")",
+                    "border": 13
+                },
+                "F8": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,7,\"price_subtotal\")",
+                    "border": 13
+                },
+                "F9": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,8,\"price_subtotal\")",
+                    "border": 13
+                },
+                "F10": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,9,\"price_subtotal\")",
+                    "border": 13
+                },
+                "F11": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,10,\"price_subtotal\")",
+                    "border": 13
+                },
+                "F12": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,11,\"price_subtotal\")",
+                    "border": 13
+                },
+                "F13": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,12,\"price_subtotal\")",
+                    "border": 13
+                },
+                "F14": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,13,\"price_subtotal\")",
+                    "border": 13
+                },
+                "F15": {
+                    "style": 18,
+                    "content": "=ODOO.LIST(1,14,\"price_subtotal\")",
+                    "border": 14
+                },
+                "G1": {
+                    "style": 17,
+                    "content": "New Assembly & Shipping Subtotal",
+                    "border": 21
+                },
+                "G2": {
+                    "style": 18,
+                    "content": "=IF(A2=\"Furniture Assembly\",$M$2,IF(A2=\"[Delivery_010] Local Delivery\",$P$2,))",
+                    "border": 22
+                },
+                "G3": {
+                    "style": 18,
+                    "content": "=IF(A3=\"Furniture Assembly\",$M$2,IF(A3=\"[Delivery_010] Local Delivery\",$P$2,))",
+                    "border": 22
+                },
+                "G4": {
+                    "style": 18,
+                    "content": "=IF(A4=\"Furniture Assembly\",$M$2,IF(A4=\"[Delivery_010] Local Delivery\",$P$2,))",
+                    "border": 22
+                },
+                "G5": {
+                    "style": 18,
+                    "content": "=IF(A5=\"Furniture Assembly\",$M$2,IF(A5=\"[Delivery_010] Local Delivery\",$P$2,))",
+                    "border": 22
+                },
+                "G6": {
+                    "style": 18,
+                    "content": "=IF(A6=\"Furniture Assembly\",$M$2,IF(A6=\"[Delivery_010] Local Delivery\",$P$2,))",
+                    "border": 22
+                },
+                "G7": {
+                    "style": 18,
+                    "content": "=IF(A7=\"Furniture Assembly\",$M$2,IF(A7=\"[Delivery_010] Local Delivery\",$P$2,))",
+                    "border": 22
+                },
+                "G8": {
+                    "style": 18,
+                    "content": "=IF(A8=\"Furniture Assembly\",$M$2,IF(A8=\"[Delivery_010] Local Delivery\",$P$2,))",
+                    "border": 22
+                },
+                "G9": {
+                    "style": 18,
+                    "content": "=IF(A9=\"Furniture Assembly\",$M$2,IF(A9=\"[Delivery_010] Local Delivery\",$P$2,))",
+                    "border": 22
+                },
+                "G10": {
+                    "style": 18,
+                    "content": "=IF(A10=\"Furniture Assembly\",$M$2,IF(A10=\"[Delivery_010] Local Delivery\",$P$2,))",
+                    "border": 22
+                },
+                "G11": {
+                    "style": 18,
+                    "content": "=IF(A11=\"Furniture Assembly\",$M$2,IF(A11=\"[Delivery_010] Local Delivery\",$P$2,))",
+                    "border": 22
+                },
+                "G12": {
+                    "style": 18,
+                    "content": "=IF(A12=\"Furniture Assembly\",$M$2,IF(A12=\"[Delivery_010] Local Delivery\",$P$2,))",
+                    "border": 22
+                },
+                "G13": {
+                    "style": 18,
+                    "content": "=IF(A13=\"Furniture Assembly\",$M$2,IF(A13=\"[Delivery_010] Local Delivery\",$P$2,))",
+                    "border": 22
+                },
+                "G14": {
+                    "style": 18,
+                    "content": "=IF(A14=\"Furniture Assembly\",$M$2,IF(A14=\"[Delivery_010] Local Delivery\",$P$2,))",
+                    "border": 22
+                },
+                "G15": {
+                    "style": 18,
+                    "content": "=IF(A15=\"Furniture Assembly\",$M$2,IF(A15=\"[Delivery_010] Local Delivery\",$P$2,))",
+                    "border": 23
+                },
+                "H1": {
+                    "style": 17,
+                    "content": "Truck required",
+                    "border": 21
+                },
+                "H2": {
+                    "style": 18,
+                    "content": "=IF(A2=\"[Delivery_010] Local Delivery\",$Q$2,)",
+                    "border": 22
+                },
+                "H3": {
+                    "style": 18,
+                    "content": "=IF(A3=\"[Delivery_010] Local Delivery\",$Q$2,)",
+                    "border": 22
+                },
+                "H4": {
+                    "style": 18,
+                    "content": "=IF(A4=\"[Delivery_010] Local Delivery\",$Q$2,)",
+                    "border": 22
+                },
+                "H5": {
+                    "style": 18,
+                    "content": "=IF(A5=\"[Delivery_010] Local Delivery\",$Q$2,)",
+                    "border": 22
+                },
+                "H6": {
+                    "style": 18,
+                    "content": "=IF(A6=\"[Delivery_010] Local Delivery\",$Q$2,)",
+                    "border": 22
+                },
+                "H7": {
+                    "style": 18,
+                    "content": "=IF(A7=\"[Delivery_010] Local Delivery\",$Q$2,)",
+                    "border": 22
+                },
+                "H8": {
+                    "style": 18,
+                    "content": "=IF(A8=\"[Delivery_010] Local Delivery\",$Q$2,)",
+                    "border": 22
+                },
+                "H9": {
+                    "style": 18,
+                    "content": "=IF(A9=\"[Delivery_010] Local Delivery\",$Q$2,)",
+                    "border": 22
+                },
+                "H10": {
+                    "style": 18,
+                    "content": "=IF(A10=\"[Delivery_010] Local Delivery\",$Q$2,)",
+                    "border": 22
+                },
+                "H11": {
+                    "style": 18,
+                    "content": "=IF(A11=\"[Delivery_010] Local Delivery\",$Q$2,)",
+                    "border": 22
+                },
+                "H12": {
+                    "style": 18,
+                    "content": "=IF(A12=\"[Delivery_010] Local Delivery\",$Q$2,)",
+                    "border": 22
+                },
+                "H13": {
+                    "style": 18,
+                    "content": "=IF(A13=\"[Delivery_010] Local Delivery\",$Q$2,)",
+                    "border": 22
+                },
+                "H14": {
+                    "style": 18,
+                    "content": "=IF(A14=\"[Delivery_010] Local Delivery\",$Q$2,)",
+                    "border": 22
+                },
+                "H15": {
+                    "style": 18,
+                    "content": "=IF(A15=\"[Delivery_010] Local Delivery\",$Q$2,)",
+                    "border": 23
+                },
+                "J1": {
+                    "style": 19,
+                    "content": "Apprentice Time"
+                },
+                "J2": {
+                    "content": "=if(A2:A15=\"\",\"\",iferror(VLOOKUP(A2:A15,Products!$A$2:$G$57,6,false)))"
+                },
+                "K1": {
+                    "style": 19,
+                    "content": "Carpenter Time"
+                },
+                "K2": {
+                    "content": "=if(A2:A15=\"\",\"\",iferror(VLOOKUP(A2:A15,Products!$A$2:$G$57,7,false)))"
+                },
+                "L1": {
+                    "style": 19,
+                    "content": "Product Assembly"
+                },
+                "L2": {
+                    "content": "=(J2:J15*'Transport & Assembly'!$B$16+K2:K15*'Transport & Assembly'!$B$22)/60*B2:B15"
+                },
+                "M1": {
+                    "style": 19,
+                    "content": "Total Assembly"
+                },
+                "M2": {
+                    "content": "=(sum($L$2:$L$101)+'Transport & Assembly'!$B$14*'Transport & Assembly'!$B$16+'Transport & Assembly'!$B$20*'Transport & Assembly'!$B$22)*(1+'Transport & Assembly'!$B$25)"
+                },
+                "N1": {
+                    "style": 19,
+                    "content": "Product Volume"
+                },
+                "N2": {
+                    "content": "=iferror(VLOOKUP(A2:A15,Products!$A$2:$G$57,5,false)*B2:B15)"
+                },
+                "O1": {
+                    "style": 19,
+                    "content": "Total Volume"
+                },
+                "O2": {
+                    "content": "=iferror(sum($N$2:$N$101)+'Transport & Assembly'!$B$3)"
+                },
+                "P1": {
+                    "style": 19,
+                    "content": "Order Transport"
+                },
+                "P2": {
+                    "content": "=if('Transport & Assembly'!B6=\"\",((VLOOKUP(Q2,'Transport & Assembly'!G2:I8,2,false))+(VLOOKUP(Q2,'Transport & Assembly'!G2:I8,3,false)*'Transport & Assembly'!B7)),((VLOOKUP('Transport & Assembly'!B6,'Transport & Assembly'!G2:I8,2,false))+(VLOOKUP('Transport & Assembly'!B6,'Transport & Assembly'!G2:I8,3,false)*'Transport & Assembly'!B7)))"
+                },
+                "Q1": {
+                    "style": 19,
+                    "content": "Recommended vehicle"
+                },
+                "Q2": {
+                    "content": "=iferror(VLOOKUP(O2,'Transport & Assembly'!$E$2:$G$8,3))"
+                },
+                "S1": {
+                    "style": 19,
+                    "content": "Product"
+                },
+                "S2": {
+                    "content": "=A2:A15"
+                },
+                "T1": {
+                    "style": 19,
+                    "content": "Product"
+                },
+                "T2": {
+                    "content": "=if(G2:G15=\"\",F2:F15,G2:G15)"
+                },
+                "U1": {
+                    "style": 19,
+                    "content": "Commission"
+                },
+                "U2": {
+                    "content": "=(sum(T2:T15)-'Transport & Assembly'!B10)*10%"
+                },
+                "V1": {
+                    "style": 19,
+                    "content": "Truck load"
+                },
+                "V2": {
+                    "format": 2,
+                    "content": "='Transport & Assembly'!B4/IF('Transport & Assembly'!B6=\"\",XLOOKUP('Transport & Assembly'!B5,'Transport & Assembly'!G3:G8,'Transport & Assembly'!F3:F8),XLOOKUP('Transport & Assembly'!B6,'Transport & Assembly'!G3:G8,'Transport & Assembly'!F3:F8))"
+                },
+                "A16": {
+                    "border": 10
+                },
+                "B16": {
+                    "border": 10
+                },
+                "C16": {
+                    "border": 10
+                },
+                "D16": {
+                    "border": 10
+                },
+                "E16": {
+                    "border": 10
+                },
+                "F16": {
+                    "border": 10
+                },
+                "G16": {
+                    "border": 10
+                },
+                "H16": {
+                    "border": 10
+                },
+                "I1": {
+                    "border": 15
+                },
+                "I2": {
+                    "border": 15
+                },
+                "I3": {
+                    "border": 15
+                },
+                "I4": {
+                    "border": 15
+                },
+                "I5": {
+                    "border": 15
+                },
+                "I6": {
+                    "border": 15
+                },
+                "I7": {
+                    "border": 15
+                },
+                "I8": {
+                    "border": 15
+                },
+                "I9": {
+                    "border": 15
+                },
+                "I10": {
+                    "border": 15
+                },
+                "I11": {
+                    "border": 15
+                },
+                "I12": {
+                    "border": 15
+                },
+                "I13": {
+                    "border": 15
+                },
+                "I14": {
+                    "border": 15
+                },
+                "I15": {
+                    "border": 15
+                }
+            },
+            "conditionalFormats": [],
+            "figures": [],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {},
+            "fieldSyncs": {
+                "G2": {
+                    "listId": "1",
+                    "indexInList": 0,
+                    "fieldName": "price_unit"
+                },
+                "G3": {
+                    "listId": "1",
+                    "indexInList": 1,
+                    "fieldName": "price_unit"
+                },
+                "G4": {
+                    "listId": "1",
+                    "indexInList": 2,
+                    "fieldName": "price_unit"
+                },
+                "G5": {
+                    "listId": "1",
+                    "indexInList": 3,
+                    "fieldName": "price_unit"
+                },
+                "G6": {
+                    "listId": "1",
+                    "indexInList": 4,
+                    "fieldName": "price_unit"
+                },
+                "G7": {
+                    "listId": "1",
+                    "indexInList": 5,
+                    "fieldName": "price_unit"
+                },
+                "G8": {
+                    "listId": "1",
+                    "indexInList": 6,
+                    "fieldName": "price_unit"
+                },
+                "G9": {
+                    "listId": "1",
+                    "indexInList": 7,
+                    "fieldName": "price_unit"
+                },
+                "G10": {
+                    "listId": "1",
+                    "indexInList": 8,
+                    "fieldName": "price_unit"
+                },
+                "G11": {
+                    "listId": "1",
+                    "indexInList": 9,
+                    "fieldName": "price_unit"
+                },
+                "G12": {
+                    "listId": "1",
+                    "indexInList": 10,
+                    "fieldName": "price_unit"
+                },
+                "G13": {
+                    "listId": "1",
+                    "indexInList": 11,
+                    "fieldName": "price_unit"
+                },
+                "G14": {
+                    "listId": "1",
+                    "indexInList": 12,
+                    "fieldName": "price_unit"
+                },
+                "G15": {
+                    "listId": "1",
+                    "indexInList": 13,
+                    "fieldName": "price_unit"
+                }
+            }
+        }
+    ],
+    "styles": {
+        "1": {
+            "bold": true,
+            "fontSize": 18,
+            "textColor": "#6C4E65",
+            "verticalAlign": "middle"
+        },
+        "2": {
+            "fillColor": "#EFEFEF",
+            "verticalAlign": "middle"
+        },
+        "3": {
+            "fillColor": "#EFEFEF",
+            "verticalAlign": "middle",
+            "bold": true
+        },
+        "4": {
+            "fillColor": "#F3F3F3",
+            "verticalAlign": "middle"
+        },
+        "5": {
+            "fillColor": "#6C4E65",
+            "textColor": "#FFFFFF",
+            "verticalAlign": "middle",
+            "bold": true
+        },
+        "6": {
+            "verticalAlign": "middle"
+        },
+        "7": {
+            "fillColor": "#FFFFFF",
+            "verticalAlign": "middle"
+        },
+        "8": {
+            "fillColor": "#FFF2CC",
+            "verticalAlign": "middle"
+        },
+        "9": {
+            "bold": true,
+            "verticalAlign": "middle"
+        },
+        "10": {
+            "align": "right",
+            "verticalAlign": "middle"
+        },
+        "11": {
+            "fillColor": "#D9EAD3",
+            "verticalAlign": "middle",
+            "bold": true
+        },
+        "12": {
+            "textColor": "#6C4E65",
+            "verticalAlign": "middle"
+        },
+        "13": {
+            "textColor": "",
+            "verticalAlign": "middle"
+        },
+        "14": {
+            "fillColor": "#A2C4C9",
+            "textColor": "",
+            "bold": true,
+            "align": "center",
+            "verticalAlign": "middle"
+        },
+        "15": {
+            "fillColor": "#EFEFEF",
+            "textColor": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "verticalAlign": "middle"
+        },
+        "16": {
+            "fillColor": "#6C4E65",
+            "textColor": "#FFFFFF",
+            "bold": true,
+            "align": "center"
+        },
+        "17": {
+            "fillColor": "#6C4E65",
+            "textColor": "#FFFFFF",
+            "bold": true
+        },
+        "18": {
+            "fillColor": "#EFEFEF"
+        },
+        "19": {
+            "bold": true
+        }
+    },
+    "formats": {
+        "1": "[$$]#,##0.00",
+        "2": "0.00%",
+        "3": "0"
+    },
+    "borders": {
+        "1": {
+            "right": {
+                "style": "thin",
+                "color": "#000000"
+            }
+        },
+        "2": {
+            "top": {
+                "style": "thin",
+                "color": "#000000"
+            },
+            "left": {
+                "style": "thin",
+                "color": "#000000"
+            }
+        },
+        "3": {
+            "left": {
+                "style": "thin",
+                "color": "#000000"
+            }
+        },
+        "4": {
+            "bottom": {
+                "style": "thin",
+                "color": "#000000"
+            },
+            "left": {
+                "style": "thin",
+                "color": "#000000"
+            }
+        },
+        "5": {
+            "top": {
+                "style": "thin",
+                "color": "#000000"
+            }
+        },
+        "6": {
+            "bottom": {
+                "style": "thin",
+                "color": "#000000"
+            }
+        },
+        "7": {
+            "top": {
+                "style": "thin",
+                "color": "#000000"
+            },
+            "right": {
+                "style": "thin",
+                "color": "#000000"
+            }
+        },
+        "8": {
+            "bottom": {
+                "style": "thin",
+                "color": "#000000"
+            },
+            "right": {
+                "style": "thin",
+                "color": "#000000"
+            }
+        },
+        "9": {
+            "bottom": {
+                "style": "thin",
+                "color": "#6C4E65"
+            },
+            "left": {
+                "style": "thin",
+                "color": "#000000"
+            }
+        },
+        "10": {
+            "top": {
+                "style": "thin",
+                "color": "#6C4E65"
+            }
+        },
+        "11": {
+            "bottom": {
+                "style": "thin",
+                "color": "#6C4E65"
+            }
+        },
+        "12": {
+            "top": {
+                "style": "thin",
+                "color": "#000000"
+            },
+            "right": {
+                "style": "thin",
+                "color": "#6C4E65"
+            }
+        },
+        "13": {
+            "right": {
+                "style": "thin",
+                "color": "#6C4E65"
+            }
+        },
+        "14": {
+            "bottom": {
+                "style": "thin",
+                "color": "#6C4E65"
+            },
+            "right": {
+                "style": "thin",
+                "color": "#6C4E65"
+            }
+        },
+        "15": {
+            "left": {
+                "style": "thin",
+                "color": "#6C4E65"
+            }
+        },
+        "16": {
+            "top": {
+                "style": "thin",
+                "color": "#000000"
+            },
+            "bottom": {
+                "style": "thin",
+                "color": "#000000"
+            },
+            "left": {
+                "style": "thin",
+                "color": "#000000"
+            }
+        },
+        "17": {
+            "top": {
+                "style": "thin",
+                "color": "#000000"
+            },
+            "bottom": {
+                "style": "thin",
+                "color": "#000000"
+            }
+        },
+        "18": {
+            "top": {
+                "style": "thin",
+                "color": "#000000"
+            },
+            "bottom": {
+                "style": "thin",
+                "color": "#000000"
+            },
+            "right": {
+                "style": "thin",
+                "color": "#000000"
+            }
+        },
+        "19": {
+            "bottom": {
+                "style": "thin",
+                "color": "#6C4E65"
+            },
+            "left": {
+                "style": "thin",
+                "color": "#6C4E65"
+            }
+        },
+        "20": {
+            "top": {
+                "style": "thin",
+                "color": "#6C4E65"
+            },
+            "right": {
+                "style": "thin",
+                "color": "#6C4E65"
+            }
+        },
+        "21": {
+            "top": {
+                "style": "thin",
+                "color": "#6C4E65"
+            },
+            "left": {
+                "style": "thin",
+                "color": "#6C4E65"
+            },
+            "right": {
+                "style": "thin",
+                "color": "#6C4E65"
+            }
+        },
+        "22": {
+            "left": {
+                "style": "thin",
+                "color": "#6C4E65"
+            },
+            "right": {
+                "style": "thin",
+                "color": "#6C4E65"
+            }
+        },
+        "23": {
+            "bottom": {
+                "style": "thin",
+                "color": "#6C4E65"
+            },
+            "left": {
+                "style": "thin",
+                "color": "#6C4E65"
+            },
+            "right": {
+                "style": "thin",
+                "color": "#6C4E65"
+            }
+        }
+    },
+    "revisionId": "33ae3100-6ea2-4690-8935-0d80244371fc",
+    "uniqueFigureIds": true,
+    "settings": {
+        "locale": {
+            "name": "English (US)",
+            "code": "en_US",
+            "thousandsSeparator": ",",
+            "decimalSeparator": ".",
+            "dateFormat": "mm/dd/yyyy",
+            "timeFormat": "hh:mm:ss",
+            "formulaArgSeparator": ","
+        }
+    },
+    "pivots": {},
+    "pivotNextId": 1,
+    "customTableStyles": {},
+    "odooVersion": 12,
+    "globalFilters": [
+        {
+            "id": "order_filter_id",
+            "type": "relation",
+            "label": "Quote",
+            "modelName": "sale.order",
+            "defaultValue": []
+        }
+    ],
+    "lists": {
+        "1": {
+            "columns": [],
+            "domain": [["display_type", "=", false]],
+            "model": "sale.order.line",
+            "context": {},
+            "orderBy": [],
+            "id": "1",
+            "name": "Sale order lines",
+            "fieldMatching": {
+                "order_filter_id": {
+                    "chain": "order_id",
+                    "type": "many2one"
+                }
+            }
+        }
+    },
+    "listNextId": 5,
+    "chartOdooMenusReferences": {}
+}

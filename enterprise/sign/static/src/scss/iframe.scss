@@ -1,0 +1,7 @@
+@for $size from 2 through length($o-colors) {
+    // Note: the first color is supposed to be invisible so it's ignored
+    .o_color_responsible_#{$size - 1} {
+        background-color: nth($o-colors, $size);
+        opacity: 0.9;
+    }
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">res.users.form.l10n.ke.edi.oscu.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="l10n_ke_oscu_company_ids" invisible="1"/>
+                <button name="action_l10n_ke_create_branch_user"
+                        string="Send to eTIMS"
+                        type="object"
+                        invisible="not l10n_ke_oscu_company_ids"
+                        groups="base.group_no_one"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

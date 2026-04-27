@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- CAP57 -->
+    <record id="input_custom_average_monthly_salary" model="hr.payslip.input.type">
+        <field name="name">Custom Average Monthly Salary</field>
+        <field name="code">CUST_AVG_MONTHLY_SALARY</field>
+        <field name="country_id" ref="base.hk" />
+        <field name="struct_ids" eval="[
+            (4, ref('l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary')),
+            (4, ref('l10n_hk_hr_payroll.hr_payroll_structure_cap57_payment_in_lieu_of_notice'))]" />
+    </record>
+
+    <!-- CAP57: Employees Monthly Pay -->
+    <record id="input_back_pay" model="hr.payslip.input.type">
+        <field name="name">Back Pay</field>
+        <field name="code">BACKPAY</field>
+        <field name="country_id" ref="base.hk" />
+        <field name="struct_ids" eval="[(4, ref('l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary'))]" />
+    </record>
+
+    <record id="input_commission" model="hr.payslip.input.type">
+        <field name="name">Commission</field>
+        <field name="code">COMMISSION</field>
+        <field name="country_id" ref="base.hk" />
+        <field name="struct_ids" eval="[(4, ref('l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary'))]" />
+    </record>
+
+    <record id="input_global_deduction" model="hr.payslip.input.type">
+        <field name="name">Global Deduction</field>
+        <field name="code">GLOBAL_DEDUCTION</field>
+        <field name="country_id" ref="base.hk" />
+        <field name="struct_ids" eval="[(4, ref('l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary'))]" />
+    </record>
+
+    <record id="input_global_reimbursement" model="hr.payslip.input.type">
+        <field name="name">Global Reimbursement</field>
+        <field name="code">GLOBAL_REIMBURSEMENT</field>
+        <field name="country_id" ref="base.hk" />
+        <field name="struct_ids" eval="[(4, ref('l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary'))]" />
+    </record>
+
+    <record id="input_referral_fee" model="hr.payslip.input.type">
+        <field name="name">Referral Fee</field>
+        <field name="code">REFERRAL_FEE</field>
+        <field name="country_id" ref="base.hk" />
+        <field name="struct_ids" eval="[(4, ref('l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary'))]" />
+    </record>
+
+    <record id="input_custom_moving_daily_wage" model="hr.payslip.input.type">
+        <field name="name">Moving Daily Wage</field>
+        <field name="code">MOVING_DAILY_WAGE</field>
+        <field name="country_id" ref="base.hk" />
+        <field name="struct_ids" eval="[(4, ref('l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary'))]" />
+    </record>
+
+    <record id="input_skip_rent_allowance" model="hr.payslip.input.type">
+        <field name="name">Skip Rent Allowance</field>
+        <field name="code">SKIP_RENT_ALLOWANCE</field>
+        <field name="country_id" ref="base.hk" />
+        <field name="struct_ids" eval="[(4, ref('l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary'))]" />
+    </record>
+
+    <!-- CAP57: Payment in Lieu of Notice -->
+    <record id="input_lieu_of_notice_period" model="hr.payslip.input.type">
+        <field name="name">Lieu of Notice Period (Months)</field>
+        <field name="code">LIEU_OF_NOTICE_PERIOD</field>
+        <field name="country_id" ref="base.hk" />
+        <field name="struct_ids" eval="[(4, ref('l10n_hk_hr_payroll.hr_payroll_structure_cap57_payment_in_lieu_of_notice'))]" />
+    </record>
+
+</odoo>

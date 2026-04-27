@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.user_root" model="res.users">
+        <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
+    </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
+    </record>
+
+    <!-- To change the categoy name from Invoicing -> Accounting-->
+    <record model="ir.module.category" id="base.module_category_accounting_accounting">
+        <field name="name">Accounting</field>
+        <field name="description">Helps you handle your invoices and accounting actions.
+
+        Invoicing: Invoices, payments and basic invoice reporting.
+        Invoicing &amp; Banks: adds the accounting dashboard, bank management and follow-up reports.
+        Bookkeeper: access to all Accounting features, including reporting, asset management, analytic accounting, without configuration rights.
+        Administrator: full access including configuration rights and accounting data management.
+        Readonly: access to all the accounting data but in readonly mode, no actions allowed.
+        </field>
+    </record>
+
+    <!-- Add additional XMLIDs to export the overwritten names in this module's POT file -->
+    <function model="ir.model.data" name="_update_xmlids">
+        <value model="base" eval="[
+            {'xml_id': 'accountant.group_account_readonly', 'record': obj().env.ref('account.group_account_readonly')},
+            {'xml_id': 'accountant.group_account_user', 'record': obj().env.ref('account.group_account_user')},
+        ]"/>
+    </function>
+
+    <record id="account.group_account_readonly" model="res.groups">
+        <field name="name">Read-only</field>
+        <field name="category_id" ref="base.module_category_accounting_accounting"/>
+    </record>
+
+    <record id="account.group_account_user" model="res.groups">
+        <field name="name">Bookkeeper</field>
+        <field name="category_id" ref="base.module_category_accounting_accounting"/>
+    </record>
+
+    <record id="account.group_account_manager" model="res.groups">
+        <field name="implied_ids" eval="[(3, ref('account.group_account_invoice')), (4, ref('account.group_account_user'))]"/>
+    </record>
+
+</odoo>

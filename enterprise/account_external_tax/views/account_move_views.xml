@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="move_form_inherit" model="ir.ui.view">
+        <field name="name">account.move.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <button name="button_draft" position="after">
+                <field name="is_tax_computed_externally" invisible="1"/>
+                <button name="button_external_tax_calculation"
+                        type="object"
+                        string="Compute Taxes"
+                        invisible="state != 'draft' or is_move_sent or move_type not in ('out_invoice', 'out_refund') or not is_tax_computed_externally"
+                        groups="account.group_account_invoice"/>
+            </button>
+        </field>
+    </record>
+</odoo>

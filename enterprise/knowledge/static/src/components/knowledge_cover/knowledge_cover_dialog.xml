@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="knowledge.KnowledgeCoverDialog">
+    <Dialog contentClass="contentClass" size="size" title.translate="Choose a nice cover" modalRef="modalRef">
+        <KnowledgeCoverSelector articleCoverId="props.articleCoverId"
+                                save.bind="save" 
+                                searchTerm="props.articleName"
+                                selectMedia="(media)=>this.selectedMedia=media"
+                                modalRef="modalRef"/>
+        <t t-set-slot="footer">
+            <button class="btn btn-secondary" t-on-click="() => this.props.close()">Discard</button>
+        </t>
+    </Dialog>
+</t>
+
+<t t-name="knowledge.CoversListTemplate" t-inherit="web_editor.ImagesListTemplate" t-inherit-mode="primary">
+    <xpath expr="//t[@t-foreach='state.attachments']" position="replace">
+        <t t-foreach="state.attachments" t-as="attachment" t-key="attachment.id">
+            <AutoResizeCover t-if="!attachment.original_id or state.showOptimized"
+                             id="attachment.id"
+                             isOptimized="!!attachment.original_id"
+                             isRemovable="true"
+                             onRemoved.bind="onRemoved"
+                             src="attachment.thumbnail_src or attachment.image_src"
+                             name="attachment.name"
+                             title="attachment.name"
+                             altDescription="attachment.altDescription"
+                             model="attachment.res_model"
+                             resId="attachment.res_id"
+                             minRowHeight="MIN_ROW_HEIGHT"
+                             onImageClick="() => this.onClickAttachment(attachment)"/>
+        </t>
+    </xpath>
+</t>
+</templates>

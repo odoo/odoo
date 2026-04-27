@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="email_template_sync_reminder" model="mail.template">
+            <field name="name">Bank connection expiration reminder</field>
+            <field name="subject">Your bank connection is expiring soon</field>
+            <field name="email_from">{{ object.company_id.email_formatted or user.email_formatted }}</field>
+            <field name="email_to">{{ object.renewal_contact_email }}</field>
+            <field name="model_id" ref="account_online_synchronization.model_account_journal"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Hello,<br /><br />
+                                                            The connection between <b><a t-att-href='object.get_base_url()' t-out="object.get_base_url() or ''">https://yourcompany.odoo.com</a></b> and <t t-out="object.account_online_link_id.name or ''">Belfius</t> <t t-if="not object.expiring_synchronization_due_day">expired.</t><t t-else="">expires in <t t-out="object.expiring_synchronization_due_day or ''">10</t> days.</t><br/>
+                                                            <div style="margin: 16px 0px 16px 0px;">
+                                                                <a t-attf-href="{{ website_url }}/renew_consent/{{ object.id }}?access_token={{object.access_token}}"
+                                                                   style="background-color: #4caf50; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                                                                    Renew Consent
+                                                                </a>
+                                                            </div>
+                                                            Security Tip: Check that the domain name you are redirected to is: <b><a t-att-href='object.get_base_url()' t-out="object.get_base_url() or ''">https://yourcompany.odoo.com</a></b>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- POWERED BY -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                                <tr>
+                                    <td style="text-align: center; font-size: 13px;">
+                                        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Odoo</a>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; color: #454748; padding: 8px; border-collapse:separate;">
+                                <tr>
+                                    <td style="text-align: center; font-size: 11px;">
+                                        PS: This is an automated email sent by Odoo Accounting to remind you before a bank sync consent expiration.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+    </data>
+</odoo>

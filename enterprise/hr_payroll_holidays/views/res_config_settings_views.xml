@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr.payroll.holidays</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="45"/>
+        <field name="inherit_id" ref="hr_payroll.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='hr_payroll_accountant']" position="after">
+                <block title="Time Off">
+                    <setting string="Deferred Time Off" help="Postpone time off after payslip validation">
+                        <div class="content-group">
+                            <div class="row mt16 ms-2">
+                                <label string="Responsible" for="deferred_time_off_manager"
+                                    class="col-md-6 p-0 m-0 o_light_label"/>
+                                <field name="deferred_time_off_manager" class="col-lg-6 p-0"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,136 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * documents_sign
+#
+# Translators:
+# Wil Odoo, 2024
+# Odoo哥 <vnsoft.he@gmail.com>, 2024
+# Chloe Wang, 2024
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:47+0000\n"
+"PO-Revision-Date: 2025-08-26 22:31+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
+"projects/odoo-18/documents_sign/zh_Hans/>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: documents_sign
+#: model_terms:ir.ui.view,arch_db:documents_sign.res_config_settings_view_form_inherit_documents_sign
+msgid ""
+"Base folder for the folders created on-the-fly in the Sign App. Permission "
+"of the created folders will be inherited from this base folder."
+msgstr ""
+"在电子签名应用程序中即时创建的文件夹的基本文件夹。创建文件夹的权限将从该基本"
+"文件夹继承。"
+
+#. module: documents_sign
+#: model:ir.model,name:documents_sign.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: documents_sign
+#: model:ir.model,name:documents_sign.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设定"
+
+#. module: documents_sign
+#: model:ir.model,name:documents_sign.model_documents_document
+msgid "Document"
+msgstr "文档"
+
+#. module: documents_sign
+#: model_terms:ir.ui.view,arch_db:documents_sign.res_config_settings_view_form_inherit_documents_sign
+msgid ""
+"Each document template can be configured to centralize signed documents into "
+"a specific folder."
+msgstr "每个文档模板都可以配置为将已签名的文档集中到特定文件夹中。"
+
+#. module: documents_sign
+#: model_terms:ir.ui.view,arch_db:documents_sign.res_config_settings_view_form_inherit_documents_sign
+msgid "Folder"
+msgstr "文件夹"
+
+#. module: documents_sign
+#: model_terms:ir.ui.view,arch_db:documents_sign.res_config_settings_view_form_inherit_documents_sign
+msgid "Go to Sign Document Templates"
+msgstr "前往签名文档模板"
+
+#. module: documents_sign
+#. odoo-python
+#: code:addons/documents_sign/models/documents_document.py:0
+msgid "Invalid model %s"
+msgstr "无效模型%s"
+
+#. module: documents_sign
+#. odoo-python
+#: code:addons/documents_sign/models/documents_document.py:0
+msgid "New templates"
+msgstr "新模板"
+
+#. module: documents_sign
+#: model:ir.actions.server,name:documents_sign.ir_actions_server_create_sign_template_direct
+#: model_terms:ir.ui.view,arch_db:documents_sign.res_config_settings_view_form_inherit_documents_sign
+msgid "Sign"
+msgstr "签名"
+
+#. module: documents_sign
+#: model:ir.model.fields,field_description:documents_sign.field_res_config_settings__documents_sign_folder_id
+#: model_terms:ir.ui.view,arch_db:documents_sign.res_config_settings_view_form_inherit_documents_sign
+msgid "Sign Base Folder"
+msgstr "签名基础文件夹"
+
+#. module: documents_sign
+#: model:ir.model.fields,field_description:documents_sign.field_res_company__documents_sign_folder_id
+msgid "Sign Folder"
+msgstr "签名文件夹"
+
+#. module: documents_sign
+#: model:ir.actions.server,name:documents_sign.ir_actions_server_create_sign_template_direct_create
+msgid "Sign create"
+msgstr "创建电子签名"
+
+#. module: documents_sign
+#: model:ir.model,name:documents_sign.model_sign_request
+msgid "Signature Request"
+msgstr "签字请求"
+
+#. module: documents_sign
+#: model:ir.model,name:documents_sign.model_sign_request_item
+msgid "Signature Request Item"
+msgstr "签字请求项"
+
+#. module: documents_sign
+#: model:ir.model,name:documents_sign.model_sign_template
+msgid "Signature Template"
+msgstr "签字模板"
+
+#. module: documents_sign
+#: model:ir.model.fields,field_description:documents_sign.field_sign_template__folder_id
+msgid "Signed Document Folder"
+msgstr "已签名文件夹"
+
+#. module: documents_sign
+#: model:ir.model.fields,field_description:documents_sign.field_sign_template__documents_tag_ids
+msgid "Signed Document Tags"
+msgstr "已签名文档标记"
+
+#. module: documents_sign
+#. odoo-python
+#: code:addons/documents_sign/models/documents_document.py:0
+msgid "This action can only be applied on a single record."
+msgstr "此操作只能应用于单个记录"
+
+#. module: documents_sign
+#. odoo-python
+#: code:addons/documents_sign/models/documents_document.py:0
+msgid "This action can only be applied on pdf document."
+msgstr "此操作只可套用至 pdf 文件。"

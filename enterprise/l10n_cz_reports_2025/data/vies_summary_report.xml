@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="vies_summary_report" model="account.report">
+        <field name="name">VIES summary report</field>
+        <field name="availability_condition">country</field>
+        <field name="country_id" ref="base.cz"/>
+        <field name="load_more_limit" eval="80"/>
+        <field name="custom_handler_model_id" ref="model_l10n_cz_vies_summary_report_handler"/>
+        <field name="integer_rounding">UP</field>
+        <field name="column_ids">
+            <record id="vies_summary_report_country_code" model="account.report.column">
+                <field name="name">Country Code</field>
+                <field name="expression_label">country_code</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="vies_summary_report_vat_number" model="account.report.column">
+                <field name="name">VAT number</field>
+                <field name="expression_label">vat_number</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="vies_summary_report_transaction_code" model="account.report.column">
+                <field name="name">Transaction code</field>
+                <field name="expression_label">transaction_code</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="vies_summary_report_supplies_number" model="account.report.column">
+                <field name="name">Supplies number</field>
+                <field name="expression_label">supplies_number</field>
+                <field name="figure_type">integer</field>
+            </record>
+            <record id="vies_summary_report_total_value" model="account.report.column">
+                <field name="name">Total value</field>
+                <field name="expression_label">total_value</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="vies_summary_report_line" model="account.report.line">
+                <field name="name">B. SECTION</field>
+                <field name="groupby">partner_id, l10n_cz_transaction_code, move_id</field>
+                <field name="expression_ids">
+                    <record id="vies_summary_report_line_country_code" model="account.report.expression">
+                        <field name="label">country_code</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_vies_summary</field>
+                        <field name="subformula">country_code</field>
+                    </record>
+                    <record id="vies_summary_report_line_vat_number" model="account.report.expression">
+                        <field name="label">vat_number</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_vies_summary</field>
+                        <field name="subformula">vat_number</field>
+                    </record>
+                    <record id="vies_summary_report_line_transaction_code" model="account.report.expression">
+                        <field name="label">transaction_code</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_vies_summary</field>
+                        <field name="subformula">transaction_code</field>
+                    </record>
+                    <record id="vies_summary_report_line_supplies_number" model="account.report.expression">
+                        <field name="label">supplies_number</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_vies_summary</field>
+                        <field name="subformula">supplies_number</field>
+                    </record>
+                    <record id="vies_summary_report_line_total_value" model="account.report.expression">
+                        <field name="label">total_value</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_vies_summary</field>
+                        <field name="subformula">total_value</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+    <record id="action_vies_summary_report" model="ir.actions.client">
+        <field name="name">VIES summary report</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('l10n_cz_reports_2025.vies_summary_report')}"/>
+    </record>
+
+    <menuitem
+        id="account_reports_cz_statements_menu"
+        name="Czech Republic"
+        parent="account.menu_finance_reports"
+        sequence="5"
+        groups="account.group_account_readonly"/>
+
+    <menuitem
+        id="menu_action_vies_summary_report"
+        name="VIES summary report"
+        action="action_vies_summary_report"
+        parent="l10n_cz_reports_2025.account_reports_cz_statements_menu"/>
+</odoo>

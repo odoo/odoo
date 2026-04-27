@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="base.partner_demo_company_gt" model="res.partner">
+        <field name="vat">11201220K</field>
+        <field name="l10n_gt_edi_consignatory_code">0000</field>
+        <field name="l10n_gt_edi_phrase_ids"
+               eval="[Command.set([ref('l10n_gt_edi.l10n_gt_edi_phrase_type_1_code_1')])]"/>
+        <field name="l10n_latam_identification_type_id" ref="it_nit"/>
+    </record>
+
+    <record id="l10n_gt_partner_1" model="res.partner">
+        <field name="name">Empresa Guatemalteca S. A.</field>
+        <field name="street">Av. Pedro Calles. 434</field>
+        <field name="city">Guatemala</field>
+        <field name="state_id" ref="base.state_gt_ave"/>
+        <field name="zip">01066</field>
+        <field name="country_id" ref="base.gt"/>
+        <field name="vat">2492334</field>
+        <field name="company_type">company</field>
+        <field name="email">info@empresaguatemalteca.com</field>
+        <field name="l10n_latam_identification_type_id" ref="it_nit"/>
+    </record>
+
+    <record id="l10n_gt_partner_2" model="res.partner">
+        <field name="name">Pablo García</field>
+        <field name="street">Av. De Las Flores. 34</field>
+        <field name="city">Guatemala</field>
+        <field name="state_id" ref="base.state_gt_ave"/>
+        <field name="zip">01051</field>
+        <field name="country_id" ref="base.gt"/>
+        <field name="vat">1234567890101</field>
+        <field name="is_company" eval="False"/>
+        <field name="l10n_latam_identification_type_id" ref="it_cui"/>
+    </record>
+
+    <record id="l10n_gt_partner_3" model="res.partner">
+        <field name="name">SAT</field>
+        <field name="street">7A Avenida 9</field>
+        <field name="state_id" ref="base.state_gt_ave"/>
+        <field name="zip">01051</field>
+        <field name="country_id" ref="base.gt"/>
+        <field name="company_type">company</field>
+        <field name="vat">1669394-9</field>
+        <field name="l10n_latam_identification_type_id" ref="it_nit"/>
+    </record>
+
+</odoo>

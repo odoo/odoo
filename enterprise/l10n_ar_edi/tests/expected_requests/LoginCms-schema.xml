@@ -1,0 +1,71 @@
+<wsdl:definitions xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="https://wsaahomo.afip.gov.ar/ws/services/LoginCms" xmlns:intf="https://wsaahomo.afip.gov.ar/ws/services/LoginCms" xmlns:tns1="http://wsaa.view.sua.dvadac.desein.afip.gov" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="https://wsaahomo.afip.gov.ar/ws/services/LoginCms">
+    <!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+    <wsdl:types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://wsaa.view.sua.dvadac.desein.afip.gov">
+            <import namespace="https://wsaahomo.afip.gov.ar/ws/services/LoginCms"/>
+            <element name="loginCms">
+                <complexType>
+                    <sequence>
+                        <element name="in0" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="loginCmsResponse">
+                <complexType>
+                    <sequence>
+                        <element name="loginCmsReturn" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+        </schema>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="https://wsaahomo.afip.gov.ar/ws/services/LoginCms">
+            <complexType name="LoginFault">
+                <sequence/>
+            </complexType>
+            <element name="fault" type="impl:LoginFault"/>
+        </schema>
+    </wsdl:types>
+    <wsdl:message name="loginCmsRequest">
+        <wsdl:part element="tns1:loginCms" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="LoginFault">
+        <wsdl:part element="impl:fault" name="fault">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="loginCmsResponse">
+        <wsdl:part element="tns1:loginCmsResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="LoginCMS">
+        <wsdl:operation name="loginCms">
+            <wsdl:input message="impl:loginCmsRequest" name="loginCmsRequest">
+            </wsdl:input>
+            <wsdl:output message="impl:loginCmsResponse" name="loginCmsResponse">
+            </wsdl:output>
+            <wsdl:fault message="impl:LoginFault" name="LoginFault">
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="LoginCmsSoapBinding" type="impl:LoginCMS">
+        <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="loginCms">
+            <wsdlsoap:operation soapAction=""/>
+            <wsdl:input name="loginCmsRequest">
+                <wsdlsoap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="loginCmsResponse">
+                <wsdlsoap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="LoginFault">
+                <wsdlsoap:fault name="LoginFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="LoginCMSService">
+        <wsdl:port binding="impl:LoginCmsSoapBinding" name="LoginCms">
+            <wsdlsoap:address location="https://wsaahomo.afip.gov.ar/ws/services/LoginCms"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

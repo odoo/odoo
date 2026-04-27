@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.inter.company.rules</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account_inter_company_rules.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='module_account_inter_company_rules_company_id']" position="inside">
+                <div class="row">
+                    <field name="intercompany_generate_sales_orders" class="oe_inline o_light_label"/>
+                    <label string="Generate Sales Orders" for="intercompany_generate_sales_orders" class="col-lg-6 o_light_label"/>
+                </div>
+                <div class="row">
+                    <field name="intercompany_generate_purchase_orders" class="oe_inline o_light_label"/>
+                    <label string="Generate Purchase Orders" for="intercompany_generate_purchase_orders" class="col-lg-6 o_light_label"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

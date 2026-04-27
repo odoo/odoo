@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_pl_reports_jpk_fa.jpk_fa_report" model="account.report">
+        <field name="name">JPK FA Report</field>
+        <field name="default_opening_date_filter">this_month</field>
+        <field name="filter_multi_company">selector</field>
+        <field name="country_id" ref="base.pl"/>
+        <field name="custom_handler_model_id" ref="model_l10n_pl_reports_jpk_fa_report_handler"/>
+        <field name="column_ids">
+            <record id="l10n_pl_jpk_fa_report_partner" model="account.report.column">
+                <field name="name">Partner</field>
+                <field name="expression_label">partner_name</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="l10n_pl_jpk_fa_report_invoice_date" model="account.report.column">
+                <field name="name">Invoice Date</field>
+                <field name="expression_label">invoice_date</field>
+                <field name="figure_type">date</field>
+            </record>
+            <record id="l10n_pl_jpk_fa_report_invoice_due_date" model="account.report.column">
+                <field name="name">Due Date</field>
+                <field name="expression_label">invoice_date_due</field>
+                <field name="figure_type">date</field>
+            </record>
+            <record id="l10n_pl_jpk_fa_report_net_amount" model="account.report.column">
+                <field name="name">Net Amount</field>
+                <field name="expression_label">amount_net</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="l10n_pl_jpk_fa_report_tax" model="account.report.column">
+                <field name="name">Tax</field>
+                <field name="expression_label">applied_tax</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="l10n_pl_jpk_fa_report_tax_amount" model="account.report.column">
+                <field name="name">Tax amount</field>
+                <field name="expression_label">amount_tax</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="l10n_pl_jpk_fa_report_amount_in_currency" model="account.report.column">
+                <field name="name">Amount in Currency</field>
+                <field name="expression_label">amount_in_currency</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="l10n_pl_jpk_fa_report_amount" model="account.report.column">
+                <field name="name">Total Amount</field>
+                <field name="expression_label">amount_total</field>
+                <field name="figure_type">monetary</field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_referral_alert_mail_wizard_view_form" model="ir.ui.view">
+        <field name="name">hr.referral.alert.mail.wizard.view.form</field>
+        <field name="model">hr.referral.alert.mail.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="user_ids" widget="many2many_tags" options="{'no_create': true}"/>
+                    <field name="subject"/>
+                    <field name="body" no_label="1"/>
+                </group>
+                <footer>
+                    <button string="Send" class="oe_highlight" type="object" name="action_send" data-hotkey="q"/>
+                    <button string="Cancel" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_referral_alert_mail_wizard_action" model="ir.actions.act_window">
+        <field name="name">Send Mail</field>
+        <field name="res_model">hr.referral.alert.mail.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

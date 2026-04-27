@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="email_template_sdd_mandate_expiring" model="mail.template">
+            <field name="name">SEPA Direct Debit mandate expiration warning</field>
+            <field name="subject">SEPA Direct Debit mandate expiration warning</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_cc">{{ ','.join(object.message_follower_ids.mapped('email')) }}</field>
+            <field name="model_id" ref="account_sepa_direct_debit.model_sdd_mandate"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+            <table border="0" cellpadding="0" cellspacing="0"
+                   style="padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                   style="padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Hello,<br/><br/>
+                                                            A SEPA Direct Debit mandate will reach its automatic expiration date on <span t-out="format_date(object._get_expiry_date_per_mandate()[object])">2020-04-18</span><br/>
+                                                            This can be caused by one of the following reason:
+                                                            <ul>
+                                                                <li>
+                                                                    That date is the mandate end date agreed upon signature.
+                                                                </li>
+                                                                <li>
+                                                                    It would then be more than 36 months since the last time this mandate was used.
+                                                                </li>
+                                                            </ul>
+                                                            <div style="margin: 16px 0px 16px 0px;">
+                                                                <a t-attf-href="{{ website_url }}/odoo/sdd-mandates/{{ object.id }}"
+                                                                   style="background-color: #4caf50; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                                                                    Go to Mandate
+                                                                </a>
+                                                            </div>
+                                                            Security Tip: Check that the domain name you are redirected to is: <b><a
+                                                                t-att-href='object.get_base_url()' t-out="object.get_base_url() or ''">
+                                                            https://yourcompany.odoo.com</a></b>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%"
+                                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- POWERED BY -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                   style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                                <tr>
+                                    <td style="text-align: center; font-size: 13px;">
+                                        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=auth"
+                                                      style="color: #875A7B;">Odoo</a>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                   style="min-width: 590px; color: #454748; padding: 8px; border-collapse:separate;">
+                                <tr>
+                                    <td style="text-align: center; font-size: 11px;">
+                                        PS: This is an automated email sent by Odoo Accounting to notify you a SEPA Direct Debit mandate is going to get automatically closed.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+
+        <record id="email_template_sdd_pre_notification" model="mail.template">
+            <field name="name">SEPA Direct Debit Customer Pre-Notification mail</field>
+            <field name="subject">Payment notification {{ object.memo }}</field>
+            <field name="description">Sent to the customer to indicate their account will be charged</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{ object.partner_id.email_formatted }}</field>
+            <field name="model_id" ref="account_batch_payment.model_account_payment"/>
+            <field name="lang">{{ object.partner_id.lang or user.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <t t-set="company" t-value="object.company_id"/>
+                    <span style="font-size: 10px;">Your Direct Debit Payment Notification</span><br/>
+                </td></tr>
+                <tr><td valign="middle" align="right" t-if="not company.uses_default_logo">
+                    <img t-attf-src="/logo.png?company={{ company.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="company.name"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 13px;">
+                    Dear <t t-out="object.partner_id.name or ''">Azure Interior</t><br/>
+                    <br/>
+                    A Direct Debit payment request amounting to
+                    <span style="font-weight:bold;" t-out="format_amount(object.amount, object.currency_id) or ''">$ 0.00</span>
+                    will be sent to your bank.<br/>
+                    Your account ending with <t t-out="ctx.get('iban_last_4') or ''">1234</t> will be automatically debited on the
+                    <span style="font-weight:bold;" t-out="format_date(ctx.get('collection_date'))">2020-04-18</span>,
+                    or shortly thereafter.<br/>
+                    please make sure you have the requested funds.<br/>
+                    <br/>
+                    <t t-if="ctx.get('creditor_iban') or ctx.get('mandate_ref')">
+                        Merchant data:<br/>
+                        <ul>
+                            <t t-if="ctx.get('creditor_iban')">
+                                <li>IBAN: <t t-out="ctx['creditor_iban'] or ''">NO 93 8601 1117947</t></li>
+                            </t>
+                            <t t-if="ctx.get('mandate_ref')">
+                                <li>SEPA DIRECT DEBIT MANDATE REFERENCE: <t t-out="ctx['mandate_ref'] or ''"></t></li>
+                            </t>
+                        </ul>
+                    </t>
+                    <br/>
+                    Do not hesitate to contact us if you have any question.
+                </td></tr>
+                <tr><td style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle" align="left">
+                    <t t-out="company.name or ''">YourCompany</t>
+                </td></tr>
+                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                    <t t-if="company.phone">
+                        <t t-out="company.phone or ''">+1 650-123-4567</t> |
+                    </t>
+                    <t t-if="company.email">
+                        <a t-attf-href="'mailto:%s' % {{ company.email }}" style="text-decoration:none; color: #454748;" t-out="company.email or ''">info@yourcompany.com</a> |
+                    </t>
+                    <t t-if="company.website">
+                        <a t-attf-href="'%s' % {{ company.website }}" style="text-decoration:none; color: #454748;" t-out="company.website or ''">http://www.example.com</a>
+                    </t>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px;">
+    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+      <tr><td style="text-align: center; font-size: 13px;">
+        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=mail" style="color: #875A7B;">Odoo</a>
+      </td></tr>
+    </table>
+</td></tr>
+</table>
+            </field>
+        </record>
+
+        <record id="email_template_sdd_new_mandate" model="mail.template">
+            <field name="name">SEPA Direct Debit Sending</field>
+            <field name="description">Email requesting the customer to sign the mandate attached</field>
+            <field name="model_id" ref="account_sepa_direct_debit.model_sdd_mandate_send"/>
+            <field name="subject">{{ object.partner_id.display_name }} SEPA Direct Debit Mandate</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear <t t-out="object.partner_id.display_name or ''">Azure Interior</t>
+                        <br/>
+                        <br/>
+                        Here is your SEPA Direct Debit Mandate to sign to authorize
+                        <t t-out="object.company_id.display_name or ''">YourCompany</t>
+                        to send instructions to your bank to debit your account in accordance with the instructions from
+                        <t t-out="object.company_id.display_name or ''">YourCompany</t>
+                        Do not hesitate to contact us if you have any questions.
+                        <br/>
+                        Best regards,
+                        <t t-if="not is_html_empty(user.signature)">
+                            <br/><br/>
+                            <t t-out="user.signature">--<br/>Mitchell Admin</t>
+                        </t>
+                    </p>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

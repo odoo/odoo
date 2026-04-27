@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template name="Rental Search" id="s_rental_search">
+        <div class="s_rental_search d-flex align-items-start my-2">
+            <div class="o_website_sale_daterange_picker variant_attribute flex-grow-1 pb-0">
+                <input class="s_rental_search_rental_duration_unit" type="hidden" name="rental_duration_unit"
+                       value=""/>
+                <div class="s_website_form_datetime date o_daterange_picker">
+                    <div class="d-flex gap-2 align-items-center flex-column flex-md-row">
+                        <div class="input-group">
+                            <input type="text" name="renting_start_date" class="o_website_sale_daterange_picker_input form-control" placeholder="Start date"/>
+                            <input type="text" name="renting_end_date" class="o_website_sale_daterange_picker_input form-control" placeholder="End date"/>
+                            <label class="input-group-text input-group-text-subtle d-flex align-items-center o_input_group_date_icon">
+                                <i class="fa fa-calendar" role="img"/>
+                            </label>
+                        </div>
+                        <div class="d-flex gap-2 align-self-stretch flex-shrink-0">
+                            <div class="product_attribute_search_rental o_not_editable col-auto d-none flex-grow-1">
+                                <div class="product_attribute_search_rental_name"/>
+                                <select class="s_rental_search_select form-select mb-0"/>
+                            </div>
+                            <button class="s_rental_search_btn btn btn-light ms-auto">
+                                <span class="d-md-none me-2">Search period</span>
+                                <i class="fa fa-search" role="img"/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_renting_warning invalid-feedback" role="alert">
+                    <i class="fa fa-warning" role="img" aria-label="Warning"/>
+                    <span name="renting_warning_message"/>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="s_rental_search_options" inherit_id="website.snippet_options">
+        <xpath expr="//t[@t-set='so_content_addition_selector']" position="inside">, .s_rental_search</xpath>
+        <xpath expr="." position="inside">
+            <div data-js="RentalSearchOptions" data-selector=".s_rental_search">
+                <we-select data-name="timing_picker_opt" string="Timing" data-no-preview="true">
+                    <we-button data-set-timing="day">Day</we-button>
+                    <we-button data-set-timing="hour">Hour</we-button>
+                </we-select>
+                <we-row>
+                    <we-many2one string="Attribute Filter"
+                                 data-model="product.attribute"
+                                 data-no-preview="true"
+                                 data-name="product_attribute_picker_opt"
+                                 data-set-product-attribute=""
+                    />
+                    <we-button data-name="product_attribute_reset_opt"
+                               class="reset-product-attribute-picker align-self-end fa fa-fw fa-times">
+                    </we-button>
+                </we-row>
+            </div>
+        </xpath>
+    </template>
+    <asset id="website_sale_renting.s_rental_search_000_js" name="Rental Search 000 JS">
+        <bundle>web.assets_frontend</bundle>
+        <path>website_sale_renting/static/src/snippets/s_rental_search/000.js</path>
+    </asset>
+</odoo>

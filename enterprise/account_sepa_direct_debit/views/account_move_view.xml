@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_invoice_filter" model="ir.ui.view">
+            <field name="name">sdd.account.invoice.select</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='to_check']" position="after">
+                    <filter name="has_sdd_mandate" string="SDD Mandate" domain="[('sdd_has_usable_mandate', '=', True)]" help="Invoices matching a valid SEPA Direct Debit Mandate"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_move_line_payment_filter" model="ir.ui.view">
+            <field name="name">sdd.account.move.line.payment.search</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_account_move_line_payment_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='refunds']" position="after">
+                    <separator/>
+                    <filter name="has_sdd_mandate" string="SDD Mandate" domain="[('move_id.sdd_has_usable_mandate', '=', True)]" help="Payments matching a valid SEPA Direct Debit Mandate"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

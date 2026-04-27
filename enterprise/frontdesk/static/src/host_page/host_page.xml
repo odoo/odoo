@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="frontdesk.HostPage">
+        <div class="d-flex flex-column justify-content-center">
+            <div class="container-fluid">
+                <div class="row g-0 d-flex justify-content-center">
+                    <div class="col-lg-6">
+                        <form t-on-submit.prevent="_onConfirm">
+                            <Many2One update.bind="selectedHost" disableButton.bind="disableButton" stationId="props.stationId" token="props.token"/>
+                            <button t-ref="button" class="btn btn-primary mt-3 w-100" disabled="disabled">Confirm</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

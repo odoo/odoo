@@ -1,0 +1,11 @@
+<odoo>
+    <template id="report_belgium_payslip" inherit_id="l10n_be_hr_payroll.report_belgium_payslip">
+        <div id="wage" position="after">
+            <t t-set="mobility_budget" t-value="o.contract_id.l10n_be_mobility_budget_amount_monthly"/>
+            <div id="employee_mobility_budget" t-if="mobility_budget">
+                <strong class="me-2">Mobility Budget (Monthly):</strong>
+                <span t-out="mobility_budget"/> €
+            </div>
+        </div>
+    </template>
+</odoo>

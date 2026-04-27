@@ -1,0 +1,281 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="l10n_id_hr_rule_parameter_bpjs_kesehatan" model="hr.rule.parameter">
+        <field name="name">BPJS Kesehatan Threshold</field>
+        <field name="code">l10n_id_bpjs_salary_threshold</field>
+        <field name="country_id" ref="base.id"/>
+    </record>
+    <record id="l10n_id_hr_rule_parameter_bpjs_kesehatan_2009" model="hr.rule.parameter.value">
+        <field name="parameter_value">12000000</field>
+        <field name="rule_parameter_id" ref="l10n_id_hr_rule_parameter_bpjs_kesehatan"/>
+        <field name="date_from" eval="datetime(2009, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_id_hr_rule_parameter_biaya_jabatan" model="hr.rule.parameter">
+        <field name="name">Biaya Jabatan Threshold</field>
+        <field name="code">l10n_id_biaya_jabatan_salary_threshold</field>
+        <field name="country_id" ref="base.id"/>
+    </record>
+    <record id="l10n_id_hr_rule_parameter_biaya_jabatan_2009" model="hr.rule.parameter.value">
+        <field name="parameter_value">10000000</field>
+        <field name="rule_parameter_id" ref="l10n_id_hr_rule_parameter_biaya_jabatan"/>
+        <field name="date_from" eval="datetime(2009, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_id_hr_rule_parameter_jht" model="hr.rule.parameter">
+        <field name="name">JHT Threshold</field>
+        <field name="code">l10n_id_jht_threshold</field>
+        <field name="country_id" ref="base.id"/>
+    </record>
+    <record id="l10n_id_hr_rule_parameter_jht_2013" model="hr.rule.parameter.value">
+        <field name="parameter_value">9559600</field>
+        <field name="rule_parameter_id" ref="l10n_id_hr_rule_parameter_jht"/>
+        <field name="date_from" eval="datetime(2013, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_id_hr_rule_parameter_jp" model="hr.rule.parameter">
+        <field name="name">JP Threshold</field>
+        <field name="code">l10n_id_jp_threshold</field>
+        <field name="country_id" ref="base.id"/>
+    </record>
+    <record id="l10n_id_hr_rule_parameter_jp_2015" model="hr.rule.parameter.value">
+        <field name="parameter_value">10042300</field>
+        <field name="rule_parameter_id" ref="l10n_id_hr_rule_parameter_jp"/>
+        <field name="date_from" eval="datetime(2015, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_id_hr_rule_parameter_bpjs_jkm_percentage" model="hr.rule.parameter">
+        <field name="name">JKM Percentage</field>
+        <field name="code">l10n_id_jkm_percentage</field>
+        <field name="country_id" ref="base.id"/>
+    </record>
+    <record id="l10n_id_hr_rule_parameter_bpjs_jkm_percentage_2015" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.3</field>
+        <field name="rule_parameter_id" ref="l10n_id_hr_rule_parameter_bpjs_jkm_percentage"/>
+        <field name="date_from" eval="datetime(2015, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_id_hr_rule_parameter_alw_bpjs_kesehatan_percent" model="hr.rule.parameter">
+        <field name="name">ALW BPJS Kesehatan Percentage</field>
+        <field name="code">l10n_id_alw_bpjs_kesehatan_percent</field>
+        <field name="country_id" ref="base.id"/>
+    </record>
+    <record id="l10n_id_hr_rule_parameter_alw_bpjs_kesehatan_percent_2013" model="hr.rule.parameter.value">
+        <field name="parameter_value">4</field>
+        <field name="rule_parameter_id" ref="l10n_id_hr_rule_parameter_alw_bpjs_kesehatan_percent"/>
+        <field name="date_from" eval="datetime(2013, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_id_hr_rule_parameter_biaya_jabatan_percent" model="hr.rule.parameter">
+        <field name="name">Biaya Jabatan Percentage</field>
+        <field name="code">l10n_id_biaya_jabatan_percent</field>
+        <field name="country_id" ref="base.id"/>
+    </record>
+    <record id="l10n_id_hr_rule_parameter_biaya_jabatan_percent_2008" model="hr.rule.parameter.value">
+        <field name="parameter_value">5</field>
+        <field name="rule_parameter_id" ref="l10n_id_hr_rule_parameter_biaya_jabatan_percent"/>
+        <field name="date_from" eval="datetime(2008, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_id_hr_rule_parameter_jht_percent" model="hr.rule.parameter">
+        <field name="name">JHT Percentage</field>
+        <field name="code">l10n_id_jht_percent</field>
+        <field name="country_id" ref="base.id"/>
+    </record>
+    <record id="l10n_id_hr_rule_parameter_jht_percent_2013" model="hr.rule.parameter.value">
+        <field name="parameter_value">2</field>
+        <field name="rule_parameter_id" ref="l10n_id_hr_rule_parameter_jht_percent"/>
+        <field name="date_from" eval="datetime(2013, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_id_hr_rule_parameter_ded_bpjs_kesehatan_percent" model="hr.rule.parameter">
+        <field name="name">DED BPJS Kesehatan Percentage</field>
+        <field name="code">l10n_id_ded_bpjs_kesehatan_percent</field>
+        <field name="country_id" ref="base.id"/>
+    </record>
+    <record id="l10n_id_hr_rule_parameter_ded_bpjs_kesehatan_percent_2013" model="hr.rule.parameter.value">
+        <field name="parameter_value">1</field>
+        <field name="rule_parameter_id" ref="l10n_id_hr_rule_parameter_ded_bpjs_kesehatan_percent"/>
+        <field name="date_from" eval="datetime(2013, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_id_hr_rule_parameter_jp_percent" model="hr.rule.parameter">
+        <field name="name">JP Percentage</field>
+        <field name="code">l10n_id_jp_percent</field>
+        <field name="country_id" ref="base.id"/>
+    </record>
+    <record id="l10n_id_hr_rule_parameter_jp_percent_2015" model="hr.rule.parameter.value">
+        <field name="parameter_value">1</field>
+        <field name="rule_parameter_id" ref="l10n_id_hr_rule_parameter_jp_percent"/>
+        <field name="date_from" eval="datetime(2015, 1, 1).date()"/>
+    </record>
+
+    <!-- PPH percentage range
+    forma: of parameter value: (lower_bound, upper_bound, percentage applied) -->
+    <record id="l10n_id_hr_rule_parameter_tax_percentage_pph21_a" model="hr.rule.parameter">
+        <field name="name">PPH21 Rate: Category A</field>
+        <field name="code">l10n_id_pph21_percentage_a</field>
+        <field name="country_id" ref="base.id" />
+    </record>
+    <record id="l10n_id_hr_rule_parameter_tax_percentage_a_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="l10n_id_hr_rule_parameter_tax_percentage_pph21_a"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+        <field name="parameter_value">
+            [
+                (0,5400000,0),
+                (5400000,5650000,0.25),
+                (5650000,5950000,0.5),
+                (5950000,6300000,0.75),
+                (6300000,6750000,1),
+                (6750000,7500000,1.25),
+                (7500000,8550000,1.5),
+                (8550000,9650000,1.75),
+                (9650000,10050000,2),
+                (10050000,10350000,2.25),
+                (10350000,10700000,2.5),
+                (10700000,11050000,3),
+                (11050000,11600000,3.5),
+                (11600000,12500000,4),
+                (12500000,13750000,5),
+                (13750000,15100000,6),
+                (15100000,16950000,7),
+                (16950000,19750000,8),
+                (19750000,24150000,9),
+                (24150000,26450000,10),
+                (26450000,28000000,11),
+                (28000000,30050000,12),
+                (30050000,32400000,13),
+                (32400000,35400000,14),
+                (35400000,39100000,15),
+                (39100000,43850000,16),
+                (43850000,47800000,17),
+                (47800000,51400000,18),
+                (51400000,56300000,19),
+                (56300000,62200000,20),
+                (62200000,68600000,21),
+                (68600000,77500000,22),
+                (77500000,89000000,23),
+                (89000000,103000000,24),
+                (103000000,125000000,25),
+                (125000000,157000000,26),
+                (157000000,206000000,27),
+                (206000000,337000000,28),
+                (337000000,454000000,29),
+                (454000000,550000000,30),
+                (550000000,695000000,31),
+                (695000000,910000000,32),
+                (910000000,1400000000,33),
+                (1400000000,9999999999,34)
+            ]
+        </field>
+    </record>
+
+    <record id="l10n_id_hr_rule_parameter_tax_percentage_pph21_b" model="hr.rule.parameter">
+        <field name="name">PPH21 Rate: Category B</field>
+        <field name="code">l10n_id_pph21_percentage_b</field>
+        <field name="country_id" ref="base.id" />
+    </record>
+    <record id="l10n_id_hr_rule_parameter_tax_percentage_b_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="l10n_id_hr_rule_parameter_tax_percentage_pph21_b"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+        <field name="parameter_value">
+            [
+            (0,6200000,0),
+            (6200000,6500000,0.25),
+            (6500000,6850000,0.5),
+            (6850000,7300000,0.75),
+            (7300000,9200000,1),
+            (9200000,10750000,1.5),
+            (10750000,11250000,2),
+            (11250000,11600000,2.5),
+            (11600000,12600000,3),
+            (12600000,13600000,4),
+            (13600000,14950000,5),
+            (14950000,16400000,6),
+            (16400000,18450000,7),
+            (18450000,21850000,8),
+            (21850000,26000000,9),
+            (26000000,27700000,10),
+            (27700000,29350000,11),
+            (29350000,31450000,12),
+            (31450000,33950000,13),
+            (33950000,37100000,14),
+            (37100000,41100000,15),
+            (41100000,45800000,16),
+            (45800000,49500000,17),
+            (49500000,53800000,18),
+            (53800000,58500000,19),
+            (58500000,64000000,20),
+            (64000000,71000000,21),
+            (71000000,80000000,22),
+            (80000000,93000000,23),
+            (93000000,109000000,24),
+            (109000000,129000000,25),
+            (129000000,163000000,26),
+            (163000000,211000000,27),
+            (211000000,374000000,28),
+            (374000000,459000000,29),
+            (459000000,555000000,30),
+            (555000000,704000000,31),
+            (704000000,957000000,32),
+            (957000000,1405000000,33),
+            (1405000000,9999999999,34)
+            ]
+        </field>
+    </record>
+
+    <record id="l10n_id_hr_rule_parameter_tax_percentage_pph21_c" model="hr.rule.parameter">
+        <field name="name">PPH21 Rate: Category C</field>
+        <field name="code">l10n_id_pph21_percentage_c</field>
+        <field name="country_id" ref="base.id" />
+    </record>
+    <record id="l10n_id_hr_rule_parameter_tax_percentage_c_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="l10n_id_hr_rule_parameter_tax_percentage_pph21_c"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+        <field name="parameter_value">
+            [
+            (0,6600000,0),
+            (6600000,6950000,0.25),
+            (6950000,7350000,0.5),
+            (7350000,7800000,0.75),
+            (7800000,8850000,1),
+            (8850000,9800000,1.25),
+            (9800000,10950000,1.5),
+            (10950000,11200000,1.75),
+            (11200000,12050000,2),
+            (12050000,12950000,3),
+            (12950000,14150000,4),
+            (14150000,15550000,5),
+            (15550000,17050000,6),
+            (17050000,19500000,7),
+            (19500000,22700000,8),
+            (22700000,26600000,9),
+            (26600000,28100000,10),
+            (28100000,30100000,11),
+            (30100000,32600000,12),
+            (32600000,35400000,13),
+            (35400000,38900000,14),
+            (38900000,43000000,15),
+            (43000000,47400000,16),
+            (47400000,51200000,17),
+            (51200000,55800000,18),
+            (55800000,60400000,19),
+            (60400000,66700000,20),
+            (66700000,74500000,21),
+            (74500000,83200000,22),
+            (83200000,95600000,23),
+            (95600000,110000000,24),
+            (110000000,134000000,25),
+            (134000000,169000000,26),
+            (169000000,221000000,27),
+            (221000000,390000000,28),
+            (390000000,463000000,29),
+            (463000000,561000000,30),
+            (561000000,709000000,31),
+            (709000000,965000000,32),
+            (965000000,1419000000,33),
+            (1419000000,9999999999,34)
+            ]
+        </field>
+    </record>
+</odoo>

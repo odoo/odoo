@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_move_form_inherit_loan" model="ir.ui.view">
+        <field name="name">account.move.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account_accountant.view_move_form_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                    name="open_loan"
+                    class="oe_stat_button"
+                    icon="fa-bars"
+                    type="object"
+                    invisible="not generating_loan_line_id"
+                    string="Related Loan"
+                >
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

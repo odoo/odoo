@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_task_view_search_conflict_task_project_enterprise" model="ir.ui.view">
+        <field name="name">project.task.view.search.conflict.task.project.enterprise</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_search_form_project_fsm_base"/>
+        <field name="arch" type="xml">
+            <filter name="unassigned" position="before">
+                <filter name="tasks_scheduled" string="Tasks Scheduled" context="{'highlight_planned': 1}" invisible="1"/>
+                <filter name="conflict_task" string="Tasks in Conflict" context="{'highlight_conflicting_task': 1}" invisible="1"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="project_task_view_tree" model="ir.ui.view">
+        <field name="name">project.task.view.list.inherit.project.enterprise</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_task_view_tree_base"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_deadline']" position="attributes">
+                <attribute name="widget">daterange</attribute>
+                <attribute name="options">{'start_date_field': 'planned_date_begin'}</attribute>
+                <attribute name="decoration-danger">date_deadline &lt; current_date and state not in ['1_done', '1_canceled']</attribute>
+                <attribute name="invisible">not project_id</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_deadline']" position="after">
+                <field name="planned_date_begin" column_invisible="True"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_ebterprise_task_tree2" model="ir.ui.view">
+            <field name="name">project.task.list</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_tree2"/>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="attributes">
+                    <attribute name="js_class">project_enterprise_task_list</attribute>
+                </xpath>
+            </field>
+        </record>
+
+    <record id="project_task_view_form" model="ir.ui.view">
+        <field name="name">project.task.view.form.inherit.project.enterprise</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//t[@name='warning_section']" position="inside">
+                <div role="alert" class="alert alert-warning d-flex flex-wrap gap-3"
+                    invisible="not planning_overlap">
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-random me-2" role="img" title="Planning overlap"/>
+                        <field name="planning_overlap" widget="html"  nolabel="1" class="m-0"/>
+                    </div>
+                    <a name="action_fsm_view_overlapping_tasks" type="object" class="alert-link ms-auto" invisible="not planning_overlap">
+                        Check it out <i class="oi oi-chevron-right ms-2"/>
+                    </a>
+                </div>
+                <div role="alert"
+                    class="alert alert-warning d-flex align-items-center"
+                    invisible="not dependency_warning">
+                        <i class="fa fa-exclamation-circle me-2" role="img" title="Dependency warning"/>
+                        <field name="dependency_warning" widget="html" class="m-0"/>
+                </div>
+            </xpath>
+            <xpath expr="//label[@for='date_deadline']" position="attributes">
+                <attribute name="invisible">planned_date_begin</attribute>
+            </xpath>
+            <xpath expr="//label[@for='date_deadline']" position="after">
+                <label for="date_deadline" string="Planned Date" invisible="not planned_date_begin"/>
+            </xpath>
+            <xpath expr="//field[@name='date_deadline']" position="attributes">
+                <attribute name="widget">daterange</attribute>
+                <attribute name="options">{'start_date_field': 'planned_date_begin'}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_deadline']" position="after">
+                <field name="planned_date_begin" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/list//field[@name='date_deadline']" position="attributes">
+                <attribute name="widget">daterange</attribute>
+                <attribute name="options">{'start_date_field': 'planned_date_begin'}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/list//field[@name='date_deadline']" position="after">
+                <field name="planned_date_begin" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//field[@name='depend_on_ids']/list//field[@name='date_deadline']" position="attributes">
+                <attribute name="widget">daterange</attribute>
+                <attribute name="options">{'start_date_field': 'planned_date_begin'}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='depend_on_ids']/list//field[@name='date_deadline']" position="after">
+                <field name="planned_date_begin" column_invisible="True"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_task_view_form_in_gantt" model="ir.ui.view">
+        <field name="name">project.task.view.form.gantt</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_task_view_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <footer>
+                    <button string="Save" special="save" data-hotkey="q" class="btn btn-primary" close="1"/>
+                    <button name="action_unschedule_task" string="Unschedule" type="object" data-hotkey="u" class="btn btn-secondary" close="1" invisible="not id"/>
+                    <button string="Discard" special="cancel" data-hotkey="x" class="btn btn-secondary" close="1"/>
+                </footer>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Adding manager gantt view to Project -->
+    <record id="project_task_view_gantt" model="ir.ui.view">
+        <field name="name">project.task.view.gantt</field>
+        <field name="model">project.task</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <gantt date_start="planned_date_begin"
+                form_view_id="%(project_task_view_form_in_gantt)d"
+                date_stop="date_deadline"
+                default_scale="month"
+                scales="day,week,month,year"
+                color="project_id"
+                string="Planning"
+                js_class="task_gantt"
+                display_unavailability="1"
+                precision="{'day': 'hour:quarter', 'week': 'day:half', 'month': 'day:half'}"
+                decoration-danger="planning_overlap"
+                default_group_by="user_ids"
+                progress_bar="user_ids"
+                pill_label="True"
+                total_row="True"
+                dependency_field="depend_on_ids"
+                dependency_inverted_field="dependent_ids">
+                <templates>
+                    <div t-name="gantt-popover">
+                        <div name="project_id">
+                            <strong>Project — </strong>
+                            <t t-if="project_id" t-esc="project_id[1]"/>
+                            <t t-else=""><span class="fst-italic text-muted"><i class="fa fa-lock"></i> Private</span></t>
+                        </div>
+                        <div t-if="allow_milestones and milestone_id" groups="project.group_project_milestone">
+                            <strong>Milestone — </strong> <t t-esc="milestone_id[1]"/>
+                        </div>
+                        <div t-if="user_names"><strong>Assignees — </strong> <t t-esc="user_names"/></div>
+                        <div t-if="partner_id"><strong>Customer — </strong> <t t-esc="partner_id[1]"/></div>
+                        <div t-if="project_id" name="allocated_hours"><strong>Allocated Time — </strong> <t t-esc="allocated_hours"/></div>
+                        <div t-if="project_id">
+                            <t t-esc="planned_date_begin.toFormat('f ')"/>
+                            <i class="fa fa-long-arrow-right" title="Arrow"/>
+                            <t t-esc="date_deadline.toFormat(' f')"/>
+                        </div>
+                        <div class="text-danger mt-2" t-if="planning_overlap">
+                            <t t-out="planningOverlapHtml"/>
+                        </div>
+                        <footer replace="0">
+                           <button name="action_unschedule_task" type="object" string="Unschedule" class="btn btn-sm btn-secondary"/>
+                        </footer>
+                    </div>
+                </templates>
+                <field name="project_id"/>
+                <field name="allow_milestones"/>
+                <field name="milestone_id"/>
+                <field name="user_ids"/>
+                <field name="user_names"/>
+                <field name="partner_id"/>
+                <field name="planning_overlap"/>
+                <field name="allocated_hours"/>
+            </gantt>
+        </field>
+    </record>
+
+    <record id="view_task_gantt_inherit_all_task" model="ir.ui.view">
+        <field name="name">project.task.all.gantt</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_task_view_gantt"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//gantt" position="attributes">
+                <attribute name="color">project_id</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_task_gantt_inherit_my_task" model="ir.ui.view">
+        <field name="name">project.task.my.gantt</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_task_view_gantt"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <gantt position="attributes">
+                <attribute name="default_group_by">project_id</attribute>
+            </gantt>
+        </field>
+    </record>
+
+    <record id="project_task_dependency_view_gantt" model="ir.ui.view">
+        <field name="name">project.task.dependency.view.gantt</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_enterprise.project_task_view_gantt"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//gantt" position="attributes">
+                <attribute name="color">stage_id</attribute>
+                <attribute name="display_mode">sparse</attribute>
+            </xpath>
+            <xpath expr="//div[@name='project_id']" position="replace"/>
+        </field>
+    </record>
+
+    <record id="view_project_enterprise_task_graph" model="ir.ui.view">
+        <field name="name">project.enterprise.task.graph</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_project_task_graph"/>
+        <field name="arch" type="xml">
+            <xpath expr="//graph" position="attributes">
+                <attribute name="js_class">project_enterprise_task_graph</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_project_enterprise_task_pivot" model="ir.ui.view">
+        <field name="name">project.enterprise.task.pivot</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_project_task_pivot"/>
+        <field name="arch" type="xml">
+            <xpath expr="//pivot" position="attributes">
+                <attribute name="js_class">project_enterprise_task_pivot</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_enterprise_task_view_activity" model="ir.ui.view">
+        <field name="name">project.enterprise.task.activity.view</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_task_view_activity"/>
+        <field name="arch" type="xml">
+            <activity position="attributes">
+                <attribute name="js_class">project_enterprise_activity</attribute>
+            </activity>
+        </field>
+    </record>
+
+    <!-- Adding map view to project-->
+    <record id="project_task_map_view" model="ir.ui.view">
+        <field name="name">project.task.view.map</field>
+        <field name="model">project.task</field>
+        <field name="priority">12</field>
+        <field name="arch" type="xml">
+            <map res_partner="partner_id" default_order="planned_date_begin" routing="1" js_class="project_task_map">
+                <field name="partner_id" string="Customer"/>
+                <field name="project_id" string="Project"/>
+                <field name="milestone_id" string="Milestone"/>
+                <field name="user_names" string="Assignees"/>
+                <field name="planned_date_begin" string="Date"/>
+            </map>
+        </field>
+    </record>
+
+    <record id="project_task_map_view_no_title" model="ir.ui.view">
+        <field name="name">project.task.view.map</field>
+        <field name="model">project.task</field>
+        <field name="priority">12</field>
+        <field name="arch" type="xml">
+            <map res_partner="partner_id" routing="1" js_class="project_task_map">
+                <field name="partner_id" string="Customer"/>
+                <field name="milestone_id" string="Milestone"/>
+                <field name="user_names" string="Assignees"/>
+            </map>
+        </field>
+    </record>
+
+    <record id="view_task_calendar_inherited" model="ir.ui.view">
+        <field name="name">project.task.all.calendar</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_calendar"/>
+        <field name="arch" type="xml">
+            <xpath expr="//calendar" position="attributes">
+                <attribute name="js_class">project_enterprise_task_calendar</attribute>
+                <attribute name="date_start">planned_date_start</attribute>
+                <attribute name="date_stop">date_deadline</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- All Task action with map view -->
+    <record id="project.action_view_task" model="ir.actions.act_window">
+        <field name="res_model">project.task</field>
+        <field name="view_mode">kanban,list,form,calendar,pivot,graph,gantt,activity,map</field>
+    </record>
+
+    <record id="project.action_view_my_task" model="ir.actions.act_window">
+        <field name="res_model">project.task</field>
+        <field name="view_mode">kanban,list,form,gantt,calendar,map,pivot,graph,activity</field>
+    </record>
+
+    <record id="open_view_my_task_list_gantt" model="ir.actions.act_window.view">
+        <field name="sequence" eval="30"/>
+        <field name="view_mode">gantt</field>
+        <field name="act_window_id" ref="project.action_view_my_task"/>
+        <field name="view_id" ref="view_task_gantt_inherit_my_task"/>
+    </record>
+
+    <record id="project.action_view_all_task" model="ir.actions.act_window">
+        <field name="res_model">project.task</field>
+        <field name="view_mode">kanban,list,form,gantt,calendar,map,pivot,graph,activity</field>
+    </record>
+
+    <record id="open_view_all_task_list_gantt" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">gantt</field>
+        <field name="act_window_id" ref="project.action_view_all_task"/>
+        <field name="view_id" ref="view_task_gantt_inherit_all_task"/>
+    </record>
+
+    <!-- Set map view and gantt view -->
+    <record id="project_all_task_gantt_action_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="30"/>
+        <field name="view_mode">gantt</field>
+        <field name="act_window_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="view_id" ref="project_enterprise.project_task_dependency_view_gantt"/>
+    </record>
+
+    <record id="project_all_task_map_action_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="60"/>
+        <field name="view_mode">map</field>
+        <field name="act_window_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="view_id" ref="project_task_map_view_no_title"/>
+    </record>
+
+    <record id="project_task_map_action_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="60"/>
+        <field name="view_mode">map</field>
+        <field name="act_window_id" ref="project.action_view_task"/>
+        <field name="view_id" ref="project_task_map_view_no_title"/>
+    </record>
+
+    <record id="project_task_graph_action_view" model="ir.actions.act_window.view">
+        <field name="view_mode">graph</field>
+        <field name="act_window_id" ref="project.action_view_task"/>
+        <field name="view_id" ref="view_project_enterprise_task_graph"/>
+    </record>
+
+    <record id="project.action_view_task_from_milestone" model="ir.actions.act_window">
+        <field name="view_mode">kanban,list,gantt,calendar,map,pivot,graph,activity,form</field>
+    </record>
+
+    <record id="action_view_task_from_milestone_kanban_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="0"/>
+        <field name="view_mode">kanban</field>
+        <field name="act_window_id" ref="project.action_view_task_from_milestone"/>
+    </record>
+    <record id="action_view_task_from_milestone_tree_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">list</field>
+        <field name="act_window_id" ref="project.action_view_task_from_milestone"/>
+    </record>
+
+    <record id="action_view_task_from_milestone_gantt_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">gantt</field>
+        <field name="act_window_id" ref="project.action_view_task_from_milestone"/>
+    </record>
+
+    <record id="action_view_task_from_milestone_calendar_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="30"/>
+        <field name="view_mode">calendar</field>
+        <field name="act_window_id" ref="project.action_view_task_from_milestone"/>
+    </record>
+
+
+    <record id="project_task_from_milestone_action_map_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">map</field>
+        <field name="act_window_id" ref="project.action_view_task_from_milestone"/>
+        <field name="view_id" ref="project_task_map_view_no_title"/>
+    </record>
+
+    <record id="project.project_task_action_sub_task" model="ir.actions.act_window">
+        <field name="res_model">project.task</field>
+        <field name="view_mode">list,kanban,form,calendar,gantt,map,pivot,graph,activity</field>
+    </record>
+
+    <!-- Views for 'Tasks' stat button via Contact form -->
+    <record id="project.project_task_action_from_partner" model="ir.actions.act_window">
+        <field name="res_model">project.task</field>
+        <field name="view_mode">kanban,list,form,gantt,calendar,map,pivot,graph,activity</field>
+    </record>
+
+    <record id="project_task_view_form_in_gantt_res_partner" model="ir.ui.view">
+        <field name="name">project.task.view.form.gantt.res.partner</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_task_view_form_in_gantt"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group//field[@name='project_id']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_task_view_gantt_res_partner" model="ir.ui.view">
+        <field name="name">project.task.view.gantt.res.partner</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="view_task_gantt_inherit_all_task"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//gantt" position="attributes">
+                <attribute name="form_view_id">%(project_enterprise.project_task_view_form_in_gantt_res_partner)d</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_task_action_from_partner_gantt_view" model="ir.actions.act_window.view">
+        <field name="view_mode">gantt</field>
+        <field name="act_window_id" ref="project.project_task_action_from_partner"/>
+        <field name="view_id" ref="project_task_view_gantt_res_partner"/>
+    </record>
+</odoo>

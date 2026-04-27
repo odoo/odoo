@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<div t-name="documents_spreadsheet.SpreadsheetAction" class="o_spreadsheet_action">
+    <SpreadsheetNavbar
+        t-props="navbarProps"
+        isReadonly="isReadonly || !!accessToken"
+    >
+        <t t-set-slot="navbar-additional-actions">
+            <a
+                title="Toggle favorite"
+                t-on-click="_onSpreadSheetFavoriteToggled"
+                t-attf-class="o-sp-favorite fa fa-lg fa-star{{!state.isFavorited ? '-o' : ''}}"
+            />
+        </t>
+    </SpreadsheetNavbar>
+    <SpreadsheetComponent model="model"/>
+</div>
+
+</templates>

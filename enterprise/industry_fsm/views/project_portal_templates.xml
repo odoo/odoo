@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_task_sign_button" name="Sign Button">
+        <a t-if="task._has_to_be_signed()" role="button" class="btn btn-primary align-self-start" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#">
+            <i class="fa fa-check me-1"/>Sign Report
+        </a>
+    </template>
+
+    <template id="portal_task_sign_modal" name="Sign Modal">
+        <!-- modal relative to the sign action -->
+        <div role="dialog" class="modal fade" id="modalaccept">
+            <div class="modal-dialog" t-if="task._has_to_be_signed()">
+                <form id="accept" method="POST" t-att-data-task-id="task.id" t-att-data-token="task.access_token" class="js_accept_json modal-content js_website_submit_form">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <header class="modal-header">
+                        <h4 class="modal-title">Sign Field Service Report</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </header>
+                    <main class="modal-body" id="sign-dialog">
+                        <t t-call="portal.signature_form">
+                            <t t-set="call_url" t-value="task.get_portal_url(suffix='/worksheet/sign/%s' % source)"/>
+                            <t t-set="default_name" t-value="task.partner_id.name"/>
+                            <t t-set="font_color" t-value="'black'"/>
+                            <t t-set="send_label">Sign Report</t>
+                        </t>
+                    </main>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <template id="portal_my_task" inherit_id="project.portal_my_task">
+        <xpath expr="//t[@t-set='backend_url']" position="after">
+            <t t-set="source_action_id" t-value="task.env.ref('industry_fsm.project_task_fsm_server_action').id if source == 'fsm' else task.env.ref('project.action_view_all_task').id"/>
+            <t t-set="backend_url" t-value="'/odoo/action-%s/%s' % (source_action_id, task.id)"/>
+        </xpath>
+        <xpath expr="//div[@id='nav-report']" position="attributes">
+            <attribute name="t-if">timesheets and allow_timesheets</attribute>
+        </xpath>
+        <xpath expr="//div[@t-field='task.partner_id']" position="attributes">
+            <attribute name="t-options">{
+                "widget": "contact",
+                "fields": ["phone", "email"] + (["address"] if task.is_fsm else []),
+            }</attribute>
+        </xpath>
+        <xpath expr="//div[@id='card_body']" position="inside">
+            <div
+                name="worksheet_signature"
+                t-if="task.worksheet_signature"
+                t-attf-class="{{ 'col-12 col-lg-3' if report_type != 'html' else 'col-sm-7 col-md-4' }} ms-auto text-end"
+                style="page-break-inside: avoid"
+            >
+                <h5>Signature</h5>
+                <img t-att-src="image_data_uri(task.worksheet_signature)" style="max-height: 6rem; max-width: 100%; color:black;"/><br/>
+                <span t-field="task.worksheet_signed_by"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='nav-report']" position="before">
+            <div t-if="task.display_sign_report_primary or task.display_sign_report_secondary" class="d-grid flex-grow-1 align-items-center mb-2">
+                <t t-call="industry_fsm.portal_task_sign_button"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='task_content']" position="inside">
+            <t t-call="industry_fsm.portal_task_sign_modal"/>
+        </xpath>
+    </template>
+</odoo>

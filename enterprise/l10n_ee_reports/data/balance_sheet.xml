@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_financial_report_bs" model="account.report">
+        <field name="name">Balance Sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.ee"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_bs_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_bs_assets" model="account.report.line">
+                <field name="name">ASSETS</field>
+                <field name="code">EE_BS_1</field>
+                <field name="aggregation_formula">EE_BS_10.balance + EE_BS_11.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_bs_cur_assets" model="account.report.line">
+                        <field name="name">Current Assets</field>
+                        <field name="code">EE_BS_10</field>
+                        <field name="aggregation_formula">EE_BS_100.balance + EE_BS_101.balance + EE_BS_102.balance + EE_BS_103.balance + EE_BS_104.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_bs_cash" model="account.report.line">
+                                <field name="name">Cash</field>
+                                <field name="code">EE_BS_100</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">100</field>
+                            </record>
+                            <record id="account_financial_report_bs_fin_inv" model="account.report.line">
+                                <field name="name">Financial Investments</field>
+                                <field name="code">EE_BS_101</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">101</field>
+                            </record>
+                            <record id="account_financial_report_bs_rec_prep" model="account.report.line">
+                                <field name="name">Receivables and Prepayments</field>
+                                <field name="code">EE_BS_102</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">EE_BS_1020.balance + EE_BS_1021.balance + EE_BS_1022.balance + EE_BS_1023.balance + EE_BS_1024.balance + EE_BS_1025.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_trade_rec" model="account.report.line">
+                                        <field name="name">Trade Receivables</field>
+                                        <field name="code">EE_BS_1020</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1020</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_rec_rel_part" model="account.report.line">
+                                        <field name="name">Receivables from Related Parties</field>
+                                        <field name="code">EE_BS_1021</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1021</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_prep_def_tax" model="account.report.line">
+                                        <field name="name">Prepaid and Deferred Taxes</field>
+                                        <field name="code">EE_BS_1022</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1022</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_loan_rec" model="account.report.line">
+                                        <field name="name">Loan Receivables</field>
+                                        <field name="code">EE_BS_1023</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1023</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_other_rec" model="account.report.line">
+                                        <field name="name">Other Receivables</field>
+                                        <field name="code">EE_BS_1024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1024</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_prep" model="account.report.line">
+                                        <field name="name">Prepayments</field>
+                                        <field name="code">EE_BS_1025</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1025</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_inventory" model="account.report.line">
+                                <field name="name">Inventory</field>
+                                <field name="code">EE_BS_103</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">EE_BS_1030.balance + EE_BS_1031.balance + EE_BS_1032.balance + EE_BS_1033.balance + EE_BS_1034.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_raw_mat" model="account.report.line">
+                                        <field name="name">Raw and Other Materials</field>
+                                        <field name="code">EE_BS_1030</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1030</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_wip" model="account.report.line">
+                                        <field name="name">Work in Progress</field>
+                                        <field name="code">EE_BS_1031</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1031</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_fin_goods" model="account.report.line">
+                                        <field name="name">Finished Goods</field>
+                                        <field name="code">EE_BS_1032</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1032</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_goods_resale" model="account.report.line">
+                                        <field name="name">Goods for Resale</field>
+                                        <field name="code">EE_BS_1033</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1033</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_prep_sup" model="account.report.line">
+                                        <field name="name">Prepayments to Suppliers</field>
+                                        <field name="code">EE_BS_1034</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1034</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_bio_assets" model="account.report.line">
+                                <field name="name">Biological Assets</field>
+                                <field name="code">EE_BS_104</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">104</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_bs_noncur_assets" model="account.report.line">
+                        <field name="name">Non-Current Assets</field>
+                        <field name="code">EE_BS_11</field>
+                        <field name="aggregation_formula">EE_BS_110.balance + EE_BS_111.balance + EE_BS_112.balance + EE_BS_113.balance + EE_BS_114.balance + EE_BS_115.balance + EE_BS_116.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_bs_inv_subs_aff" model="account.report.line">
+                                <field name="name">Investments in Subsidiaries and Affiliates</field>
+                                <field name="code">EE_BS_110</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">EE_BS_1100.balance + EE_BS_1101.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_shares_subs" model="account.report.line">
+                                        <field name="name">Shares and Participations in Subsidiaries</field>
+                                        <field name="code">EE_BS_1100</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1100</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_shares_aff" model="account.report.line">
+                                        <field name="name">Shares and Participations in Affiliates</field>
+                                        <field name="code">EE_BS_1101</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1101</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_lt_fin_inv" model="account.report.line">
+                                <field name="name">Financial Investments</field>
+                                <field name="code">EE_BS_111</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">111</field>
+                            </record>
+                            <record id="account_financial_report_bs_lt_rec_prep" model="account.report.line">
+                                <field name="name">Receivables and Prepayments</field>
+                                <field name="code">EE_BS_112</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">EE_BS_1120.balance + EE_BS_1121.balance + EE_BS_1122.balance + EE_BS_1123.balance + EE_BS_1124.balance + EE_BS_1125.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_lt_trade_rec" model="account.report.line">
+                                        <field name="name">Trade Receivables</field>
+                                        <field name="code">EE_BS_1120</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1120</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_lt_rec_rel_part" model="account.report.line">
+                                        <field name="name">Receivables from Related Parties</field>
+                                        <field name="code">EE_BS_1121</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1121</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_lt_def_tax" model="account.report.line">
+                                        <field name="name">Prepaid and Deferred Taxes</field>
+                                        <field name="code">EE_BS_1122</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1122</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_lt_loan_rec" model="account.report.line">
+                                        <field name="name">Loan Receivables</field>
+                                        <field name="code">EE_BS_1123</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1123</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_lt_other_rec" model="account.report.line">
+                                        <field name="name">Other Receivables</field>
+                                        <field name="code">EE_BS_1124</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1124</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_lt_prep" model="account.report.line">
+                                        <field name="name">Prepayments</field>
+                                        <field name="code">EE_BS_1125</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1125</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_real_estate" model="account.report.line">
+                                <field name="name">Real Estate Investments</field>
+                                <field name="code">EE_BS_113</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">113</field>
+                            </record>
+                            <record id="account_financial_report_bs_tan_noncur_assets" model="account.report.line">
+                                <field name="name">Tangible Non-Current Assets</field>
+                                <field name="code">EE_BS_114</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">114</field>
+                            </record>
+                            <record id="account_financial_report_bs_lt_bio_assets" model="account.report.line">
+                                <field name="name">Biological Assets</field>
+                                <field name="code">EE_BS_115</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">115</field>
+                            </record>
+                            <record id="account_financial_report_bs_intan_noncur_assets" model="account.report.line">
+                                <field name="name">Intangible Non-Current Assets</field>
+                                <field name="code">EE_BS_116</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">116</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_bs_liabilities_equity" model="account.report.line">
+                <field name="name">LIABILITIES + EQUITY</field>
+                <field name="code">EE_BS_2_3</field>
+                <field name="aggregation_formula">EE_BS_2.balance + EE_BS_3.balance</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="account_financial_report_bs_liabilities" model="account.report.line">
+                <field name="name">LIABILITIES</field>
+                <field name="code">EE_BS_2</field>
+                <field name="aggregation_formula">EE_BS_20.balance + EE_BS_21.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_bs_cur_liab" model="account.report.line">
+                        <field name="name">Current Liabilities</field>
+                        <field name="code">EE_BS_20</field>
+                        <field name="aggregation_formula">EE_BS_200.balance + EE_BS_201.balance + EE_BS_202.balance + EE_BS_203.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_bs_loan_liab" model="account.report.line">
+                                <field name="name">Loan Liabilities</field>
+                                <field name="code">EE_BS_200</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-200</field>
+                            </record>
+                            <record id="account_financial_report_bs_pay_prep" model="account.report.line">
+                                <field name="name">Payables and Prepayments</field>
+                                <field name="code">EE_BS_201</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">EE_BS_2010.balance + EE_BS_2011.balance + EE_BS_2012.balance + EE_BS_2013.balance + EE_BS_2014.balance + EE_BS_2015.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_acc_pay" model="account.report.line">
+                                        <field name="name">Accounts Payable</field>
+                                        <field name="code">EE_BS_2010</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2010</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_emp_pay" model="account.report.line">
+                                        <field name="name">Employee Payables</field>
+                                        <field name="code">EE_BS_2011</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2011</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_tax_pay" model="account.report.line">
+                                        <field name="name">Taxes Payable</field>
+                                        <field name="code">EE_BS_2012</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2012</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_other_pay" model="account.report.line">
+                                        <field name="name">Other Payables</field>
+                                        <field name="code">EE_BS_2013</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2013</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_def_rev" model="account.report.line">
+                                        <field name="name">Deferred Revenue</field>
+                                        <field name="code">EE_BS_2014</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2014</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_other_rec_prep" model="account.report.line">
+                                        <field name="name">Other Received Prepayments</field>
+                                        <field name="code">EE_BS_2015</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2015</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_prov" model="account.report.line">
+                                <field name="name">Provisions</field>
+                                <field name="code">EE_BS_202</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">EE_BS_2020.balance + EE_BS_2021.balance + EE_BS_2022.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_warr_prov" model="account.report.line">
+                                        <field name="name">Warranty Provisions</field>
+                                        <field name="code">EE_BS_2020</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2020</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_tax_prov" model="account.report.line">
+                                        <field name="name">Tax Provisions</field>
+                                        <field name="code">EE_BS_2021</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2021</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_other_prov" model="account.report.line">
+                                        <field name="name">Other Provisions</field>
+                                        <field name="code">EE_BS_2022</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2022</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_gov_grants" model="account.report.line">
+                                <field name="name">Government Grants</field>
+                                <field name="code">EE_BS_203</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-203</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_bs_noncur_liab" model="account.report.line">
+                        <field name="name">Non-Current Liabilities</field>
+                        <field name="code">EE_BS_21</field>
+                        <field name="aggregation_formula">EE_BS_210.balance + EE_BS_211.balance + EE_BS_212.balance + EE_BS_213.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_bs_lt_loan_liab" model="account.report.line">
+                                <field name="name">Loan Liabilities</field>
+                                <field name="code">EE_BS_210</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-210</field>
+                            </record>
+                            <record id="account_financial_report_bs_lt_pay_prep" model="account.report.line">
+                                <field name="name">Payables and Prepayments</field>
+                                <field name="code">EE_BS_211</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">EE_BS_2110.balance + EE_BS_2111.balance + EE_BS_2112.balance + EE_BS_2113.balance + EE_BS_2114.balance + EE_BS_2115.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_lt_acc_pay" model="account.report.line">
+                                        <field name="name">Accounts Payable</field>
+                                        <field name="code">EE_BS_2110</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2110</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_lt_emp_pay" model="account.report.line">
+                                        <field name="name">Employee Payables</field>
+                                        <field name="code">EE_BS_2111</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2111</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_lt_tax_pay" model="account.report.line">
+                                        <field name="name">Taxes Payable</field>
+                                        <field name="code">EE_BS_2112</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2112</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_lt_other_pay" model="account.report.line">
+                                        <field name="name">Other Payables</field>
+                                        <field name="code">EE_BS_2113</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2113</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_lt_def_rev" model="account.report.line">
+                                        <field name="name">Deferred Revenue</field>
+                                        <field name="code">EE_BS_2114</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2114</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_lt_other_rec_prep" model="account.report.line">
+                                        <field name="name">Other Received Prepayments</field>
+                                        <field name="code">EE_BS_2115</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2115</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_lt_prov" model="account.report.line">
+                                <field name="name">Provisions</field>
+                                <field name="code">EE_BS_212</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">EE_BS_2120.balance + EE_BS_2121.balance + EE_BS_2122.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_lt_warr_prov" model="account.report.line">
+                                        <field name="name">Warranty Provisions</field>
+                                        <field name="code">EE_BS_2120</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2120</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_lt_tax_prov" model="account.report.line">
+                                        <field name="name">Tax Provisions</field>
+                                        <field name="code">EE_BS_2121</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2121</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_lt_other_prov" model="account.report.line">
+                                        <field name="name">Other Provisions</field>
+                                        <field name="code">EE_BS_2122</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2122</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_lt_gov_grants" model="account.report.line">
+                                <field name="name">Government Grants</field>
+                                <field name="code">EE_BS_213</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-213</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_bs_equity" model="account.report.line">
+                <field name="name">EQUITY</field>
+                <field name="code">EE_BS_3</field>
+                <field name="aggregation_formula">EE_BS_300.balance + EE_BS_301.balance + EE_BS_302.balance + EE_BS_303.balance + EE_BS_304.balance + EE_BS_310.balance + EE_BS_311.balance + EE_BS_32.balance + EE_BS_330.balance + EE_BS_331.balance + EE_BS_UNALLOC_PL.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_bs_share_cap" model="account.report.line">
+                        <field name="name">Share Capital (Nominal Value)</field>
+                        <field name="code">EE_BS_300</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-300</field>
+                    </record>
+                    <record id="account_financial_report_bs_unreg_share_cap" model="account.report.line">
+                        <field name="name">Unregistered Share Capital or Equity</field>
+                        <field name="code">EE_BS_301</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-301</field>
+                    </record>
+                    <record id="account_financial_report_bs_unpaid_share_cap" model="account.report.line">
+                        <field name="name">Unpaid Share Capital</field>
+                        <field name="code">EE_BS_302</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-302</field>
+                    </record>
+                    <record id="account_financial_report_bs_share_prem" model="account.report.line">
+                        <field name="name">Share Premium</field>
+                        <field name="code">EE_BS_303</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-303</field>
+                    </record>
+                    <record id="account_financial_report_bs_own_shares" model="account.report.line">
+                        <field name="name">Own Shares</field>
+                        <field name="code">EE_BS_304</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-304</field>
+                    </record>
+                    <record id="account_financial_report_bs_stat_res_cap" model="account.report.line">
+                        <field name="name">Statutory Reserve Capital</field>
+                        <field name="code">EE_BS_310</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-310</field>
+                    </record>
+                    <record id="account_financial_report_bs_other_res" model="account.report.line">
+                        <field name="name">Other Reserves</field>
+                        <field name="code">EE_BS_311</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-311</field>
+                    </record>
+                    <record id="account_financial_report_bs_other_equity" model="account.report.line">
+                        <field name="name">Other Equity</field>
+                        <field name="code">EE_BS_32</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-32</field>
+                    </record>
+                    <record id="account_financial_report_bs_unalloc_pl" model="account.report.line">
+                        <field name="name">Unallocated Profit/Loss</field>
+                        <field name="code">EE_BS_UNALLOC_PL</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="aggregation_formula">EE_BS_UNALLOC_PL_PREV.balance + EE_BS_UNALLOC_PL_CUR.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_bs_unalloc_pl_prev" model="account.report.line">
+                                <field name="name">Unallocated Profit/Loss from Previous Periods</field>
+                                <field name="code">EE_BS_UNALLOC_PL_PREV</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_unalloc_pl_prev_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[
+                                            '|',
+                                            ('account_id.account_type', '=', 'equity_unaffected'),
+                                            ('account_id.internal_group', 'in', ('income', 'expense')),
+                                        ]"/>
+                                        <field name="subformula">-sum</field>
+                                        <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_unalloc_pl_cur" model="account.report.line">
+                                <field name="name">Unallocated Profit/Loss for the Financial Year</field>
+                                <field name="code">EE_BS_UNALLOC_PL_CUR</field>
+                                <field name="action_id" ref="account_reports.action_account_report_pl"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_unalloc_pl_cur_balance_unaff" model="account.report.expression">
+                                        <field name="label">balance_unaff</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.account_type', '=', 'equity_unaffected')]"/>
+                                        <field name="subformula">-sum</field>
+                                        <field name="date_scope">from_fiscalyear</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_unalloc_pl_cur_balance_pl" model="account.report.expression">
+                                        <field name="label">balance_pl</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">EE_PL_1_FINAL.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                        <field name="date_scope">from_fiscalyear</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_unalloc_pl_cur_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">EE_BS_UNALLOC_PL_CUR.balance_unaff + EE_BS_UNALLOC_PL_CUR.balance_pl</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_bs_pl_prev" model="account.report.line">
+                        <field name="name">Retained Profit/Loss from Previous Periods</field>
+                        <field name="code">EE_BS_330</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-330</field>
+                    </record>
+                    <record id="account_financial_report_bs_pl_cur" model="account.report.line">
+                        <field name="name">Profit/Loss for the Financial Year</field>
+                        <field name="code">EE_BS_331</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-331</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

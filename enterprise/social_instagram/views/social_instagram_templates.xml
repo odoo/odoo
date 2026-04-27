@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <template id="instagram_preview" t-name="Instagram Preview">
+        <div class="o_social_preview o_social_instagram_preview bg-white px-3 border rounded overflow-hidden">
+            <div class="o_social_preview_header d-flex my-3">
+                <span class="o_social_preview_icon_wrapper d-inline-block overflow-hidden me-2">
+                    <i class="fa fa-instagram fa-2x"/>
+                </span>
+
+                <div class="o_social_preview_author o_social_instagram_font_size">
+                    <span class="mt-1 fw-bold">My Instagram Page</span>
+                </div>
+            </div>
+            <div t-if="error_code == 'missing'" class="alert alert-warning w-100">
+                <i class="fa fa-exclamation-triangle me-1"/>
+                At least one image is required when posting on Instagram.
+            </div>
+
+            <div t-if="error_code == 'corrupted'" class="alert alert-warning w-100">
+                <i class="fa fa-exclamation-triangle me-1"/>
+                Your image appears to be corrupted, please try loading it again.
+            </div>
+            <div t-if="error_code == 'wrong_extension'" class="alert alert-warning w-100">
+                <span class="d-flex gap-1">
+                    <div><i class="fa fa-exclamation-triangle me-1"/></div>
+                    <div>
+                        The following images are not in the correct format (jpg/jpeg).
+                    </div>
+                </span>
+                <hr/>
+                <ul>
+                    <t t-foreach="faulty_images" t-as="faulty_image">
+                        <li t-out="faulty_image"/>
+                    </t>
+                </ul>
+            </div>
+             <div t-if="error_code == 'max_limit'" class="alert alert-warning w-100">
+                <i class="fa fa-exclamation-triangle me-1"/>
+                You can only post up to 10 images at once.
+            </div>
+            <div t-if="error_code == 'incorrect_ratio'" class="alert alert-warning w-100">
+                <span class="d-flex gap-1">
+                    <div><i class="fa fa-exclamation-triangle me-1"/></div>
+                    <div>
+                        The following images do not meet the
+                        <a href="https://www.facebook.com/help/instagram/1631821640426723" target="_blank">
+                            required aspect ratio
+                        </a>
+                        (between 1.91:1 and 4:5).
+                    </div>
+                </span>
+                <hr/>
+                <ul>
+                    <t t-foreach="faulty_images" t-as="faulty_image">
+                        <li t-out="faulty_image"/>
+                    </t>
+                </ul>
+            </div>
+            <div t-if="image_urls and not error_code"
+                class="o_social_stream_post_image d-flex mx-n3 overflow-hidden">
+                <t t-foreach="image_urls" t-as="image_url">
+                    <div t-if="image_url_index == 1 and len(image_urls) > 2"
+                         class="o_social_stream_post_image_more position-relative d-flex ms-1">
+                        <img t-att-src="image_url" alt="Post Image" />
+                        <div class="o_social_stream_post_image_more_overlay
+                            d-flex align-items-center h-100 w-100 text-white
+                            justify-content-center position-absolute h1 m-0 pe-none"
+                            style="user-select: none;">
+                            +<t t-out="len(image_urls) - 2"/>
+                        </div>
+                    </div>
+                    <div t-elif="image_url_index &lt; 2" class="w-100">
+                        <img t-att-src="image_url" alt="Post Image" />
+                    </div>
+                </t>
+            </div>
+            <div t-if="message" class="pt-2 o_social_instagram_font_size">
+                <span class="fw-bold pe-1">My_instagram_page</span>
+                <span class="o_social_preview_message" t-out="message" />
+            </div>
+            <div class="text-muted o_social_instagram_font_size small pt-1 pb-3">
+                <a t-if="live_post_link" t-attf-href="#{live_post_link}" target="blank">34 SECONDS AGO</a>
+                <t t-else="">34 SECONDS AGO</t>
+            </div>
+        </div>
+    </template>
+</data>
+</odoo>

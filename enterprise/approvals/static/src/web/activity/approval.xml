@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="approvals.Approval">
+        <div t-if="props.activity.approval.status === 'pending'">
+            <t t-if="props.activity.user_id[0] === store.self.userId">
+                <button class="btn btn-success btn-link ps-0 pt-0" t-on-click="onClickApprove">
+                    <i class="fa fa-check"/> Approve
+                </button>
+                <button class="btn btn-danger btn-link pt-0" t-on-click="onClickRefuse">
+                    <i class="fa fa-times"/> Refuse
+                </button>
+            </t>
+            <span t-else="" class="text-warning ps-0 pt-0">
+                <i class="fa fa-pencil"/> To Approve
+            </span>
+        </div>
+    </t>
+
+</templates>

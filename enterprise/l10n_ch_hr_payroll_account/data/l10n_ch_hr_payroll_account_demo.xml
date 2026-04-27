@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <function model="account.chart.template" name="try_loading">
+            <value eval="[]"/>
+            <value>ch</value>
+            <value model="res.company" eval="obj().env.ref('base.demo_company_ch')"/>
+            <value name="install_demo" eval="True"/>
+        </function>
+    </data>
+</odoo>

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_salary_rule_category_comp_part" model="hr.salary.rule.category">
+        <field name="name">Company Part</field>
+        <field name="code">COMPPART</field>
+    </record>
+
+    <record id="hr_salary_rule_category_caf" model="hr.salary.rule.category">
+        <field name="name">Family Allowance (CAF)</field>
+        <field name="code">CAF</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_salary_rule_category_thirteen_month" model="hr.salary.rule.category">
+        <field name="name">13th Month</field>
+        <field name="code">13THMONTH</field>
+    </record>
+
+    <record id="hr_salary_rule_category_avs_salary" model="hr.salary.rule.category">
+        <field name="name">AVS Salary</field>
+        <field name="code">AVSSALARY</field>
+    </record>
+
+    <record id="hr_salary_rule_category_ac_salary" model="hr.salary.rule.category">
+        <field name="name">AC Salary</field>
+        <field name="code">ACSALARY</field>
+    </record>
+
+    <record id="hr_salary_rule_category_acc_salary" model="hr.salary.rule.category">
+        <field name="name">ACC Salary</field>
+        <field name="code">ACCSALARY</field>
+    </record>
+
+    <!-- To be removed in master -->
+    <record id="hr_salary_rule_category_aanp_salary" model="hr.salary.rule.category">
+        <field name="name">AANP Salary</field>
+        <field name="code">AANPSALARY</field>
+    </record>
+
+    <record id="hr_salary_rule_category_laac_salary" model="hr.salary.rule.category">
+        <field name="name">LAAC Salary</field>
+        <field name="code">LAACSALARY</field>
+    </record>
+
+    <record id="hr_salary_rule_category_ijm_salary" model="hr.salary.rule.category">
+        <field name="name">IJM Salary</field>
+        <field name="code">IJMSALARY</field>
+    </record>
+
+    <record id="hr_salary_rule_category_avs_base" model="hr.salary.rule.category">
+        <field name="name">AVS Base</field>
+        <field name="code">AVSBASE</field>
+    </record>
+
+    <record id="hr_salary_rule_category_avs_franchise" model="hr.salary.rule.category">
+        <field name="name">AVS Franchise Imputée</field>
+        <field name="code">AVSFRANCHISE</field>
+    </record>
+
+    <record id="hr_salary_rule_category_avs_franchise_non_imp" model="hr.salary.rule.category">
+        <field name="name">AVS Franchise Non Imputée</field>
+        <field name="code">AVSFRANCHISENONIMP</field>
+    </record>
+
+    <record id="hr_salary_rule_category_avs_salary_retired" model="hr.salary.rule.category">
+        <field name="name">AVS Salary Retired</field>
+        <field name="code">AVSSALARYRET</field>
+    </record>
+
+    <record id="hr_salary_rule_category_avs_open" model="hr.salary.rule.category">
+        <field name="name">AVS Open</field>
+        <field name="code">AVSOPEN</field>
+    </record>
+
+    <record id="hr_salary_rule_category_ac_base" model="hr.salary.rule.category">
+        <field name="name">AC Base</field>
+        <field name="code">ACBASE</field>
+    </record>
+
+    <record id="hr_salary_rule_category_ac_threshold" model="hr.salary.rule.category">
+        <field name="name">AC Salary Maximum</field>
+        <field name="code">ACSALARYMAX</field>
+    </record>
+
+    <record id="hr_salary_rule_category_acc_threshold" model="hr.salary.rule.category">
+        <field name="name">ACC Salary Maximum</field>
+        <field name="code">ACCSALARYMAX</field>
+    </record>
+
+    <record id="hr_salary_rule_category_ac_open" model="hr.salary.rule.category">
+        <field name="name">AC Open</field>
+        <field name="code">ACOPEN</field>
+    </record>
+
+    <record id="hr_salary_rule_category_laa_base" model="hr.salary.rule.category">
+        <field name="name">LAA Base</field>
+        <field name="code">LAABASE</field>
+    </record>
+
+    <record id="hr_salary_rule_category_laa_threshold" model="hr.salary.rule.category">
+        <field name="name">LAA Salary Maximum</field>
+        <field name="code">LAASALARYMAX</field>
+    </record>
+
+    <record id="hr_salary_rule_category_laa_salary" model="hr.salary.rule.category">
+        <field name="name">LAA Salary</field>
+        <field name="code">LAASALARY</field>
+    </record>
+
+    <record id="hr_salary_rule_category_laac_base" model="hr.salary.rule.category">
+        <field name="name">LAAC Base</field>
+        <field name="code">LAACBASE</field>
+    </record>
+
+    <record id="hr_salary_rule_category_laac_salary_max_1" model="hr.salary.rule.category">
+        <field name="name">LAAC Salary Maximum Main Insurance</field>
+        <field name="code">LAACSALARYMAX1</field>
+    </record>
+
+    <record id="hr_salary_rule_category_laac_salary_max_2" model="hr.salary.rule.category">
+        <field name="name">LAAC Salary Maximum Second Insurance</field>
+        <field name="code">LAACSALARYMAX2</field>
+    </record>
+
+    <record id="hr_salary_rule_category_laac_salary_min_1" model="hr.salary.rule.category">
+        <field name="name">LAAC Salary Minimum Main Insurance</field>
+        <field name="code">LAACSALARYMIN1</field>
+    </record>
+
+    <record id="hr_salary_rule_category_laac_salary_min_2" model="hr.salary.rule.category">
+        <field name="name">LAAC Salary Minimum Second Insurance</field>
+        <field name="code">LAACSALARYMIN2</field>
+    </record>
+
+    <record id="hr_salary_rule_category_laac_salary_1" model="hr.salary.rule.category">
+        <field name="name">LAAC Salary Main Insurance</field>
+        <field name="code">LAACSALARY1</field>
+    </record>
+
+    <record id="hr_salary_rule_category_laac_salary_2" model="hr.salary.rule.category">
+        <field name="name">LAAC Salary Second Insurance</field>
+        <field name="code">LAACSALARY2</field>
+    </record>
+
+    <record id="hr_salary_rule_category_ijm_base" model="hr.salary.rule.category">
+        <field name="name">IJM Base</field>
+        <field name="code">IJMBASE</field>
+    </record>
+
+    <record id="hr_salary_rule_category_ijm_salary_max_1" model="hr.salary.rule.category">
+        <field name="name">IJM Salary Maximum Main Insurance</field>
+        <field name="code">IJMSALARYMAX1</field>
+    </record>
+
+    <record id="hr_salary_rule_category_ijm_salary_max_2" model="hr.salary.rule.category">
+        <field name="name">IJM Salary Maximum Second Insurance</field>
+        <field name="code">IJMSALARYMAX2</field>
+    </record>
+
+    <record id="hr_salary_rule_category_ijm_salary_min_1" model="hr.salary.rule.category">
+        <field name="name">IJM Salary Minimum Main Insurance</field>
+        <field name="code">IJMSALARYMIN1</field>
+    </record>
+
+    <record id="hr_salary_rule_category_ijm_salary_min_2" model="hr.salary.rule.category">
+        <field name="name">IJM Salary Minimum Second Insurance</field>
+        <field name="code">IJMSALARYMIN2</field>
+    </record>
+
+    <record id="hr_salary_rule_category_ijm_salary_1" model="hr.salary.rule.category">
+        <field name="name">IJM Salary Main Insurance</field>
+        <field name="code">IJMSALARY1</field>
+    </record>
+
+    <record id="hr_salary_rule_category_ijm_salary_2" model="hr.salary.rule.category">
+        <field name="name">IJM Salary Second Insurance</field>
+        <field name="code">IJMSALARY2</field>
+    </record>
+
+    <record id="hr_salary_rule_category_indemnite_perte_gain" model="hr.salary.rule.category">
+        <field name="name">Indemnite Perte de Gain</field>
+        <field name="code">RHTITP</field>
+    </record>
+
+    <record id="hr_salary_rule_category_is_base" model="hr.salary.rule.category">
+        <field name="name">IS Base</field>
+        <field name="code">ISBASE</field>
+    </record>
+
+    <record id="hr_salary_rule_category_is_salary" model="hr.salary.rule.category">
+        <field name="name">IS Salary</field>
+        <field name="code">ISSALARY</field>
+    </record>
+
+    <record id="hr_salary_rule_category_is_dt_aperiodic_salary" model="hr.salary.rule.category">
+        <field name="name">IS DT Aperiodic Salary</field>
+        <field name="code">ISDTSALARYAPERIODIC</field>
+    </record>
+
+    <record id="hr_salary_rule_category_is_dt_periodic_salary" model="hr.salary.rule.category">
+        <field name="name">IS DT Periodic Salary</field>
+        <field name="code">ISDTSALARYPERIODIC</field>
+    </record>
+
+    <record id="hr_salary_rule_category_is_dt_salary" model="hr.salary.rule.category">
+        <field name="name">IS DT Salary</field>
+        <field name="code">ISDTSALARY</field>
+    </record>
+
+    <record id="hr_salary_rule_category_is_rate" model="hr.salary.rule.category">
+        <field name="name">IS Rate</field>
+        <field name="code">ISRATE</field>
+    </record>
+
+    <record id="hr_salary_rule_category_as_days" model="hr.salary.rule.category">
+        <field name="name">AS Days</field>
+        <field name="code">ASDAYS</field>
+    </record>
+
+    <record id="hr_salary_rule_category_ch_days" model="hr.salary.rule.category">
+        <field name="name">CH Days</field>
+        <field name="code">ISWORKEDDAYSINCH</field>
+    </record>
+
+    <record id="hr_salary_rule_category_worked_days" model="hr.salary.rule.category">
+        <field name="name">Worked Days Total</field>
+        <field name="code">ISWORKEDDAYS</field>
+    </record>
+
+    <record id="hr_salary_rule_category_is_salary_dt_p" model="hr.salary.rule.category">
+        <field name="name">IS Salary DT P</field>
+        <field name="code">ISSALARYDTP</field>
+    </record>
+
+    <record id="hr_salary_rule_category_is_salary_dt_ap" model="hr.salary.rule.category">
+        <field name="name">IS Salary DT AP</field>
+        <field name="code">ISSALARYDTAP</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payslip_run_form_inherit_l10n_hk_hr_payroll" model="ir.ui.view">
+        <field name="name">hr.payslip.run.form.inherit.l10n_hk_hr_payroll</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
+        <field name="arch" type="xml">
+            <button name="action_paid" position="before">
+                <button name="action_open_hsbc_autopay_wizard" type="object" string="Create HSBC Autopay Report" class="oe_highlight" invisible="not l10n_hk_autopay or state not in ['close', 'paid'] or l10n_hk_autopay_export_first_batch or l10n_hk_autopay_export_second_batch" />
+            </button>
+            <button name="action_paid" position="after">
+                <button name="action_open_hsbc_autopay_wizard" type="object" string="Create HSBC Autopay Report" invisible="(not l10n_hk_autopay or state not in ['close', 'paid'] or not l10n_hk_autopay_export_first_batch) and not l10n_hk_autopay_export_second_batch" />
+            </button>
+            <xpath expr="//div[hasclass('o_row')]" position="after">
+                <field name="l10n_hk_autopay" invisible="1" />
+                <field name="l10n_hk_autopay_export_first_batch_date" readonly="1" invisible="not l10n_hk_autopay_export_first_batch" />
+                <field name="l10n_hk_autopay_export_first_batch_filename" invisible="1" />
+                <field name="l10n_hk_autopay_export_first_batch" filename="l10n_hk_autopay_export_first_batch_filename" invisible="not l10n_hk_autopay_export_first_batch" />
+                <field name="l10n_hk_autopay_export_second_batch_date" readonly="1" invisible="not l10n_hk_autopay_export_second_batch" />
+                <field name="l10n_hk_autopay_export_second_batch_filename" invisible="1" />
+                <field name="l10n_hk_autopay_export_second_batch" filename="l10n_hk_autopay_export_second_batch_filename" invisible="not l10n_hk_autopay_export_second_batch" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

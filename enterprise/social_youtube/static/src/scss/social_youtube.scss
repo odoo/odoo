@@ -1,0 +1,33 @@
+.o_social_post_view_form .o_social_preview_wrapper .o_social_youtube_preview {
+    .o_social_preview_icon_wrapper {
+        width: 1.6em;
+        height: auto;
+    }
+}
+
+.o_social_youtube_field {
+    min-width: 30px;
+
+    &.o_input {
+        border: none;
+    }
+
+    .o_social_youtube_upload_bar {
+        height: 1.75rem;
+
+        .o_social_youtube_upload_text, .fa-spinner {
+            color: #000000;
+        }
+
+        .o_social_youtube_upload_progress {
+            width: 0%;
+            background-color: $primary;
+            transition: width .5s ease-out;
+        }
+    }
+}
+
+
+.o_form_view .o_group.o_inner_group.o_social_disclaimer_group > tbody > tr > td {
+    padding: 0px;
+}

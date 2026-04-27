@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+
+   	<record model="ir.rule" id="quality_check_spreadsheet_rule_company">
+        <field name="name">Quality check spreadsheet company rule</field>
+        <field name="model_id" ref="model_quality_check_spreadsheet"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+   	<record model="ir.rule" id="quality_spreadsheet_template_rule_company">
+        <field name="name">Quality spreadsheet template company rule</field>
+        <field name="model_id" ref="model_quality_spreadsheet_template"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    </data>
+
+</odoo>

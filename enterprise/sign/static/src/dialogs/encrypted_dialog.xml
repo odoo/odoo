@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="sign.EncryptedDialog">
+        <Dialog t-props="dialogProps">
+            <div class="mb-3">
+                <span>Your file is encrypted, PDF's password is required to generate final document. The final document will be encrypted with the same password.</span>
+                <div>
+                    <input type="password" t-ref="password" class="form-control"/>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary o_sign_validate_encrypted" t-on-click="validatePassword">Generate PDF</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="social_security_employee" model="hr.salary.rule.category">
+        <field name="name">Social Security Employee</field>
+        <field name="code">SOCIAL</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+
+    <record id="social_security_employer" model="hr.salary.rule.category">
+        <field name="name">Social Security Employer</field>
+        <field name="code">SOCIAL.EMPLOYER</field>
+    </record>
+
+    <record id="social_security_employee_total" model="hr.salary.rule.category">
+        <field name="name">Social Security Employee (TOTAL)</field>
+        <field name="code">SOCIALTOTAL</field>
+    </record>
+
+    <record id="social_security_employer_total" model="hr.salary.rule.category">
+        <field name="name">Social Security Employer (TOTAL)</field>
+        <field name="code">SOCIALTOTAL.EMPLOYER</field>
+    </record>
+
+    <record id="standard_earning" model="hr.salary.rule.category">
+        <field name="name">Standard Earning Costs</field>
+        <field name="code">STANDARD.EARNING</field>
+    </record>
+
+    <record id="taxable_amount" model="hr.salary.rule.category">
+        <field name="name">Taxable Amount</field>
+        <field name="code">TAXABLE</field>
+    </record>
+
+    <record id="withholding_taxes" model="hr.salary.rule.category">
+        <field name="name">Withholding Taxes</field>
+        <field name="code">TAX</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+</odoo>

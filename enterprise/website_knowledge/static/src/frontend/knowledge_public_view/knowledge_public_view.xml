@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="website_knowledge.knowledgePublic">
+        <t t-if="props.record">
+            <!-- Deprecated -->
+            <div t-attf-class="container-fluid h-100 o_knowledge_public_view p-0">
+                <div class="d-sm-flex h-100">
+                    <!-- Sidebar -->
+                    <t t-call="website_knowledge.knowledgePublicSidebar"/>
+                    <div class="flex-grow-1 position-relative min-w-0">
+                        <div class="d-flex flex-column h-100">
+                            <!-- Article header -->
+                            <header class="o_knowledge_header justify-content-between border-bottom flex-shrink-1">
+                                <div class="d-flex align-items-center p-3 flex-grow-1">
+                                    <a t-if="props.showSidebar" role="button" class="d-md-none btn align-self-start px-2 me-2 py-1" t-on-click="toggleAsideMobile">
+                                        <i class="fa fa-lg fa-bars" title="Toggle aside menu"/>
+                                    </a>
+                                    <!-- Title -->
+                                    <div class="min-w-0 text-truncate" t-if="props.record.resId">
+                                        <span t-if="props.record.data.name" t-out="props.record.data.display_name"/>
+                                        <span t-else="">Untitled</span>
+                                    </div>
+                                    <!-- Log In -->
+                                    <div class="d-flex my-auto mx-3 o_knowledge_public_virality flex-grow-1 flex-shrink-1 justify-content-end">
+                                        <div class="nav-item text-center o_no_autohide_item">
+                                            <a t-att-href="'/web/login?redirect=/knowledge' + (props.record.resId ? `/article/${props.record.resId}` : '/home')" class="nav-link fw-bold text-nowrap">Sign in</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </header>
+                            <div class="p-3 text-center" t-if="!props.record.resId">
+                                <p class="o_view_nocontent_empty_folder">
+                                    <h2>Article not found</h2>
+                                    <br />
+                                    <p>The article you are trying the read has either been removed or you do not have access to it.</p>
+                                </p>
+                            </div>
+                            <main t-else="" class="flex-grow-1 position-relative">
+                                <div class="o_scroll_view">
+                                    <!-- Article Cover -->
+                                    <div t-if="props.record.data.cover_image_id" class="o_knowledge_cover">
+                                        <img t-att-src="props.record.data.cover_image_url" t-attf-style="object-position: 50% #{props.record.data.cover_image_position or 50}%;"/>
+                                    </div>
+                                    <!-- Article Icon -->
+                                    <div t-if="props.record.data.icon" class="o_knowledge_icon px-3" t-att-class="{
+                                        'o_full_width': props.record.data.full_width
+                                    }">
+                                        <t t-out="props.record.data.icon" />
+                                    </div>
+                                    <!-- Article Body -->
+                                    <div class="o_knowledge_article px-3" t-att-class="{
+                                        'pt-3': !props.record.data.icon,
+                                        'o_full_width': props.record.data.full_width
+                                    }">
+                                        <HtmlViewer config="getConfig()"/>
+                                    </div>
+                                </div>
+                            </main>
+                        </div>
+                        <KnowledgePublicFormResizer/>
+                    </div>
+                </div>
+            </div>
+        </t>
+        <t t-else="" t-call="website_knowledge.knowledgePublicSidebar"/>
+    </t>
+
+    <t t-name="website_knowledge.knowledgePublicSidebar">
+        <aside t-if="props.showSidebar" class="o_knowledge_sidebar flex-shrink-0 p-0"
+            t-att-class="{ 'o_knowledge_desktop_sidebar': !state.showAsideMobile }"
+            t-attf-style="--knowledge-article-sidebar-size: #{state.sidebarSize}px">
+            <div class="d-flex flex-column h-100">
+                <div class="p-3 d-flex">
+                    <a role="button" class="d-md-none btn align-self-start px-2 me-2 py-1" t-on-click="toggleAsideMobile">
+                        <i class="fa fa-lg fa-bars" title="Toggle aside menu"/>
+                    </a>
+                    <input type="text" class="form-control knowledge_search_bar" placeholder="Search an article..."
+                        t-on-input="searchArticles"/>
+                </div>
+                <!-- File explorer -->
+                <div class="flex-grow-1 position-relative border-bottom">
+                    <div class="o_scroll_view px-3">
+                        <div t-ref="tree" t-if="state.tree" t-out="state.tree" class="o_knowledge_tree"/>
+                        <div t-ref="tree" t-else="" class="o_knowledge_tree">
+                            <t t-call="website_knowledge.sidebarLoader"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <div class="o_knowledge_backdrop cursor-pointer" t-att-class="{ 'd-none': !state.showAsideMobile }" t-on-click="toggleAsideMobile"/>
+    </t>
+
+    <t t-name="website_knowledge.knowledgePublicFormResizer">
+        <div class="o_knowledge_article_form_resizer d-print-none d-none d-sm-block opacity-75 opacity-100-hover"
+            t-on-pointerdown="resizeSidebar">
+            <span class="pe-1"/>
+        </div>
+    </t>
+
+    <t t-name="website_knowledge.sidebarLoader">
+        <div class="p-5 text-center">
+            <i class="fa fa-circle-o-notch fa-2x fa-spin" title="loader" role="img"/>
+        </div>
+    </t>
+</templates>

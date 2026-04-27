@@ -1,0 +1,16 @@
+<templates>
+    <t t-name="documents.AccessExpirationDateBtn">
+        <button t-if="props.editionMode"
+            t-ref="datetime-picker-target-{{props.accessPartner.partner_id.id}}"
+            t-attf-class="o_documents_expiration_date_btn btn btn-primary me-2 {{ props.accessPartner.expiration_date ? 'invisible' : ''}}"
+            t-att-disabled="props.disabled"
+            title="Set expiration date"
+            t-on-click.prevent="onClickDateTimePickerBtn">
+            <i class="fa fa-fw fa-calendar"/>
+        </button>
+        <span t-else=""
+            t-ref="datetime-picker-target-{{props.accessPartner.partner_id.id}}"
+            class="o_documents_set_expiration_date fa fa-fw fa-edit"
+            t-on-click.prevent="onClickDateTimePickerBtn"/>
+    </t>
+</templates>

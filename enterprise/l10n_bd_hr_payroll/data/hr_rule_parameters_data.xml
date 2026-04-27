@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_bd_rule_parameter_maximum_yearly_exempt" model="hr.rule.parameter">
+        <field name="name">Bangladesh: Maximum Yearly Exempt</field>
+        <field name="code">l10n_bd_maximum_yearly_exempt</field>
+        <field name="country_id" ref="base.bd"/>
+    </record>
+    <record id="l10n_bd_rule_parameter_maximum_yearly_exempt_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">450000</field>
+        <field name="rule_parameter_id" ref="l10n_bd_rule_parameter_maximum_yearly_exempt"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_bd_rule_parameter_male_yearly_exempt" model="hr.rule.parameter">
+        <field name="name">Bangladesh: Male Yearly Exempt</field>
+        <field name="code">l10n_bd_male_yearly_exempt</field>
+        <field name="country_id" ref="base.bd"/>
+    </record>
+    <record id="l10n_bd_rule_parameter_male_yearly_exempt_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">350000</field>
+        <field name="rule_parameter_id" ref="l10n_bd_rule_parameter_male_yearly_exempt"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_bd_rule_parameter_female_senior_yearly_exempt" model="hr.rule.parameter">
+        <field name="name">Bangladesh: Female, 3rd Gender and Senior Yearly Exempt</field>
+        <field name="code">l10n_bd_female_senior_yearly_exempt</field>
+        <field name="country_id" ref="base.bd"/>
+    </record>
+    <record id="l10n_bd_rule_parameter_female_senior_yearly_exempt_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">400000</field>
+        <field name="rule_parameter_id" ref="l10n_bd_rule_parameter_female_senior_yearly_exempt"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_bd_rule_parameter_disabled_yearly_exempt" model="hr.rule.parameter">
+        <field name="name">Bangladesh: Disabled Yearly Exempt</field>
+        <field name="code">l10n_bd_disabled_yearly_exempt</field>
+        <field name="country_id" ref="base.bd"/>
+    </record>
+    <record id="l10n_bd_rule_parameter_disabled_yearly_exempt_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">475000</field>
+        <field name="rule_parameter_id" ref="l10n_bd_rule_parameter_disabled_yearly_exempt"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_bd_rule_parameter_gazetted_fighter_yearly_exempt" model="hr.rule.parameter">
+        <field name="name">Bangladesh: Gazetted Freedom Fighter Yearly Exempt</field>
+        <field name="code">l10n_bd_gazetted_fighter_yearly_exempt</field>
+        <field name="country_id" ref="base.bd"/>
+    </record>
+    <record id="l10n_bd_rule_parameter_gazetted_fighter_yearly_exempt_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">500000</field>
+        <field name="rule_parameter_id" ref="l10n_bd_rule_parameter_gazetted_fighter_yearly_exempt"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_bd_rule_parameter_per_disabled_dependent_yearly_exempt" model="hr.rule.parameter">
+        <field name="name">Bangladesh: Per Disabled Dependent Yearly Exempt</field>
+        <field name="code">l10n_bd_per_disabled_dependent_yearly_exempt</field>
+        <field name="country_id" ref="base.bd"/>
+    </record>
+    <record id="l10n_bd_rule_parameter_per_disabled_dependent_yearly_exempt_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">50000</field>
+        <field name="rule_parameter_id" ref="l10n_bd_rule_parameter_per_disabled_dependent_yearly_exempt"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_bd_rule_parameter_yearly_minimum_tax" model="hr.rule.parameter">
+        <field name="name">Bangladesh: Yearly Minimum Tax</field>
+        <field name="code">l10n_bd_yearly_minimum_tax</field>
+        <field name="country_id" ref="base.bd"/>
+    </record>
+    <record id="l10n_bd_rule_parameter_yearly_minimum_tax_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">5000</field>
+        <field name="rule_parameter_id" ref="l10n_bd_rule_parameter_yearly_minimum_tax"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_bd_rule_parameter_yearly_tax_rates" model="hr.rule.parameter">
+        <field name="name">Bangladesh: Yearly Tax Rates</field>
+        <field name="code">l10n_bd_yearly_tax_rates</field>
+        <field name="country_id" ref="base.bd"/>
+    </record>
+    <record id="l10n_bd_rule_parameter_yearly_tax_rates_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            (100000, 0.05),
+            (300000, 0.10),
+            (400000, 0.15),
+            (500000, 0.20),
+            (99999999999999999, 0.25),
+        ]</field>
+        <field name="rule_parameter_id" ref="l10n_bd_rule_parameter_yearly_tax_rates"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+    </record>
+</odoo>

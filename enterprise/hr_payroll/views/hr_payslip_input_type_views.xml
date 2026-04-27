@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payslip_input_type_view_search" model="ir.ui.view">
+        <field name="name">hr.payslip.input.type.view.search</field>
+        <field name="model">hr.payslip.input.type</field>
+        <field name="arch" type="xml">
+            <search string="Payslip Input Type">
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <filter string="Available in attachments" name="available_in_attachments" domain="[('available_in_attachments', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_payslip_input_type_view_form" model="ir.ui.view">
+        <field name="name">hr.payslip.input.type.view.form</field>
+        <field name="model">hr.payslip.input.type</field>
+        <field name="arch" type="xml">
+            <form string="Payslip Input" >
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Child Support" class="w-100"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="country_id" options="{'no_create': True, 'no_open': True}" groups="base.group_no_one"/>
+                            <field name="country_code" invisible="1"/>
+                            <field name="available_in_attachments"/>
+                            <field name="is_quantity" invisible="not available_in_attachments"/>
+                            <field name="default_no_end_date" invisible="not available_in_attachments"/>
+                        </group>
+                        <group>
+                            <field name="code"/>
+                            <field name="struct_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_payslip_input_type_view_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.input.type.view.list</field>
+        <field name="model">hr.payslip.input.type</field>
+        <field name="arch" type="xml">
+            <list string="Payslip Input" >
+                <field name="name" placeholder="Payslip Input Name"/>
+                <field name="code"/>
+                <field name="struct_ids" widget="many2many_tags"/>
+                <field name="available_in_attachments" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_payslip_input_type_view_kanban" model="ir.ui.view">
+        <field name="name">hr.payslip.input.type.kanban.view</field>
+        <field name="model">hr.payslip.input.type</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="fw-bold fs-5"/>
+                        <field name="code" class="text-muted"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_view_hr_payslip_input_type" model="ir.actions.act_window">
+        <field name="name">Payslip Other Input Types</field>
+        <field name="res_model">hr.payslip.input.type</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="search_view_id" ref="hr_payslip_input_type_view_search"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.l10n.lu.hr.payroll</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_payroll.payroll_hr_employee_view_form"/>
+        <field name="arch" type="xml">
+            <page name="hr_settings" position="after">
+                <page name="l10n_lu_tax_withholding_form" string="Tax Withholding Form"
+                      invisible="company_country_code != 'LU'" groups="hr_payroll.group_hr_payroll_user">
+                    <group>
+                        <group name="l10n_lu_tax_information_group" string="Tax Information">
+                            <field name="l10n_lu_tax_id_number"/>
+                            <field name="l10n_lu_tax_classification" required="company_country_code == 'LU'"/>
+                            <label for="l10n_lu_tax_rate_no_classification" class="oe_inline"
+                                   invisible="l10n_lu_tax_classification != 'without'"/>
+                            <div class="d-flex" invisible="l10n_lu_tax_classification != 'without'">
+                                <field name="l10n_lu_tax_rate_no_classification" class="w-25"
+                                       invisible="l10n_lu_tax_classification != 'without'"
+                                       required="company_country_code == 'LU' and l10n_lu_tax_classification == 'without'"/>
+                                <span>%</span>
+                            </div>
+                        </group>
+
+                        <div name="l10n_lu_tax_credit_group">
+                            <separator string="Tax Credits"/>
+                            <div class="alert alert-warning m-0 w-100 oe_inline" role="alert" invisible="l10n_lu_tax_id_number">
+                                No tax identification number given, the employee won't receive any tax credits.
+                            </div>
+                            <group>
+                                <field name="l10n_lu_tax_credit_cis" invisible="not l10n_lu_tax_id_number"/>
+                                <field name="l10n_lu_tax_credit_cip" invisible="not l10n_lu_tax_id_number"/>
+                                <field name="l10n_lu_tax_credit_cim" invisible="not l10n_lu_tax_id_number"/>
+                            </group>
+                        </div>
+
+                        <div name="l10n_lu_tax_deductions_group">
+                            <separator string="Tax Deductions &amp; Packages"/>
+                            <div class="d-flex fw-bold mb-3">
+                                <span class="w-25">Deductions</span>
+                                <span class="w-25">Day</span>
+                                <span class="w-25">Month</span>
+                                <span class="w-25">Year</span>
+                            </div>
+                            <div class="d-flex">
+                                <label for="l10n_lu_deduction_fd_daily" class="w-25 fw-bold"/>
+                                <field name="l10n_lu_deduction_fd_daily" class="w-25"/>
+                                <field name="l10n_lu_deduction_fd_monthly" class="w-25 text-muted"/>
+                                <field name="l10n_lu_deduction_fd_yearly" class="w-25 text-muted"/>
+                            </div>
+                            <div class="d-flex">
+                                <label for="l10n_lu_deduction_ac_ae_daily" class="w-25 fw-bold"/>
+                                <field name="l10n_lu_deduction_ac_ae_daily" class="w-25"/>
+                                <field name="l10n_lu_deduction_ac_ae_monthly" class="w-25 text-muted"/>
+                                <field name="l10n_lu_deduction_ac_ae_yearly" class="w-25 text-muted"/>
+                            </div>
+                            <div class="d-flex">
+                                <label for="l10n_lu_deduction_ce_daily" class="w-25 fw-bold"/>
+                                <field name="l10n_lu_deduction_ce_daily" class="w-25"/>
+                                <field name="l10n_lu_deduction_ce_monthly" class="w-25 text-muted"/>
+                                <field name="l10n_lu_deduction_ce_yearly" class="w-25 text-muted"/>
+                            </div>
+                            <div class="d-flex">
+                                <label for="l10n_lu_deduction_ds_daily" class="w-25 fw-bold"/>
+                                <field name="l10n_lu_deduction_ds_daily" class="w-25"/>
+                                <field name="l10n_lu_deduction_ds_monthly" class="w-25 text-muted"/>
+                                <field name="l10n_lu_deduction_ds_yearly" class="w-25 text-muted"/>
+                            </div>
+                            <div class="d-flex">
+                                <label for="l10n_lu_deduction_fo_daily" class="w-25 fw-bold"/>
+                                <field name="l10n_lu_deduction_fo_daily" class="w-25"/>
+                                <field name="l10n_lu_deduction_fo_monthly" class="w-25 text-muted"/>
+                                <field name="l10n_lu_deduction_fo_yearly" class="w-25 text-muted"/>
+                            </div>
+                            <div class="d-flex mb-4">
+                                <label for="l10n_lu_deduction_amd_daily" class="w-25 fw-bold"/>
+                                <field name="l10n_lu_deduction_amd_daily" class="w-25"/>
+                                <field name="l10n_lu_deduction_amd_monthly" class="w-25 text-muted"/>
+                                <field name="l10n_lu_deduction_amd_yearly" class="w-25 text-muted"/>
+                            </div>
+                            <div class="d-flex fw-bold mb-3">
+                                <span class="w-25">Packages</span>
+                                <span class="w-25">Day</span>
+                                <span class="w-25">Month</span>
+                                <span class="w-25">Year</span>
+                            </div>
+                            <div class="d-flex">
+                                <label for="l10n_lu_package_ffo_daily" class="w-25 fw-bold"/>
+                                <field name="l10n_lu_package_ffo_daily" class="w-25"/>
+                                <field name="l10n_lu_package_ffo_monthly" class="w-25 text-muted"/>
+                                <field name="l10n_lu_package_ffo_yearly" class="w-25 text-muted"/>
+                            </div>
+                            <div class="d-flex">
+                                <label for="l10n_lu_package_fds_daily" class="w-25 fw-bold"/>
+                                <field name="l10n_lu_package_fds_daily" class="w-25"/>
+                                <field name="l10n_lu_package_fds_monthly" class="w-25 text-muted"/>
+                                <field name="l10n_lu_package_fds_yearly" class="w-25 text-muted"/>
+                            </div>
+                        </div>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>

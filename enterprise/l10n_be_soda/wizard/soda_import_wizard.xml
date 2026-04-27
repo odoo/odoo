@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="soda_import_wizard_view_form" model="ir.ui.view">
+        <field name="name">soda.import.wizard.view.form</field>
+        <field name="model">soda.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="SODA Import">
+                <div class="alert alert-info" role="alert">
+                    The accounts in the SODA file will be mapped to the accounts listed below. If you change any of
+                    them, your choice will be the default one for future imports. The Suspense Account (499000) will
+                    be used for accounts that are not mapped or whose mapping is not found.
+                </div>
+                <field name="soda_account_mapping_ids" nolabel="1" options="{'unlink': false}">
+                    <list editable="bottom">
+                        <field name="display_name" string="SODA Account" readonly="1"/>
+                        <field name="account_id" required="0"/>
+                        <field name="company_id" column_invisible="True"/>
+                        <button name="action_unlink" title="Delete" icon="fa-trash" type="object" invisible="parent.soda_files"/>
+                    </list>
+                </field>
+                <footer>
+                    <button string="Save" type="object"
+                        name="action_save_and_import" class="btn-primary"
+                        data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary"
+                        special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

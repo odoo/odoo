@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_supplier_payment_check_warehouse_tree" model="ir.ui.view">
+        <field name="name">account.supplier.payment.check.warehouse.list</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="decoration-danger">state == 'draft' and date &lt;= datetime.datetime.now().strftime('%Y-%m-%d')</attribute>
+                <attribute name="default_order">check_number ASC</attribute>
+            </list>
+            <field name="partner_id" position="attributes">
+                <attribute name="string">Vendor</attribute>
+            </field>
+            <field name="date" position="after">
+                <field name="is_matched" column_invisible="True"/>
+                <field name="check_number"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_payment_check_warehouse_search" model="ir.ui.view">
+        <field name="name">account.payment.check.warehouse.search</field>
+        <field name="model">account.payment</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.view_account_payment_search"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <filter name="outbound_filter" position="after">
+                <separator/>
+                <filter string="Checks"
+                        name="checks_payments_filter"
+                        domain="[('payment_method_code', '=', 'check_printing')]"/>
+                <separator/>
+                <filter string="Not Matched"
+                        name="checks_payments_not_matched_filter"
+                        domain="[('is_matched', '=', False), ('is_sent', '=', True)]"/>
+                <separator/>
+                <filter string="Overdue"
+                        name="checks_payments_overdue_filter"
+                        domain="[('is_matched', '=', False), ('is_sent', '=', True), ('date', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="action_account_payments_payable_check_warehouse" model="ir.actions.act_window">
+        <field name="name">Check Warehouse</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">list,kanban,form,graph,activity</field>
+        <field name="context">{
+            'default_payment_type': 'outbound',
+            'default_partner_type': 'supplier',
+            'default_move_journal_types': ('bank', 'cash'),
+            'display_account_trust': True,
+            'search_default_outbound_filter': 1,
+            'search_default_checks_payments_filter': 1,
+            'search_default_checks_payments_not_matched_filter': 1,
+            'is_check_payment': True,
+        }</field>
+        <field name="view_id" ref="view_account_supplier_payment_check_warehouse_tree"/>
+        <field name="search_view_id" ref="view_account_payment_check_warehouse_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Register a check
+            </p><p>
+              Checks are used to register liquidity movements. You can process those checks by your own means or by using installed facilities.
+            </p>
+        </field>
+    </record>
+</odoo>

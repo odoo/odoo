@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ke_edi_oscu_inherit_view_tax_form" model="ir.ui.view">
+        <field name="name">l10n.ke.edi.oscu.inherit.account.tax.form</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_ke_item_code_id']" position="replace">
+                <field name="l10n_ke_tax_type_id" invisible="country_code != 'KE'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

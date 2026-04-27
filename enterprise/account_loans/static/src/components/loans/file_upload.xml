@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+<!--    Upload from form view-->
+    <t t-name="account_accountant.NewLoan">
+        <FileUploader
+            acceptedFileExtensions="props.acceptedFileExtensions"
+            fileUploadClass="'new_loan'"
+            multiUpload="false"
+            onUploaded.bind="onFileUploaded"
+        >
+            <t t-set-slot="toggler">
+                <span groups="account.group_account_invoice">
+                    <button class="btn btn-primary">
+                        Upload
+                    </button>
+                </span>
+            </t>
+            <t t-slot="default"/>
+        </FileUploader>
+        <span groups="account.group_account_invoice">
+            <button
+                class="btn btn-secondary"
+                t-on-click="openComputeWizard"
+            >
+                Compute
+            </button>
+        </span>
+    </t>
+</templates>

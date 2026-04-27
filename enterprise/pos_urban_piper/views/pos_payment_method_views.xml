@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_pos_urban_piper" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.pos.urban.piper</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <field name="split_transactions" position="after">
+                <field name="is_delivery_payment"/>
+            </field>
+            <field name="payment_method_type" position="after">
+                <field name="delivery_provider_id" invisible="not is_delivery_payment" required="is_delivery_payment" options="{'no_open': True, 'no_create': True}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

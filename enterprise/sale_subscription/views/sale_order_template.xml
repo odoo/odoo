@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_template_view_search" model="ir.ui.view">
+        <field name="name">sale.order.template.search</field>
+        <field name="model">sale.order.template</field>
+        <field name="arch" type="xml">
+            <search string="Search Template">
+                <field name="name"/>
+                <filter string="Subscription" name="is_subscription" domain="[('is_subscription','=', True)]"/>
+                <filter string="Archived" name="inactive" domain="[('active','=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="sale_subscription_template_action" model="ir.actions.act_window">
+        <field name="name">Quotation Templates</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{
+            'default_is_subscription': 1,
+            'search_default_is_subscription': 1,
+        }</field>
+        <field name="search_view_id" eval='sale_order_template_view_search'/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new template of subscription
+            </p><p>
+                Templates are used to prefigure subscription that
+                can be selected by the salespeople to quickly configure the
+                terms and conditions of the subscription.
+            </p>
+        </field>
+    </record>
+
+    <record id="sale_order_template_view_tree" model="ir.ui.view">
+        <field name="name">sale.order.template.list</field>
+        <field name="model">sale.order.template</field>
+        <field name="inherit_id" ref="sale_management.sale_order_template_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="plan_id" options="{'no_create': True}"/>
+            </field>
+        </field>
+    </record>
+
+     <record id="sale_subscription_template_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="sale_order_template_view_tree"/>
+        <field name="act_window_id" ref="sale_subscription_template_action"/>
+    </record>
+
+
+    <record id="sale_subscription_template_view_form" model="ir.ui.view">
+        <field name="name">sale.order.template.form</field>
+        <field name="model">sale.order.template</field>
+        <field name="inherit_id" ref="sale_management.sale_order_template_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="is_subscription" invisible="1"/>
+            </xpath>
+            <xpath expr="//notebook/page[@name='order_lines']/field/list/field[@name='name']" position="after">
+                <field name="recurring_invoice" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//notebook/page[@name='optional_products']/field/list/field[@name='name']" position="after">
+                <field name="recurring_invoice" column_invisible="True"/>
+            </xpath>
+            <group name="sale_info" position="after">
+                <group name="sale_info2">
+                    <field name="plan_id" placeholder="None"
+                           options="{'no_create': True}"/>
+                    <field name="is_unlimited" options="{'horizontal': true}"
+                           invisible="not plan_id"/>
+                    <label for="duration_value"
+                           invisible="not plan_id or is_unlimited"/>
+                    <div invisible="not plan_id or is_unlimited">
+                        <field name="duration_value" style="width: 3rem;"/>
+                        <field name="duration_unit" class="oe_inline"/>
+                    </div>
+                    <!-- company_id invisible to be available in domains -->
+                    <field name="company_id" invisible="1"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="sale_subscription_template_form" model="ir.actions.act_window.view" >
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="sale_subscription_template_view_form"/>
+        <field name="act_window_id" ref="sale_subscription_template_action"/>
+    </record>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payslip_line_view_tree_id_history" model="ir.ui.view">
+        <field name="name">hr.payslip.line.view.list.id.history</field>
+        <field name="model">hr.payslip.line</field>
+        <field name="arch" type="xml">
+            <list string="Payslip Lines">
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="total"/>
+            </list>
+        </field>
+    </record>
+</odoo>

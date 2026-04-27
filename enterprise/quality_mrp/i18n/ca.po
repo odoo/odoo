@@ -1,0 +1,179 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * quality_mrp
+#
+# Translators:
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2024
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
+# marcescu, 2024
+# Arnau Ros, 2024
+# Wil Odoo, 2025
+# Noemi Pla, 2025
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2025-09-02 17:08+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"Language-Team: Catalan <https://translate.odoo.com/projects/odoo-18/"
+"quality_mrp/ca/>\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: quality_mrp
+#: model_terms:ir.ui.view,arch_db:quality_mrp.mrp_production_view_form_inherit_quality
+msgid "<span class=\"o_stat_text text-danger\">Quality Checks</span>"
+msgstr ""
+"<span class=\"o_stat_text text-danger\">Comprovacions de qualitat</span>"
+
+#. module: quality_mrp
+#: model_terms:ir.ui.view,arch_db:quality_mrp.mrp_production_view_form_inherit_quality
+msgid "<span class=\"o_stat_text text-success\">Quality Checks</span>"
+msgstr ""
+"<span class=\"o_stat_text text-success\">Comprovacions de qualitat</span>"
+
+#. module: quality_mrp
+#: model_terms:ir.ui.view,arch_db:quality_mrp.mrp_production_view_form_inherit_quality
+msgid "<span class=\"o_stat_text\">Quality Alerts</span>"
+msgstr "<span class=\"o_stat_text\">Alertes de qualitat</span>"
+
+#. module: quality_mrp
+#: model_terms:ir.ui.view,arch_db:quality_mrp.mrp_production_view_form_inherit_quality
+msgid "<span class=\"o_stat_text\">Quality Checks</span>"
+msgstr "<span class=\"o_stat_text\">Comprovacions de qualitat</span>"
+
+#. module: quality_mrp
+#: model_terms:ir.ui.view,arch_db:quality_mrp.worksheet_page
+msgid "<strong>Manufacturing Order: </strong>"
+msgstr "<strong>Ordre de fabricació: </strong>"
+
+#. module: quality_mrp
+#: model:ir.model.fields,field_description:quality_mrp.field_mrp_production__quality_alert_ids
+msgid "Alerts"
+msgstr "Alertes"
+
+#. module: quality_mrp
+#: model:ir.model.fields,field_description:quality_mrp.field_mrp_production__check_ids
+msgid "Checks"
+msgstr "Xecs"
+
+#. module: quality_mrp
+#. odoo-python
+#: code:addons/quality_mrp/models/quality.py:0
+msgid ""
+"It will not be possible to edit the failed quantity of a quantity type "
+"quality check on a manufacturing order"
+msgstr ""
+"No és possible modificar la quantitat fallida d'un control de qualitat de "
+"tipus «Quantitat» en una ordre de fabricació"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_mrp_production
+#: model:ir.model.fields,field_description:quality_mrp.field_quality_check_on_demand__production_id
+msgid "Manufacturing Order"
+msgstr "Ordre de fabricació"
+
+#. module: quality_mrp
+#. odoo-python
+#: code:addons/quality_mrp/models/mrp_production.py:0
+msgid "On-Demand Quality Check"
+msgstr "Control de qualitat sota demanda"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Moviment del producte (línia de moviment d'estoc)"
+
+#. module: quality_mrp
+#: model:ir.model.fields,field_description:quality_mrp.field_quality_alert__production_id
+#: model:ir.model.fields,field_description:quality_mrp.field_quality_check__production_id
+msgid "Production Order"
+msgstr "Ordre de producció"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_quality_alert
+#: model_terms:ir.ui.view,arch_db:quality_mrp.mrp_production_view_form_inherit_quality
+msgid "Quality Alert"
+msgstr "Alerta de qualitat"
+
+#. module: quality_mrp
+#: model:ir.model.fields,field_description:quality_mrp.field_mrp_production__quality_alert_count
+msgid "Quality Alert Count"
+msgstr "Comptador de les alertes de qualitat"
+
+#. module: quality_mrp
+#: model:ir.actions.server,name:quality_mrp.mrp_production_action_quality_check_on_demand
+#: model:ir.model,name:quality_mrp.model_quality_check
+msgid "Quality Check"
+msgstr "Comprovació de qualitat"
+
+#. module: quality_mrp
+#: model:ir.model.fields,field_description:quality_mrp.field_mrp_production__quality_check_fail
+msgid "Quality Check Fail"
+msgstr "Fallida de l'error de la comprovació de qualitat"
+
+#. module: quality_mrp
+#: model:ir.model.fields,field_description:quality_mrp.field_mrp_production__quality_check_todo
+msgid "Quality Check Todo"
+msgstr "Prova de la qualitat"
+
+#. module: quality_mrp
+#: model:ir.actions.act_window,name:quality_mrp.quality_check_action_mo
+#: model_terms:ir.ui.view,arch_db:quality_mrp.mrp_production_view_form_inherit_quality
+msgid "Quality Checks"
+msgstr "Comprovacions de qualitat"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_quality_point
+msgid "Quality Control Point"
+msgstr "Punt de control de qualitat"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_stock_move
+msgid "Stock Move"
+msgstr "Moviment d'estoc"
+
+#. module: quality_mrp
+#. odoo-python
+#: code:addons/quality_mrp/models/quality.py:0
+msgid "Warning"
+msgstr "Avís"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_quality_check_wizard
+msgid "Wizard for Quality Check Pop Up"
+msgstr "Assistent per al control de qualitat emergent"
+
+#. module: quality_mrp
+#: model:ir.model,name:quality_mrp.model_quality_check_on_demand
+msgid "Wizard to select on-demand quality check points"
+msgstr "Assistent per seleccionar punts de control de qualitat sota demanda"
+
+#. module: quality_mrp
+#. odoo-python
+#: code:addons/quality_mrp/models/mrp_production.py:0
+#: code:addons/quality_mrp/wizard/on_demand_quality_check_wizard.py:0
+msgid ""
+"You can not create quality check for a draft, done or cancelled "
+"manufacturing order."
+msgstr ""
+
+#. module: quality_mrp
+#. odoo-python
+#: code:addons/quality_mrp/models/mrp_production.py:0
+msgid ""
+"You cannot perform a quality check if the quantity producing is zero. Please "
+"set the production quantity first."
+msgstr ""
+
+#. module: quality_mrp
+#. odoo-python
+#: code:addons/quality_mrp/models/mrp_production.py:0
+msgid "You still need to do the quality checks!"
+msgstr "Encara necessites fer les comprovacions de qualitat"

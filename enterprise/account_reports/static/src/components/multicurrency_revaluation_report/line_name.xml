@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.MulticurrencyRevaluationReportLineName" t-inherit="account_reports.AccountReportLineNameCustomizable">
+        <xpath expr="//t[@data-id='line_buttons']" position="inside">
+            <t t-if="props.line.cur_revaluation_line_model === 'res.currency'">
+                <Dropdown position="'right-start'">
+                    <button class="btn btn_more">
+                        <i class="fa fa-ellipsis-v"/>
+                    </button>
+
+                    <t t-set-slot="content">
+                        <DropdownItem onSelected="(ev) => controller.reportAction(ev, 'action_multi_currency_revaluation_open_currency_rates', { line_id: props.line.id })">
+                            Rates
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+            </t>
+
+            <t t-if="props.line.cur_revaluation_line_model === 'account.account'">
+                <Dropdown position="'right-start'">
+                    <button class="btn btn_more">
+                        <i class="fa fa-ellipsis-v"/>
+                    </button>
+
+                    <t t-set-slot="content">
+                        <DropdownItem onSelected="(ev) => controller.reportAction(ev, 'action_multi_currency_revaluation_open_general_ledger', { line_id: props.line.id })">
+                            General Ledger
+                        </DropdownItem>
+
+                        <DropdownItem onSelected="(ev) => controller.reportAction(ev, 'action_multi_currency_revaluation_toggle_provision', { line_id: props.line.id })">
+                            <t t-esc="props.line.is_included_line ? 'Exclude' : 'Include'"/>
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+            </t>
+        </xpath>
+    </t>
+</templates>

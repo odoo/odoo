@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="ubl_20_CommonLineType_mandate" inherit_id="account_edi_ubl_cii.ubl_20_CommonLineType">
+            <xpath expr="t/*[local-name()='ID']" position="attributes">
+                <attribute name="t-att">vals.get('id_attrs', {})</attribute>
+            </xpath>
+            <xpath expr="//*[local-name()='Item']" position="inside">                    
+                <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    t-if="vals['item_vals'].get('l10n_co_edi_mandate_vals', {})">
+                    <cac:InformationContentProviderParty>
+                        <cac:PowerOfAttorney>
+                            <cac:AgentParty>
+                                <cac:PartyIdentification>
+                                    <t t-set="mandate_vals" t-value="vals['item_vals'].get('l10n_co_edi_mandate_vals', {})"/>
+                                    <cbc:ID
+                                        t-att="mandate_vals.get('id_attrs', {})"
+                                        t-out="mandate_vals.get('id_out')"
+                                    />
+                                </cac:PartyIdentification>
+                            </cac:AgentParty>
+                        </cac:PowerOfAttorney>
+                    </cac:InformationContentProviderParty>
+                </t>
+            </xpath>
+        </template>
+</odoo>

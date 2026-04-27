@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="whatsapp_template_button_view_tree" model="ir.ui.view">
+        <field name="name">whatsapp.template.button.view.list</field>
+        <field name="model">whatsapp.template.button</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="wa_template_id"/>
+                <field name="call_number"/>
+                <field name="url_type"/>
+                <field name="website_url"/>
+                <field name="button_type"/>
+            </list>
+        </field>
+    </record>
+    <record id="whatsapp_template_button_view_form" model="ir.ui.view">
+        <field name="name">whatsapp.template.button.view.form</field>
+        <field name="model">whatsapp.template.button</field>
+        <field name="arch" type="xml">
+            <form string="Template Button">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="wa_template_id"/>
+                        </group>
+                        <group>
+                            <field name="call_number"/>
+                            <field name="url_type"/>
+                            <field name="website_url"/>
+                            <field name="button_type"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

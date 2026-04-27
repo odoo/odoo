@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="appointment.AppointmentBookingListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <xpath expr="//div/table" position="before">
+            <button
+            t-if="isAppointmentManager" class="o_appointment_booking_list_button_add_leaves btn btn-primary mx-3 mt-2"
+            t-att-class="{'btn-sm btn-link p-1': env.isSmall}"
+            t-on-click="onClickAddLeave">Add Closing Day(s)</button>
+        </xpath>
+    </t>
+
+    <t t-name="appointment.AppointmentTypeListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <t t-call="web.ActionHelper" position="replace">
+            <t t-if="showNoContentHelper">
+                <AppointmentTypeActionHelper/>
+            </t>
+        </t>
+    </t>
+</templates>

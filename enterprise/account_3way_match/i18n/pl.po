@@ -1,0 +1,145 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_3way_match
+#
+# Translators:
+# Marta Wacławek, 2024
+# Wil Odoo, 2025
+#
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2025-10-09 07:26+0000\n"
+"Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/"
+"account_3way_match/pl/>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: account_3way_match
+#: model:ir.model.fields,help:account_3way_match.field_account_bank_statement_line__release_to_pay_manual
+#: model:ir.model.fields,help:account_3way_match.field_account_move__release_to_pay_manual
+msgid ""
+"  * Yes: you should pay the bill, you have received the products\n"
+"  * No, you should not pay the bill, you have not received the products\n"
+"  * Exception, there is a difference between received and billed quantities\n"
+"This status is defined automatically, but you can force it by ticking the "
+"'Force Status' checkbox."
+msgstr ""
+"* Tak: powinieneś opłacić rachunek, otrzymałeś produkty.\n"
+"* Nie: nie powinieneś opłacać rachunku, nie otrzymałeś produktów\n"
+"* Wyjątkiem jest rozbieżność pomiędzy otrzymanymi i zafakturowanymi "
+"ilościami\n"
+"Ten status jest definiowany automatycznie, ale możesz go wymusić poprzez "
+"checkbox 'Wymuś status'"
+
+#. module: account_3way_match
+#: model_terms:ir.ui.view,arch_db:account_3way_match.account_invoice_filter_inherit_account_3way_match
+msgid "Bills in Exception"
+msgstr "Rachunki w wyjątku"
+
+#. module: account_3way_match
+#: model_terms:ir.ui.view,arch_db:account_3way_match.account_invoice_filter_inherit_account_3way_match
+msgid "Bills to Pay"
+msgstr "Rachunki do zapłaty"
+
+#. module: account_3way_match
+#: model_terms:ir.ui.view,arch_db:account_3way_match.account_invoice_filter_inherit_account_3way_match
+msgid "Bills to Validate"
+msgstr "Rachunki do zweryfikowania"
+
+#. module: account_3way_match
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay__exception
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay_manual__exception
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move_line__can_be_paid__exception
+msgid "Exception"
+msgstr "Wyjątek"
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_bank_statement_line__force_release_to_pay
+#: model:ir.model.fields,field_description:account_3way_match.field_account_move__force_release_to_pay
+msgid "Force Status"
+msgstr "Wymuś status"
+
+#. module: account_3way_match
+#: model:ir.model.fields,help:account_3way_match.field_account_bank_statement_line__force_release_to_pay
+#: model:ir.model.fields,help:account_3way_match.field_account_move__force_release_to_pay
+msgid ""
+"Indicates whether the 'Should Be Paid' status is defined automatically or "
+"manually."
+msgstr ""
+"Wskazuje, czy status \"Powinien zostać zapłacony\" jest definiowany "
+"automatycznie czy ręcznie."
+
+#. module: account_3way_match
+#: model:ir.model,name:account_3way_match.model_account_journal
+msgid "Journal"
+msgstr "Dziennik"
+
+#. module: account_3way_match
+#: model:ir.model,name:account_3way_match.model_account_move
+msgid "Journal Entry"
+msgstr "Zapis dziennika"
+
+#. module: account_3way_match
+#: model:ir.model,name:account_3way_match.model_account_move_line
+msgid "Journal Item"
+msgstr "Pozycja dziennika"
+
+#. module: account_3way_match
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay__no
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay_manual__no
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move_line__can_be_paid__no
+msgid "No"
+msgstr "Nie"
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_bank_statement_line__release_to_pay
+#: model:ir.model.fields,field_description:account_3way_match.field_account_move__release_to_pay
+msgid "Release To Pay"
+msgstr "Przeznacz do zapłaty"
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_move_line__can_be_paid
+msgid "Release to Pay"
+msgstr "Przeznacz do zapłaty"
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_bank_statement_line__release_to_pay_manual
+#: model:ir.model.fields,field_description:account_3way_match.field_account_move__release_to_pay_manual
+msgid "Should Be Paid"
+msgstr "Powinien zostać zapłacony"
+
+#. module: account_3way_match
+#: model:ir.model.fields,help:account_3way_match.field_account_bank_statement_line__release_to_pay
+#: model:ir.model.fields,help:account_3way_match.field_account_move__release_to_pay
+msgid ""
+"This field can take the following values :\n"
+"  * Yes: you should pay the bill, you have received the products\n"
+"  * No, you should not pay the bill, you have not received the products\n"
+"  * Exception, there is a difference between received and billed quantities\n"
+"This status is defined automatically, but you can force it by ticking the "
+"'Force Status' checkbox."
+msgstr ""
+"To pole może przyjmować następujące wartości:\n"
+"   * Tak: powinieneś zapłacić rachunek, otrzymałeś produkty\n"
+"   * Nie: nie powinieneś płacić rachunku, nie otrzymałeś produktów\n"
+"   * Wyjątek: istnieje różnica między otrzymanymi i rozliczanymi ilościami\n"
+"Ten status jest definiowany automatycznie, ale można go wymusić, zaznaczając "
+"pole wyboru \"Wymuś status\"."
+
+#. module: account_3way_match
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay__yes
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay_manual__yes
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move_line__can_be_paid__yes
+msgid "Yes"
+msgstr "Tak"

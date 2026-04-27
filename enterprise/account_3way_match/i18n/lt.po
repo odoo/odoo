@@ -1,0 +1,146 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_3way_match
+#
+# Translators:
+# Linas Versada <linaskrisiukenas@gmail.com>, 2024
+# Arunas V. <arunas@devoro.com>, 2024
+# Silvija Butko <silvija.butko@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Wil Odoo, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2025-11-10 09:41+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-18/"
+"account_3way_match/lt/>\n"
+"Language: lt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
+"1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: account_3way_match
+#: model:ir.model.fields,help:account_3way_match.field_account_bank_statement_line__release_to_pay_manual
+#: model:ir.model.fields,help:account_3way_match.field_account_move__release_to_pay_manual
+msgid ""
+"  * Yes: you should pay the bill, you have received the products\n"
+"  * No, you should not pay the bill, you have not received the products\n"
+"  * Exception, there is a difference between received and billed quantities\n"
+"This status is defined automatically, but you can force it by ticking the "
+"'Force Status' checkbox."
+msgstr ""
+"  * Taip: turėtumėte apmokėti sąskaitą, nes gavote prekes.\n"
+"* Ne, neturėtumėte apmokėti sąskaitos, nes negavote prekių.\n"
+"* Išimtis – yra skirtumas tarp gautų ir apmokestintų kiekių.\n"
+"Ši būsena apibrėžiama automatiškai, bet galite ją priverstinai nustatyti "
+"pažymėdami langelį „Priversti būseną“."
+
+#. module: account_3way_match
+#: model_terms:ir.ui.view,arch_db:account_3way_match.account_invoice_filter_inherit_account_3way_match
+msgid "Bills in Exception"
+msgstr "Sąskaitų išimtys"
+
+#. module: account_3way_match
+#: model_terms:ir.ui.view,arch_db:account_3way_match.account_invoice_filter_inherit_account_3way_match
+msgid "Bills to Pay"
+msgstr "Mokėtinos sąskaitos"
+
+#. module: account_3way_match
+#: model_terms:ir.ui.view,arch_db:account_3way_match.account_invoice_filter_inherit_account_3way_match
+msgid "Bills to Validate"
+msgstr "Sąskaitos patvirtinimui"
+
+#. module: account_3way_match
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay__exception
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay_manual__exception
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move_line__can_be_paid__exception
+msgid "Exception"
+msgstr "Išimtis"
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_bank_statement_line__force_release_to_pay
+#: model:ir.model.fields,field_description:account_3way_match.field_account_move__force_release_to_pay
+msgid "Force Status"
+msgstr "Priverstinė būsena"
+
+#. module: account_3way_match
+#: model:ir.model.fields,help:account_3way_match.field_account_bank_statement_line__force_release_to_pay
+#: model:ir.model.fields,help:account_3way_match.field_account_move__force_release_to_pay
+msgid ""
+"Indicates whether the 'Should Be Paid' status is defined automatically or "
+"manually."
+msgstr ""
+"Nurodo, ar būsena „Turėtų būti apmokėta“ apibrėžiama automatiškai, ar "
+"rankiniu būdu."
+
+#. module: account_3way_match
+#: model:ir.model,name:account_3way_match.model_account_journal
+msgid "Journal"
+msgstr "Žurnalas"
+
+#. module: account_3way_match
+#: model:ir.model,name:account_3way_match.model_account_move
+msgid "Journal Entry"
+msgstr "Žurnalo įrašas"
+
+#. module: account_3way_match
+#: model:ir.model,name:account_3way_match.model_account_move_line
+msgid "Journal Item"
+msgstr "Žurnalo įrašas"
+
+#. module: account_3way_match
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay__no
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay_manual__no
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move_line__can_be_paid__no
+msgid "No"
+msgstr "Ne"
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_bank_statement_line__release_to_pay
+#: model:ir.model.fields,field_description:account_3way_match.field_account_move__release_to_pay
+msgid "Release To Pay"
+msgstr "Leisti apmokėti"
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_move_line__can_be_paid
+msgid "Release to Pay"
+msgstr "Leisti apmokėti"
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_bank_statement_line__release_to_pay_manual
+#: model:ir.model.fields,field_description:account_3way_match.field_account_move__release_to_pay_manual
+msgid "Should Be Paid"
+msgstr "Turėtų būti apmokėta"
+
+#. module: account_3way_match
+#: model:ir.model.fields,help:account_3way_match.field_account_bank_statement_line__release_to_pay
+#: model:ir.model.fields,help:account_3way_match.field_account_move__release_to_pay
+msgid ""
+"This field can take the following values :\n"
+"  * Yes: you should pay the bill, you have received the products\n"
+"  * No, you should not pay the bill, you have not received the products\n"
+"  * Exception, there is a difference between received and billed quantities\n"
+"This status is defined automatically, but you can force it by ticking the "
+"'Force Status' checkbox."
+msgstr ""
+"Šio lauko galimos reikšmės:\n"
+"  * Taip: jūs turėtumėte apmokėti sąskaitą, gavote produktus\n"
+"  * Ne, jūs neturėtumėte apmokėti sąskaitos, negavote produktų\n"
+"  * Išimtis, rastas nesutapimas tarp gautų ir apmokestintų kiekių\n"
+"Ši būsena yra nustatoma automatiškai, tačiau jūs galite priverstinai "
+"priskirti ją pažymėdami varnele \"Priverstinę būseną\"."
+
+#. module: account_3way_match
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay__yes
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay_manual__yes
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move_line__can_be_paid__yes
+msgid "Yes"
+msgstr "Taip"

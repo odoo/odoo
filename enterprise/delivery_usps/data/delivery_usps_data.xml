@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+
+    <record id="product_product_delivery_usps_domestic" model="product.product">
+      <field name="name">USPS Domestic Flat Rate Envelope</field>
+      <field name="default_code">Delivery_012</field>
+      <field name="type">service</field>
+      <field name="categ_id" ref="delivery.product_category_deliveries"/>
+      <field name="sale_ok" eval="False"/>
+      <field name="purchase_ok" eval="False"/>
+      <field name="list_price">0.0</field>
+      <field name="invoice_policy">order</field>
+    </record>
+    <record id="delivery_carrier_usps_domestic" model="delivery.carrier">
+        <field name="name">USPS Domestic Flat Rate Envelope</field>
+        <field name="product_id" ref="delivery_usps.product_product_delivery_usps_domestic"/>
+        <field name="delivery_type">usps</field>
+        <field name="usps_service">Express</field>
+        <field name="usps_delivery_nature">domestic</field>
+        <field name="usps_domestic_regular_container">Flat Rate Envelope</field>
+        <field name="usps_content_type">MERCHANDISE</field>
+        <field name="country_ids" eval="[(4,(ref('base.us')))]"/>
+        <field name="usps_username">956ODOO01006</field>
+    </record>
+
+    <record id="product_product_delivery_usps_international" model="product.product">
+      <field name="name">USPS International Flat Rate Box</field>
+      <field name="default_code">Delivery_013</field>
+      <field name="type">service</field>
+      <field name="categ_id" ref="delivery.product_category_deliveries"/>
+      <field name="sale_ok" eval="False"/>
+      <field name="purchase_ok" eval="False"/>
+      <field name="list_price">0.0</field>
+      <field name="invoice_policy">order</field>
+    </record>
+    <record id="delivery_carrier_usps_international" model="delivery.carrier">
+        <field name="name">USPS International Flat Rate Box</field>
+        <field name="product_id" ref="delivery_usps.product_product_delivery_usps_international"/>
+        <field name="usps_mail_type">Package</field>
+        <field name="delivery_type">usps</field>
+        <field name="usps_service">Express</field>
+        <field name="usps_delivery_nature">international</field>
+        <field name="usps_international_regular_container">FLATRATEBOX</field>
+        <field name="usps_content_type">MERCHANDISE</field>
+        <field name="usps_username">956ODOO01006</field>
+    </record>
+
+</data>
+</odoo>

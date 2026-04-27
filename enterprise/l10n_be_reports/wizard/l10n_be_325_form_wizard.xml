@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="form_325_wizard_view_form" model="ir.ui.view">
+            <field name="name">l10n_be_reports.form_325_wizard_view_form</field>
+            <field name="model">l10n_be.form.325.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Create 325 Form">
+                    <field name="company_id" invisible="1"/>
+                    <group>
+                        <field name="sender_id"/>
+                        <field name="reference_year" placeholder="e.g. 2018" options="{'format': False}"/>
+                        <field name="is_test"/>
+                        <field name="sending_type"/>
+                        <field name="treatment_type"/>
+                    </group>
+                    <footer>
+                        <button name="action_generate_325_form" string="Create" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

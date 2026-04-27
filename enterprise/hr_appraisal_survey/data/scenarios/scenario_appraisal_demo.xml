@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Appraisal survey -->
+    <record id="survey_appraisal_0" model="survey.user_input">
+        <field name="survey_id" ref="appraisal_360_feedback_template"/>
+        <field name="deadline" eval="(DateTime.today() + relativedelta(days=+15))"/>
+        <field name="partner_id" ref="hr.work_contact_eg"/>
+        <field name="email">granger@mycompany.example.com</field>
+        <field name="state">done</field>
+        <field name="appraisal_id" ref="hr_appraisal.hr_appraisal_0"/>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="start_datetime" eval="datetime.now() - timedelta(days=0, hours=3, minutes=50)"/>
+        <field name="end_datetime" eval="datetime.now() - timedelta(days=0, hours=3, minutes=0)"/>
+    </record>
+
+    <!-- appraisal survey lines -->
+    <record id="survey_appraisal_0_line_2" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_appraisal_0"/>
+        <field name="survey_id" ref="appraisal_360_feedback_template"/>
+        <field name="question_id" ref="appraisal_360_2"/>
+        <field name="value_char_box">Emma Granger</field>
+        <field name="answer_type">char_box</field>
+    </record>
+    <record id="survey_appraisal_0_line_3" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_appraisal_0"/>
+        <field name="survey_id" ref="appraisal_360_feedback_template"/>
+        <field name="question_id" ref="appraisal_360_3"/>
+        <field name="suggested_answer_id" ref="appraisal_360_3_sug4"/>
+        <field name="answer_type">suggestion</field>
+    </record>
+    <record id="survey_appraisal_0_line_5_1" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_appraisal_0"/>
+        <field name="survey_id" ref="appraisal_360_feedback_template"/>
+        <field name="question_id" ref="appraisal_360_5"/>
+        <field name="matrix_row_id" ref="y_360_5_1"/>
+        <field name="suggested_answer_id" ref="x_360_5_5"/>
+        <field name="answer_type">suggestion</field>
+    </record>
+    <record id="survey_appraisal_0_line_5_2" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_appraisal_0"/>
+        <field name="survey_id" ref="appraisal_360_feedback_template"/>
+        <field name="question_id" ref="appraisal_360_5"/>
+        <field name="matrix_row_id" ref="y_360_5_2"/>
+        <field name="suggested_answer_id" ref="x_360_5_5"/>
+        <field name="answer_type">suggestion</field>
+    </record>
+    <record id="survey_appraisal_0_line_5_3" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_appraisal_0"/>
+        <field name="survey_id" ref="appraisal_360_feedback_template"/>
+        <field name="question_id" ref="appraisal_360_5"/>
+        <field name="matrix_row_id" ref="y_360_5_3"/>
+        <field name="suggested_answer_id" ref="x_360_5_5"/>
+        <field name="answer_type">suggestion</field>
+    </record>
+    <record id="survey_appraisal_0_line_5_4" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_appraisal_0"/>
+        <field name="survey_id" ref="appraisal_360_feedback_template"/>
+        <field name="question_id" ref="appraisal_360_5"/>
+        <field name="matrix_row_id" ref="y_360_5_4"/>
+        <field name="suggested_answer_id" ref="x_360_5_3"/>
+        <field name="answer_type">suggestion</field>
+    </record>
+    <record id="survey_appraisal_0_line_5_5" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_appraisal_0"/>
+        <field name="survey_id" ref="appraisal_360_feedback_template"/>
+        <field name="question_id" ref="appraisal_360_5"/>
+        <field name="matrix_row_id" ref="y_360_5_5"/>
+        <field name="suggested_answer_id" ref="x_360_5_2"/>
+        <field name="answer_type">suggestion</field>
+    </record>
+    <record id="survey_appraisal_0_line_5_6" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_appraisal_0"/>
+        <field name="survey_id" ref="appraisal_360_feedback_template"/>
+        <field name="question_id" ref="appraisal_360_5"/>
+        <field name="matrix_row_id" ref="y_360_5_6"/>
+        <field name="suggested_answer_id" ref="x_360_5_3"/>
+        <field name="answer_type">suggestion</field>
+    </record>
+    <record id="survey_appraisal_0_line_5_7" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_appraisal_0"/>
+        <field name="survey_id" ref="appraisal_360_feedback_template"/>
+        <field name="question_id" ref="appraisal_360_5"/>
+        <field name="matrix_row_id" ref="y_360_5_7"/>
+        <field name="suggested_answer_id" ref="x_360_5_4"/>
+        <field name="answer_type">suggestion</field>
+    </record>
+    <record id="survey_appraisal_0_line_6" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_appraisal_0"/>
+        <field name="survey_id" ref="appraisal_360_feedback_template"/>
+        <field name="question_id" ref="appraisal_360_6"/>
+        <field name="value_char_box">Sometimes, it's not a solution to just solve the issue,
+            we need to take time investigating the root cause and avoid doing it again.
+        </field>
+        <field name="answer_type">char_box</field>
+    </record>
+    <record id="survey_appraisal_0_line_7" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_appraisal_0"/>
+        <field name="survey_id" ref="appraisal_360_feedback_template"/>
+        <field name="question_id" ref="appraisal_360_7"/>
+        <field name="value_text_box">
+            You adapted very well to the changes in the team, and you're not trying to keep all the knowledge.
+            You're not acting to be above others.
+        </field>
+        <field name="answer_type">text_box</field>
+    </record>
+    <record id="survey_appraisal_0_line_8" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_appraisal_0"/>
+        <field name="survey_id" ref="appraisal_360_feedback_template"/>
+        <field name="question_id" ref="appraisal_360_8"/>
+        <field name="value_text_box">
+            As I said, not going at the bottom of the issues.
+        </field>
+        <field name="answer_type">text_box</field>
+    </record>
+    <record id="survey_appraisal_0_line_10" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_appraisal_0"/>
+        <field name="survey_id" ref="appraisal_360_feedback_template"/>
+        <field name="question_id" ref="appraisal_360_10"/>
+        <field name="value_text_box">
+            I'm sure you're aware of it and already work on that.
+        </field>
+        <field name="answer_type">text_box</field>
+    </record>
+    <record id="hr_appraisal.hr_appraisal_0" model="hr.appraisal">
+        <field name="employee_feedback_ids" eval="[(4, ref('hr.employee_eg'))]"/>
+    </record>
+</odoo>

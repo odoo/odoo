@@ -1,0 +1,744 @@
+{
+    "version": 21,
+    "sheets": [
+        {
+            "id": "sheet1",
+            "name": "Dashboard",
+            "colNumber": 6,
+            "rowNumber": 41,
+            "rows": {
+                "11": {
+                    "size": 39
+                },
+                "28": {
+                    "size": 41
+                },
+                "29": {
+                    "size": 40
+                },
+                "30": {
+                    "size": 30
+                },
+                "31": {
+                    "size": 30
+                },
+                "32": {
+                    "size": 30
+                },
+                "33": {
+                    "size": 30
+                },
+                "34": {
+                    "size": 30
+                },
+                "35": {
+                    "size": 30
+                },
+                "36": {
+                    "size": 30
+                },
+                "37": {
+                    "size": 30
+                },
+                "38": {
+                    "size": 30
+                },
+                "39": {
+                    "size": 30
+                }
+            },
+            "cols": {
+                "0": {
+                    "size": 381
+                },
+                "2": {
+                    "size": 27
+                },
+                "3": {
+                    "size": 285
+                }
+            },
+            "merges": [],
+            "cells": {
+                "A12": {
+                    "content": "[Payroll Analysis](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[],\"graph_measure\":\"net_wage\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"date_from:month\"],\"graph_order\":null,\"graph_stacked\":true,\"graph_cumulated\":false},\"modelName\":\"hr.payroll.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Payroll Analysis\"})"
+                },
+                "A29": {
+                    "content": "[Work Entries Analysis](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[],\"pivot_measures\":[\"number_of_days\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"work_entry_type_id\"]},\"modelName\":\"hr.work.entry.report\",\"views\":[[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Work Entries Analysis\"})"
+                },
+                "A30": {
+                    "content": "=_t(\"Work type\")"
+                },
+                "B30": {
+                    "content": "=_t(\"Days\")"
+                }
+            },
+            "styles": {
+                "A12": 1,
+                "A29": 1,
+                "A30:B30": 2
+            },
+            "formats": {},
+            "borders": {
+                "A29:B29": 1,
+                "A12:F12": 1,
+                "A30:B30": 2,
+                "A13:F13": 2,
+                "A31": 3,
+                "A32:A40": 4,
+                "A41:B41": 5,
+                "B31": 6,
+                "B32:B40": 7
+            },
+            "conditionalFormats": [],
+            "figures": [
+                {
+                    "id": "2e014bc2-e684-4373-adf6-6407a99af32c",
+                    "x": 0,
+                    "y": 13,
+                    "width": 192,
+                    "height": 102,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "Average Net Wage",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#FFF7ED",
+                        "baseline": "Data!E3",
+                        "keyValue": "Data!D3",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "6432db5b-d0ee-446c-8fdc-571a58e107da",
+                    "x": 200,
+                    "y": 13,
+                    "width": 192,
+                    "height": 102,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "Average Basic Wage",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#FFF7ED",
+                        "baseline": "Data!E4",
+                        "keyValue": "Data!D4",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "d6526401-f138-4435-9147-df08e80b3303",
+                    "x": 0,
+                    "y": 125,
+                    "width": 192,
+                    "height": 102,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "Avg Hours/Days",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#EFF6FF",
+                        "baseline": "Data!E15",
+                        "keyValue": "Data!D15",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "ad4f9864-da2a-46c3-9738-7b5120eb3712",
+                    "x": 400,
+                    "y": 13,
+                    "width": 192,
+                    "height": 102,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "Total Net Wage",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#FFF7ED",
+                        "baseline": "Data!E6",
+                        "keyValue": "Data!D6",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "784c171b-55e1-47f9-88c5-80ff33c0d58a",
+                    "x": 601,
+                    "y": 13,
+                    "width": 192,
+                    "height": 102,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "Total Basic Wage",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#FFF7ED",
+                        "baseline": "Data!E7",
+                        "keyValue": "Data!D7",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "1020f2c2-4cb2-4713-8a4d-2d22a3e30008",
+                    "x": 200,
+                    "y": 125,
+                    "width": 192,
+                    "height": 102,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "text",
+                        "title": {
+                            "text": "FTE",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#EFF6FF",
+                        "baseline": "Data!B16",
+                        "baselineDescr": "Employees",
+                        "keyValue": "Data!B17",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "bf9fa47a-a79b-4cd6-a44a-87f783424d76",
+                    "x": 0,
+                    "y": 292,
+                    "width": 980,
+                    "height": 369,
+                    "tag": "chart",
+                    "data": {
+                        "type": "line",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!C22:C30",
+                                "yAxisId": "y"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "labelRange": "Data!A22:A29",
+                        "title": {},
+                        "labelsAsText": true,
+                        "stacked": false,
+                        "aggregated": false,
+                        "cumulative": true,
+                        "fillArea": true
+                    }
+                }
+            ],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        },
+        {
+            "id": "1e571810-7579-4ae9-82c1-a7c0ab6d5d94",
+            "name": "Data",
+            "colNumber": 26,
+            "rowNumber": 102,
+            "rows": {},
+            "cols": {},
+            "merges": [],
+            "cells": {
+                "A2": {
+                    "content": "=_t(\"#Payslips\")"
+                },
+                "A3": {
+                    "content": "=_t(\"Average Net Wage\")"
+                },
+                "A4": {
+                    "content": "=_t(\"Average Basic Wage\")"
+                },
+                "A5": {
+                    "content": "=_t(\"Average Gross Wage\")"
+                },
+                "A6": {
+                    "content": "=_t(\"Total Net Wage\")"
+                },
+                "A7": {
+                    "content": "=_t(\"Total Basic Wage\")"
+                },
+                "A8": {
+                    "content": "=_t(\"Total Gross Wage\")"
+                },
+                "A9": {
+                    "content": "=_t(\"Work Days\")"
+                },
+                "A10": {
+                    "content": "=_t(\"Work Hours\")"
+                },
+                "A11": {
+                    "content": "=_t(\"Paid Time Off\")"
+                },
+                "A12": {
+                    "content": "=_t(\"Unpaid TIme Off\")"
+                },
+                "A13": {
+                    "content": "=_t(\"Attendance Rate\")"
+                },
+                "A14": {
+                    "content": "=_t(\"Absenteeism Rate\")"
+                },
+                "A15": {
+                    "content": "=_t(\"Average Hours per Days of Work\")"
+                },
+                "A16": {
+                    "content": "=_t(\"Employees\")"
+                },
+                "A17": {
+                    "content": "=_t(\"FTE\")"
+                },
+                "A18": {
+                    "content": "=_t(\"Employees (%)\")"
+                },
+                "A19": {
+                    "content": "=_t(\"FTE (%)\")"
+                },
+                "A22": {
+                    "content": "=EDATE(TODAY(),B22)"
+                },
+                "A23": {
+                    "content": "=EDATE(TODAY(),B23)"
+                },
+                "A24": {
+                    "content": "=EDATE(TODAY(),B24)"
+                },
+                "A25": {
+                    "content": "=EDATE(TODAY(),B25)"
+                },
+                "A26": {
+                    "content": "=EDATE(TODAY(),B26)"
+                },
+                "A27": {
+                    "content": "=EDATE(TODAY(),B27)"
+                },
+                "A28": {
+                    "content": "=EDATE(TODAY(),B28)"
+                },
+                "A29": {
+                    "content": "=EDATE(TODAY(),B29)"
+                },
+                "A30": {
+                    "content": "=EDATE(TODAY(),B30)"
+                },
+                "B1": {
+                    "content": "=_t(\"Current\")"
+                },
+                "B2": {
+                    "content": "14"
+                },
+                "B3": {
+                    "content": "3635.054285714286"
+                },
+                "B4": {
+                    "content": "3632.1428571428573"
+                },
+                "B5": {
+                    "content": "4302.142857142857"
+                },
+                "B6": {
+                    "content": "50890.76"
+                },
+                "B7": {
+                    "content": "50850"
+                },
+                "B8": {
+                    "content": "60230"
+                },
+                "B9": {
+                    "content": "314.47291"
+                },
+                "B10": {
+                    "content": "2515.7833333333333"
+                },
+                "B11": {
+                    "content": "2"
+                },
+                "B12": {
+                    "content": "0"
+                },
+                "B15": {
+                    "content": "8.000000169595953"
+                },
+                "B16": {
+                    "content": "22"
+                },
+                "B17": {
+                    "content": "21.95"
+                },
+                "B18": {
+                    "content": "1"
+                },
+                "B19": {
+                    "content": "0.9977272727272727"
+                },
+                "B22": {
+                    "content": "-8"
+                },
+                "B23": {
+                    "content": "-7"
+                },
+                "B24": {
+                    "content": "-6"
+                },
+                "B25": {
+                    "content": "-5"
+                },
+                "B26": {
+                    "content": "-4"
+                },
+                "B27": {
+                    "content": "-3"
+                },
+                "B28": {
+                    "content": "-2"
+                },
+                "B29": {
+                    "content": "-1"
+                },
+                "B30": {
+                    "content": "0"
+                },
+                "C1": {
+                    "content": "=_t(\"Previous\")"
+                },
+                "C2": {
+                    "content": "1"
+                },
+                "C3": {
+                    "content": "2930.55"
+                },
+                "C4": {
+                    "content": "3600"
+                },
+                "C5": {
+                    "content": "3600"
+                },
+                "C6": {
+                    "content": "2930.55"
+                },
+                "C7": {
+                    "content": "3600"
+                },
+                "C8": {
+                    "content": "3600"
+                },
+                "C9": {
+                    "content": "21"
+                },
+                "C10": {
+                    "content": "168"
+                },
+                "C11": {
+                    "content": "0"
+                },
+                "C12": {
+                    "content": "0"
+                },
+                "C15": {
+                    "content": "8"
+                },
+                "C22": {
+                    "content": "2721"
+                },
+                "C23": {
+                    "content": "4007"
+                },
+                "C24": {
+                    "content": "4529"
+                },
+                "C25": {
+                    "content": "2619"
+                },
+                "C26": {
+                    "content": "2446"
+                },
+                "C27": {
+                    "content": "2104"
+                },
+                "C28": {
+                    "content": "3697"
+                },
+                "C29": {
+                    "content": "2457"
+                },
+                "C30": {
+                    "content": "4002"
+                },
+                "D1": {
+                    "content": "=_t(\"Current\")"
+                },
+                "D2": {
+                    "content": "14"
+                },
+                "D3": {
+                    "content": "3635.054285714286"
+                },
+                "D4": {
+                    "content": "3632.1428571428573"
+                },
+                "D5": {
+                    "content": "4302.142857142857"
+                },
+                "D6": {
+                    "content": "50890.76"
+                },
+                "D7": {
+                    "content": "50850"
+                },
+                "D8": {
+                    "content": "60230"
+                },
+                "D9": {
+                    "content": "314.47291"
+                },
+                "D10": {
+                    "content": "2515.7833333333333"
+                },
+                "D11": {
+                    "content": "2"
+                },
+                "D12": {
+                    "content": "0"
+                },
+                "D13": {
+                    "content": "0"
+                },
+                "D14": {
+                    "content": "0"
+                },
+                "D15": {
+                    "content": "8.000000169595953"
+                },
+                "E1": {
+                    "content": "=_t(\"Previous\")"
+                },
+                "E2": {
+                    "content": "1"
+                },
+                "E3": {
+                    "content": "2930.55"
+                },
+                "E4": {
+                    "content": "3600"
+                },
+                "E5": {
+                    "content": "3600"
+                },
+                "E6": {
+                    "content": "2930.55"
+                },
+                "E7": {
+                    "content": "3600"
+                },
+                "E8": {
+                    "content": "3600"
+                },
+                "E9": {
+                    "content": "21"
+                },
+                "E10": {
+                    "content": "168"
+                },
+                "E11": {
+                    "content": "0"
+                },
+                "E12": {
+                    "content": "0"
+                },
+                "E13": {
+                    "content": "0"
+                },
+                "E14": {
+                    "content": "0"
+                },
+                "E15": {
+                    "content": "8"
+                }
+            },
+            "styles": {
+                "A2:A19": 3,
+                "B1:E1": 3,
+                "B2:E19": 4
+            },
+            "formats": {
+                "A22:A30": 1,
+                "B15:B16": 2,
+                "B2:C2": 2,
+                "B9:C12": 2,
+                "C15": 2,
+                "B3:E8": 3,
+                "B17": 4,
+                "B18:B19": 5,
+                "D2:E2": 6,
+                "D9:E12": 6,
+                "D15:E15": 6,
+                "D13:E14": 7
+            },
+            "borders": {},
+            "conditionalFormats": [],
+            "figures": [],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        }
+    ],
+    "styles": {
+        "1": {
+            "fontSize": 16,
+            "bold": true
+        },
+        "2": {
+            "textColor": "#434343",
+            "fontSize": 11,
+            "bold": true
+        },
+        "3": {
+            "bold": true
+        },
+        "4": {
+            "fillColor": "#F3F3F3"
+        }
+    },
+    "formats": {
+        "1": "mmmm yyyy",
+        "2": "0",
+        "3": "[$$]#,##0",
+        "4": "#,##0.00",
+        "5": "0%",
+        "6": "0[$]",
+        "7": "#,##0[$]"
+    },
+    "borders": {
+        "1": {
+            "bottom": {
+                "style": "thin",
+                "color": "#CCCCCC"
+            }
+        },
+        "2": {
+            "top": {
+                "style": "thin",
+                "color": "#CCCCCC"
+            }
+        },
+        "3": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "4": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "5": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "6": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "7": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        }
+    },
+    "revisionId": "START_REVISION",
+    "uniqueFigureIds": true,
+    "settings": {
+        "locale": {
+            "name": "English (US)",
+            "code": "en_US",
+            "thousandsSeparator": ",",
+            "decimalSeparator": ".",
+            "dateFormat": "mm/dd/yyyy",
+            "timeFormat": "hh:mm:ss",
+            "formulaArgSeparator": ",",
+            "weekStart": 7
+        }
+    },
+    "pivots": {},
+    "pivotNextId": 8,
+    "customTableStyles": {},
+    "odooVersion": 12,
+    "globalFilters": [],
+    "lists": {},
+    "listNextId": 1
+}

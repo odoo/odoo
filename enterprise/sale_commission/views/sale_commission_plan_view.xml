@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_commission_plan_view_form" model="ir.ui.view">
+        <field name="name">sale.commission.plan.view.form</field>
+        <field name="model">sale.commission.plan</field>
+        <field name="arch" type="xml">
+            <form string="Commission Plan">
+                <header>
+                    <button string="Approve" class="btn-primary" name="action_approve" type="object" invisible="state != 'draft'" data-hotkey="w" />
+                    <button string="Cancel" class="btn-secondary" name="action_cancel" type="object" invisible="state != 'draft'" data-hotkey="w"/>
+                    <button string="Mark as done" class="btn-secondary" name="action_done" type="object" invisible="state != 'approved'" data-hotkey="w"/>
+                    <button string="Reset to draft" class="btn-secondary" name="action_draft" type="object" invisible="state == 'draft'" data-hotkey="d"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,done"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div name="button_box" class="oe_button_box">
+                        <button name="action_open_commission" type="object"
+                                class="oe_stat_button" icon="fa-dollar" invisible="state in ['draft', 'cancel']">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Commissions</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Commission Plan"/>
+                        <h1>
+                            <field name="name" placeholder="i.e. Commissions plan 2025" readonly="state != 'draft'" class="d-block"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <label for="type" string="Based on"/>
+                            <div>
+                                <field name="type" class="oe_inline" readonly="state != 'draft'"/>
+                                per <field name="user_type" class="oe_inline" readonly="state != 'draft'"/>
+                            </div>
+                            <field name="team_id" invisible="user_type == 'person'" readonly="state != 'draft'"/>
+                            <field name="currency_id" invisible="1"/>   <!-- Needed for monetary widget -->
+                            <field name="commission_amount" invisible="type == 'achieve'" readonly="state != 'draft'"
+                                   widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <label for="date_from" string="Effective Period"/>
+                            <div>
+                                <field name="date_from" class="oe_inline" readonly="state != 'draft'" force_save="1"/>
+                               <i class="oi oi-fw oi-arrow-right"/><field name="date_to" class="oe_inline" readonly="state != 'draft'" force_save="1"/>
+                            </div>
+                            <field name="periodicity" string="Target Frequency" readonly="state != 'draft'" force_save="1"/>
+                        </group>
+                    </group>
+                    <notebook name="main_book">
+                        <page string="Commissions" invisible="type == 'achieve'">
+                            <group>
+                                <group>
+                                    <field name="target_commission_ids" readonly="state != 'draft'" nolabel="1">
+                                        <list editable="bottom" default_order="target_rate">
+                                            <control>
+                                                <create string="Add a new commission level"/>
+                                            </control>
+                                            <field name="target_rate" widget="percentage"/>
+                                            <field name="amount" force_save="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                            <field name="amount_rate" widget="percentage" force_save="1" optional="hide"/>
+                                            <field name="currency_id" column_invisible="1"/> <!-- For monetary field -->
+                                        </list>
+                                    </field>
+                                </group>
+                                <group>
+                                    <field name="target_commission_graph" widget="commission_graph" nolabel="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Targets" invisible="type == 'achieve'">
+                            <field name="target_ids" readonly="state != 'draft'">
+                                <list create="0" delete="0" editable="bottom">
+                                    <field name="name" force_save="1"/>
+                                    <field name="date_from" optional="hide" force_save="1"/>
+                                    <field name="date_to" optional="hide" force_save="1"/>
+                                    <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="currency_id" column_invisible="1"/> <!-- For monetary field -->
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Achievements">
+                            <field name="achievement_ids" readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <control>
+                                        <create string="Add a new achievement"/>
+                                    </control>
+                                    <field name="type" required="1"/>
+                                    <field name="product_id" placeholder="All products"/>
+                                    <field name="product_categ_id" placeholder="All categories"/>
+                                    <field name="rate" widget="percentage"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Periods" invisible="type == 'target'">
+                            <field name="target_ids" readonly="state != 'draft'">
+                                <list create="0" delete="0">
+                                    <field name="name" force_save="1"/>
+                                    <field name="date_from" optional="hide" force_save="1"/>
+                                    <field name="date_to" optional="hide" force_save="1"/>
+                                    <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}" optional="hide"/>
+                                    <field name="currency_id" column_invisible="1"/> <!-- For monetary field -->
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Sales People">
+                            <field name="user_ids">
+                                <list editable="bottom">
+                                    <control>
+                                        <create string="Add a new Sales Person"/>
+                                    </control>
+                                    <field name="user_id"/>
+                                    <field name="date_from" required="True"/>
+                                    <field name="date_to"/>
+                                    <field name="other_plans" widget="many2many_tags" readonly="True"/>
+                                </list>
+                            </field>
+                            <button string="Add Multiple Salespersons" type="action" name="%(sale_commission.sale_subscription_change_customer_wizard_action)d" groups="base.group_no_one"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_commission_plan_view_list" model="ir.ui.view">
+        <field name="name">sale.commission.plan.view.list</field>
+        <field name="model">sale.commission.plan</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="type"/>
+                <field name="periodicity"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="date_from" string="Start Date"/>
+                <field name="date_to" string="End Date"/>
+                <field name="state"/>
+                <field name="state" widget="badge"
+                   decoration-info="state == 'draft'"
+                   decoration-success="state == 'approved'"
+                   decoration-primary="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="sale_commission_plan_view_search" model="ir.ui.view">
+        <field name="name">sale.commission.plan.view.search</field>
+        <field name="model">sale.commission.plan</field>
+        <field name="arch" type="xml">
+            <search string="Commission Plan">
+                <field name="name" string="Name" filter_domain="[('name', 'ilike', self)]"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter string="Completed" name="current"
+                        domain="[('date_to', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Ongoing" name="current"
+                        domain="[('date_from', '&lt;', context_today().strftime('%Y-%m-%d')), ('date_to', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Upcoming" name="current"
+                        domain="[('date_from', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Periodicity" name="periodicity" context="{'group_by':'periodicity'}"/>
+                    <filter string="Type" name="type" context="{'group_by':'type'}"/>
+                    <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="sale_commission_action_plan" model="ir.actions.act_window">
+        <field name="name">Commission Plans</field>
+        <field name="res_model">sale.commission.plan</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" eval='sale_commission_plan_view_search'/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new commission plan
+            </p>
+            <p>
+                Compute commissions of your sales people based on their achievements and targets
+            </p>
+        </field>
+    </record>
+</odoo>

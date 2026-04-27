@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+  <t t-name="spreadsheet_edition.VersionHistoryItem">
+    <div
+      class="o-version-history-item border rounded p-2 mb-2 d-flex"
+      t-att-class="{'active': this.props.active}"
+      t-ref="item"
+      t-on-contextmenu.prevent.stop="this.activate"
+      t-on-pointerdown.capture="this.activate">
+      <div>
+        <span t-if="isLatestVersion" class="o-sp-badge badge rounded-4 mb-1">Current</span>
+        <div class="d-flex o-version-history-item-text" t-ref="label">
+          <TextInput
+            t-if="props.editable"
+            value="state.editName"
+            onChange.bind="renameRevision"
+          />
+          <span t-else="" t-esc="state.editName" />
+        </div>
+        <div
+          t-if="revision.name"
+          class="o-version-history-timestamp smaller fst-italic"
+          t-esc="formattedTimeStamp"
+        />
+        <div
+          t-if="revision.user"
+          class="d-flex pt-1">
+          <span class="o_spreadsheet_user d-inline-flex align-items-center">
+            <img
+              t-attf-src="/web/image?model=res.users&amp;field=avatar_128&amp;id={{revision.user[0]}}"
+              class="pe-1 rounded-circle" />
+            <span t-esc="revision.user[1]" />
+          </span>
+        </div>
+      </div>
+      <div class="ms-auto">
+        <Dropdown items="menuItems">
+          <span
+            class="d-flex btn px-2 border-0 o-version-history-menu"
+            t-on-click="this.activate"
+            t-on-contextmenu.prevent.stop="this.activate"
+          >
+            <i class="fa fa-ellipsis-v text-muted" />
+          </span>
+        </Dropdown>
+      </div>
+    </div>
+  </t>
+</templates>

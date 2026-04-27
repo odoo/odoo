@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_l10n_lu_generate_vat_intra_report" model="ir.ui.view">
+            <field name="name">l10n_lu.generate.vat.intra.report.view</field>
+            <field name="model">l10n_lu.generate.vat.intra.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="l10n_lu_stored_report_ids" string="Old declarations to update/correct" widget="many2many_tags" options="{'no_create_edit': True, 'no_create': True}"/>
+                        <field name="save_report"/>
+                    </group>
+                    <footer>
+                        <button name="get_xml" string="EXPORT XML" type="object" class="oe_highlight"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_lu_generate_vat_intra_report" model="ir.actions.act_window">
+            <field name="name">Generate Sales report</field>
+            <field name="res_model">l10n_lu.generate.vat.intra.report</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_l10n_lu_generate_vat_intra_report"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

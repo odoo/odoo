@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_employee_declaration_view_tree" model="ir.ui.view">
+        <field name="name">hr.payroll.employee.declaration.view.list</field>
+        <field name="model">hr.payroll.employee.declaration</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <header>
+                    <button name="action_generate_pdf" string="Generate PDFs" type="object"/>
+                </header>
+                <field name="employee_id" options="{'no_create': True, 'no_create_edit': True}" widget="many2one_avatar_user"/>
+                <field name="res_model" column_invisible="True"/>
+                <field name="res_id" column_invisible="True"/>
+                <field name="pdf_filename" column_invisible="True"/>
+                <field name="pdf_file" readonly="1" filename="pdf_filename" widget="binary"/>
+                <field name="pdf_to_generate" optional="hide"/>
+                <field name="state" decoration-info="state == 'draft'" decoration-warning="state in ['pdf_to_generate', 'pdf_to_post']" decoration-success="state in ['pdf_generated', 'pdf_posted']" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_payroll_employee_declaration_view_search" model="ir.ui.view">
+        <field name="name">hr.payroll.employee.declaration.view.search</field>
+        <field name="model">hr.payroll.employee.declaration</field>
+        <field name="arch" type="xml">
+            <search string="Search Declarations">
+                <field name="employee_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="State" name="group_by_state" domain="[]" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

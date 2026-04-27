@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="res_partner_view_form" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='accounting_entries']" position="attributes">
+                    <attribute name="groups">account.group_account_user</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- To-Do: Remove me in master -->
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="priority">5</field>
+            <field name="inherit_id" ref="account.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <page name="invoicing" position="attributes">
+                    <attribute name="groups">account.group_account_readonly</attribute>
+                </page>
+            </field>
+        </record>
+</odoo>

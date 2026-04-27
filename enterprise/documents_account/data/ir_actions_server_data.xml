@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Create Vendor Bill -->
+        <record id="ir_actions_server_create_vendor_bill_code" model="ir.actions.server" forcecreate="0">
+            <field name="name">Create Vendor Bill</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+# To send in a specific journal, replace "None" by the code of the journal between quotation marks on the next line
+SPECIFIC_JOURNAL_CODE = None
+action = records.account_create_account_move('in_invoice', journal_id=model.env['account.journal'].search([('code', '=', SPECIFIC_JOURNAL_CODE), ('company_id', '=', env.company.id)]) if SPECIFIC_JOURNAL_CODE else None)
+            </field>
+        </record>
+
+        <record id="ir_actions_server_create_vendor_bill" model="ir.actions.server" forcecreate="0">
+            <field name="name">Create Vendor Bill</field>
+            <field name="sequence">10</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('account.group_account_invoice'))]"/>
+            <field name="usage">ir_actions_server</field>
+            <field name="state">multi</field>
+            <field name="child_ids" eval="[
+                ref('documents.ir_actions_server_tag_remove_inbox'),
+                ref('documents.ir_actions_server_tag_remove_to_validate'),
+                ref('documents.ir_actions_server_tag_add_validated'),
+                ref('documents.ir_actions_server_tag_add_bill'),
+
+                ref('documents_account.ir_actions_server_create_vendor_bill_code'),
+            ]"/>
+        </record>
+
+        <function model="documents.document" name="action_folder_embed_action" eval="[
+            ref('documents.document_finance_folder'),
+            ref('documents_account.ir_actions_server_create_vendor_bill'),
+        ]"/>
+
+        <!-- Create Vendor Refund -->
+        <record id="ir_actions_server_create_vendor_refund_code" model="ir.actions.server" forcecreate="0">
+            <field name="name">Create Vendor Refund</field>
+            <field name="sequence">20</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('account.group_account_invoice'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+# To send in a specific journal, replace "None" by the code of the journal between quotation marks on the next line.
+SPECIFIC_JOURNAL_CODE = None
+action = records.account_create_account_move('in_refund', journal_id=model.env['account.journal'].search([('code', '=', SPECIFIC_JOURNAL_CODE), ('company_id', '=', env.company.id)]) if SPECIFIC_JOURNAL_CODE else None)
+            </field>
+        </record>
+
+        <record id="ir_actions_server_create_vendor_refund" model="ir.actions.server" forcecreate="0">
+            <field name="name">Create Vendor Refund</field>
+            <field name="sequence">20</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('account.group_account_invoice'))]"/>
+            <field name="usage">ir_actions_server</field>
+            <field name="state">multi</field>
+            <field name="child_ids" eval="[
+                ref('documents.ir_actions_server_tag_remove_inbox'),
+                ref('documents.ir_actions_server_tag_remove_to_validate'),
+                ref('documents.ir_actions_server_tag_add_validated'),
+                ref('documents.ir_actions_server_tag_add_bill'),
+
+                ref('documents_account.ir_actions_server_create_vendor_refund_code'),
+            ]"/>
+        </record>
+
+        <function model="documents.document" name="action_folder_embed_action" eval="[
+            ref('documents.document_finance_folder'),
+            ref('documents_account.ir_actions_server_create_vendor_refund'),
+        ]"/>
+
+        <!-- Create Customer Invoice -->
+        <record id="ir_actions_server_create_customer_invoice_code" model="ir.actions.server" forcecreate="0">
+            <field name="name">Create Customer Invoice</field>
+            <field name="sequence">30</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('account.group_account_invoice'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+# To send in a specific journal, replace "None" by the code of the journal between quotation marks on the next line.
+SPECIFIC_JOURNAL_CODE = None
+action = records.account_create_account_move('out_invoice', journal_id=model.env['account.journal'].search([('code', '=', SPECIFIC_JOURNAL_CODE), ('company_id', '=', env.company.id)]) if SPECIFIC_JOURNAL_CODE else None)
+            </field>
+        </record>
+
+        <record id="ir_actions_server_create_customer_invoice" model="ir.actions.server" forcecreate="0">
+            <field name="name">Create Customer Invoice</field>
+            <field name="sequence">30</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('account.group_account_invoice'))]"/>
+            <field name="usage">ir_actions_server</field>
+            <field name="state">multi</field>
+            <field name="child_ids" eval="[
+                ref('documents.ir_actions_server_tag_remove_inbox'),
+                ref('documents.ir_actions_server_tag_remove_to_validate'),
+                ref('documents.ir_actions_server_tag_add_validated'),
+                ref('documents.ir_actions_server_tag_add_bill'),
+
+                ref('documents_account.ir_actions_server_create_customer_invoice_code'),
+            ]"/>
+        </record>
+
+        <function model="documents.document" name="action_folder_embed_action" eval="[
+            ref('documents.document_finance_folder'),
+            ref('documents_account.ir_actions_server_create_customer_invoice'),
+        ]"/>
+
+        <!-- Create Customer Credit Note -->
+        <record id="ir_actions_server_create_credit_note_code" model="ir.actions.server" forcecreate="0">
+            <field name="name">Create Customer Credit Note</field>
+            <field name="sequence">40</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('account.group_account_invoice'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+# To send in a specific journal, replace "None" by the code of the journal between quotation marks on the next line.
+SPECIFIC_JOURNAL_CODE = None
+action = records.account_create_account_move('out_refund', journal_id=model.env['account.journal'].search([('code', '=', SPECIFIC_JOURNAL_CODE), ('company_id', '=', env.company.id)]) if SPECIFIC_JOURNAL_CODE else None)
+            </field>
+        </record>
+
+        <record id="ir_actions_server_create_credit_note" model="ir.actions.server" forcecreate="0">
+            <field name="name">Create Customer Credit Note</field>
+            <field name="sequence">40</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('account.group_account_invoice'))]"/>
+            <field name="usage">ir_actions_server</field>
+            <field name="state">multi</field>
+            <field name="child_ids" eval="[
+                ref('documents.ir_actions_server_tag_remove_inbox'),
+                ref('documents.ir_actions_server_tag_remove_to_validate'),
+
+                ref('documents.ir_actions_server_tag_add_validated'),
+                ref('documents.ir_actions_server_tag_add_bill'),
+
+                ref('documents_account.ir_actions_server_create_credit_note_code'),
+            ]"/>
+        </record>
+
+        <function model="documents.document" name="action_folder_embed_action" eval="[
+            ref('documents.document_finance_folder'),
+            ref('documents_account.ir_actions_server_create_credit_note'),
+        ]"/>
+
+        <!-- Create Vendor Receipt -->
+        <record id="ir_actions_server_create_vendor_receipt" model="ir.actions.server" forcecreate="0">
+            <field name="name">Create Vendor Receipt</field>
+            <field name="sequence">50</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('account.group_account_invoice'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+# To send in a specific journal, replace "None" by the code of the journal between quotation marks on the next line.
+SPECIFIC_JOURNAL_CODE = None
+action = records.account_create_account_move('in_receipt', journal_id=model.env['account.journal'].search([('code', '=', SPECIFIC_JOURNAL_CODE), ('company_id', '=', env.company.id)]) if SPECIFIC_JOURNAL_CODE else None, skip_activities=True)
+            </field>
+        </record>
+
+        <function model="documents.document" name="action_folder_embed_action" eval="[
+            ref('documents.document_finance_folder'),
+            ref('documents_account.ir_actions_server_create_vendor_receipt'),
+        ]"/>
+
+        <!-- Create Misc Entry -->
+        <record id="ir_actions_server_create_misc_entry_code" model="ir.actions.server" forcecreate="0">
+            <field name="name">Create Misc Entry</field>
+            <field name="sequence">60</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('account.group_account_invoice'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+# To send in a specific journal, replace "None" by the code of the journal between quotation marks on the next line.
+SPECIFIC_JOURNAL_CODE = None
+action = records.account_create_account_move('entry', journal_id=model.env['account.journal'].search([('code', '=', SPECIFIC_JOURNAL_CODE), ('company_id', '=', env.company.id)]) if SPECIFIC_JOURNAL_CODE else None, skip_activities=True)
+            </field>
+        </record>
+
+        <record id="ir_actions_server_create_misc_entry" model="ir.actions.server" forcecreate="0">
+            <field name="name">Create Misc Entry</field>
+            <field name="sequence">60</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('account.group_account_invoice'))]"/>
+            <field name="usage">ir_actions_server</field>
+            <field name="state">multi</field>
+            <field name="child_ids" eval="[
+                ref('documents.ir_actions_server_tag_add_validated'),
+                ref('documents.ir_actions_server_tag_remove_inbox'),
+                ref('documents.ir_actions_server_tag_remove_to_validate'),
+
+                ref('documents_account.ir_actions_server_create_misc_entry_code'),
+            ]"/>
+        </record>
+
+        <function model="documents.document" name="action_folder_embed_action" eval="[
+            ref('documents.document_finance_folder'),
+            ref('documents_account.ir_actions_server_create_misc_entry'),
+        ]"/>
+
+        <!-- Import Bank Statement -->
+        <record id="ir_actions_server_bank_statement_code" model="ir.actions.server" forcecreate="0">
+            <field name="name">Import Bank Statement</field>
+            <field name="sequence">70</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('account.group_account_invoice'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+# To send in a specific journal, replace "None" by the code of the journal between quotation marks on the next line.
+SPECIFIC_JOURNAL_CODE = None
+action = records.account_create_account_bank_statement(journal_id=model.env['account.journal'].search([('code', '=', SPECIFIC_JOURNAL_CODE), ('company_id', '=', env.company.id)]) if SPECIFIC_JOURNAL_CODE else None)
+            </field>
+        </record>
+
+        <record id="ir_actions_server_bank_statement" model="ir.actions.server" forcecreate="0">
+            <field name="name">Import Bank Statement</field>
+            <field name="sequence">70</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="groups_id" eval="[Command.link(ref('account.group_account_invoice'))]"/>
+            <field name="usage">ir_actions_server</field>
+            <field name="state">multi</field>
+            <field name="child_ids" eval="[
+                ref('documents.ir_actions_server_tag_add_validated'),
+                ref('documents.ir_actions_server_tag_remove_inbox'),
+                ref('documents.ir_actions_server_tag_remove_to_validate'),
+
+                ref('documents_account.ir_actions_server_bank_statement_code'),
+            ]"/>
+        </record>
+
+        <function model="documents.document" name="action_folder_embed_action" eval="[
+            ref('documents.document_finance_folder'),
+            ref('documents_account.ir_actions_server_bank_statement'),
+        ]"/>
+    </data>
+</odoo>

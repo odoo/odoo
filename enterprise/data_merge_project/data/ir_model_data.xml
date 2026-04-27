@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+        <function model="ir.model" name="action_merge_contextual_enable"
+                  eval="[[ref('project.model_project_tags'), ref('project.model_project_task')], 'data_merge_project']"/>
+    </data>
+</odoo>

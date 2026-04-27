@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Lower & Upper Tax Bracket Boundaries -->
+    <record id="rule_parameter_l10n_eg_lower_boundary" model="hr.rule.parameter">
+        <field name="name">Income Tax: Personal Exempt</field>
+        <field name="code">l10n_eg_lower_boundary</field>
+        <field name="country_id" ref="base.eg"/>
+    </record>
+    <record id="rule_parameter_l10n_eg_lower_boundary_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">15000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_l10n_eg_lower_boundary"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_l10n_eg_upper_boundary" model="hr.rule.parameter">
+        <field name="name">Income Tax: Upper Salary Boundary</field>
+        <field name="code">l10n_eg_upper_boundary</field>
+        <field name="country_id" ref="base.eg"/>
+    </record>
+    <record id="rule_parameter_l10n_eg_upper_boundary_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">600000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_l10n_eg_upper_boundary"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+    <!-- Tax Rates -->
+    <record id="rule_parameter_l10_eg_tax_rates" model="hr.rule.parameter">
+        <field name="name">Tax Percentage: Taxes Rates</field>
+        <field name="code">l10_eg_tax_rates</field>
+        <field name="country_id" ref="base.eg"/>
+    </record>
+    <record id="rule_parameter_l10_eg_tax_rates_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+# GROSSY_from, GROSSY_to
+[0.00, 600000.00,
+    [   # bracket_from, bracket_to, tax_pcnt
+        ( 0.00, 29999.99, 0.00),
+        ( 30000.00, 44999.99, 0.10),
+        ( 45000.00, 59999.99, 0.15),
+        ( 60000.00, 199999.99, 0.20),
+        ( 200000.00, 399999.99, 0.225),
+        ( 400000.00, 599999.99, 0.25),
+    ]
+],
+[600000.01, 700000.00,
+    [   # bracket_from, bracket_to, tax_pcnt
+        ( 0.00, 44999.99, 0.10),
+        ( 45000.00, 59999.99, 0.15),
+        ( 60000.00, 199999.99, 0.20),
+        ( 200000.00, 399999.99, 0.225),
+        ( 400000.00, 699999.99, 0.25),
+    ]
+],
+[700000.01, 800000.00,
+    [   # bracket_from, bracket_to, tax_pcnt
+        ( 0.00, 59999.99, 0.15),
+        ( 60000.00, 199999.99, 0.20),
+        ( 200000.00, 399999.99, 0.225),
+        ( 400000.00, 799999.99, 0.25),
+    ]
+],
+[800000.01, 900000.00,
+    [   # bracket_from, bracket_to, tax_pcnt
+        ( 0.00, 199999.99, 0.20),
+        ( 200000.00, 399999.99, 0.225),
+        ( 400000.00, 899999.99, 0.25),
+    ]
+],
+[900000.01, 1200000.00,
+    [   # bracket_from, bracket_to, tax_pcnt
+        ( 0.00, 399999.99, 0.225),
+        ( 400000.00, 1199999.99, 0.25),
+    ]
+],
+[1200000.01, 0.00,
+    [   # bracket_from, bracket_to, tax_pcnt
+        ( 0.00, 1199999.99, 0.25),
+        ( 1_200_000.00, 0.00, 0.275)
+    ]
+],
+]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_l10_eg_tax_rates"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+</odoo>

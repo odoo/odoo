@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_timesheet_forecast_report_view_graph_inherit_project_timesheet_forecast_sale" model="ir.ui.view">
+        <field name="name">project.timesheet.forecast.report.analysis.graph.inherit</field>
+        <field name="inherit_id" ref="project_timesheet_forecast.project_timesheet_forecast_report_view_graph"/>
+        <field name="model">project.timesheet.forecast.report.analysis</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='planned_hours']" position="before">
+                <field name="planned_billable_hours" widget="timesheet_uom"/>
+                <field name="effective_billable_hours" widget="timesheet_uom"/>
+                <field name="planned_non_billable_hours" widget="timesheet_uom"/>
+                <field name="effective_non_billable_hours" widget="timesheet_uom"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

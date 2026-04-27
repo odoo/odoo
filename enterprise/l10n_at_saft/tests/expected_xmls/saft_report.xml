@@ -1,0 +1,287 @@
+<AuditFile xmlns="urn:OECD:StandardAuditFile-Taxation:AT_1.01">
+    <Header>
+        <TaxID>
+            <TaxRegistrationNumber>123/4567</TaxRegistrationNumber>
+            <VATNumber>ATU12345675</VATNumber>
+        </TaxID>
+        <CompanyName>company_1_data</CompanyName>
+        <CompanyAddress>
+            <BuildingNumber>10/A/4/15</BuildingNumber>
+            <StreetName>Am Bahnhof</StreetName>
+            <City>Innsbruck</City>
+            <PostalCode>6020</PostalCode>
+            <Country>AT</Country>
+        </CompanyAddress>
+        <ContactInformation>
+            <Contact>Mr Big CEO</Contact>
+            <Telephone>+43 512 321 54 00</Telephone>
+            <Email>big.CEO@example.com</Email>
+        </ContactInformation>
+        <TaxAccountingBasis>§ 4(1) EStG</TaxAccountingBasis>
+        <TaxEntity>OENACE-CODE</TaxEntity>
+        <FiscalYear>2023</FiscalYear>
+        <StartDate>2023-10-01</StartDate>
+        <EndDate>2023-10-31</EndDate>
+        <Kleinunternehmer_AT>0</Kleinunternehmer_AT>
+        <CurrencyCode>EUR</CurrencyCode>
+        <AuditFileVersion>1.01</AuditFileVersion>
+        <DateCreated>2023-11-01</DateCreated>
+        <ProductID>Odoo</ProductID>
+        <ProductVersion>___ignore___</ProductVersion>
+        <SelectionCriteria>
+            <SelectionStartDate>2023-10-01</SelectionStartDate>
+            <SelectionEndDate>2023-10-31</SelectionEndDate>
+        </SelectionCriteria>
+    </Header>
+    <MasterFiles>
+        <GeneralLedger>
+            <AccountID>___ignore___</AccountID>
+            <AccountDescription>Trade receivables, domestic</AccountDescription>
+            <AccountType>aktives Bestandskonto</AccountType>
+            <AccountID_oeEKR>2000</AccountID_oeEKR>
+            <AccountDescription_oeEKR>Forderungen aus Lieferungen und Leistungen Inland</AccountDescription_oeEKR>
+            <OpeningDebitBalance>0.00</OpeningDebitBalance>
+        </GeneralLedger>
+        <GeneralLedger>
+            <AccountID>___ignore___</AccountID>
+            <AccountDescription>Input tax 20%</AccountDescription>
+            <AccountType>aktives Bestandskonto</AccountType>
+            <AccountID_oeEKR>2500</AccountID_oeEKR>
+            <AccountDescription_oeEKR>Vorsteuer, Forderungen aus der Abgabenverrechnung</AccountDescription_oeEKR>
+            <OpeningDebitBalance>0.00</OpeningDebitBalance>
+        </GeneralLedger>
+        <GeneralLedger>
+            <AccountID>___ignore___</AccountID>
+            <AccountDescription>Trade payables, domestic (copy)</AccountDescription>
+            <AccountType>passives Bestandskonto</AccountType>
+            <AccountID_oeEKR>3300</AccountID_oeEKR>
+            <AccountDescription_oeEKR>Lieferverbindlichkeiten Inland</AccountDescription_oeEKR>
+            <OpeningDebitBalance>0.00</OpeningDebitBalance>
+        </GeneralLedger>
+        <GeneralLedger>
+            <AccountID>___ignore___</AccountID>
+            <AccountDescription>VAT 20%</AccountDescription>
+            <AccountType>passives Bestandskonto</AccountType>
+            <AccountID_oeEKR>3500</AccountID_oeEKR>
+            <AccountDescription_oeEKR>Umsatzsteuer, Verbindlichkeiten aus Steuern</AccountDescription_oeEKR>
+            <OpeningDebitBalance>0.00</OpeningDebitBalance>
+        </GeneralLedger>
+        <GeneralLedger>
+            <AccountID>___ignore___</AccountID>
+            <AccountDescription>Revenue 20%</AccountDescription>
+            <AccountType>Erlöskonto</AccountType>
+            <AccountID_oeEKR>4000</AccountID_oeEKR>
+            <AccountDescription_oeEKR>Erlöse 20 %</AccountDescription_oeEKR>
+            <OpeningDebitBalance>0.00</OpeningDebitBalance>
+        </GeneralLedger>
+        <GeneralLedger>
+            <AccountID>___ignore___</AccountID>
+            <AccountDescription>Cost of goods sold</AccountDescription>
+            <AccountType>Aufwandskonto</AccountType>
+            <AccountID_oeEKR>5000</AccountID_oeEKR>
+            <AccountDescription_oeEKR>Wareneinsatz</AccountDescription_oeEKR>
+            <OpeningDebitBalance>0.00</OpeningDebitBalance>
+        </GeneralLedger>
+        <Customer>
+            <AccountID>___ignore___</AccountID>
+            <CustomerName>partner_a</CustomerName>
+            <CustomerTaxID>
+                <TaxID>
+                    <TaxRegistrationNumber>123/4567a</TaxRegistrationNumber>
+                </TaxID>
+            </CustomerTaxID>
+            <BillingAddress>
+                <BuildingNumber>1</BuildingNumber>
+                <StreetName>Saftstraße</StreetName>
+                <City>Wien</City>
+                <PostalCode>1600</PostalCode>
+                <Country>AT</Country>
+            </BillingAddress>
+        </Customer>
+        <Supplier>
+            <AccountID>___ignore___</AccountID>
+            <SupplierName>partner_b</SupplierName>
+            <SupplierTaxID>
+                <TaxID>
+                    <TaxRegistrationNumber>123/4567b</TaxRegistrationNumber>
+                </TaxID>
+            </SupplierTaxID>
+            <Address>
+                <BuildingNumber>1</BuildingNumber>
+                <StreetName>Saftstraße</StreetName>
+                <City>Wien</City>
+                <PostalCode>1600</PostalCode>
+                <Country>AT</Country>
+            </Address>
+        </Supplier>
+        <Owner>
+            <AccountID>___ignore___</AccountID>
+            <OwnerID>___ignore___</OwnerID>
+            <OwnerName>company_1_data</OwnerName>
+            <Address>
+                <BuildingNumber>10/A/4/15</BuildingNumber>
+                <StreetName>Am Bahnhof</StreetName>
+                <City>Innsbruck</City>
+                <PostalCode>6020</PostalCode>
+                <Country>AT</Country>
+            </Address>
+            <TaxID>
+                <TaxRegistrationNumber>123/4567</TaxRegistrationNumber>
+                <VATNumber>ATU12345675</VATNumber>
+            </TaxID>
+        </Owner>
+        <TaxTable>
+            <TaxType>sale</TaxType>
+            <Description>Sales</Description>
+            <TaxCodeDetails>
+                <TaxCode>___ignore___</TaxCode>
+                <Description>20% Ust</Description>
+                <TaxPercentage>20.0</TaxPercentage>
+            </TaxCodeDetails>
+        </TaxTable>
+        <TaxTable>
+            <TaxType>purchase</TaxType>
+            <Description>Purchases</Description>
+            <TaxCodeDetails>
+                <TaxCode>___ignore___</TaxCode>
+                <Description>20% Vst</Description>
+                <TaxPercentage>20.0</TaxPercentage>
+            </TaxCodeDetails>
+        </TaxTable>
+    </MasterFiles>
+    <GeneralLedgerEntries>
+        <NumberOfEntries>3</NumberOfEntries>
+        <TotalDebit>19200.00</TotalDebit>
+        <TotalCredit>19200.00</TotalCredit>
+        <Journal>
+            <JournalID>___ignore___</JournalID>
+            <Description>Customer Invoices</Description>
+            <Type>sale</Type>
+            <Transaction>
+                <GLPostingDate>2023-10-01</GLPostingDate>
+                <TransactionDate>2023-10-01</TransactionDate>
+                <Period>10</Period>
+                <TransactionID>___ignore___</TransactionID>
+                <Description>INV/2023/00001</Description>
+                <CustomerID>___ignore___</CustomerID>
+                <Line>
+                    <RecordID>___ignore___</RecordID>
+                    <AccountID>___ignore___</AccountID>
+                    <PostingText>[PA] product_a</PostingText>
+                    <SourceDocumentID>___ignore___</SourceDocumentID>
+                    <SystemEntryDate>___ignore___</SystemEntryDate>
+                    <DebitAmount>5000.00</DebitAmount>
+                    <Tax>
+                        <TaxType>sale</TaxType>
+                        <TaxCode>___ignore___</TaxCode>
+                        <TaxPercentage>20.0</TaxPercentage>
+                        <TaxAmount>1000.00</TaxAmount>
+                    </Tax>
+                </Line>
+                <Line>
+                    <RecordID>___ignore___</RecordID>
+                    <AccountID>___ignore___</AccountID>
+                    <PostingText>20% Ust</PostingText>
+                    <SourceDocumentID>___ignore___</SourceDocumentID>
+                    <SystemEntryDate>___ignore___</SystemEntryDate>
+                    <DebitAmount>1000.00</DebitAmount>
+                </Line>
+                <Line>
+                    <RecordID>___ignore___</RecordID>
+                    <AccountID>___ignore___</AccountID>
+                    <PostingText>INV/2023/00001</PostingText>
+                    <SourceDocumentID>___ignore___</SourceDocumentID>
+                    <SystemEntryDate>___ignore___</SystemEntryDate>
+                    <DebitAmount>6000.00</DebitAmount>
+                </Line>
+                </Transaction><Transaction>
+                <GLPostingDate>2023-10-03</GLPostingDate>
+                <TransactionDate>2023-10-03</TransactionDate>
+                <Period>10</Period>
+                <TransactionID>___ignore___</TransactionID>
+                <Description>RINV/2023/00001</Description>
+                <CustomerID>___ignore___</CustomerID>
+                <Line>
+                    <RecordID>___ignore___</RecordID>
+                    <AccountID>___ignore___</AccountID>
+                    <PostingText>[PA] product_a</PostingText>
+                    <SourceDocumentID>___ignore___</SourceDocumentID>
+                    <SystemEntryDate>___ignore___</SystemEntryDate>
+                    <DebitAmount>3000.00</DebitAmount>
+                    <Tax>
+                        <TaxType>sale</TaxType>
+                        <TaxCode>___ignore___</TaxCode>
+                        <TaxPercentage>20.0</TaxPercentage>
+                        <TaxAmount>600.00</TaxAmount>
+                    </Tax>
+                </Line>
+                <Line>
+                    <RecordID>___ignore___</RecordID>
+                    <AccountID>___ignore___</AccountID>
+                    <PostingText>20% Ust</PostingText>
+                    <SourceDocumentID>___ignore___</SourceDocumentID>
+                    <SystemEntryDate>___ignore___</SystemEntryDate>
+                    <DebitAmount>600.00</DebitAmount>
+                </Line>
+                <Line>
+                    <RecordID>___ignore___</RecordID>
+                    <AccountID>___ignore___</AccountID>
+                    <PostingText>RINV/2023/00001</PostingText>
+                    <SourceDocumentID>___ignore___</SourceDocumentID>
+                    <SystemEntryDate>___ignore___</SystemEntryDate>
+                    <DebitAmount>3600.00</DebitAmount>
+                </Line>
+            </Transaction>
+            </Journal><Journal>
+            <JournalID>___ignore___</JournalID>
+            <Description>Vendor Bills</Description>
+            <Type>purchase</Type>
+            <Transaction>
+                <GLPostingDate>2023-10-30</GLPostingDate>
+                <TransactionDate>2023-10-30</TransactionDate>
+                <Period>10</Period>
+                <TransactionID>___ignore___</TransactionID>
+                <Description>BILL/2023/10/0001</Description>
+                <SupplierID>___ignore___</SupplierID>
+                <Line>
+                    <RecordID>___ignore___</RecordID>
+                    <AccountID>___ignore___</AccountID>
+                    <PostingText>[PB] product_b</PostingText>
+                    <SourceDocumentID>___ignore___</SourceDocumentID>
+                    <SystemEntryDate>___ignore___</SystemEntryDate>
+                    <DebitAmount>8000.00</DebitAmount>
+                    <Tax>
+                        <TaxType>purchase</TaxType>
+                        <TaxCode>___ignore___</TaxCode>
+                        <TaxPercentage>20.0</TaxPercentage>
+                        <TaxAmount>1600.00</TaxAmount>
+                    </Tax>
+                </Line>
+                <Line>
+                    <RecordID>___ignore___</RecordID>
+                    <AccountID>___ignore___</AccountID>
+                    <PostingText>20% Vst</PostingText>
+                    <SourceDocumentID>___ignore___</SourceDocumentID>
+                    <SystemEntryDate>___ignore___</SystemEntryDate>
+                    <DebitAmount>1600.00</DebitAmount>
+                </Line>
+                <Line>
+                    <RecordID>___ignore___</RecordID>
+                    <AccountID>___ignore___</AccountID>
+                    <PostingText>installment #1</PostingText>
+                    <SourceDocumentID>___ignore___</SourceDocumentID>
+                    <SystemEntryDate>___ignore___</SystemEntryDate>
+                    <DebitAmount>2880.00</DebitAmount>
+                </Line>
+                <Line>
+                    <RecordID>___ignore___</RecordID>
+                    <AccountID>___ignore___</AccountID>
+                    <PostingText>installment #2</PostingText>
+                    <SourceDocumentID>___ignore___</SourceDocumentID>
+                    <SystemEntryDate>___ignore___</SystemEntryDate>
+                    <DebitAmount>6720.00</DebitAmount>
+                </Line>
+            </Transaction>
+        </Journal>
+    </GeneralLedgerEntries>
+</AuditFile>

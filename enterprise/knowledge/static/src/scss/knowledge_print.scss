@@ -1,0 +1,58 @@
+// Override some options & hide some things to make the print of an article prettier
+// Put in a separate file that is loaded in its own assets
+// This is done because we alter some generic parts of the layout (like "o_web_client"), so we only
+// load these assets dynamically when printing a knowledge article.
+@media print {
+    html,
+    body,
+    html .o_web_client {
+        height: auto;
+
+        .oe-toolbar, .oe-command-temporary-hint {
+            display: none; // force-hide the editor toolbar & hint when printing
+        }
+
+        div {
+            overflow: visible !important;
+        }
+
+        // force to print background-images
+        print-color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+
+        .o_knowledge_form_view {
+            border-top: 0px !important;  // remove useless border, needs import to bypass bootstrap
+
+            .o_scroll_view,
+            .o_scroll_view_lg {
+                position: static;
+            }
+
+            .o_knowledge_icon { // force the icon to its regular size regardless of screen media query
+                font-size: 80px;
+            }
+
+            .o_embedded_toolbar { // hide embedded toolbars & buttons
+                display: none !important; // need !important to bypass the d-flex
+            }
+
+            .o_knowledge_embedded_view {
+                border: none !important;  // remove useless border, needs import to bypass bootstrap
+
+                // maps, kanban & calendar views are not working so well in print mode
+                // (nothing to do with knowledge, they look a bit broken in standard as well)
+                // let's hide them still to have better looking printed articles
+                & > .o_map_view, & > .o_kanban_view, & > .o_calendar_view {
+                    display: none;
+                }
+            }
+
+            .o_field_property_add {
+                display: none;
+            }
+        }
+    }
+    body > :not(.o_action_manager) {
+        display: none;
+    }
+}

@@ -1,0 +1,94 @@
+.o_hr_referral_intro_carousel{
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 33% 50% 16%;
+    grid-template-areas:
+        "header"
+        "inner"
+        "outer";
+    height: calc(100vh - #{$o-navbar-height});
+    .carousel-header {
+        grid-area: header;
+        width: 100%;
+        padding: 2rem;
+        flex-grow: 3;
+
+        .o_hr_referral_logo {
+            max-width: 100px;
+            margin: 0 auto;
+        }
+    }
+    .carousel-inner {
+        grid-area: inner;
+        flex-grow: 1;
+
+        .carousel-item {
+            height: 100%;
+        }
+
+        .carousel-item-grid {
+            display: grid;
+            height: 100%;
+            grid-template-rows: 60% 40%;
+        }
+
+        .carousel-item_text {
+            color: #FFFFFF;
+            font-size: $font-size-lg;
+            font-family: $subHeaderFont;
+            min-height: 130px;
+            margin: 0 auto;
+
+            @include media-breakpoint-up(lg) {
+                max-width: 500px;
+            }
+        }
+
+        .carousel-item_img {
+            text-align: center;
+            position: relative;
+
+            img {
+                position: absolute;
+                @include centerer(true, false);
+                bottom: 0;
+                max-height: 100%;
+            }
+
+            .img--small {
+                max-width: 300px;
+                max-height: 300px;
+            }
+        }
+    }
+
+    .carousel-outer {
+        position: relative;
+        grid-area: outer;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: column;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+        width: 100%;
+        margin: 0 auto;
+
+        .carousel-controls {
+            position: relative;
+        }
+
+        .carousel-indicators {
+            top: 0;
+            bottom: auto;
+
+            li {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background-color: #FFFFFF;
+            }
+        }
+    }
+}

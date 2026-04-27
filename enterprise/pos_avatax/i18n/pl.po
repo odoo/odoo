@@ -1,0 +1,92 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_avatax
+#
+# Translators:
+# Wil Odoo, 2024
+# Marta Wacławek, 2024
+#
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:48+0000\n"
+"PO-Revision-Date: 2026-02-14 09:16+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/"
+"pos_avatax/pl/>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: pos_avatax
+#: model:ir.model.fields,field_description:pos_avatax.field_pos_order__avatax_unique_code
+msgid "Avalara Code"
+msgstr "Kod Avalara"
+
+#. module: pos_avatax
+#. odoo-python
+#: code:addons/pos_avatax/models/pos_order.py:0
+msgid ""
+"Avatax requires your current location or a customer to be set on the order "
+"with a proper zip, state and country."
+msgstr ""
+"Avatax wymaga podania aktualnej lokalizacji lub klienta w zamówieniu wraz z "
+"odpowiednim kodem pocztowym, stanem i krajem."
+
+#. module: pos_avatax
+#. odoo-javascript
+#: code:addons/pos_avatax/static/src/app/store/pos_store.js:0
+msgid ""
+"Enable to load Avatax taxes, please verify partner information and Avatax "
+"API configuration."
+msgstr ""
+"Aby umożliwić ładowanie podatków Avatax, sprawdź informacje o partnerze i "
+"konfigurację API Avatax."
+
+#. module: pos_avatax
+#. odoo-javascript
+#: code:addons/pos_avatax/static/src/app/store/pos_store.js:0
+msgid "Error while loading Avatax taxes"
+msgstr "Błąd podczas ładowania podatków Avatax"
+
+#. module: pos_avatax
+#: model:ir.model.fields,field_description:pos_avatax.field_pos_order__is_avatax
+msgid "Is Avatax"
+msgstr "Jest Avatax"
+
+#. module: pos_avatax
+#: model:ir.model.fields,field_description:pos_avatax.field_pos_order__is_tax_computed_externally
+msgid "Is Tax Computed Externally"
+msgstr "Podatek jest obliczany zewnętrznie"
+
+#. module: pos_avatax
+#: model:ir.model,name:pos_avatax.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Zamówienia Punktu Sprzedaży"
+
+#. module: pos_avatax
+#: model:ir.model.fields,help:pos_avatax.field_pos_order__is_tax_computed_externally
+msgid ""
+"Technical field to determine if tax is calculated using an external service "
+"instead of Odoo."
+msgstr ""
+"Pole techniczne do określenia, czy podatek jest obliczany z użyciem "
+"zewnętrznej usługi zamiast Odoo."
+
+#. module: pos_avatax
+#. odoo-javascript
+#: code:addons/pos_avatax/static/src/app/store/pos_store.js:0
+msgid "Updating Avatax taxes..."
+msgstr "Aktualizacja podatków Avatax..."
+
+#. module: pos_avatax
+#: model:ir.model.fields,help:pos_avatax.field_pos_order__avatax_unique_code
+msgid "Use this code to cross-reference in the Avalara portal."
+msgstr "Użyj tego kodu, aby przeszukać referencje w portalu Avalara."

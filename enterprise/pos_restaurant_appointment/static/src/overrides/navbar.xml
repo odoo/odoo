@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_restaurant.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('navbar-menu')]" position="inside">
+            <button t-if="pos.config.module_pos_restaurant_appointment"
+                class="btn btn-lg lh-lg"
+                t-att-class="{'btn-primary': screen === 'ActionScreen' and pos.mainScreen.props.actionName === 'ManageBookings'}"
+                t-on-click="() => this.pos.manageBookings()" >
+                <span t-if="!ui.isSmall">Booking</span>
+                <i t-else="" class="fa fa-lg fa-fw fa-calendar"/>
+            </button>
+        </xpath>
+    </t>
+
+</templates>

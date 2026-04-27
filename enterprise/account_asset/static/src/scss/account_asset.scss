@@ -1,0 +1,77 @@
+.o_account_reports_page.o_account_assets_report .o_account_reports_table {
+
+     .o_account_reports_header_hierarchy {
+
+        white-space: nowrap;
+
+        .o_account_asset_report_top_header_row th:not(:first-child) {
+            border: 1px solid var(--DepreciationSchedule-border-color, #{$o-gray-200});
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+
+        .o_account_report_column_header{
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+
+        & > tr:first-child th{
+            text-align: right !important;
+        }
+    }
+
+    .o_account_reports_header_hierarchy tr:nth-child(3) th:nth-child(2n+6),
+    .o_account_asset_column_contrast{
+        background-color: var(--DepreciationSchedule-background-color, #{$o-gray-100});
+        background-clip: padding-box;
+    }
+
+    .o_account_asset_contrast_inner{
+        font-weight: normal;
+    }
+
+    .o_asset_blank_if_zero_value{
+        opacity: 0.3;
+    }
+}
+
+.o_account_asset_kanban_title {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.o_account_reports_body_print .o_account_assets_report{
+
+    .o_account_asset_contrast_inner{
+        font-weight: normal;
+    }
+
+    td.o_foldable_total {
+        font-weight: bold;
+    }
+
+    .o_account_reports_header_hierarchy {
+        white-space: nowrap;
+        .o_account_asset_report_top_header_row th:not(:first-child) {
+            border: 1px solid lightgrey;
+            padding-top: 8px;
+            padding-bottom: 8px;
+
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        tr:nth-child(3) {
+            th:nth-child(2), th:nth-child(3), th:nth-child(4), th:nth-child(5) {
+                table > tbody > tr > td{
+                    text-align: center !important;
+                }
+            }
+            th > table > tbody > tr > td {
+                font-weight: normal;
+                font-size: 0.8rem;
+            }
+        }
+    }
+}

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="sale_timesheet_enterprise.LeaderboardTimerGridRenderer" t-inherit="timesheet_grid.TimerGridRenderer" t-inherit-mode="extension">
+        <xpath expr="//div[@t-if='showTimer']" position="inside">
+            <div t-if="showLeaderboardComponent and !timerState.timerRunning" class="position-relative pe-3 py-2 d-flex justify-content-end">
+                <TimesheetLeaderboard
+                    model="props.model"
+                    date="props.model.navigationInfo.periodStart.startOf('month')"
+                    showIndicators="showIndicators"
+                    showLeaderboard="showLeaderboard"
+                    leaderboard="props.model.data.leaderboard"
+                    changeType="(type) => props.model._dataPoint.changeLeaderboardType(type)"
+                    type="props.model.data.leaderboardType"
+                />
+            </div>
+        </xpath>
+        <xpath expr="//div[@t-if='showTimer']/GridTimesheetTimerHeader" position="attributes">
+            <attribute name="t-if">showTimer</attribute>
+        </xpath>
+        <xpath expr="//div[@t-if='showTimer']" position="attributes">
+            <attribute name="t-if" add="showLeaderboardComponent" separator=" or "/>
+        </xpath>
+    </t>
+
+</templates>

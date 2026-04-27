@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="product.product_product_22" model="product.product">
+            <field name="barcode">6016478556387</field>
+        </record>
+        <record id="stock.product_cable_management_box" model="product.product">
+            <field name="barcode">6016478556318</field>
+        </record>
+        <record id="product.product_product_12" model="product.product">
+            <field name="barcode">6016478556349</field>
+        </record>
+        <record id="product.consu_delivery_01" model="product.product">
+            <field name="barcode">6016478556356</field>
+        </record>
+        <record id="product.consu_delivery_02" model="product.product">
+            <field name="barcode">6016478556363</field>
+        </record>
+        <record id="product.consu_delivery_02" model="product.product">
+            <field name="barcode">6016478556370</field>
+        </record>
+        <record id="product.product_product_13" model="product.product">
+            <field name="barcode">6016478556400</field>
+        </record>
+        <record id="product.product_product_4" model="product.product">
+            <field name="barcode">6016478556417</field>
+        </record>
+        <record id="product.product_product_4b" model="product.product">
+            <field name="barcode">6016478556424</field>
+        </record>
+        <record id="product.product_product_4c" model="product.product">
+            <field name="barcode">6016478556431</field>
+        </record>
+        <record id="product.product_product_3" model="product.product">
+            <field name="barcode">6016478556448</field>
+        </record>
+        <record id="product.product_product_16" model="product.product">
+            <field name="barcode">6016478556455</field>
+        </record>
+        <record id="product.product_product_27" model="product.product">
+            <field name="barcode">6016478556486</field>
+        </record>
+        <record id="product.product_product_9" model="product.product">
+            <field name="barcode">6016478556493</field>
+        </record>
+        <record id="product.product_product_6" model="product.product">
+            <field name="barcode">6016478556509</field>
+        </record>
+        <record id="product.consu_delivery_03" model="product.product">
+            <field name="barcode">6016478556516</field>
+        </record>
+        <record id="product.product_product_10" model="product.product">
+            <field name="barcode">6016478556523</field>
+        </record>
+        <record id="product.product_product_25" model="product.product">
+            <field name="barcode">6016478556530</field>
+        </record>
+
+        <record id="demo_package" model="stock.quant.package" />
+
+        <record id="stock.lot_product_cable_management" model="stock.lot">
+            <field name="ref">0000000000017</field>
+        </record>
+
+        <record id="stock_barcode.stock_barcode_action_main_menu" model="ir.actions.client">
+            <field name="params" eval="{'message_demo_barcodes': True}" />
+        </record>
+
+        <!-- GS1 Specific Barcodes -->
+        <record id="product_cable_management_box_2" model="product.product">
+            <field name="default_code">FURN_5800</field>
+            <field name="name">Cable Management Box</field>
+            <field name="is_storable" eval="True"/>
+            <field name="weight">0.01</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="lst_price">120.0</field>
+            <field name="standard_price">90.0</field>
+            <field name="weight">1.1</field>
+            <field name="tracking">lot</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="stock/static/img/cable_management.png"/>
+            <field name="barcode">06016478556677</field>
+        </record>
+        <record id="product_custom_cabinet_usa" model="product.product">
+            <field name="name">Customized Cabinet (USA)</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">175.50</field>
+            <field name="list_price">200</field>
+            <field name="is_storable" eval="True"/>
+            <field name="weight">2</field>
+            <field name="uom_id" ref="uom.product_uom_cubic_foot"/>
+            <field name="uom_po_id" ref="uom.product_uom_cubic_foot"/>
+            <field name="default_code">E-COM99</field>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_10-image.jpg"/>
+            <field name="barcode">06016478559999</field>
+        </record>
+        <record id="product_custom_cabinet_metric" model="product.product">
+            <field name="name">Customized Cabinet (Metric)</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">190.50</field>
+            <field name="list_price">210</field>
+            <field name="is_storable" eval="True"/>
+            <field name="weight">2</field>
+            <field name="uom_id" ref="uom.product_uom_cubic_meter"/>
+            <field name="uom_po_id" ref="uom.product_uom_cubic_meter"/>
+            <field name="default_code">E-COM98</field>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_10-image.jpg"/>
+            <field name="barcode">06016478559982</field>
+        </record>
+
+        <record id="product.product_product_24" model="product.product">
+            <field name="barcode">06016478556332</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_mx_edi_payment20_extended" inherit_id="l10n_mx_edi.payment20">
+        <xpath expr="//*[name()='cfdi:Receptor']" position="attributes">
+            <attribute name="t-att-NumRegIdTrib">receptor.get('num_reg_id_trib')</attribute>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="whatsapp.ImStatus" t-inherit="mail.ImStatus" t-inherit-mode="extension">
+        <xpath expr="//i[@title='Bot']" position="after">
+            <i t-elif="props.member?.eq(props.member.thread.whatsappMember)"
+                class="fa fa-whatsapp text-success" title="WhatsApp User"
+                role="img" aria-label="WhatsApp User" />
+        </xpath>
+    </t>
+
+</templates>

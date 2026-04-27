@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="approval_purchase_stock_product_line_view_tree_inherit" model="ir.ui.view">
+        <field name="name">approval.purchase.stock.product.line.view.list.inherit</field>
+        <field name="model">approval.product.line</field>
+        <field name="inherit_id" ref="approvals.approval_product_line_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='description']" position="after">
+                <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"
+                    options="{'no_create_edit': True, 'no_open': True}"
+                    column_invisible="parent.has_location == 'no'"
+                    required="parent.has_location == 'required'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="approval_purchase_stock_product_line_view_form_inherit" model="ir.ui.view">
+        <field name="name">approval.purchase.stock.product.line.view.form.inherit</field>
+        <field name="model">approval.product.line</field>
+        <field name="inherit_id" ref="approvals.approval_product_line_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='description']" position="after">
+                <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

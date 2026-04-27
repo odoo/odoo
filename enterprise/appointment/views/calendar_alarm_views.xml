@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="calendar_alarm_view_form" model="ir.ui.view">
+        <field name="name">calendar.alarm.view.form.inherit.appointment</field>
+        <field name="model">calendar.alarm</field>
+        <field name="inherit_id" ref="calendar.calendar_alarm_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='right_details']/div[last()]" position="after">
+                <field name="default_for_new_appointment_type"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

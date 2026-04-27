@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="l10n_ch_contract_type_indefiniteSalaryMth" model="hr.contract.type">
+            <field name="name">Permanent contract with monthly salary</field>
+            <field name="country_id" ref="base.ch"/>
+            <field name="code">indefiniteSalaryMth</field>
+        </record>
+
+        <record id="l10n_ch_contract_type_indefiniteSalaryMthAWT" model="hr.contract.type">
+            <field name="name">Permanent contract with monthly salary and annualized working time</field>
+            <field name="country_id" ref="base.ch"/>
+            <field name="code">indefiniteSalaryMthAWT</field>
+        </record>
+
+        <record id="l10n_ch_contract_type_fixedSalaryMth" model="hr.contract.type">
+            <field name="name">Fixed term contract with monthly salary</field>
+            <field name="country_id" ref="base.ch"/>
+            <field name="code">fixedSalaryMth</field>
+        </record>
+
+        <record id="l10n_ch_contract_type_apprentice" model="hr.contract.type">
+            <field name="name">Apprenticeship contract</field>
+            <field name="country_id" ref="base.ch"/>
+            <field name="code">apprentice</field>
+        </record>
+
+        <record id="l10n_ch_contract_type_internshipContract" model="hr.contract.type">
+            <field name="name">Internship contract</field>
+            <field name="country_id" ref="base.ch"/>
+            <field name="code">internshipContract</field>
+        </record>
+
+        <record id="l10n_ch_contract_type_indefiniteSalaryHrs" model="hr.contract.type">
+            <field name="name">Permanent contract with salary hourly</field>
+            <field name="country_id" ref="base.ch"/>
+            <field name="code">indefiniteSalaryHrs</field>
+        </record>
+
+        <record id="l10n_ch_contract_type_fixedSalaryHrs" model="hr.contract.type">
+            <field name="name">Fixed-term contract with salary hourly</field>
+            <field name="country_id" ref="base.ch"/>
+            <field name="code">fixedSalaryHrs</field>
+        </record>
+
+        <record id="l10n_ch_contract_type_indefiniteSalaryNoTimeConstraint" model="hr.contract.type">
+            <field name="name">Permanent contract, with commission, packages, piece rate pay, etc.</field>
+            <field name="country_id" ref="base.ch"/>
+            <field name="code">indefiniteSalaryNoTimeConstraint</field>
+        </record>
+
+        <record id="l10n_ch_contract_type_fixedSalaryNoTimeConstraint" model="hr.contract.type">
+            <field name="name">Fixed-term contract, with commission, packages, piece rate salary, etc.</field>
+            <field name="country_id" ref="base.ch"/>
+            <field name="code">fixedSalaryNoTimeConstraint</field>
+        </record>
+
+        <record id="l10n_ch_contract_type_administrativeBoard" model="hr.contract.type">
+            <field name="name">Member of a board of directors</field>
+            <field name="country_id" ref="base.ch"/>
+            <field name="code">administrativeBoard</field>
+        </record>
+    </data>
+</odoo>

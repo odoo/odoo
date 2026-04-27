@@ -1,0 +1,7 @@
+<templates xml:space="preserve">
+    <t t-name="knowledge.KnowledgeHtmlViewer" t-inherit="html_editor.HtmlViewer" t-inherit-mode="primary">
+        <xpath expr="//div[@t-ref='readonlyContent']" position="before">
+            <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
+        </xpath>
+    </t>
+</templates>

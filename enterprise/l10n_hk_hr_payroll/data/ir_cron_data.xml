@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="ir_cron_data_rental_update_state" model="ir.cron">
+            <field name="name">HR Rental: update state</field>
+            <field name="model_id" ref="model_l10n_hk_rental"/>
+            <field name="state">code</field>
+            <field name="code">model.update_state()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+    </data>
+</odoo>

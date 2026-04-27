@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="knowledge.EmbeddedArticleIndex" t-inherit="knowledge.ReadonlyEmbeddedArticleIndex" t-inherit-mode="primary">
+        <xpath expr="//div[contains(@class, 'o_embedded_articles_index_content')]" position="before">
+            <t t-set="show_less">Show Less</t>
+            <t t-set="show_all">Show All</t>
+            <EmbeddedComponentToolbar>
+                <t t-set-slot="buttons">
+                    <EmbeddedComponentToolbarButton
+                        hidden="props.readonly"
+                        icon="embeddedState.showAllChildren ? 'fa-eye-slash' : 'fa-eye'"
+                        label="embeddedState.showAllChildren ? show_less : show_all"
+                        onClick.bind="onSwitchModeBtnClick"
+                        title.translate="Switch Mode"
+                    />
+                    <EmbeddedComponentToolbarButton
+                        hidden="props.readonly"
+                        icon="['fa-refresh', state.loading ? 'fa-spin' : ''].join(' ')"
+                        label.translate="Refresh"
+                        onClick.bind="onRefreshBtnClick"
+                        title.translate="Update"
+                    />
+                </t>
+            </EmbeddedComponentToolbar>
+        </xpath>
+        <xpath expr="//p[contains(@t-if, 'props.articles')]" position="attributes">
+            <attribute name="t-if">(embeddedState.articles || []).length === 0</attribute>
+        </xpath>
+        <xpath expr="//ArticleIndexList[contains(@articles, 'props.articles')]" position="attributes">
+            <attribute name="articles">embeddedState.articles</attribute>
+        </xpath>
+    </t>
+</templates>

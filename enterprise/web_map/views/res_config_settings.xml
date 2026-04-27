@@ -1,0 +1,25 @@
+<?xml version = "1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.map</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval ="46"/>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='base_geolocalize']" position="after">
+                <setting id="token_map_view" string="Map Routes" help="Set a MapBox account to activate routes and style">
+                    <div class ="content-group">
+                        <label for="map_box_token" string="Token" class="mr8"/>
+                        <field name ="map_box_token"/>
+                        <div class="text-start" style="position:relative;">
+                            <a class="oe_link"  href="https://account.mapbox.com/auth/signup/" target="_blank">
+                                <i class="oi oi-arrow-right"/>
+                                Sign up to MapBox to get a free token
+                            </a>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

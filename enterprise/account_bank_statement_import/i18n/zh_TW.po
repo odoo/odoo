@@ -1,0 +1,198 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_bank_statement_import
+#
+# Translators:
+# Wil Odoo, 2024
+# Tony Ng, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2024-09-25 09:43+0000\n"
+"Last-Translator: Tony Ng, 2025\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "%d transactions had already been imported and were ignored."
+msgstr "%d 已匯入的交易將被忽略"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "1 transaction had already been imported and was ignored."
+msgstr "1個 已匯入的交易將被忽略."
+
+#. module: account_bank_statement_import
+#: model:ir.model.constraint,message:account_bank_statement_import.constraint_account_bank_statement_line_unique_import_id
+msgid "A bank account transactions can be imported only once!"
+msgstr "一個銀行賬戶的交易只能匯入一次！"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "銀行結單資料行"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_setup_bank_manual_config
+msgid "Bank setup manual config"
+msgstr "銀行設定通用設定"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"Cannot find in which journal import this statement. Please manually select a "
+"journal."
+msgstr "不能找到所需匯入的資料. 請手動選擇資料檔案."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "Click \"New\" or upload a %s."
+msgstr "按一下「新增」，或上載一個 %s。"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"Could not make sense of the given file.\n"
+"Did you install the module to support this type of file?"
+msgstr ""
+"無法理解提供的檔案。\n"
+"是否已安裝支援這類型檔案的模組？"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "Go to Apps"
+msgstr "前往應用程式"
+
+#. module: account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
+msgid "Import File"
+msgstr "匯入檔案"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__unique_import_id
+msgid "Import ID"
+msgstr "匯入識別碼"
+
+#. module: account_bank_statement_import
+#. odoo-javascript
+#: code:addons/account_bank_statement_import/static/src/account_bank_statement_import_model.js:0
+msgid "Import Template for Bank Statements"
+msgstr "銀行結單匯入範本"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_journal
+msgid "Journal"
+msgstr "日記賬"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "Manual (or import %(import_formats)s)"
+msgstr "手動（或匯入 %(import_formats)s）"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "No attachment was provided"
+msgstr "未提供附件"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "No currency found matching '%s'."
+msgstr "找不到與'%s'匹配的幣別"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "No transactions matching your filters were found."
+msgstr "找不到符合你篩選條件的交易。"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_bank_statement.py:0
+msgid "Nothing to do here!"
+msgstr "沒有待辦工作"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"The account of this statement (%(account)s) is not the same as the journal (%"
+"(journal)s)."
+msgstr "此結單的賬戶（%(account)s）與日記賬（%(journal)s）不同。"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"The currency of the bank statement (%(code)s) is not the same as the "
+"currency of the journal (%(journal)s)."
+msgstr "銀行結單（%(code)s）的貨幣，與日記賬（%(journal)s）的貨幣不同。"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "The following files could not be imported:\n"
+msgstr "未能匯入以下檔案：\n"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"This file doesn't contain any statement for account %s.\n"
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
+msgstr ""
+"此檔案沒有賬戶 %s 的任何結單。\n"
+"如果檔案包含多個賬戶的交易，必須為每個賬戶匯入。"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid ""
+"This file doesn't contain any transaction for account %s.\n"
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
+msgstr ""
+"此檔案沒有賬戶 %s 的任何交易。\n"
+"如果檔案包含多個賬戶的交易，必須為每個賬戶匯入。"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "View successfully imported statements"
+msgstr "檢視成功匯入結單"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "You already have imported that file."
+msgstr "您已經匯入了該檔案。"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "You have to set a Default Account for the journal: %s"
+msgstr "須為日記賬設定預設賬戶：%s"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+msgid "You uploaded an invalid or empty file."
+msgstr "上載的檔案無效或空白。"

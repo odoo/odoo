@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="request_appraisal_view_form">
+            <field name="name">request.appraisal.form</field>
+            <field name="model">request.appraisal</field>
+            <field name="arch" type="xml">
+                <form string="Compose Email">
+                    <sheet>
+                        <group col="1">
+                            <group>
+                                <field name="author_id" invisible="1"/>
+                                <field name="employee_id" invisible="1"/>
+                                <field name="lang" invisible="1"/>
+                                <field name="render_model" invisible="1"/>
+                                <field name="template_id" invisible='1'/>
+                                <field name="recipient_ids"
+                                    widget="many2many_tags"
+                                    placeholder="Add existing contacts..."
+                                    options="{'no_quick_create': True}"
+                                    context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
+                                <field name="subject" placeholder="Subject..." class="w-100"/>
+                            </group>
+                        </group>
+                        <field name="body" invisible="1"/>
+                        <field name="user_body" class="oe-bordered-editor" widget="html_mail" nolabel="1"/>
+                    </sheet>
+                    <footer>
+                        <button string="Send" name="action_invite" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

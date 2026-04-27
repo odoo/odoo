@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_report_intrastat_code_tree" model="ir.ui.view">
+            <field name="name">account.intrastat.code.list</field>
+            <field name="model">account.intrastat.code</field>
+            <field name="arch" type="xml">
+                <list string="Intrastat code">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="description"/>
+                    <field name="country_id"/>
+                    <field name="supplementary_unit"/>
+                    <field name="start_date" optional="hide"/>
+                    <field name="expiry_date" optional="hide"/>
+                </list>
+            </field>
+        </record>
+        <record id="view_intrastat_code_search" model="ir.ui.view">
+            <field name="name">account.intrastat.code.search</field>
+            <field name="model">account.intrastat.code</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="code"/>
+                    <field name="country_id"/>
+                    <field name="supplementary_unit"/>
+                    <filter string="Active" domain="[
+                        '|',
+                        ('expiry_date', '&gt;', context_today().strftime('%Y-%m-%d')),
+                        ('expiry_date', '=', None),
+                        '|',
+                        ('start_date', '&lt;=', context_today().strftime('%Y-%m-%d')),
+                        ('start_date', '=', None)
+                    ]" name="in_use"/>
+                    <filter string="Commodity" domain="[('type','=','commodity')]" name="type_commodity"/>
+                    <filter string="Transport" domain="[('type','=','transport')]" name="type_transport"/>
+                    <filter string="Transaction" domain="[('type','=','transaction')]" name="type_transaction"/>
+                    <filter string="Region" domain="[('type','=','region')]" name="type_region"/>
+                    <filter name="group_by_type" string="By type" context="{'group_by': 'type'}"/>
+                    <filter name="group_by_country" string="By country" context="{'group_by': 'country_id'}"/>
+                    <filter name="group_by_supplementary_unit" string="Supplementary Unit" context="{'group_by': 'supplementary_unit'}"/>
+                </search>
+            </field>
+        </record>
+        <record id="view_report_intrastat_code_kanban" model="ir.ui.view">
+            <field name="name">account.intrastat.code.kanban</field>
+            <field name="model">account.intrastat.code</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <templates>
+                        <t t-name="card">
+                            <field name="name" class="fw-bold"/>
+                            <field name="description"/>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record id="view_intrastat_code_restricted_type_search" model="ir.ui.view">
+            <field name="name">account.intrastat.transport.code.search</field>
+            <field name="model">account.intrastat.code</field>
+            <field name="mode">primary</field>
+            <field name="priority">1000</field>
+            <field name="inherit_id" ref="view_intrastat_code_search" />
+            <field name="arch" type="xml">
+                <filter name="type_commodity" position="replace"/>
+                <filter name="type_transport" position="replace"/>
+                <filter name="type_transaction" position="replace"/>
+                <filter name="type_region" position="replace"/>
+                <filter name="group_by_type" position="replace"/>
+            </field>
+        </record>
+        <record id="view_report_intrastat_code_form" model="ir.ui.view">
+            <field name="name">account.intrastat.code.form</field>
+            <field name="model">account.intrastat.code</field>
+            <field name="arch" type="xml">
+                <form string="Intrastat Code">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="type"/>
+                            <field name="supplementary_unit"/>
+                            <field name="country_id" invisible="type != 'region'" required="type == 'region'" options="{'no_create': True}"/>
+                            <field name="start_date" invisible="type not in ('transaction', 'commodity')"/>
+                            <field name="expiry_date" invisible="type not in ('transaction', 'commodity')"/>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_intrastat_code_restricted_type_form" model="ir.ui.view">
+            <field name="name">account.intrastat.code.restricted.type.form</field>
+            <field name="model">account.intrastat.code</field>
+            <field name="mode">primary</field>
+            <field name="priority">1000</field>
+            <field name="inherit_id" ref="view_report_intrastat_code_form" />
+            <field name="arch" type="xml">
+                <field name="type" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="country_id" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="action_report_intrastat_code_tree" model="ir.actions.act_window">
+            <field name="name">Intrastat Code</field>
+            <field name="res_model">account.intrastat.code</field>
+            <field name="context">{'search_default_group_by_type': 1, 'search_default_in_use':1}</field>
+            <field name="view_mode">list,form,kanban</field>
+        </record>
+
+        <menuitem action="action_report_intrastat_code_tree" id="menu_report_intrastat_code"
+                  parent="account.account_invoicing_menu" sequence="4" groups="account.group_account_manager"/>
+    </data>
+</odoo>

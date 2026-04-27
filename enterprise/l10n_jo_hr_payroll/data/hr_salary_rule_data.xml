@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="jordan_housing_allowance_salary_rule" model="hr.salary.rule">
+        <field name="name">Housing Allowance</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="code">HOUALLOW</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.l10n_jo_housing_allowance)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = contract.l10n_jo_housing_allowance</field>
+        <field name="struct_id" ref="l10n_jo_hr_payroll.hr_payroll_structure_jo_employee_salary"/>
+    </record>
+
+    <record id="jordan_transportation_allowance_salary_rule" model="hr.salary.rule">
+        <field name="name">Transportation Allowance</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="code">TRAALLOW</field>
+        <field name="sequence">20</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.l10n_jo_transportation_allowance)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = contract.l10n_jo_transportation_allowance</field>
+        <field name="struct_id" ref="l10n_jo_hr_payroll.hr_payroll_structure_jo_employee_salary"/>
+    </record>
+
+    <record id="jordan_other_allowances_salary_rule" model="hr.salary.rule">
+        <field name="name">Other Allowances</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="code">OTALLOW</field>
+        <field name="sequence">30</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.l10n_jo_other_allowances)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = contract.l10n_jo_other_allowances</field>
+        <field name="struct_id" ref="l10n_jo_hr_payroll.hr_payroll_structure_jo_employee_salary"/>
+    </record>
+
+    <!-- Default GROSS rule with sequence = 100 -->
+
+    <record id="jordan_sse_deduction" model="hr.salary.rule">
+        <field name="name">Social Security Employee Deduction</field>
+        <field name="category_id" ref="l10n_jo_hr_payroll.hr_salary_rule_category_jo_ssd"/>
+        <field name="code">SSE</field>
+        <field name="sequence">105</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = min(payslip._rule_parameter('l10n_jo_min_sse_ded'), (categories['BASIC'] + categories['ALW']))
+result_rate = payslip._rule_parameter('l10n_jo_sse_rate')
+        </field>
+        <field name="struct_id" ref="l10n_jo_hr_payroll.hr_payroll_structure_jo_employee_salary"/>
+    </record>
+
+    <record id="jordan_ssc_contribution" model="hr.salary.rule">
+        <field name="name">Social Security Employer Contribution</field>
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="code">SSC</field>
+        <field name="sequence">110</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = min(payslip._rule_parameter('l10n_jo_min_ssc_contrib'), (categories['BASIC'] + categories['ALW']))
+result_rate = payslip._rule_parameter('l10n_jo_ssc_rate')
+        </field>
+        <field name="struct_id" ref="l10n_jo_hr_payroll.hr_payroll_structure_jo_employee_salary"/>
+    </record>
+
+    <record id="jordan_yearly_gross" model="hr.salary.rule">
+        <field name="name">Taxable Yearly Gross</field>
+        <field name="category_id" ref="hr_payroll.GROSS"/>
+        <field name="code">GROSSY</field>
+        <field name="sequence">115</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = (GROSS * 12) - contract.l10n_jo_tax_exemption
+        </field>
+        <field name="struct_id" ref="l10n_jo_hr_payroll.hr_payroll_structure_jo_employee_salary"/>
+    </record>
+
+    <record id="jordan_tax_tax_bracket_total" model="hr.salary.rule">
+        <field name="name">TAX Bracket Deduction</field>
+        <field name="category_id" ref="l10n_jo_hr_payroll.hr_salary_rule_category_jo_tax_brackets"/>
+        <field name="code">TXB</field>
+        <field name="sequence">145</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip._l10n_jo_get_tax(GROSSY)) &gt; 0</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -payslip._l10n_jo_get_tax(GROSSY) / 12
+        </field>
+        <field name="struct_id" ref="l10n_jo_hr_payroll.hr_payroll_structure_jo_employee_salary"/>
+    </record>
+</odoo>

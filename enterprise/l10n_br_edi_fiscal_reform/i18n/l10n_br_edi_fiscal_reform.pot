@@ -1,0 +1,659 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_br_edi_fiscal_reform
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-01 19:01+0000\n"
+"PO-Revision-Date: 2026-01-01 19:01+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_partner__l10n_br_is_cashback_applied
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_users__l10n_br_is_cashback_applied
+msgid "Apply Cashback"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_product_product__l10n_br_nbs_id
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_product_template__l10n_br_nbs_id
+msgid ""
+"Brazil: Brazilian Service Classification (NBS) code required for services in"
+" the tax reform."
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_partner__l10n_br_tax_regime
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_users__l10n_br_tax_regime
+msgid "Brazil: Contact FederalTax Regime"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_account_move_line__l10n_br_cbs_ibs_deduction
+msgid ""
+"Brazil: Deduction value to reduce the CBS/IBS taxable base in outbound "
+"invoices for certain operations."
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_account_bank_statement_line__l10n_br_presence
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_account_external_tax_mixin__l10n_br_presence
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_account_move__l10n_br_presence
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_pos_order__l10n_br_presence
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_sale_order__l10n_br_presence
+msgid ""
+"Brazil: Defines if the buyer was physically present during the transaction, "
+"affecting tax calculation and location."
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_product_product__l10n_br_transaction_usage
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_product_template__l10n_br_transaction_usage
+msgid ""
+"Brazil: Defines the fiscal classification of how the good or service is used"
+" in the transaction, which may impact tax calculation and invoice request."
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_account_bank_statement_line__l10n_br_service_operation_indicator
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_account_external_tax_mixin__l10n_br_service_operation_indicator
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_account_move__l10n_br_service_operation_indicator
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_pos_order__l10n_br_service_operation_indicator
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_sale_order__l10n_br_service_operation_indicator
+msgid ""
+"Brazil: Defines the specific “indOp” operation indicator code for the "
+"service (e.g., '050101'). This value is sent to Avalara for tax calculation "
+"and invoice generation. If left empty, Avalara's automatic calculation may "
+"be used, but specific municipal validations may require a manual definition."
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_partner__l10n_br_entity_type
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_users__l10n_br_entity_type
+msgid "Brazil: Defines the type of entity."
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_product_product__l10n_br_legal_uom_id
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_product_template__l10n_br_legal_uom_id
+msgid ""
+"Brazil: Determines the conversion factor between the commercial unit and the"
+" taxable unit when taxes apply per quantity (ad rem)."
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_partner__l10n_br_is_cashback_applied
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_users__l10n_br_is_cashback_applied
+msgid ""
+"Brazil: Enables CBS/IBS cashback calculation for eligible consumers in "
+"outbound operations."
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_config_settings__l10n_br_is_cbs_ibs_taxpayer
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_partner__l10n_br_is_cbs_ibs_taxpayer
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_users__l10n_br_is_cbs_ibs_taxpayer
+msgid ""
+"Brazil: Indicates that this entity is subject to CBS/IBS taxation. Used for "
+"exempt operations or special regimes."
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_product_product__l10n_br_taxable_is
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_product_template__l10n_br_taxable_is
+msgid ""
+"Brazil: Indicates that this product is exempt from the Selective Tax (IS) "
+"due to a specific fiscal benefit, overriding the standard IS taxation rules."
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_config_settings__l10n_br_is_cbs_ibs_normal
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_partner__l10n_br_is_cbs_ibs_normal
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_users__l10n_br_is_cbs_ibs_normal
+msgid ""
+"Brazil: Indicates whether the contact or company under the simplified regime"
+" is classified as Normal or Mixed taxation. When enabled, it means the "
+"entity follows the Normal regime; when disabled, it indicates the Mixed "
+"regime."
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_l10n_br_ncm_code__legal_reference
+msgid ""
+"Brazil: Official technical name required for some NCM codes with specific "
+"tax rules (e.g. beverages, electronics)."
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_product_product__l10n_br_customs_regime_id
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_product_template__l10n_br_customs_regime_id
+msgid ""
+"Brazil: Optional value to be selected if the transaction for the capital "
+"good is subject to a special customs regime."
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_config_settings__l10n_br_cbs_credit
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_partner__l10n_br_cbs_credit
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_users__l10n_br_cbs_credit
+msgid ""
+"Brazil: Percentage of presumed CBS credit for entities under Simples "
+"Nacional \"misto\" regime."
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_config_settings__l10n_br_ibs_credit
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_partner__l10n_br_ibs_credit
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_users__l10n_br_ibs_credit
+msgid ""
+"Brazil: Percentage of presumed IBS credit for entities under Simples "
+"Nacional \"misto\" regime."
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model_terms:ir.ui.view,arch_db:l10n_br_edi_fiscal_reform.account_move_form_inherit
+msgid ""
+"Brazil: This is the operation type related to the transaction. It will "
+"identify how taxes will be computed."
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_company__l10n_br_is_icbs
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_res_config_settings__l10n_br_is_icbs
+msgid "Brazil: enable the fiscal reform."
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__res_partner__l10n_br_entity_type__business
+msgid "Business"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_config_settings__l10n_br_cbs_credit
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_partner__l10n_br_cbs_credit
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_users__l10n_br_cbs_credit
+msgid "CBS Presumed Credit (%)"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_account_move_line__l10n_br_cbs_ibs_deduction
+msgid "CBS/IBS Credit"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_config_settings__l10n_br_is_cbs_ibs_normal
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_partner__l10n_br_is_cbs_ibs_normal
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_users__l10n_br_is_cbs_ibs_normal
+msgid "CBS/IBS Normal"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_config_settings__l10n_br_is_cbs_ibs_taxpayer
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_partner__l10n_br_is_cbs_ibs_taxpayer
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_users__l10n_br_is_cbs_ibs_taxpayer
+msgid "CBS/IBS Taxpayer"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_product_product__l10n_br_uom_category_id
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_product_template__l10n_br_uom_category_id
+msgid "Category"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__res_partner__l10n_br_entity_type__citygovernment
+msgid "City Government"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_l10n_br_nbs_code__code
+msgid "Code"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model,name:l10n_br_edi_fiscal_reform.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model,name:l10n_br_edi_fiscal_reform.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model,name:l10n_br_edi_fiscal_reform.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_product_product__l10n_br_uom_category_id
+#: model:ir.model.fields,help:l10n_br_edi_fiscal_reform.field_product_template__l10n_br_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__res_partner__l10n_br_entity_type__coops
+msgid "Coops"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_l10n_br_customs_regime__create_uid
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_l10n_br_nbs_code__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_l10n_br_customs_regime__create_date
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_l10n_br_nbs_code__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.ui.menu,name:l10n_br_edi_fiscal_reform.customs_regimes_menu
+msgid "Customs Regime"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.actions.act_window,name:l10n_br_edi_fiscal_reform.l10n_br_customs_regime_action
+msgid "Customs Regimes"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__plataforma_digital_de_entrega
+msgid "Digital Delivery Platform"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_l10n_br_customs_regime__display_name
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_l10n_br_nbs_code__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model_terms:ir.ui.view,arch_db:l10n_br_edi_fiscal_reform.res_config_settings_view_form
+msgid "Enable Brazilian fiscal reform"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_company__l10n_br_is_icbs
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_config_settings__l10n_br_is_icbs
+msgid "Enable ICBS"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_partner__l10n_br_entity_type
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_users__l10n_br_entity_type
+msgid "Entity Type"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__res_partner__l10n_br_entity_type__federalgovernment
+msgid "Federal Government"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__ativo_financeiro_ou_instrumento_cambial
+msgid "Financial Asset or Foreign Exchange Instrument"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__ativo_imobilizado
+msgid "Fixed Asset"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__res_partner__l10n_br_entity_type__foreign
+msgid "Foreign"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__livre_e_gratuita
+msgid "Free of Charge"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_config_settings__l10n_br_ibs_credit
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_partner__l10n_br_ibs_credit
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_users__l10n_br_ibs_credit
+msgid "IBS Presumed Credit (%)"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_l10n_br_customs_regime__id
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_l10n_br_nbs_code__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_product_product__l10n_br_taxable_is
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_product_template__l10n_br_taxable_is
+msgid "IS taxable"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__contribuição_de_melhoria
+msgid "Improvement Contribution"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__account_external_tax_mixin__l10n_br_presence__5
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__account_move__l10n_br_presence__5
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__pos_order__l10n_br_presence__5
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__sale_order__l10n_br_presence__5
+msgid "In-person operation, for establishment (v3)"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__exportação_indireta
+msgid "Indirect Export"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__res_partner__l10n_br_entity_type__individual
+msgid "Individual"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:l10n_br.operation.type,name:l10n_br_edi_fiscal_reform.operation_type_sales_intangible_assets_onerous
+msgid "Intangible assets and rights (onerous)"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__produto_intermediário
+msgid "Intermediate Product"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model,name:l10n_br_edi_fiscal_reform.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model,name:l10n_br_edi_fiscal_reform.model_account_move_line
+msgid "Journal Item"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_product_product__l10n_br_transaction_usage
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_product_template__l10n_br_transaction_usage
+msgid "L10N Br Transaction Usage"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_l10n_br_customs_regime__write_uid
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_l10n_br_nbs_code__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_l10n_br_customs_regime__write_date
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_l10n_br_nbs_code__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__locação_dos_imóveis_localizados_nas_zonas_reabilitadas
+msgid "Lease of Properties Located in Rehabilitated Zones"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_l10n_br_ncm_code__legal_reference
+msgid "Legal Reference"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_product_product__l10n_br_legal_uom_id
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_product_template__l10n_br_legal_uom_id
+msgid "Legal Unit of Measure"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__industrialização_por_encomenda
+msgid "Manufacturing by Order"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__res_partner__l10n_br_entity_type__mixedcapital
+msgid "Mixed Capital"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model,name:l10n_br_edi_fiscal_reform.model_account_external_tax_mixin
+msgid "Mixin to manage common parts of external tax calculation"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model,name:l10n_br_edi_fiscal_reform.model_l10n_br_nbs_code
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_product_product__l10n_br_nbs_id
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_product_template__l10n_br_nbs_id
+msgid "NBS Code"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.actions.act_window,name:l10n_br_edi_fiscal_reform.l10n_br_nbs_code_action
+#: model:ir.ui.menu,name:l10n_br_edi_fiscal_reform.nbs_codes_menu
+msgid "NBS Codes"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model,name:l10n_br_edi_fiscal_reform.model_l10n_br_ncm_code
+msgid "NCM Code"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__account_external_tax_mixin__l10n_br_presence__4
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__account_move__l10n_br_presence__4
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__pos_order__l10n_br_presence__4
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__sale_order__l10n_br_presence__4
+msgid "NFC-e home delivery"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_l10n_br_customs_regime__name
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_l10n_br_nbs_code__name
+msgid "Name"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__operações_não_onerosas_sem_previsão_de_ibs/cbs
+msgid "Non-Onerous Transactions without IBS/CBS Applicability"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__account_external_tax_mixin__l10n_br_presence__0
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__account_move__l10n_br_presence__0
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__pos_order__l10n_br_presence__0
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__sale_order__l10n_br_presence__0
+msgid "Not applicable"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model_terms:ir.ui.view,arch_db:l10n_br_edi_fiscal_reform.account_move_form_inherit
+msgid "Operation Type"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:l10n_br.operation.type,name:l10n_br_edi_fiscal_reform.operation_type_sales_other_services_onerous
+msgid "Other services (onerous)"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__embalagem
+msgid "Packaging"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:l10n_br.operation.type,name:l10n_br_edi_fiscal_reform.operation_type_sales_passenger_transport_start
+msgid "Passenger transport (start)"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__pessoas_com_deficiência
+msgid "People with Disabilities"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:l10n_br.operation.type,name:l10n_br_edi_fiscal_reform.operation_type_sales_physical_service_on_person
+msgid "Physical service provided to a person"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:l10n_br.operation.type,name:l10n_br_edi_fiscal_reform.operation_type_sales_portuary_services
+msgid "Portuary services execution"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_account_bank_statement_line__l10n_br_presence
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_account_external_tax_mixin__l10n_br_presence
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_account_move__l10n_br_presence
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_pos_order__l10n_br_presence
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_sale_order__l10n_br_presence
+msgid "Presence"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__account_external_tax_mixin__l10n_br_presence__1
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__account_move__l10n_br_presence__1
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__pos_order__l10n_br_presence__1
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__sale_order__l10n_br_presence__1
+msgid "Present"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model,name:l10n_br_edi_fiscal_reform.model_product_template
+msgid "Product"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__ferrovia
+msgid "Railway"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__matéria-prima
+msgid "Raw Material"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:product.template,name:l10n_br_edi_fiscal_reform.regular_consumable_product_dozen_product_template
+msgid "Regular Consumable Product Dozen"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__account_external_tax_mixin__l10n_br_presence__2
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__account_move__l10n_br_presence__2
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__pos_order__l10n_br_presence__2
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__sale_order__l10n_br_presence__2
+msgid "Remote, internet"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__account_external_tax_mixin__l10n_br_presence__9
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__account_move__l10n_br_presence__9
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__pos_order__l10n_br_presence__9
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__sale_order__l10n_br_presence__9
+msgid "Remote, others"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__account_external_tax_mixin__l10n_br_presence__3
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__account_move__l10n_br_presence__3
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__pos_order__l10n_br_presence__3
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__sale_order__l10n_br_presence__3
+msgid "Remote, phone"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__exploração_de_via
+msgid "Roadway Operation"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_account_bank_statement_line__l10n_br_service_operation_indicator
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_account_external_tax_mixin__l10n_br_service_operation_indicator
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_account_move__l10n_br_service_operation_indicator
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_pos_order__l10n_br_service_operation_indicator
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_sale_order__l10n_br_service_operation_indicator
+msgid "Service Operation Indicator"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:l10n_br.operation.type,name:l10n_br_edi_fiscal_reform.operation_type_sales_delivery_address
+msgid "Service at delivery address"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:l10n_br.operation.type,name:l10n_br_edi_fiscal_reform.operation_type_sales_event_location
+msgid "Service at event location"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:l10n_br.operation.type,name:l10n_br_edi_fiscal_reform.operation_type_sales_property_location
+msgid "Service at property location"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model,name:l10n_br_edi_fiscal_reform.model_l10n_br_customs_regime
+msgid "Special Brazilian customs regime"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_product_product__l10n_br_customs_regime_id
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_product_template__l10n_br_customs_regime_id
+msgid "Special Customs Regime"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__res_partner__l10n_br_entity_type__stategovernment
+msgid "State Government"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__depende_de_evento_posterior
+msgid "Subject to a Subsequent Event"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_partner__l10n_br_tax_regime
+#: model:ir.model.fields,field_description:l10n_br_edi_fiscal_reform.field_res_users__l10n_br_tax_regime
+msgid "Tax Regime"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__táxi
+msgid "Taxi"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.constraint,message:l10n_br_edi_fiscal_reform.constraint_l10n_br_nbs_code_code_uniq
+msgid "The code must be unique."
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__gorjeta_até_15%
+msgid "Tip up to 15%"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__operação_equiparada_à_exportação
+msgid "Transaction Equivalent to Export"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__product_template__l10n_br_transaction_usage__projetos_de_reabilitação_urbana
+msgid "Urban Rehabilitation Projects"
+msgstr ""
+
+#. module: l10n_br_edi_fiscal_reform
+#: model:ir.model.fields.selection,name:l10n_br_edi_fiscal_reform.selection__res_partner__l10n_br_tax_regime__simplifiedhybrid
+msgid "simplifiedHybrid"
+msgstr ""

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_urban_piper.TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('header-row')]//div[8]" position="after">
+            <div class="col wide p-2" name="Delivery Partner">Delivery Partner</div>
+        </xpath>
+        <xpath expr="//div[hasclass('header-row')]//div[9]" position="after">
+            <div class="col p-2" name="Order Status">Order Status</div>
+        </xpath>
+        <xpath expr="//div[hasclass('header-row')]//div[hasclass('very-narrow')]" position="before">
+            <div class="col very-narrow p-2" name="Order Info"/>
+        </xpath>
+        <xpath expr="//div[hasclass('order-row')]//div[8]" position="after">
+            <div class="col wide p-2">
+                <t t-if="order.delivery_provider_id">
+                    <t t-set="order_otp" t-value="fetchOrderOtp()"/>
+                    <div class="d-flex">
+                        <t t-esc="order.delivery_provider_id.name"/>
+                        <t t-if="order_otp"> - <t t-esc="order_otp"/></t>
+                    </div>
+                </t>
+                <t t-else="">
+                    <t t-esc=""/>
+                </t>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('order-row')]//div[9]" position="after">
+            <div class="col p-2">
+                <t t-if="order.delivery_status">
+                    <t t-esc="this.order_status[order.delivery_status]"/>
+                </t>
+                <t t-else="">
+                    <t t-esc=""/>
+                </t>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('order-row')]//div[hasclass('very-narrow')]" position="before">
+            <div class="col very-narrow info-button p-2 text-center" name="info">
+                <i t-if="order?.delivery_identifier" class="fa fa-info-circle" aria-hidden="true" t-on-click="() => this._onInfoOrder(order)"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('pads')]//div[hasclass('pads')]//BackButton" position="after">
+            <t t-set="order" t-value="getSelectedOrder()"/>
+            <t t-if="order.delivery_status and order.state !== 'paid'">
+                <div class="container" t-if="order.delivery_status != 'cancelled' and order.delivery_status != 'completed' and order.delivery_status != 'food_ready' and order.delivery_status != 'dispatched'">
+                    <div class="row">
+                        <div class="col-sm container">
+                            <div class="row">
+                                <button class="button validation h-50 w-100 btn btn-info rounded fw-bolder py-3 col-sm" t-on-click="() => this._setOrder(order)">
+                                    <span class="fs-1 d-block">Edit</span>
+                                </button>
+                                <button t-if="order.delivery_status != 'completed'or order.delivery_status != 'food_ready'" class="button validation h-50 w-100 btn btn-light rounded ms-2 fw-bolder py-3 col-sm" t-on-click="() => this._rejectOrder(order)">
+                                    <span class="fs-1 d-block">Reject</span>
+                                </button>
+                            </div>
+                        </div>
+                        <button class="button validation h-50 w-100 btn btn-lg btn-primary rounded fw-bolder py-3 mt-2" t-if="order.delivery_status == 'acknowledged'" t-on-click="() => this._doneOrder(order)">
+                            <span class="fs-1 d-block">Mark as ready</span>
+                        </button>
+                        <button t-if="order.delivery_status == 'placed'" class="button validation h-50 w-100 btn btn-lg btn-primary rounded fw-bolder py-3 mt-2" t-on-click="() => this._acceptOrder(order)">
+                            <span class="fs-1 d-block">Accept</span>
+                        </button>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('pads')]//div[hasclass('pads')]" position="attributes">
+            <attribute name="t-if">!isOrderSynced</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('pads')]//div[hasclass('pads')]//button[hasclass('load-order-button')]" position="attributes">
+            <attribute name="t-if">!_selectedSyncedOrder.delivery_identifier</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('switchpane')]" position="before">
+            <t t-set="order" t-value="getSelectedOrder()"/>
+            <t t-if="ui.isSmall and order?.delivery_identifier and  order?.state !== 'paid'">
+                <div t-if="order.delivery_status != 'cancelled' and order.delivery_status != 'completed' and order.delivery_status != 'food_ready' and order.delivery_status != 'dispatched'">
+                    <div class="d-flex h-50 w-100">
+                        <button class="btn-switchpane primary btn btn-info rounded-0 w-50 fw-bolder py-3" t-if="!isOrderSynced" t-on-click="() => this._setOrder(order)">
+                            <span class="fs-1 d-block">Edit</span>
+                        </button>
+                        <button t-if="order.delivery_status != 'completed'or order.delivery_status != 'food_ready'" class="btn btn-light flex-fill btn rounded-0 fw-bolder secondary review-button ms-2" t-on-click="() => this._rejectOrder(order)">
+                            <span class="fs-1 d-block">Reject</span>
+                        </button>
+                    </div>
+                    <button t-if="order.delivery_status == 'placed'" class="btn-switchpane w-100 btn btn-primary rounded-0 fw-bolder secondary review-button mt-2" t-on-click="() => this._acceptOrder(order)">
+                        <span class="fs-1 d-block">Accept</span>
+                    </button>
+                    <button t-if="order.delivery_status == 'acknowledged'" class="btn-switchpane w-100 btn btn-primary rounded-0 fw-bolder secondary review-button mt-2" t-on-click="() => this._doneOrder(order)">
+                        <span class="fs-1 d-block">Mark as ready</span>
+                    </button>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('switchpane')]" position="attributes">
+            <attribute name="t-if">!order?.delivery_identifier and ui.isSmall</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('mobileOrderList')]//div[hasclass('justify-content-between')][2]" position="after">
+            <div t-if="ui.isSmall and order?.delivery_identifier" class="col p-2" t-att-class="{ 'highlight bg-primary text-white': isHighlighted(order) }">
+                <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow bg-info p-2 rounded-2" name="info" t-on-click="() => this._onInfoOrder(order)">
+                    <i class="fa fa-info-circle" aria-hidden="true"/> Info
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//ActionpadWidget" position="after">
+            <button t-if="order?.deliveryOrderType == 'self' and order.delivery_status == 'food_ready'" class="btn-switchpane w-100 btn btn-primary rounded secondary fw-bold review-button mt-2" t-on-click="() => this._dispatchOrder(order)">
+                <span class="fs-3">Dispatch Order</span>
+            </button>
+            <button t-if="order?.deliveryOrderType == 'self' and order.delivery_status == 'dispatched'" class="btn-switchpane w-100 btn btn-primary rounded secondary fw-bold review-button mt-2" t-on-click="() => this._completeOrder(order)">
+                <span class="fs-3">Complete Order</span>
+            </button>
+        </xpath>
+        <xpath expr="//ActionpadWidget" position="attributes">
+            <attribute name="t-if">order?.deliveryOrderType != 'self' or order.delivery_status == 'completed'</attribute>
+        </xpath>
+        <xpath expr="//OrderWidget" position="attributes">
+            <attribute name="orderAcceptTime">order?.uiState?.orderAcceptTime</attribute>
+            <attribute name="orderPrepTime">order?.prep_time</attribute>
+        </xpath>
+    </t>
+</templates>

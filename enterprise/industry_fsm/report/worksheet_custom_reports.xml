@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="task_custom_report" model="ir.actions.report">
+            <field name="name">Field Service Report</field>
+            <field name="model">project.task</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">industry_fsm.worksheet_custom</field>
+            <field name="report_file">industry_fsm.worksheet_custom</field>
+            <field name="print_report_name">'Field Service Report - %s - %s' % (object.name, object.partner_id.name)</field>
+            <field name="binding_model_id" ref="model_project_task"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>

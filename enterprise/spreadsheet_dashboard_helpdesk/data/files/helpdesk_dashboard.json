@@ -1,0 +1,1054 @@
+{
+  "version": 21,
+  "sheets": [
+    {
+      "id": "sheet1",
+      "name": "Dashboard",
+      "colNumber": 5,
+      "rowNumber": 67,
+      "rows": {
+        "6": { "size": 40 },
+        "22": { "size": 40 },
+        "23": { "size": 40 },
+        "24": { "size": 29 },
+        "25": { "size": 29 },
+        "26": { "size": 29 },
+        "27": { "size": 29 },
+        "28": { "size": 29 },
+        "29": { "size": 29 },
+        "30": { "size": 29 },
+        "31": { "size": 29 },
+        "32": { "size": 29 },
+        "33": { "size": 29 },
+        "35": { "size": 40 },
+        "36": { "size": 40 },
+        "37": { "size": 29 },
+        "38": { "size": 29 },
+        "39": { "size": 29 },
+        "40": { "size": 29 },
+        "41": { "size": 29 },
+        "42": { "size": 29 },
+        "43": { "size": 29 },
+        "44": { "size": 29 },
+        "45": { "size": 29 },
+        "47": { "size": 39 },
+        "48": { "size": 39 },
+        "49": { "size": 29 },
+        "50": { "size": 29 },
+        "51": { "size": 29 },
+        "52": { "size": 29 },
+        "53": { "size": 29 },
+        "54": { "size": 29 },
+        "55": { "size": 29 },
+        "56": { "size": 29 },
+        "57": { "size": 29 }
+      },
+      "cols": {
+        "0": { "size": 375 },
+        "1": { "size": 100 },
+        "2": { "size": 50 },
+        "3": { "size": 374 },
+        "4": { "size": 100 }
+      },
+      "merges": [],
+      "cells": {
+        "A7": {
+          "content": "[Tickets by Stage](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"stage_id\",\"team_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"stage_id\",\"team_id\"]},\"modelName\":\"helpdesk.ticket.report.analysis\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"cohort\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tickets by Stage\"})"
+        },
+        "A23": {
+          "content": "[Top Teams](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"team_id\",\"!=\",false]],\"context\":{\"group_by\":[\"team_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"team_id\"]},\"modelName\":\"helpdesk.ticket.report.analysis\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"cohort\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Teams\"})"
+        },
+        "A24": { "content": "=_t(\"Team\")" },
+        "A25": { "content": "=PIVOT.HEADER(1,\"#team_id\",1)" },
+        "A26": { "content": "=PIVOT.HEADER(1,\"#team_id\",2)" },
+        "A27": { "content": "=PIVOT.HEADER(1,\"#team_id\",3)" },
+        "A28": { "content": "=PIVOT.HEADER(1,\"#team_id\",4)" },
+        "A29": { "content": "=PIVOT.HEADER(1,\"#team_id\",5)" },
+        "A30": { "content": "=PIVOT.HEADER(1,\"#team_id\",6)" },
+        "A31": { "content": "=PIVOT.HEADER(1,\"#team_id\",7)" },
+        "A32": { "content": "=PIVOT.HEADER(1,\"#team_id\",8)" },
+        "A33": { "content": "=PIVOT.HEADER(1,\"#team_id\",9)" },
+        "A34": { "content": "=PIVOT.HEADER(1,\"#team_id\",10)" },
+        "A36": {
+          "content": "[Tickets by Stage](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"stage_id\",\"!=\",false]],\"context\":{\"group_by\":[\"stage_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"stage_id\"]},\"modelName\":\"helpdesk.ticket.report.analysis\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"cohort\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tickets By Stage\"})"
+        },
+        "A37": { "content": "=_t(\"Ticket Stage\")" },
+        "A38": { "content": "=PIVOT.HEADER(3,\"#stage_id\",1)" },
+        "A39": { "content": "=PIVOT.HEADER(3,\"#stage_id\",2)" },
+        "A40": { "content": "=PIVOT.HEADER(3,\"#stage_id\",3)" },
+        "A41": { "content": "=PIVOT.HEADER(3,\"#stage_id\",4)" },
+        "A42": { "content": "=PIVOT.HEADER(3,\"#stage_id\",5)" },
+        "A43": { "content": "=PIVOT.HEADER(3,\"#stage_id\",6)" },
+        "A44": { "content": "=PIVOT.HEADER(3,\"#stage_id\",7)" },
+        "A45": { "content": "=PIVOT.HEADER(3,\"#stage_id\",8)" },
+        "A46": { "content": "=PIVOT.HEADER(3,\"#stage_id\",9)" },
+        "A47": { "content": "=PIVOT.HEADER(3,\"#stage_id\",10)" },
+        "A48": {
+          "content": "[Top Customers](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"partner_id\",\"!=\",false]],\"context\":{\"group_by\":[\"partner_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"helpdesk.ticket.report.analysis\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"cohort\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Customers\"})"
+        },
+        "A49": { "content": "=_t(\"Customer\")" },
+        "A50": { "content": "=PIVOT.HEADER(7,\"#partner_id\",1)" },
+        "A51": { "content": "=PIVOT.HEADER(7,\"#partner_id\",2)" },
+        "A52": { "content": "=PIVOT.HEADER(7,\"#partner_id\",3)" },
+        "A53": { "content": "=PIVOT.HEADER(7,\"#partner_id\",4)" },
+        "A54": { "content": "=PIVOT.HEADER(7,\"#partner_id\",5)" },
+        "A55": { "content": "=PIVOT.HEADER(7,\"#partner_id\",6)" },
+        "A56": { "content": "=PIVOT.HEADER(7,\"#partner_id\",7)" },
+        "A57": { "content": "=PIVOT.HEADER(7,\"#partner_id\",8)" },
+        "A58": { "content": "=PIVOT.HEADER(7,\"#partner_id\",9)" },
+        "A59": { "content": "=PIVOT.HEADER(7,\"#partner_id\",10)" },
+        "B24": { "content": "=_t(\"Tickets\")" },
+        "B25": { "content": "=PIVOT.VALUE(1,\"__count\",\"#team_id\",1)" },
+        "B26": { "content": "=PIVOT.VALUE(1,\"__count\",\"#team_id\",2)" },
+        "B27": { "content": "=PIVOT.VALUE(1,\"__count\",\"#team_id\",3)" },
+        "B28": { "content": "=PIVOT.VALUE(1,\"__count\",\"#team_id\",4)" },
+        "B29": { "content": "=PIVOT.VALUE(1,\"__count\",\"#team_id\",5)" },
+        "B30": { "content": "=PIVOT.VALUE(1,\"__count\",\"#team_id\",6)" },
+        "B31": { "content": "=PIVOT.VALUE(1,\"__count\",\"#team_id\",7)" },
+        "B32": { "content": "=PIVOT.VALUE(1,\"__count\",\"#team_id\",8)" },
+        "B33": { "content": "=PIVOT.VALUE(1,\"__count\",\"#team_id\",9)" },
+        "B34": { "content": "=PIVOT.VALUE(1,\"__count\",\"#team_id\",10)" },
+        "B37": { "content": "=_t(\"Tickets\")" },
+        "B38": { "content": "=PIVOT.VALUE(3,\"__count\",\"#stage_id\",1)" },
+        "B39": { "content": "=PIVOT.VALUE(3,\"__count\",\"#stage_id\",2)" },
+        "B40": { "content": "=PIVOT.VALUE(3,\"__count\",\"#stage_id\",3)" },
+        "B41": { "content": "=PIVOT.VALUE(3,\"__count\",\"#stage_id\",4)" },
+        "B42": { "content": "=PIVOT.VALUE(3,\"__count\",\"#stage_id\",5)" },
+        "B43": { "content": "=PIVOT.VALUE(3,\"__count\",\"#stage_id\",6)" },
+        "B44": { "content": "=PIVOT.VALUE(3,\"__count\",\"#stage_id\",7)" },
+        "B45": { "content": "=PIVOT.VALUE(3,\"__count\",\"#stage_id\",8)" },
+        "B46": { "content": "=PIVOT.VALUE(3,\"__count\",\"#stage_id\",9)" },
+        "B47": { "content": "=PIVOT.VALUE(3,\"__count\",\"#stage_id\",10)" },
+        "B49": { "content": "=_t(\"Tickets\")" },
+        "B50": { "content": "=PIVOT.VALUE(7,\"__count\",\"#partner_id\",1)" },
+        "B51": { "content": "=PIVOT.VALUE(7,\"__count\",\"#partner_id\",2)" },
+        "B52": { "content": "=PIVOT.VALUE(7,\"__count\",\"#partner_id\",3)" },
+        "B53": { "content": "=PIVOT.VALUE(7,\"__count\",\"#partner_id\",4)" },
+        "B54": { "content": "=PIVOT.VALUE(7,\"__count\",\"#partner_id\",5)" },
+        "B55": { "content": "=PIVOT.VALUE(7,\"__count\",\"#partner_id\",6)" },
+        "B56": { "content": "=PIVOT.VALUE(7,\"__count\",\"#partner_id\",7)" },
+        "B57": { "content": "=PIVOT.VALUE(7,\"__count\",\"#partner_id\",8)" },
+        "B58": { "content": "=PIVOT.VALUE(7,\"__count\",\"#partner_id\",9)" },
+        "B59": { "content": "=PIVOT.VALUE(7,\"__count\",\"#partner_id\",10)" },
+        "D23": {
+          "content": "[Top Assignees](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"user_id\",\"!=\",false]],\"context\":{\"group_by\":[\"user_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"user_id\"]},\"modelName\":\"helpdesk.ticket.report.analysis\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"cohort\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Agents\"})"
+        },
+        "D24": { "content": "=_t(\"Agent\")" },
+        "D25": { "content": "=PIVOT.HEADER(2,\"#user_id\",1)" },
+        "D26": { "content": "=PIVOT.HEADER(2,\"#user_id\",2)" },
+        "D27": { "content": "=PIVOT.HEADER(2,\"#user_id\",3)" },
+        "D28": { "content": "=PIVOT.HEADER(2,\"#user_id\",4)" },
+        "D29": { "content": "=PIVOT.HEADER(2,\"#user_id\",5)" },
+        "D30": { "content": "=PIVOT.HEADER(2,\"#user_id\",6)" },
+        "D31": { "content": "=PIVOT.HEADER(2,\"#user_id\",7)" },
+        "D32": { "content": "=PIVOT.HEADER(2,\"#user_id\",8)" },
+        "D33": { "content": "=PIVOT.HEADER(2,\"#user_id\",9)" },
+        "D34": { "content": "=PIVOT.HEADER(2,\"#user_id\",10)" },
+        "D36": {
+          "content": "[Tickets by Tags](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"tag_ids\",\"!=\",false]],\"context\":{\"group_by\":[\"tag_ids\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"tag_ids\"]},\"modelName\":\"helpdesk.ticket.report.analysis\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"cohort\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tickets by Tags\"})"
+        },
+        "D37": { "content": "=_t(\"Ticket Tags\")" },
+        "D38": { "content": "=PIVOT.HEADER(4,\"#tag_ids\",1)" },
+        "D39": { "content": "=PIVOT.HEADER(4,\"#tag_ids\",2)" },
+        "D40": { "content": "=PIVOT.HEADER(4,\"#tag_ids\",3)" },
+        "D41": { "content": "=PIVOT.HEADER(4,\"#tag_ids\",4)" },
+        "D42": { "content": "=PIVOT.HEADER(4,\"#tag_ids\",5)" },
+        "D43": { "content": "=PIVOT.HEADER(4,\"#tag_ids\",6)" },
+        "D44": { "content": "=PIVOT.HEADER(4,\"#tag_ids\",7)" },
+        "D45": { "content": "=PIVOT.HEADER(4,\"#tag_ids\",8)" },
+        "D46": { "content": "=PIVOT.HEADER(4,\"#tag_ids\",9)" },
+        "D47": { "content": "=PIVOT.HEADER(4,\"#tag_ids\",10)" },
+        "E24": { "content": "=_t(\"Tickets\")" },
+        "E25": { "content": "=PIVOT.VALUE(2,\"__count\",\"#user_id\",1)" },
+        "E26": { "content": "=PIVOT.VALUE(2,\"__count\",\"#user_id\",2)" },
+        "E27": { "content": "=PIVOT.VALUE(2,\"__count\",\"#user_id\",3)" },
+        "E28": { "content": "=PIVOT.VALUE(2,\"__count\",\"#user_id\",4)" },
+        "E29": { "content": "=PIVOT.VALUE(2,\"__count\",\"#user_id\",5)" },
+        "E30": { "content": "=PIVOT.VALUE(2,\"__count\",\"#user_id\",6)" },
+        "E31": { "content": "=PIVOT.VALUE(2,\"__count\",\"#user_id\",7)" },
+        "E32": { "content": "=PIVOT.VALUE(2,\"__count\",\"#user_id\",8)" },
+        "E33": { "content": "=PIVOT.VALUE(2,\"__count\",\"#user_id\",9)" },
+        "E34": { "content": "=PIVOT.VALUE(2,\"__count\",\"#user_id\",10)" },
+        "E37": { "content": "=_t(\"Tickets\")" },
+        "E38": { "content": "=PIVOT.VALUE(4,\"__count\",\"#tag_ids\",1)" },
+        "E39": { "content": "=PIVOT.VALUE(4,\"__count\",\"#tag_ids\",2)" },
+        "E40": { "content": "=PIVOT.VALUE(4,\"__count\",\"#tag_ids\",3)" },
+        "E41": { "content": "=PIVOT.VALUE(4,\"__count\",\"#tag_ids\",4)" },
+        "E42": { "content": "=PIVOT.VALUE(4,\"__count\",\"#tag_ids\",5)" },
+        "E43": { "content": "=PIVOT.VALUE(4,\"__count\",\"#tag_ids\",6)" },
+        "E44": { "content": "=PIVOT.VALUE(4,\"__count\",\"#tag_ids\",7)" },
+        "E45": { "content": "=PIVOT.VALUE(4,\"__count\",\"#tag_ids\",8)" },
+        "E46": { "content": "=PIVOT.VALUE(4,\"__count\",\"#tag_ids\",9)" },
+        "E47": { "content": "=PIVOT.VALUE(4,\"__count\",\"#tag_ids\",10)" }
+      },
+      "styles": {
+        "A7": 1,
+        "A23": 1,
+        "A36": 1,
+        "A48": 1,
+        "D23": 1,
+        "D36": 1,
+        "A24": 2,
+        "A37": 2,
+        "A49": 2,
+        "D24": 2,
+        "D37": 2,
+        "A25:B34": 3,
+        "A38:B47": 3,
+        "A50:B59": 3,
+        "D25:E34": 3,
+        "D38:E47": 3,
+        "B24": 5,
+        "B37": 5,
+        "B49": 5,
+        "E24": 5,
+        "E37": 5
+      },
+      "formats": {},
+      "borders": {
+        "A7:B7": 1,
+        "A23:B23": 1,
+        "A36:B36": 1,
+        "A48:B48": 1,
+        "D7:E7": 1,
+        "D23:E23": 1,
+        "D36:E36": 1,
+        "A8:B8": 2,
+        "A24:B24": 2,
+        "A37:B37": 2,
+        "A49:B49": 2,
+        "D8:E8": 2,
+        "D24:E24": 2,
+        "D37:E37": 2,
+        "A25": 3,
+        "A38": 3,
+        "A50": 3,
+        "D25": 3,
+        "D38": 3,
+        "A26:A33": 4,
+        "A39:A46": 4,
+        "A51:A58": 4,
+        "D26:D33": 4,
+        "D39:D46": 4,
+        "A34": 5,
+        "A47": 5,
+        "A59": 5,
+        "D34": 5,
+        "D47": 5,
+        "A35:B35": 6,
+        "D35:E35": 6,
+        "B25": 7,
+        "B38": 7,
+        "B50": 7,
+        "E25": 7,
+        "E38": 7,
+        "B26:B33": 8,
+        "B39:B46": 8,
+        "B51:B58": 8,
+        "E26:E33": 8,
+        "E39:E46": 8,
+        "B34": 9,
+        "B47": 9,
+        "B59": 9,
+        "E34": 9,
+        "E47": 9
+      },
+      "conditionalFormats": [
+        {
+          "rule": {
+            "type": "DataBarRule",
+            "color": 16708338,
+            "rangeValues": "B25:B34"
+          },
+          "id": "2eda3bb0-21e2-4700-86fc-5ee11b33e4c1",
+          "ranges": ["A25:A34"]
+        },
+        {
+          "rule": {
+            "type": "DataBarRule",
+            "color": 15726335,
+            "rangeValues": "E25:E34"
+          },
+          "id": "647d8712-3fb0-4a82-bd60-f0b29a0e5c57",
+          "ranges": ["D25:D34"]
+        },
+        {
+          "rule": {
+            "type": "DataBarRule",
+            "color": 16775149,
+            "rangeValues": "B38:B47"
+          },
+          "id": "24a19fd8-ba42-48a7-bac2-c2d6eaac274e",
+          "ranges": ["A38:A47"]
+        },
+        {
+          "rule": {
+            "type": "DataBarRule",
+            "color": 15531509,
+            "rangeValues": "E38:E47"
+          },
+          "id": "66d4484f-b953-4852-8af1-975745008deb",
+          "ranges": ["D38:D47"]
+        },
+        {
+          "rule": {
+            "type": "DataBarRule",
+            "color": 16708338,
+            "rangeValues": "B50:B59"
+          },
+          "id": "1faed76d-6e53-43c8-887f-76a49e72cd05",
+          "ranges": ["A50:A59"]
+        }
+      ],
+      "figures": [
+        {
+          "id": "f16a9ed2-bf56-4fcd-9fa7-262c3be1e441",
+          "x": 0,
+          "y": 178,
+          "width": 475,
+          "height": 346,
+          "tag": "chart",
+          "data": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "top",
+            "metaData": {
+              "groupBy": ["stage_id", "team_id"],
+              "measure": "__count",
+              "order": null,
+              "resModel": "helpdesk.ticket.report.analysis",
+              "mode": "bar"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [],
+              "groupBy": ["stage_id", "team_id"],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "verticalAxisPosition": "left",
+            "stacked": true,
+            "fieldMatching": {
+              "9c37c741-1bb5-439a-b93d-d5443a9544be": {
+                "chain": "create_date",
+                "type": "datetime",
+                "offset": 0
+              },
+              "32224750-df4d-496b-94d1-113aeb0a922a": {
+                "chain": "team_id",
+                "type": "many2one"
+              },
+              "6bd364fc-ce70-461b-81fb-1e9cfbc0fb48": {
+                "chain": "user_id",
+                "type": "many2one"
+              },
+              "6cfea52a-55aa-4c5e-8068-a087b0432cc4": {
+                "chain": "stage_id",
+                "type": "many2one"
+              },
+              "cc4e1afb-103a-4a2d-a95a-a2cffb4ec225": {
+                "chain": "partner_id",
+                "type": "many2one"
+              },
+              "7cgfa52a-52bb-5t4e-2089-a980b0432ff5": {
+                "chain": "tag_ids",
+                "type": "many2many"
+              }
+            }
+          }
+        },
+        {
+          "id": "7c83311f-28a2-47b3-b27c-4ff69ad74d38",
+          "x": 524,
+          "y": 178,
+          "width": 475,
+          "height": 346,
+          "tag": "chart",
+          "data": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "top",
+            "metaData": {
+              "groupBy": ["stage_id"],
+              "measure": "__count",
+              "order": null,
+              "resModel": "helpdesk.ticket.report.analysis",
+              "mode": "pie"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [],
+              "groupBy": ["stage_id"],
+              "orderBy": []
+            },
+            "type": "odoo_pie",
+            "fieldMatching": {
+              "9c37c741-1bb5-439a-b93d-d5443a9544be": {
+                "chain": "create_date",
+                "type": "datetime",
+                "offset": 0
+              },
+              "32224750-df4d-496b-94d1-113aeb0a922a": {
+                "chain": "team_id",
+                "type": "many2one"
+              },
+              "6bd364fc-ce70-461b-81fb-1e9cfbc0fb48": {
+                "chain": "user_id",
+                "type": "many2one"
+              },
+              "6cfea52a-55aa-4c5e-8068-a087b0432cc4": {
+                "chain": "stage_id",
+                "type": "many2one"
+              },
+              "cc4e1afb-103a-4a2d-a95a-a2cffb4ec225": {
+                "chain": "partner_id",
+                "type": "many2one"
+              },
+              "7cgfa52a-52bb-5t4e-2089-a980b0432ff5": {
+                "chain": "tag_ids",
+                "type": "many2many"
+              }
+            }
+          }
+        },
+        {
+          "id": "7aacba02-73fb-4e18-99f9-c31017cab6da",
+          "x": 203,
+          "y": 9,
+          "width": 192,
+          "height": 107,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Rating", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!E6",
+            "baselineDescr": "since last period",
+            "keyValue": "Data!D6",
+            "humanize": false
+          }
+        },
+        {
+          "id": "c2b71e9b-5f66-41fb-ad81-d63814f07780",
+          "x": 0,
+          "y": 9,
+          "width": 192,
+          "height": 107,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Tickets", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!E2",
+            "baselineDescr": "since last period",
+            "keyValue": "Data!D2",
+            "humanize": false
+          }
+        },
+        {
+          "id": "2bff6c94-6e18-4af9-b46a-ab1c8ac8f7e0",
+          "x": 406,
+          "y": 9,
+          "width": 192,
+          "height": 107,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": {
+              "text": "Time to Assign",
+              "color": "#434343",
+              "bold": true
+            },
+            "type": "scorecard",
+            "background": "#FEF2F2",
+            "baseline": "Data!E3",
+            "baselineDescr": "last period",
+            "keyValue": "Data!D3",
+            "humanize": false
+          }
+        },
+        {
+          "id": "26af76da-e3c1-4696-8167-1b33773591e2",
+          "x": 606,
+          "y": 9,
+          "width": 192,
+          "height": 107,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": {
+              "text": "Time to Respond",
+              "bold": true,
+              "color": "#434343"
+            },
+            "type": "scorecard",
+            "background": "#FEF2F2",
+            "baseline": "Data!E4",
+            "baselineDescr": "last period",
+            "keyValue": "Data!D4",
+            "humanize": false
+          }
+        },
+        {
+          "id": "26d60f2f-6c8f-4881-9ac5-3a4fde74699e",
+          "x": 807,
+          "y": 9,
+          "width": 192,
+          "height": 107,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": {
+              "text": "Time to Close",
+              "bold": true,
+              "color": "#434343"
+            },
+            "type": "scorecard",
+            "background": "#FEF2F2",
+            "baseline": "Data!E5",
+            "baselineDescr": "last period",
+            "keyValue": "Data!D5",
+            "humanize": false
+          }
+        }
+      ],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": { "ROW": [], "COL": [] },
+      "dataValidationRules": [],
+      "comments": {}
+    },
+    {
+      "id": "0f64cc65-f0df-4a80-bf23-c70033b3e60f",
+      "name": "Data",
+      "colNumber": 26,
+      "rowNumber": 108,
+      "rows": {},
+      "cols": { "0": { "size": 135 } },
+      "merges": [],
+      "cells": {
+        "A1": { "content": "=_t(\"KPI\")" },
+        "A2": { "content": "=_t(\"Tickets\")" },
+        "A3": { "content": "=_t(\"Hours to assign\")" },
+        "A4": { "content": "=_t(\"Hours to respond\")" },
+        "A5": { "content": "=_t(\"Hours to close\")" },
+        "A6": { "content": "=_t(\"Rating\")" },
+        "B1": { "content": "=_t(\"Current\")" },
+        "B2": { "content": "=PIVOT.VALUE(5,\"__count\")" },
+        "B3": { "content": "=PIVOT.VALUE(5,\"ticket_assignation_hours\")" },
+        "B4": { "content": "=PIVOT.VALUE(5,\"avg_response_hours\")" },
+        "B5": { "content": "=PIVOT.VALUE(5,\"ticket_close_hours\")" },
+        "B6": { "content": "=PIVOT.VALUE(5,\"rating_last_value\")" },
+        "C1": { "content": "=_t(\"Previous\")" },
+        "C2": { "content": "=PIVOT.VALUE(6,\"__count\")" },
+        "C3": { "content": "=PIVOT.VALUE(6,\"ticket_assignation_hours\")" },
+        "C4": { "content": "=PIVOT.VALUE(6,\"avg_response_hours\")" },
+        "C5": { "content": "=PIVOT.VALUE(6,\"ticket_close_hours\")" },
+        "C6": { "content": "=PIVOT.VALUE(6,\"rating_last_value\")" },
+        "D1": { "content": "=_t(\"Current\")" },
+        "D2": { "content": "=FORMAT.LARGE.NUMBER(B2)" },
+        "D3": { "content": "=CONCATENATE(IFERROR(ROUND(B3)),\" hours\")" },
+        "D4": { "content": "=CONCATENATE(IFERROR(ROUND(B4)),\" hours\")" },
+        "D5": { "content": "=CONCATENATE(IFERROR(ROUND(B5)),\" hours\")" },
+        "D6": { "content": "=CONCATENATE(IFERROR(ROUND(B6,1)),\"/5\")" },
+        "E1": { "content": "=_t(\"Previous\")" },
+        "E2": { "content": "=FORMAT.LARGE.NUMBER(C2)" },
+        "E3": { "content": "=IFERROR(ROUND(C3))" },
+        "E4": { "content": "=IFERROR(ROUND(C4))" },
+        "E5": { "content": "=IFERROR(ROUND(C5))" },
+        "E6": { "content": "=CONCATENATE(IFERROR(ROUND(C6,1)),\"/5\")" }
+      },
+      "styles": { "A1:E1": 6, "A2:E6": 7 },
+      "formats": { "E3:E5": 1 },
+      "borders": {},
+      "conditionalFormats": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": { "ROW": [], "COL": [] },
+      "dataValidationRules": [],
+      "comments": {}
+    }
+  ],
+  "styles": {
+    "1": { "textColor": "#01666b", "bold": true, "fontSize": 16 },
+    "2": { "textColor": "#434343", "bold": true, "fontSize": 11 },
+    "3": { "textColor": "#434343", "verticalAlign": "middle" },
+    "5": {
+      "textColor": "#434343",
+      "bold": true,
+      "fontSize": 11,
+      "align": "center"
+    },
+    "6": { "bold": true, "fillColor": "#f2f2f2" },
+    "7": { "fillColor": "#f2f2f2" }
+  },
+  "formats": { "1": "#,##0" },
+  "borders": {
+    "1": { "bottom": { "style": "thin", "color": "#CCCCCC" } },
+    "2": { "top": { "style": "thin", "color": "#CCCCCC" } },
+    "3": {
+      "bottom": { "style": "thick", "color": "#FFFFFF" },
+      "right": { "style": "thick", "color": "#FFFFFF" }
+    },
+    "4": {
+      "top": { "style": "thick", "color": "#FFFFFF" },
+      "bottom": { "style": "thick", "color": "#FFFFFF" },
+      "right": { "style": "thick", "color": "#FFFFFF" }
+    },
+    "5": {
+      "top": { "style": "thick", "color": "#FFFFFF" },
+      "bottom": { "style": "thin", "color": "#FFFFFF" },
+      "right": { "style": "thick", "color": "#FFFFFF" }
+    },
+    "6": { "top": { "style": "thin", "color": "#FFFFFF" } },
+    "7": {
+      "bottom": { "style": "thick", "color": "#FFFFFF" },
+      "left": { "style": "thick", "color": "#FFFFFF" }
+    },
+    "8": {
+      "top": { "style": "thick", "color": "#FFFFFF" },
+      "bottom": { "style": "thick", "color": "#FFFFFF" },
+      "left": { "style": "thick", "color": "#FFFFFF" }
+    },
+    "9": {
+      "top": { "style": "thick", "color": "#FFFFFF" },
+      "bottom": { "style": "thin", "color": "#FFFFFF" },
+      "left": { "style": "thick", "color": "#FFFFFF" }
+    }
+  },
+  "revisionId": "START_REVISION",
+  "uniqueFigureIds": true,
+  "settings": {
+    "locale": {
+      "name": "English (US)",
+      "code": "en_US",
+      "thousandsSeparator": ",",
+      "decimalSeparator": ".",
+      "dateFormat": "mm/dd/yyyy",
+      "timeFormat": "hh:mm:ss",
+      "formulaArgSeparator": ",",
+      "weekStart": 7
+    }
+  },
+  "pivots": {
+    "1": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "9c37c741-1bb5-439a-b93d-d5443a9544be": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "32224750-df4d-496b-94d1-113aeb0a922a": {
+          "chain": "team_id",
+          "type": "many2one"
+        },
+        "6bd364fc-ce70-461b-81fb-1e9cfbc0fb48": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "6cfea52a-55aa-4c5e-8068-a087b0432cc4": {
+          "chain": "stage_id",
+          "type": "many2one"
+        },
+        "cc4e1afb-103a-4a2d-a95a-a2cffb4ec225": {
+          "chain": "partner_id",
+          "type": "many2one"
+        },
+        "7cgfa52a-52bb-5t4e-2089-a980b0432ff5": {
+          "chain": "tag_ids",
+          "type": "many2many"
+        }
+      },
+      "context": {},
+      "domain": [["team_id", "!=", false]],
+      "id": "1",
+      "measures": [{ "id": "__count", "fieldName": "__count" }],
+      "model": "helpdesk.ticket.report.analysis",
+      "name": "Ticket Analysis by Team",
+      "sortedColumn": {
+        "groupId": [[], []],
+        "measure": "__count",
+        "order": "desc"
+      },
+      "formulaId": "1",
+      "columns": [],
+      "rows": [{ "fieldName": "team_id" }]
+    },
+    "2": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "9c37c741-1bb5-439a-b93d-d5443a9544be": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "32224750-df4d-496b-94d1-113aeb0a922a": {
+          "chain": "team_id",
+          "type": "many2one"
+        },
+        "6bd364fc-ce70-461b-81fb-1e9cfbc0fb48": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "6cfea52a-55aa-4c5e-8068-a087b0432cc4": {
+          "chain": "stage_id",
+          "type": "many2one"
+        },
+        "cc4e1afb-103a-4a2d-a95a-a2cffb4ec225": {
+          "chain": "partner_id",
+          "type": "many2one"
+        },
+        "7cgfa52a-52bb-5t4e-2089-a980b0432ff5": {
+          "chain": "tag_ids",
+          "type": "many2many"
+        }
+      },
+      "context": {},
+      "domain": [["user_id", "!=", false]],
+      "id": "2",
+      "measures": [{ "id": "__count", "fieldName": "__count" }],
+      "model": "helpdesk.ticket.report.analysis",
+      "name": "Ticket Analysis by Assigned To",
+      "sortedColumn": {
+        "groupId": [[], []],
+        "measure": "__count",
+        "order": "desc"
+      },
+      "formulaId": "2",
+      "columns": [],
+      "rows": [{ "fieldName": "user_id" }]
+    },
+    "3": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "9c37c741-1bb5-439a-b93d-d5443a9544be": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "32224750-df4d-496b-94d1-113aeb0a922a": {
+          "chain": "team_id",
+          "type": "many2one"
+        },
+        "6bd364fc-ce70-461b-81fb-1e9cfbc0fb48": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "6cfea52a-55aa-4c5e-8068-a087b0432cc4": {
+          "chain": "stage_id",
+          "type": "many2one"
+        },
+        "cc4e1afb-103a-4a2d-a95a-a2cffb4ec225": {
+          "chain": "partner_id",
+          "type": "many2one"
+        },
+        "7cgfa52a-52bb-5t4e-2089-a980b0432ff5": {
+          "chain": "tag_ids",
+          "type": "many2many"
+        }
+      },
+      "context": {},
+      "domain": [["stage_id", "!=", false]],
+      "id": "3",
+      "measures": [{ "id": "__count", "fieldName": "__count" }],
+      "model": "helpdesk.ticket.report.analysis",
+      "name": "Ticket Analysis by Ticket Stage",
+      "sortedColumn": {
+        "groupId": [[], []],
+        "measure": "__count",
+        "order": "desc"
+      },
+      "formulaId": "3",
+      "columns": [],
+      "rows": [{ "fieldName": "stage_id" }]
+    },
+    "4": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "9c37c741-1bb5-439a-b93d-d5443a9544be": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "32224750-df4d-496b-94d1-113aeb0a922a": {
+          "chain": "team_id",
+          "type": "many2one"
+        },
+        "6bd364fc-ce70-461b-81fb-1e9cfbc0fb48": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "6cfea52a-55aa-4c5e-8068-a087b0432cc4": {
+          "chain": "stage_id",
+          "type": "many2one"
+        },
+        "cc4e1afb-103a-4a2d-a95a-a2cffb4ec225": {
+          "chain": "partner_id",
+          "type": "many2one"
+        },
+        "7cgfa52a-52bb-5t4e-2089-a980b0432ff5": {
+          "chain": "tag_ids",
+          "type": "many2many"
+        }
+      },
+      "context": {},
+      "domain": [["tag_ids", "!=", false]],
+      "id": "4",
+      "measures": [{ "id": "__count", "fieldName": "__count" }],
+      "model": "helpdesk.ticket.report.analysis",
+      "name": "Ticket Analysis by Tags",
+      "sortedColumn": {
+        "groupId": [[], []],
+        "measure": "__count",
+        "order": "desc"
+      },
+      "formulaId": "4",
+      "columns": [],
+      "rows": [{ "fieldName": "tag_ids" }]
+    },
+    "5": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "9c37c741-1bb5-439a-b93d-d5443a9544be": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "32224750-df4d-496b-94d1-113aeb0a922a": {
+          "chain": "team_id",
+          "type": "many2one"
+        },
+        "6bd364fc-ce70-461b-81fb-1e9cfbc0fb48": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "6cfea52a-55aa-4c5e-8068-a087b0432cc4": {
+          "chain": "stage_id",
+          "type": "many2one"
+        },
+        "cc4e1afb-103a-4a2d-a95a-a2cffb4ec225": {
+          "chain": "partner_id",
+          "type": "many2one"
+        },
+        "7cgfa52a-52bb-5t4e-2089-a980b0432ff5": {
+          "chain": "tag_ids",
+          "type": "many2many"
+        }
+      },
+      "context": {
+        "params": {
+          "action": 658,
+          "model": "helpdesk.ticket.report.analysis",
+          "view_type": "pivot",
+          "menu_id": 471,
+          "cids": 1
+        }
+      },
+      "domain": [],
+      "id": "5",
+      "measures": [
+        { "id": "__count", "fieldName": "__count" },
+        {
+          "id": "ticket_assignation_hours",
+          "fieldName": "ticket_assignation_hours"
+        },
+        { "id": "avg_response_hours", "fieldName": "avg_response_hours" },
+        { "id": "ticket_close_hours", "fieldName": "ticket_close_hours" },
+        { "id": "rating_last_value", "fieldName": "rating_last_value" }
+      ],
+      "model": "helpdesk.ticket.report.analysis",
+      "name": "stats - current",
+      "sortedColumn": null,
+      "formulaId": "5",
+      "columns": [],
+      "rows": []
+    },
+    "6": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "9c37c741-1bb5-439a-b93d-d5443a9544be": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": -1
+        },
+        "32224750-df4d-496b-94d1-113aeb0a922a": {
+          "chain": "team_id",
+          "type": "many2one"
+        },
+        "6bd364fc-ce70-461b-81fb-1e9cfbc0fb48": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "6cfea52a-55aa-4c5e-8068-a087b0432cc4": {
+          "chain": "stage_id",
+          "type": "many2one"
+        },
+        "cc4e1afb-103a-4a2d-a95a-a2cffb4ec225": {
+          "chain": "partner_id",
+          "type": "many2one"
+        },
+        "7cgfa52a-52bb-5t4e-2089-a980b0432ff5": {
+          "chain": "tag_ids",
+          "type": "many2many"
+        }
+      },
+      "context": {
+        "params": {
+          "action": 658,
+          "model": "helpdesk.ticket.report.analysis",
+          "view_type": "pivot",
+          "menu_id": 471,
+          "cids": 1
+        }
+      },
+      "domain": [],
+      "id": "6",
+      "measures": [
+        { "id": "__count", "fieldName": "__count" },
+        {
+          "id": "ticket_assignation_hours",
+          "fieldName": "ticket_assignation_hours"
+        },
+        { "id": "avg_response_hours", "fieldName": "avg_response_hours" },
+        { "id": "ticket_close_hours", "fieldName": "ticket_close_hours" },
+        { "id": "rating_last_value", "fieldName": "rating_last_value" }
+      ],
+      "model": "helpdesk.ticket.report.analysis",
+      "name": "stats - previous",
+      "sortedColumn": null,
+      "formulaId": "6",
+      "columns": [],
+      "rows": []
+    },
+    "7": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "9c37c741-1bb5-439a-b93d-d5443a9544be": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "32224750-df4d-496b-94d1-113aeb0a922a": {
+          "chain": "team_id",
+          "type": "many2one"
+        },
+        "6bd364fc-ce70-461b-81fb-1e9cfbc0fb48": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "6cfea52a-55aa-4c5e-8068-a087b0432cc4": {
+          "chain": "stage_id",
+          "type": "many2one"
+        },
+        "cc4e1afb-103a-4a2d-a95a-a2cffb4ec225": {
+          "chain": "partner_id",
+          "type": "many2one"
+        },
+        "7cgfa52a-52bb-5t4e-2089-a980b0432ff5": {
+          "chain": "tag_ids",
+          "type": "many2many"
+        }
+      },
+      "context": {},
+      "domain": [["partner_id", "!=", false]],
+      "id": "7",
+      "measures": [{ "id": "__count", "fieldName": "__count" }],
+      "model": "helpdesk.ticket.report.analysis",
+      "name": "Ticket Analysis by Customer",
+      "sortedColumn": {
+        "groupId": [[], []],
+        "measure": "__count",
+        "order": "desc"
+      },
+      "formulaId": "7",
+      "columns": [],
+      "rows": [{ "fieldName": "partner_id" }]
+    }
+  },
+  "pivotNextId": 8,
+  "customTableStyles": {},
+  "odooVersion": 12,
+  "globalFilters": [
+    {
+      "id": "9c37c741-1bb5-439a-b93d-d5443a9544be",
+      "type": "date",
+      "label": "Period",
+      "defaultValue": "last_month",
+      "rangeType": "relative"
+    },
+    {
+      "id": "32224750-df4d-496b-94d1-113aeb0a922a",
+      "type": "relation",
+      "label": "Team",
+      "modelName": "helpdesk.team",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    },
+    {
+      "id": "6bd364fc-ce70-461b-81fb-1e9cfbc0fb48",
+      "type": "relation",
+      "label": "Agent",
+      "modelName": "res.users",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    },
+    {
+      "id": "6cfea52a-55aa-4c5e-8068-a087b0432cc4",
+      "type": "relation",
+      "label": "Ticket Stage",
+      "modelName": "helpdesk.stage",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    },
+    {
+      "id": "cc4e1afb-103a-4a2d-a95a-a2cffb4ec225",
+      "type": "relation",
+      "label": "Customer",
+      "modelName": "res.partner",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    },
+    {
+      "id": "7cgfa52a-52bb-5t4e-2089-a980b0432ff5",
+      "type": "relation",
+      "label": "Tags",
+      "modelName": "helpdesk.tag",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    }
+  ],
+  "lists": {},
+  "listNextId": 1,
+  "chartOdooMenusReferences": {
+    "f16a9ed2-bf56-4fcd-9fa7-262c3be1e441": "helpdesk.menu_helpdesk_root",
+    "7c83311f-28a2-47b3-b27c-4ff69ad74d38": "helpdesk.menu_helpdesk_root",
+    "c2b71e9b-5f66-41fb-ad81-d63814f07780": "helpdesk.helpdesk_ticket_menu_all",
+    "7aacba02-73fb-4e18-99f9-c31017cab6da": "helpdesk.helpdesk_ticket_report_menu_ratings",
+    "2bff6c94-6e18-4af9-b46a-ab1c8ac8f7e0": "helpdesk.helpdesk_ticket_report_menu",
+    "26af76da-e3c1-4696-8167-1b33773591e2": "helpdesk.helpdesk_ticket_report_menu",
+    "26d60f2f-6c8f-4881-9ac5-3a4fde74699e": "helpdesk.helpdesk_ticket_report_menu"
+  }
+}

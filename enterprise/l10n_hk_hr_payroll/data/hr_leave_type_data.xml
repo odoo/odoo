@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="holiday_type_hk_annual_leave" model="hr.leave.type">
+        <field name="name">HK Annual Leaves</field>
+        <field name="requires_allocation">yes</field>
+        <field name="request_unit">half_day</field>
+        <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_legal_leave" />
+        <field name="leave_validation_type">no_validation</field>
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="holiday_type_hk_compensation_leave" model="hr.leave.type">
+        <field name="name">HK Compensation Leaves</field>
+        <field name="requires_allocation">yes</field>
+        <field name="request_unit">half_day</field>
+        <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_compensatory"></field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="holiday_type_hk_sick_leave" model="hr.leave.type">
+        <field name="name">HK Sick Leaves</field>
+        <field name="requires_allocation">no</field>
+        <field name="request_unit">half_day</field>
+        <field name="support_document">True</field>
+        <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_sick_leave"></field>
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="holiday_type_hk_sick_leave_80" model="hr.leave.type">
+        <field name="name">HK Sick Leaves 80%</field>
+        <field name="requires_allocation">no</field>
+        <field name="request_unit">half_day</field>
+        <field name="support_document">True</field>
+        <field name="work_entry_type_id" ref="work_entry_type_sick_leave_80"></field>
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="holiday_type_hk_unpaid_leave" model="hr.leave.type">
+        <field name="name">HK Unpaid Leaves</field>
+        <field name="requires_allocation">no</field>
+        <field name="request_unit">half_day</field>
+        <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_unpaid_leave"></field>
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="holiday_type_hk_marriage_leave" model="hr.leave.type">
+        <field name="name">HK Marriage Leaves</field>
+        <field name="requires_allocation">no</field>
+        <field name="support_document">True</field>
+        <field name="work_entry_type_id" ref="work_entry_type_marriage_leave"></field>
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="holiday_type_hk_maternity_leave" model="hr.leave.type">
+        <field name="name">HK Maternity Leaves</field>
+        <field name="requires_allocation">no</field>
+        <field name="work_entry_type_id" ref="work_entry_type_maternity_leave"></field>
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="holiday_type_hk_maternity_leave_80" model="hr.leave.type">
+        <field name="name">HK Maternity Leaves 80%</field>
+        <field name="requires_allocation">no</field>
+        <field name="work_entry_type_id" ref="work_entry_type_maternity_leave_80"></field>
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="holiday_type_hk_paternity_leave" model="hr.leave.type">
+        <field name="name">HK Paternity Leaves</field>
+        <field name="requires_allocation">no</field>
+        <field name="work_entry_type_id" ref="work_entry_type_paternity_leave"></field>
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="holiday_type_hk_compassionate_leave" model="hr.leave.type">
+        <field name="name">HK Compassionate Leaves</field>
+        <field name="requires_allocation">no</field>
+        <field name="work_entry_type_id" ref="work_entry_type_compassionate_leave"></field>
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="holiday_type_hk_examination_leave" model="hr.leave.type">
+        <field name="name">HK Examination Leaves</field>
+        <field name="requires_allocation">no</field>
+        <field name="request_unit">half_day</field>
+        <field name="work_entry_type_id" ref="work_entry_type_examination_leave"></field>
+        <field name="company_id" eval="False" />
+    </record>
+</odoo>

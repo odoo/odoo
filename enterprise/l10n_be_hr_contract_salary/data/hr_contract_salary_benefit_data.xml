@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    <record id="l10n_be_transport_company_car" model="hr.contract.salary.benefit">
+        <field name="name">Transportation</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'company_car_total_depreciated_cost')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'company_car_total_depreciated_cost')])"/>
+        <field name="sequence">5</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="icon">fa fa-car</field>
+        <field name="folded" eval="True"/>
+        <field name="fold_label">Company Car</field>
+        <field name="fold_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'transport_mode_car')])"/>
+        <field name="display_type">dropdown-group</field>
+        <field name="requested_documents_field_ids" model="ir.model.fields" eval="[(4, obj().search([('model', '=', 'hr.contract'), ('name', '=', 'driving_license')]).id)]"/>
+    </record>
+
+    <record id="l10n_be_transport_new_car" model="hr.contract.salary.benefit">
+        <field name="name">Wishlist Car</field>
+        <field name="show_name">False</field>
+        <field name="sequence">10</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'wishlist_car_total_depreciated_cost')])"/>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="folded" eval="True"/>
+        <field name="fold_label">Company Car (To order)</field>
+        <field name="fold_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'new_car')])"/>
+        <field name="display_type">dropdown-group</field>
+    </record>
+
+    <record id="l10n_be_transport_public" model="hr.contract.salary.benefit">
+        <field name="name">Public Transport</field>
+        <field name="show_name">False</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'public_transport_reimbursed_amount')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'public_transport_reimbursed_amount')])"/>
+        <field name="sequence">15</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="folded" eval="True"/>
+        <field name="fold_label">Public Transportation</field>
+        <field name="fold_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'transport_mode_public')])"/>
+        <field name="manual_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'public_transport_employee_amount')])"/>
+        <field name="display_type">manual</field>
+        <field name="description">Enter the monthly amount you spend on public transportation to go to work. The approximative amount reimbursed by the employer is calculated accordingly.</field>
+    </record>
+
+    <record id="l10n_be_transport_train" model="hr.contract.salary.benefit">
+        <field name="name">Train Transport</field>
+        <field name="show_name">False</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'train_transport_reimbursed_amount')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'train_transport_reimbursed_amount')])"/>
+        <field name="sequence">16</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="folded" eval="True"/>
+        <field name="fold_label">Train Transportation</field>
+        <field name="fold_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'transport_mode_train')])"/>
+        <field name="manual_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'train_transport_employee_amount')])"/>
+        <field name="display_type">manual</field>
+        <field name="description">Enter the monthly amount you spend on train transportation to go to work. The approximative amount reimbursed by the employer is calculated accordingly.</field>
+    </record>
+
+    <record id="l10n_be_transport_private_car" model="hr.contract.salary.benefit">
+        <field name="name">Private Car</field>
+        <field name="show_name">False</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'private_car_reimbursed_amount')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'private_car_reimbursed_amount')])"/>
+        <field name="sequence">20</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="folded" eval="True"/>
+        <field name="fold_label">Private Car</field>
+        <field name="fold_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'transport_mode_private_car')])"/>
+        <field name="manual_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'km_home_work')])"/>
+        <field name="display_type">manual</field>
+        <field name="description">Enter the number of kilometers between your home and your work place. The approximative amount reimbursed by the employer is calculated accordingly.</field>
+    </record>
+
+    <record id="l10n_be_transport_private_bike" model="hr.contract.salary.benefit">
+        <field name="name">Bicyle Cost</field>
+        <field name="show_name">False</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_bicyle_cost')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_bicyle_cost')])"/>
+        <field name="sequence">21</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="folded" eval="True"/>
+        <field name="fold_label">Private Bike</field>
+        <field name="fold_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'has_bicycle')])"/>
+        <field name="manual_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'km_home_work')])"/>
+        <field name="display_type">manual</field>
+        <field name="description">Enter the number of kilometers between your home and your work place. The reimbursed amount is of 0.20 cents per km with a maximum amount of 8€, computed on a one-day-per-week basis.</field>
+    </record>
+
+    <record id="l10n_be_transport_company_bike" model="hr.contract.salary.benefit">
+        <field name="name">Company Bike</field>
+        <field name="show_name">False</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'company_bike_depreciated_cost')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'company_bike_depreciated_cost')])"/>
+        <field name="sequence">12</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="folded" eval="True"/>
+        <field name="fold_label">Company Bike</field>
+        <field name="fold_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'transport_mode_bike')])"/>
+        <field name="display_type">dropdown-group</field>
+    </record>
+
+
+    <record id="l10n_be_internet" model="hr.contract.salary.benefit">
+        <field name="name">Internet Subscription</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'internet')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'internet')])"/>
+        <field name="manual_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'internet')])"/>
+        <field name="sequence">25</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="icon">fa fa-globe</field>
+        <field name="display_type">manual</field>
+        <field name="description">Enter the amount of your internet subscription invoice. If you have a pack only the internet part of your operator subscription will be paid by the employer.</field>
+        <field name="always_show_description" eval="False"/>
+        <field name="requested_documents_field_ids" model="ir.model.fields" eval="[(4, obj().search([('model', '=', 'hr.contract'), ('name', '=', 'internet_invoice')]).id)]"/>
+    </record>
+
+    <record id="l10n_be_mobile" model="hr.contract.salary.benefit">
+        <field name="name">Phone Subscription</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'mobile')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'mobile')])"/>
+        <field name="sequence">30</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="icon">fa fa-mobile</field>
+        <field name="display_type">radio</field>
+        <field name="description">This BASE subscription include unlimited Internet, calls and SMS in Belgium + Roaming trough Europe (International Communications are excluded).</field>
+        <field name="requested_documents_field_ids" model="ir.model.fields" eval="[
+            (4, obj().search([('model', '=', 'hr.contract'), ('name', '=', 'mobile_invoice')]).id),
+            (4, obj().search([('model', '=', 'hr.contract'), ('name', '=', 'sim_card')]).id)]"/>
+    </record>
+
+    <record id="l10n_be_mobile_value_0" model="hr.contract.salary.benefit.value">
+        <field name="sequence" eval="1"/>
+        <field name="benefit_id" ref="l10n_be_mobile"/>
+        <field name="value">0</field>
+        <field name="name">No</field>
+        <field name="selector_highlight">red</field>
+        <field name="always_show_description" eval="False"/>
+    </record>
+
+    <record id="l10n_be_mobile_value_1" model="hr.contract.salary.benefit.value">
+        <field name="sequence" eval="2"/>
+        <field name="benefit_id" ref="l10n_be_mobile"/>
+        <field name="value">30.0</field>
+        <field name="name">30.0 €</field>
+    </record>
+
+    <record id="l10n_be_extra_time_off" model="hr.contract.salary.benefit">
+        <field name="name">Extra Time Off</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'holidays')])"/>
+        <field name="sequence">35</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="icon">fa fa-suitcase</field>
+        <field name="display_type">slider</field>
+        <field name="uom">days</field>
+        <field name="description">In addition to your legal leaves, you can choose to have extra days off (up to +15 days). The amount of annual time off (legal leaves) allocated to you depends on your working hours from the previous year. For example, if you worked full-time for 12 months under a Belgian contract, you are entitled to 20 days off.</field>
+        <field name="slider_min">0</field>
+        <field name="slider_max">15</field>
+    </record>
+
+    <record id="l10n_be_intellectual_property" model="hr.contract.salary.benefit">
+        <field name="name">Intellectual Property</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'ip_value')])"/>
+        <field name="sequence">40</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_net"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="icon">fa fa-puzzle-piece</field>
+        <field name="display_type">radio</field>
+        <field name="uom">percent</field>
+        <field name="description">Since Odoo invests massively in developing and writing intellectual property content, legally we are able to pay part of our employees' salaries as intellectual property income. This amount will be paid in cash every month and is taxed less.</field>
+    </record>
+
+    <record id="l10n_be_intellectual_property_value_0" model="hr.contract.salary.benefit.value">
+        <field name="benefit_id" ref="l10n_be_intellectual_property"/>
+        <field name="name">No</field>
+        <field name="value">0</field>
+        <field name="selector_highlight">red</field>
+        <field name="always_show_description" eval="False"/>
+    </record>
+
+    <record id="l10n_be_intellectual_property_value_1" model="hr.contract.salary.benefit.value">
+        <field name="benefit_id" ref="l10n_be_intellectual_property"/>
+        <field name="name">Yes</field>
+        <field name="value">1</field>
+    </record>
+
+    <record id="l10n_be_representation_fees" model="hr.contract.salary.benefit">
+        <field name="name">Representation Fees</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'representation_fees')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'representation_fees')])"/>
+        <field name="sequence">45</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_net"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="icon">fa fa-male</field>
+        <field name="display_type">radio</field>
+        <field name="description">This is a monthly net amount, taken into account in your payslip.</field>
+    </record>
+
+    <record id="l10n_be_representation_fees_value_0" model="hr.contract.salary.benefit.value">
+        <field name="benefit_id" ref="l10n_be_representation_fees"/>
+        <field name="value">0</field>
+        <field name="name">0 €</field>
+    </record>
+
+    <record id="l10n_be_representation_fees_value_2" model="hr.contract.salary.benefit.value">
+        <field name="benefit_id" ref="l10n_be_representation_fees"/>
+        <field name="name">150 €</field>
+        <field name="value">150</field>
+    </record>
+
+    <record id="l10n_be_fuel_card" model="hr.contract.salary.benefit">
+        <field name="name">Fuel Card</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'fuel_card')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'fuel_card')])"/>
+        <field name="sequence">22</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="benefit_ids" eval="[(4, ref('l10n_be_hr_contract_salary.l10n_be_transport_company_car'))]"/>
+        <field name="icon">fa fa-tint</field>
+        <field name="display_type">slider</field>
+        <field name="slider_min">0</field>
+        <field name="slider_max">500</field>
+        <field name="slider_step">10</field>
+    </record>
+
+    <record id="l10n_be_yearly_commission" model="hr.contract.salary.benefit">
+        <field name="name">Commissions</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'commission_on_target')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'yearly_commission_cost')])"/>
+        <field name="sequence">53</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_yearly_cash"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="icon">fa fa-crosshairs</field>
+        <field name="display_type">always</field>
+    </record>
+
+    <record id="l10n_be_meal_vouchers" model="hr.contract.salary.benefit">
+        <field name="name">Meal Vouchers</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'meal_voucher_average_monthly_amount')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'meal_voucher_paid_monthly_by_employer')])"/>
+        <field name="sequence">55</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_cash"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="icon">fa fa-cutlery</field>
+        <field name="display_type">always</field>
+        <field name="description">Each month you'll receive 8€ per day worked on a meal voucher card.</field>
+    </record>
+
+    <record id="l10n_be_eco_voucher" model="hr.contract.salary.benefit">
+        <field name="name">Eco Vouchers</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'eco_checks')])"/>
+        <field name="sequence">60</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_yearly_cash"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="icon">fa fa-leaf</field>
+        <field name="display_type">always</field>
+        <field name="description">You'll receive this amount in the form of Eco Vouchers around June. The exact amount is based on real worked day during the period between the first of June of last year and the 31th of May of this year.</field>
+    </record>
+
+    <record id="l10n_be_thirteen_month" model="hr.contract.salary.benefit">
+        <field name="name">13th Month</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'wage_with_holidays')])"/>
+        <field name="sequence">65</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_yearly_cash"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="icon">fa fa-gift</field>
+        <field name="display_type">always</field>
+        <field name="description">If you meet conditions to benefit from 13th month, you will receive this amount around December. This amount may be different based on your working schedule and the number of worked days during the year.</field>
+    </record>
+
+    <record id="l10n_be_double_holiday" model="hr.contract.salary.benefit">
+        <field name="name">Double Holiday Pay</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'double_holiday_wage')])"/>
+        <field name="sequence">70</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_yearly_cash"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="icon">fa fa-suitcase</field>
+        <field name="display_type">always</field>
+        <field name="description">You'll receive this amount around June. This amount will depend on the number of worked days during the previous year.</field>
+    </record>
+
+    <record id="l10n_be_hospital_insurance" model="hr.contract.salary.benefit">
+        <field name="name">Hospital Insurance</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'has_hospital_insurance')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'insurance_amount')])"/>
+        <field name="sequence">40</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="icon">fa fa-hospital-o</field>
+        <field name="display_type">radio</field>
+    </record>
+
+    <record id="l10n_be_hospital_insurance_value_0" model="hr.contract.salary.benefit.value">
+        <field name="benefit_id" ref="l10n_be_hospital_insurance"/>
+        <field name="name">No</field>
+        <field name="value">0</field>
+        <field name="selector_highlight">red</field>
+        <field name="always_show_description" eval="False"/>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="l10n_be_hospital_insurance_value_1" model="hr.contract.salary.benefit.value">
+        <field name="benefit_id" ref="l10n_be_hospital_insurance"/>
+        <field name="name">Yes</field>
+        <field name="value">1</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="l10n_be_insured_spouse" model="hr.contract.salary.benefit">
+        <field name="name">Insured Spouse</field>
+        <field name="show_name">False</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'insured_relative_spouse')])"/>
+        <field name="sequence">41</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="folded" eval="True"/>
+        <field name="fold_label">Insured Spouse</field>
+        <field name="fold_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'insured_relative_spouse')])"/>
+        <field name="display_type">always</field>
+    </record>
+
+    <record id="l10n_be_insured_children" model="hr.contract.salary.benefit">
+        <field name="name">Insured Children (&lt; 19 y/o)</field>
+        <field name="show_name">False</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'insured_relative_children')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="False"/>
+        <field name="sequence">42</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="manual_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'insured_relative_children')])"/>
+        <field name="display_type">manual</field>
+    </record>
+
+    <record id="l10n_be_insured_adults" model="hr.contract.salary.benefit">
+        <field name="name">Insured Children (&gt;= 19 y/o)</field>
+        <field name="show_name">False</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'insured_relative_adults')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="False"/>
+        <field name="sequence">43</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="fold_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'has_hospital_insurance')])"/>
+        <field name="manual_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'insured_relative_adults')])"/>
+        <field name="display_type">manual</field>
+    </record>
+
+    <record id="l10n_be_hospital_insurance_note" model="hr.contract.salary.benefit">
+        <field name="name">Hospital insurance (info)</field>
+        <field name="show_name">False</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_hospital_insurance_notes')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="False"/>
+        <field name="sequence">44</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="fold_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'has_hospital_insurance')])"/>
+        <field name="manual_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_hospital_insurance_notes')])"/>
+        <field name="display_type">text</field>
+        <field name="description">For all insured persons, indicate the last name / first name / date of birth / relationship / Indicate if disabled</field>
+    </record>
+
+    <record id="l10n_be_group_insurance" model="hr.contract.salary.benefit">
+        <field name="name">Group Insurance</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_group_insurance_rate')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_group_insurance_cost')])"/>
+        <field name="sequence">50</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="icon">fa fa-users</field>
+        <field name="uom">percent</field>
+        <field name="display_type">radio</field>
+        <field name="description">The chosen percentage of the salary will be sacrified into a group insurance. Regarding the employer's budget, in addition to the amount invested in group insurance, 8.86% of this amount is paid to the ONSS, and an additional 4.4% is used in the management costs of the insurance product.</field>
+    </record>
+
+    <record id="l10n_be_group_insurance_value_0" model="hr.contract.salary.benefit.value">
+        <field name="benefit_id" ref="l10n_be_group_insurance"/>
+        <field name="value">0</field>
+        <field name="name">No</field>
+        <field name="sequence">5</field>
+    </record>
+
+    <record id="l10n_be_group_insurance_value_2" model="hr.contract.salary.benefit.value">
+        <field name="benefit_id" ref="l10n_be_group_insurance"/>
+        <field name="value">3</field>
+        <field name="name">3 %</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="l10n_be_group_insurance_value_3" model="hr.contract.salary.benefit.value">
+        <field name="benefit_id" ref="l10n_be_group_insurance"/>
+        <field name="value">5</field>
+        <field name="name">5 %</field>
+        <field name="sequence">15</field>
+    </record>
+
+    <record id="l10n_be_ambulatory_insurance" model="hr.contract.salary.benefit">
+        <field name="name">Ambulatory Insurance</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_has_ambulatory_insurance')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_ambulatory_insurance_amount')])"/>
+        <field name="sequence">45</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="icon">fa fa-stethoscope</field>
+        <field name="display_type">radio</field>
+    </record>
+
+    <record id="l10n_be_ambulatory_insurance_value_0" model="hr.contract.salary.benefit.value">
+        <field name="benefit_id" ref="l10n_be_ambulatory_insurance"/>
+        <field name="name">No</field>
+        <field name="value">0</field>
+        <field name="selector_highlight">red</field>
+        <field name="sequence">1</field>
+        <field name="always_show_description" eval="False"/>
+    </record>
+
+    <record id="l10n_be_ambulatory_insurance_value_1" model="hr.contract.salary.benefit.value">
+        <field name="benefit_id" ref="l10n_be_ambulatory_insurance"/>
+        <field name="name">Yes</field>
+        <field name="value">1</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="l10n_be_ambulatory_insured_spouse" model="hr.contract.salary.benefit">
+        <field name="name">Ambulatory (spouse)</field>
+        <field name="show_name">False</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_ambulatory_insured_spouse')])"/>
+        <field name="sequence">46</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="folded" eval="True"/>
+        <field name="fold_label">Insured Spouse</field>
+        <field name="fold_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_ambulatory_insured_spouse')])"/>
+        <field name="display_type">always</field>
+    </record>
+
+    <record id="l10n_be_ambulatory_insured_children" model="hr.contract.salary.benefit">
+        <field name="name">Ambulatory Children (&lt;19 y/o)</field>
+        <field name="show_name">False</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_ambulatory_insured_children')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="False"/>
+        <field name="sequence">47</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="manual_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_ambulatory_insured_children')])"/>
+        <field name="display_type">manual</field>
+    </record>
+
+    <record id="l10n_be_ambulatory_insured_adults" model="hr.contract.salary.benefit">
+        <field name="name">Ambulatory Children (&gt;= 19 y/o)</field>
+        <field name="show_name">False</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_ambulatory_insured_adults')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="False"/>
+        <field name="sequence">48</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="fold_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_has_ambulatory_insurance')])"/>
+        <field name="manual_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_ambulatory_insured_adults')])"/>
+        <field name="display_type">manual</field>
+    </record>
+
+    <record id="l10n_be_ambulatory_insurance_note" model="hr.contract.salary.benefit">
+        <field name="name">Ambulatory Insurance (info)</field>
+        <field name="show_name">False</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_ambulatory_insurance_notes')])"/>
+        <field name="cost_res_field_id" model="ir.model.fields" eval="False"/>
+        <field name="sequence">49</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="fold_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_has_ambulatory_insurance')])"/>
+        <field name="manual_res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'l10n_be_ambulatory_insurance_notes')])"/>
+        <field name="display_type">text</field>
+        <field name="description">For all insured persons, indicate the last name / first name / date of birth / relationship / Indicate if disabled</field>
+    </record>
+    </data>
+</odoo>

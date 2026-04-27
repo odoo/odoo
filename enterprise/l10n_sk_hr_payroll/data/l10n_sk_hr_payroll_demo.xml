@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.demo_company_sk" model="res.company" forcecreate="1">
+        <field name="name">My Slovak Company</field>
+        <field name="currency_id" ref="base.EUR"/>
+        <field name="street">Dúbravská cesta 9</field>
+        <field name="zip">80000</field>
+        <field name="city">Bratislava</field>
+        <field name="country_id" ref="base.sk"/>
+    </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_sk'))]"/>
+    </record>
+
+    <record id="base.user_demo" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_sk'))]"/>
+    </record>
+
+    <record id="hr_department_rdpl" model="hr.department">
+        <field name="name">RD SK</field>
+        <field name="company_id" ref="base.demo_company_sk"/>
+    </record>
+
+    <record id="job_developer_slovakia" model="hr.job">
+        <field name="name">Experienced Developer SK</field>
+        <field name="department_id" ref="hr_department_rdpl"/>
+        <field name="no_of_recruitment">5</field>
+        <field name="company_id" ref="base.demo_company_sk"/>
+    </record>
+
+    <record id="hr_employee_richard" model="hr.employee">
+        <field name="name">Richard Hečko</field>
+        <field name="job_id" ref="job_developer_slovakia"/>
+        <field name="country_id" ref="base.sk"/>
+        <field name="company_id" ref="base.demo_company_sk"/>
+        <field name="image_1920" type="base64" file="l10n_sk_hr_payroll/static/img/hr_employee_richard.jpg"/>
+        <field name="gender">male</field>
+    </record>
+
+    <record id="res_partner_frantiska" model="res.partner">
+        <field name="name">Františka Kubáňová</field>
+        <field name="street">Buš Ridges 8790</field>
+        <field name="city">Trebejov</field>
+        <field name="zip">35926</field>
+        <field name="country_id" ref="base.sk"/>
+        <field name="phone">89496211</field>
+        <field name="email">frantiska.kubanova@example.com</field>
+        <field name="company_id" ref="base.demo_company_sk"/>
+    </record>
+
+    <record id="user_frantiska" model="res.users">
+        <field name="partner_id" ref="l10n_sk_hr_payroll.res_partner_frantiska"/>
+        <field name="login">frantiskakubanova@example.com</field>
+        <field name="password">frantiskakubanova</field>
+        <field name="signature" type="html"><span>--<br/>+F. Kubáňová</span></field>
+        <field name="company_ids" eval="[(4, ref('base.demo_company_sk'))]"/>
+        <field name="company_id" ref="base.demo_company_sk"/>
+        <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
+        <field name="image_1920" type="base64" file="l10n_sk_hr_payroll/static/img/hr_employe_frantiska.jpg"/>
+    </record>
+
+    <record id="res_partner_frantiska_work_address" model="res.partner">
+        <field name="name">SK Offices</field>
+        <field name="street">Horák Corners 635</field>
+        <field name="city">Snina</field>
+        <field name="zip">97540</field>
+        <field name="country_id" ref="base.sk"/>
+        <field name="company_id" ref="base.demo_company_sk"/>
+    </record>
+
+    <record id="res_partner_frantiska_private_address" model="res.partner">
+        <field name="name">Františka Kubáňová</field>
+        <field name="company_id" ref="base.demo_company_sk"/>
+    </record>
+
+    <record id="res_partner_bank_account_norberta" model="res.partner.bank">
+        <field name="acc_number">SK3193779311764615225576</field>
+        <field name="bank_id" ref="base.bank_ing"/>
+        <field name="partner_id" ref="l10n_sk_hr_payroll.res_partner_frantiska_private_address"/>
+        <field name="company_id" ref="base.demo_company_sk"/>
+    </record>
+
+    <record id="hr_employee_frantiska" model="hr.employee">
+        <field name="name">Františka Kubáňová (fku)</field>
+        <field name="gender">female</field>
+        <field name="marital">single</field>
+        <field name="job_title">Software Developer</field>
+        <field name="private_street">Klaudia Rest 28528</field>
+        <field name="private_city">Veľké Kosihy</field>
+        <field name="private_zip">62481</field>
+        <field name="private_country_id" ref="base.sk"/>
+        <field name="private_phone">7558 354 877</field>
+        <field name="private_email">frantiska.kubanova@example.com</field>
+        <field name="address_id" ref="l10n_sk_hr_payroll.res_partner_frantiska_work_address"/>
+        <field name="emergency_contact">Kamila Kubáňová</field>
+        <field name="emergency_phone">7558 354 877</field>
+        <field name="birthday">1991-07-28</field>
+        <field name="distance_home_work">25</field>
+        <field name="place_of_birth">Slovakia</field>
+        <field name="country_of_birth" ref="base.sk"/>
+        <field name="certificate">master</field>
+        <field name="study_field">Civil Engineering</field>
+        <field name="study_school">Université Catholique de Louvain-la-Neuve</field>
+        <field name="parent_id" ref="l10n_sk_hr_payroll.hr_employee_richard"/>
+        <field name="country_id" ref="base.sk"/>
+        <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+        <field name="identification_id">8752027365496</field>
+        <field name="bank_account_id" ref="l10n_sk_hr_payroll.res_partner_bank_account_norberta"/>
+        <field name="image_1920" type="base64" file="l10n_sk_hr_payroll/static/img/hr_employe_frantiska.jpg"/>
+        <field name="company_id" ref="base.demo_company_sk"/>
+        <field name="user_id" ref="l10n_sk_hr_payroll.user_frantiska"/>
+    </record>
+
+    <record id="hr_contract_cdi_frantiska_previous" model="hr.contract">
+        <field name="name">CDI - Františka Kubáňová - Experienced Developer</field>
+        <field name="department_id" ref="hr_department_rdpl"/>
+        <field name="employee_id" ref="hr_employee_frantiska"/>
+        <field name="job_id" ref="l10n_sk_hr_payroll.job_developer_slovakia"/>
+        <field name="structure_type_id" ref="l10n_sk_hr_payroll.structure_type_employee_sk"/>
+        <field name="wage">3000</field>
+        <field name="state">close</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="company_id" ref="base.demo_company_sk"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-2, month=1, day=1))"/>
+        <field name="date_end" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1, days=-2))"/>
+        <field name="resource_calendar_id" model="resource.calendar" eval="obj().search([('company_id', '=', obj().env.ref('base.demo_company_sk').id)], limit=1)"/>
+        <field name="l10n_sk_meal_voucher_employee">6.40</field>
+        <field name="l10n_sk_meal_voucher_employer">3.52</field>
+    </record>
+
+    <record id="hr_contract_cdi_frantiska" model="hr.contract">
+        <field name="name">CDI - Františka Kubáňová - Experienced Developer</field>
+        <field name="department_id" ref="hr_department_rdpl"/>
+        <field name="employee_id" ref="hr_employee_frantiska"/>
+        <field name="job_id" ref="l10n_sk_hr_payroll.job_developer_slovakia"/>
+        <field name="structure_type_id" ref="l10n_sk_hr_payroll.structure_type_employee_sk"/>
+        <field name="wage">3600</field>
+        <field name="state">open</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="company_id" ref="base.demo_company_sk"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1, days=-1))"/>
+        <field name="resource_calendar_id" model="resource.calendar" eval="obj().search([('company_id', '=', obj().env.ref('base.demo_company_sk').id)], limit=1)"/>
+        <field name="l10n_sk_meal_voucher_employee">6.40</field>
+        <field name="l10n_sk_meal_voucher_employer">3.52</field>
+    </record>
+
+    <record id="hr_employee_frantiska" model="hr.employee">
+        <field name="contract_id" ref="l10n_sk_hr_payroll.hr_contract_cdi_frantiska"/>
+    </record>
+</odoo>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_task_form2_inherit_holidays" model="ir.ui.view">
+        <field name="name">project.task.view.form.holidays</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_enterprise.project_task_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//t[@name='warning_section']" position="inside">
+                <div role="alert"
+                     class="alert alert-warning d-flex align-items-center"
+                     invisible="not leave_warning or not user_ids">
+                        <i class="fa fa-user-times me-2" role="img" title="Leave warning"/>
+                        <field name="leave_warning" nolabel="1" class="m-0"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_task_view_gantt_fsm_inherit_holidays" model="ir.ui.view">
+        <field name="name">project.task.view.gantt.holidays</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_enterprise.project_task_view_gantt"/>
+        <field name="arch" type="xml">
+            <xpath expr="//gantt" position="attributes">
+                <attribute name="decoration-danger">planning_overlap or leave_warning</attribute>
+            </xpath>
+            <xpath expr="//gantt" position="inside">
+                <field name="leave_warning"/>
+                <field name="planning_overlap"/>
+            </xpath>
+            <xpath expr="//div[@t-if='planning_overlap']" position="after">
+                <p t-if="leave_warning" class="text-danger mt-2 mb-0">
+                    <t t-esc="leave_warning"/>
+                </p>
+            </xpath>
+        </field>
+    </record>
+</odoo>

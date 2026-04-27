@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp_workorder.ControlPanelButtons">
+    <div class="position-relative d-flex align-items-center mw-100 overflow-x-auto">
+        <div class="d-flex gap-1">
+            <t t-foreach="workcenterButtons" t-as="workcenter" t-key="workcenter[0]">
+                <t t-set="id" t-value="workcenter[0]"/>
+                <t t-set="name" t-value="workcenter[1].name"/>
+                <t t-set="count" t-value="workcenter[1].count"/>
+                <button class="btn btn-light text-nowrap" t-att-class="this.props.activeWorkcenter == id ? 'active' : ''"
+                        t-on-click="() => this.props.selectWorkcenter(id)">
+                    <t t-esc="name"/>
+                    <span class="overflow-hidden rounded ms-1 py-1 px-2" t-out="count"
+                          t-attf-class="o_workcenter_item_color_{{id > 0 ? id % 11 : 0}}"/>
+                </button>
+                <div class="d-inline border-end ps-1 me-1" t-if="id == 0"></div>
+            </t>
+        </div>
+        <div class="position-sticky top-0 end-0 bg-view" t-att-class="this.props.hideNewWorkcenterButton ? 'invisible' : ''">
+            <button class="btn btn-light fa fa-plus" t-on-click="() => {this.props.toggleWorkcenter();}"/>
+        </div>
+    </div>
+    </t>
+</templates>

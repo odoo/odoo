@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ar_afip_ws_consult_form" model="ir.ui.view">
+        <field name="name">AFIP WS Consult form</field>
+        <field name="model">l10n_ar_afip.ws.consult</field>
+        <field name="arch" type="xml">
+            <form string="Consult Data in AFIP">
+                <div>
+                    Get information stored in AFIP. You can get the detail information of an invoice number or you can get the last number used in AFIP for a specific Document Type and POS Number.
+                </div>
+                <group>
+                    <field name="journal_id" options="{'no_create': True, 'no_open': True}" required="1"/>
+                    <field name="available_document_type_ids" invisible="1"/>
+                    <field name="document_type_id" domain="[('id', 'in', available_document_type_ids)]" options="{'no_create': True, 'no_open': True}" required="1"/>
+                </group>
+                <group>
+                    <group>
+                        <field name="consult_type" widget="radio"/>
+                        <field name="number" readonly="consult_type == 'last'" force_save="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Get Invoice Detail" name="button_confirm" type="object" class="oe_highlight" data-hotkey="q"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_ar_afip_ws_consult" model="ir.actions.act_window">
+        <field name="name">Consult invoice in AFIP</field>
+        <field name="res_model">l10n_ar_afip.ws.consult</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_l10n_ar_afip_ws_consult" parent="account.menu_finance_entries" action="action_l10n_ar_afip_ws_consult" sequence="100"/>
+
+</odoo>

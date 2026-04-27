@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="knowledge.KnowledgeIcon">
+        <t t-if="icon">
+            <p t-if="props.readonly" t-attf-class="o_article_emoji cursor-default m-0 #{props.iconClasses ? props.iconClasses : ''}" t-out="icon"/>
+            <a t-else="" t-ref="icon" role="button" t-out="icon" t-attf-class="o_article_emoji #{props.iconClasses ? props.iconClasses : ''}"/>
+        </t>
+        <a t-elif="props.allowRandomIconSelection" role="button" t-on-click="selectRandomIcon" title="Add a random icon"
+            class="text-muted opacity-75 opacity-100-hover" >
+            <i class="fa fa-fw fa-plus-circle"/>
+        </a>
+    </t>
+</templates>

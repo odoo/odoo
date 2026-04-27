@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Payment methods -->
+
+        <record id="account_payment_method_batch_deposit" model="account.payment.method">
+            <field name="name">Batch Deposit</field>
+            <field name="code">batch_payment</field>
+            <field name="payment_type">inbound</field>
+        </record>
+    </data>
+
+    <data noupdate="0">
+        <function model="account.journal" name="_create_batch_payment_outbound_sequence"/>
+        <function model="account.journal" name="_create_batch_payment_inbound_sequence"/>
+    </data>
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_account_asset_form_inherit_loan" model="ir.ui.view">
+        <field name="name">account.asset.form</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_linked_loans"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-bars"
+                    invisible="count_linked_loans == 0">
+                    <field string="Related Loan(s)" name="count_linked_loans" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="appointment_validated" inherit_id="appointment.appointment_validated">
+    <xpath expr="//h2[@t-if='is_cancelled']" position="after">
+        <t t-elif="state == 'no_cancel_paid'">
+            <div role="alert" class="alert alert-danger">
+                Oops! Paid appointment cannot be cancelled via our website.<br/>
+                <t t-if="cancel_responsible">
+                    To make any changes, please contact
+                    <t t-out="cancel_responsible.name"/> at <t t-out="cancel_responsible.email"/>
+                    <t t-if="cancel_responsible.partner_id.phone"> or <t t-out="cancel_responsible.partner_id.phone"/> </t>.
+                </t>
+                <t t-else="">
+                    To make any changes, please contact us.
+                </t>
+            </div>
+            <h2 role="alert">
+                <i class="fa fa-check-circle text-success me-3"/>Appointment Scheduled!
+            </h2>
+        </t>
+    </xpath>
+</template>
+</odoo>

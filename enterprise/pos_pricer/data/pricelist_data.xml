@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="pricer_demo_pricelist" model="product.pricelist">
+            <field name="name">Christmas</field>
+        </record>
+        <record id="pricer_demo_pricelist_item" model="product.pricelist.item">
+            <field name="pricelist_id" ref="pricer_demo_pricelist"/>
+            <field name="compute_price">percentage</field>
+            <field name="base">list_price</field>
+            <field name="percent_price">20</field>
+        </record>
+    </data>
+</odoo>

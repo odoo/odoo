@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_individual_account_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.salary.certificate.form</field>
+        <field name="model">l10n.ch.salary.certificate</field>
+        <field name="arch" type="xml">
+            <form string="Salary Certificates">
+                <header>
+                    <button name="action_generate_xml" string="Generate Certificates" type="object" class="btn-primary" options="{'reload_on_button': true}"/>
+                </header>
+                <sheet>
+                    <group name="first_group">
+                        <group>
+                            <field name="year" class="o_hr_narrow_field"/>
+                            <field name="name"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="xml_filename" invisible="1"/>
+                            <field name="xml_file" filename="xml_filename" readonly="1" invisible="not xml_file"/>
+                        </group>
+                    </group>
+                    <div class="mt16" invisible="not xml_file">
+                        <a href="https://www.elohnausweis-ssk.ch/" target="_new">
+                            <i class="oi oi-fw oi-arrow-right"/>The following XML file can be imported here for PDF Generation</a>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_ch_salary_certificate_view_tree" model="ir.ui.view">
+        <field name="name">l10n.ch.salary.certificate.tree</field>
+        <field name="model">l10n.ch.salary.certificate</field>
+        <field name="arch" type="xml">
+            <list string="Salary Certificates">
+                <field name="name"/>
+                <field name="year"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_ch_salary_certificate_action" model="ir.actions.act_window">
+        <field name="name">Salary Certificates</field>
+        <field name="res_model">l10n.ch.salary.certificate</field>
+        <field name="view_mode">list,form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mod130_boe_wizard" model="ir.ui.view">
+            <field name="name">l10n_es_reports_modelo130.aeat.boe.mod130.export.wizard.form</field>
+            <field name="model">l10n_es_reports_modelo130.aeat.boe.mod130.export.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="taxpayer_id"/>
+                            <field name="taxpayer_last_name"/>
+                            <field name="taxpayer_first_name"/>
+                            <field name="declaration_type"/>
+                            <field name="company_id" invisible="True"/>
+                            <field name="company_partner_id" invisible="True"/>
+                            <field name="partner_bank_id"/>
+                            <field name="complementary_declaration"/>
+                            <field name="previous_report_number" invisible="not complementary_declaration"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Cancel" special="cancel" data-hotkey="x"/>
+                        <button string="Generate BOE" class="oe_highlight" type="object" name="download_boe_action" data-hotkey="q"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

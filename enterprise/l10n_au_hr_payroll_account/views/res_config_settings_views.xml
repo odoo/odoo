@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_open_transfer_previous_payroll" model="ir.actions.act_window">
+        <field name="name">Import YTD Balances</field>
+        <field name="res_model">l10n_au.previous.payroll.transfer</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_au_hr_payroll_account</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="50"/>
+        <field name="inherit_id" ref="hr_payroll.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='l10n_au_hr_payroll']" position="inside">
+                    <setting string="SuperStream and Single Touch Payroll">
+                        <div name="au_super_info" class="mt16 content-group">
+                            <div class="row mt16 ms-2">
+                                <label for="l10n_au_hr_super_responsible_id"
+                                    class="col-md-6 p-0 m-0 o_light_label"/>
+                                <field name="l10n_au_hr_super_responsible_id"
+                                    widget="many2one_avatar_employee" class="col-lg-6 p-0" domain="[('user_id', '!=', False)]"/>
+                            </div>
+                            <div class="row mt16 ms-2">
+                                <label for="l10n_au_superstream_payable_account_id"
+                                    class="col-md-6 p-0 m-0 o_light_label"/>
+                                <field name="l10n_au_superstream_payable_account_id" class="col-lg-6 p-0"/>
+                            </div>
+                            <div class="row mt16 ms-2">
+                                <label for="l10n_au_stp_responsible_id"
+                                    class="col-md-6 p-0 m-0 o_light_label"/>
+                                <field name="l10n_au_stp_responsible_id" class="col-lg-6 p-0" domain="[('user_id', '!=', False)]"/>
+                            </div>
+                            <div class="row mt16 ms-2">
+                                <button name="%(l10n_au_hr_payroll_account.action_open_transfer_previous_payroll)d"
+                                    string="Import YTD Balances" type="action" class="btn-primary"/>
+                            </div>
+                            <div class="row mt16 ms-2">
+                                <label for="l10n_au_previous_bms_id"
+                                    class="col-md-6 p-0 m-0 o_light_label"/>
+                                <field name="l10n_au_previous_bms_id" class="col-lg-6 p-0"/>
+                            </div>
+                            <div class="row mt16 ms-2">
+                                <label for="l10n_au_bms_id"
+                                    class="col-md-6 p-0 m-0 o_light_label"/>
+                                <field name="l10n_au_bms_id" class="col-lg-6 p-0"/>
+                            </div>
+                        </div>
+                    </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

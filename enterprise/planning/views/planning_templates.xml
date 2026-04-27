@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="planning.frontend_layout" name="Planning Frontend Layout" inherit_id="web.frontend_layout" primary="True">
+        <xpath expr="//t[@t-call='web.brand_promotion']" position="replace">
+            <t t-call="planning.brand_promotion"/>
+        </xpath>
+    </template>
+
+    <template id="period_report_template" name="My Planning">
+        <t t-call="planning.frontend_layout">
+            <!-- fullcalendar object's container -->
+            <div class="container o_planning_calendar_container">
+                <h1 align="center" class="m-3">Planning: <t t-esc="employee.name"/></h1>
+                <div align="center" t-if="start_datetime">
+                    <div class="alert alert-info o_shift_info">
+                        Shifts from
+                        <t t-esc="format_datetime(start_datetime, dt_format='E')"/>.
+                        <t t-esc="format_datetime(start_datetime, dt_format='short')"/>
+                        to
+                        <t t-esc="format_datetime(end_datetime, dt_format='E')"/>.
+                        <t t-esc="format_datetime(end_datetime, dt_format='short')"/>
+                    </div>
+                </div>
+                <div align="center" t-if="no_data and not open_slots_ids" class="alert alert-info o_shift_info">
+                    This open shift is no longer available, or the planning has been updated in the meantime. Please contact your manager for further information.
+                </div>
+                <t t-call="planning.planning_shift_notification"/>
+                <div id="calendar_employee" class="o_calendar_container">
+                    <div class="o_calendar_view" >
+                        <span class="employee_slots_fullcalendar_data" t-att-value="json.dumps(employee_slots_fullcalendar_data)"/>
+                        <span class="planning_token" t-att-value="planning_token" />
+                        <span class="employee_token" t-att-value="employee_token" />
+                        <span class="open_slots_ids" t-att-value="open_slots_ids" />
+                        <span class="locale" t-att-value="locale" />
+                        <span class="notification_text" t-att-value="notification_text" />
+                        <span class="message_slug" t-att-value="message_slug" />
+                        <span class="open_slot_has_role" t-att-value="open_slot_has_role" />
+                        <span class="open_slot_has_note" t-att-value="open_slot_has_note" />
+                        <span class="unwanted_slot_has_role" t-att-value="unwanted_slot_has_role" />
+                        <span class="unwanted_slot_has_note" t-att-value="unwanted_slot_has_note" />
+                        <span class="start_datetime" t-att-value="start_datetime"/>
+                        <span class="end_datetime" t-att-value="end_datetime" />
+                        <span class="default_view" t-att-value="default_view"/>
+                        <span class="default_start" t-att-value="default_start"/>
+                        <span class="mintime" t-att-value="mintime"/>
+                        <span class="maxtime" t-att-value="maxtime"/>
+                        <span class="no_data" t-att-value="no_data"/>
+                        <div class="o_calendar_widget"/>
+                    </div>
+                </div>
+            </div>
+            <!-- open shift's container -->
+            <t t-call="planning.open_slots_list_template"/>
+            <!-- unwanted shift's container-->
+            <t t-call="planning.unwanted_slots_list_template"/>
+            <!-- fullcalendar event onclick Modal -->
+            <div class="modal fade" id="fc-slot-onclick-modal" role="dialog">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0">
+                        <div class="modal-header modal-header-primary py-3 border-0 rounded-top text-light">
+                            <h5 class="modal-title"/>
+                            <button type="button" aria-label="close" data-bs-dismiss="modal" class="btn-close btn-close-white py-0"/>
+                        </div>
+                        <div class="modal-body">
+                            <div id="switch-warning" class="alert alert-warning" style="margin-bottom: 25px">
+                                <span class="warning-text"/>
+                            </div>
+                            <dl class="d-flex flex-column mt-0 mb-0">
+                                <dt>Date </dt>
+                                <dd id="date">
+                                    <span class="o_start_date"/>
+                                    <i class="mx-1 fa fa-long-arrow-right" aria-label="Arrow icon" title="Arrow"/>
+                                    <span class="o_end_date"/>
+                                </dd>
+                                <dt>Role</dt>
+                                <dd id="role"/>
+                                <dt>Note</dt>
+                                <dd id="note"/>
+                                <div class="d-none" t-esc="shift_id" id="shift_uid"/>
+                            </dl>
+                        </div>
+
+                        <div class="modal-footer" style="justify-content:flex-start">
+                            <div id="dismiss_shift" style="float:left">
+                                <form id="modal_action_dismiss_shift" t-attf-action="/planning" method="post">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <input type="hidden" name="message" value="unassign"/>
+                                    <button type="submit" class="btn btn-outline-danger">I am unavailable</button>
+                                </form>
+                            </div>
+                            <div id="switch_shift" style="float:left">
+                                <form id="modal_action_switch_shift" t-attf-action="/planning" method="post">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <input type="hidden" name="message" value="switch"/>
+                                    <button type="submit" class="btn btn-outline-danger">Ask to Switch</button>
+                                </form>
+                            </div>
+                            <div id="cancel_switch" style="float:left">
+                                <form id="modal_action_cancel_switch" t-attf-action="/planning" method="post">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <input type="hidden" name="message" value="cancel_switch"/>
+                                    <button type="submit" class="btn btn-outline-danger">Cancel Switch</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- open shifts list sub template -->
+    <template id="open_slots_list_template" name="Open Shifts">
+        <div class="container o_planning_calendar_open_shifts d-print-none mt-5">
+            <div name="available_shift_list_container" class="container" t-if="open_slots_ids">
+                <h1 align="center" class="m-3">Open Shifts Available</h1>
+                <div class="table-responsive-md">
+                    <table class="table table-borderless table-hover table-striped">
+                        <thead class="o_thead">
+                            <tr>
+                                <th class="text-start">Date</th>
+                                <th name="role_column" id="o_role" t-if="open_slot_has_role" class="text-start">Role</th>
+                                <th name="note_column" id="o_note" t-if="open_slot_has_note" class="text-start">Note</th>
+                            </tr>
+                        </thead>
+                        <tbody class="o_tbody">
+                            <t t-set="slots" t-value="open_slots_ids"/>
+                            <t t-foreach="slots" t-as="shift">
+                                <tr>
+                                    <td class="align-middle">
+                                        <t t-out="format_datetime(shift.start_datetime, dt_format='E')"/>.&amp;nbsp;
+                                        <t t-out="format_datetime(shift.start_datetime, dt_format='short')"/>
+                                        <i class="fa fa-long-arrow-right" aria-label="Arrow icon" title="Arrow"/>
+                                        <t t-out="format_datetime(shift.end_datetime, dt_format='E')"/>.&amp;nbsp;
+                                        <t t-out="format_datetime(shift.end_datetime, dt_format='short')"/>
+                                        (<t t-out="'%d:%02d' % (int(shift.allocated_hours), round(shift.allocated_hours % 1 * 60))"/>)
+                                        <t t-if="shift.allocated_percentage &lt; 100">
+                                            (<t t-out="shift.allocated_percentage" t-options="{'widget': 'float', 'precision': 2}"/>%)
+                                        </t>
+                                    </td>
+                                    <td t-if="open_slot_has_role" class="align-middle" name="role_id"><t t-esc="shift.role_id.name"/></td>
+                                    <td t-if="open_slot_has_note" class="align-middle" name="note_id"><t t-esc="shift.name"/></td>
+                                    <td name="buttons">
+                                        <div class="text-center float-end" t-if="not shift.resource_id">
+                                            <form t-attf-action="/planning/#{planning_planning_id.access_token}/#{employee.employee_token}/assign/#{shift.id}" method="post">
+                                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                <input type="hidden" name="message" value="assign"/>
+                                                <button type="submit" class="btn btn-primary">I Take It</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- unwanted shifts list sub template -->
+    <template id="unwanted_slots_list_template" name="Unwanted Shifts" inherit_id="planning.open_slots_list_template" primary="True">
+        <!-- New class attributes for container -->
+        <xpath expr="//div" position="attributes">
+            <attribute name="class" remove="o_planning_calendar_open_shifts" separator=" "/>
+            <attribute name="class" add="o_planning_calendar_unwanted_shifts" separator=" "/>
+        </xpath>
+        <!-- New conditional for showing the container -->
+        <xpath expr="//div[@name='available_shift_list_container']" position="attributes">
+            <attribute name="t-if">unwanted_slots_ids and not planning_planning_id['allow_self_unassign']</attribute>
+        </xpath>
+        <!-- New Section's Title -->
+        <xpath expr="//div/div[hasclass('container')]/h1" position="replace">
+            <h1 align="center" class="m-3">Unwanted Shifts Available</h1>
+        </xpath>
+        <!-- change conditional for showing roles/notes column headers-->
+        <xpath expr="//th[@name='role_column']" position="attributes">
+            <attribute name="t-if">unwanted_slot_has_role</attribute>
+        </xpath>
+        <xpath expr="//th[@name='note_column']" position="attributes">
+            <attribute name="t-if">unwanted_slot_has_note</attribute>
+        </xpath>
+        <!-- Adding the assignee column -->
+        <xpath expr="//th[@name='note_column']" position="after">
+            <th class="text-start">Assignee</th>
+        </xpath>
+        <!-- changing the set of slots we are iterating over -->
+        <xpath expr="//div/div/div/table/tbody/t" position="replace">
+            <t t-set="slots" t-value="unwanted_slots_ids"/>
+        </xpath>
+        <!-- change conditional for showing roles/notes data -->
+        <xpath expr="//td[@name='role_id']" position="attributes">
+            <attribute name="t-if">unwanted_slot_has_role</attribute>
+        </xpath>
+        <xpath expr="//td[@name='note_id']" position="attributes">
+            <attribute name="t-if">unwanted_slot_has_note</attribute>
+        </xpath>
+        <!-- change conditional to show self-assginment button in unwanted shifts -->
+        <xpath expr="//td[@name='buttons']/div" position="attributes">
+            <attribute name="t-if">shift.resource_id and shift.request_to_switch and shift.employee_id != employee</attribute>
+        </xpath>
+        <!-- introduce button that allows users to cancel the switch -->
+        <xpath expr="//td[@name='buttons']/div" position="after">
+            <div class="text-center float-end" t-if="shift.resource_id and shift.employee_id == employee">
+                <form t-attf-action="/planning/#{planning_planning_id.access_token}/#{employee.employee_token}/cancel_switch/#{shift.id}" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="message" value="assign"/>
+                    <button type="submit" class="btn btn-secondary">CANCEL SWITCH</button>
+                </form>
+            </div>
+        </xpath>
+        <!-- Add the assignee icon to the list -->
+        <xpath expr="//td[@name='buttons']" position="before">
+            <td class="align-middle assignee-cell">
+                <t t-set="popover_content">
+                    <t t-call="planning.planning_assignee_contact_popover"/>
+                </t>
+                <a tabindex="0" class="btn contact-assignee-popover"
+                    role="button"
+                    rel='popover'
+                    data-bs-toggle="popover"
+                    data-bs-placement="right"
+                    data-bs-custom-class="contact-assignee-popover"
+                    data-bs-html="true"
+                    data-bs-title="Contact Details"
+                    t-att-data-bs-content="popover_content" style="padding: 0px">
+                    <img t-att-src="image_data_uri(shift.employee_id.avatar_256)" t-attf-class="rounded o_object_fit_cover #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
+                    <t t-esc="shift.employee_id.name"/>
+                </a>
+            </td>
+        </xpath>
+    </template>
+
+    <template id="planning_assignee_contact_popover">
+        <div style="padding-bottom: 2px">
+            <i class="fa fa-envelope-o" title="Mail" role="img" style="padding-right: 2px"/>
+            <a t-attf-href="mailto:#{shift.employee_id.work_email}">
+                <t t-esc="shift.employee_id.work_email"/>
+            </a>
+        </div>
+        <div>
+            <t t-if="shift.employee_id.work_phone">
+                <i class="fa fa-phone" title="Phone" role="img" style="padding-right: 2px"/>
+                <a t-attf-href="tel:#{shift.employee_id.work_phone}">
+                    <t t-esc="shift.employee_id.work_phone"/>
+                </a>
+            </t>
+        </div>
+    </template>
+
+    <!-- notification sub template -->
+    <template id="planning_shift_notification" name="Shift notification">
+        <t t-if="notification_text">
+            <t t-if="message_slug in ['assign', 'unassign', 'switch', 'cancel_switch']">
+                <t t-set="o_toast_color" t-value="'bg-success'"/>
+            </t>
+            <t t-else="">
+                <t t-set="o_toast_color" t-value="'bg-danger'"/>
+            </t>
+            <div t-att-class="'position-absolute mx-2 my-1 toast o_planning_toast ' + o_toast_color" role="alert" id="PlanningToast" data-delay="3000">
+                <div class="toast-body">
+                    <t t-if="message_slug == 'assign'">
+                        <i class="fa fa-check-circle"/> You were successfully assigned this open shift.
+                    </t>
+                    <t t-if="message_slug == 'unassign'">
+                        <i class="fa fa-check-circle"/> This shift is no longer assigned to you.
+                    </t>
+                    <t t-if="message_slug == 'already_assign'">
+                        <i class="fa fa-exclamation-circle"/> This shift is already assigned to another employee.
+                    </t>
+                    <t t-if="message_slug == 'deny_unassign'">
+                        <i class="fa fa-exclamation-circle"/> You can no longer unassign yourself from this shift.
+                    </t>
+                    <t t-if="message_slug == 'switch'">
+                        <i class="fa fa-check-circle"/>
+                        You have successfully requested to switch your shift. You will be notified when another employee takes over your shift.
+                    </t>
+                    <t t-if="message_slug == 'cancel_switch'">
+                        <i class="fa fa-check-circle"/> Request to switch shift cancelled successfully.
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="slot_unassign">
+        <t t-call="web.frontend_layout">
+            <t t-set="title">Your Planning</t>
+            <body>
+                <div class="container">
+                    <div class="alert alert-success text-center" role="alert">
+                        <p class="d-inline">You have been successfully unassigned from this shift</p>
+                        <i class="fa fa-2x fa-check-circle float-end" style="margin-top:-3px"/>
+                    </div>
+                </div>
+            </body>
+        </t>
+    </template>
+
+    <template id="planning.brand_promotion" inherit_id="web.brand_promotion" primary="True">
+        <xpath expr="//t[@t-call='web.brand_promotion_message']" position="replace">
+            <t t-call="web.brand_promotion_message">
+                <t t-set="_message">
+                        Give depth to your <a target="_blank" href="https://www.odoo.com/app/planning?utm_source=db&amp;utm_medium=planning">Plans</a>
+                </t>
+                <t t-set="_utm_medium" t-valuef="planning"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="planning_shift_ics_description" name="Shift Description for ISC file"><t t-if="is_google_url"><b>Allocated Time:</b></t><t t-else="">Allocated Time:</t> <t t-out="shift['allocated_hours']"/> (<t t-out="shift['allocated_percentage']"/>%)
+<t name="role"><t t-if="is_google_url"><b>Role:</b></t><t t-else="">Role:</t> <t t-out="shift['role']"/></t>
+<t name="name"><t t-if="shift['name']"><t t-if="is_google_url"><b>Note:</b></t><t t-else="">Note:</t> <t t-out="shift['name']"/></t></t>
+    </template>
+</odoo>

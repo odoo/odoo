@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="sign.SignActionHelper">
+        <div class="o_view_nocontent">
+            <div class="o_nocontent_help">
+                <p class="o_view_nocontent_sign">
+                    Drag and drop <span class="fw-normal">or </span>
+                    <span class="btn btn-link fs-2 p-0 pb-1" t-on-click="() => this.onClickUpload('sign_send_request')">
+                        Upload
+                    </span>
+                </p>
+                <p t-if="this.props.resModel === 'sign.template'">Upload a PDF file to create a reusable template.</p>
+                <p t-else="">Document to send for signature or to sign yourself.</p>
+                <button class="btn btn-primary text-white o_sign_sample" t-on-click="onClicksampleSign">
+                    <t t-if="this.props.resModel === 'sign.request'">Try a sample contract</t>
+                    <t t-else="">Try our sample document</t>
+                </button>
+            </div>
+            <input type="file" multiple="true" t-ref="uploadFileInput" accept="application/pdf, application/x-pdf, application/vnd.cups-pdf" class="o_sign_template_file_input o_input_file o_hidden" t-on-change.stop="onFileInputChange"/>
+        </div>
+    </t>
+</templates>

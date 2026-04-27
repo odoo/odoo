@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_pk_rule_parameter_tax_brackets" model="hr.rule.parameter">
+        <field name="name">Pakistan: Tax Brackets</field>
+        <field name="code">l10n_pk_tax_brackets</field>
+        <field name="country_id" ref="base.pk"/>
+    </record>
+    <record id="l10n_pk_rule_parameter_tax_brackets_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+    (0, 600000, 0, 0),
+    (600000, 1200000, 0.025, 15000),
+    (1200000, 2400000, 0.125, 150000),
+    (2400000, 3600000, 0.225, 270000),
+    (3600000, 6000000, 0.275, 660000),
+    (6000000, 99999999999999999, 0.35, 0)]</field>
+        <field name="rule_parameter_id" ref="l10n_pk_rule_parameter_tax_brackets"/>
+        <field name="date_from" eval="datetime(2014, 6, 1).date()"/>
+    </record>
+    <record id="l10n_pk_rule_parameter_tax_brackets_2026" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+    (0, 600000, 0, 0),
+    (600000, 1200000, 0.01, 6000),
+    (1200000, 2200000, 0.11, 116000),
+    (2200000, 3200000, 0.23, 346000),
+    (3200000, 4100000, 0.3, 616000),
+    (4100000, 10000000, 0.35, 2681000),
+    (10000000, 99999999999999999,0.09,0)]</field>
+        <field name="rule_parameter_id" ref="l10n_pk_rule_parameter_tax_brackets"/>
+        <field name="date_from" eval="datetime(2025, 6, 30).date()"/>
+    </record>
+</odoo>

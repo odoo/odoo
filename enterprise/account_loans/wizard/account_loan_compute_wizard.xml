@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_loan_compute_wizard" model="ir.ui.view">
+            <field name="name">account.loan.compute.wizard.form</field>
+            <field name="model">account.loan.compute.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="currency_id" invisible="1"/>  <!-- Needed for monetary widget -->
+                        <group>
+                            <group name="loan_values">
+                                <field name="loan_amount" widget="monetary"/>
+                                <label for="interest_rate" string="Interest Rate"/>
+                                <div>
+                                    <field name="interest_rate" class="oe_inline"/>
+                                    <span class="oe_inline">%</span>
+                                </div>
+                                <label for="loan_term" string="Loan Term"/>
+                                <div>
+                                    <field name="loan_term" class="oe_inline"/>
+                                    <span class="oe_inline" invisible="loan_term == 1">years</span>
+                                    <span class="oe_inline" invisible="loan_term != 1">year</span>
+                                </div>
+                            </group>
+                            <group name="loan_dates">
+                                <field name="start_date"/>
+                                <field name="payment_end_of_month"/>
+                                <field name="first_payment_date" invisible="payment_end_of_month == 'end_of_month'"/>
+                                <field name="compounding_method"/>
+                            </group>
+                        </group>
+                        <label for="preview" string="Preview" invisible="not preview"/>
+                        <pre invisible="not preview"><field name="preview"/></pre>
+                    </sheet>
+                    <footer>
+                        <button string="Apply" name="action_save" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_view_account_loan_compute_wizard" model="ir.actions.act_window">
+            <field name="name">Loan Compute Wizard</field>
+            <field name="res_model">account.loan.compute.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_loan_compute_wizard"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

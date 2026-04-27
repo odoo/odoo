@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_kz_bl_report" model="account.report">
+        <field name="name">Balance Sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="False"/>
+        <field name="country_id" ref="base.kz"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_kz_bl_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_kz_bl_assets" model="account.report.line">
+                <field name="name">Assets</field>
+                <field name="code">L10N_KZ_BS_A</field>
+                <field name="aggregation_formula">L10N_KZ_BS_A_1.balance + L10N_KZ_BS_A_101.balance + L10N_KZ_BS_A_2.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_kz_bl_current_assets" model="account.report.line">
+                        <field name="name">I. Current Assets</field>
+                        <field name="code">L10N_KZ_BS_A_1</field>
+                        <field name="aggregation_formula">L10N_KZ_BS_A_010.balance + L10N_KZ_BS_A_011.balance + L10N_KZ_BS_A_012.balance + L10N_KZ_BS_A_013.balance + L10N_KZ_BS_A_014.balance + L10N_KZ_BS_A_015.balance + L10N_KZ_BS_A_016.balance + L10N_KZ_BS_A_017.balance + L10N_KZ_BS_A_018.balance + L10N_KZ_BS_A_019.balance + L10N_KZ_BS_A_020.balance + L10N_KZ_BS_A_021.balance + L10N_KZ_BS_A_022.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_kz_report_line_bs_current_assets_010" model="account.report.line">
+                                <field name="name">010. Cash and Cash Equivalents</field>
+                                <field name="code">L10N_KZ_BS_A_010</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">10</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_current_assets_011" model="account.report.line">
+                                <field name="name">011. Short-term financial assets measured at amortized cost</field>
+                                <field name="code">L10N_KZ_BS_A_011</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1110</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_current_assets_012" model="account.report.line">
+                                <field name="name">012. Short-term financial assets measured at fair value through other comprehensive income</field>
+                                <field name="code">L10N_KZ_BS_A_012</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1120</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_current_assets_013" model="account.report.line">
+                                <field name="name">013. Short-term financial assets at fair value through profit or loss</field>
+                                <field name="code">L10N_KZ_BS_A_013</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1130</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_current_assets_014" model="account.report.line">
+                                <field name="name">014. Short-term derivative financial instruments</field>
+                                <field name="code">L10N_KZ_BS_A_014</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1140</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_current_assets_015" model="account.report.line">
+                                <field name="name">015. Other short-term financial assets</field>
+                                <field name="code">L10N_KZ_BS_A_015</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">11\(1110,1120,1130,1140)</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_current_assets_016" model="account.report.line">
+                                <field name="name">016. Short-term trade and other receivables</field>
+                                <field name="code">L10N_KZ_BS_A_016</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">12\(1260,1210)</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_current_assets_017" model="account.report.line">
+                                <field name="name">017. Short-term lease receivables</field>
+                                <field name="code">L10N_KZ_BS_A_017</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1260</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_current_assets_018" model="account.report.line">
+                                <field name="name">018. Short-term assets under contracts with customers</field>
+                                <field name="code">L10N_KZ_BS_A_018</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1210</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_current_assets_019" model="account.report.line">
+                                <field name="name">019. Current income tax</field>
+                                <field name="code">L10N_KZ_BS_A_019</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1410</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_current_assets_020" model="account.report.line">
+                                <field name="name">020. Inventory</field>
+                                <field name="code">L10N_KZ_BS_A_020</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">13</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_current_assets_021" model="account.report.line">
+                                <field name="name">021. Biological assets</field>
+                                <field name="code">L10N_KZ_BS_A_021</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">16</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_current_assets_022" model="account.report.line">
+                                <field name="name">022. Other short-term assets</field>
+                                <field name="code">L10N_KZ_BS_A_022</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">14\(1410) + 17</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kz_bl_assets_for_sale" model="account.report.line">
+                        <field name="name">101. Assets (or disposal groups) held for sale</field>
+                        <field name="code">L10N_KZ_BS_A_101</field>
+                        <field name="account_codes_formula">15</field>
+                    </record>
+                    <record id="l10n_kz_bl_non_current_assets" model="account.report.line">
+                        <field name="name">II. Non-current Assets</field>
+                        <field name="code">L10N_KZ_BS_A_2</field>
+                        <field name="aggregation_formula">L10N_KZ_BS_A_110.balance + L10N_KZ_BS_A_111.balance + L10N_KZ_BS_A_112.balance + L10N_KZ_BS_A_113.balance + L10N_KZ_BS_A_114.balance + L10N_KZ_BS_A_115.balance + L10N_KZ_BS_A_116.balance + L10N_KZ_BS_A_117.balance + L10N_KZ_BS_A_118.balance + L10N_KZ_BS_A_119.balance + L10N_KZ_BS_A_120.balance + L10N_KZ_BS_A_121.balance + L10N_KZ_BS_A_122.balance + L10N_KZ_BS_A_123.balance + L10N_KZ_BS_A_124.balance + L10N_KZ_BS_A_125.balance + L10N_KZ_BS_A_126.balance + L10N_KZ_BS_A_127.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_kz_report_line_bs_non_current_assets_110" model="account.report.line">
+                                <field name="name">110. Long-term financial assets measured at amortized cost</field>
+                                <field name="code">L10N_KZ_BS_A_110</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">2010</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_non_current_assets_111" model="account.report.line">
+                                <field name="name">111. Long-term financial assets measured at fair value through other comprehensive income</field>
+                                <field name="code">L10N_KZ_BS_A_111</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">2020</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_non_current_assets_112" model="account.report.line">
+                                <field name="name">112. Long-term financial assets at fair value through profit or loss</field>
+                                <field name="code">L10N_KZ_BS_A_112</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">2030</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_non_current_assets_113" model="account.report.line">
+                                <field name="name">113. Long-term derivative financial instruments</field>
+                                <field name="code">L10N_KZ_BS_A_113</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">2040</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_non_current_assets_114" model="account.report.line">
+                                <field name="name">114. Investments accounted for at historical cost</field>
+                                <field name="code">L10N_KZ_BS_A_114</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">2220</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_non_current_assets_115" model="account.report.line">
+                                <field name="name">115. Investments accounted for using the equity method</field>
+                                <field name="code">L10N_KZ_BS_A_115</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">2200 + 2210</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_non_current_assets_116" model="account.report.line">
+                                <field name="name">116. Other non-current financial assets</field>
+                                <field name="code">L10N_KZ_BS_A_116</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">20\(2010,2020,2030,2040) + 22\(2200,2210,2220)</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_non_current_assets_117" model="account.report.line">
+                                <field name="name">117. Long-term trade and other receivables</field>
+                                <field name="code">L10N_KZ_BS_A_117</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">21\(2160,2110)</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_non_current_assets_118" model="account.report.line">
+                                <field name="name">118. Long-term lease receivables</field>
+                                <field name="code">L10N_KZ_BS_A_118</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">2160</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_non_current_assets_119" model="account.report.line">
+                                <field name="name">119. Long-term assets under contracts with customers</field>
+                                <field name="code">L10N_KZ_BS_A_119</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">2110</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_non_current_assets_120" model="account.report.line">
+                                <field name="name">120. Investment property</field>
+                                <field name="code">L10N_KZ_BS_A_120</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">23</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_non_current_assets_121" model="account.report.line">
+                                <field name="name">121. Property, plant and equipment</field>
+                                <field name="code">L10N_KZ_BS_A_121</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">24\(2440)</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_non_current_assets_122" model="account.report.line">
+                                <field name="name">122. Right-of-use asset</field>
+                                <field name="code">L10N_KZ_BS_A_122</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">2440 + 2760</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_non_current_assets_123" model="account.report.line">
+                                <field name="name">123. Biological assets</field>
+                                <field name="code">L10N_KZ_BS_A_123</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">25</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_non_current_assets_124" model="account.report.line">
+                                <field name="name">124. Exploration and evaluation assets</field>
+                                <field name="code">L10N_KZ_BS_A_124</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">26</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_non_current_assets_125" model="account.report.line">
+                                <field name="name">125. Intangible assets</field>
+                                <field name="code">L10N_KZ_BS_A_125</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">27\(2760)</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_non_current_assets_126" model="account.report.line">
+                                <field name="name">126. Deferred tax assets</field>
+                                <field name="code">L10N_KZ_BS_A_126</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">28</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_non_current_assets_127" model="account.report.line">
+                                <field name="name">127. Other non-current assets</field>
+                                <field name="code">L10N_KZ_BS_A_127</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">29</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kz_bl_equity_liabilities" model="account.report.line">
+                <field name="name">Equity and liabilities</field>
+                <field name="code">L10N_KZ_BS_B</field>
+                <field name="aggregation_formula">L10N_KZ_BS_B_1.balance + L10N_KZ_BS_B_2.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_kz_bl_liabilities" model="account.report.line">
+                        <field name="name">Liabilities</field>
+                        <field name="code">L10N_KZ_BS_B_2</field>
+                        <field name="aggregation_formula">L10N_KZ_BS_B_2_1.balance + L10N_KZ_BS_B_301.balance + L10N_KZ_BS_B_2_2.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_kz_report_line_bs_current_liabilities" model="account.report.line">
+                                <field name="name">III. Current liabilities</field>
+                                <field name="code">L10N_KZ_BS_B_2_1</field>
+                                <field name="aggregation_formula">L10N_KZ_BS_B_210.balance + L10N_KZ_BS_B_211.balance + L10N_KZ_BS_B_212.balance + L10N_KZ_BS_B_213.balance + L10N_KZ_BS_B_214.balance + L10N_KZ_BS_B_215.balance + L10N_KZ_BS_B_216.balance + L10N_KZ_BS_B_217.balance + L10N_KZ_BS_B_218.balance + L10N_KZ_BS_B_219.balance + L10N_KZ_BS_B_220.balance + L10N_KZ_BS_B_221.balance + L10N_KZ_BS_B_222.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kz_report_line_bs_current_liabilities_210" model="account.report.line">
+                                        <field name="name">210. Short-term financial liabilities measured at amortized cost</field>
+                                        <field name="code">L10N_KZ_BS_B_210</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-3010</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_current_liabilities_211" model="account.report.line">
+                                        <field name="name">211. Short-term financial liabilities at fair value through profit or loss</field>
+                                        <field name="code">L10N_KZ_BS_B_211</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-3070</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_current_liabilities_212" model="account.report.line">
+                                        <field name="name">212. Short-term derivative financial instruments</field>
+                                        <field name="code">L10N_KZ_BS_B_212</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-3030</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_current_liabilities_213" model="account.report.line">
+                                        <field name="name">213. Other current financial liabilities</field>
+                                        <field name="code">L10N_KZ_BS_B_213</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-30\(3010,3030,3040,3070)</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_current_liabilities_214" model="account.report.line">
+                                        <field name="name">214. Short-term trade and other payables</field>
+                                        <field name="code">L10N_KZ_BS_B_214</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-33\(3350,3360)</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_current_liabilities_215" model="account.report.line">
+                                        <field name="name">215. Short term estimated liabilities</field>
+                                        <field name="code">L10N_KZ_BS_B_215</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-34\(3430)</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_current_liabilities_216" model="account.report.line">
+                                        <field name="name">216. Current income tax liabilities</field>
+                                        <field name="code">L10N_KZ_BS_B_216</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-3110</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_current_liabilities_217" model="account.report.line">
+                                        <field name="name">217. Employee benefits</field>
+                                        <field name="code">L10N_KZ_BS_B_217</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-3350 - 3430</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_current_liabilities_218" model="account.report.line">
+                                        <field name="name">218. Short term lease receivables</field>
+                                        <field name="code">L10N_KZ_BS_B_218</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-3360</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_current_liabilities_219" model="account.report.line">
+                                        <field name="name">219. Short-term liabilities on contracts with customers</field>
+                                        <field name="code">L10N_KZ_BS_B_219</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-3540</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_current_liabilities_220" model="account.report.line">
+                                        <field name="name">220. Government grants</field>
+                                        <field name="code">L10N_KZ_BS_B_220</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-3570</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_current_liabilities_221" model="account.report.line">
+                                        <field name="name">221. Dividends payable</field>
+                                        <field name="code">L10N_KZ_BS_B_221</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-3040</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_current_liabilities_222" model="account.report.line">
+                                        <field name="name">222. Other current liabilities</field>
+                                        <field name="code">L10N_KZ_BS_B_222</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-31\(3110) - 32 - 35\(3530,3540,3570)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_liabilities_301" model="account.report.line">
+                                <field name="name">301. Liabilities of disposal groups held for sale</field>
+                                <field name="code">L10N_KZ_BS_B_301</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-3530</field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_non_current_liabilities" model="account.report.line">
+                                <field name="name">IV. Non-current liabilities</field>
+                                <field name="code">L10N_KZ_BS_B_2_2</field>
+                                <field name="aggregation_formula">L10N_KZ_BS_B_310.balance + L10N_KZ_BS_B_311.balance + L10N_KZ_BS_B_312.balance + L10N_KZ_BS_B_313.balance + L10N_KZ_BS_B_314.balance + L10N_KZ_BS_B_315.balance + L10N_KZ_BS_B_316.balance + L10N_KZ_BS_B_317.balance + L10N_KZ_BS_B_318.balance + L10N_KZ_BS_B_319.balance + L10N_KZ_BS_B_320.balance + L10N_KZ_BS_B_321.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kz_report_line_bs_non_current_liabilities_310" model="account.report.line">
+                                        <field name="name">310. Long-term financial liabilities measured at amortized cost</field>
+                                        <field name="code">L10N_KZ_BS_B_310</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-4010</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_non_current_liabilities_311" model="account.report.line">
+                                        <field name="name">311. Long-term financial liabilities at fair value through profit or loss</field>
+                                        <field name="code">L10N_KZ_BS_B_311</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-4020</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_non_current_liabilities_312" model="account.report.line">
+                                        <field name="name">312. Long-term derivative financial instruments</field>
+                                        <field name="code">L10N_KZ_BS_B_312</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-4030</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_non_current_liabilities_313" model="account.report.line">
+                                        <field name="name">313. Other non-current financial liabilities</field>
+                                        <field name="code">L10N_KZ_BS_B_313</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-40\(4010,4020,4030)</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_non_current_liabilities_314" model="account.report.line">
+                                        <field name="name">314. Long-term trade and other payables</field>
+                                        <field name="code">L10N_KZ_BS_B_314</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-41\(4164,4150)</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_non_current_liabilities_315" model="account.report.line">
+                                        <field name="name">315. Non-current estimated liabilities</field>
+                                        <field name="code">L10N_KZ_BS_B_315</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-42\(4230)</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_non_current_liabilities_316" model="account.report.line">
+                                        <field name="name">316. Deferred tax liabilities</field>
+                                        <field name="code">L10N_KZ_BS_B_316</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-43</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_non_current_liabilities_317" model="account.report.line">
+                                        <field name="name">317. Employee benefits</field>
+                                        <field name="code">L10N_KZ_BS_B_317</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-4164 - 4230</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_non_current_liabilities_318" model="account.report.line">
+                                        <field name="name">318. Long-term lease liabilities</field>
+                                        <field name="code">L10N_KZ_BS_B_318</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-4150</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_non_current_liabilities_319" model="account.report.line">
+                                        <field name="name">319. Long-term liabilities on contracts with customers</field>
+                                        <field name="code">L10N_KZ_BS_B_319</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-4430</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_non_current_liabilities_320" model="account.report.line">
+                                        <field name="name">320. Government grants</field>
+                                        <field name="code">L10N_KZ_BS_B_320</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-4460</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_non_current_liabilities_321" model="account.report.line">
+                                        <field name="name">321. Other non-current liabilities</field>
+                                        <field name="code">L10N_KZ_BS_B_321</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-44\(4430,4460)</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kz_bl_equity" model="account.report.line">
+                        <field name="name">V. Equity</field>
+                        <field name="code">L10N_KZ_BS_B_1</field>
+                        <field name="aggregation_formula">L10N_KZ_BS_B_1_1.balance + L10N_KZ_BS_B_1_2.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_kz_bl_equity_420" model="account.report.line">
+                                <field name="name">420. Total equity attributable to owners</field>
+                                <field name="code">L10N_KZ_BS_B_1_1</field>
+                                <field name="aggregation_formula">L10N_KZ_BS_B_410.balance + L10N_KZ_BS_B_411.balance + L10N_KZ_BS_B_412.balance + L10N_KZ_BS_B_413.balance + L10N_KZ_BS_B_414.balance + L10N_KZ_BS_B_415.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kz_report_line_bs_equity_410" model="account.report.line">
+                                        <field name="name">410. Authorized (share) capital</field>
+                                        <field name="code">L10N_KZ_BS_B_410</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-50 - 51</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_equity_411" model="account.report.line">
+                                        <field name="name">411. Share premium</field>
+                                        <field name="code">L10N_KZ_BS_B_411</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-53</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_equity_412" model="account.report.line">
+                                        <field name="name">412. Treasury equity instruments</field>
+                                        <field name="code">L10N_KZ_BS_B_412</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-52</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_equity_413" model="account.report.line">
+                                        <field name="name">413. Components of other comprehensive income</field>
+                                        <field name="code">L10N_KZ_BS_B_413</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-55</field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_equity_414" model="account.report.line">
+                                        <field name="name">414. Retained earnings (uncovered loss)</field>
+                                        <field name="code">L10N_KZ_BS_B_414</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="aggregation_formula">L10N_KZ_BS_B_414_1.balance + L10N_KZ_BS_B_414_2.balance</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_kz_report_line_bs_equity_414_1" model="account.report.line">
+                                                <field name="name">Current year earnings</field>
+                                                <field name="code">L10N_KZ_BS_B_414_1</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_kz_report_line_bs_equity_414_1_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">aggregation</field>
+                                                        <field name="formula">L10N_KZ_PNL_500.balance</field>
+                                                        <field name="date_scope">from_fiscalyear</field>
+                                                        <field name="subformula">cross_report</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="l10n_kz_report_line_bs_equity_414_2" model="account.report.line">
+                                                <field name="name">Retained earnings (uncovered loss) for the reporting year and previous years</field>
+                                                <field name="code">L10N_KZ_BS_B_414_2</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-56 - 999999</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kz_report_line_bs_equity_415" model="account.report.line">
+                                        <field name="name">415. Other capital</field>
+                                        <field name="code">L10N_KZ_BS_B_415</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-54 - 57</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kz_report_line_bs_equity_421" model="account.report.line">
+                                <field name="name">421. Shares of non-controlling owners</field>
+                                <field name="code">L10N_KZ_BS_B_1_2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kz_report_line_bs_equity_421_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

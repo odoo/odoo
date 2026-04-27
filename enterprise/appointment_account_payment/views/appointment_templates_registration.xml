@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="appointment_form" inherit_id="appointment.appointment_form">
+    <xpath expr="//button[hasclass('o_appointment_form_confirm_btn')]" position="replace">
+        <button t-if="appointment_type.has_payment_step and appointment_type.product_id.lst_price" type="button" class="btn btn-primary o_appointment_form_confirm_btn">
+            Proceed to Payment
+        </button>
+        <button t-else="" type="button" class="btn btn-primary o_appointment_form_confirm_btn">Confirm Appointment</button>
+    </xpath>
+</template>
+</odoo>

@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_cn_assbe_pl" model="account.report">
+        <field name="name">ASSBE: Profit And Loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="country_id" ref="base.cn"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="filter_budgets" eval="True"/>
+        <field name="default_opening_date_filter">this_year</field>
+        <field name="availability_condition">coa</field>
+        <field name="chart_template">cn</field>
+        <field name="column_ids">
+            <record id="l10n_cn_assbe_pl_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_cn_assbe_pl_cns_oi" model="account.report.line">
+                <field name="name">1. Operating Income</field>
+                <field name="code">CNS_OI</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="account_codes_formula">- 50</field>
+                <field name="children_ids">
+                    <record id="l10n_cn_assbe_pl_cns_oc" model="account.report.line">
+                        <field name="name">2. Operating Costs</field>
+                        <field name="code">CNS_OC</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">54\(5403) + 55 + 56\(5601, 5602, 5603) + 40 + 41 + 42 + 44</field>
+                    </record>
+                    <record id="l10n_cn_assbe_pl_cns_ots" model="account.report.line">
+                        <field name="name">3. Operating Taxes and Surcharges</field>
+                        <field name="code">CNS_OTS</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="aggregation_formula">CNS_CT.balance + CNS_BTS.balance + CNS_UMCT.balance + CNS_RT.balance + CNS_LVAT.balance + CNS_LPVS.balance + CNS_EMP.balance + CNS_OOTS.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_cn_assbe_pl_cns_ct" model="account.report.line">
+                                <field name="name">4. Consumption Tax</field>
+                                <field name="code">CNS_CT</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">540301</field>
+                            </record>
+                            <record id="l10n_cn_assbe_pl_cns_bts" model="account.report.line">
+                                <field name="name">5. Business Taxes and Surcharges</field>
+                                <field name="code">CNS_BTS</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">540302</field>
+                            </record>
+                            <record id="l10n_cn_assbe_pl_cns_umct" model="account.report.line">
+                                <field name="name">6. Urban Maintenance and Construction Tax</field>
+                                <field name="code">CNS_UMCT</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">540303</field>
+                            </record>
+                            <record id="l10n_cn_assbe_pl_cns_rt" model="account.report.line">
+                                <field name="name">7. Resource Tax</field>
+                                <field name="code">CNS_RT</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">540304</field>
+                            </record>
+                            <record id="l10n_cn_assbe_pl_cns_lvat" model="account.report.line">
+                                <field name="name">8. Land Value Added Tax</field>
+                                <field name="code">CNS_LVAT</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">540305</field>
+                            </record>
+                            <record id="l10n_cn_assbe_pl_cns_lpvs" model="account.report.line">
+                                <field name="name">9. Urban Land Use Tax, Property Tax, Vehicle and Vessel Tax, Stamp Duty</field>
+                                <field name="code">CNS_LPVS</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">540306 + 540307 + 540308 + 540309</field>
+                            </record>
+                            <record id="l10n_cn_assbe_pl_cns_emp" model="account.report.line">
+                                <field name="name">10. Education Fee Surcharge, Mineral Resource Compensation Fee, Pollution Discharge Fee</field>
+                                <field name="code">CNS_EMP</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">540310 + 540311 + 540312</field>
+                            </record>
+                            <record id="l10n_cn_assbe_pl_cns_oots" model="account.report.line">
+                                <field name="name">Other Operating Taxes and Surcharges</field>
+                                <field name="code">CNS_OOTS</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">5403\(540301,540302, 540303, 540304, 540305, 540306, 540307, 540308, 540309, 540310, 540311, 540312)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_cn_assbe_pl_cns_se" model="account.report.line">
+                        <field name="name">11. Sales Expenses</field>
+                        <field name="code">CNS_SE</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="aggregation_formula">CNS_PRF.balance + CNS_APE.balance + CNS_OSE.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_cn_assbe_pl_cns_prf" model="account.report.line">
+                                <field name="name">12. Product Repair Fee</field>
+                                <field name="code">CNS_PRF</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">560101</field>
+                            </record>
+                            <record id="l10n_cn_assbe_pl_cns_ape" model="account.report.line">
+                                <field name="name">13. Advertising and Promotion Expenses</field>
+                                <field name="code">CNS_APE</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">560102</field>
+                            </record>
+                            <record id="l10n_cn_assbe_pl_cns_ose" model="account.report.line">
+                                <field name="name">Other Sales Expenses</field>
+                                <field name="code">CNS_OSE</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">5601\(560101, 560102)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_cn_assbe_pl_cns_ae" model="account.report.line">
+                        <field name="name">14. Administrative Expenses</field>
+                        <field name="code">CNS_AE</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="aggregation_formula">CNS_SUE.balance + CNS_EE.balance + CNS_RE.balance + CNS_OAE.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_cn_assbe_pl_cns_sue" model="account.report.line">
+                                <field name="name">15. Start-up Expense</field>
+                                <field name="code">CNS_SUE</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">560201</field>
+                            </record>
+                            <record id="l10n_cn_assbe_pl_cns_ee" model="account.report.line">
+                                <field name="name">16. Entertainment Expenses</field>
+                                <field name="code">CNS_EE</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">560202</field>
+                            </record>
+                            <record id="l10n_cn_assbe_pl_cns_re" model="account.report.line">
+                                <field name="name">17. Research Expense</field>
+                                <field name="code">CNS_RE</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">560203</field>
+                            </record>
+                            <record id="l10n_cn_assbe_pl_cns_oae" model="account.report.line">
+                                <field name="name">Other Administrative Expenses</field>
+                                <field name="code">CNS_OAE</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">43 + 5602\(560201, 560202, 560203)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_cn_assbe_pl_cns_fe" model="account.report.line">
+                        <field name="name">18. Financial Expenses</field>
+                        <field name="code">CNS_FE</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="aggregation_formula">CNS_IE.balance + CNS_OFE.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_cn_assbe_pl_cns_ie" model="account.report.line">
+                                <field name="name">19. Interest Expenses</field>
+                                <field name="code">CNS_IE</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">560301</field>
+                            </record>
+                            <record id="l10n_cn_assbe_pl_cns_ofe" model="account.report.line">
+                                <field name="name">Other Financial Expenses</field>
+                                <field name="code">CNS_OFE</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">5603\(560301)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_cn_assbe_pl_cns_ii" model="account.report.line">
+                        <field name="name">20. Add: investment income</field>
+                        <field name="code">CNS_II</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">- 51</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cn_assbe_pl_cns_op" model="account.report.line">
+                <field name="name">21. Operating profit</field>
+                <field name="code">CNS_OP</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="aggregation_formula">CNS_OI.balance - CNS_OC.balance - CNS_OTS.balance - CNS_SE.balance - CNS_AE.balance - CNS_FE.balance + CNS_II.balance</field>
+                <field name="children_ids">
+                    <record id="l10n_cn_assbe_pl_cns_noi" model="account.report.line">
+                        <field name="name">22. Add: Non-operating income</field>
+                        <field name="code">CNS_NOI</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="aggregation_formula">CNS_GS.balance + CNS_ONOI.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_cn_assbe_pl_cns_gs" model="account.report.line">
+                                <field name="name">23. Government Subsidies</field>
+                                <field name="code">CNS_GS</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 530101</field>
+                            </record>
+                            <record id="l10n_cn_assbe_pl_cns_onoi" model="account.report.line">
+                                <field name="name">Other Non-operating Income</field>
+                                <field name="code">CNS_ONOI</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 53\(530101)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_cn_assbe_pl_cns_noe" model="account.report.line">
+                        <field name="name">24. Less: Non-operating Expenses</field>
+                        <field name="code">CNS_NOE</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="aggregation_formula">CNS_BDE.balance + CNS_ULLB.balance + CNS_ULLE.balance + CNS_LCFM.balance + CNS_LTPE.balance + CNS_ONOE.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_cn_assbe_pl_cns_bde" model="account.report.line">
+                                <field name="name">25. Bad Debt Expenses</field>
+                                <field name="code">CNS_BDE</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">571101</field>
+                            </record>
+                            <record id="l10n_cn_assbe_pl_cns_ullb" model="account.report.line">
+                                <field name="name">26. Unrecoverable Losses on Long-term Bond Investments</field>
+                                <field name="code">CNS_ULLB</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">571102</field>
+                            </record>
+                            <record id="l10n_cn_assbe_pl_cns_ulle" model="account.report.line">
+                                <field name="name">27. Unrecoverable Losses on Long-term Equity Investments</field>
+                                <field name="code">CNS_ULLE</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">571103</field>
+                            </record>
+                            <record id="l10n_cn_assbe_pl_cns_lcfm" model="account.report.line">
+                                <field name="name">28. Losses Caused by Force Majeure Factors Such as Natural Disasters</field>
+                                <field name="code">CNS_LCFM</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">571104</field>
+                            </record>
+                            <record id="l10n_cn_assbe_pl_cns_ltpe" model="account.report.line">
+                                <field name="name">29. Late Tax Payment Expenses</field>
+                                <field name="code">CNS_LTPE</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">571105</field>
+                            </record>
+                            <record id="l10n_cn_assbe_pl_cns_onoe" model="account.report.line">
+                                <field name="name">Other Non-operating Expenses</field>
+                                <field name="code">CNS_ONOE</field>
+                                <field name="hierarchy_level">4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">57\(571101, 571102, 571103, 571104, 571105)</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cn_assbe_pl_cns_gp" model="account.report.line">
+                <field name="name">30. Gross Profit</field>
+                <field name="code">CNS_GP</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="aggregation_formula">CNS_OP.balance + CNS_NOI.balance - CNS_NOE.balance</field>
+                <field name="children_ids">
+                    <record id="l10n_cn_assbe_pl_cns_ite" model="account.report.line">
+                        <field name="name">31. Income Tax Expenses</field>
+                        <field name="code">CNS_ITE</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">58</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cn_assbe_pl_cns_nep" model="account.report.line">
+                <field name="name">32. Net Profit</field>
+                <field name="code">CNS_NEP</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="aggregation_formula">CNS_GP.balance - CNS_ITE.balance</field>
+            </record>
+        </field>
+    </record>
+</odoo>

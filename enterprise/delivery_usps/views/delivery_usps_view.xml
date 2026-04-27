@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_delivery_carrier_form_with_provider_usps" model="ir.ui.view">
+        <field name="name">delivery.carrier.form.provider.usps</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='destination']" position='before'>
+                <page string="USPS Configuration" name="usps_configuration"
+                    invisible="delivery_type != 'usps'">
+                    <group>
+                        <group>
+                            <field name="usps_username" required="delivery_type == 'usps'"/>
+                            <field name="usps_account_validated" required="delivery_type == 'usps'"/>
+                            <field name="usps_service" required="delivery_type == 'usps'"/>
+                            <field name="usps_delivery_nature" required="delivery_type == 'usps'"/>
+                            <field name="usps_content_type" required="delivery_type == 'usps'"/>
+                        </group>
+                        <group>
+                            <field name="usps_mail_type" invisible="usps_delivery_nature != 'international'"/>
+                            <field name="usps_container" invisible="usps_service == 'First Class'"/>
+                            <field name="usps_first_class_mail_type" invisible="usps_service != 'First Class'"/>
+                            <field name="usps_domestic_regular_container" invisible="usps_container != 'Regular' or usps_delivery_nature == 'international' or usps_service == 'First Class'"/>
+                            <label for="usps_custom_container_width"/>
+                            <div>
+                                <field name="usps_custom_container_width" class="oe_inline" invisible="usps_container == 'Regular' or usps_service == 'First Class'"/>
+                                inch
+                            </div>
+                            <label for="usps_custom_container_length"/>
+                            <div>
+                                <field name="usps_custom_container_length" class="oe_inline" invisible="usps_container == 'Regular' or usps_service == 'First Class'"/>
+                                inch
+                            </div>
+                            <label for="usps_custom_container_height"/>
+                            <div>
+                                <field name="usps_custom_container_height" class="oe_inline" invisible="usps_container == 'Regular' or usps_service == 'First Class'"/>
+                                inch
+                            </div>
+                            <label for="usps_custom_container_girth"/>
+                            <div>
+                                <field name="usps_custom_container_girth" class="oe_inline" invisible="usps_container == 'Regular' or usps_service == 'First Class'"/>
+                                inch
+                            </div>
+                            <field name="usps_international_regular_container" invisible="usps_container != 'Regular' or usps_delivery_nature != 'international' or usps_service == 'First Class'"/>
+                            <field name="usps_label_file_type" string="Label Format" required="delivery_type == 'usps'"/>
+                        </group>
+                        <group string="Options">
+                            <field name="usps_machinable" required="delivery_type == 'usps'"/>
+                            <field name="can_generate_return" invisible="1"/>
+                            <field name="return_label_on_delivery" invisible="not can_generate_return"/>
+                            <field name="get_return_label_from_portal" invisible="not return_label_on_delivery"/>
+                            <field name="usps_intl_non_delivery_option" invisible="usps_delivery_nature != 'international' or usps_service == 'First Class'" />
+                            <field name="usps_redirect_partner_id" invisible="usps_delivery_nature != 'international' or usps_intl_non_delivery_option != 'REDIRECT'"  />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

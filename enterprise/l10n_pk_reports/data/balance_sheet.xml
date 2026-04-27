@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_financial_report_pk_balancesheet0" model="account.report">
+        <field name="name">Balance Sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.pk"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_pk_balancesheet0_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_balance_report_pk_asset" model="account.report.line">
+                <field name="name">Assets</field>
+                <field name="code">PK_AST</field>
+                <field name="aggregation_formula">PK_NCA.balance + PK_CA.balance</field>
+                <field name="children_ids">
+                    <record id="account_balance_report_pk_non_current_asset" model="account.report.line">
+                        <field name="name">Non-Current Assets</field>
+                        <field name="code">PK_NCA</field>
+                        <field name="aggregation_formula">PK_1111.balance + PK_1112.balance + PK_1113.balance + PK_1114.balance + PK_1115.balance + PK_1116.balance + PK_1117.balance + PK_1118.balance + PK_1119.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_pk_property_plant_equipment" model="account.report.line">
+                                <field name="name">Property, plant, equipment</field>
+                                <field name="code">PK_1111</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1111</field>
+                            </record>
+                            <record id="account_financial_report_pk_intangible_assets" model="account.report.line">
+                                <field name="name">Intangible Assets</field>
+                                <field name="code">PK_1112</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1112</field>
+                            </record>
+                            <record id="account_financial_report_pk_investment_property" model="account.report.line">
+                                <field name="name">Investment Property</field>
+                                <field name="code">PK_1113</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1113</field>
+                            </record>
+                            <record id="account_financial_report_pk_long_term_investments" model="account.report.line">
+                                <field name="name">Long Term Investments</field>
+                                <field name="code">PK_1114</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1114</field>
+                            </record>
+                            <record id="account_financial_report_pk_long_term_deposits" model="account.report.line">
+                                <field name="name">Long Term Deposits</field>
+                                <field name="code">PK_1115</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1115</field>
+                            </record>
+                            <record id="account_financial_report_pk_biological_assets" model="account.report.line">
+                                <field name="name">Biological Assets</field>
+                                <field name="code">PK_1116</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1116</field>
+                            </record>
+                            <record id="account_financial_report_pk_investment_associates" model="account.report.line">
+                                <field name="name">Investment in Associates</field>
+                                <field name="code">PK_1117</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1117</field>
+                            </record>
+                            <record id="account_financial_report_pk_investment_jointly_entities" model="account.report.line">
+                                <field name="name">Investment in Jointly Controlled Entities</field>
+                                <field name="code">PK_1118</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1118</field>
+                            </record>
+                            <record id="account_financial_report_pk_financial_assets" model="account.report.line">
+                                <field name="name">Other Financial Assets</field>
+                                <field name="code">PK_1119</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1119</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_balance_report_pk_current_asset" model="account.report.line">
+                        <field name="name">Current Assets</field>
+                        <field name="code">PK_CA</field>
+                        <field name="aggregation_formula">PK_1121.balance + PK_1122.balance + PK_1123.balance + PK_1124.balance + PK_1125.balance + PK_1126.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_pk_trade_receivable" model="account.report.line">
+                                <field name="name">Trade Receivable</field>
+                                <field name="code">PK_1121</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1121</field>
+                            </record>
+                            <record id="account_financial_report_pk_loans_advances" model="account.report.line">
+                                <field name="name">Loans and Advances</field>
+                                <field name="code">PK_1122</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1122</field>
+                            </record>
+                            <record id="account_financial_report_pk_deposit_prepayments" model="account.report.line">
+                                <field name="name">Trade Deposits and Short Term Prepayments</field>
+                                <field name="code">PK_1123</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1123</field>
+                            </record>
+                            <record id="account_financial_report_pk_inventories" model="account.report.line">
+                                <field name="name">Inventories</field>
+                                <field name="code">PK_1125</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1125</field>
+                            </record>
+                            <record id="account_financial_report_pk_cash" model="account.report.line">
+                                <field name="name">Cash and Cash Equivalents</field>
+                                <field name="code">PK_1126</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1126</field>
+                            </record>
+                            <record id="account_financial_report_pk_other_current_asset" model="account.report.line">
+                                <field name="name">Other Current Assets</field>
+                                <field name="code">PK_1124</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1124</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_balance_report_pk_liabilities" model="account.report.line">
+                <field name="name">Liabilities</field>
+                <field name="code">PK_LIA</field>
+                <field name="aggregation_formula">PK_NCL.balance + PK_CL.balance</field>
+                <field name="children_ids">
+                    <record id="account_balance_report_pk_non_current_liabilities" model="account.report.line">
+                        <field name="name">Non-Current Liabilities</field>
+                        <field name="code">PK_NCL</field>
+                        <field name="aggregation_formula">PK_2211.balance + PK_2212.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_pk_long_term_financing" model="account.report.line">
+                                <field name="name">Long Term Financing</field>
+                                <field name="code">PK_2211</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2211</field>
+                            </record>
+                            <record id="account_financial_report_pk_deferred_liabilities" model="account.report.line">
+                                <field name="name">Deferred Liabilities</field>
+                                <field name="code">PK_2212</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2212</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_balance_report_pk_current_liabilities" model="account.report.line">
+                        <field name="name">Current Liabilities</field>
+                        <field name="code">PK_CL</field>
+                        <field name="aggregation_formula">PK_2221.balance + PK_2222.balance + PK_2223.balance + PK_2224.balance + PK_2225.balance + PK_2226.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_pk_payables" model="account.report.line">
+                                <field name="name">Trade and Payables</field>
+                                <field name="code">PK_2221</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2221</field>
+                            </record>
+                            <record id="account_financial_report_pk_short_borrowing" model="account.report.line">
+                                <field name="name">Short Term Borrowings</field>
+                                <field name="code">PK_2222</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2222</field>
+                            </record>
+                            <record id="account_financial_report_pk_provisions" model="account.report.line">
+                                <field name="name">Provisions</field>
+                                <field name="code">PK_2223</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2223</field>
+                            </record>
+                            <record id="account_financial_report_pk_unpaid_dividend" model="account.report.line">
+                                <field name="name">Unpaid Dividend</field>
+                                <field name="code">PK_2224</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2224</field>
+                            </record>
+                            <record id="account_financial_report_pk_unclaimed_dividend" model="account.report.line">
+                                <field name="name">Unclaimed Dividend</field>
+                                <field name="code">PK_2225</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2225</field>
+                            </record>
+                            <record id="account_financial_report_pk_other_current_liabilities" model="account.report.line">
+                                <field name="name">Other Current Liabilities</field>
+                                <field name="code">PK_2226</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2226</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_balance_report_pk_equity" model="account.report.line">
+                <field name="name">Equity</field>
+                <field name="code">PK_EQUI</field>
+                <field name="aggregation_formula">PK_2111.balance + PK_Earnings.balance + PK_2112.balance + PK_2113.balance</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_pk_share_capital" model="account.report.line">
+                        <field name="name">Share Capital</field>
+                        <field name="code">PK_2111</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-2111</field>
+                    </record>
+                    <record id="account_financial_report_pk_current_year_earnings" model="account.report.line">
+                        <field name="name">Unappropriated Profit</field>
+                        <field name="code">PK_Earnings</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pk_current_year_earnings_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-4 - 3</field>
+                                <field name="date_scope">from_beginning</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pk_reserves" model="account.report.line">
+                        <field name="name">Reserves</field>
+                        <field name="code">PK_2112</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-2112</field>
+                    </record>
+                    <record id="account_financial_report_pk_revaluation_surplus" model="account.report.line">
+                        <field name="name">Revaluation Surplus on Property and Equipment</field>
+                        <field name="code">PK_2113</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-2113</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_balance_report_pk_equity_plus_liabilities" model="account.report.line">
+                <field name="name">Contingencies and Commitments</field>
+                <field name="code">PK_EQUI_LIA</field>
+                <field name="aggregation_formula">PK_EQUI.balance + PK_LIA.balance</field>
+            </record>
+        </field>
+    </record>
+</odoo>

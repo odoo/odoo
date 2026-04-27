@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <div t-name="knowledge.KnowledgeCommentsHandler" t-ref="rootCommentsRef"
+        class="o_knowledge_comments_handler position-absolute top-0 start-100 d-print-none">
+        <t t-if="commentsState.displayMode === 'handler'">
+            <t t-foreach="props.commentBeaconManager.sortedThreadIds" t-as="threadId" t-key="threadId">
+                <KnowledgeCommentsThread threadId="threadId" top="getThreadTop(threadId)"
+                    horizontalDimensions="state.threadDimensions.horizontal"/>
+            </t>
+        </t>
+    </div>
+</templates>

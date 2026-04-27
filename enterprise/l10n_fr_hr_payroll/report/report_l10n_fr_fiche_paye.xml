@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_l10n_fr_fiche_paye">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="row">
+                        <div class="col-4">
+                            <h2>Bulletin de paie</h2>
+                            <h4>Paie du <span t-field="o.date_from"/> <span>au</span> <span t-field="o.date_to"/></h4>
+                        </div>
+                        <div class="col-4 ms-auto">
+                            <table class="table table-bordered" style="border: 2px solid black;">
+                                <tr>
+                                    <td>
+                                        <div t-field="o.employee_id.company_id.partner_id"  
+                                    t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' /><span>SIRET:</span>
+                                        <span t-esc="o.employee_id.company_id.siret or '_'"/><span> APE:</span>
+                                        <span t-esc="o.employee_id.company_id.ape or '_'"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="w-100 d-block">
+                                            <t t-esc="o.employee_id.private_street"/><br/>
+                                            <t t-if="o.employee_id.private_street2">
+                                                <t t-esc="o.employee_id.private_street2"/><br/>
+                                            </t>
+                                            <t t-esc="o.employee_id.private_zip"/> <t t-esc="o.employee_id.private_city"/><br/>
+                                            <t t-esc="o.employee_id.private_country_id.name"/><br/>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td>
+                                        <span>Matricule :</span><br/>
+                                        <span>N° s.s :</span><br/>
+                                        <span>Emploi :</span><br/>
+                                        <span>Qualif :</span><br/>
+                                        <span>Niveau :</span><br/>
+                                        <span>Coef :</span><br/>
+                                        <span>Entrée :</span><br/>
+                                        <span>Sortie :</span><br/>
+                                        <span>ORG. S.S :</span>
+                                    </td>
+                                    <td>
+                                        <span t-esc="o.employee_id.id or '_'"/><br/>
+                                        <span t-esc="o.employee_id.identification_id or '_'"/><br/>
+                                        <span t-esc="o.contract_id.job_id.name or '_'"/><br/>
+                                        <span t-esc="o.contract_id.qualif or '_'"/><br/>
+                                        <span t-esc="o.contract_id.niveau or '_'"/><br/>
+                                        <span t-esc="o.contract_id.coef or '_'"/><br/>
+                                        <span t-esc="o.contract_id.date_start or '_'"/><br/>
+                                        <span t-esc="o.contract_id.date_end or '_'"/><br/>
+                                        <span t-esc="o.employee_id.company_id.org_ss or '_'"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Désignation</th>
+                                <th>Quantité / Base</th>
+                                <th>Taux</th>
+                                <th>Montant</th>
+                                <th>Taux Charges Patronales</th>
+                                <th>Montant Charges Patronales</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip)" t-as="line">
+                                <td>
+                                    <span t-esc="line.code or ''"/>
+                                </td>
+                                <td>
+                                     <span t-esc="line.name or ''"/>
+                                </td>
+                                <td>
+                                    <t t-if="line.amount_select== 'percentage'">
+                                        <span t-esc="line.amount or ''"/>
+                                    </t> 
+                                    <t t-if="line.amount_select== 'fix'">
+                                        <span t-esc="line.quantity or ''"/>
+                                    </t>
+                                </td>
+                                <td>
+                                    <t t-if="line.amount_select == 'percentage'">
+                                        <span t-esc="line.rate or ''"/>
+                                    </t>
+                                </td>
+                                <td>
+                                    <span t-esc="line.total or ''"/>
+                                </td>
+                                <t t-set="employer_line" t-value="get_employer_line(line)"/>
+                                <td>
+                                    <span t-esc="employer_line.rate if employer_line else ''"/>
+                                </td>
+                                <td>
+                                    <span t-esc="employer_line.total if employer_line else ''"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                     <div class="row">
+                        <div class="col-12">
+                            <table class="table  table-round-border">
+                                <tr>
+                                    <td>
+                                        <div class="float-end">         
+                                        <strong>Net à payer </strong>: <span t-esc="get_total_by_rule_category(o, 'NET')"/>
+                                        <strong>Total Charges Patronales</strong> : <span t-esc="get_total_by_rule_category(o, 'COMP')"/>
+                                        </div>
+                                        <div class="mt15">
+                                             <strong>Mode de réglement</strong> : <span t-esc="o.payment_mode or ''"/> 
+                                        </div>
+                                        <div class="mt15">
+                                             <t t-if="o.paid is True"><strong>Payé</strong></t>
+                                        </div>
+                                        
+                                   </td>
+                                </tr>   
+                            </table>
+                        </div>
+                     </div>   
+                    <table class="table table-bordered text-center">
+                        <thead>
+                            <tr>
+                                <th>Salaire Brut</th>
+                                <th>Total Charges Salariales</th>
+                                <th>Net Imposable</th>
+                                <th>Plafond s.s.</th>
+                                <th></th>
+                                <th>Total versé par l'employeur</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span t-esc="get_total_by_rule_category(o, 'BRUT')"/></td>
+                                <td><span t-esc="get_total_by_rule_category(o, 'SALC')"/></td>
+                                <td><span t-esc="get_total_by_rule_category(o, 'C_IMP')"/></td>
+                                <td><span t-esc="o.employee_id.company_id.plafond_secu or ''"/></td>
+                                <td></td>
+                                <td><span t-esc="get_total_by_rule_category(o, 'TOTAL')"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p class="mt32">DANS VOTRE INTERET ET POUR VOUS AIDER A FAIRE VALOIR VOS DROITS, CONSERVEZ CE 
+BULLETIN DE PAIE SANS LIMITATION DE DUREE</p>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <function model="forum.forum" name="write">
+        <value eval="[ref('website_forum.forum_help')]"/>
+        <value model="ir.config_parameter" eval="{
+            'description': '',
+            'karma_ask': 0,
+            'karma_answer': 0,
+            'karma_upvote': 0,
+            'karma_edit_own': 0,
+            'karma_answer_accept_own': 0,
+            'karma_comment_own': 0,
+            'karma_comment_all': 0,
+        }"/>
+    </function>
+</odoo>

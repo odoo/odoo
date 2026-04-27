@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='hmrc_group']" position="inside">
+                <group>    
+                    <field name="l10n_uk_cis_enabled" string="Construction Industry Scheme"/>
+                    <field name="l10n_uk_reports_cis_verification_number" invisible="not l10n_uk_cis_enabled"/>
+                    <field name="l10n_uk_reports_cis_deduction_rate" readonly="not l10n_uk_reports_cis_verification_number" invisible="not l10n_uk_cis_enabled"/>
+                    
+                    <field name="l10n_uk_reports_cis_forename" invisible="company_type == 'company' or not l10n_uk_cis_enabled"/>
+                    <field name="l10n_uk_reports_cis_second_forename" invisible="company_type == 'company' or not l10n_uk_cis_enabled"/>
+                    <field name="l10n_uk_reports_cis_surname" invisible="company_type == 'company' or not l10n_uk_cis_enabled"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

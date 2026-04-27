@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="social_post_to_lead_description">
+<div>
+    <div>
+        <span t-esc="object.author_name"/>
+        <span class="me-1">posted on</span>
+        <a t-att-href="object.post_link"
+            t-esc="object.social_account_id.media_id.name" target="_blank"/>
+        <span class="ms-1">at</span>
+        <span t-esc="post_datetime"/>
+    </div>
+    <blockquote class="my-4">
+        <t t-out="object.post_content"/>
+        <t t-foreach="post_image_urls" t-as="image_url">
+            <img t-att-src="image_url" t-attf-alt="Social Post Image {{image_url_index}}" class="w-25 pb-1"/>
+        </t>
+    </blockquote>
+</div>
+        </template>
+    </data>
+</odoo>

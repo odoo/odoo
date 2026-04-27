@@ -1,0 +1,145 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * project_forecast
+#
+# Translators:
+# Wil Odoo, 2024
+#
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:48+0000\n"
+"PO-Revision-Date: 2026-03-11 13:02+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/"
+"project_forecast/pl/>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.16.2\n"
+
+#. module: project_forecast
+#: model_terms:ir.ui.view,arch_db:project_forecast.planning_shift_ics_description_inherit
+msgid "<b>Project:</b>"
+msgstr "<b>Projekt:</b>"
+
+#. module: project_forecast
+#: model:ir.ui.menu,name:project_forecast.planning_menu_schedule_by_project
+msgid "By Project"
+msgstr "Wg projektu"
+
+#. module: project_forecast
+#: model:ir.model.fields,field_description:project_forecast.field_planning_slot_template__company_id
+msgid "Company"
+msgstr "Firma"
+
+#. module: project_forecast
+#: model_terms:ir.actions.act_window,help:project_forecast.project_forecast_action_from_project
+msgid "Let's start your planning by adding a new shift."
+msgstr "Zacznijmy planowanie od dodania nowej zmiany."
+
+#. module: project_forecast
+#: model_terms:ir.ui.view,arch_db:project_forecast.planning_slot_template_inherit_view_search
+#: model_terms:ir.ui.view,arch_db:project_forecast.planning_slot_view_search
+msgid "My Projects"
+msgstr "Moje projekty"
+
+#. module: project_forecast
+#: model_terms:ir.actions.act_window,help:project_forecast.planning_action_schedule_by_project
+#: model_terms:ir.actions.act_window,help:project_forecast.planning_action_schedule_project
+#: model_terms:ir.actions.act_window,help:project_forecast.project_forecast_action_from_project
+#: model_terms:ir.actions.act_window,help:project_forecast.project_forecast_action_schedule_by_employee
+msgid "No shifts found. Let's create one!"
+msgstr "Nie znaleziono zmian. Utwórz nową!"
+
+#. module: project_forecast
+#. odoo-python
+#: code:addons/project_forecast/models/project.py:0
+msgid "Planned"
+msgstr "Zaplanowane"
+
+#. module: project_forecast
+#: model:ir.actions.act_window,name:project_forecast.planning_action_schedule_project
+#: model:ir.actions.act_window,name:project_forecast.project_forecast_action_from_project
+#: model:ir.embedded.actions,name:project_forecast.project_embedded_action_planning
+#: model:ir.embedded.actions,name:project_forecast.project_embedded_action_planning_dashboard
+msgid "Planning"
+msgstr "Planowanie"
+
+#. module: project_forecast
+#: model:ir.model,name:project_forecast.model_planning_analysis_report
+msgid "Planning Analysis Report"
+msgstr "Raport z analizy planistycznej"
+
+#. module: project_forecast
+#: model:ir.model,name:project_forecast.model_planning_slot
+msgid "Planning Shift"
+msgstr "Planowanie zmian"
+
+#. module: project_forecast
+#: model:ir.model,name:project_forecast.model_project_project
+#: model:ir.model.fields,field_description:project_forecast.field_planning_analysis_report__project_id
+#: model:ir.model.fields,field_description:project_forecast.field_planning_slot__project_id
+#: model:ir.model.fields,field_description:project_forecast.field_planning_slot_template__project_id
+#: model_terms:ir.ui.view,arch_db:project_forecast.open_slots_list_template
+#: model_terms:ir.ui.view,arch_db:project_forecast.period_report_template
+#: model_terms:ir.ui.view,arch_db:project_forecast.planning_slot_view_search
+#: model_terms:ir.ui.view,arch_db:project_forecast.resource_planning_project_forecast
+msgid "Project"
+msgstr "Projekt"
+
+#. module: project_forecast
+#: model_terms:ir.ui.view,arch_db:project_forecast.planning_shift_ics_description_inherit
+msgid "Project:"
+msgstr "Projekt:"
+
+#. module: project_forecast
+#: model:ir.actions.act_window,name:project_forecast.planning_action_schedule_by_project
+msgid "Schedule by Project"
+msgstr "Harmonogram według projektu"
+
+#. module: project_forecast
+#: model:ir.actions.act_window,name:project_forecast.project_forecast_action_schedule_by_employee
+msgid "Schedule by Resource"
+msgstr "Harmonogram według zasobów"
+
+#. module: project_forecast
+#: model_terms:ir.actions.act_window,help:project_forecast.planning_action_schedule_by_project
+#: model_terms:ir.actions.act_window,help:project_forecast.planning_action_schedule_project
+#: model_terms:ir.actions.act_window,help:project_forecast.project_forecast_action_schedule_by_employee
+msgid ""
+"Schedule your human and material resources across roles, projects and sales "
+"orders."
+msgstr ""
+"Zaplanuj zasoby ludzkie i materiałowe w ramach ról, projektów i zamówień "
+"sprzedaży."
+
+#. module: project_forecast
+#: model:ir.model,name:project_forecast.model_planning_slot_template
+msgid "Shift Template"
+msgstr "Szablon zmian"
+
+#. module: project_forecast
+#: model:planning.role,name:project_forecast.planning_role_tester
+msgid "Tester"
+msgstr "Tester"
+
+#. module: project_forecast
+#. odoo-python
+#: code:addons/project_forecast/models/project.py:0
+msgid ""
+"You cannot update the company for the %(project_name)s project because it’s "
+"tied to shifts in another company.\n"
+"To change it, first clear the company field for the project. Then move the "
+"shifts to the new company, and update the project's company."
+msgstr ""
+"Nie można zaktualizować firmy dla projektu %(project_name)s, ponieważ jest "
+"on powiązany z zmianami w innej firmie.\n"
+"Aby to zmienić, należy najpierw wyczyścić pole firmy dla projektu. Następnie "
+"przenieść zmiany do nowej firmy i zaktualizować firmę projektu."

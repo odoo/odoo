@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- ARTICLE -->
+    <record id="rule_knowledge_article_users_read" model="ir.rule">
+        <field name="name">Articles: users/portal: published gives read access</field>
+        <field name="model_id" ref="knowledge.model_knowledge_article"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="domain_force">[('website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record id="rule_knowledge_article_public_users_read" model="ir.rule">
+        <field name="name">Articles: public: published gives read access</field>
+        <field name="model_id" ref="knowledge.model_knowledge_article"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="domain_force">[('website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+    </record>
+
+    <!-- ARTICLE MEMBER -->
+    <record id="rule_knowledge_article_member_users" model="ir.rule">
+        <field name="name">Article members: sync with article</field>
+        <field name="model_id" ref="knowledge.model_knowledge_article_member"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="domain_force">[('article_id.website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="rule_knowledge_article_member_portal" model="ir.rule">
+        <field name="name">Article members: portal: sync with article</field>
+        <field name="model_id" ref="knowledge.model_knowledge_article_member"/>
+        <field name="domain_force">[('partner_id', '=', user.partner_id.id), ('article_id.website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- ARTICLE FAVORITE -->
+    <record id="rule_knowledge_article_favorite_users" model="ir.rule">
+        <field name="name">Article favorite: sync with article</field>
+        <field name="model_id" ref="knowledge.model_knowledge_article_favorite"/>
+        <field name="domain_force">[('user_id', '=', user.id), ('article_id.website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- ITEM STAGES -->
+    <record id="rule_knowledge_article_stage_users_read" model="ir.rule">
+        <field name="name">Stages: users/portal: published articles give read access</field>
+        <field name="model_id" ref="knowledge.model_knowledge_article_stage"/>
+        <field name="domain_force">[('parent_id.website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+</odoo>

@@ -1,0 +1,100 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_work_entry_contract_planning
+#
+# Translators:
+# Anastasiia Koroleva, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Anastasiia Koroleva, 2025\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: hr_work_entry_contract_planning
+#: model:ir.model.fields,help:hr_work_entry_contract_planning.field_hr_contract__work_entry_source
+msgid ""
+"\n"
+"        Defines the source for work entries generation\n"
+"\n"
+"        Working Schedule: Work entries will be generated from the working "
+"hours below.\n"
+"        Attendances: Work entries will be generated from the employee's "
+"attendances. (requires Attendance app)\n"
+"        Planning: Work entries will be generated from the employee's "
+"planning. (requires Planning app)\n"
+"    "
+msgstr ""
+"\n"
+"        Определяет источник создания рабочих записей\n"
+"\n"
+"        Рабочий график: Рабочие записи будут генерироваться на основе "
+"рабочего времени, указанного ниже.\n"
+"        Посещаемость: Рабочие записи будут генерироваться на основе "
+"посещений сотрудника (требуется модуль Посещаемость).\n"
+"        Планирование: Рабочие записи будут генерироваться на основе "
+"планирования сотрудника (требуется модуль Планирование).\n"
+"    "
+
+#. module: hr_work_entry_contract_planning
+#: model:ir.model,name:hr_work_entry_contract_planning.model_hr_contract
+msgid "Employee Contract"
+msgstr "Договор сотрудника"
+
+#. module: hr_work_entry_contract_planning
+#: model:ir.model,name:hr_work_entry_contract_planning.model_hr_work_entry
+msgid "HR Work Entry"
+msgstr "Рабочая запись HR"
+
+#. module: hr_work_entry_contract_planning
+#: model:ir.model.fields.selection,name:hr_work_entry_contract_planning.selection__hr_contract__work_entry_source__planning
+msgid "Planning"
+msgstr "Планирование"
+
+#. module: hr_work_entry_contract_planning
+#: model:ir.model,name:hr_work_entry_contract_planning.model_planning_slot
+msgid "Planning Shift"
+msgstr "Смена в планировании"
+
+#. module: hr_work_entry_contract_planning
+#: model:ir.model.fields,field_description:hr_work_entry_contract_planning.field_hr_work_entry__planning_slot_id
+msgid "Planning Slot"
+msgstr "Слот планирования"
+
+#. module: hr_work_entry_contract_planning
+#: model:ir.model,name:hr_work_entry_contract_planning.model_hr_work_entry_regeneration_wizard
+msgid "Regenerate Employee Work Entries"
+msgstr "Сгенерировать рабочие записи сотрудника повторно"
+
+#. module: hr_work_entry_contract_planning
+#. odoo-python
+#: code:addons/hr_work_entry_contract_planning/models/planning_slot.py:0
+msgid ""
+"This shift record is linked to a validated working entry. You can't delete "
+"it."
+msgstr ""
+"Эта смена связана с подтвержденной рабочей записью. Вы не можете удалить ее."
+
+#. module: hr_work_entry_contract_planning
+#. odoo-python
+#: code:addons/hr_work_entry_contract_planning/models/planning_slot.py:0
+msgid ""
+"This shift record is linked to a validated working entry. You can't modify "
+"it."
+msgstr ""
+"Эта смена связана с подтвержденной рабочей записью. Изменить ее невозможно."
+
+#. module: hr_work_entry_contract_planning
+#: model:ir.model.fields,field_description:hr_work_entry_contract_planning.field_hr_contract__work_entry_source
+msgid "Work Entry Source"
+msgstr "Источник рабочей записи"

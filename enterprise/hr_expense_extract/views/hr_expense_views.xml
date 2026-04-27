@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_expense_extract_view_form" model="ir.ui.view">
+        <field name="name">hr.expense.extract.view.form</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_manual_send_for_digitization" class="oe_highlight" string="Digitize document" type="object"
+                    invisible="not extract_can_show_send_button" data-hotkey="s"/>
+            </xpath>
+            <xpath expr="//sheet" position='before'>
+                <field name="extract_can_show_send_button" invisible="True"/>
+                <field name="extract_error_message" invisible="1"/> <!-- extract_error_message required for the extract_state_header -->
+                <field name="extract_document_uuid" invisible="1"/> <!-- extract_document_uuid required for the extract_state_header -->
+                <field name="extract_state" class="d-block" invisible="state != 'draft' or extract_state == 'waiting_validation'" widget="extract_state_header"/>
+            </xpath>
+            <xpath expr="//field[@name='account_id']" position='after'>
+                <label for="extract_document_uuid" groups="base.group_no_one" invisible="not extract_document_uuid" class="d-none d-md-flex"/>
+                <field name="extract_document_uuid" groups="base.group_no_one" widget="CopyClipboardChar"
+                       nolabel="1"
+                       class="d-none d-md-flex"
+                       invisible="not extract_document_uuid"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_expense_extract_view_graph" model="ir.ui.view">
+        <field name="name">hr.expense.extract.view.graph</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_graph"/>
+        <field name="arch" type="xml">
+            <xpath expr="//graph" position="inside">
+                <field name="extract_document_uuid" invisible="1"/>
+                <field name="extract_status" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_expense_extract_view_list" model="ir.ui.view">
+        <field name="name">hr.expense.extract.view.list</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_expenses_analysis_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="decoration-muted">extract_state_processed</attribute>
+            </xpath>
+            <xpath expr="//list" position="inside">
+                <field name="extract_state_processed" column_invisible="True"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_expense_extract_view_kanban" model="ir.ui.view">
+        <field name="name">hr.expense.extract.view.kanban</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_expenses_analysis_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates//field[@name='total_amount_currency']" position="attributes">
+                <attribute name="invisible">extract_state == 'waiting_extraction'</attribute>
+            </xpath>
+            <xpath expr="//templates//field[@name='state']" position="attributes">
+                <attribute name="invisible">extract_state == 'waiting_extraction'</attribute>
+            </xpath>
+            <xpath expr="//templates//field[@name='total_amount_currency']" position="after">
+                <span class="o_expense_scanning" invisible="extract_state != 'waiting_extraction'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_expense_parse_action_server" model="ir.actions.server">
+            <field name="name">Digitize document</field>
+            <field name="model_id" ref="model_hr_expense"/>
+            <field name="binding_model_id" ref="model_hr_expense"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.action_send_batch_for_digitization()
+            </field>
+    </record>
+</odoo>

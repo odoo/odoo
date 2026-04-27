@@ -1,0 +1,561 @@
+{
+    "version": 21,
+    "sheets": [
+        {
+            "id": "Sheet1",
+            "name": "Dashboard",
+            "colNumber": 9,
+            "rowNumber": 56,
+            "rows": {
+                "6": {
+                    "size": 40
+                },
+                "23": {
+                    "size": 36
+                },
+                "24": {
+                    "size": 30
+                },
+                "25": {
+                    "size": 30
+                },
+                "26": {
+                    "size": 30
+                },
+                "27": {
+                    "size": 30
+                },
+                "28": {
+                    "size": 30
+                },
+                "30": {
+                    "size": 36
+                },
+                "31": {
+                    "size": 30
+                },
+                "32": {
+                    "size": 30
+                },
+                "33": {
+                    "size": 30
+                },
+                "34": {
+                    "size": 30
+                },
+                "36": {
+                    "size": 36
+                },
+                "37": {
+                    "size": 30
+                },
+                "38": {
+                    "size": 30
+                },
+                "39": {
+                    "size": 30
+                },
+                "40": {
+                    "size": 30
+                },
+                "41": {
+                    "size": 36
+                },
+                "42": {
+                    "size": 30
+                },
+                "43": {
+                    "size": 30
+                },
+                "44": {
+                    "size": 30
+                },
+                "45": {
+                    "size": 30
+                }
+            },
+            "cols": {
+                "0": {
+                    "size": 175
+                },
+                "1": {
+                    "size": 100
+                },
+                "2": {
+                    "size": 100
+                },
+                "3": {
+                    "size": 100
+                },
+                "4": {
+                    "size": 50
+                },
+                "5": {
+                    "size": 175
+                },
+                "6": {
+                    "size": 100
+                },
+                "7": {
+                    "size": 100
+                },
+                "8": {
+                    "size": 100
+                }
+            },
+            "merges": [],
+            "cells": {
+                "A7": {
+                    "content": "[Invoiced](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],\"|\",[\"move_type\",\"=\",\"out_invoice\"],[\"move_type\",\"=\",\"out_refund\"]],\"context\":{\"group_by\":[\"invoice_date\"],\"graph_measure\":\"price_subtotal\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"invoice_date:month\"]},\"modelName\":\"account.invoice.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices Analysis\",\"positional\":true})"
+                },
+                "A24": {
+                    "content": "=_t(\"Cash\")"
+                },
+                "A31": {
+                    "content": "=_t(\"Performance\")"
+                },
+                "A37": {
+                    "content": "=_t(\"Position\")"
+                },
+                "A42": {
+                    "content": "=_t(\"Liquidity\")"
+                },
+                "B24": {
+                    "content": "=YEAR(EDATE(TODAY(),-12))"
+                },
+                "B31": {
+                    "content": "=YEAR(EDATE(TODAY(),-12))"
+                },
+                "B37": {
+                    "content": "=YEAR(EDATE(TODAY(),-12))"
+                },
+                "B42": {
+                    "content": "=YEAR(EDATE(TODAY(),-12))"
+                },
+                "C24": {
+                    "content": "=YEAR(EDATE(TODAY(),0))"
+                },
+                "C31": {
+                    "content": "=YEAR(EDATE(TODAY(),0))"
+                },
+                "C37": {
+                    "content": "=YEAR(EDATE(TODAY(),0))"
+                },
+                "C42": {
+                    "content": "=YEAR(EDATE(TODAY(),0))"
+                },
+                "D24": {
+                    "content": "Δ"
+                },
+                "D31": {
+                    "content": "Δ"
+                },
+                "D37": {
+                    "content": "Δ"
+                },
+                "D42": {
+                    "content": "Δ"
+                },
+                "F24": {
+                    "content": "=_t(\"Profitability\")"
+                },
+                "F31": {
+                    "content": "=_t(\"Balance sheet\")"
+                },
+                "F37": {
+                    "content": "=_t(\"Solvency\")"
+                },
+                "G24": {
+                    "content": "=YEAR(EDATE(TODAY(),-12))"
+                },
+                "G31": {
+                    "content": "=YEAR(EDATE(TODAY(),-12))"
+                },
+                "G37": {
+                    "content": "=YEAR(EDATE(TODAY(),-12))"
+                },
+                "H24": {
+                    "content": "=YEAR(EDATE(TODAY(),0))"
+                },
+                "H31": {
+                    "content": "=YEAR(EDATE(TODAY(),0))"
+                },
+                "H37": {
+                    "content": "=YEAR(EDATE(TODAY(),0))"
+                },
+                "I24": {
+                    "content": "Δ"
+                },
+                "I31": {
+                    "content": "Δ"
+                },
+                "I37": {
+                    "content": "Δ"
+                }
+            },
+            "styles": {
+                "A7": 1,
+                "A24": 2,
+                "A31": 2,
+                "A37": 2,
+                "A42": 2,
+                "F24": 2,
+                "F31": 2,
+                "F37": 2,
+                "B24:D24": 3,
+                "B31:D31": 3,
+                "B37:D37": 3,
+                "B42:D42": 3,
+                "G24:I24": 3,
+                "G31:I31": 3,
+                "G37:I37": 3
+            },
+            "formats": {},
+            "borders": {},
+            "conditionalFormats": [],
+            "figures": [
+                {
+                    "id": "86aac7b2-f3a5-46e1-a097-916aa4b8f8d0",
+                    "x": 0,
+                    "y": 10,
+                    "width": 200,
+                    "height": 106,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "Current income",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#FFF7ED",
+                        "baseline": "Data!C3",
+                        "baselineDescr": "last period",
+                        "keyValue": "Data!C2",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "3586cbc4-6ca3-46af-951f-94d4773f94dc",
+                    "x": 212,
+                    "y": 10,
+                    "width": 200,
+                    "height": 106,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "Receivables",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#FFF7ED",
+                        "baselineDescr": "to receive",
+                        "keyValue": "Data!C4",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "57f18f9a-55b7-4b84-b927-480c4c56c026",
+                    "x": 423,
+                    "y": 10,
+                    "width": 200,
+                    "height": 106,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "Current expense",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#FFF7ED",
+                        "baseline": "Data!C6",
+                        "baselineDescr": "last period",
+                        "keyValue": "Data!C5",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "8f1fb053-5700-4bb3-b93d-55ceb2083d31",
+                    "x": 635,
+                    "y": 10,
+                    "width": 200,
+                    "height": 106,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "Payables",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#FFF7ED",
+                        "baselineDescr": "to pay",
+                        "keyValue": "Data!C7",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "f7d625f5-dbe1-4324-82c1-df5ec35698f6",
+                    "x": 0,
+                    "y": 177,
+                    "width": 998,
+                    "height": 363,
+                    "tag": "chart",
+                    "data": {
+                        "type": "line",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!C10:C17",
+                                "yAxisId": "y"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "title": {},
+                        "labelsAsText": false,
+                        "stacked": false,
+                        "aggregated": false,
+                        "cumulative": true,
+                        "fillArea": true
+                    }
+                }
+            ],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        },
+        {
+            "id": "08b80fa9-158a-44a6-ad6c-c29245a6e31a",
+            "name": "Data",
+            "colNumber": 31,
+            "rowNumber": 168,
+            "rows": {},
+            "cols": {},
+            "merges": [
+                "A37:F37"
+            ],
+            "cells": {
+                "A1": {
+                    "content": "=_t(\"KPIS\")"
+                },
+                "A2": {
+                    "content": "=_t(\"Current income\")"
+                },
+                "A3": {
+                    "content": "=_t(\"Previous income\")"
+                },
+                "A4": {
+                    "content": "=_t(\"Receivables\")"
+                },
+                "A5": {
+                    "content": "=_t(\"Current expense\")"
+                },
+                "A6": {
+                    "content": "=_t(\"Previous expense\")"
+                },
+                "A7": {
+                    "content": "=_t(\"Payables\")"
+                },
+                "A10": {
+                    "content": "=EDATE(TODAY(),-B10)"
+                },
+                "A11": {
+                    "content": "=EDATE(TODAY(),-B11)"
+                },
+                "A12": {
+                    "content": "=EDATE(TODAY(),-B12)"
+                },
+                "A13": {
+                    "content": "=EDATE(TODAY(),-B13)"
+                },
+                "A14": {
+                    "content": "=EDATE(TODAY(),-B14)"
+                },
+                "A15": {
+                    "content": "=EDATE(TODAY(),-B15)"
+                },
+                "A16": {
+                    "content": "=EDATE(TODAY(),-B16)"
+                },
+                "A17": {
+                    "content": "=EDATE(TODAY(),-B17)"
+                },
+                "B2": {
+                    "content": "6489.2699999999895"
+                },
+                "B3": {
+                    "content": "1425"
+                },
+                "B4": {
+                    "content": "7463.5"
+                },
+                "B5": {
+                    "content": "12500"
+                },
+                "B6": {
+                    "content": "0"
+                },
+                "B7": {
+                    "content": "129500"
+                },
+                "B10": {
+                    "content": "7"
+                },
+                "B11": {
+                    "content": "6"
+                },
+                "B12": {
+                    "content": "5"
+                },
+                "B13": {
+                    "content": "2"
+                },
+                "B14": {
+                    "content": "3"
+                },
+                "B15": {
+                    "content": "2"
+                },
+                "B16": {
+                    "content": "1"
+                },
+                "B17": {
+                    "content": "0"
+                },
+                "C2": {
+                    "content": "6489.2699999999895"
+                },
+                "C3": {
+                    "content": "1425"
+                },
+                "C4": {
+                    "content": "7463.5"
+                },
+                "C5": {
+                    "content": "12500"
+                },
+                "C6": {
+                    "content": "0"
+                },
+                "C7": {
+                    "content": "129500"
+                },
+                "C10": {
+                    "content": "98933"
+                },
+                "C11": {
+                    "content": "91695"
+                },
+                "C12": {
+                    "content": "27473"
+                },
+                "C13": {
+                    "content": "63463"
+                },
+                "C14": {
+                    "content": "16272"
+                },
+                "C15": {
+                    "content": "5159"
+                },
+                "C16": {
+                    "content": "8327"
+                },
+                "C17": {
+                    "content": "58080"
+                }
+            },
+            "styles": {
+                "A1": 4,
+                "C2:C6": 5
+            },
+            "formats": {
+                "A10:A17": 1,
+                "B2:C7": 2,
+                "C10:C17": 2
+            },
+            "borders": {},
+            "conditionalFormats": [],
+            "figures": [],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        }
+    ],
+    "styles": {
+        "1": {
+            "textColor": "#01666b",
+            "fontSize": 16,
+            "bold": true
+        },
+        "2": {
+            "textColor": "#434343",
+            "bold": true,
+            "fontSize": 11
+        },
+        "3": {
+            "textColor": "#434343",
+            "bold": true,
+            "fontSize": 11,
+            "align": "center"
+        },
+        "4": {
+            "bold": true
+        },
+        "5": {
+            "fillColor": "#f8f9fa"
+        }
+    },
+    "formats": {
+        "1": "mmmm yyyy",
+        "2": "[$$]#,##0"
+    },
+    "borders": {},
+    "revisionId": "START_REVISION",
+    "uniqueFigureIds": true,
+    "settings": {
+        "locale": {
+            "name": "English (US)",
+            "code": "en_US",
+            "thousandsSeparator": ",",
+            "decimalSeparator": ".",
+            "dateFormat": "mm/dd/yyyy",
+            "timeFormat": "hh:mm:ss",
+            "formulaArgSeparator": ",",
+            "weekStart": 7
+        }
+    },
+    "pivots": {},
+    "pivotNextId": 1,
+    "customTableStyles": {},
+    "odooVersion": 12,
+    "globalFilters": [],
+    "lists": {},
+    "listNextId": 1
+}

@@ -1,0 +1,163 @@
+@keyframes appCreatorIconFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.o_web_studio_icon_creator {
+  $tmp-selector-size: 22px !important;
+  $choice-selector-size: 36px;
+
+  h6 {
+    color: $o-web-studio-text-inactive;
+  }
+
+  .o_web_studio_upload {
+    color: $o-web-studio-text-inactive;
+  }
+
+  .o_web_studio_uploaded_image {
+    width: 128px;
+    height: 128px;
+    background-position: center center;
+    background-size: cover;
+  }
+
+  .o_web_studio_icon {
+    .o_app_icon {
+      width: 128px;
+      height: 128px;
+      transition: background 0.2s ease 0s;
+
+      > i {
+        opacity: 0;
+        animation: appCreatorIconFadeIn 0.8s forwards;
+        font-size: 6em;
+        transition: color 0.2s ease 0s;
+      }
+    }
+  }
+
+  /* Don't nest this rule, as the hover must be effective when the icon designer is hovered */
+  .o_web_studio_selector_pointer {
+    $tmp-selector-size: 22px;
+    @include o-position-absolute(($tmp-selector-size/2)-1, $tmp-selector-size);
+    opacity: 0;
+    width: 30px;
+    border-top: 2px dotted black;
+    transition: all 0.3s ease 0s;
+
+    &:after {
+      content: "\B0";
+      font-weight: 100;
+      line-height: 0;
+      font-size: 50px;
+      color: black;
+      text-shadow: 0 0 1px $o-web-studio-bg-dark;
+      @include o-position-absolute(12px, auto, auto, -16px);
+      transition: all 0.3s ease 0s;
+    }
+  }
+  &:hover .o_web_studio_selector_pointer {
+    opacity: 0.5;
+  }
+
+  .o_web_studio_selector {
+    position: relative;
+    width: $tmp-selector-size !important;
+    height: $tmp-selector-size;
+    transition: all 0.3s ease 0s;
+    outline: 1px solid $o-web-studio-text-light;
+
+    &:before {
+      opacity: 0.5;
+      content: "\f0d7";
+      width: 15px;
+      text-align: right;
+      font-family: "FontAwesome";
+      color: $o-web-studio-text-light;
+      @include o-position-absolute(1px, -15px);
+    }
+
+    &.o_web_studio_selector_background {
+      .o_web_studio_selector_pointer {
+        width: 30px;
+      }
+    }
+
+    &.o_web_studio_selector_color {
+      .o_web_studio_selector_pointer {
+        width: 60px;
+      }
+    }
+
+    .o_select_menu_toggler, .o_select_menu_toggler_slot {
+      border: 0 !important;
+      width: $tmp-selector-size;
+      height: $tmp-selector-size;
+      text-align: center !important;
+    }
+
+    .o_select_menu_toggler_caret {
+      display: none;
+    }
+
+    &.o_web_studio_selector_icon {
+      .o_web_studio_selector_pointer {
+        width: 82px;
+        &:after {
+          content: "\f0d8";
+          font-family: "FontAwesome";
+          line-height: 0;
+          font-size: 18px;
+          @include o-position-absolute(-15px, auto, auto, -4px);
+        }
+        &:before {
+          content: "";
+          height: 10px;
+          border-left: 2px dotted black;
+          @include o-position-absolute(-10px, auto, auto, 0);
+        }
+      }
+    }
+
+    &:hover {
+      .o_web_studio_selector_pointer {
+        border-top: 2px solid black;
+        &:before {
+          border-left-style: solid;
+        }
+      }
+      &:before,
+      .o_web_studio_selector_pointer {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.o_web_studio_selector_menu {
+  $tmp-selector-size: 22px !important;
+  $choice-selector-size: 36px;
+  min-width: calc((6 * #{$choice-selector-size}) + 2px); // We display 6 choices, plus a 1px border from each side
+
+  &.o_web_studio_selector_icon_menu {
+    min-width: calc((9 * #{$choice-selector-size}) + 2px); // We display 9 choices, plus a 1px border from each side
+  }
+
+  .o_web_studio_selector_value {
+    width: $tmp-selector-size;
+    height: $tmp-selector-size;
+  }
+
+  .o_select_menu_item {
+    display: inline-block !important;
+    padding: .5em;
+    width: auto;
+    line-height: 1;
+  }
+}

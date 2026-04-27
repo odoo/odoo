@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="search_result" name="Knowledge Base: Forum Search Result">
+        <div class="website_forum d-flex w-100 mb-0 py-4 border-top">
+            <p class="mt-1 text-400">
+                <i class="fa fa-fw fa-2x fa-comments" title="Forum Post"/>
+            </p>
+            <div class="w-100 ms-3">
+                <h5 class="mb-1">
+                    <a t-att-href="url" target="_blank" t-out="record.name" class="fw-bold"/>
+                    <i t-if="record.has_validated_answer" class="fa fa-check-circle text-success" title="Solved"/>
+                </h5>
+                <small>
+                    <t t-call="website_forum.vote">
+                        <t t-set="post" t-value="record"/>
+                    </t>
+                    <time t-field="record.create_date" class="ps-2 border-start" t-options='{"format": "d MMM yyyy"}'/>, by <a t-attf-href="/forum/user/{{record.create_uid.id}}?forum_id={{record.forum_id.id}}&amp;forum_origin={{team.website_url}}" class="fw-bold" t-out="record.create_uid.name"/>
+                    <t t-if="record.child_count">
+                    • <a t-att-href="url" class="fw-bold"><t t-out="record.child_count"/> Answers</a>
+                    </t>
+                    <t t-else="">
+                    • 0 Answer
+                    </t>
+                    • <t t-out="record.views"/> Views
+                </small>
+                <div class="whelpdesk_search_description mt-3 text-break text-muted overflow-hidden" t-if="not is_html_empty(record.content)" t-out="record.content"/>
+                <p class="d-flex gap-1 flex-wrap mt-3 mb-0" t-if="record.tag_ids">
+                    <a t-foreach="record.tag_ids" t-as="tag" t-attf-href="/forum/#{slug(tag.forum_id)}/tag/#{slug(tag)}/questions?filters=tag" class="badge text-bg-secondary me-1" t-out="tag.name"/>
+                </p>
+            </div>
+        </div>
+    </template>
+
+    <template id="website_helpdesk_forum.question_dropdown" inherit_id="website_forum.post_dropdown">
+        <xpath expr="//div[hasclass('dropdown-menu')]" position="inside">
+            <t t-if="question">
+                <a groups="helpdesk.group_helpdesk_user" t-if="question and question.show_ticket" class="dropdown-item ps-3" t-attf-href="/odoo/helpdesk.ticket/#{question.ticket_id.id}?menu_id=#{question.env.ref('helpdesk.menu_helpdesk_root').id}">
+                    <i class="fa fa-life-ring fa-fw" />
+                    View Ticket
+                </a>
+                <button groups="helpdesk.group_helpdesk_user" t-if="not answer and not question.show_ticket and show_create_ticket" class="dropdown-item ps-3 create_ticket_forum" t-att-data-forum-id="forum.id" t-att-data-post-id="question.id">
+                    <i class="fa fa-life-ring fa-fw" />
+                    Create Ticket
+                </button>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

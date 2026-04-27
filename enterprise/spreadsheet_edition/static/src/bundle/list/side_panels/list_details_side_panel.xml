@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name="spreadsheet_edition.ListDetailsSidePanel" class="o-listing-details-side-panel">
+        <t t-if="isModelValid">
+            <Section class="'o-section'">
+                <t t-set-slot="title">
+                    <div class="d-flex flex-row justify-content-between align-items-center">
+                        List Name
+                        <CogWheelMenu items="cogWheelMenuItems"/>
+                    </div>
+                </t>
+                <EditableName name="env.model.getters.getListName(props.listId)"
+                            displayName="env.model.getters.getListDisplayName(props.listId)"
+                            onChanged.bind="onNameChanged"/>
+            </Section>
+            <t t-set="def" t-value="listDefinition"/>
+            <div class="o-section">
+                <div class="o-section-title">Model</div>
+                <div class="o_model_name"><t t-esc="def.modelDisplayName"/> (<t t-esc="def.model"/>)</div>
+            </div>
+            <Section class="'o-section'">
+                <div class="o-section-title">
+                    Columns
+                </div>
+                <div class="columns-list" t-foreach="getColumnFields()" t-as="field" t-key="field.name">
+                    <div t-esc="field.string" t-att-title="field.name"/>
+                </div>
+            </Section>
+            <SidePanelDomain
+                resModel="def.model"
+                domain="def.domain"
+                onUpdate.bind="onDomainUpdate"
+            />
+            <EditListSortingSection
+                resModel="def.model"
+                orderBy="def.orderBy"
+                fields="listFields"
+                onUpdateSorting.bind="this.onUpdateSorting"
+            />
+            <Section class="'o-section pt-0'">
+                <div class="o_pivot_last_update text-muted"><i>Last updated at <t t-esc="getLastUpdate()"/></i></div>
+            </Section>
+            <div class="o-section py-1" t-if="env.model.getters.isListUnused(props.listId)">
+                <ValidationMessages messages="[unusedListWarning]" msgType="'warning'"/>
+            </div>
+        </t>
+        <Section t-else="1">
+            <ValidationMessages messages="[invalidListModel]" msgType="'error'"/>
+            <button class="mx o-button o-button-primary mt-2 m-1" t-on-click="delete">Delete List</button>
+        </Section>
+    </div>
+</templates>

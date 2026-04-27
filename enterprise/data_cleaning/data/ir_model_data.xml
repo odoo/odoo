@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+        <!-- res.country -->
+        <function model="ir.model" name="action_merge_contextual_enable"
+                  eval="[[ref('base.model_res_country'),
+                          ref('base.model_res_country_state'),
+                          ref('base.model_res_partner_category'),
+                          ref('base.model_res_partner_industry'),
+                          ref('base.model_res_partner_title')]]"/>
+    </data>
+</odoo>

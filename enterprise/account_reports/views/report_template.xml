@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="internal_layout" inherit_id="web.internal_layout" primary="True">
+        <xpath expr="//div[hasclass('header')]//div[hasclass('row')]" position="attributes">
+            <attribute name="class" add="o_footer_font_size" separator=" "/>
+        </xpath>
+
+        <!-- Suport for long company name -->
+        <xpath expr="//div[hasclass('col-3')]" position="attributes">
+                <attribute name="class">col-4</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('col-2') and hasclass('offset-2') and hasclass('text-center')]" position="attributes">
+            <attribute name="class">col-4 text-center</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('col-2') and hasclass('offset-3') and hasclass('text-end')]" position="attributes">
+            <attribute name="class">col-2 offset-2 text-end</attribute>
+        </xpath>
+    </template>
+
+</odoo>

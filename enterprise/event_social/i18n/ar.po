@@ -1,0 +1,67 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* event_social
+#
+# Translators:
+# Wil Odoo, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:47+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: event_social
+#. odoo-python
+#: code:addons/event_social/models/event_mail.py:0
+#: code:addons/event_social/models/event_type_mail.py:0
+msgid ""
+"As social posts have no recipients, they cannot be triggered by "
+"registrations."
+msgstr ""
+"لا يمكن تشغيل المنشورات الاجتماعية عن طريق التسجيل، حيث أنه ليس لها أي "
+"مستلمين. "
+
+#. module: event_social
+#: model:ir.model,name:event_social.model_event_mail
+msgid "Event Automated Mailing"
+msgstr "إرسال رسائل البريد الإلكتروني للفعاليات تلقائياً "
+
+#. module: event_social
+#: model:ir.model,name:event_social.model_event_type_mail
+msgid "Mail Scheduling on Event Category"
+msgstr "جدولة رسائل البريد حسب فئة الفعالية"
+
+#. module: event_social
+#: model:ir.model.fields,field_description:event_social.field_event_mail__notification_type
+#: model:ir.model.fields,field_description:event_social.field_event_type_mail__notification_type
+msgid "Send"
+msgstr "إرسال"
+
+#. module: event_social
+#: model:ir.model.fields.selection,name:event_social.selection__event_mail__notification_type__social_post
+#: model:ir.model.fields.selection,name:event_social.selection__event_mail__template_ref__social_post_template
+#: model:ir.model.fields.selection,name:event_social.selection__event_type_mail__notification_type__social_post
+#: model:ir.model.fields.selection,name:event_social.selection__event_type_mail__template_ref__social_post_template
+msgid "Social Post"
+msgstr "منشور اجتماعي "
+
+#. module: event_social
+#: model:ir.model,name:event_social.model_social_post_template
+msgid "Social Post Template"
+msgstr "قالب المنشور الاجتماعي "
+
+#. module: event_social
+#: model:ir.model.fields,field_description:event_social.field_event_mail__template_ref
+#: model:ir.model.fields,field_description:event_social.field_event_type_mail__template_ref
+msgid "Template"
+msgstr "قالب "

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="amazon_offer_list" model="ir.ui.view">
+        <field name="name">sale.offer.inherit</field>
+        <field name="model">amazon.offer</field>
+        <field name="inherit_id" ref="sale_amazon.amazon_offer_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="sku" position="after">
+                <field name="amazon_channel"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

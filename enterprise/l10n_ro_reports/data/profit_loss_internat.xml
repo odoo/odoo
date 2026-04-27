@@ -1,0 +1,1011 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_financial_report_ro_pnl_internat" model="account.report">
+        <field name="name">Code 20 - Situation of incomes and expenses (international)</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.ro"/>
+        <field name="filter_period_comparison" eval="True"/>
+        <field name="custom_handler_model_id" eval="False"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_ro_pnl_internat_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_ro_pnl_internat_01_01" model="account.report.line">
+                <field name="name">1. Net turnover | 01</field>
+                <field name="code">RO_PNL_internat_01_01</field>
+                <field name="aggregation_formula">RO_PNL_internat_01_02.balance + RO_PNL_internat_01_03.balance - RO_PNL_internat_01_04.balance + RO_PNL_internat_01_05.balance</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_ro_pnl_internat_01_02" model="account.report.line">
+                        <field name="name">Production sales | 02</field>
+                        <field name="code">RO_PNL_internat_01_02</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-701 - 68151 - 705 - 708 - 704 - 702 - 703 - 706</field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_01_03" model="account.report.line">
+                        <field name="name">Income from sale of goods | 03</field>
+                        <field name="code">RO_PNL_internat_01_03</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-707 - 68152</field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_01_04" model="account.report.line">
+                        <field name="name">Commercial discounts granted | 04</field>
+                        <field name="code">RO_PNL_internat_01_04</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">709</field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_01_05" model="account.report.line">
+                        <field name="name">Income from operating subsidies related to net turnover | 05</field>
+                        <field name="code">RO_PNL_internat_01_05</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-7411</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_02" model="account.report.line">
+                <field name="name">2. Revenues related to the cost of production in progress</field>
+                <field name="code">RO_PNL_internat_02</field>
+                <field name="aggregation_formula">RO_PNL_internat_02_06.balance + RO_PNL_internat_02_07.balance</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_ro_pnl_internat_02_06" model="account.report.line">
+                        <field name="name">SOLDE C | 06</field>
+                        <field name="code">RO_PNL_internat_02_06</field>
+                        <field name="groupby" eval="False"/>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="domain_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_02_06_balance_unfiltered"
+                                model="account.report.expression">
+                                <field name="label">balance_unfiltered</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-711 - 712 - 713</field>
+                            </record>
+                            <record id="account_financial_report_ro_pnl_internat_02_06_balance"
+                                model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RO_PNL_internat_02_06.balance_unfiltered</field>
+                                <field name="subformula">if_above(RON(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_02_07" model="account.report.line">
+                        <field name="name">SOLDE D | 07</field>
+                        <field name="code">RO_PNL_internat_02_07</field>
+                        <field name="groupby" eval="False"/>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="domain_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_02_07_balance"
+                                model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">-RO_PNL_internat_02_06.balance_unfiltered</field>
+                                <field name="subformula">if_above(RON(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_03_08" model="account.report.line">
+                <field name="name">
+                    3. Income from the production of non-current assets and real estate investments | 08
+                </field>
+                <field name="code">RO_PNL_internat_03_08</field>
+                <field name="aggregation_formula">RO_PNL_internat_03_09.balance + RO_PNL_internat_03_10.balance</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_ro_pnl_internat_03_09" model="account.report.line">
+                        <field name="name">Income from the production of intangible and tangible non-current assets | 09</field>
+                        <field name="code">RO_PNL_internat_03_09</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-722 - 721</field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_03_10" model="account.report.line">
+                        <field name="name">Income from the production of real estate investments | 10</field>
+                        <field name="code">RO_PNL_internat_03_10</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-725</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_04_11" model="account.report.line">
+                <field name="name">
+                    4. Income from non-current assets (or groups intended for disposal held for sale) | 11
+                </field>
+                <field name="code">RO_PNL_internat_04_11</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-753</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_05_12" model="account.report.line">
+                <field name="name">5. Revenues from revaluation of non-current assets | 12</field>
+                <field name="code">RO_PNL_internat_05_12</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-755</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_06_13" model="account.report.line">
+                <field name="name">6. Real estate investment income | 13</field>
+                <field name="code">RO_PNL_internat_06_13</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-756</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_07_14" model="account.report.line">
+                <field name="name">7. Income from biological assets and agricultural products | 14</field>
+                <field name="code">RO_PNL_internat_07_14</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-757</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_08_15" model="account.report.line">
+                <field name="name">8. Income from operating grants | 15</field>
+                <field name="code">RO_PNL_internat_08_15</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-741\(7410,7411,7418)</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_09_16" model="account.report.line">
+                <field name="name">9. Other operating revenues , of which: | 16</field>
+                <field name="code">RO_PNL_internat_09_16</field>
+                <field name="account_codes_formula">-751 - 758 - 7815</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_ro_pnl_internat_09_17" model="account.report.line">
+                        <field name="name">- income from investment grants | 17</field>
+                        <field name="code">RO_PNL_internat_09_17</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-7584</field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_09_18" model="account.report.line">
+                        <field name="name">- earnings from purchases on advantageous terms | 18</field>
+                        <field name="code">RO_PNL_internat_09_18</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-7587</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_00_19" model="account.report.line">
+                <field name="name">OPERATING INCOME - TOTAL | 19</field>
+                <field name="code">RO_PNL_internat_00_19</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="aggregation_formula">RO_PNL_internat_01_01.balance + RO_PNL_internat_02_06.balance - RO_PNL_internat_02_07.balance + RO_PNL_internat_03_08.balance + RO_PNL_internat_04_11.balance + RO_PNL_internat_05_12.balance + RO_PNL_internat_06_13.balance + RO_PNL_internat_07_14.balance + RO_PNL_internat_08_15.balance + RO_PNL_internat_09_16.balance</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_10_20" model="account.report.line">
+                <field name="name">10. a) Expenditures on raw materials and consumables | 20</field>
+                <field name="code">RO_PNL_internat_10_20</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ro_pnl_internat_10_20_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">601 + 602</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_ro_pnl_internat_10_21" model="account.report.line">
+                        <field name="name">Other material expenses | 21</field>
+                        <field name="code">RO_PNL_internat_10_21</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_10_21_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">603 + 604 + 606 + 608</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_10_22" model="account.report.line">
+                <field name="name">b) Other external expenses (with energy and water) | 22</field>
+                <field name="code">RO_PNL_internat_10_22</field>
+                <field name="groupby">account_id</field>
+                <field name="hierarchy_level" eval="1"/>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ro_pnl_internat_10_22_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">605</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_10_23" model="account.report.line">
+                <field name="name">c) Expenditure on goods | 23</field>
+                <field name="code">RO_PNL_internat_10_23</field>
+                <field name="groupby">account_id</field>
+                <field name="hierarchy_level" eval="1"/>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ro_pnl_internat_10_23_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">607</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_10_24" model="account.report.line">
+                <field name="name">Trade discounts received | 24</field>
+                <field name="code">RO_PNL_internat_10_24</field>
+                <field name="groupby">account_id</field>
+                <field name="hierarchy_level" eval="1"/>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-609</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_11_25" model="account.report.line">
+                <field name="name">11. Staff costs, of which: | 25</field>
+                <field name="code">RO_PNL_internat_11_25</field>
+                <field name="aggregation_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ro_pnl_internat_11_25_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">RO_PNL_internat_11_26.balance + RO_PNL_internat_11_27.balance</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_ro_pnl_internat_11_26" model="account.report.line">
+                        <field name="name">a) Salaries and allowances | 26</field>
+                        <field name="code">RO_PNL_internat_11_26</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_11_26_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">641 + 642 + 643 + 644</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_11_27" model="account.report.line">
+                        <field name="name">b) Expenses regarding insurance and social protection | 27</field>
+                        <field name="code">RO_PNL_internat_11_27</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_11_27_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">645 + 646</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_12_28" model="account.report.line">
+                <field name="name">12. a) Value adjustments on non-current assets | 28</field>
+                <field name="code">RO_PNL_internat_12_28</field>
+                <field name="aggregation_formula">RO_PNL_internat_12_29.balance + RO_PNL_internat_12_30.balance - RO_PNL_internat_12_31.balance</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_ro_pnl_internat_12_29" model="account.report.line">
+                        <field name="name">a. 1) Depreciation and amortization expenses | 29</field>
+                        <field name="code">RO_PNL_internat_12_29</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_12_29_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6811 + 6813 + 6816 + 6817 + 6818</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_12_30" model="account.report.line">
+                        <field name="name">. 2) Depreciation expenses related to the rights to use the leased assets | 30</field>
+                        <field name="code">RO_PNL_internat_12_30</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_12_30_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">685</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_12_31" model="account.report.line">
+                        <field name="name">a. 3) Incomes | 31</field>
+                        <field name="code">RO_PNL_internat_12_31</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-7816 - 7818 - 7813</field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_12_32" model="account.report.line">
+                        <field name="name">b) Value adjustments on current assets | 32</field>
+                        <field name="code">RO_PNL_internat_12_32</field>
+                        <field name="hierarchy_level" eval="1"/>
+                        <field name="aggregation_formula">RO_PNL_internat_12_33.balance - RO_PNL_internat_12_34.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_ro_pnl_internat_12_33" model="account.report.line">
+                                <field name="name">b. 1) Expenses | 33</field>
+                                <field name="code">RO_PNL_internat_12_33</field>
+                                <field name="groupby">account_id</field>
+                                <field name="hierarchy_level" eval="3"/>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_ro_pnl_internat_12_33_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">654 + 6814 + 6818</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_ro_pnl_internat_12_34" model="account.report.line">
+                                <field name="name">b. 2) Incomes | 34</field>
+                                <field name="code">RO_PNL_internat_12_34</field>
+                                <field name="groupby">account_id</field>
+                                <field name="hierarchy_level" eval="3"/>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-7814 - 754 - 7818</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_13_35" model="account.report.line">
+                <field name="name">13. Other operating expenses | 35</field>
+                <field name="code">RO_PNL_internat_13_35</field>
+                <field name="aggregation_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ro_pnl_internat_13_35_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">RO_PNL_internat_13_36.balance + RO_PNL_internat_13_37.balance + RO_PNL_internat_13_38.balance +
+                            RO_PNL_internat_13_39.balance + RO_PNL_internat_13_40.balance + RO_PNL_internat_13_41.balance +
+                            RO_PNL_internat_13_42.balance + RO_PNL_internat_13_43.balance + RO_PNL_internat_13_44.balance</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_ro_pnl_internat_13_36" model="account.report.line">
+                        <field name="name">13.1 Expenditure on external benefits | 36</field>
+                        <field name="code">RO_PNL_internat_13_36</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_13_36_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">611 + 612 + 613 + 614 + 615 + 621 + 622 + 623 + 624 + 625 + 626 + 627 + 628</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_13_37" model="account.report.line">
+                        <field name="name">
+                            13.2 Expenses with other taxes and assimilated payments representing transfers and contributions due
+                            based on special normative acts | 37
+                        </field>
+                        <field name="code">RO_PNL_internat_13_37</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_13_37_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">635 + 6586</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_13_38" model="account.report.line">
+                        <field name="name">13.3 Expenditure on environmental protection | 38</field>
+                        <field name="code">RO_PNL_internat_13_38</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_13_38_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">652</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_13_39" model="account.report.line">
+                        <field name="name">
+                            13.4 Expenses related to non-current assets (or disposal groups) held for sale | 39
+                        </field>
+                        <field name="code">RO_PNL_internat_13_39</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_13_39_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">653</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_13_40" model="account.report.line">
+                        <field name="name">13.5 Expenditures from revaluation of non-current assets | 40</field>
+                        <field name="code">RO_PNL_internat_13_40</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_13_40_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">655</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_13_41" model="account.report.line">
+                        <field name="name">13.6 Real estate investment expenses | 41</field>
+                        <field name="code">RO_PNL_internat_13_41</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_13_41_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">656</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_13_42" model="account.report.line">
+                        <field name="name">13.7 Expenditures on biological assets | 42</field>
+                        <field name="code">RO_PNL_internat_13_42</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_13_42_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">657</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_13_43" model="account.report.line">
+                        <field name="name">13.8 Disaster and other similar expenses | 43</field>
+                        <field name="code">RO_PNL_internat_13_43</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_13_43_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6587</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_13_44" model="account.report.line">
+                        <field name="name">13.9 Other expenses | 44</field>
+                        <field name="code">RO_PNL_internat_13_44</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_13_44_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">651 + 6581 + 6582 + 6583 + 6584 + 6585 + 6588</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_13_45" model="account.report.line">
+                        <field name="name">Adjustments regarding provisions | 45</field>
+                        <field name="code">RO_PNL_internat_13_45</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="aggregation_formula">RO_PNL_internat_13_46.balance - RO_PNL_internat_13_47.balance</field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_13_46" model="account.report.line">
+                        <field name="name">- Costs | 46</field>
+                        <field name="code">RO_PNL_internat_13_46</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_13_46_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6812</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_13_47" model="account.report.line">
+                        <field name="name">- Incomes | 47</field>
+                        <field name="code">RO_PNL_internat_13_47</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-7812</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_00_48" model="account.report.line">
+                <field name="name">OPERATING COSTS - TOTAL | 48</field>
+                <field name="code">RO_PNL_internat_00_48</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="aggregation_formula">RO_PNL_internat_10_20.balance + RO_PNL_internat_10_21.balance + RO_PNL_internat_10_22.balance + RO_PNL_internat_10_23.balance - RO_PNL_internat_10_24.balance + RO_PNL_internat_11_25.balance + RO_PNL_internat_12_28.balance + RO_PNL_internat_12_32.balance + RO_PNL_internat_13_35.balance + RO_PNL_internat_13_45.balance</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_00_49" model="account.report.line">
+                <field name="name">OPERATING PROFIT OR LOSS:</field>
+                <field name="code">RO_PNL_internat_00_49</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="children_ids">
+                    <record id="account_financial_report_ro_pnl_internat_00_49_1" model="account.report.line">
+                        <field name="name">- Profit | 49</field>
+                        <field name="code">RO_PNL_internat_00_49_1</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_00_49_1_balance_unfiltered" model="account.report.expression">
+                                <field name="label">balance_unfiltered</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RO_PNL_internat_00_19.balance - RO_PNL_internat_00_48.balance</field>
+                            </record>
+                            <record id="account_financial_report_ro_pnl_smle_00_2_41_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RO_PNL_internat_00_49_1.balance_unfiltered</field>
+                                <field name="subformula">if_above(RON(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_00_50" model="account.report.line">
+                        <field name="name">- Losses | 50</field>
+                        <field name="code">RO_PNL_internat_00_50</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_00_50_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">-RO_PNL_internat_00_49_1.balance_unfiltered</field>
+                                <field name="subformula">if_above(RON(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_14_51" model="account.report.line">
+                <field name="name">14. Income from shares held in subsidiaries | 51</field>
+                <field name="code">RO_PNL_internat_14_51</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-7611</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_15_52" model="account.report.line">
+                <field name="name">15. Income from shares held in associated entities | 52</field>
+                <field name="code">RO_PNL_internat_15_52</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-7612</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_16_53" model="account.report.line">
+                <field name="name">16. Income from shares held by associates and jointly controlled entities | 53</field>
+                <field name="code">RO_PNL_internat_16_53</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-7613</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_17_54" model="account.report.line">
+                <field name="name">17. Income from securities operations and other financial instruments | 54</field>
+                <field name="code">RO_PNL_internat_17_54</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-762</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_18_55" model="account.report.line">
+                <field name="name">18. Revenue from derivative transactions | 55</field>
+                <field name="code">RO_PNL_internat_18_55</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-763</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_19_56" model="account.report.line">
+                <field name="name">19. Income from exchange rate differences | 56</field>
+                <field name="code">RO_PNL_internat_19_56</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-765</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_20_57" model="account.report.line">
+                <field name="name">20. Interest income | 57</field>
+                <field name="code">RO_PNL_internat_20_57</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-766</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_ro_pnl_internat_20_58" model="account.report.line">
+                        <field name="name">- of which, the income obtained from the entities in the group | 58</field>
+                        <field name="code">RO_PNL_internat_20_58</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-766</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_21_59" model="account.report.line">
+                <field name="name">21. Income from operating subsidies for the debt due | 59</field>
+                <field name="code">RO_PNL_internat_21_59</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-7418</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_22_60" model="account.report.line">
+                <field name="name">22. Income from short-term financial investments | 60</field>
+                <field name="code">RO_PNL_internat_22_60</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-7617</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_23_61" model="account.report.line">
+                <field name="name">23. Income from deferred collection over normal credit terms | 61</field>
+                <field name="code">RO_PNL_internat_23_61</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-7681</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_24_62" model="account.report.line">
+                <field name="name">24. Other incomes | 62</field>
+                <field name="code">RO_PNL_internat_24_62</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-7680 - 7688 - 7615 - 767 - 764</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_00_63" model="account.report.line">
+                <field name="name">FINANCIAL INCOME - TOTAL | 63</field>
+                <field name="code">RO_PNL_internat_00_63</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="aggregation_formula">RO_PNL_internat_14_51.balance + RO_PNL_internat_15_52.balance + RO_PNL_internat_16_53.balance + RO_PNL_internat_17_54.balance + RO_PNL_internat_18_55.balance + RO_PNL_internat_19_56.balance + RO_PNL_internat_20_57.balance + RO_PNL_internat_21_59.balance + RO_PNL_internat_22_60.balance + RO_PNL_internat_23_61.balance + RO_PNL_internat_24_62.balance</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_25_64" model="account.report.line">
+                <field name="name">25. Value adjustments in respect of financial non-current assets and investments held
+                    as current assets | 64
+                </field>
+                <field name="code">RO_PNL_internat_25_64</field>
+                <field name="aggregation_formula">RO_PNL_internat_25_65.balance - RO_PNL_internat_25_66.balance</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_ro_pnl_internat_25_65" model="account.report.line">
+                        <field name="name">- Costs | 65</field>
+                        <field name="code">RO_PNL_internat_25_65</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_25_65_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">686</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_25_66" model="account.report.line">
+                        <field name="name">- Incomes | 66</field>
+                        <field name="code">RO_PNL_internat_25_66</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-786</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_26_67" model="account.report.line">
+                <field name="name">
+                    26. Expenditure on operations with securities and other financial instruments | 67
+                </field>
+                <field name="code">RO_PNL_internat_26_67</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">661</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_27_68" model="account.report.line">
+                <field name="name">27. Costs of derivative transactions | 68</field>
+                <field name="code">RO_PNL_internat_27_68</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">662</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_28_69" model="account.report.line">
+                <field name="name">28. Interest charges | 69</field>
+                <field name="code">RO_PNL_internat_28_69</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">666</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_ro_pnl_internat_28_70" model="account.report.line">
+                        <field name="name">- of which, charges in relation group companies | 70</field>
+                        <field name="code">RO_PNL_internat_28_70</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">666</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_29_71" model="account.report.line">
+                <field name="name">29. Payments with deferred payment over normal credit terms | 71</field>
+                <field name="code">RO_PNL_internat_29_71</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">6681</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_30_72" model="account.report.line">
+                <field name="name">30. Interest costs on leasing contracts | 72</field>
+                <field name="code">RO_PNL_internat_30_72</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">6685</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_31_73" model="account.report.line">
+                <field name="name">31. Other financial expenses | 73</field>
+                <field name="code">RO_PNL_internat_31_73</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">665 + 664 + 667 + 6688 + 663 + 660 + 668</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_00_74" model="account.report.line">
+                <field name="name">FINANCIAL COSTS - TOTAL | 74</field>
+                <field name="code">RO_PNL_internat_00_74</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="aggregation_formula">RO_PNL_internat_25_64.balance + RO_PNL_internat_26_67.balance + RO_PNL_internat_27_68.balance + RO_PNL_internat_28_69.balance + RO_PNL_internat_29_71.balance + RO_PNL_internat_30_72.balance + RO_PNL_internat_31_73.balance</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_00_75" model="account.report.line">
+                <field name="name">FINANCIAL PROFIT OR LOSS</field>
+                <field name="code">RO_PNL_internat_00_75</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="aggregation_formula">RO_PNL_internat_00_63.balance - RO_PNL_internat_00_74.balance</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_ro_pnl_internat_00_2_75" model="account.report.line">
+                        <field name="name">- Profit | 75</field>
+                        <field name="code">RO_PNL_internat_00_2_75</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_00_2_75_balance_unfiltered" model="account.report.expression">
+                                <field name="label">balance_unfiltered</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RO_PNL_internat_00_63.balance - RO_PNL_internat_00_74.balance</field>
+                            </record>
+                            <record id="account_financial_report_ro_pnl_internat_00_2_75_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RO_PNL_internat_00_2_75.balance_unfiltered</field>
+                                <field name="subformula">if_above(RON(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_00_76" model="account.report.line">
+                        <field name="name">- Loss | 76</field>
+                        <field name="code">RO_PNL_internat_00_76</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_00_76_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">-RO_PNL_internat_00_2_75.balance_unfiltered</field>
+                                <field name="subformula">if_above(RON(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_00_77" model="account.report.line">
+                <field name="name">TOTAL INCOME | 77</field>
+                <field name="code">RO_PNL_internat_00_77</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="aggregation_formula">RO_PNL_internat_00_19.balance + RO_PNL_internat_00_63.balance</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_00_78" model="account.report.line">
+                <field name="name">TOTAL COSTS | 78</field>
+                <field name="code">RO_PNL_internat_00_78</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="aggregation_formula">RO_PNL_internat_00_48.balance + RO_PNL_internat_00_74.balance</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_00_79" model="account.report.line">
+                <field name="name">GROSS PROFIT OR LOSS</field>
+                <field name="code">RO_PNL_internat_00_79</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="children_ids">
+                    <record id="account_financial_report_ro_pnl_internat_00_2_79" model="account.report.line">
+                        <field name="name">- Profit | 79</field>
+                        <field name="code">RO_PNL_internat_00_79_1</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_00_2_79_balance_unfiltered" model="account.report.expression">
+                                <field name="label">balance_unfiltered</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RO_PNL_internat_00_77.balance - RO_PNL_internat_00_78.balance</field>
+                            </record>
+                            <record id="account_financial_report_ro_pnl_internat_00_2_79_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RO_PNL_internat_00_79_1.balance_unfiltered</field>
+                                <field name="subformula">if_above(RON(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_00_80" model="account.report.line">
+                        <field name="name">- Loss | 80</field>
+                        <field name="code">RO_PNL_internat_00_80</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_00_80_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">-RO_PNL_internat_00_79_1.balance_unfiltered</field>
+                                <field name="subformula">if_above(RON(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_32_81" model="account.report.line">
+                <field name="name">32. Current profit tax | 81</field>
+                <field name="code">RO_PNL_internat_32_81</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ro_pnl_internat_32_81_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">691</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_33_82" model="account.report.line">
+                <field name="name">33. Deferred income tax | 82</field>
+                <field name="code">RO_PNL_internat_33_82</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">692</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_34_83" model="account.report.line">
+                <field name="name">34. Deferred income tax revenue | 83</field>
+                <field name="code">RO_PNL_internat_34_83</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-792</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_35_84" model="account.report.line">
+                <field name="name">35. Income tax expenses, caused by uncertainties related to tax treatment | 84</field>
+                <field name="code">RO_PNL_internat_35_84</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">693</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_36_85" model="account.report.line">
+                <field name="name">36. Activity-specific taxes | 85</field>
+                <field name="code">RO_PNL_internat_36_85</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ro_pnl_internat_36_85_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">695</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_37_86" model="account.report.line">
+                <field name="name">37. Other taxes not shown in the above items | 86</field>
+                <field name="code">RO_PNL_internat_37_86</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ro_pnl_internat_37_86_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">698</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_internat_00_87" model="account.report.line">
+                <field name="name">NET PROFIT OR LOSS OF THE REPORTING PERIOD</field>
+                <field name="code">RO_PNL_internat_00_87</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="children_ids">
+                    <record id="account_financial_report_ro_pnl_internat_00_87_1" model="account.report.line">
+                        <field name="name">- Profit | 87</field>
+                        <field name="code">RO_PNL_internat_00_87_1</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_00_87_1_balance_unfiltered" model="account.report.expression">
+                                <field name="label">balance_unfiltered</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RO_PNL_internat_34_83.balance - RO_PNL_internat_00_80.balance + RO_PNL_internat_00_79_1.balance - RO_PNL_internat_32_81.balance - RO_PNL_internat_33_82.balance - RO_PNL_internat_35_84.balance - RO_PNL_internat_36_85.balance - RO_PNL_internat_37_86.balance</field>
+                            </record>
+                            <record id="account_financial_report_ro_pnl_internat_00_87_1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RO_PNL_internat_00_87_1.balance_unfiltered</field>
+                                <field name="subformula">if_above(RON(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_internat_00_88" model="account.report.line">
+                        <field name="name">- Loss | 88</field>
+                        <field name="code">RO_PNL_internat_00_88</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_internat_00_88_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">-RO_PNL_internat_00_87_1.balance_unfiltered</field>
+                                <field name="subformula">if_above(RON(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

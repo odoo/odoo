@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="rule_parameter_health_fund_tax" model="hr.rule.parameter">
+        <field name="name">Lux Tax: Health Fund</field>
+        <field name="code">l10n_lu_health_fund_tax</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+    <record id="rule_parameter_health_fund_tax_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">2.8</field>
+        <field name="rule_parameter_id" ref="rule_parameter_health_fund_tax"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_retirement_fund_tax" model="hr.rule.parameter">
+        <field name="name">Lux Tax: Retirement Fund</field>
+        <field name="code">l10n_lu_retirement_fund_tax</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+    <record id="rule_parameter_retirement_fund_tax_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">8</field>
+        <field name="rule_parameter_id" ref="rule_parameter_retirement_fund_tax"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_cash_sickness_fund_tax" model="hr.rule.parameter">
+        <field name="name">Lux Tax: Cash Sickness Fund</field>
+        <field name="code">l10n_lu_cash_sickness_fund_tax</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+    <record id="rule_parameter_cash_sickness_fund_tax_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.25</field>
+        <field name="rule_parameter_id" ref="rule_parameter_cash_sickness_fund_tax"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_dependency_insurance_tax" model="hr.rule.parameter">
+        <field name="name">Lux Tax: Dependency Insurance</field>
+        <field name="code">l10n_lu_dependency_insurance_tax</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+    <record id="rule_parameter_dependency_insurance_tax_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">1.4</field>
+        <field name="rule_parameter_id" ref="rule_parameter_dependency_insurance_tax"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+</odoo>

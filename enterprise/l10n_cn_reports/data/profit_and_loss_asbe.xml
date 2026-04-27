@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_cn_asbe_pl" model="account.report">
+        <field name="name">ASBE: Profit And Loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="country_id" ref="base.cn"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="filter_budgets" eval="True"/>
+        <field name="default_opening_date_filter">this_year</field>
+        <field name="availability_condition">coa</field>
+        <field name="chart_template">cn_large_bis</field>
+        <field name="column_ids">
+            <record id="l10n_cn_asbe_pl_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_cn_asbe_pl_cn_oi" model="account.report.line">
+                <field name="name">1. Operating Income</field>
+                <field name="code">CN_OI</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="account_codes_formula">- 600</field>
+                <field name="children_ids">
+                    <record id="l10n_cn_asbe_pl_cn_oc" model="account.report.line">
+                        <field name="name">Operating Costs</field>
+                        <field name="code">CN_OC</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">64\(6403, 641) + 5\(53)</field>
+                    </record>
+                    <record id="l10n_cn_asbe_pl_cn_ts" model="account.report.line">
+                        <field name="name">Taxes And Surcharges</field>
+                        <field name="code">CN_TS</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">6403</field>
+                    </record>
+                    <record id="l10n_cn_asbe_pl_cn_se" model="account.report.line">
+                        <field name="name">Sales Expenses</field>
+                        <field name="code">CN_SE</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">6601 + 6604</field>
+                    </record>
+                    <record id="l10n_cn_asbe_pl_cn_ae" model="account.report.line">
+                        <field name="name">Administrative Expenses</field>
+                        <field name="code">CN_AE</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">66\(6601, 6603, 6604)</field>
+                    </record>
+                    <record id="l10n_cn_asbe_pl_cn_rde" model="account.report.line">
+                        <field name="name">R&amp;D Expenses</field>
+                        <field name="code">CN_RDE</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">53</field>
+                    </record>
+                    <record id="l10n_cn_asbe_pl_cn_fc" model="account.report.line">
+                        <field name="name">Financial Charges</field>
+                        <field name="code">CN_FC</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">6603 - 601 + 641</field>
+                    </record>
+                    <record id="l10n_cn_asbe_pl_cn_oti" model="account.report.line">
+                        <field name="name">Other Income</field>
+                        <field name="code">CN_OTI</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">- 60\(600, 601, 606, 607) - 61\(610, 6111, 6115)</field>
+                    </record>
+                    <record id="l10n_cn_asbe_pl_cn_ii" model="account.report.line">
+                        <field name="name">Investment Income</field>
+                        <field name="code">CN_II</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">- 6111 - 62</field>
+                    </record>
+                    <record id="l10n_cn_asbe_pl_cn_hi" model="account.report.line">
+                        <field name="name">Net Exposure Hedging Income</field>
+                        <field name="code">CN_HI</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">- 607</field>
+                    </record>
+                    <record id="l10n_cn_asbe_pl_cn_fvi" model="account.report.line">
+                        <field name="name">Gains From Changes In Fair Value</field>
+                        <field name="code">CN_FVI</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">- 610</field>
+                    </record>
+                    <record id="l10n_cn_asbe_pl_cn_cil" model="account.report.line">
+                        <field name="name">Credit Impairment Loss</field>
+                        <field name="code">CN_CIL</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">672</field>
+                    </record>
+                    <record id="l10n_cn_asbe_pl_cn_di" model="account.report.line">
+                        <field name="name">Asset Impairment Losses</field>
+                        <field name="code">CN_DI</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">670</field>
+                    </record>
+                    <record id="l10n_cn_asbe_pl_cn_adi" model="account.report.line">
+                        <field name="name">Asset Disposal Income</field>
+                        <field name="code">CN_ADI</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">- 6115</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cn_asbe_pl_cn_op" model="account.report.line">
+                <field name="name">2. Operating Profit</field>
+                <field name="code">CN_OP</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="aggregation_formula">CN_OI.balance - CN_OC.balance - CN_TS.balance - CN_SE.balance - CN_AE.balance - CN_RDE.balance - CN_FC.balance + CN_OTI.balance + CN_II.balance + CN_HI.balance + CN_FVI.balance - CN_DI.balance + CN_ADI.balance</field>
+                <field name="children_ids">
+                    <record id="l10n_cn_asbe_pl_cn_noi" model="account.report.line">
+                        <field name="name">Non-Operating Income</field>
+                        <field name="code">CN_NOI</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">- 606 - 63</field>
+                    </record>
+                    <record id="l10n_cn_asbe_pl_cn_noe" model="account.report.line">
+                        <field name="name">Non-Operating Expenses</field>
+                        <field name="code">CN_NOE</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">65 + 67\(670, 672)</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cn_asbe_pl_cn_tp" model="account.report.line">
+                <field name="name">3. Total Profits</field>
+                <field name="code">CN_TP</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="aggregation_formula">CN_OP.balance + CN_NOI.balance - CN_NOE.balance</field>
+                <field name="children_ids">
+                    <record id="l10n_cn_asbe_pl_cn_ite" model="account.report.line">
+                        <field name="name">Income Tax Expense</field>
+                        <field name="code">CN_ITE</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">68</field>
+                    </record>
+                    <record id="l10n_cn_asbe_pl_cn_pyia" model="account.report.line">
+                        <field name="name">Prior Year Income Adjustment</field>
+                        <field name="code">CN_PYIA</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">69</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cn_asbe_pl_cn_nep" model="account.report.line">
+                <field name="name">4. Net Profit</field>
+                <field name="code">CN_NEP</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="aggregation_formula">CN_TP.balance - CN_ITE.balance - CN_PYIA.balance</field>
+                <field name="children_ids">
+                    <record id="l10n_cn_asbe_pl_cn_nepco" model="account.report.line">
+                        <field name="name">(1) Net Profit From Continuing Operations</field>
+                        <field name="code">CN_NEPCO</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="aggregation_formula">CN_NEP.balance - CN_NEPDO.balance</field>
+                    </record>
+                    <record id="l10n_cn_asbe_pl_cn_nepdo" model="account.report.line">
+                        <field name="name">(2) Net Profit From Discontinued Operations</field>
+                        <field name="code">CN_NEPDO</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="cn_nepdo_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cn_asbe_pl_cn_nepoiat" model="account.report.line">
+                <field name="name">5. Other Comprehensive Income, net of tax</field>
+                <field name="code">CN_NEPOIAT</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="aggregation_formula">CN_OCINR.balance + CN_OCIR.balance</field>
+                <field name="children_ids">
+                    <record id="l10n_cn_asbe_pl_cn_ocinr" model="account.report.line">
+                        <field name="name">(1) Other Comprehensive Income That Cannot Be Reclassified Into Profit Or Loss</field>
+                        <field name="code">CN_OCINR</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="cn_ocinr_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_cn_asbe_pl_cn_ocir" model="account.report.line">
+                        <field name="name">(2) Other Comprehensive Income That Will Be Reclassified Into Profit And Loss</field>
+                        <field name="code">CN_OCIR</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="cn_ocir_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cn_asbe_pl_cn_tci" model="account.report.line">
+                <field name="name">6. Total Comprehensive Income</field>
+                <field name="code">CN_TCI</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="aggregation_formula">CN_NEP.balance + CN_NEPOIAT.balance</field>
+            </record>
+        </field>
+    </record>
+</odoo>

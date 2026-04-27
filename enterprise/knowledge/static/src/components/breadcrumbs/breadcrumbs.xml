@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="knowledge.KnowledgeBreadcrumbs">
+        <button class="btn btn-light" t-att-class="{'disabled': !isGoBackEnabled}" t-on-click="onClickBack">
+            <i class="oi oi-chevron-left"/>
+        </button>
+        <button class="btn btn-light" t-att-class="{'disabled': !isGoNextEnabled}" t-on-click="onClickNext">
+            <i class="oi oi-chevron-right"/>
+        </button>
+    </t>
+</templates>

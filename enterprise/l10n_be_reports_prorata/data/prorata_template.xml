@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="vat_export_prorata" xmlns:ns2="http://www.minfin.fgov.be/VATConsignment">
+        <ns2:Deduction t-if="prorata_year">
+            <AdjustedPeriod t-out="prorata_year"/>
+            <AdjustedValue t-out="prorata"/>
+            <SpecialAdjustedValue t-if="prorata_at_100 or prorata_at_0 or special_prorata_deduction">
+                <moreSpecialProrata t-out="str(submit_more).lower()"/>
+                <UseProRataPercentage t-att-GridNumber="1" t-out="prorata_at_100"/>
+                <UseProRataPercentage t-att-GridNumber="2" t-out="prorata_at_0"/>
+                <UseProRataPercentage t-att-GridNumber="3" t-out="special_prorata_deduction"/>
+                <SpecialProRataPercentage t-att-SpecialProRataGridNumber="1" t-if="special_prorata_1" t-out="special_prorata_1"/>
+                <SpecialProRataPercentage t-att-SpecialProRataGridNumber="2" t-if="special_prorata_2" t-out="special_prorata_2"/>
+                <SpecialProRataPercentage t-att-SpecialProRataGridNumber="3" t-if="special_prorata_3" t-out="special_prorata_3"/>
+                <SpecialProRataPercentage t-att-SpecialProRataGridNumber="4" t-if="special_prorata_4" t-out="special_prorata_4"/>
+                <SpecialProRataPercentage t-att-SpecialProRataGridNumber="5" t-if="special_prorata_5" t-out="special_prorata_5"/>
+            </SpecialAdjustedValue>
+        </ns2:Deduction>
+    </template>
+</odoo>

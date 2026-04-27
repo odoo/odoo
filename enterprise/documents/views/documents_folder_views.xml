@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="document_view_form_new_folder" model="ir.ui.view">
+        <field name="name">New Folder form</field>
+        <field name="model">documents.document</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="type" invisible="1" force_save="1"/>  <!-- save that we're creating a folder -->
+                <field name="active" string="Active" invisible="1"/>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Finance" options="{'line_breaks': False}" widget="text" readonly="False" required="True"/></h1>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="folder_deletion_form" model="ir.ui.view">
+        <field name="name">Folder Deletion</field>
+        <field name="model">documents.document</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <form>
+                <div>
+                    Files will be sent to trash and deleted forever after <field name="deletion_delay"/> days.
+                </div>
+                <footer>
+                    <button string="Move to trash" class="btn-primary" type="object" name="action_archive" data-hotkey="d"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_folder_form" model="ir.actions.act_window">
+        <field name="name">Add Folder</field>
+        <field name="res_model">documents.document</field>
+        <field name="view_mode">form</field>
+        <field name="context">{
+            'form_view_ref': 'documents.document_view_form_new_folder',
+            'default_type': 'folder',
+            'dialog_size': 'medium',
+        }</field>
+        <field name="domain">[("type", "=", "folder")]</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

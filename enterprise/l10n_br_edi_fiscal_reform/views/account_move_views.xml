@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_move_view_form" model="ir.ui.view">
+            <field name="name">account.move.view.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="l10n_br_edi.account_move_form_inherit_l10n_br_edi"/>
+            <field name="arch" type="xml">
+                <field name="l10n_br_edi_payment_method" position="after">
+                    <field name="l10n_br_presence" invisible="country_code != 'BR'" readonly="state in ['cancel', 'posted']"/>
+                    <field name="l10n_br_service_operation_indicator" invisible="country_code != 'BR'" readonly="state in ['cancel', 'posted']"/>
+                </field>
+                <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='tax_ids']" position="before">
+                    <field name="l10n_br_cbs_ibs_deduction" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account_move_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="l10n_br_avatax.account_move_form_inherit"/>
+            <field name="arch" type="xml">
+                <field name="l10n_br_goods_operation_type_id" position="attributes">
+                    <attribute name="invisible" separator="or" remove="l10n_br_is_service_transaction"/>
+                    <!-- After the reform it's not only for goods. -->
+                    <attribute name="string">Operation Type</attribute>
+                    <attribute name="help">Brazil: This is the operation type related to the transaction. It will identify how taxes will be computed.</attribute>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

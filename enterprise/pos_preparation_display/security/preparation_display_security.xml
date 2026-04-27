@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Company-restricted Records -->
+    <record model="ir.rule" id="record_restricted_company_rule">
+        <field name="name">Restricted Record: multi-company</field>
+        <field name="model_id" ref="model_pos_preparation_display_display"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">
+            [('company_id', 'in', company_ids)]
+        </field>
+    </record>
+</odoo>

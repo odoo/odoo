@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_partner_kmd_inf_warning_view_tree" model="ir.ui.view">
+            <field name="name">res.partner.kmd.inf.warning.view.tree</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <list create="false" editable="bottom">
+                    <field name="name" readonly="true"/>
+                    <field name="country_id"/>
+                    <field name="vat"/>
+                    <field name="company_registry"/>
+                </list>
+            </field>
+        </record>
+    </data>
+</odoo>

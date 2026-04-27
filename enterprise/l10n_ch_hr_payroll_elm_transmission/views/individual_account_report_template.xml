@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_individual_account">
+        <t t-call="web.html_container" t-if="report_data">
+            <t t-set="company" t-value="report_data.get('company')"/>
+            <t t-call="web.external_layout">
+                <div t-if="company" class="page">
+                    <h2>
+                        <t t-if="employee">
+                            <span>Individual Account - </span> <t t-esc="report_data['year']"/> <t t-esc="employee.name"/> <span> - </span> <t t-esc="employee.registration_number"/>
+                        </t>
+                        <t t-else="">
+                            <span>Individual Account - <t t-esc="report_data['company'].name"/> - </span> <t t-esc="report_data['year']"/>
+                        </t>
+                    </h2>
+                    <br/>
+                    <tbody>
+                        <table class="table table-bordered table-sm">
+                            <thead><tr>
+                                <th class="text-center">Code</th>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">January</th>
+                                <th class="text-center">February</th>
+                                <th class="text-center">March</th>
+                                <th class="text-center">April</th>
+                                <th class="text-center">May</th>
+                                <th class="text-center">June</th>
+                                <th class="text-center">July</th>
+                                <th class="text-center">August</th>
+                                <th class="text-center">September</th>
+                                <th class="text-center">October</th>
+                                <th class="text-center">November</th>
+                                <th class="text-center">December</th>
+                                <th class="text-center">Total</th>
+                            </tr></thead>
+                            <tr t-foreach="report_data['rules']" t-as="rule">
+                                <td t-esc="rule['code']"/>
+                                <td t-esc="rule['name']"/>
+                                <t t-foreach="[0,1,2,3,4,5,6,7,8,9,10,11,12]" t-as="m">
+                                    <t t-if="rule['monthly_values'][m] != 0">
+                                        <td t-esc="rule['monthly_values'][m]"/>
+                                    </t>
+                                    <t t-else="">
+                                        <td class="text-center">/</td>
+                                    </t>
+                                </t>
+                            </tr>
+                        </table>
+                    </tbody>
+                </div>
+                <p style="page-break-before:always;"></p>
+            </t>
+        </t>
+    </template>
+    <record id="l10n_ch_hr_payroll.action_report_individual_account" model="ir.actions.report">
+        <field name="name">Individual Account</field>
+        <field name="model">hr.employee</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_ch_hr_payroll_elm_transmission.report_individual_account</field>
+        <field name="report_file">l10n_ch_hr_payroll_elm_transmission.report_individual_account</field>
+        <field name="print_report_name">(object._get_report_base_filename())</field>
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="l10n_ch_hr_payroll_elm_transmission.report_paperformat_individual_account_elm"/>
+    </record>
+</odoo>

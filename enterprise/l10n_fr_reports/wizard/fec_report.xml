@@ -1,0 +1,14 @@
+<odoo>
+    <record id="fec_wizard_action" model="ir.actions.act_window">
+        <field name="name">FEC</field>
+        <field name="res_model">l10n_fr.fec.export.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="l10n_fr_account.fec_export_wizard_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="fec_report_menu_item"
+            parent="l10n_fr_account.account_reports_fr_statements_menu"
+            action="fec_wizard_action"
+            sequence="100" />
+</odoo>

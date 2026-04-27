@@ -1,0 +1,21 @@
+.account_report_filter {
+    &.exchange_rate {
+        .dropdown-item {
+            display: flex;
+            justify-content: space-between;
+
+            &.focus, &.selected:hover, &.selected:focus { background-color: inherit }
+            input {
+                display: inline;
+                width: 100px;
+                margin: 0 8px;
+                border-top: none;
+                border-left: none;
+                border-right: none;
+                border-bottom: 1px solid var(--o-input-border-color);
+                text-align: right;
+                background-color: inherit;
+            }
+        }
+    }
+}

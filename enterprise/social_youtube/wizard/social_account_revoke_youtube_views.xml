@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="social_account_revoke_youtube_view_form" model="ir.ui.view">
+            <field name="name">social.account.revoke.youtube.view.form</field>
+            <field name="model">social.account.revoke.youtube</field>
+            <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
+            <field name="arch" type="xml">
+                <form string="Revoke YouTube Account">
+                    <div class="alert alert-warning" role="alert">
+                        Odoo will lose access to your YouTube account
+                        and delete all its related data from your database.
+                    </div>
+                    <group>
+                        <field name="account_id"/>
+                    </group>
+                    <footer>
+                        <button string="Revoke &amp; Delete" name="action_revoke" type="object"
+                            class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+       <record id="social_account_revoke_youtube_action" model="ir.actions.act_window">
+           <field name="name">Revoke YouTube Account</field>
+           <field name="res_model">social.account.revoke.youtube</field>
+           <field name="view_mode">form</field>
+           <field name="target">new</field>
+       </record>
+    </data>
+</odoo>

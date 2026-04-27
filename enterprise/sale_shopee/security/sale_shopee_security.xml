@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record model="ir.rule" id="shopee_account_comp_rule">
+        <field name="name">Shopee Account multi-company</field>
+        <field name="model_id" ref="model_shopee_account"/>
+        <field name="domain_force">['|', ('company_ids', '=', False), ('company_ids', 'in', company_ids)]</field>
+    </record>
+
+    <record model="ir.rule" id="shopee_shop_comp_rule">
+        <field name="name">Shopee Shop multi-company</field>
+        <field name="model_id" ref="model_shopee_shop"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
+</odoo>

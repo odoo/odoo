@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_kz_pl_report" model="account.report">
+        <field name="name">Profit and Loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.kz"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_kz_pl_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_kz_pl_total_income" model="account.report.line">
+                <field name="name">020. Total operating income (loss)</field>
+                <field name="code">L10N_KZ_PNL_020</field>
+                <field name="aggregation_formula">L10N_KZ_PNL_012.balance - L10N_KZ_PNL_013.balance - L10N_KZ_PNL_014.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_kz_pl_non_exchange_income" model="account.report.line">
+                        <field name="name">012. Gross profit (loss)</field>
+                        <field name="code">L10N_KZ_PNL_012</field>
+                        <field name="aggregation_formula">L10N_KZ_PNL_010.balance - L10N_KZ_PNL_011.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_kz_pl_revenue_010" model="account.report.line">
+                                <field name="name">010. Revenue from sales of goods, works and services</field>
+                                <field name="code">L10N_KZ_PNL_010</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-60</field>
+                            </record>
+                            <record id="l10n_kz_pl_revenue_011" model="account.report.line">
+                                <field name="name">011. Cost of goods, works and services sold</field>
+                                <field name="code">L10N_KZ_PNL_011</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">70</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kz_pl_revenue_013" model="account.report.line">
+                        <field name="name">013. Cost of sales</field>
+                        <field name="code">L10N_KZ_PNL_013</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">71</field>
+                    </record>
+                    <record id="l10n_kz_pl_revenue_014" model="account.report.line">
+                        <field name="name">014. Administrative expenses</field>
+                        <field name="code">L10N_KZ_PNL_014</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">72</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kz_pl_income_021" model="account.report.line">
+                <field name="name">021. Financial income</field>
+                <field name="code">L10N_KZ_PNL_021</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-61 - 6280</field>
+            </record>
+            <record id="l10n_kz_pl_income_022" model="account.report.line">
+                <field name="name">022. Financial expenses</field>
+                <field name="code">L10N_KZ_PNL_022</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">73 + 7470</field>
+            </record>
+            <record id="l10n_kz_pl_income_023" model="account.report.line">
+                <field name="name">023. Share of the organization in profit (loss) of associates and joint ventures accounted for using the equity method</field>
+                <field name="code">L10N_KZ_PNL_023</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-64 - 76</field>
+            </record>
+            <record id="l10n_kz_pl_income_024" model="account.report.line">
+                <field name="name">024. Other income</field>
+                <field name="code">L10N_KZ_PNL_024</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-62\(6280)</field>
+            </record>
+            <record id="l10n_kz_pl_income_025" model="account.report.line">
+                <field name="name">025. Other expenses</field>
+                <field name="code">L10N_KZ_PNL_025</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">74\(7470) + 8</field>
+            </record>
+            <record id="l10n_kz_pl_income_100" model="account.report.line">
+                <field name="name">100. Profit (loss) before taxation</field>
+                <field name="code">L10N_KZ_PNL_100</field>
+                <field name="aggregation_formula">L10N_KZ_PNL_020.balance + L10N_KZ_PNL_021.balance - L10N_KZ_PNL_022.balance + L10N_KZ_PNL_023.balance + L10N_KZ_PNL_024.balance - L10N_KZ_PNL_025.balance</field>
+            </record>
+            <record id="l10n_kz_pl_taxes_101" model="account.report.line">
+                <field name="name">101. Income tax expense (income)</field>
+                <field name="code">L10N_KZ_PNL_101</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">77</field>
+            </record>
+            <record id="l10n_kz_pl_after_tax_200" model="account.report.line">
+                <field name="name">200. Profit (loss) after tax from continuing operations</field>
+                <field name="code">L10N_KZ_PNL_200</field>
+                <field name="aggregation_formula">L10N_KZ_PNL_100.balance - L10N_KZ_PNL_101.balance</field>
+            </record>
+            <record id="l10n_kz_pl_after_tax_201" model="account.report.line">
+                <field name="name">201. Profit (loss) after tax from discontinued operations</field>
+                <field name="code">L10N_KZ_PNL_201</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-63 - 75</field>
+            </record>
+            <record id="l10n_kz_pl_after_tax_300" model="account.report.line">
+                <field name="name">300. Profit for the year attributable to:</field>
+                <field name="code">L10N_KZ_PNL_300</field>
+                <field name="aggregation_formula">L10N_KZ_PNL_200.balance + L10N_KZ_PNL_201.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_kz_pl_after_tax_300_1" model="account.report.line">
+                        <field name="name">Owners of the parent organization</field>
+                        <field name="code">L10N_KZ_PNL_300_1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kz_pl_after_tax_300_1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kz_pl_after_tax_300_2" model="account.report.line">
+                        <field name="name">Shares of non-controlling owners</field>
+                        <field name="code">L10N_KZ_PNL_300_2</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kz_pl_after_tax_300_2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kz_pl_other_income_400" model="account.report.line">
+                <field name="name">400. Other comprehensive income, total, including:</field>
+                <field name="code">L10N_KZ_PNL_400</field>
+                <field name="aggregation_formula">L10N_KZ_PNL_420.balance + L10N_KZ_PNL_440.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_kz_pl_other_income_420" model="account.report.line">
+                        <field name="name">420. Total other comprehensive income to be reclassified to income or expense in subsequent periods (net of income tax)</field>
+                        <field name="code">L10N_KZ_PNL_420</field>
+                        <field name="aggregation_formula">L10N_KZ_PNL_410.balance + L10N_KZ_PNL_411.balance + L10N_KZ_PNL_412.balance + L10N_KZ_PNL_413.balance + L10N_KZ_PNL_414.balance + L10N_KZ_PNL_415.balance + L10N_KZ_PNL_416.balance + L10N_KZ_PNL_417.balance + L10N_KZ_PNL_418.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_kz_pl_other_income_410" model="account.report.line">
+                                <field name="name">410. Revaluation of debt financial instruments measured at fair value through other comprehensive income</field>
+                                <field name="code">L10N_KZ_PNL_410</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kz_pl_other_income_410_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kz_pl_other_income_411" model="account.report.line">
+                                <field name="name">411. Shares in other comprehensive income (loss) of associates and joint ventures accounted for using the equity method</field>
+                                <field name="code">L10N_KZ_PNL_411</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kz_pl_other_income_411_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kz_pl_other_income_412" model="account.report.line">
+                                <field name="name">412. Effect of change in income tax rate on deferred tax</field>
+                                <field name="code">L10N_KZ_PNL_412</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kz_pl_other_income_412_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kz_pl_other_income_413" model="account.report.line">
+                                <field name="name">413. Cash flow hedges</field>
+                                <field name="code">L10N_KZ_PNL_413</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kz_pl_other_income_413_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kz_pl_other_income_414" model="account.report.line">
+                                <field name="name">414. Exchange rate difference on investments in foreign entities</field>
+                                <field name="code">L10N_KZ_PNL_414</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kz_pl_other_income_414_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kz_pl_other_income_415" model="account.report.line">
+                                <field name="name">415. Hedges of net investments in foreign operations</field>
+                                <field name="code">L10N_KZ_PNL_415</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kz_pl_other_income_415_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kz_pl_other_income_416" model="account.report.line">
+                                <field name="name">416. Other components of other comprehensive income</field>
+                                <field name="code">L10N_KZ_PNL_416</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kz_pl_other_income_416_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kz_pl_other_income_417" model="account.report.line">
+                                <field name="name">417. Adjustment on reclassification to profit (loss)</field>
+                                <field name="code">L10N_KZ_PNL_417</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kz_pl_other_income_417_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kz_pl_other_income_418" model="account.report.line">
+                                <field name="name">418. Tax effect of components of other comprehensive income</field>
+                                <field name="code">L10N_KZ_PNL_418</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kz_pl_other_income_418_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kz_pl_other_income_440" model="account.report.line">
+                        <field name="name">440. Total other comprehensive income not to be reclassified as income or expense in subsequent periods (net of income tax)</field>
+                        <field name="code">L10N_KZ_PNL_440</field>
+                        <field name="aggregation_formula">L10N_KZ_PNL_431.balance + L10N_KZ_PNL_432.balance + L10N_KZ_PNL_433.balance + L10N_KZ_PNL_434.balance + L10N_KZ_PNL_435.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_kz_pl_other_income_431" model="account.report.line">
+                                <field name="name">431. Revaluation of fixed and intangible assets</field>
+                                <field name="code">L10N_KZ_PNL_431</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kz_pl_other_income_431_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kz_pl_other_income_432" model="account.report.line">
+                                <field name="name">432. Share in other comprehensive income (loss) of associates and joint ventures accounted for using the equity method</field>
+                                <field name="code">L10N_KZ_PNL_432</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kz_pl_other_income_432_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kz_pl_other_income_433" model="account.report.line">
+                                <field name="name">433. Actuarial gains (losses) on pension obligations</field>
+                                <field name="code">L10N_KZ_PNL_433</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kz_pl_other_income_433_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kz_pl_other_income_434" model="account.report.line">
+                                <field name="name">434. Tax effect of components of other comprehensive income</field>
+                                <field name="code">L10N_KZ_PNL_434</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kz_pl_other_income_434_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kz_pl_other_income_435" model="account.report.line">
+                                <field name="name">435. Revaluation of equity financial instruments measured at fair value through other comprehensive income</field>
+                                <field name="code">L10N_KZ_PNL_435</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kz_pl_other_income_435_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kz_pl_total_comprehensive_income" model="account.report.line">
+                <field name="name">500. Total comprehensive income attributable to:</field>
+                <field name="code">L10N_KZ_PNL_500</field>
+                <field name="aggregation_formula">L10N_KZ_PNL_300.balance + L10N_KZ_PNL_400.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_kz_pl_after_tax_500_1" model="account.report.line">
+                        <field name="name">Owners of the parent organization</field>
+                        <field name="code">L10N_KZ_PNL_500_1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kz_pl_after_tax_500_1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kz_pl_after_tax_500_2" model="account.report.line">
+                        <field name="name">Shares of non-controlling owners</field>
+                        <field name="code">L10N_KZ_PNL_500_2</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kz_pl_after_tax_500_2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kz_pl_earnings_per_share" model="account.report.line">
+                <field name="name">600. Earnings per share including:</field>
+                <field name="code">L10N_KZ_PNL_600</field>
+                <field name="aggregation_formula">L10N_KZ_PNL_600_1.balance + L10N_KZ_PNL_600_2.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_kz_pl_earnings_per_share_1" model="account.report.line">
+                        <field name="name">Basic earnings per share:</field>
+                        <field name="code">L10N_KZ_PNL_600_1</field>
+                        <field name="aggregation_formula">L10N_KZ_PNL_600_1_1.balance + L10N_KZ_PNL_600_1_2.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_kz_pl_earnings_600_1_1" model="account.report.line">
+                                <field name="name">From continuing operations</field>
+                                <field name="code">L10N_KZ_PNL_600_1_1</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kz_pl_earnings_600_1_1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kz_pl_earnings_600_1_2" model="account.report.line">
+                                <field name="name">From discontinued operations</field>
+                                <field name="code">L10N_KZ_PNL_600_1_2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kz_pl_earnings_600_1_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kz_pl_earnings_per_share_2" model="account.report.line">
+                        <field name="name">Diluted earnings per share:</field>
+                        <field name="code">L10N_KZ_PNL_600_2</field>
+                        <field name="aggregation_formula">L10N_KZ_PNL_600_2_1.balance + L10N_KZ_PNL_600_2_2.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_kz_pl_earnings_600_2_1" model="account.report.line">
+                                <field name="name">From continuing operations</field>
+                                <field name="code">L10N_KZ_PNL_600_2_1</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kz_pl_earnings_600_2_1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kz_pl_earnings_600_2_2" model="account.report.line">
+                                <field name="name">From discontinued operations</field>
+                                <field name="code">L10N_KZ_PNL_600_2_2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kz_pl_earnings_600_2_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+    <record id="action_l10n_kz_pl_report" model="ir.actions.client">
+        <field name="name">Profit and Loss</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'model': 'account.report', 'report_id': ref('l10n_kz_pl_report')}"/>
+    </record>
+    <record id="l10n_kz_report_line_bs_equity_414_1" model="account.report.line">
+        <field name="action_id" ref="action_l10n_kz_pl_report"/>
+    </record>
+</odoo>

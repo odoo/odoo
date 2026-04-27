@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="sale_order_tree" model="ir.ui.view">
+        <field name="name">shopee.order.list</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="shopee_order_ref" groups="base.group_no_one" optional="hide"/>
+                <field name="shopee_shop_id" groups="base.group_no_one" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">shopee.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="after">
+                <div class="badge rounded-pill text-bg-info fs-6 float-end"
+                     invisible="shopee_fulfillment_type != 'fbm'">
+                    Fulfilled by Merchant
+                </div>
+                <div class="badge rounded-pill text-bg-info fs-6 float-end"
+                     invisible="shopee_fulfillment_type != 'fbs'">
+                    Fulfilled by Shopee
+                </div>
+                <div class="badge rounded-pill text-bg-info fs-6 float-end"
+                     invisible="shopee_fulfillment_type != 'hybrid'">
+                    Fulfilled by Cross Border Seller
+                </div>
+            </div>
+            <t groups="sale.group_auto_done_setting" position="after">
+                <t groups="!sale.group_auto_done_setting">
+                    <button
+                        name="action_lock"
+                        type="object"
+                        string="Lock"
+                        help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."
+                        invisible="locked or state != 'sale' or not shopee_order_ref"
+                        groups="sales_team.group_sale_manager"
+                    />
+                </t>
+            </t>
+            <group name="order_details" position="inside">
+                <field
+                    name="shopee_order_ref"
+                    invisible="not shopee_order_ref"
+                />
+                <field
+                    name="shopee_shop_id"
+                    invisible="not shopee_shop_id"
+                />
+            </group>
+        </field>
+    </record>
+
+    <record id="view_sales_order_filter" model="ir.ui.view">
+        <field name="name">shopee.order.search</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="shopee_order_ref" groups="base.group_no_one"/>
+                <field name="shopee_shop_id" groups="base.group_no_one"/>
+            </field>
+        </field>
+    </record>
+</odoo>

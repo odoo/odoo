@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="account_accountant.MatchingLink">
+        <t t-if="props.record.context.is_matched_view">
+            <span t-out="props.record.data[props.name]" t-attf-class="o_tag o_badge badge rounded-pill {{'o_tag_color_' + colorCode}}"/>
+        </t>
+        <t t-elif="props.record.data[props.name]">
+            <a href='#' t-on-click.prevent="viewMatch" t-attf-class="o_tag o_badge badge rounded-pill {{'o_tag_color_' + colorCode}}">
+                <span t-out="props.record.data[props.name]"/>
+            </a>
+        </t>
+    </t>
+
+</templates>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_l10n_ec_edi_stock_picking_form" model="ir.ui.view">
+            <field name="name">view_l10n_ec_edi_stock_picking_form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <field name="origin" position="after">
+                    <field name="country_code" invisible="1"/>
+                    <field name="l10n_ec_allow_send_edi" invisible="1"/>
+                    <field name="l10n_ec_is_delivery_guide" invisible="1"/>
+                    <field name="l10n_ec_edi_document_number" string="Delivery Guide Number" invisible="not l10n_ec_is_delivery_guide"/>
+                </field>
+                <group name="other_infos" position="after">
+                    <group string="Delivery Guide" name="delivery_guide" invisible="not l10n_ec_is_delivery_guide" colspan="4">
+                        <group>
+                            <field name="l10n_ec_transporter_id" readonly="l10n_ec_edi_status == 'sent'"/>
+                            <field name="l10n_ec_plate_number" readonly="l10n_ec_edi_status == 'sent'"/>
+                            <field name="l10n_ec_transfer_reason" readonly="l10n_ec_edi_status == 'sent'"/>
+                            <field name="l10n_ec_delivery_start_date" readonly="l10n_ec_edi_status == 'sent'"/>
+                            <field name="l10n_ec_delivery_end_date" readonly="l10n_ec_edi_status == 'sent'"/>
+                        </group>
+                        <group>
+                            <field name="l10n_ec_authorization_date"/>
+                            <field name="l10n_ec_authorization_number"/>
+                            <field name="l10n_ec_edi_status"/>
+                        </group>
+                    </group>
+                </group>
+                <xpath expr="//header" position="after">
+                    <div class="d-flex alert alert-info justify-content-between" role="alert"
+                        invisible="l10n_ec_delivery_guide_error or l10n_ec_edi_status != 'to_send'">
+                         <div>The delivery guide will soon be sent to SRI</div>
+                         <button name="l10n_ec_send_delivery_guide_to_send" type="object" class="oe_link ps-0 text-decoration-underline" string="Process now"/>
+                    </div>
+                    <div class="d-flex alert alert-info justify-content-between" role="alert"
+                        invisible="l10n_ec_delivery_guide_error or l10n_ec_edi_status != 'to_cancel'">
+                         <div>The delivery guide will soon be sent to SRI</div>
+                         <button name="l10n_ec_send_delivery_guide_to_cancel" type="object" class="oe_link ps-0 text-decoration-underline" string="Process now"/>
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                        invisible="not l10n_ec_delivery_guide_error">
+                        <field name="l10n_ec_delivery_guide_error" readonly="1"/>
+                        <button
+                            name="l10n_ec_action_create_delivery_guide"
+                            type="object"
+                            class="oe_link"
+                            string="Retry"
+                            invisible="l10n_ec_edi_status != 'to_send'"/>
+                        <button
+                            name="l10n_ec_send_delivery_guide_to_cancel"
+                            type="object"
+                            class="oe_link"
+                            string="Retry"
+                            invisible="l10n_ec_edi_status != 'to_cancel'"/>
+                        <button
+                            name="l10n_ec_action_download_delivery_guide"
+                            type="object"
+                            class="oe_link"
+                            string="Download"
+                            invisible="l10n_ec_edi_status != 'to_send'"/>
+                    </div>
+                </xpath>
+                <xpath expr="//header//button[@name='action_cancel']" position="after">
+                    <button name="l10n_ec_action_create_delivery_guide" type="object"
+                        string="Generate Delivery Guide"
+                        invisible="not l10n_ec_allow_send_edi"/>
+                    <button name="l10n_ec_send_delivery_guide_to_partner" type="object"
+                        string="Send Delivery Guide"
+                        invisible="l10n_ec_edi_status != 'sent'"/>
+                    <button name="button_action_cancel_delivery_guide"
+                        string="Request Delivery Guide Cancellation"
+                        type="object"
+                        invisible="l10n_ec_edi_status != 'sent'"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_l10n_ec_edi_stock_view_picking_internal_search" model="ir.ui.view">
+            <field name="name">view_l10n_ec_edi_stock_view_picking_internal_search</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+            <field name="arch" type="xml">
+                <filter name="picking_type" position="after">
+                    <filter string="Delivery Guide Status" name="delivery_guide_status" domain="[]" context="{'group_by': 'l10n_ec_edi_status'}"/>
+                </filter>
+            </field>
+        </record>
+    </data>
+</odoo>

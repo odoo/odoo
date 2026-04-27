@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="mrp_workorder.WorkingEmployeePopup">
+        <div role="dialog">
+            <div class="popup text-center">
+                <t t-foreach="lines" t-as="line" t-key="line.employee_id">
+                    <div class="o_popup_employee_selection">
+                        <div class="o_popup_employee_name" t-on-click="() => this.setAdmin(line.employee_id)">
+                            <button class="btn_employee bg-100">
+                            <img t-attf-src="/web/image/hr.employee/{{line.employee_id}}/avatar_128" alt="Employee" style="height:35px;" class="ml8 rounded"/>
+                            <span class="ml8">
+                                <t t-esc="line.employee_name"/>
+                            </span>
+                            </button>
+                        </div>
+                        <div class="text-end">
+                            <MrpTimer ongoing="line.ongoing" value="line.duration"/>
+                        </div>
+                        <div class="text-end">
+                            <button t-if="line.ongoing" class="btn btn-danger" t-on-click="() => this.stopEmployee(line.employee_id)" style="line-height:20px;">Pause</button>
+                            <button t-if="!line.ongoing" class="btn btn-warning" t-on-click="() => this.startEmployee(line.employee_id)" style="line-height:20px;">Continue</button>
+                        </div>
+                    </div>
+                </t>
+                <footer class="footer">
+                    <button class="btn btn-link" t-on-click="addEmployee">+ New Operator</button>
+                    <button class="btn btn-link" t-on-click="close">Close</button>
+                </footer>
+            </div>
+        </div>
+    </t>
+</templates>

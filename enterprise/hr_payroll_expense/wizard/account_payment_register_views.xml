@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_payment_register_form_inherit_hr_payroll_expense" model="ir.ui.view">
+            <field name="name">account.payment.register.view.form.inherit.hr_payroll_expense</field>
+            <field name="model">account.payment.register</field>
+            <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@role='alert' and @invisible='not missing_account_partners']" position="after">
+                    <field name="is_already_paid_through_a_payslip" invisible="True"/>
+                    <div role="alert" class="alert alert-warning" name="payroll_expense_move_already_set_to_be_paid"
+                         invisible="not is_already_paid_through_a_payslip">
+                        <span class="fw-bold">
+                            The expenses will already be reimbursed in a payslip. Make sure this payment is intended.
+                        </span>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

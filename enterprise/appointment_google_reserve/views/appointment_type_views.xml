@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="appointment_type_view_form" model="ir.ui.view">
+        <field name="name">appointment.type.form.inherit.appointment.google.reserve</field>
+        <field name="model">appointment.type</field>
+        <field name="inherit_id" ref="appointment.appointment_type_view_form"/>
+        <field name="arch" type="xml">
+            <page name="messages" position="after">
+                <page name="google_reserve_options" string="Google Bookings"
+                    invisible="category in ['custom', 'punctual']"
+                    groups="appointment.group_appointment_manager">
+                    <group>
+                        <group>
+                            <div class="alert alert-success" role="alert" colspan="2"
+                                invisible="not google_reserve_enable or google_reserve_pending_sync">
+                                <span class="fa fa-check fa-fw me-1"/>Your Google Reserve Synchronization is active.
+                            </div>
+                            <div class="alert alert-warning" role="alert" colspan="2"
+                                invisible="not google_reserve_enable or not google_reserve_pending_sync">
+                                <span class="fa fa-check fa-hourglass me-1"/>Your Appointment Type is being synchronized with Google Reserve.<br/>
+                                This can take up to 24 hours to be active.
+                            </div>
+                            <button name="action_google_reserve_enable" type="object"
+                                string="Synchronize with Google Reserve" class="btn btn-primary"
+                                confirm="Ready to synchronize your Appointment Type with Google Reserve? Make sure your setup is complete — changes may take up to 24 hours to appear once live."
+                                confirm-title="Synchronize with Google Reserve" confirm-label="I'm ready, synchronize!" cancel-label="Not yet"
+                                invisible="google_reserve_enable"
+                            />
+                            <button name="action_google_reserve_disable" type="object"
+                                string="Disable Google Reserve" class="btn btn-primary"
+                                confirm="Hold a second — are you sure you want to stop showing on Google Reserve? Changes can take up to 24 hours to take effect."
+                                confirm-title="Disable Synchronization" confirm-label="Stop syncing" cancel-label="Discard"
+                                invisible="not google_reserve_enable"
+                            />
+                            <field name="google_reserve_merchant_id" required="google_reserve_enable"/>
+                        </group>
+                    </group>
+                </page>
+            </page>
+            <xpath expr="//field[@name='assign_method']" position="attributes">
+                <attribute name="invisible">google_reserve_enable</attribute>
+            </xpath>
+            <xpath expr="//field[@name='assign_method']" position="after">
+                <label for="assign_method" invisible="not google_reserve_enable"/>
+                <div invisible="not google_reserve_enable">
+                    <field name="assign_method" readonly="1" class="oe_inline"/>
+                    <i class="ms-2 fa fa-info-circle" title="Required for Google Reserve"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

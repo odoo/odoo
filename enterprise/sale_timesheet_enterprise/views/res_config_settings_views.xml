@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale.timesheet.enterprise</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_timesheet.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@name='invoice_policy']" position="replace">
+                <setting string="Invoicing Policy" help="Timesheets taken into account when invoicing your time">
+                    <div class="content-group">
+                        <div class="mt16">
+                            <label for="invoiced_timesheet" string="Invoice" class="mr16"/>
+                            <field name="invoiced_timesheet" widget="radio" class="o_light_label"/>
+                        </div>
+                    </div>
+                </setting>
+                <setting help="Set a billable time target for your employees. If their current rate falls below their target, it will be highlighted in red." name="timesheet_show_rates" company_dependent="1">
+                    <field name="timesheet_show_rates"/>
+                    <button name="%(hr.open_view_employee_list_my)d" context="{'searchpanel_default_company_id': company_id}" string="Set employee billable time targets" type="action" class="btn-link" icon="oi-arrow-right" invisible="not timesheet_show_rates"/>
+                </setting>
+                <setting help="Boost productivity and competitiveness by displaying a leaderboard based on the billing rates." name="timesheet_show_leaderboard" invisible="not timesheet_show_rates" company_dependent="1">
+                    <field name="timesheet_show_leaderboard"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

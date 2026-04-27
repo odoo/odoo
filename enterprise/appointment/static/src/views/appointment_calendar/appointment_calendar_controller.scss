@@ -1,0 +1,14 @@
+.o_attendee_calendar_view {
+    .o_appointment_scheduling_box {
+        grid-area: 1 / 2;
+
+        @include media-breakpoint-down(md) {
+            grid-area: 4 / 1 / 4 / 4;
+            z-index: $zindex-modal;
+            border: none;
+            background-color: $o-view-background-color;
+            width: 100%;
+            padding: 8px 16px;
+        }
+    }
+}

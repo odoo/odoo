@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_followup_print_all" inherit_id="account_followup.report_followup_print_all">
+        <xpath expr="//t[@t-set='fallback_address']" position="after">
+            <t t-set="din5008_document_information">
+                <div class="information_block" t-if="doc and doc._name=='res.partner'">
+                    <table>
+                        <tr>
+                            <td>Date:</td>
+                            <td><t t-out="doc.l10n_din5008_date" t-options="{'widget': 'date'}"/></td>
+                        </tr>
+                        <t t-set="partner_addr" t-value="doc.env['res.partner'].browse(doc.address_get(['invoice'])['invoice']) or doc"/>
+                        <tr t-if="partner_addr.ref">
+                            <td>Customer ref:</td>
+                            <td><t t-out="partner_addr.ref"/></td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+            <t t-set="din5008_document_title">
+                <span t-if="doc and doc._name == 'res.partner'">
+                    Payment Reminder
+                </span>
+            </t>
+        </xpath>
+    </template>
+</odoo>

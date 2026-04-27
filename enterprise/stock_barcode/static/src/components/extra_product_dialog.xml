@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="stock_barcode.ExtraProductDialog" t-inherit="web.ConfirmationDialog" t-inherit-mode="primary">
+        <xpath expr="//p" position="replace">
+            <div class="o_barcode_extra_product_dialog">
+                <p t-out="props.body" class="fw-bold"/>
+
+                <t t-foreach="props.products.keys()" t-as="product" t-key="product">
+                    <t t-set="productData" t-value="props.products.get(product)"/>
+                    <div class="row mx-3" t-att-data-barcode="productData.params[0].fieldsParams.product_id.barcode">
+                        <CheckBox className="'w-100'" value="productData.confirmed" onChange.bind="(isChecked) => this.props.onCheckboxChange(product, isChecked)">
+                            <span class="col-9">
+                                <t t-esc="productData.name"/>
+                            </span>
+                            <span class="col-3 text-end">
+                                <t t-esc="productData.qty"/>
+                                <t t-if="displayUOM" t-esc="' ' + productData.uomName"/>
+                            </span>
+                        </CheckBox>
+                    </div>
+                </t>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

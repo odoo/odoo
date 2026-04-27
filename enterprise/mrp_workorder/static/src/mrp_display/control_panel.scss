@@ -1,0 +1,44 @@
+.o_mrp_display {
+    .o_control_panel_breadcrumbs_actions {
+        gap: map-get($spacers, 1);
+    }
+
+    .o_control_panel_breadcrumbs {
+        gap: 0 !important;
+        min-width: initial;
+        flex-grow: initial;
+        .o_last_breadcrumb_item {
+            display: none !important;
+        }
+    }
+
+    .o_control_panel_actions {
+        gap: map-get($spacers, 2);
+
+        @include media-breakpoint-down(md) {
+            flex-wrap: wrap;
+        }
+    }
+
+    .o_control_panel_main{
+        align-items: center !important;
+    }
+
+    .o_cp_searchview{
+        max-width: 65%;
+    }
+
+    .o_control_panel{
+        padding-bottom: 8px !important;
+    }
+
+}
+
+@for $size from 1 through length($o-colors) {
+    // Note: the first color is supposed to be invisible if there is a color
+    // field but it is used as a default color when there is no color field.
+    .o_workcenter_item_color_#{$size - 1} {
+        background-color: nth($o-colors, $size);
+        color: color-contrast(nth($o-colors, $size));
+    }
+}

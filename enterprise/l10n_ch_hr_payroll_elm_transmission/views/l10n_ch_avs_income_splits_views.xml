@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_l10n_ch_avs_splits_tree" model="ir.ui.view">
+        <field name="name">l10n.ch.avs.splits.tree</field>
+        <field name="model">l10n.ch.avs.splits</field>
+        <field name="arch" type="xml">
+            <list string="Negative AVS Salary Splitting">
+                <field name="employee_id"/>
+                <field name="year"/>
+                <field name="income_to_split"/>
+                <field name="additional_delivery_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_l10n_ch_avs_splits_form" model="ir.ui.view">
+        <field name="name">l10n.ch.avs.splits.form</field>
+        <field name="model">l10n.ch.avs.splits</field>
+        <field name="arch" type="xml">
+            <form string="Negative AVS Salary Splitting">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed" statusbar_buttons="true"/>µ
+                    <button name="action_confirm" type="object" string="Confirm" class="btn-primary" invisible="state == 'confirmed'"/>
+                    <button name="action_cancel" type="object" string="Cancel" class="btn-secondary" invisible="state == 'draft'"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="year" class="o_hr_narrow_field" options="{'type': 'number'}"/>
+                        <field name="income_to_split"/>
+                        <field name="additional_delivery_date"/>
+                    </group>
+                    <field name="avs_split_lines">
+                        <list editable="bottom">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="income"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_ch_avs_splits" model="ir.actions.act_window">
+        <field name="name">Negative AVS Salary Splitting</field>
+        <field name="res_model">l10n.ch.avs.splits</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p>
+                Manage the splitting of negative AVS salaries for employees.
+            </p>
+        </field>
+    </record>
+
+
+</odoo>

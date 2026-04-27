@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_commission_plan_target_forecast_view_search" model="ir.ui.view">
+        <field name="name">sale.commission.plan.target.forecast.view.search</field>
+        <field name="model">sale.commission.plan.target.forecast</field>
+        <field name="arch" type="xml">
+            <search string="Forecast">
+                <field name="user_id" string="Salesperson"/>
+                <field name="team_id" string="Sales Team"/>
+                <filter name="date_this_month" string="This Month" domain="[
+                        ('target_id.date_to', '&gt;=', (datetime.datetime.combine(context_today() + relativedelta(day=1), datetime.time(0,0,0)).to_utc())),
+                        ('target_id.date_to', '&lt;=', (datetime.datetime.combine(context_today() + relativedelta(months=1, day=1), datetime.time(0,0,0)).to_utc())),
+                    ]"/>
+                <filter name="date_this_year" string="This Year" domain="[
+                        ('target_id.date_to', '&gt;=', (datetime.datetime.combine(context_today() + relativedelta(month=1, day=1), datetime.time(0,0,0)).to_utc())),
+                        ('target_id.date_to', '&lt;=', (datetime.datetime.combine(context_today() + relativedelta(years=1, month=1, day=1), datetime.time(0,0,0)).to_utc())),
+                    ]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Sales Team" name="team_id" context="{'group_by':'team_id'}"/>
+                    <filter string="Salesperson" name="user_id" context="{'group_by':'user_id'}"/>
+                    <filter string="Period" name="target_id" context="{'group_by':'target_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="sale_commission_plan_target_forecast_view_list" model="ir.ui.view">
+        <field name="name">sale.commission.plan.target.forecast.view.list</field>
+        <field name="model">sale.commission.plan.target.forecast</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="plan_id"/>
+                <field name="user_id"/>
+                <field name="target_id"/>
+                <field name="amount" string="Forecast"/>
+                <field name="currency_id" column_invisible="True"/><!-- Monetary field -->
+            </list>
+        </field>
+    </record>
+
+    <record id="sale_commission_action_my_forecast" model="ir.actions.act_window">
+        <field name="name">My Forecast</field>
+        <field name="res_model">sale.commission.plan.target.forecast</field>
+        <field name="view_mode">list</field>
+        <field name="search_view_id" eval='sale_commission_plan_target_forecast_view_search'/>
+        <field name="context">{}</field>
+        <field name="domain">[('user_id','=',uid)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an forecast
+            </p>
+            <p>
+                Allows you to manually set your sales' forecast
+                for a specific period and commission plan.
+            </p>
+        </field>
+    </record>
+
+    <record id="sale_commission_plan_target_forecast_view_graph" model="ir.ui.view">
+        <field name="name">sale.commission.plan.target.forecast.view.graph</field>
+        <field name="model">sale.commission.plan.target.forecast</field>
+        <field name="arch" type="xml">
+            <graph>
+                <field name="target_id" type="row"/>
+                <field name="amount" string="Forecast" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="sale_commission_plan_target_forecast_view_pivot" model="ir.ui.view">
+        <field name="name">sale.commission.plan.target.forecast.view.pivot</field>
+        <field name="model">sale.commission.plan.target.forecast</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="target_id" type="row"/>
+                <field name="currency_id"/>
+                <field name="amount" string="Forecast" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="sale_commission_action_forecast" model="ir.actions.act_window">
+        <field name="name">Forecast</field>
+        <field name="res_model">sale.commission.plan.target.forecast</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="search_view_id" eval='sale_commission_plan_target_forecast_view_search'/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an forecast
+            </p>
+            <p>
+                Allows you to manually set a salesperson's forecast
+                for a specific period and commission plan.
+            </p>
+        </field>
+    </record>
+</odoo>

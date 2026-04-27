@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_structure_pk_employee_salary" model="hr.payroll.structure">
+        <field name="name">Pakistan: Regular Pay</field>
+        <field name="country_id" ref="base.pk"/>
+        <field name="code">PKMONTHLY</field>
+        <field name="type_id" ref="l10n_pk_hr_payroll.structure_type_employee_pk"/>
+    </record>
+
+    <record id="l10n_pk_hr_payroll.structure_type_employee_pk" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure_pk_employee_salary"/>
+    </record>
+</odoo>

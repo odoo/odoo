@@ -1,0 +1,296 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_barcode_picking_batch
+#
+# Translators:
+# Wil Odoo, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Fernanda Alvarez, 2024
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:49+0000\n"
+"PO-Revision-Date: 2025-10-29 17:42+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
+"odoo-18/stock_barcode_picking_batch/es_419/>\n"
+"Language: es_419\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_barcode_picking_batch.stock_move_line_product_selector_inherit
+msgid "<i class=\"fa fa-lg fa-truck\" title=\"Transfer\"/>"
+msgstr "<i class=\"fa fa-lg fa-truck\" title=\"Transferencia\"/>"
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_barcode_picking_batch.stock_picking_view_kanban
+msgid ""
+"<span class=\"fa fa-external-link-square ms-1\" title=\"Open Batch Picking\"/"
+">"
+msgstr ""
+"<span class=\"fa fa-external-link-square ms-1\" title=\"Abrir recolección de "
+"lotes\"/>"
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_barcode_picking_batch.stock_barcode_batch_picking_view_info
+msgid "Allocation"
+msgstr "Asignación"
+
+#. module: stock_barcode_picking_batch
+#: model:ir.actions.client,name:stock_barcode_picking_batch.stock_barcode_picking_batch_client_action
+msgid "Barcode Batch Picking Client Action"
+msgstr "Acción del cliente para la recolección de lotes con código de barras "
+
+#. module: stock_barcode_picking_batch
+#: model:ir.model,name:stock_barcode_picking_batch.model_stock_picking_batch
+#: model:ir.model.fields,field_description:stock_barcode_picking_batch.field_stock_barcode_cancel_operation__batch_id
+msgid "Batch Transfer"
+msgstr "Traslado por lote"
+
+#. module: stock_barcode_picking_batch
+#: model:ir.model.fields,field_description:stock_barcode_picking_batch.field_stock_barcode_cancel_operation__batch_name
+msgid "Batch Transfer Name"
+msgstr "Nombre del traslado por lote"
+
+#. module: stock_barcode_picking_batch
+#: model:ir.actions.act_window,name:stock_barcode_picking_batch.stock_barcode_batch_picking_action_kanban
+msgid "Batch Transfers"
+msgstr "Traslados por lote"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/kanban/stock_barcode_kanban_renderer.xml:0
+msgid "Batches"
+msgstr "Lotes"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+msgid "Cancel Batch Transfer"
+msgstr "Cancelar traslado por lotes"
+
+#. module: stock_barcode_picking_batch
+#: model:ir.model,name:stock_barcode_picking_batch.model_stock_barcode_cancel_operation
+msgid "Cancel Operation"
+msgstr "Cancelar la operación"
+
+#. module: stock_barcode_picking_batch
+#. odoo-python
+#: code:addons/stock_barcode_picking_batch/models/stock_picking_batch.py:0
+msgid "Cancel this batch transfer?"
+msgstr "¿Desea cancelar este traslado por lotes?"
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_barcode_picking_batch.stock_barcode_batch_picking_view_info
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_barcode_picking_batch.stock_barcode_batch_picking_view_info
+msgid "Description"
+msgstr "Descripción"
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_barcode_picking_batch.stock_barcode_batch_picking_view_info
+msgid "Discard"
+msgstr "Descartar"
+
+#. module: stock_barcode_picking_batch
+#: model:ir.model.fields,field_description:stock_barcode_picking_batch.field_stock_picking__display_batch_button
+msgid "Display Batch Button"
+msgstr "Mostrar botón de lote"
+
+#. module: stock_barcode_picking_batch
+#: model:ir.model.fields,field_description:stock_barcode_picking_batch.field_stock_picking_type__group_lines_by_product
+msgid "Group batch lines"
+msgstr "Agrupar líneas en lotes"
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_barcode_picking_batch.stock_barcode_batch_picking_view_kanban
+msgid "Lines"
+msgstr "Líneas"
+
+#. module: stock_barcode_picking_batch
+#: model:ir.model.fields,help:stock_barcode_picking_batch.field_stock_picking_type__group_lines_by_product
+msgid ""
+"Lines of same product at same location appear grouped. Not to use for "
+"cluster picking"
+msgstr ""
+"Las líneas del mismo producto en la misma ubicación aparecen agrupadas. No "
+"se debe usar para preparación de varias órdenes."
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_barcode_picking_batch.stock_barcode_batch_picking_action_kanban
+msgid "No batch transfer found"
+msgstr "No se encontró ningún traslado por lotes"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+msgid "No ready transfers found"
+msgstr "No se encontraron traslados listos"
+
+#. module: stock_barcode_picking_batch
+#. odoo-python
+#: code:addons/stock_barcode_picking_batch/models/stock_picking_batch.py:0
+msgid "Open picking batch form"
+msgstr "Abrir el formulario de recolección de lotes"
+
+#. module: stock_barcode_picking_batch
+#: model:ir.model,name:stock_barcode_picking_batch.model_stock_picking_type
+msgid "Picking Type"
+msgstr "Tipo de recolección"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+msgid "Print Batch Transfer"
+msgstr "Imprimir traslado por lotes"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+msgid "Print Product Labels"
+msgstr "Imprimir etiquetas de productos"
+
+#. module: stock_barcode_picking_batch
+#: model:ir.model,name:stock_barcode_picking_batch.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Movimientos de producto (línea de movimiento de stock)"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+msgid "Scan the package %s"
+msgstr "Escanee el paquete %s"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+msgid "Select an operation type for batch transfer"
+msgstr "Seleccione un tipo de operación para el traslado por lotes"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+msgid "Select transfers for batch transfer"
+msgstr "Seleccione el traslado para el traslado por lote"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+msgid "The Batch Transfer has been validated"
+msgstr "Se validó el traslado por lotes"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+msgid "The batch picking has been cancelled"
+msgstr "Se canceló la recolección por lotes"
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_barcode_picking_batch.stock_barcode_batch_picking_action_kanban
+msgid ""
+"The goal of the batch transfer is to group operations that may\n"
+"            (needs to) be done together in order to increase their "
+"efficiency.\n"
+"            It may also be useful to assign jobs (one person = one batch) "
+"or\n"
+"            help the timing management of operations (tasks to be done at "
+"1pm)."
+msgstr ""
+"El objetivo del traslado por lote es agrupar operaciones que pueden\n"
+"            (deben) hacerse juntas para poder incrementar la eficiencia.\n"
+"            También es útil para asignar trabajos (una persona por lote) o\n"
+"            ayudar a gestionar el tiempo de las operaciones (por ejemplo, "
+"tareas que se deben realizar a la 1 p. m.)."
+
+#. module: stock_barcode_picking_batch
+#: model:ir.model.fields,help:stock_barcode_picking_batch.field_stock_move_line__picking_id
+msgid "The stock operation where the packing has been made"
+msgstr "La operación de existencias en la que se creó el paquete"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+msgid "This batch is already cancelled"
+msgstr "Este lote ya está cancelado"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+msgid "This batch is already done"
+msgstr "Este lote ya está hecho"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+msgid "This batch transfer is already done"
+msgstr "Ya se realizó el traslado de este lote"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+msgid "This batch transfer is cancelled"
+msgstr "Se cancela este traslado por lotes"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+msgid ""
+"This batch transfer is still draft, it must be confirmed before being "
+"processed"
+msgstr ""
+"Este traslado por lotes es un borrador, debe confirmarlo antes de procesarlo."
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+msgid ""
+"This batch transfer is still in draft, scans are disabled until the batch is "
+"confirmed"
+msgstr ""
+"Este traslado en lote todavía está en borrador, los escaneos están "
+"desactivados hasta que confirmes el lote"
+
+#. module: stock_barcode_picking_batch
+#: model:ir.model,name:stock_barcode_picking_batch.model_stock_picking
+#: model:ir.model.fields,field_description:stock_barcode_picking_batch.field_stock_move_line__picking_id
+#: model_terms:ir.ui.view,arch_db:stock_barcode_picking_batch.stock_move_line_product_selector_inherit
+msgid "Transfer"
+msgstr "Trasladar "
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/kanban/stock_barcode_kanban_renderer.xml:0
+msgid "Transfers"
+msgstr "Transferencias"
+
+#. module: stock_barcode_picking_batch
+#: model:ir.model.fields,field_description:stock_barcode_picking_batch.field_stock_picking_batch__picking_type_code
+msgid "Type of Operation"
+msgstr "Tipo de operación"
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_barcode_picking_batch.stock_barcode_batch_picking_view_info
+msgid "Unbatch Transfer"
+msgstr "Eliminar traslado por lotes"
+
+#. module: stock_barcode_picking_batch
+#. odoo-python
+#: code:addons/stock_barcode_picking_batch/models/stock_picking.py:0
+msgid ""
+"You cannot validate a transfer if no quantities are reserved nor done. You "
+"can use the info button on the top right corner of your screen to remove the "
+"transfer in question from the batch."
+msgstr ""
+"No puede validar un traslado si no hay cantidades reservadas o hechas. Puede "
+"usar el botón de información en la esquina superior derecha de su pantalla "
+"para eliminar el traslado del lote. "

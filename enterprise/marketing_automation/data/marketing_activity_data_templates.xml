@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <template id="marketing_activity_summary_template" name="Activity Summary Template">
+            <strong>Summary</strong><br/>
+            Starting from <strong><t t-out="activity.interval_number"/> <t t-out="interval_type_label"/></strong>
+            <t t-set="action_or_template_id" t-value="activity.server_action_id or activity.mass_mailing_id"/>
+            <t t-if="action_or_template_id and activity.trigger_type == 'begin'">
+                after the <strong>beginning of the workflow</strong>,<br/>the <strong><t t-out="activity_type_label"/> "<t t-out="action_or_template_id.display_name"/>"</strong> will be <t t-if="activity.activity_type == 'action'">run</t><t t-else="">sent</t>.
+            </t>
+            <t t-elif="action_or_template_id and activity.parent_id">
+                <t t-if="activity.trigger_type == 'activity'">
+                    after the execution of the Activity "<strong t-out="parent_activity_name"/>",
+                </t>
+                <t t-elif="activity.trigger_type == 'mail_open'">
+                    after the Participant <strong>opened</strong> the <strong>Mailing</strong> sent by the Activity "<strong t-out="parent_activity_name"/>",
+                </t>
+                <t t-elif="activity.trigger_type == 'mail_not_open'">
+                    if the <strong>Mailing</strong> sent by the Activity "<strong t-out="parent_activity_name"/>" was <strong>not opened</strong>,
+                </t>
+                <t t-elif="activity.trigger_type == 'mail_reply'">
+                    after the Participant <strong>replied</strong> to the <strong>Mailing</strong> sent by the Activity "<strong t-out="parent_activity_name"/>",
+                </t>
+                <t t-elif="activity.trigger_type == 'mail_not_reply'">
+                    if the <strong>Mailing</strong> sent by the Activity "<strong t-out="parent_activity_name"/>" did <strong>not receive a reply</strong>,
+                </t>
+                <t t-elif="activity.trigger_type == 'mail_click'">
+                    after the Participant <strong>clicked</strong>,<br/>on any link included in the <strong>Mailing</strong> sent by the Activity "<strong t-out="parent_activity_name"/>",
+                </t>
+                <t t-elif="activity.trigger_type == 'mail_not_click'">
+                    if no link included in the <strong>Mailing</strong> sent by the Activity "<strong t-out="parent_activity_name"/>" gets clicked,
+                </t>
+                <t t-elif="activity.trigger_type == 'mail_bounce'">
+                    after the <strong>Mailing</strong> sent by the Activity "<strong t-out="parent_activity_name"/>" <strong>bounced</strong>,
+                </t>
+                <t name="activity_action_or_template">
+                    the <strong><t t-out="activity_type_label"/> "<t t-out="action_or_template_id.display_name"/>"</strong> will be <t t-if="activity.activity_type == 'action'">run</t><t t-else="">sent</t>.
+                </t>
+            </t>
+            <span t-else="" class="ms-1">...</span>
+            <t t-if="activity.validity_duration">
+                <br/>This activity will be <strong>cancelled, if <t t-out="activity.validity_duration_number"/> <t t-out="validity_duration_type_label"/></strong> have passed since the scheduled date.
+            </t>
+        </template>
+    </data>
+</odoo>

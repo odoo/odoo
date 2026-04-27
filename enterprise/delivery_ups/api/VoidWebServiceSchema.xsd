@@ -1,0 +1,45 @@
+<xsd:schema targetNamespace="http://www.ups.com/XMLSchema/XOLTWS/Void/v1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:void="http://www.ups.com/XMLSchema/XOLTWS/Void/v1.1" xmlns:common="http://www.ups.com/XMLSchema/XOLTWS/Common/v1.0" elementFormDefault="qualified" version="201601">
+	<xsd:import namespace="http://www.ups.com/XMLSchema/XOLTWS/Common/v1.0" schemaLocation="common.xsd"/>
+	<xsd:element name="VoidShipmentRequest">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="common:Request"/>
+				<xsd:element name="VoidShipment">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ShipmentIdentificationNumber" type="xsd:string"/>
+							<xsd:element name="TrackingNumber" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="VoidShipmentResponse">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="common:Response"/>
+				<xsd:element name="SummaryResult">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="Status" type="void:CodeDescriptionType"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="PackageLevelResult" type="void:PackageLevelResult" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="PackageLevelResult">
+		<xsd:sequence>
+			<xsd:element name="TrackingNumber" type="xsd:string"/>
+			<xsd:element name="Status" type="void:CodeDescriptionType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="CodeDescriptionType">
+		<xsd:sequence>
+			<xsd:element name="Code" type="xsd:string"/>
+			<xsd:element name="Description" type="xsd:string" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

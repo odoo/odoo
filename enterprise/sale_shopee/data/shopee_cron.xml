@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_sync_shopee_orders" model="ir.cron">
+        <field name="name">Shopee: sync orders</field>
+        <field name="model_id" ref="model_shopee_shop"/>
+        <field name="state">code</field>
+        <field name="code">model._sync_orders()</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">60</field>
+        <field name="interval_type">minutes</field>
+        <field
+            name="nextcall"
+            eval="(DateTime.now() + timedelta(minutes=60)).strftime('%Y-%m-%d %H:%M:%S')"
+        />
+        <field name="priority">1000</field>
+    </record>
+
+    <record id="ir_cron_sync_shopee_pickings" model="ir.cron">
+        <field name="name">Shopee: sync shipping labels</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="state">code</field>
+        <field name="code">model._sync_shopee_pickings()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">30</field>
+        <field name="interval_type">minutes</field>
+        <field
+            name="nextcall"
+            eval="(DateTime.now() + timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')"
+        />
+        <field name="priority">1000</field>
+    </record>
+
+    <record id="ir_cron_sync_shopee_inventory" model="ir.cron">
+        <field name="name">Shopee: sync inventory</field>
+        <field name="model_id" ref="model_shopee_shop"/>
+        <field name="state">code</field>
+        <field name="code">model._sync_inventory()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">30</field>
+        <field name="interval_type">minutes</field>
+        <field
+            name="nextcall"
+            eval="(DateTime.now() + timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')"
+        />
+        <field name="priority">1000</field>
+    </record>
+
+    <!-- Used only as a cron trigger. -->
+    <record id="ir_cron_sync_shopee_pickings_retry" model="ir.cron">
+        <field name="name">Shopee: retry sync shipping labels</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="state">code</field>
+        <field name="code">model._sync_processing_pickings()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">9999</field>
+        <field name="interval_type">months</field>
+        <field name="priority">1000</field>
+    </record>
+</odoo>

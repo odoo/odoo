@@ -1,0 +1,65 @@
+<odoo>
+    <record id="l10n_ch_swissdec_transmitter_form" model="ir.ui.view">
+        <field name="name">l10n.ch.swissdec.transmitter.form</field>
+        <field name="model">l10n.ch.swissdec.transmitter</field>
+        <field name="arch" type="xml">
+            <form>
+                <header position="inside">
+                    <button string="Declare Salary" name="action_declare_salary" type="object" class="btn-primary" invisible="not l10n_ch_declare_salary_data"/>
+                    <button string="Prepare Data" name="action_prepare_data" type="object" class="btn-primary" invisible="l10n_ch_declare_salary_data"/>
+                    <button string="Prepare Data" name="action_prepare_data" type="object" class="btn-secondary" invisible="not l10n_ch_declare_salary_data"/>
+                </header>
+                <sheet>
+                    <div name="button_box" position="inside">
+                        <field name="l10n_ch_swissdec_declaration_ids" invisible="1"/>
+                        <button type="object" invisible="not l10n_ch_swissdec_declaration_ids" class="oe_stat_button" id="action_open_swissec_declarations"
+                            icon="fa-globe" name="action_open_swissec_declarations">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">
+                                    Declarations
+                                </span>
+                                <span class="o_stat_value">
+                                    <field name="l10n_ch_swissdec_declaration_ids_size"/>
+                                </span>
+                            </div>
+                        </button>
+                    </div>
+                    <field name="actionable_warnings" widget="actionable_warnings" class="o_field_html"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h2>
+                            <field name="name" class="oe_inline" placeholder="e.g. 2024 Yearly Declaration"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="year" string="Year" class="o_hr_narrow_field" options="{'type': 'number'}"/>
+                            <field name="month" string="Month" class="o_hr_narrow_field"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="test_transmission"/>
+                            <field name="replacement_declaration"/>
+                            <field name="substituted_declaration_id" invisible="not replacement_declaration" required="replacement_declaration"/>
+                        </group>
+                    </group>
+                    <group name="institution_group" invisible="not l10n_ch_declare_salary_data" colspan="4">
+                    </group>
+                    <field name="l10n_ch_declare_salary_data" class="w-100" widget="declare_salary_widget"/>
+                </sheet>
+                <chatter reload_on_attachment="True"/>
+            </form>
+        </field>
+    </record>
+    <record id="l10n_ch_swissdec_transmitter_tree" model="ir.ui.view">
+        <field name="name">l10n.ch.swissdec.transmitter.tree</field>
+        <field name="model">l10n.ch.swissdec.transmitter</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="month"/>
+                <field name="year"/>
+            </list>
+        </field>
+    </record>
+</odoo>

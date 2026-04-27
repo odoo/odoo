@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n.ph.check.printing</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account_check_printing.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <!-- In PH Check Printing, we don't need to show the Margin -->
+            <xpath expr="//div[field/@name = 'account_check_printing_margin_top']" position="attributes">
+                <attribute name="invisible">account_check_printing_layout == 'l10n_ph_check_printing.action_print_check'</attribute>
+            </xpath>
+            <xpath expr="//div[field/@name = 'account_check_printing_margin_left']" position="attributes">
+                <attribute name="invisible">account_check_printing_layout == 'l10n_ph_check_printing.action_print_check'</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

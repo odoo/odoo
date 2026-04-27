@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="helpdesk_team3_projet" model="project.project">
+        <field name="name">VIP Support</field>
+        <field name="type_ids" eval="[ref('project.project_stage_0')]"/>
+    </record>
+
+    <record id="helpdesk.helpdesk_team3" model="helpdesk.team">
+        <field name="project_id" ref="helpdesk_team3_projet"/>
+        <field name="use_helpdesk_timesheet" eval="True"/>
+    </record>
+
+    <record id="helpdesk_timesheet_1" model="account.analytic.line">
+        <field name="name">Fix Drawer Slides</field>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-1)).strftime('%Y-%m-%d')"/>
+        <field name="employee_id" ref="hr.employee_admin"/>
+        <field name="unit_amount">01.00</field>
+        <field name="helpdesk_ticket_id" ref="helpdesk.helpdesk_ticket_16"/>
+        <field name="account_id" ref="analytic.analytic_internal"/>
+    </record>
+    <record id="helpdesk_timesheet_2" model="account.analytic.line">
+        <field name="name">Changed Drawer Handle</field>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-1)).strftime('%Y-%m-%d')"/>
+        <field name="employee_id" ref="hr.employee_admin"/>
+        <field name="unit_amount">0.5</field>
+        <field name="helpdesk_ticket_id" ref="helpdesk.helpdesk_ticket_16"/>
+        <field name="account_id" ref="analytic.analytic_internal"/>
+    </record>
+
+    <record id="helpdesk.helpdesk_ticket_12" model="helpdesk.ticket">
+        <field name="analytic_account_id" ref="analytic.analytic_internal" />
+    </record>
+
+    <record id="helpdesk.helpdesk_ticket_13" model="helpdesk.ticket">
+        <field name="analytic_account_id" ref="analytic.analytic_internal" />
+    </record>
+
+    <record id="helpdesk.helpdesk_ticket_14" model="helpdesk.ticket">
+        <field name="analytic_account_id" ref="analytic.analytic_internal" />
+    </record>
+
+    <record id="helpdesk.helpdesk_ticket_16" model="helpdesk.ticket">
+        <field name="analytic_account_id" ref="analytic.analytic_internal" />
+    </record>
+
+    <record id="helpdesk.helpdesk_ticket_19" model="helpdesk.ticket">
+        <field name="analytic_account_id" ref="analytic.analytic_internal" />
+    </record>
+
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.PaymentScreenPaymentLines" t-inherit-mode="extension">
+        <xpath expr="//t[contains(@t-elif, 'waitingCard')]/div[hasclass('electronic_status')]" position="replace">
+            <div class="electronic_status">
+                <t t-if="line.payment_method_id.use_payment_terminal === 'tyro'" t-out="line.tyro_status"/>
+                <t t-else="">Waiting for card</t>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('paymentlines')]" position="inside">
+            <div t-if="props.refundLines.length > 0" class="my-5 d-flex flex-column gap-1">
+                <h3>Payments available to refund:</h3>
+                <t t-foreach="props.refundLines" t-as="line" t-key="line.uuid">
+                    <div class="paymentline d-flex align-items-center bg-view border rounded-3">
+                        <div class="payment-infos d-flex align-items-center justify-content-between flex-grow-1 px-3 py-3 text-truncate cursor-pointer fs-2" t-on-click="() => this.props.selectRefundLine(line)">
+                            <t t-esc="line.payment_method_id.name" />
+                            <div class="payment-amount px-3">
+                                <t t-esc="env.utils.formatCurrency(line.get_amount())" />
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="spreadsheet_dashboard_view_list" model="ir.ui.view">
+        <field name="name">spreadsheet.dashboard.list.view</field>
+        <field name="model">spreadsheet.dashboard</field>
+        <field name="inherit_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_view_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position='attributes'>
+                <attribute name="create">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='is_published']" position='after'>
+                <field name="spreadsheet_file_name" column_invisible="True"/>
+                <button string="Edit" class="float-end" icon="fa-pencil" type="object" name="action_edit_dashboard"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

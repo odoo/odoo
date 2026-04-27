@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_l10n_ch_swissdec_job_result_tree" model="ir.ui.view">
+        <field name="name">l10n.ch.swissdec.job.result.tree</field>
+        <field name="model">l10n.ch.swissdec.job.result</field>
+        <field name="arch" type="xml">
+            <list string="Institution Results" create="0" edit="0" delete="0">
+                <field name="display_name"/>
+                <field name="general_state" decoration-info="general_state == 'Processing'" decoration-success="general_state == 'Success'" decoration-danger="general_state == 'Error'" widget="badge"/>
+                <field name="status_response_json" column_invisible="1"/>
+                <button string="Notifications" class="btn btn-secondary" invisible="not status_response_json" name="action_open_status_notification" type="object"/>
+                <field name="success_state" column_invisible="1"/>
+                <field name="result_state" invisible="general_state != 'Success'" decoration-info="result_state == 'Processing'" decoration-warning="result_state == 'CompletionReleaseIsMissing'" decoration-success="result_state == 'Success'" decoration-danger="result_state == 'Error'" widget="badge"/>
+                <button string="Completion" class="btn btn-secondary" name="action_open_completion_url" type="object" invisible="success_state != 'CompletionAndResult' "/>
+                <button string="Dialog" class="btn btn-secondary" name="action_open_swissdec_job_result" type="object" invisible="success_state != 'DialogAndResult' "/>
+                <button string="Details" name="action_open_swissdec_job_result" type="object" class="btn-link fa-arrow-right" invisible="general_state == 'waiting' and not (success_state in ['CompletionAndResult', 'DialogAndResult'])"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_l10n_ch_swissdec_job_result_form" model="ir.ui.view">
+        <field name="name">l10n.ch.swissdec.job.result.form</field>
+        <field name="model">l10n.ch.swissdec.job.result</field>
+        <field name="arch" type="xml">
+            <form string="Institution Result" create="0" edit="0" delete="0">
+                <header position="inside">
+                    <field name="result_state" invisible="1"/>
+                    <field name="success_state" invisible="1"/>
+                    <field name="has_proof_of_insurance" invisible="1"/>
+                    <field name="has_lpp_contributions" invisible="1"/>
+                    <field name="has_st_corrections" invisible="1"/>
+                    <button string="Get Result" name="action_get_result_from_declare_salary" type="object" class="btn-primary" invisible="result_state == 'Success'"/>
+                    <button string="Get Dialog" name="action_get_dialog" type="object" class="btn-primary" invisible="success_state != 'DialogAndResult'"/>
+                    <button string="Generate Proof Of Insurance" name="generate_proof_of_insurance" type="object" class="btn-primary" invisible="not has_proof_of_insurance"/>
+                    <button string="Import LPP Contributions" name="import_lpp_contributions" type="object" class="btn-primary" invisible="not has_lpp_contributions"/>
+                    <button string="Import Source-Tax Corrections" name="import_source_tax_corrections" type="object" class="btn-primary" invisible="not has_st_corrections"/>
+                    <button string="Download Verified Source-Tax Statement" name="generate_is_statement" type="object" class="btn-primary" invisible="domain != 'TaxAtSource' or result_state != 'Success' or not has_st_corrections"/>
+                </header>
+                <sheet>
+                    <div name="button_box" position="inside">
+                        <button type="object" name="action_open_proof_of_insurance"
+                                class="oe_stat_button" icon="fa-book" invisible="not proof_of_insurance_count">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">
+                                    Proof of Insurances
+                                </span>
+                                <span class="o_stat_value">
+                                    <field name="proof_of_insurance_count"/>
+                                </span>
+                            </div>
+                        </button>
+                    </div>
+        
+                    <field name="test_transmission" readonly="1" invisible="1"/>
+                    <widget name="web_ribbon" title="Test" bg_color="text-bg-info" invisible="not test_transmission"/>
+                    <group>
+                        <field name="domain" invisible="1" readonly="1"/>
+                        <field name="declaration_id" readonly="1"/>
+                        <field name="swissdec_declaration_id" readonly="1"/>
+                        <field name="transmission_date" readonly="1"/>
+                    </group>
+                    <group string="Completion" invisible="not completion_url or result_state == 'Success'">
+                        <field name="completion_url" widget="CopyClipboardURL"/>
+                        <field name="credential_key" widget="CopyClipboardChar" readonly="1"/>
+                        <field name="credential_password" widget="CopyClipboardChar" readonly="1"/>
+                    </group>
+                    <group string="Messages" invisible="not dialog_message_ids and not dialog_response_json">
+                        <field name="dialog_response_json" widget="swissdec_salary_result" nolabel="1" colspan="2"/>
+                        <field name="dialog_message_ids" invisible="not dialog_message_ids" colspan="2" nolabel="1">
+                            <list create="0" delete="0">
+                                <field name="swissdec_Title"/>
+                                <field name="swissdec_creation"/>
+                                <field name="swissdec_story_id"/>
+                                <field name="status" decoration-info="status == 'Processing'" decoration-success="status == 'Finished'" decoration-warning="status == 'Waiting'" widget="badge"/>
+                                <button name="action_poll" type="object" string="Poll Result" class="btn btn-secondary" invisible="status != 'Processing'"/>
+                                <button name="action_reply_dialog" type="object" string="Send Reply" class="btn btn-secondary" invisible="status != 'Waiting'"/>
+                            </list>
+                        </field>
+                    </group>
+                    <group string="Result" invisible="not result_response_json">
+                        <field name="result_response_json" colspan="2" class="w-100" nolabel="1" widget="swissdec_salary_result"/>
+                    </group>
+                </sheet>
+                <chatter reload_on_attachment="True"/>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="view_l10n_ch_swissdec_job_result_status_form" model="ir.ui.view">
+        <field name="name">l10n.ch.swissdec.job.status.form</field>
+        <field name="model">l10n.ch.swissdec.job.result</field>
+        <field name="arch" type="xml">
+            <form string="Institution Result" create="0" edit="0" delete="0">
+                <field name="status_response_json" class="w-100" nolabel="1" widget="swissdec_status_result"/>
+            </form>
+        </field>
+    </record>
+</odoo>
+

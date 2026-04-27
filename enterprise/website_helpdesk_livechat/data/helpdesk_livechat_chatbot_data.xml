@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data noupdate="1">
+
+    <!--
+        This provides a working helpdesk chatbot for people to work with.
+        It's placed into 'data' to give them a starting point.
+        From that record, they can duplicate / adapt / delete / ...
+    -->
+
+    <record id="chatbot_script_helpdesk_bot" model="chatbot.script">
+        <field name="title">Helpdesk Bot</field>
+        <field name="image_1920" type="base64" file="mail/static/src/img/odoobot.png"/>
+    </record>
+
+    <record id="chatbot_script_helpdesk_step_welcome" model="chatbot.script.step">
+        <field name="message">Here we go, help is on the way!</field>
+        <field name="sequence">1</field>
+        <field name="step_type">text</field>
+        <field name="chatbot_script_id" ref="chatbot_script_helpdesk_bot"/>
+    </record>
+
+    <record id="chatbot_script_helpdesk_step_dispatch" model="chatbot.script.step">
+        <field name="message">First, what is the nature of your issue?</field>
+        <field name="sequence">2</field>
+        <field name="step_type">question_selection</field>
+        <field name="chatbot_script_id" ref="chatbot_script_helpdesk_bot"/>
+    </record>
+
+    <record id="chatbot_script_helpdesk_step_dispatch_answer_technical" model="chatbot.script.answer">
+        <field name="name">I have a technical issue</field>
+        <field name="sequence">1</field>
+        <field name="script_step_id" ref="chatbot_script_helpdesk_step_dispatch"/>
+    </record>
+
+    <record id="chatbot_script_helpdesk_step_dispatch_answer_administrative" model="chatbot.script.answer">
+        <field name="name">I have an administrative question</field>
+        <field name="sequence">2</field>
+        <field name="script_step_id" ref="chatbot_script_helpdesk_step_dispatch"/>
+    </record>
+
+    <record id="chatbot_script_helpdesk_step_technical_serial" model="chatbot.script.step">
+        <field name="message">Please write below the serial number of your equipment.</field>
+        <field name="sequence">3</field>
+        <field name="step_type">free_input_single</field>
+        <field name="chatbot_script_id" ref="chatbot_script_helpdesk_bot"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('chatbot_script_helpdesk_step_dispatch_answer_technical'))]"/>
+    </record>
+
+    <record id="chatbot_script_helpdesk_step_technical_serial_thanks" model="chatbot.script.step">
+        <field name="message">Thank you, that will help our engineers see what went wrong.</field>
+        <field name="sequence">4</field>
+        <field name="step_type">text</field>
+        <field name="chatbot_script_id" ref="chatbot_script_helpdesk_bot"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('chatbot_script_helpdesk_step_dispatch_answer_technical'))]"/>
+    </record>
+
+    <record id="chatbot_script_helpdesk_step_technical_serial_misc" model="chatbot.script.step">
+        <field name="message">Anything else to add?</field>
+        <field name="sequence">5</field>
+        <field name="step_type">free_input_multi</field>
+        <field name="chatbot_script_id" ref="chatbot_script_helpdesk_bot"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('chatbot_script_helpdesk_step_dispatch_answer_technical'))]"/>
+    </record>
+
+    <record id="chatbot_script_helpdesk_step_administrative_customer_ref" model="chatbot.script.step">
+        <field name="message">To start with, do you have a customer reference?
+They are written on each invoice you received, next to your name.</field>
+        <field name="sequence">6</field>
+        <field name="step_type">question_selection</field>
+        <field name="chatbot_script_id" ref="chatbot_script_helpdesk_bot"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('chatbot_script_helpdesk_step_dispatch_answer_administrative'))]"/>
+    </record>
+
+    <record id="chatbot_script_helpdesk_step_administrative_customer_ref_answer_yes" model="chatbot.script.answer">
+        <field name="name">Yes</field>
+        <field name="sequence">1</field>
+        <field name="script_step_id" ref="chatbot_script_helpdesk_step_administrative_customer_ref"/>
+    </record>
+
+    <record id="chatbot_script_helpdesk_step_administrative_customer_ref_answer_no" model="chatbot.script.answer">
+        <field name="name">No</field>
+        <field name="sequence">2</field>
+        <field name="script_step_id" ref="chatbot_script_helpdesk_step_administrative_customer_ref"/>
+    </record>
+
+    <record id="chatbot_script_helpdesk_step_administrative_customer_ref_no" model="chatbot.script.step">
+        <field name="message">It's OK, we can also find your contract by other means.</field>
+        <field name="sequence">7</field>
+        <field name="step_type">text</field>
+        <field name="chatbot_script_id" ref="chatbot_script_helpdesk_bot"/>
+        <field name="triggering_answer_ids"
+            eval="[(4, ref('chatbot_script_helpdesk_step_dispatch_answer_administrative')),
+                   (4, ref('chatbot_script_helpdesk_step_administrative_customer_ref_answer_no'))]"/>
+    </record>
+
+    <record id="chatbot_script_helpdesk_step_administrative_customer_ref_yes" model="chatbot.script.step">
+        <field name="message">Great, that will make our lives easier.</field>
+        <field name="sequence">8</field>
+        <field name="step_type">text</field>
+        <field name="chatbot_script_id" ref="chatbot_script_helpdesk_bot"/>
+        <field name="triggering_answer_ids"
+            eval="[(4, ref('chatbot_script_helpdesk_step_dispatch_answer_administrative')),
+                   (4, ref('chatbot_script_helpdesk_step_administrative_customer_ref_answer_yes'))]"/>
+    </record>
+
+    <record id="chatbot_script_helpdesk_step_administrative_customer_ref_input" model="chatbot.script.step">
+        <field name="message">Please write below your customer reference.</field>
+        <field name="sequence">9</field>
+        <field name="step_type">free_input_single</field>
+        <field name="chatbot_script_id" ref="chatbot_script_helpdesk_bot"/>
+        <field name="triggering_answer_ids"
+            eval="[(4, ref('chatbot_script_helpdesk_step_dispatch_answer_administrative')),
+                   (4, ref('chatbot_script_helpdesk_step_administrative_customer_ref_answer_yes'))]"/>
+    </record>
+
+    <record id="chatbot_script_helpdesk_step_administrative_issue" model="chatbot.script.step">
+        <field name="message">We're all set. Now, what is your issue?</field>
+        <field name="sequence">10</field>
+        <field name="step_type">free_input_multi</field>
+        <field name="chatbot_script_id" ref="chatbot_script_helpdesk_bot"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('chatbot_script_helpdesk_step_dispatch_answer_administrative'))]"/>
+    </record>
+
+    <record id="chatbot_script_helpdesk_step_done" model="chatbot.script.step">
+        <field name="message">Alright, we should have everything we need</field>
+        <field name="sequence">11</field>
+        <field name="step_type">text</field>
+        <field name="chatbot_script_id" ref="chatbot_script_helpdesk_bot"/>
+    </record>
+
+    <record id="chatbot_script_helpdesk_step_email" model="chatbot.script.step">
+        <field name="message">Just a last thing, can we please have your email address?</field>
+        <field name="sequence">12</field>
+        <field name="step_type">question_email</field>
+        <field name="chatbot_script_id" ref="chatbot_script_helpdesk_bot"/>
+    </record>
+
+    <record id="chatbot_script_helpdesk_step_ticket" model="chatbot.script.step">
+        <field name="message">OK, I just created a ticket for you. You should receive an email confirmation very soon.</field>
+        <field name="sequence">13</field>
+        <field name="step_type">create_ticket</field>
+        <field name="chatbot_script_id" ref="chatbot_script_helpdesk_bot"/>
+    </record>
+
+</data></odoo>

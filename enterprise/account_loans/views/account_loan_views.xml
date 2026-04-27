@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!--        ACCOUNT LOAN-->
+
+        <record id="account_loan_form_view" model="ir.ui.view">
+            <field name="name">account.loan.form</field>
+            <field name="model">account.loan</field>
+            <field name="arch" type="xml">
+                <form string="Loan">
+                    <header>
+                        <button
+                            name="action_confirm" string="Confirm" class="btn btn-primary"
+                            type="object" groups="account.group_account_invoice"
+                            invisible="state != 'draft'"
+                        />
+                        <widget name="new_loan" invisible="line_ids"/>
+                        <button
+                            name="action_reset" string="Reset" class="btn btn-secondary"
+                            type="object" groups="account.group_account_manager"
+                            invisible="state != 'draft' or not line_ids"
+                        />
+                        <button
+                            name="action_close" string="Close" class="btn btn-secondary"
+                            type="object" groups="account.group_account_manager"
+                            invisible="state != 'running'"
+                        />
+                        <button
+                            name="action_set_to_draft" string="Set to Draft" class="btn btn-secondary"
+                            type="object" groups="account.group_account_manager"
+                            invisible="state in ('draft', 'running')"
+                        />
+                        <button
+                            name="action_cancel" string="Cancel" class="btn btn-secondary"
+                            type="object" groups="account.group_account_manager"
+                            invisible="state != 'running'"
+                        />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,running,closed"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button
+                                class="oe_stat_button"
+                                icon="fa-bars"
+                                type="object"
+                                name="action_open_loan_entries"
+                                invisible="state == 'draft'"
+                            >
+                                <field string="Posted Entries" name="nb_posted_entries" widget="statinfo"/>
+                            </button>
+                            <button
+                                class="oe_stat_button"
+                                icon="fa-bars"
+                                type="object"
+                                name="action_open_linked_assets"
+                                invisible="count_linked_assets == 0"
+                            >
+                                <field string="Related Asset(s)" name="count_linked_assets" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <field name="company_id" invisible="1"/> <!-- Needed so the company_id is fetched when creating a new record -->
+                        <field name="currency_id" invisible="1"/>  <!-- Needed for monetary widget -->
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="Loan name"/>
+                            </h1>
+                            <group>
+                                <group>
+                                    <field name="amount_borrowed" widget="monetary" decoration-danger="amount_borrowed_difference != 0" readonly="state != 'draft'"/>
+                                    <field name="interest" widget="monetary" decoration-danger="interest_difference != 0" readonly="state != 'draft'"/>
+                                    <field name="outstanding_balance" widget="monetary"/>
+                                </group>
+                                <group>
+                                    <field name="date" decoration-danger="is_wrong_date" readonly="state != 'draft'"/>
+                                    <label for="duration" string="Duration"/>
+                                    <div>
+                                        <field name="duration" class="oe_inline" decoration-danger="duration_difference != 0" readonly="state != 'draft'"/>
+                                        <span class="oe_inline" invisible="duration == 1">months</span>
+                                        <span class="oe_inline" invisible="duration != 1">month</span>
+                                    </div>
+                                    <field name="asset_group_id"/>
+                                </group>
+                            </group>
+                        </div>
+                        <field name="loan_properties" columns="2"/>
+                        <notebook>
+                            <page string="Amortization schedule" name="amortization_schedule">
+                                <field name="line_ids" readonly="state != 'draft'"/>
+                            </page>
+                            <page string="Loan Settings" name="main_page">
+                                <group>
+                                    <group name="loan_settings_column1">
+                                        <field name="long_term_account_id" readonly="state != 'draft'"/>
+                                        <field name="short_term_account_id" readonly="state != 'draft'"/>
+                                        <field name="expense_account_id" readonly="state != 'draft'"/>
+                                        <field name="journal_id" readonly="state != 'draft'"/>
+                                    </group>
+                                    <group name="loan_settings_column2">
+                                        <field name="skip_until_date" readonly="state != 'draft'" placeholder="1st amortization schedule"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_loan_list_view" model="ir.ui.view">
+            <field name="name">account.loan.list</field>
+            <field name="model">account.loan</field>
+            <field name="arch" type="xml">
+                <list string="Loans"
+                      decoration-info="state == 'draft'"
+                      decoration-muted="state in ('closed', 'cancelled')"
+                >
+                    <field name="currency_id" column_invisible="1"/>  <!-- Needed for monetary widget -->
+                    <field name="name"/>
+                    <field name="date" string="Start Date"/>
+                    <field name="end_date"/>
+                    <field name="amount_borrowed" sum="Total Amounts Borrowed"/>
+                    <field name="outstanding_balance" sum="Total Outstanding Balance"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'running'" decoration-danger="state in ('closed', 'cancelled')"/>
+                    <field name="long_term_account_id" optional="hide"/>
+                    <field name="short_term_account_id" optional="hide"/>
+                    <field name="expense_account_id" optional="hide"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="account_loan_search_view" model="ir.ui.view">
+            <field name="name">account.loan.search</field>
+            <field name="model">account.loan</field>
+            <field name="arch" type="xml">
+                <search string="Search Loan">
+                    <field name="name" string="Loan" filter_domain="['|', ('name', 'ilike', self), ('display_name', 'ilike', self)]"/>
+                    <field name="asset_group_id"/>
+                    <field name="loan_properties"/>
+                    <filter string="Current" name="current" domain="[('state', 'in', ('draft', 'running'))]" help="Draft &amp; Running Loans"/>
+                    <filter string="Closed" name="closed" domain="[('state', '=', 'closed')]" help="Closed Loans"/>
+                    <separator/>
+                    <filter string="Date" name="date" date="date"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Asset Group" name="group_by_asset_group" domain="[]" context="{'group_by': 'asset_group_id'}"/>
+                        <filter string="Properties" name="group_by_properties" domain="[]" context="{'group_by': 'loan_properties'}"/>
+                        <filter string="Date" name="group_by_date" domain="[]" context="{'group_by': 'date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="account_loan_kanban_view" model="ir.ui.view">
+            <field name="name">account.loan.search</field>
+            <field name="model">account.loan</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" sample="1">
+                    <field name="currency_id"/>
+                    <templates>
+                        <t t-name="card">
+                            <div class="row mb4">
+                                <field name="name" class="fw-bold fs-5 col-10"/>
+                                <div class="col-2">
+                                    <field name="state" class="float-end" widget="label_selection" options="{'classes': {'draft': 'primary', 'running': 'success', 'closed': 'default'}}"/>
+                                </div>
+                            </div>
+
+                        <div class="row">
+                            <div class="col-5">
+                                <field name="amount_borrowed" widget='monetary'/>
+                            </div>
+                            <div class="col-7 text-end">
+                                <field name="date"/>
+                            </div>
+                        </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="account_loan_pivot_view" model="ir.ui.view">
+            <field name="name">account.loan.pivot</field>
+            <field name="model">account.loan</field>
+             <field name="arch" type="xml">
+                 <pivot sample="1">
+                     <field name="date" interval="year" type="col"/>
+                     <field name="name" type="row"/>
+                     <field name="amount_borrowed" type="measure"/>
+                 </pivot>
+             </field>
+        </record>
+
+        <record id="account_loan_graph_view" model="ir.ui.view">
+            <field name="name">account.loan.graph</field>
+            <field name="model">account.loan</field>
+            <field name="arch" type="xml">
+                <graph type="line" sample="1">
+                    <field name="date" interval="year"/>
+                    <field name="name"/>
+                    <field name="amount_borrowed" type="measure"/>
+                    <field name="interest" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+<!--        ACCOUNT LOAN LINE-->
+
+        <record id="account_loan_line_list_view" model="ir.ui.view">
+            <field name="name">account.loan.line.list</field>
+            <field name="model">account.loan.line</field>
+            <field name="arch" type="xml">
+                <list string="Loan lines" editable="bottom" delete="1" limit="80" decoration-info="not is_payment_move_posted">
+                    <field name="currency_id" column_invisible="1"/>  <!-- Needed for monetary widget -->
+                    <field name="sequence" width="30px" optional="hide"/>
+                    <field name="date"/>
+                    <field name="principal" string="Principals" sum="Total principals"/>
+                    <field name="interest" string="Interests" sum="Total interests"/>
+                    <field name="payment" string="Payments" sum="Total payments"/>
+                    <field name="outstanding_balance"/>
+                    <field name="long_term_theoretical_balance" optional="hide"/>
+                    <field name="short_term_theoretical_balance" optional="hide"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="account_loan_line_search_view" model="ir.ui.view">
+            <field name="name">account.loan.line.search</field>
+            <field name="model">account.loan.line</field>
+            <field name="arch" type="xml">
+                <search string="Search Loan">
+                    <field name="loan_name" string="Loan" filter_domain="[('loan_name', 'ilike', self)]"/>
+                    <filter string="Current" name="current" domain="[('loan_state', 'in', ('draft', 'running'))]" help="Draft &amp; Running Loans"/>
+                    <filter string="Closed" name="closed" domain="[('loan_state', '=', 'closed')]" help="Closed Loans"/>
+                    <separator/>
+                    <filter string="Loan Date" name="loan_line_date" date="date"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Loan" name="group_by_loan" domain="[]" context="{'group_by': 'loan_id'}"/>
+                        <filter string="Loan Date" name="group_by_loan_line_date" domain="[]" context="{'group_by': 'date'}"/>
+                        <filter string="Asset Group" name="group_by_asset_group" domain="[]" context="{'group_by': 'loan_asset_group_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="account_loan_line_pivot_view" model="ir.ui.view">
+            <field name="name">account.loan.line.pivot</field>
+            <field name="model">account.loan.line</field>
+             <field name="arch" type="xml">
+                 <pivot string="Loans Analysis" sample="1">
+                     <field name="date" interval="year" type="col"/>
+                     <field name="loan_id" type="row"/>
+                     <field name="principal" type="measure"/>
+                     <field name="interest" type="measure"/>
+                     <field name="payment" type="measure"/>
+                 </pivot>
+             </field>
+        </record>
+
+<!--        ACCOUNT MOVE LIST VIEW-->
+
+        <record id="account_loan_view_account_move_list_view" model="ir.ui.view">
+            <field name="name">account.move.list</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_tree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="attributes">
+                    <attribute name="default_order">date,name,ref</attribute>
+                </xpath>
+            </field>
+        </record>
+
+<!--        ACTIONS -->
+
+        <record id="action_view_account_loans" model="ir.actions.act_window">
+            <field name="name">Loans</field>
+            <field name="path">loans</field>
+            <field name="res_model">account.loan</field>
+            <field name="search_view_id" ref="account_loan_search_view"/>
+            <field name="context">{'search_default_current':1}</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'list', 'view_id': ref('account_loan_list_view')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('account_loan_form_view')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('account_loan_kanban_view')}),
+                (0, 0, {'view_mode': 'pivot', 'view_id': ref('account_loan_pivot_view')}),
+                (0, 0, {'view_mode': 'graph', 'view_id': ref('account_loan_graph_view')}),
+            ]"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_amortization"/>
+                <h2>
+                    Manage Your Acquired Loans with Automated Adjustments.
+                </h2>
+                <p>
+                    Set up your amortization schedule, or import it, and let Odoo handle the monthly interest and principal adjustments automatically.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_view_account_loans_analysis" model="ir.actions.act_window">
+            <field name="name">Loans Analysis</field>
+            <field name="path">loans-analysis</field>
+            <field name="res_model">account.loan.line</field>
+            <field name="search_view_id" ref="account_loan_line_search_view"/>
+            <field name="context">{'search_default_current':1}</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'pivot', 'view_id': ref('account_loan_line_pivot_view')}),
+            ]"/>
+        </record>
+
+<!--        MENU ITEMS -->
+
+        <menuitem
+            id="menu_action_loans"
+            sequence="62"
+            parent="account.menu_finance_entries"
+            action="action_view_account_loans"
+            groups="account.group_account_readonly"
+        />
+
+        <menuitem
+            id="menu_action_loans_analysis"
+            name="Loans Analysis"
+            action="action_view_account_loans_analysis"
+            parent="account.account_reports_management_menu"
+            groups="account.group_account_readonly"
+        />
+
+    </data>
+</odoo>

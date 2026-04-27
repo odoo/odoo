@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_mz_pl" model="account.report">
+        <field name="name">Profit And Loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="country_id" ref="base.mz"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_mz_pl_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_mz_pl_sales" model="account.report.line">
+                <field name="name">Profit/Loss from Sales of goods and services</field>
+                <field name="code">l10n_mz_sales</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_mz_pl_sales_1_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_mz_sales_11.balance + l10n_mz_sales_12.balance + l10n_mz_sales_13.balance + l10n_mz_sales_14.balance + l10n_mz_sales_15.balance + l10n_mz_sales_16.balance + l10n_mz_sales_17.balance + l10n_mz_sales_18.balance + l10n_mz_sales_19.balance + l10n_mz_sales_20.balance + l10n_mz_sales_21.balance + l10n_mz_sales_22.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_mz_pl_sales_11" model="account.report.line">
+                        <field name="name">Sales of goods and services</field>
+                        <field name="code">l10n_mz_sales_11</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_pl_sales_11_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-71-72</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_pl_sales_12" model="account.report.line">
+                        <field name="name">Changes in production and work in progress</field>
+                        <field name="code">l10n_mz_sales_12</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_pl_sales_12_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-612</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_pl_sales_13" model="account.report.line">
+                        <field name="name">Work performed by the entity and capitalised</field>
+                        <field name="code">l10n_mz_sales_13</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_pl_sales_13_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-73</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_pl_sales_14" model="account.report.line">
+                        <field name="name">Cost of inventories sold or consumed</field>
+                        <field name="code">l10n_mz_sales_14</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_pl_sales_14_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-611</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_pl_sales_15" model="account.report.line">
+                        <field name="name">Staff expenses</field>
+                        <field name="code">l10n_mz_sales_15</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_pl_sales_15_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-62</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_pl_sales_16" model="account.report.line">
+                        <field name="name">Purchased supplies and services</field>
+                        <field name="code">l10n_mz_sales_16</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_pl_sales_16_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-63</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_pl_sales_17" model="account.report.line">
+                        <field name="name">Depreciation and amortisation for the period</field>
+                        <field name="code">l10n_mz_sales_17</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_pl_sales_17_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-65</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_pl_sales_18" model="account.report.line">
+                        <field name="name">Provisions</field>
+                        <field name="code">l10n_mz_sales_18</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_pl_sales_18_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-66</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_pl_sales_19" model="account.report.line">
+                        <field name="name">Adjustments from inventories</field>
+                        <field name="code">l10n_mz_sales_19</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_pl_sales_19_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-641</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_pl_sales_20" model="account.report.line">
+                        <field name="name">Adjustments from receivables</field>
+                        <field name="code">l10n_mz_sales_20</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_pl_sales_20_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-644</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_pl_sales_21" model="account.report.line">
+                        <field name="name">Adjustments from Financial investments and Investment property</field>
+                        <field name="code">l10n_mz_sales_21</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_pl_sales_21_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-642-643</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_pl_sales_22" model="account.report.line">
+                        <field name="name">Other operating gains and losses for the period</field>
+                        <field name="code">l10n_mz_sales_22</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_pl_sales_22_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-68-76-9990001-9990002-74-75</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_mz_pl_finance" model="account.report.line">
+                <field name="name">Finance Profit/loss</field>
+                <field name="code">l10n_mz_finance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_mz_pl_finance_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_mz_finance_income.balance + l10n_mz_finance_cost.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_mz_pl_finance_income" model="account.report.line">
+                        <field name="name">Finance income</field>
+                        <field name="code">l10n_mz_finance_income</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_pl_finance_income_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-78</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mz_pl_finance_cost" model="account.report.line">
+                        <field name="name">Finance costs</field>
+                        <field name="code">l10n_mz_finance_cost</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_pl_finance_cost_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-69</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_mz_pl_before_tax" model="account.report.line">
+                <field name="name">Profit/loss before tax</field>
+                <field name="code">l10n_mz_before_tax</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_mz_pl_before_tax_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_mz_sales.balance + l10n_mz_finance.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_mz_pl_tax" model="account.report.line">
+                <field name="name">Income tax</field>
+                <field name="code">l10n_mz_tax</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_mz_pl_line_tax_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-85</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_mz_pl_net" model="account.report.line">
+                <field name="name">Net profit or loss for the period</field>
+                <field name="code">l10n_mz_net_pl</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_mz_pl_net_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_mz_before_tax.balance + l10n_mz_tax.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+    <record id="action_account_report_mz_pl" model="ir.actions.client">
+        <field name="name">Profit and loss</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'model': 'account.report', 'report_id': ref('l10n_mz_pl')}"/>
+    </record>
+
+    <record id="l10n_mz_bs_line_218" model="account.report.line">
+        <field name="action_id" ref="action_account_report_mz_pl"/>
+    </record>
+</odoo>

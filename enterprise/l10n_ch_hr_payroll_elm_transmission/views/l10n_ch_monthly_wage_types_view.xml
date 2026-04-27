@@ -1,0 +1,69 @@
+<odoo>
+
+    <record id="view_l10n_ch_hr_contract_wage_form_calendar" model="ir.ui.view">
+        <field name="name">l10n.ch.hr.contract.wage.form.calendar</field>
+        <field name="model">l10n.ch.hr.contract.wage</field>
+        <field name="arch" type="xml">
+            <form string="One-Time Wage Payment">
+                <sheet>
+                    <group>
+                        <field name="uom" invisible="1"/>
+                        <field name="contract_id"/>
+                        <field name="input_type_id" options="{'no_open': True, 'no_create': True}"/>
+                        <label for="amount" string="Amount"/>
+                        <div class="o_row">
+                            <field name="amount" class="o_hr_narrow_field" nolabel="1"/>
+                            <field name="currency_id" invisible="uom != 'currency'"/>
+                            <span invisible="uom != 'percentage'">%</span>
+                            <span invisible="uom != 'hours'">Hours</span>
+                        </div>
+                        <field name="date_start"/>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="view_l10n_ch_hr_contract_wage_calendar" model="ir.ui.view">
+        <field name="name">l10n.ch.hr.contract.wage.calendar</field>
+        <field name="model">l10n.ch.hr.contract.wage</field>
+        <field name="arch" type="xml">
+            <calendar
+                string="One-Time Wages Calendar"
+                date_start="date_start"
+                form_view_id="%(view_l10n_ch_hr_contract_wage_form_calendar)d"
+                color="input_type_id"
+                event_open_popup="true"
+                quick_create="0"
+                mode="year"
+            >
+                <field name="input_type_id" filters="1" invisible="1" color="id"/>
+                <field name="description"/>
+                <field name="contract_id"/>
+                <field name="amount"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_l10n_ch_hr_contract_wage_tree" model="ir.ui.view">
+        <field name="name">l10n.ch.hr.contract.wage.tree</field>
+        <field name="model">l10n.ch.hr.contract.wage</field>
+        <field name="arch" type="xml">
+            <list expand="1" create="0" editable="bottom" open_form_view="False" string="Monthly Recurring Wages"
+                  default_order="type desc">
+                <field name="input_type_id" options="{'no_create': True, 'no_open': True}"/>
+                <field name="amount"/>
+                <field name="uom"/>
+                <field name="date_start"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_l10n_ch_hr_contract_wage" model="ir.actions.act_window">
+        <field name="name">Planned Wage Types</field>
+        <field name="res_model">l10n.ch.hr.contract.wage</field>
+        <field name="view_mode">calendar,list,form</field>
+    </record>
+</odoo>

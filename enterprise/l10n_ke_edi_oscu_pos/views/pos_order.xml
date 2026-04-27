@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_pos_pos_form">
+        <field name="name">pos.order</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='refund']" position="after">
+                <field name="l10n_ke_oscu_order_number" invisible="1"/>
+                <button name="action_post_order" string="Send to eTIMS" type="object"
+                        invisible="l10n_ke_oscu_order_number"/>
+            </xpath>
+            <notebook position="inside">
+                <page string="eTIMS Details" invisible="country_code != 'KE'">
+                    <group>
+                        <group string="eTIMS Details">
+                            <field name="l10n_ke_oscu_confirmation_datetime" readonly="1"/>
+                            <field name="l10n_ke_order_send_status" readonly="1"
+                                   widget="badge" decoration-warning="l10n_ke_order_send_status == 'not_sent'" decoration-success="l10n_ke_order_send_status == 'sent'"/>
+                            <field string="ETims number" name="l10n_ke_oscu_receipt_number" readonly="1"/>
+                            <field name="l10n_ke_oscu_signature" readonly="1"/>
+                            <field name="l10n_ke_oscu_datetime" readonly="1"/>
+                            <field name="l10n_ke_oscu_internal_data" readonly="1"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <record id="view_pos_order_tree" model="ir.ui.view">
+        <field name="name">pos.order.list</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="js_class">l10n_ke_edi_oscu_pos_list</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="before">
+                <field name="l10n_ke_order_send_status" optional="hide"
+                       widget="badge" decoration-warning="l10n_ke_order_send_status == 'not_sent'" decoration-success="l10n_ke_order_send_status == 'sent'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_pos_order_filter" model="ir.ui.view">
+        <field name="name">pos.order.list.select</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='posted']" position="after">
+                <separator/>
+                <filter string="Posted to eTIMS" name="posted_etims" domain="[('l10n_ke_order_send_status', '=', 'sent')]"/>
+                <filter string="Unposted to eTIMS" name="unposted_etims" domain="[('l10n_ke_order_send_status', '=', 'not_sent')]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

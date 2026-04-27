@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_home_knowledge" name="knowledge.portal_my_home" inherit_id="portal.portal_my_home" priority="100">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/knowledge/static/src/img/Books.svg'"/>
+                <t t-set="title">Knowledge</t>
+                <t t-set="url" t-value="'/knowledge/home'"/>
+                <t t-set="text">Find all articles shared with you</t>
+                <t t-set="placeholder_count" t-value="'knowledge_count'"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

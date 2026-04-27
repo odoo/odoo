@@ -1,0 +1,20 @@
+<templates>
+
+<t t-name="web_studio.ViewEditor.InteractiveEditorProperties.Div">
+    <ViewStructureProperties>
+        <ClassAttribute
+            value="this.props.node.attrs.class"
+            onChange.bind="onChangeAttribute"
+        />
+        <ModifiersProperties node="props.node" availableOptions="['invisible']"/>
+        <Property
+            name="'style'"
+            type="'string'"
+            value="props.node.attrs.style"
+            onChange.bind="onChangeAttribute">
+                CSS style
+        </Property>
+    </ViewStructureProperties>
+</t>
+
+</templates>

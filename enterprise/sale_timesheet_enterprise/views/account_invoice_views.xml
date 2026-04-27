@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_timesheet_from_invoice_view_grid" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">grid</field>
+        <field name="view_id" ref="timesheet_grid.timesheet_view_grid_by_employee"/>
+        <field name="act_window_id" ref="sale_timesheet.action_timesheet_from_invoice"/>
+    </record>
+</odoo>

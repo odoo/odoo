@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="hr_appraisal.RemainingDaysField" t-inherit="web.RemainingDaysField" t-inherit-mode="primary">
+    <xpath expr="//div" position="attributes">
+        <attribute name="t-att-class">
+            {
+                'fw-bold text-danger': days !== null and days lt 0,
+            }
+        </attribute>
+    </xpath>
+</t>
+</templates>

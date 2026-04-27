@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="helpdesk_tag_view_tree" model="ir.ui.view">
+        <field name="name">helpdesk.tags.list</field>
+        <field name="model">helpdesk.tag</field>
+        <field name="arch" type="xml">
+            <list editable="top" string="Tag" sample="1" multi_edit="1">
+                <field name="name"/>
+                <field name="color" widget="color_picker" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="helpdesk_tag_view_form" model="ir.ui.view">
+        <field name="name">helpdesk.tags.form</field>
+        <field name="model">helpdesk.tag</field>
+        <field name="arch" type="xml">
+            <form string="Tags">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="helpdesk_tag_action" model="ir.actions.act_window">
+        <field name="name">Tags</field>
+        <field name="res_model">helpdesk.tag</field>
+        <field name="path">helpdesk-tags</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No tags found. Let's create one!
+          </p><p>
+            Tags are perfect for organizing your tickets.
+          </p>
+        </field>
+    </record>
+
+</odoo>

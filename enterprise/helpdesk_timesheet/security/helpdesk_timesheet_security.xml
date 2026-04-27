@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+        <record id="timesheet_line_rule_helpdesk_user" model="ir.rule">
+            <field name="name">account.analytic.line.helpdesk.user</field>
+            <field name="model_id" ref="analytic.model_account_analytic_line"/>
+            <field name="domain_force">[('user_id', '=', user.id), ('helpdesk_ticket_id', '!=', False)]</field>
+            <field name="groups" eval="[(4, ref('helpdesk.group_helpdesk_user'))]"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_read" eval="0"/>
+        </record>
+
+        <record id="timesheet_line_rule_helpdesk_manager" model="ir.rule">
+            <field name="name">account.analytic.line.timesheet.manager</field>
+            <field name="model_id" ref="analytic.model_account_analytic_line"/>
+            <field name="domain_force">[('helpdesk_ticket_id', '!=', False)]</field>
+            <field name="groups" eval="[(4, ref('helpdesk.group_helpdesk_manager'))]"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_read" eval="0"/>
+        </record>
+
+        <record id="group_use_helpdesk_timesheet" model="res.groups">
+            <field name="name">Timesheets</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
+        <record id="helpdesk.group_helpdesk_user" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('helpdesk_timesheet.group_use_helpdesk_timesheet'))]"/>
+        </record>
+
+        <record id="hr_timesheet.group_hr_timesheet_user" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('helpdesk_timesheet.group_use_helpdesk_timesheet'))]"/>
+        </record>
+
+</odoo>

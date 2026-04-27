@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates xml:space="preserve">
+    <t t-name="social.SocialMany2manyImages">
+        <t t-if="attachmentsIds.length >= 2">
+            <a class="o_social_original_post_image_more position-relative d-flex ms-1"
+                t-on-click.stop.prevent="onClickMoreImages">
+                <img t-attf-src="/web/image/{{attachmentsIds[0]}}" alt="Post Image" />
+                <div class="social_many2many_image o_social_stream_post_image_more_overlay d-flex align-items-center h-100 w-100 text-white justify-content-center position-absolute h1 m-0 user-select-none">
+                    +<t t-out="attachmentsIds.length - 1"/>
+                </div>
+            </a>
+        </t>
+        <img t-elif="attachmentsIds.length === 1"
+            class="social_many2many_image"
+            t-attf-src="/web/image/{{attachmentsIds[0]}}"
+            alt="Post Image"
+            t-on-click.stop.prevent="onClickMoreImages"/>
+    </t>
+</templates>

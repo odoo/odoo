@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="l10n_it_pos.FiscalDocumentFooter">
+        <t t-foreach="footers" t-as="footer" t-key="footer.index">
+            <PrintRecMessage t-if="props.isFiscal and !props.isEarlyPrint" operator="1" messageType="3" index="footer.index" font="footer.font" message="footer" alignment="2"/>
+            <PrintNormal t-else="" data="footer" alignment="2"/>
+        </t>  
+    </t>
+</templates>

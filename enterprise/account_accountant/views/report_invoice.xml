@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <div id="right-elements" position="inside">
+            <div t-if="o.show_signature_area" t-attf-class="#{'col-12' if report_type != 'html' else 'col-lg-5 offset-lg-7 col-md-12'}">
+                <t t-if="o.signature">
+                    <img t-if="o.signature" t-att-src="image_data_uri(o.signature)" class="img-fluid mx-auto" style="max-height: 6rem;"/>
+                </t>
+                <t t-else="">
+                    <!-- leave an empty space allowing to sign the invoice manually -->
+                    <div class="col-12" style="min-height: 10rem"/>
+                </t>
+                <!-- wkhtmltopdf doesn't render a simple `border-top border-dark` -->
+                <p class="mx-auto text-center" style="border-top: thin solid;">Authorized signatory</p>
+            </div>
+        </div>
+    </template>
+</odoo>

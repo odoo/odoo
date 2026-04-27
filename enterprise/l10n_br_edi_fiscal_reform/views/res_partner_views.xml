@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_partner_view_form" model="ir.ui.view">
+            <field name="name">res.partner.view.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="l10n_br_avatax.res_partner_view_form" />
+            <field name="arch" type="xml">
+                <group name="fiscal_information" position="inside">
+                    <field name="l10n_br_entity_type" invisible="'BR' not in fiscal_country_codes" required="'BR' in fiscal_country_codes"/>
+                    <field name="l10n_br_is_cbs_ibs_taxpayer" invisible="'BR' not in fiscal_country_codes"/>
+                    <field name="l10n_br_is_cbs_ibs_normal" invisible="'BR' not in fiscal_country_codes or l10n_br_tax_regime != 'simplified'"/>
+                    <field name="l10n_br_cbs_credit" invisible="'BR' not in fiscal_country_codes or l10n_br_is_cbs_ibs_normal or l10n_br_tax_regime != 'simplified'"/>
+                    <field name="l10n_br_ibs_credit" invisible="'BR' not in fiscal_country_codes or l10n_br_is_cbs_ibs_normal or l10n_br_tax_regime != 'simplified'"/>
+                    <field name="l10n_br_is_cashback_applied" invisible="'BR' not in fiscal_country_codes or l10n_br_tax_regime != 'individual'"/>
+                </group>
+            </field>
+        </record>
+    </data>
+</odoo>

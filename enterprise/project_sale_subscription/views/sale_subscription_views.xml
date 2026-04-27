@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_subscription_view_search_inherit_project_sale_subscription" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit.project_sale_subscription</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_subscription.sale_subscription_view_search"/>
+        <field name="arch" type="xml">
+            <field name="sale_order_template_id" position="after">
+                <field name="project_id" groups="project.group_project_user"/>
+            </field>
+        </field>
+    </record>
+</odoo>

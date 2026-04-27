@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.04" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:camt.053.001.04 camt.053.001.04.xsd">
+  <BkToCstmrStmt>
+    <GrpHdr>
+      <MsgId>2514988305.2019-02-13</MsgId>
+      <CreDtTm>2019-02-13T15:27:15.66+02:00</CreDtTm>
+    </GrpHdr>
+    <Stmt>
+      <Id>2514988306.2019-02-13</Id>
+      <CreDtTm>2019-02-12T21:17:26+01:00</CreDtTm>
+      <Acct>
+        <Id>
+          <IBAN></IBAN>
+          <Othr>
+            <Id>112233</Id>
+          </Othr>
+        </Id>
+      </Acct>
+      <Bal>
+        <Tp>
+          <CdOrPrtry>
+            <Cd>OPBD</Cd>
+          </CdOrPrtry>
+        </Tp>
+        <Amt Ccy="USD">100000.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt>
+          <Dt>2019-02-12</Dt>
+        </Dt>
+      </Bal>
+      <Bal>
+        <Tp>
+          <CdOrPrtry>
+            <Cd>CLBD</Cd>
+          </CdOrPrtry>
+        </Tp>
+        <Amt Ccy="USD">150000.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt>
+          <Dt>2019-02-13</Dt>
+        </Dt>
+      </Bal>
+      <Ntry>
+        <Amt Ccy="USD">50000.00</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BookgDt>
+          <Dt>2024-11-25</Dt>
+        </BookgDt>
+        <ValDt>
+          <Dt>2024-11-25</Dt>
+        </ValDt>
+        <BkTxCd>
+          <Prtry>
+            <Cd>ABCD</Cd>
+          </Prtry>
+        </BkTxCd>
+        <AmtDtls>
+          <InstdAmt>
+            <Amt Ccy="EUR">52759.31</Amt>
+          </InstdAmt>
+          <TxAmt>
+            <Amt Ccy="EUR">52759.31</Amt>
+            <CcyXchg>
+              <SrcCcy>EUR</SrcCcy>
+              <XchgRate>0.9477</XchgRate>
+            </CcyXchg>
+          </TxAmt>
+        </AmtDtls>
+        <NtryDtls>
+          <Btch>
+            <NbOfTxs>4</NbOfTxs>
+          </Btch>
+          <TxDtls>
+            <Amt Ccy="EUR">19962.03</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RmtInf>
+              <Ustrd>label01</Ustrd>
+            </RmtInf>
+          </TxDtls>
+          <TxDtls>
+            <Amt Ccy="EUR">24806</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RmtInf>
+              <Ustrd>label02</Ustrd>
+            </RmtInf>
+          </TxDtls>
+          <TxDtls>
+            <Refs>
+              <AcctSvcrRef>A6Z0001086376914</AcctSvcrRef>
+              <InstrId>8052-2410138</InstrId>
+            </Refs>
+            <Amt Ccy="EUR">7991.28</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RmtInf>
+              <Ustrd>label03</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+    </Stmt>
+  </BkToCstmrStmt>
+</Document>

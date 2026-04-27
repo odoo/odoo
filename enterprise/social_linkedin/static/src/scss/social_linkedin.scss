@@ -1,0 +1,34 @@
+.o_social_linkedin_preview {
+    --social-linkedin-color: #3178c9;
+    .o_social_preview_icon_wrapper {
+        background-color: var(--social-linkedin-color);
+        .fa {
+            transform: translate(0.3em, 0.2em);
+        }
+    }
+
+    .o_social_preview_author {
+        line-height: 1.2;
+        small{
+            line-height: 1;
+        }
+    }
+    .o_social_preview_description {
+        font-size: 0.75em;
+    }
+    .o_social_linkedin_preview_article {
+        background-color: #f0f4fc;
+    }
+}
+
+.o_social_comments_modal_linkedin {
+    --social-linkedin-color: #3178c9;
+    a:not(.btn-outline-secondary):not(.o_social_comment_published_date):not(.o_social_post_published_date):not(.dropdown-item) {
+        color: var(--social-linkedin-color);
+
+        &:hover, &:focus {
+            color: var(--social-linkedin-color);
+            text-decoration: underline;
+        }
+    }
+}

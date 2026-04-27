@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_mx_edi_standard_addenda_autozone" model="l10n_mx_edi.addenda">
+        <field name="name">Autozone</field>
+        <field name="arch" type="xml">
+            <t>
+                <t t-set="sale_model" t-value="'sale_line_ids' in record.invoice_line_ids._fields"/>
+                <t t-set="sale_id" t-value="record.invoice_line_ids.sale_line_ids.order_id[:1] if sale_model else False"/>
+                <ADDENDA10
+                    xmlns:cfdi="http://www.sat.gob.mx/cfd/3"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:noNamespaceSchemaLocation="https://azfes.autozone.com/xsd/Addenda_Merch_32.xsd"
+                    t-att-DEPTID="record.user_id.partner_id.function"
+                    VERSION="1.0"
+                    t-att-BUYER="record.partner_id.name"
+                    t-att-VENDOR_ID="record.user_id.partner_id.ref"
+                    t-att-POID="record.name"
+                    t-att-PODATE="sale_id.date_order.strftime('%Y-%m-%d') if sale_id else False"
+                    t-att-EMAIL="record.company_id.partner_id.email"/>
+            </t>
+        </field>
+    </record>
+
+    <record id="l10n_mx_edi_standard_addenda_bosh_A_C" model="l10n_mx_edi.addenda">
+        <field name="name">Bosh</field>
+        <field name="arch" type="xml">
+            <Addenda>
+                <customized xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                            xmlns="http://repository.edicomnet.com/schemas/mx/cfd/addenda"
+                            t-if="record.name and len(record.name.split('|')) >= 2"
+                            xsi:schemaLocation="http://repository.edicomnet.com/schemas/mx/cfd/addenda http://repository.edicomnet.com/schemas/mx/cfd/addenda/customized.xsd">
+                    <EDICOM_GENERICA>
+                        <t t-set="elements" t-value="record.name.split('|')"/>
+                        <elementos t-if="len(record.name.split('|'))">
+                            <elemento>
+                                <etiqueta>OC</etiqueta>
+                                <descripcion>Orden de Compra</descripcion>
+                                <valor t-out="str(elements[0])"/>
+                            </elemento>
+                            <elemento>
+                                <etiqueta>CP</etiqueta>
+                                <descripcion>Codigo Planta</descripcion>
+                                <valor t-out="str(elements[1])"/>
+                            </elemento>
+                            <elemento t-if="len(elements)>=3">
+                                <etiqueta>NC</etiqueta>
+                                <descripcion>NOMBRE DEL REQUISITOR</descripcion>
+                                <valor t-out="str(elements[2])"/>
+                            </elemento>
+                            <elemento t-if="len(elements)>=4">
+                                <etiqueta>CC</etiqueta>
+                                <descripcion>CENTRO DE COSTOS</descripcion>
+                                <valor t-out="str(elements[3])"/>
+                            </elemento>
+                        </elementos>
+                    </EDICOM_GENERICA>
+                </customized>
+            </Addenda>
+        </field>
+    </record>
+</odoo>

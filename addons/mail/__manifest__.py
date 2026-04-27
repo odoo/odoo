@@ -42,12 +42,13 @@ these accounts will be automatically downloaded into your Odoo system. All
 POP3/IMAP-compatible servers are supported, included those that require an
 encrypted SSL/TLS connection.
 This can be used to easily create email-based workflows for many email-enabled Odoo documents, such as:
-----------------------------------------------------------------------------------------------------------
-    * CRM Leads/Opportunities
-    * CRM Claims
-    * Project Issues
-    * Project Tasks
-    * Human Resource Recruitment (Applicants)
+
+* CRM Leads/Opportunities
+* CRM Claims
+* Project Issues
+* Project Tasks
+* Human Resource Recruitment (Applicants)
+
 Just install the relevant application, and you can assign any of these document
 types (Leads, Project Issues) to your incoming email accounts. New emails will
 automatically spawn new documents of the chosen type, so it's a snap to create a
@@ -57,7 +58,7 @@ answers will automatically be collected when they come back, and attached to the
 same *conversation* document.
 For more specific needs, you may also assign custom-defined actions
 (technically: Server Actions) to be triggered for each incoming mail.
-    """,
+""",
     'website': 'https://www.odoo.com/app/discuss',
     'depends': ['base', 'base_setup', 'bus', 'web_tour', 'html_editor'],
     'data': [

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_au_payslip_ytd_form" model="ir.ui.view">
+        <field name="name">l10n_au.payslip.ytd.form</field>
+        <field name="model">l10n_au.payslip.ytd</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="employee_id" placeholder="Employee" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <!-- <field name="company_id" invisible="not employee_id"/> -->
+                            <field name="struct_id" invisible="not employee_id" readonly="1"/>
+                            <field name="rule_id" readonly="1"/>
+                        </group>
+                        <group invisible="not employee_id">
+                            <field name="ytd_amount" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="inputs" string="Inputs">
+                            <field name="l10n_au_payslip_ytd_input_ids" widget="one2many_list">
+                                <list editable="bottom" create="0" delete="0">
+                                    <field name="name"/>
+                                    <field name="ytd_amount" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_au_payslip_ytd_list" model="ir.ui.view">
+        <field name="name">l10n_au.payslip.ytd.list</field>
+        <field name="model">l10n_au.payslip.ytd</field>
+        <field name="arch" type="xml">
+            <list string="Opening Balances" editable="top" create="false">
+                <header>
+                    <button name="button_finalise" type="object" string="Mark as Finalised" />
+                    <button name="%(l10n_au_hr_payroll_account.action_open_transfer_previous_payroll)d"
+                            string="Import YTD Balances" type="action" display="always"/>
+                </header>
+                <field name="employee_id" readonly="1"/>
+                <field name="start_date" readonly="1"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="struct_id" readonly="1"/>
+                <field name="rule_id" readonly="1"/>
+                <field name="requires_inputs" widget="boolean_toggle" readonly="1" column_invisible="1"/>
+                <button name="action_add_inputs" type="object" icon="fa-list" string="Add inputs" class="oe_inline" invisible="not requires_inputs"/>
+                <field name="start_value" invisible="requires_inputs" />
+                <field name="ytd_amount"/>
+                <field name="finalised" optional="hide" readonly="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_au_payslip_ytd_search" model="ir.ui.view">
+        <field name="name">l10n_au.payslip.ytd.search</field>
+        <field name="model">l10n_au.payslip.ytd</field>
+        <field name="arch" type="xml">
+            <search string="Opening Balance">
+                <field name="employee_id" string="Employee" filter_domain="[('employee_id', 'ilike', self)]"/>
+                <filter name="start_date" string="Fiscal Year" date="start_date"/>
+                <filter name="not_finalised" string="To Finalise" domain="[('finalised', '=', False)]"/>
+                <filter name="finalised" string="Finalised" domain="[('finalised', '=', True)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="filter_group_fiscal_year" string="Fiscal Year" context="{'group_by': 'start_date'}"/>
+                    <filter name="filter_group_employee_id" string="Employee" context="{'group_by': 'employee_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="l10n_au_payslip_ytd_action" model="ir.actions.act_window">
+        <field name="name">YTD Opening Balances</field>
+        <field name="res_model">l10n_au.payslip.ytd</field>
+        <field name="view_mode">list,form</field>
+        <field name="target">current</field>
+        <field name="context">{'search_default_filter_group_fiscal_year': 1,
+                               'search_default_filter_group_employee_id': 1,
+                               'search_default_not_finalised': 1}</field>
+        <field name="path">payroll-ytd</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_au_l10n_au_payslip_ytd"
+        name="YTD Opening Balances"
+        action="l10n_au_payslip_ytd_action"
+        parent="l10n_au_hr_payroll.l10n_au_hr_payroll"
+        groups="base.group_user"
+        sequence="30"
+    />
+
+</odoo>

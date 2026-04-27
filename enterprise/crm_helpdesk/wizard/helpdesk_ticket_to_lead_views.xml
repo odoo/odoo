@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="helpdesk_ticket_to_lead_view_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.to.lead.view.form</field>
+        <field name="model">helpdesk.ticket.to.lead</field>
+        <field name="arch" type="xml">
+            <form string="Convert Ticket to Lead">
+                <sheet class="pt-0">
+                    <separator string="Customer"/>
+                    <field name="action" nolabel="1" widget="radio" required="1" class="w-100"/>
+                    <group class="mt-2">
+                        <field name="partner_id" widget="res_partner_many2one"
+                            context="{'res_partner_search_mode': 'customer', 'show_vat': True}"
+                            invisible="action != 'exist'"
+                            required="action == 'exist'"/>
+                    </group>
+                    <group string="Sales Team">
+                        <field name="ticket_id" invisible="1"/>
+                        <field name="team_id"/>
+                        <field name="user_id"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_convert_to_lead" string="Convert to Lead" type="object" class="btn-primary" data-hotkey="q" groups="crm.group_use_lead" context="{'show_create_ticket': True}"/>
+                    <button name="action_convert_to_lead" string="Convert to Opportunity" type="object" class="btn-primary" data-hotkey="q" groups="!crm.group_use_lead"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

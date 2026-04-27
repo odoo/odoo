@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="hmrc_vat_obligation_tree">
+        <field name="name">HMRC MTD VAT Obigations</field>
+        <field name="model">l10n_uk.vat.obligation</field>
+        <field name="arch" type="xml">
+            <list string="Obligations" create="false">
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="date_due"/>
+                <field name="status"/>
+                <field name="date_received"/>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="hmrc_vat_obligation_form">
+        <field name="name">HMRC MTD VAT Obigations</field>
+        <field name="model">l10n_uk.vat.obligation</field>
+        <field name="arch" type="xml">
+            <form string="Obligations" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <field name="date_due"/>
+                        <field name="status"/>
+                        <field name="date_received"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hmrc_vat_obligation_view_menu" model="ir.actions.act_window">
+        <field name="name">HMRC VAT Obligations</field>
+        <field name="res_model">l10n_uk.vat.obligation</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                It looks like you have not yet imported your obligations HMRC.  They will be loaded when you try to send
+                the VAT Return report to HMRC.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_hmrc_vat_obligation" parent="l10n_uk.account_reports_uk_statements_menu" name="VAT Obligations"
+      action="action_hmrc_vat_obligation_view_menu" groups="base.group_no_one"/>
+</odoo>

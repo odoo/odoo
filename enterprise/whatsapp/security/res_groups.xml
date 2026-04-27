@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="group_whatsapp_admin" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="base.module_category_marketing_whatsapp"/>
+        <field name="users" eval="[Command.link(ref('base.user_admin'))]"/>
+    </record>
+</odoo>

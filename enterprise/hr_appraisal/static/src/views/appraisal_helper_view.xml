@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr_appraisal.AppraisalActionHelper">
+        <div class="o_view_nocontent flex-wrap pt-5">
+            <div class="container">
+                <div class="o_nocontent_help">
+                    <div class="oe_view_nocontent_create">
+                        <p class="py-2" t-if="employeeNumber > 1 || !hasAppraisalRight">
+                            No Appraisals yet ...<br/>
+                            Do you want to
+                            <a type="oject" class="oe_link" t-on-click="() => this.loadCreateAppraisal()">
+                                create a new one
+                            </a>
+                        </p>
+                        <div t-else="" class="py-2">
+                            <div class="py-2">
+                                To create an appraisal, you need at least 2 employees
+                            </div>
+                            <div class="row justify-content-center scenario-div">
+                                <a
+                                    class="btn card rounded flex-row align-items-center w-auto gap-3"
+                                    type="object"
+                                    t-on-click="() => this.loadCreateEmployee()">
+                                    <img src="/hr/static/description/icon.png" width="50"/>
+                                        Create a new employee
+                                </a>
+                            </div>
+                        </div>
+                        <t t-if="hasAppraisalRight and !state.hasDemoData">
+                            <div class="d-flex gap-3 align-items-center or-separator py-2">
+                                <hr class="flex-grow-1"/>
+                                or
+                                <hr class="flex-grow-1"/>
+                            </div>
+                            <div class="px-2 py-2">
+                                <div class="pb-2">
+                                    Try the backend and reporting:
+                                </div>
+                                <div class="row justify-content-center">
+                                    <a class="btn btn-secondary d-block col-3"
+                                    type="object"
+                                    t-on-click="() => this.loadAppraisalScenario()">
+                                        Load sample data
+                                    </a>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</odoo>

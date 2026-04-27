@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id='fleet_vehicle_state_view_form' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.state.form</field>
+        <field name="model">fleet.vehicle.state</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_state_view_form"/>
+        <field name="arch" type="xml">
+            <field name="sequence" position="after">
+                <field name="hide_in_offer"/>
+            </field>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_state_view_tree' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.state.list</field>
+        <field name="model">fleet.vehicle.state</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_state_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="hide_in_offer"/>
+            </field>
+        </field>
+    </record>
+</odoo>
+

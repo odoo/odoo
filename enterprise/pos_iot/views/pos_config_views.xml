@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_iot_config_view_form" model="ir.ui.view">
+        <field name="name">pos.iot.config.form.view</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('pos_iot_config')]" position="replace">
+                <!-- The domain declared for iface_scale_id uses `company_id`. -->
+                <field name="company_id" invisible="1" />
+                <div class="content-group pos_iot_config ms-3" invisible="not is_posbox">
+                    <div class="row">
+                        <label string="Receipt Printer" for="iface_printer_id" class="col-lg-4 o_light_label"/>
+                        <field name="iface_printer_id"/>
+                        <field name="iface_print_via_proxy" invisible="1"/>
+                    </div>
+                    <div class="row" invisible="not iface_printer_id">
+                        <div class="col-lg-4 o_light_label ps-4">
+                            <label string="Cashdrawer" for="iface_cashdrawer"/>
+                        </div>
+                        <div class="col-lg-8">
+                            <field name="iface_cashdrawer"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-auto o_light_label">
+                            <label string="Customer Display" for="iface_display_id"/>
+                        </div>
+                        <div class="col-lg-7">
+                            <field name="iface_display_id" style="width: 82%;"/>
+                        </div>
+                    </div>
+                    <div class="row iot_barcode_scanner">
+                        <label string="Scanner" for="iface_scanner_ids" class="col-lg-4 o_light_label"/>
+                        <field name="iface_scanner_ids" widget="many2many_tags"/>
+                    </div>
+                    <div class="row" name="row_scale">
+                        <label string="Electronic Scale" for="iface_scale_id" class="col-lg-4 o_light_label"/>
+                        <field name="iface_scale_id"/>
+                    </div>
+                    <div>
+                        <button name="%(iot.iot_device_action)d" icon="oi-arrow-right" type="action" string="IoT Devices" class="btn-link mt8"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

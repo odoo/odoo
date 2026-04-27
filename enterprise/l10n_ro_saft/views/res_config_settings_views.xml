@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_form_inherit_l10n_ro_saft" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n.ro.saft</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='invoicing_settings']" position="after">
+                <block title="Romanian localization" id="l10n_ro_saft_settings" invisible="country_code != 'RO'">
+                    <setting id="l10n_ro_saft_tax_accounting_basis" company_dependent="1"
+                        string="Tax Accounting Basis"
+                        help="The accounting regulations and Chart of Accounts used by this company"
+                        documentation="/applications/finance/fiscal_localizations/romania.html">
+                        <field name="l10n_ro_saft_tax_accounting_basis"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

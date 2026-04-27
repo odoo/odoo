@@ -1,0 +1,135 @@
+<templates>
+
+    <t t-name="web_studio.ViewEditor.GanttEditorSidebar">
+        <InteractiveEditorSidebar>
+            <t t-set-slot="view">
+                <Property
+                    name="'create'"
+                    value="modelParams.canCreate === true"
+                    type="'boolean'"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Can Create
+                </Property>
+                <Property
+                    name="'edit'"
+                    value="modelParams.canEdit === true"
+                    type="'boolean'"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Can Edit
+                </Property>
+                <Property
+                    name="'display_unavailability'"
+                    value="modelParams.displayUnavailability === true"
+                    type="'boolean'"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Display Unavailability
+                </Property>
+                <Property
+                    name="'total_row'"
+                    value="modelParams.displayTotalRow === true"
+                    type="'boolean'"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Display Total row
+                </Property>
+                <Property
+                    name="'date_start'"
+                    type="'selection'"
+                    value="modelParams.dateStartField"
+                    childProps="{ choices: fieldsDateChoices }"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Start Date Field
+                </Property>
+                <Property
+                    name="'date_stop'"
+                    type="'selection'"
+                    value="modelParams.dateStopField"
+                    childProps="{ choices: fieldsDateChoices }"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Stop Date Field
+                </Property>
+                <Property
+                    name="'string'"
+                    type="'string'"
+                    value="modelParams.string"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Label
+                </Property>
+                <Property
+                    name="'default_group_by'"
+                    type="'selection'"
+                    value="modelParams.defaultGroupBy"
+                    childProps="{ choices: fieldsChoices, multiSelect: true }"
+                    onChange.bind="onDefaultGroupByChanged"
+                >
+                    Default Group by
+                </Property>
+                <Property
+                    name="'display_mode'"
+                    type="'selection'"
+                    value="modelParams.displayMode"
+                    childProps="{ choices: displayModeChoices }"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Display Mode
+                </Property>
+                <Property
+                    name="'default_scale'"
+                    type="'selection'"
+                    value="modelParams.defaultScale"
+                    childProps="{ choices: defaultScalesChoices }"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Default Scale
+                </Property>
+                <Property
+                    name="'color'"
+                    type="'selection'"
+                    value="modelParams.colorField"
+                    childProps="{ choices: colorChoices }"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Color
+                </Property>
+                <Property
+                    name="'precision_day'"
+                    type="'selection'"
+                    value="currentDayPrecision"
+                    childProps="{ choices: dayPrecisionChoices }"
+                    onChange.bind="(value) => this.onPrecisionChanged(value, 'day')"
+                >
+                    Day Precision
+                </Property>
+                <Property
+                    name="'precision_week'"
+                    type="'selection'"
+                    value="currentWeekPrecision"
+                    childProps="{ choices: weekAndMonthPrecisionChoices }"
+                    onChange.bind="(value) => this.onPrecisionChanged(value, 'week')"
+                >
+                    Week Precision
+                </Property>
+                <Property
+                    name="'precision_month'"
+                    type="'selection'"
+                    value="currentMonthPrecision"
+                    childProps="{ choices: weekAndMonthPrecisionChoices }"
+                    onChange.bind="(value) => this.onPrecisionChanged(value, 'month')"
+                >
+                    Month Precision
+                </Property>
+
+                <SidebarViewToolbox onMore="props.openViewInForm"
+                    canEditXml="!viewEditorModel.isEditingSubview"
+                    openDefaultValues="props.openDefaultValues" />
+            </t>
+        </InteractiveEditorSidebar>
+    </t>
+
+</templates>

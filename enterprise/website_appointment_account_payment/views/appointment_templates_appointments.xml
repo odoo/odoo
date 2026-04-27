@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="appointments_cards" inherit_id="website_appointment.appointment_card_body">
+    <xpath expr="//div[hasclass('o_wappointment_card_location')]" position="before">
+        <div t-if="appointment.has_payment_step and appointment.product_id" class="mt-2">
+            <strong class="text-primary" t-out="appointment.product_lst_price"
+                t-options="{'widget': 'monetary', 'display_currency': appointment.product_currency_id}"/>
+        </div>
+    </xpath>
+</template>
+</odoo>

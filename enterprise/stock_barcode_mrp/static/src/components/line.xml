@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-inherit="stock_barcode.LineQuantity" t-inherit-mode="extension">
+        <xpath expr="//div[@name='quantity']" position="before">
+            <div t-if="props.line.description_bom_line" name="kits">
+                <i class="fa fa-fw fa-flask"/>
+                <span t-esc="props.line.description_bom_line"/>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

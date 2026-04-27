@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="monthly_tax_report_xml_export_wizard_view" model="ir.ui.view">
+            <field name="name">l10n_it_xml_export.monthly_tax_report_xml_export_wizard_view</field>
+            <field name="model">l10n_it_xml_export.monthly.tax.report.xml.export.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Generate Monthly Tax Report XML">
+                    <group>
+                        <group>
+                            <field name="taxpayer_code" placeholder="e.g. ABCDEF12G34H567I"/>
+                            <field name="parent_company_id" invisible="1"/>
+                            <field name="parent_company_vat_number" placeholder="e.g. 12345678901" invisible="not parent_company_id"/>
+                            <field name="declarant_fiscal_code" placeholder="e.g. 12345678901 or ABCDEF12G34H567I"/>
+                            <field name="declarant_role_code" required="declarant_fiscal_code"/>
+                            <field name="intermediary_code" invisible="1"/>
+                            <field name="commitment_date" invisible="not intermediary_code" required="intermediary_code"/>
+                            <field name="submission_commitment" invisible="not intermediary_code" required="intermediary_code" widget="radio" options="{'horizontal': True}"/>
+                        </group>
+                        <group>
+                            <field name="subcontracting"/>
+                            <field name="exceptional_events"/>
+                            <field name="extraordinary_operations"/>
+                            <field name="id_sistema"/>
+                            <field name="show_method" invisible="1"/>
+                            <field name="method" invisible="not show_method"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="action_generate_export" string="Confirm" type="object"
+                                class="btn-primary" data-hotkey="q"/>
+                        <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

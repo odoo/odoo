@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_batch_payment_form_inherit" model="ir.ui.view">
+            <field name="name">sdd.account.batch.payment.form.inherit</field>
+            <field name="model">account.batch.payment</field>
+            <field name="inherit_id" ref="account_batch_payment.view_batch_payment_form"/>
+            <field name="arch" type="xml">
+                <header position="after">
+                    <field name="sdd_min_required_collection_date" invisible="True"/>
+                    <div class="alert alert-warning" role="alert" invisible="not sdd_min_required_collection_date or sdd_required_collection_date >= sdd_min_required_collection_date">
+                        This batch includes payments from mandates with no prior collections:
+                        <field name="sdd_first_time_payment_ids" widget="x2many_buttons" string="First-Time Payments"/>.
+                        SEPA requires a 5 days notice.
+                    </div>
+                </header>
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="sdd_required_collection_date" invisible="payment_method_code not in ('sdd', 'sepa_direct_debit')" readonly="state != 'draft'" required="payment_method_code in ('sdd', 'sepa_direct_debit')"/>
+                    <field name="sdd_batch_booking" string="Batch Booking" invisible="payment_method_code not in ('sdd', 'sepa_direct_debit')"/>
+                    <field name="sdd_scheme" invisible="payment_method_code not in ('sdd', 'sepa_direct_debit')" readonly="state != 'draft' or payment_ids" required="payment_method_code in ('sdd', 'sepa_direct_debit')"/>
+                </xpath>
+                <field name="payment_method_name" position="after">
+                    <field name="sdd_mandate_scheme" optional="hide"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

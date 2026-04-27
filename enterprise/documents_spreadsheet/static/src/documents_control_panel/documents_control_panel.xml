@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="spreadsheet.documents.ControlPanel" t-inherit="documents.ControlPanel"
+        t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o_documents_share_button')]" position="after">
+            <button type="button" class="btn btn-secondary"
+                t-if="!isInTrash and userIsInternal and singleSelection?.data?.handler === 'spreadsheet'"
+                t-on-click.prevent="onClickFreezeAndShareSpreadsheet" data-hotkey="s">
+                <t t-call="spreadsheet_edition.SpreadsheetIcon"/> Freeze and share
+            </button>
+        </xpath>
+        <xpath expr="//*[hasclass('o_documents_export')]" position="after">
+            <button class="dropdown-item w-100"
+                t-if="!isInTrash and userIsInternal and this.documentsState.viewType === 'list'"
+                t-on-click="() => this.onInsertInSpreadsheet()">
+                <i class="oi oi-view-list fa-fw me-1"/>
+                <span class="d-inline-block">Insert in spreadsheet</span>
+            </button>
+        </xpath>
+        <xpath expr="//*[hasclass('o_documents_download_button')]" position="attributes">
+            <attribute name="t-if">
+                this.targetRecords.some((r) => !r.isRequest() and r.data.handler !== "spreadsheet") and 
+                !(
+                    this.targetRecords.some((r) => r.data.handler === "spreadsheet")
+                    and
+                    this.targetRecords.every((r) => r.data.handler === "spreadsheet" or r.data.type === "url" )
+                )
+            </attribute>
+        </xpath>
+    </t>
+</templates>

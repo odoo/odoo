@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_salary_rule_view_tree_l10n_ch_wage_types" model="ir.ui.view">
+        <field name="name">hr.salary.rule.view.list.l10n.ch.account.wage.types</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll.hr_salary_rule_view_tree_l10n_ch_wage_types"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="account_debit"/>
+                <field name="account_credit"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="planning.planning_slot_132" model="planning.slot">
+            <field name="project_id" ref="project.project_project_1"/>
+        </record>
+        <record id="planning_slot_132_account_analytic_line_1" model="account.analytic.line">
+            <field name="name">Quality analysis</field>
+            <field name="employee_id" ref="hr.employee_lur"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday() - 2)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">3</field>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="task_id" ref="project.project_1_task_9"/>
+        </record>
+
+        <record id="planning.planning_slot_145" model="planning.slot">
+            <field name="project_id" ref="project.project_project_2"/>
+        </record>
+        <record id="planning_slot_145_account_analytic_line_1" model="account.analytic.line">
+            <field name="name">Quality analysis</field>
+            <field name="employee_id" ref="hr.employee_admin"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday() + 3)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">2</field>
+            <field name="project_id" ref="project.project_project_2"/>
+            <field name="task_id" ref="project.project_2_task_5"/>
+        </record>
+
+        <record id="planning_account_analytic_line_1" model="account.analytic.line">
+            <field name="name">Presentation</field>
+            <field name="employee_id" ref="hr.employee_jod"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday())).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">2</field>
+            <field name="project_id" ref="project.project_project_2"/>
+            <field name="task_id" ref="project.project_2_task_7"/>
+        </record>
+
+        <record id="planning_account_analytic_line_2" model="account.analytic.line">
+            <field name="name">Quality analysis</field>
+            <field name="employee_id" ref="hr.employee_jod"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday())).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">0.75</field>
+            <field name="project_id" ref="project.project_project_2"/>
+            <field name="task_id" ref="project.project_2_task_7"/>
+        </record>
+
+        <record id="planning_account_analytic_line_3" model="account.analytic.line">
+            <field name="name">Call</field>
+            <field name="employee_id" ref="hr.employee_lur"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday())).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">1.0</field>
+            <field name="project_id" ref="project.project_project_3"/>
+            <field name="task_id" ref="project.project_3_task_5"/>
+        </record>
+
+        <record id="planning_account_analytic_line_4" model="account.analytic.line">
+            <field name="name">Design</field>
+            <field name="employee_id" ref="hr.employee_niv"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday())).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">2.0</field>
+            <field name="project_id" ref="project.project_project_2"/>
+            <field name="task_id" ref="project.project_2_task_4"/>
+        </record>
+
+        <record id="planning_account_analytic_line_5" model="account.analytic.line">
+            <field name="name">On Site Visit</field>
+            <field name="employee_id" ref="hr.employee_niv"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday())).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">0.75</field>
+            <field name="project_id" ref="project.project_project_2"/>
+            <field name="task_id" ref="project.project_2_task_4"/>
+        </record>
+
+        <record id="planning_account_analytic_line_6" model="account.analytic.line">
+            <field name="name">Quality analysis</field>
+            <field name="employee_id" ref="hr.employee_jep"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday() - 1)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">0.5</field>
+            <field name="project_id" ref="project.project_project_3"/>
+            <field name="task_id" ref="project.project_3_task_2"/>
+        </record>
+
+        <record id="planning_account_analytic_line_7" model="account.analytic.line">
+            <field name="name">Requirements analysis</field>
+            <field name="employee_id" ref="hr.employee_jep"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday() - 1)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">0.25</field>
+            <field name="project_id" ref="project.project_project_3"/>
+            <field name="task_id" ref="project.project_3_task_2"/>
+        </record>
+
+        <record id="planning_account_analytic_line_8" model="account.analytic.line">
+            <field name="name">Requirements analysis</field>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday() - 1)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">0.5</field>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="task_id" ref="project.project_1_task_8"/>
+        </record>
+
+        <record id="planning_account_analytic_line_9" model="account.analytic.line">
+            <field name="name">Presentation</field>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday() - 1)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">1.5</field>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="task_id" ref="project.project_1_task_8"/>
+        </record>
+
+        <record id="planning_account_analytic_line_10" model="account.analytic.line">
+            <field name="name">Training</field>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday() - 1)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">0.25</field>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="task_id" ref="project.project_1_task_8"/>
+        </record>
+
+        <record id="planning_account_analytic_line_11" model="account.analytic.line">
+            <field name="name">Sprint</field>
+            <field name="employee_id" ref="hr.employee_jth"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday() - 1)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">4</field>
+            <field name="project_id" ref="project.project_project_2"/>
+            <field name="task_id" ref="project.project_2_task_3"/>
+        </record>
+
+        <record id="planning_account_analytic_line_12" model="account.analytic.line">
+            <field name="name">Delivery</field>
+            <field name="employee_id" ref="hr.employee_lur"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday() - 2)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">1.75</field>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="task_id" ref="project.project_1_task_13"/>
+        </record>
+
+        <record id="planning_account_analytic_line_13" model="account.analytic.line">
+            <field name="name">Delivery</field>
+            <field name="employee_id" ref="hr.employee_lur"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday() - 2)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">0.5</field>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="task_id" ref="project.project_1_task_13"/>
+        </record>
+
+        <record id="planning_account_analytic_line_14" model="account.analytic.line">
+            <field name="name">Presentation</field>
+            <field name="employee_id" ref="hr.employee_jth"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday() - 3)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">0.5</field>
+            <field name="project_id" ref="project.project_project_3"/>
+            <field name="task_id" ref="project.project_3_task_1"/>
+        </record>
+
+        <record id="planning_account_analytic_line_15" model="account.analytic.line">
+            <field name="name">Quality analysis</field>
+            <field name="employee_id" ref="hr.employee_jod"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday() - 4)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">1.75</field>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="task_id" ref="project.project_1_task_5"/>
+        </record>
+
+        <record id="planning_account_analytic_line_16" model="account.analytic.line">
+            <field name="name">Training</field>
+            <field name="employee_id" ref="hr.employee_niv"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday() - 4)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">3.5</field>
+            <field name="project_id" ref="project.project_project_3"/>
+            <field name="task_id" ref="project.project_3_task_5"/>
+        </record>
+
+        <record id="planning_account_analytic_line_17" model="account.analytic.line">
+            <field name="name">Delivery</field>
+            <field name="employee_id" ref="hr.employee_jth"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday() - 7)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">0.25</field>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="task_id" ref="project.project_1_task_5"/>
+        </record>
+
+        <record id="planning_account_analytic_line_18" model="account.analytic.line">
+            <field name="name">Requirements analysis</field>
+            <field name="employee_id" ref="hr.employee_jth"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday() - 7 - 1)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">2.25</field>
+            <field name="project_id" ref="project.project_project_2"/>
+            <field name="task_id" ref="project.project_2_task_8"/>
+        </record>
+
+        <record id="planning_account_analytic_line_19" model="account.analytic.line">
+            <field name="name">Design</field>
+            <field name="employee_id" ref="hr.employee_jod"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday() - 7 - 3)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">4.0</field>
+            <field name="project_id" ref="project.project_project_2"/>
+            <field name="task_id" ref="project.project_2_task_1"/>
+        </record>
+
+        <record id="planning_account_analytic_line_20" model="account.analytic.line">
+            <field name="name">Presentation</field>
+            <field name="employee_id" ref="hr.employee_niv"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday() - 7 - 3)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">1.5</field>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="task_id" ref="project.project_1_task_6"/>
+        </record>
+
+        <record id="planning_account_analytic_line_21" model="account.analytic.line">
+            <field name="name">Call</field>
+            <field name="employee_id" ref="hr.employee_lur"/>
+            <field name="date" eval="(datetime.today() - timedelta(days=datetime.today().weekday() - 7 - 4)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">3.25</field>
+            <field name="project_id" ref="project.project_project_3"/>
+            <field name="task_id" ref="project.project_3_task_2"/>
+        </record>
+
+    </data>
+</odoo>

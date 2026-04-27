@@ -1,0 +1,426 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_payroll_account
+#
+# Translators:
+# Wil Odoo, 2024
+# Junko Augias, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:47+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Junko Augias, 2025\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_bank_statement_line__payslip_count
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_move__payslip_count
+msgid "# of Payslips"
+msgstr "給与明細数"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_view_form
+msgid ""
+"<span class=\"o_stat_text\" invisible=\"move_state != 'draft'\">Journal "
+"Entry <br/>(Draft)</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"move_state !"
+"= 'posted'\">Journal Entry <br/>(Posted)</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"move_state !"
+"= 'cancel'\">Journal Entry <br/>(Canceled)</span>"
+msgstr ""
+"<span class=\"o_stat_text\" invisible=\"move_state != 'draft'\">仕訳<br/>(ド"
+"ラフト)</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"move_state !"
+"= 'posted'\">仕訳 <br/>(記帳済)</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"move_state !"
+"= 'cancel'\">仕訳 <br/>(キャンセル済)</span>"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.view_move_form_inherit
+msgid "<span class=\"o_stat_text\">Payslip</span>"
+msgstr "<span class=\"o_stat_text\">給与明細</span>"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "勘定科目表テンプレート"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_chart_template.py:0
+msgid "Account Payslip Houserental"
+msgstr "口座振込明細書 家賃"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_salary_rule_view_form
+msgid "Accounting"
+msgstr "会計"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__move_id
+msgid "Accounting Entry"
+msgstr "会計入力"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "Adjustment Entry"
+msgstr "調整項目"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract__analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract_history__analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__analytic_account_id
+msgid "Analytic Account"
+msgstr "分析勘定"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_view_form
+msgid "Are you sure you want to proceed?"
+msgstr "本当に進めますか？"
+
+#. module: hr_payroll_account
+#: model:ir.actions.act_window,name:hr_payroll_account.action_res_partner_bank_account_form
+#: model:ir.model,name:hr_payroll_account.model_res_partner_bank
+#: model:ir.ui.menu,name:hr_payroll_account.menu_hr_employee_bank_account
+msgid "Bank Accounts"
+msgstr "銀行口座"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.res_config_settings_view_form
+msgid "Batch Account Move Lines"
+msgstr "一括会計仕訳明細"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__batch_payroll_move_lines
+#: model:ir.model.fields,field_description:hr_payroll_account.field_res_company__batch_payroll_move_lines
+#: model:ir.model.fields,field_description:hr_payroll_account.field_res_config_settings__batch_payroll_move_lines
+msgid "Batch Payroll Move Lines"
+msgstr "一括給与記帳明細"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_res_company
+msgid "Companies"
+msgstr "会社"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_res_config_settings
+msgid "Config Settings"
+msgstr "コンフィグ設定"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_contract_history
+msgid "Contract history"
+msgstr "契約履歴"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_view_form
+msgid "Create Draft Entry"
+msgstr "ドラフトエントリを作成"
+
+#. module: hr_payroll_account
+#: model_terms:ir.actions.act_window,help:hr_payroll_account.action_res_partner_bank_account_form
+msgid "Create a Bank Account"
+msgstr "銀行口座作成"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__account_credit
+msgid "Credit Account"
+msgstr "貸方勘定"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__credit_tag_ids
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__credit_tag_ids
+msgid "Credit Tax Grids"
+msgstr "貸方税グリッド"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__date
+msgid "Date Account"
+msgstr "会計日付"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__account_debit
+msgid "Debit Account"
+msgstr "借方勘定"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__debit_tag_ids
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__debit_tag_ids
+msgid "Debit Tax Grids"
+msgstr "借方税グリッド"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_contract
+msgid "Employee Contract"
+msgstr "従業員契約"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.view_partner_bank_search_inherit
+msgid "Employees"
+msgstr "従業員"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_res_config_settings__batch_payroll_move_lines
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.res_config_settings_view_form
+msgid ""
+"Enable this option to merge all the accounting entries for the same period "
+"into a single account move line. This will anonymize the accounting entries "
+"but also disable single payment generations."
+msgstr ""
+"このオプションを有効にすると、同じ期間の全ての会計項目が1つの会計仕訳明細に"
+"マージされます。これにより、会計項目は匿名化されますが、単一支払生成も無効に"
+"なります。"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_salary_rule__split_move_lines
+msgid ""
+"Enable this option to split the accountig entries for this rule according to "
+"the payslip line name. It could be useful for deduction/reimbursement or "
+"salary attachments for instance."
+msgstr ""
+"このオプションを有効にすると、この規則の勘定科目が給与明細の明細名に従って分"
+"割されます。たとえば、控除/払戻や給与の添付に便利です。"
+
+#. module: hr_payroll_account
+#: model_terms:ir.actions.act_window,help:hr_payroll_account.action_res_partner_bank_account_form
+msgid ""
+"From here you can manage all bank accounts linked to you and your contacts."
+msgstr ""
+"ここから、あなたと連絡先にリンクされている全ての銀行口座を管理することができ"
+"ます。"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payroll_payment_report_wizard
+msgid "HR Payroll Payment Report Wizard"
+msgstr "人事給与明細支払レポートウィザード"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_setup_bank_manual_config__has_alt_bank_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_res_partner_bank__has_alt_bank_account
+msgid "Has Alt Bank Account"
+msgstr "Alt銀行口座あり"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payroll_structure.py:0
+msgid ""
+"Incorrect journal: The journal must be in the same currency as the company"
+msgstr "間違った仕訳帳:仕訳帳の通貨は会社と同じである必要があります。"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/wizard/hr_payroll_payment_report_wizard.py:0
+msgid ""
+"Invalid IBAN for the following employees:\n"
+"%s"
+msgstr ""
+"以下の従業員用のIBANが無効です:\n"
+"%s"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_journal
+msgid "Journal"
+msgstr "仕訳帳"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+#: code:addons/hr_payroll_account/models/hr_payslip_run.py:0
+#: model:ir.model,name:hr_payroll_account.model_account_move
+msgid "Journal Entry"
+msgstr "仕訳"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip__date
+msgid "Keep empty to use the period of the validation(Payslip) date."
+msgstr "発効日(給与明細)の期間を使うために、空白にしておいて下さい。"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_run__move_id
+msgid "Move"
+msgstr "仕訳"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_run__move_state
+msgid "Move State"
+msgstr "仕訳ステータス"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__not_computed_in_net
+msgid "Not computed in net accountably"
+msgstr "正味で計算されていません"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "One of the contract for these payslips has no structure type."
+msgstr "これらの給与明細の契約書の1つには、構造タイプがありません。"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_payment_register
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_view_form
+msgid "Pay"
+msgstr "支払"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip
+msgid "Pay Slip"
+msgstr "給与明細"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/wizard/account_payment_register.py:0
+msgid "Payment done at %s"
+msgstr " %sに支払が完了しました"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_payment
+msgid "Payments"
+msgstr "支払"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "給与明細のバッチ"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_line
+msgid "Payslip Line"
+msgstr "給与明細行"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_bank_statement_line__payslip_ids
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_move__payslip_ids
+msgid "Payslips"
+msgstr "給与明細"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_chart_template.py:0
+msgid "SLR"
+msgstr "SLR"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_chart_template.py:0
+msgid "Salaries"
+msgstr "給与"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payroll_structure__journal_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__journal_id
+msgid "Salary Journal"
+msgstr "給与仕訳"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr "給与規則"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payroll_structure
+msgid "Salary Structure"
+msgstr "給与体系"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__split_move_lines
+msgid "Split account line based on name"
+msgstr "名前ごとに勘定科目明細を分割"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip_line__credit_tag_ids
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_salary_rule__credit_tag_ids
+msgid ""
+"Tags assigned to this line will impact financial reports when translated "
+"into an accounting journal entry.They will be applied on the credit account "
+"line in the journal entry."
+msgstr ""
+"この行に割当てられたタグは、会計仕訳に変換されたときに会計レポートに影響を与"
+"えます。これらは、仕訳の中で貸方勘定明細に適用されます。"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip_line__debit_tag_ids
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_salary_rule__debit_tag_ids
+msgid ""
+"Tags assigned to this line will impact financial reports when translated "
+"into an accounting journal entry.They will be applied on the debit account "
+"line in the journal entry."
+msgstr ""
+"この行に割当てられたタグは、会計仕訳に変換されたときに会計レポートに影響を与"
+"えます。これらは、仕訳の中で借方勘定明細に適用されます。"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the default Account!"
+msgstr "経費仕訳帳 \"%s\" はデフォルト勘定科目を正しく設定していません。"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "The credit account on the NET salary rule is not reconciliable"
+msgstr "NET給与規則の貸方勘定が照合不可能です"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "The employee bank account is untrusted"
+msgstr "従業員の銀行口座が信頼されていません"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_salary_rule__not_computed_in_net
+msgid ""
+"This field allows you to delete the value of this rule in the \"Net Salary\" "
+"rule at the accounting level to explicitly display the value of this rule in "
+"the accounting. For example, if you want to display the value of your "
+"representation fees, you can check this field."
+msgstr ""
+"このフィールドを使用すると、会計レベルの'正味給与'規則でこの規則の値を削除し"
+"て、会計でこの規則の値を明示的に表示することができます。例えば、代理人報酬の"
+"値を表示したい場合は、このフィールドをチェックします。"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.view_partner_bank_form_inherit_hr_payroll_account
+msgid "This will replace the employee existing bank account."
+msgstr "これは従業員の既存の銀行口座に代わるものです。"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "You can only register payment for posted journal entries."
+msgstr "記帳済の仕訳に対してのみ支払登録することができます。"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "You can only register payments for unpaid documents."
+msgstr "支払は未払ドキュメントに対してのみ登録できます。"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "You can't create a journal entry for a paid payslip."
+msgstr "支払われた給与明細に対して仕訳を作成することはできません。"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_journal.py:0
+msgid "You cannot delete the journal linked to a Salary Structure"
+msgstr "給与構造にリンクされた仕訳帳は削除できません。"
+
+#~ msgid "One of the payroll structures has no account journal defined on it."
+#~ msgstr "仕訳帳が定義されていない給与体系があります。"

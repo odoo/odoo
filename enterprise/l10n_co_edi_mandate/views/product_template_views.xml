@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_template_form_inherit_l10n_co_edi_mandate" model="ir.ui.view">
+            <field name="name">product.template.form.inherit.l10n_co_edi_mandate</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product_unspsc.product_template_unspsc"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='unspsc']" position="inside">
+                    <field name="l10n_co_dian_mandate_contract" invisible="'CO' not in fiscal_country_codes or type != 'service'"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

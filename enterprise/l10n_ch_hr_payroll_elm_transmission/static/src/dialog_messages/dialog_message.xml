@@ -1,0 +1,89 @@
+<templates xml:space="preserve">
+    <t t-name="dialog_messages_renderer_template">
+        <div class="o_dialog_messages_renderer">
+            <t t-foreach="this.props.record.data[this.props.name].records" t-as="dialog_field" t-key="dialog_field.id">
+                <t t-if="dialog_field.data.field_type == 'section'">
+                    <div class="mb-4">
+                        <h2 class="fw-bold mb-1" t-esc="dialog_field.data.swissdec_label"/>
+                        <t t-if="dialog_field.data.swissdec_value">
+                            <h3 class="text-muted" t-esc="dialog_field.data.swissdec_value"/>
+                        </t>
+                    </div>
+                </t>
+                <t t-elif="dialog_field.data.field_type == 'answer'">
+                    <div class="o_field_container d-flex align-items-start mb-3 flex-wrap">
+                        <label class="o_field_label me-2 fw-bold">
+                            <t t-esc="dialog_field.data.swissdec_label"/>
+                            <t t-if="!dialog_field.data.swissdec_answer_optional">
+                                <span class="text-danger">*</span>
+                            </t>
+                            :
+                        </label>
+                        <div class="o_field_input flex-grow-1">
+                            <t t-call="render_answer_field">
+                                <t t-set="field" t-value="dialog_field"/>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+                <t t-else="">
+                    <!-- value field (read-only display) -->
+                    <div class="o_field_container d-flex align-items-start mb-3 flex-wrap">
+                        <label class="o_field_label fw-bold me-2">
+                            <t t-esc="dialog_field.data.swissdec_label"/>
+                        </label>
+                        <div class="o_field_input flex-grow-1">
+                            <t t-if="dialog_field.data.swissdec_value">
+                                : <span class="text-muted" t-esc="dialog_field.data.swissdec_value"/>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="render_answer_field">
+        <t t-set="answer_type" t-value="field.data.swissdec_answer_value_type"/>
+        <t t-if="answer_type == 'String'">
+            <div class="o_field_widget">
+                <CharField name="'swissdec_answer_value_String'" record="field"/>
+            </div>
+        </t>
+        <t t-if="answer_type == 'Integer'">
+            <div class="o_field_widget">
+                <IntegerField name="'swissdec_answer_value_Integer'" record="field"/>
+            </div>
+        </t>
+        <t t-if="answer_type == 'Double'">
+            <div class="o_field_widget">
+                <FloatField name="'swissdec_answer_value_Double'" record="field"/>
+            </div>
+        </t>
+        <t t-if="answer_type == 'Boolean'">
+            <div class="o_field_widget d-flex align-items-center">
+                <BooleanField name="'swissdec_answer_value_Boolean'" record="field"/>
+            </div>
+        </t>
+        <t t-if="answer_type == 'Date'">
+            <div class="o_field_widget">
+                <DateTimeField name="'swissdec_answer_value_Date'" record="field" options='{"type": "date"}'/>
+            </div>
+        </t>
+        <t t-if="answer_type == 'DateTime'">
+            <div class="o_field_widget">
+                <DateTimeField name="'swissdec_answer_value_DateTime'" record="field"/>
+            </div>
+        </t>
+        <t t-if="answer_type == 'Amount'">
+            <div class="o_field_widget o_row">
+                <FloatField name="'swissdec_answer_value_Amount'" record="field"/> <span class="ms-2">CHF</span>
+            </div>
+        </t>
+        <t t-if="answer_type == 'YesNoUnknown'">
+            <div class="o_field_widget">
+                <RadioField name="'swissdec_answer_value_YesNoUnknown'" record="field"/>
+            </div>
+        </t>
+    </t>
+</templates>

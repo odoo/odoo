@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr.contract.salary</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_recruitment.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block name="recruitment_process_div" position="inside">
+                <setting string="Salary Package Configurator" help="Validity duration for salary package requests for new applicants">
+                    <field name="access_token_validity" class="o_hr_narrow_field"/>
+                    <span> days</span>
+                </setting>
+            </block>
+        </field>
+    </record>
+    <record id="res_config_settings_view_form_hr" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr.contract.salary</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='hr']" position="inside">
+                <block title="Salary Configurator" name="employee_salary_config_div">
+                    <setting string="Salary Package Configurator" help="Validity duration for salary package requests for employees">
+                        <field name="employee_salary_simulator_link_validity" class="o_hr_narrow_field"/>
+                        <span> days</span>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo> 

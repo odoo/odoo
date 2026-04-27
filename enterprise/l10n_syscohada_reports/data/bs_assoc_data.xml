@@ -1,0 +1,835 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_financial_report_syscebnl_bilan_assoc" model="account.report">
+        <field name="name">Balance Sheet - SYSCEBNL</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="availability_condition">coa_children</field>
+        <field name="chart_template">syscebnl</field>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_syscebnl_bilan_assoc_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_line_syscebnl_bilan_assoc_actif_passif_total" model="account.report.line">
+                <field name="name">ACTIVE - PASSIVE</field>
+                <field name="code">SYSCEBNL_ASSOC_ACTIF_PASSIF_TOTAL</field>
+                <field name="hide_if_zero" eval="True"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_syscebnl_bilan_assoc_actif_passif_total_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">SYSCEBNL_ASSOC_BZ.balance - SYSCEBNL_ASSOC_DZ.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_syscebnl_bilan_assoc_actif_total" model="account.report.line">
+                <field name="name">ACTIVE</field>
+                <field name="code">SYSCEBNL_ASSOC_ACTIF_TOT</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_syscebnl_assoc_aa" model="account.report.line">
+                        <field name="name">AA | Fixed assets held for sale arising from gifts and bequests not received and temporary usufruct</field>
+                        <field name="code">SYSCEBNL_ASSOC_AA</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_aa_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCEBNL_ASSOC_AB.balance + SYSCEBNL_ASSOC_AC.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_ab" model="account.report.line">
+                                <field name="name">AB | Intangible assets</field>
+                                <field name="code">SYSCEBNL_ASSOC_AB</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_ab_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">201 + 280 + 2901</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_syscebnl_assoc_ac" model="account.report.line">
+                                <field name="name">AC | Tangible and financial fixed assets</field>
+                                <field name="code">SYSCEBNL_ASSOC_AC</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_ac_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">202 + 203 + 204 + 205 + 2902</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_syscebnl_assoc_ad" model="account.report.line">
+                        <field name="name">AD | Intangible assets</field>
+                        <field name="code">SYSCEBNL_ASSOC_AD</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_ad_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCEBNL_ASSOC_AE.balance + SYSCEBNL_ASSOC_AF.balance + SYSCEBNL_ASSOC_AG.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_ae" model="account.report.line">
+                                <field name="name">AE | Patents, licences, software and similar rights</field>
+                                <field name="code">SYSCEBNL_ASSOC_AE</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_ae_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">212 + 213 + 214 + 2193 + 2812 + 2813 + 2814 + 2912 + 2913 + 2914</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_syscebnl_assoc_af" model="account.report.line">
+                                <field name="name">AF | Other intangible assets</field>
+                                <field name="code">SYSCEBNL_ASSOC_AF</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_af_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">218 + 2198 + 2817 + 2818 + 2918 + 2919</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_syscebnl_assoc_ag" model="account.report.line">
+                                <field name="name">AG | Advances and deposits paid on intangible assets</field>
+                                <field name="code">SYSCEBNL_ASSOC_AG</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_ag_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">251 + 2951</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_syscebnl_assoc_ah" model="account.report.line">
+                        <field name="name">AH | Tangible assets</field>
+                        <field name="code">SYSCEBNL_ASSOC_AH</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_ah_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCEBNL_ASSOC_AI.balance + SYSCEBNL_ASSOC_AJ.balance + SYSCEBNL_ASSOC_AK.balance + SYSCEBNL_ASSOC_AL.balance + SYSCEBNL_ASSOC_AM.balance + SYSCEBNL_ASSOC_AN.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_ai" model="account.report.line">
+                                <field name="name">AI | Land</field>
+                                <field name="code">SYSCEBNL_ASSOC_AI</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_ai_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">22 + 282 + 292</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_syscebnl_assoc_aj" model="account.report.line">
+                                <field name="name">AJ | Buildings</field>
+                                <field name="code">SYSCEBNL_ASSOC_AJ</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_aj_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">231 + 232 + 233 + 2391 + 2392 + 2393 + 2396 + 2831 + 2832 + 2833 + 2931 + 2932 + 2933 + 2939</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_syscebnl_assoc_ak" model="account.report.line">
+                                <field name="name">AK | Fixtures and fittings</field>
+                                <field name="code">SYSCEBNL_ASSOC_AK</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_ak_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">234 + 235 + 238 + 2394 + 2395 + 2398 + 2834 + 2835 + 2838 + 2934 + 2935 + 2938</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_syscebnl_assoc_al" model="account.report.line">
+                                <field name="name">AL | Equipment, furniture and biological assets</field>
+                                <field name="code">SYSCEBNL_ASSOC_AL</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_al_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">24\(245,2495) + 284\(2845) + 294\(2945,2949)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_syscebnl_assoc_am" model="account.report.line">
+                                <field name="name">AM | Transport equipment</field>
+                                <field name="code">SYSCEBNL_ASSOC_AM</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_am_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">245 + 2495 + 2845 + 2945 + 2949</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_syscebnl_assoc_an" model="account.report.line">
+                                <field name="name">AN | Advance payments on tangible assets</field>
+                                <field name="code">SYSCEBNL_ASSOC_AN</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_an_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">252 + 2952</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_syscebnl_assoc_ao" model="account.report.line">
+                        <field name="name">AO | Financial assets</field>
+                        <field name="code">SYSCEBNL_ASSOC_AO</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_ao_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCEBNL_ASSOC_AX.balance + SYSCEBNL_ASSOC_AY.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_ax" model="account.report.line">
+                                <field name="name">AX | Investments</field>
+                                <field name="code">SYSCEBNL_ASSOC_AX</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_ax_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">26 + 296</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_syscebnl_assoc_ay" model="account.report.line">
+                                <field name="name">AY | Other financial assets</field>
+                                <field name="code">SYSCEBNL_ASSOC_AY</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_ay_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">27 + 297</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_syscebnl_assoc_az" model="account.report.line">
+                        <field name="name">AZ | Total non-current assets</field>
+                        <field name="code">SYSCEBNL_ASSOC_AZ</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_az_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCEBNL_ASSOC_AA.balance + SYSCEBNL_ASSOC_AD.balance + SYSCEBNL_ASSOC_AH.balance + SYSCEBNL_ASSOC_AO.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_syscebnl_assoc_bt" model="account.report.line">
+                        <field name="name">BT | Total current assets</field>
+                        <field name="code">SYSCEBNL_ASSOC_BT</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_bt_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCEBNL_ASSOC_BA.balance + SYSCEBNL_ASSOC_BB.balance + SYSCEBNL_ASSOC_BC.balance + SYSCEBNL_ASSOC_BD.balance + SYSCEBNL_ASSOC_BE.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_ba" model="account.report.line">
+                                <field name="name">BA | Current assets HAO</field>
+                                <field name="code">SYSCEBNL_ASSOC_BA</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_ba_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">485 + 4865 + 498</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_syscebnl_assoc_bb" model="account.report.line">
+                                <field name="name">BB | Inventories and outstanding</field>
+                                <field name="code">SYSCEBNL_ASSOC_BB</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_bb_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">3</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_syscebnl_assoc_bc" model="account.report.line">
+                                <field name="name">BC | Trade debtors</field>
+                                <field name="code">SYSCEBNL_ASSOC_BC</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_bc_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">409 + 490</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_syscebnl_assoc_bd" model="account.report.line">
+                                <field name="name">BD | Members, customer-users</field>
+                                <field name="code">SYSCEBNL_ASSOC_BD</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_bd_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">41\(419) + 491</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_syscebnl_assoc_be" model="account.report.line">
+                                <field name="name">BE | Other receivables</field>
+                                <field name="code">SYSCEBNL_ASSOC_BE</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_be_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">42D + 43D + 44D + 45D + 46D + 47\(478,479)D + 492 + 493 + 494 + 497</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_syscebnl_assoc_bx" model="account.report.line">
+                        <field name="name">BX | Total cash assets</field>
+                        <field name="code">SYSCEBNL_ASSOC_BX</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_bx_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCEBNL_ASSOC_BU.balance + SYSCEBNL_ASSOC_BV.balance + SYSCEBNL_ASSOC_BW.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_bu" model="account.report.line">
+                                <field name="name">BU | Investment securities</field>
+                                <field name="code">SYSCEBNL_ASSOC_BU</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_bu_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">50 + 590</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_syscebnl_assoc_bv" model="account.report.line">
+                                <field name="name">BV | Cash in hand</field>
+                                <field name="code">SYSCEBNL_ASSOC_BV</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_bv_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">51 + 591</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_syscebnl_assoc_bw" model="account.report.line">
+                                <field name="name">BW | Banks, financial institutions and similar entities</field>
+                                <field name="code">SYSCEBNL_ASSOC_BW</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_bw_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">52D + 53D + 55D + 57D + 58D + 592 + 593 + 595</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_syscebnl_assoc_by" model="account.report.line">
+                        <field name="name">BY | Currency adjustment - Assets</field>
+                        <field name="code">SYSCEBNL_ASSOC_BY</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_by_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">478</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_syscebnl_bilan_assoc_bz" model="account.report.line">
+                <field name="name">BZ | Grand total</field>
+                <field name="code">SYSCEBNL_ASSOC_BZ</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_syscebnl_assoc_bz_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">SYSCEBNL_ASSOC_AZ.balance + SYSCEBNL_ASSOC_BT.balance + SYSCEBNL_ASSOC_BX.balance + SYSCEBNL_ASSOC_BY.balance</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="account_financial_report_syscebnl_bilan_assoc_passive_total" model="account.report.line">
+                <field name="name">PASSIVE</field>
+                <field name="code">SYSCEBNL_ASSOC_PASSIVE_TOT</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_syscebnl_assoc_de" model="account.report.line">
+                        <field name="name">DE | Total stable resources</field>
+                        <field name="code">SYSCEBNL_ASSOC_DE</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_de_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCEBNL_ASSOC_CZ.balance + SYSCEBNL_ASSOC_DD.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_cz" model="account.report.line">
+                                <field name="name">CZ | Total own and similar resources</field>
+                                <field name="code">SYSCEBNL_ASSOC_CZ</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_cz_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SYSCEBNL_ASSOC_CK.balance + SYSCEBNL_ASSOC_CY.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_ck" model="account.report.line">
+                                        <field name="name">CK | Total equity and similar resources</field>
+                                        <field name="code">SYSCEBNL_ASSOC_CK</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_syscebnl_assoc_ck_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">SYSCEBNL_ASSOC_CA.balance + SYSCEBNL_ASSOC_CB.balance + SYSCEBNL_ASSOC_CC.balance + SYSCEBNL_ASSOC_CD.balance + SYSCEBNL_ASSOC_CE.balance + SYSCEBNL_ASSOC_CF.balance + SYSCEBNL_ASSOC_CG.balance + SYSCEBNL_ASSOC_CH.balance + SYSCEBNL_ASSOC_CI.balance + SYSCEBNL_ASSOC_CJ.balance</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_syscebnl_assoc_ca" model="account.report.line">
+                                                <field name="name">CA | Non-expendable allocation without right of withdrawal</field>
+                                                <field name="code">SYSCEBNL_ASSOC_CA</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_syscebnl_assoc_ca_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-101</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_syscebnl_assoc_cb" model="account.report.line">
+                                                <field name="name">CB | Non-expendable appropriation with right of withdrawal</field>
+                                                <field name="code">SYSCEBNL_ASSOC_CB</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_syscebnl_assoc_cb_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-102</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_syscebnl_assoc_cc" model="account.report.line">
+                                                <field name="name">CC | Entrance fee</field>
+                                                <field name="code">SYSCEBNL_ASSOC_CC</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_syscebnl_assoc_cc_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-103</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_syscebnl_assoc_cd" model="account.report.line">
+                                                <field name="name">CD | Expenditure</field>
+                                                <field name="code">SYSCEBNL_ASSOC_CD</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_syscebnl_assoc_cd_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-104</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_syscebnl_assoc_ce" model="account.report.line">
+                                                <field name="name">CE | Revaluation surplus</field>
+                                                <field name="code">SYSCEBNL_ASSOC_CE</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_syscebnl_assoc_ce_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-106</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_syscebnl_assoc_cf" model="account.report.line">
+                                                <field name="name">CF | Reserves</field>
+                                                <field name="code">SYSCEBNL_ASSOC_CF</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_syscebnl_assoc_cf_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-11</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_syscebnl_assoc_cg" model="account.report.line">
+                                                <field name="name">CG | Retained earnings (+ or -)</field>
+                                                <field name="code">SYSCEBNL_ASSOC_CG</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_syscebnl_assoc_cg_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-12</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_syscebnl_assoc_ch" model="account.report.line">
+                                                <field name="name">CH | Net profit for the year (surplus + or deficit -)</field>
+                                                <field name="code">SYSCEBNL_ASSOC_CH</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_syscebnl_assoc_ch_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">aggregation</field>
+                                                        <field name="formula">SYSCEBNL_ASSOC_CH.accounts + SYSCEBNL_ASSOC_CH_UNAFFECTED.balance</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_syscebnl_assoc_ch_accounts" model="account.report.expression">
+                                                        <field name="label">accounts</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-13</field>
+                                                    </record>
+                                                </field>
+                                                <field name="children_ids">
+                                                    <record id="account_financial_report_line_syscebnl_assoc_unaffected" model="account.report.line">
+                                                        <field name="name">Unallocated earnings</field>
+                                                        <field name="code">SYSCEBNL_ASSOC_CH_UNAFFECTED</field>
+                                                        <field name="expression_ids">
+                                                            <record id="account_financial_report_line_syscebnl_assoc_unaffected_balance" model="account.report.expression">
+                                                                <field name="label">balance</field>
+                                                                <field name="engine">aggregation</field>
+                                                                <field name="formula">SYSCEBNL_ASSOC_XE.balance</field>
+                                                                <field name="subformula">cross_report</field>
+                                                                <field name="date_scope">from_beginning</field>
+                                                            </record>
+                                                        </field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_syscebnl_assoc_ci" model="account.report.line">
+                                                <field name="name">CI | Investment grants</field>
+                                                <field name="code">SYSCEBNL_ASSOC_CI</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_syscebnl_assoc_ci_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-14</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_syscebnl_assoc_cj" model="account.report.line">
+                                                <field name="name">CJ | Regulated provisions</field>
+                                                <field name="code">SYSCEBNL_ASSOC_CJ</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_syscebnl_assoc_cj_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-15</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_syscebnl_assoc_cy" model="account.report.line">
+                                        <field name="name">CY | Total restricted and deferred funds</field>
+                                        <field name="code">SYSCEBNL_ASSOC_CY</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_syscebnl_assoc_cy_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">SYSCEBNL_ASSOC_CW.balance + SYSCEBNL_ASSOC_CX.balance</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_syscebnl_assoc_cw" model="account.report.line">
+                                                <field name="name">CW | Restricted funds and funds from gifts and bequests of fixed assets</field>
+                                                <field name="code">SYSCEBNL_ASSOC_CW</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_syscebnl_assoc_cw_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-16</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_syscebnl_assoc_cx" model="account.report.line">
+                                                <field name="name">CX | Deferred funds</field>
+                                                <field name="code">SYSCEBNL_ASSOC_CX</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_syscebnl_assoc_cx_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-17</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_syscebnl_assoc_dd" model="account.report.line">
+                                <field name="name">DD | Total financial debts and similar liabilities</field>
+                                <field name="code">SYSCEBNL_ASSOC_DD</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_dd_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SYSCEBNL_ASSOC_DA.balance + SYSCEBNL_ASSOC_DB.balance + SYSCEBNL_ASSOC_DC.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_da" model="account.report.line">
+                                        <field name="name">DA | Loans and borrowings</field>
+                                        <field name="code">SYSCEBNL_ASSOC_DA</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_syscebnl_assoc_da_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-181 - 182 - 183 - 185 - 186 - 188</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_syscebnl_assoc_db" model="account.report.line">
+                                        <field name="name">DB | Capital lease liabilities</field>
+                                        <field name="code">SYSCEBNL_ASSOC_DB</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_syscebnl_assoc_db_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-187</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_syscebnl_assoc_dc" model="account.report.line">
+                                        <field name="name">DC | Provisions for liabilities and charges</field>
+                                        <field name="code">SYSCEBNL_ASSOC_DC</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_syscebnl_assoc_dc_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-19</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_syscebnl_assoc_dv" model="account.report.line">
+                        <field name="name">DV | Total current liabilities</field>
+                        <field name="code">SYSCEBNL_ASSOC_DV</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_dv_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCEBNL_ASSOC_DF.balance + SYSCEBNL_ASSOC_DG.balance + SYSCEBNL_ASSOC_DH.balance + SYSCEBNL_ASSOC_DI.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_df" model="account.report.line">
+                                <field name="name">DF | Current liabilities HAO</field>
+                                <field name="code">SYSCEBNL_ASSOC_DF</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_df_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-481 - 484 - 4861 - 488 - 4998</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_syscebnl_assoc_dg" model="account.report.line">
+                                <field name="name">DG | Members, customer creditors</field>
+                                <field name="code">SYSCEBNL_ASSOC_DG</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_dg_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-419</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_syscebnl_assoc_dh" model="account.report.line">
+                                <field name="name">DH | Suppliers</field>
+                                <field name="code">SYSCEBNL_ASSOC_DH</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_dh_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-40\(409)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_syscebnl_assoc_di" model="account.report.line">
+                                <field name="name">DI | Other liabilities</field>
+                                <field name="code">SYSCEBNL_ASSOC_DI</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_di_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-42C - 43C - 44C - 45C - 46C - 47\(478,479)C - 499\(4998) - 599</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_syscebnl_assoc_dx" model="account.report.line">
+                        <field name="name">DX | Total cash liabilities</field>
+                        <field name="code">SYSCEBNL_ASSOC_DX</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_dx_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCEBNL_ASSOC_DW.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_dW" model="account.report.line">
+                                <field name="name">DW | Banks, financial institutions and overdrafts</field>
+                                <field name="code">SYSCEBNL_ASSOC_DW</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_syscebnl_assoc_dw_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-56 - 52C - 53C - 55C - 57C - 58C</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_syscebnl_assoc_dy" model="account.report.line">
+                        <field name="name">DY | Currency adjustment - Liabilities</field>
+                        <field name="code">SYSCEBNL_ASSOC_DY</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_syscebnl_assoc_dy_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-479</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="account_financial_report_syscebnl_bilan_assoc_dz" model="account.report.line">
+                <field name="name">DZ | Grand total</field>
+                <field name="code">SYSCEBNL_ASSOC_DZ</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_syscebnl_assoc_dz_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">SYSCEBNL_ASSOC_DE.balance + SYSCEBNL_ASSOC_DV.balance + SYSCEBNL_ASSOC_DX.balance + SYSCEBNL_ASSOC_DY.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

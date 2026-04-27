@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="ir_cron_l10n_uk_hmrc_process_transactions" model="ir.cron">
+        <field name="name">Process all posted transactions</field>
+        <field name="model_id" ref="model_l10n_uk_hmrc_transaction"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_poll_pending_transactions()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="ir_cron_l10n_uk_hmrc_delete_processed_transactions" model="ir.cron">
+        <field name="name">Delete all processed transactions</field>
+        <field name="model_id" ref="model_l10n_uk_hmrc_transaction"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_delete_processed_transactions()</field>
+        <field name="interval_number">30</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="stock_picking_view_map" model="ir.ui.view">
+        <field name="name">stock.picking.view.map</field>
+        <field name="model">stock.picking</field>
+        <field name="arch" type="xml">
+            <map res_partner="partner_id">
+                <field name="scheduled_date" string="Scheduled Date"/>
+                <field name="batch_sequence" string="Sequence"/>
+            </map>
+        </field>
+    </record>
+
+    <record id="stock_picking_action_view_map" model="ir.actions.act_window">
+        <field name="name">Map</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">map</field>
+    </record>
+</odoo>

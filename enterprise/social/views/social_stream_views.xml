@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="action_social_stream" model="ir.actions.act_window">
+        <field name="name">Social Streams</field>
+        <field name="res_model">social.stream</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No Social Streams yet!
+          </p>
+          <p>
+            Go to the <a href="/odoo/action-social.action_social_stream_post">dashboard</a> to link your accounts and start posting.
+          </p>
+        </field>
+    </record>
+
+    <record id="menu_social_stream" model="ir.ui.menu">
+        <field name="action" ref="action_social_stream" />
+    </record>
+
+    <record id="social_stream_view_tree" model="ir.ui.view">
+        <field name="name">social.stream.view.list</field>
+        <field name="model">social.stream</field>
+        <field name="arch" type="xml">
+            <list create="0">
+                <field name="media_id" />
+                <field name="name" />
+                <field name="stream_type_id" />
+                <field name="create_uid" widget="many2one_avatar_user"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="social_stream_view_form" model="ir.ui.view">
+        <field name="name">social.stream.view.form</field>
+        <field name="model">social.stream</field>
+        <field name="arch" type="xml">
+            <form string="Social Stream">
+                <sheet>
+                    <group>
+                        <group name="social_stream_global">
+                            <field name="media_id" invisible="1" />
+                            <field name="account_id" widget="radio"
+                                readonly="1"
+                                domain="[('media_id', '=', media_id)]"
+                                options="{'no_create': True, 'no_open': True}" />
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="stream_type_type" invisible="1" />
+                            <field name="stream_type_id"
+                                widget="radio"
+                                domain="[('media_id', '=', media_id)]"
+                                options="{'no_create': True, 'no_open': True}"
+                                required="1"
+                                readonly="id" />
+                            <field name="name" invisible="not id" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="social_stream_view_form_wizard" model="ir.ui.view">
+        <field name="name">social.stream.view.form.wizard</field>
+        <field name="model">social.stream</field>
+        <field name="mode">primary</field>
+        <field name="priority">24</field>
+        <field name="inherit_id" ref="social_stream_view_form"/>
+        <field name="arch" type="xml">
+            <!--Remove the radio widget as the account on which user want to add the stream has already been selected -->
+            <xpath expr="//field[@name='account_id']" position="attributes">
+                <attribute name="widget"></attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="social_stream_view_search" model="ir.ui.view">
+        <field name="name">social.stream.view.search</field>
+        <field name="model">social.stream</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <group expand="1" string="Group By">
+                    <filter string="Company" name="filter_company_id" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</data>
+</odoo>

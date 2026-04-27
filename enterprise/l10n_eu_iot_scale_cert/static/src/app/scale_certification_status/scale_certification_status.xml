@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<templates>
+    <t t-name="pos_iot.ScaleCertificationStatus">
+        <button
+            class="btn btn-light btn-lg lh-lg"
+            t-on-click="openDialog"
+            t-att-title="pos.isCertified ? 'This Point of Sale is EU Certified for weighing scales.' : 'This Point of Sale is uncertified for weighing scales.'"
+        >
+            <i class="fa fa-fw fa-lg fa-balance-scale" t-att-class="{'text-success': pos.isCertified, 'text-danger': !pos.isCertified}"/>
+        </button>
+    </t>
+</templates>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="l10n_be_hr_contract_salary.BinaryContractFile" t-inherit="web.BinaryField" t-inherit-mode="primary">
+        <xpath expr="//button[hasclass('o_clear_file_button')]" position="attributes">
+            <attribute name="style">color:red</attribute>
+            <attribute name="t-on-click">onFileDelete</attribute>
+        </xpath>
+        <xpath expr="//label[hasclass('o_select_file_button')]" position="attributes">
+            <attribute name="class" remove="btn-primary" add="btn-secondary" separator=" " />
+        </xpath>
+    </t>
+
+</templates>

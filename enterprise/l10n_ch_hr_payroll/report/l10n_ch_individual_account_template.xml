@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_individual_account">
+            <t t-call="web.html_container" t-if="report_data">
+                <t t-set="company" t-value="report_data.get('company')"/>
+                <t t-call="web.external_layout_standard">
+                    <div t-if="company" class="page">
+                        <h2>
+                            <span>Individual Account Report for year </span><t t-esc="report_data['year']"/>
+                        </h2>
+                        <br/>
+                        <tbody>
+                            <table class="o_ignore_layout_styling table table-sm table-bordered">
+                                <tr>
+                                    <td><strong>Company Information</strong></td>
+                                    <td>
+                                        <div><span t-field="report_data['company'].name"/></div>
+                                        <div><span t-field="report_data['company'].street"/></div>
+                                        <div><span t-field="report_data['company'].street2" t-if="report_data['company'].street2"/></div>
+                                        <div>
+                                            <span t-field="report_data['company'].city"/>
+                                            <span t-field="report_data['company'].state_id"/>
+                                            <span t-field="report_data['company'].zip"/>
+                                        </div>
+                                        <div><span t-field="report_data['company'].country_id"/></div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table t-if="employee" class="o_ignore_layout_styling table table-sm table-bordered">
+                                <tr>
+                                    <td><strong>Name</strong></td>
+                                    <td><span t-field="employee.name"/></td>
+                                    <td><strong>Designation</strong></td>
+                                    <td><span t-field="employee.job_id"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Address</strong></td>
+                                    <td colspan="3">
+                                        <span class="w-100 d-block">
+                                            <t t-esc="employee.private_street"/><br/>
+                                            <t t-if="employee.private_street2">
+                                                <t t-esc="employee.private_street"/><br/>
+                                            </t>
+                                            <t t-esc="employee.private_zip"/> <t t-esc="employee.private_city"/><br/>
+                                            <t t-esc="employee.private_country_id.name"/><br/>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Email</strong></td>
+                                    <td><span t-field="employee.work_email"/></td>
+                                    <td><strong>Identification No</strong></td>
+                                    <td><span t-field="employee.identification_id"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Bank Account</strong></td>
+                                    <td><span t-field="employee.bank_account_id"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Registration Number</strong></td>
+                                    <td><span t-field="employee.registration_number"/></td>
+                                </tr>
+                            </table>
+                            <table class="o_ignore_layout_styling table table-bordered table-sm">
+                                <thead><tr>
+                                    <th class="text-center">Code</th>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">JAN</th>
+                                    <th class="text-center">FEB</th>
+                                    <th class="text-center">MAR</th>
+                                    <th class="text-center">APR</th>
+                                    <th class="text-center">MAY</th>
+                                    <th class="text-center">JUN</th>
+                                    <th class="text-center">JUL</th>
+                                    <th class="text-center">AUG</th>
+                                    <th class="text-center">SEP</th>
+                                    <th class="text-center">OCT</th>
+                                    <th class="text-center">NOV</th>
+                                    <th class="text-center">DEC</th>
+                                    <th class="text-center">Total Year</th>
+                                </tr></thead>
+                                <tr>
+                                    <td><strong>Salary Computation</strong></td>
+                                    <td colspan="12"/>
+                                </tr>
+                                <tr t-foreach="report_data['rules']" t-as="rule">
+                                    <td t-esc="rule.l10n_ch_code"/>
+                                    <t t-set="value" t-value="report_data['rules'][rule]['month']"/>
+                                    <t t-set="name" t-value="False"/>
+
+                                    <t t-foreach="[0,1,2,3,4,5,6,7,8,9,10,11]" t-as="c">
+                                        <t t-if="value[c]['name'] != False">
+                                            <t t-set="name" t-value="value[c]['name']"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="name != False">
+                                        <td t-esc="name"/>
+                                        <t t-foreach="[0,1,2,3,4,5,6,7,8,9,10,11]" t-as="m">
+                                            <t t-if="value[m]['total'] != 0">
+                                                <td class="text-end"><t t-esc="round(value[m]['total'], 2)"/></td>
+                                            </t>
+                                            <t t-else="">
+                                                <td class="text-center">/</td>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    <t t-set="value_y" t-value="report_data['rules'][rule]['year']"/>
+                                    <t t-if="value_y['total'] != 0">
+                                        <td class="text-end"><t t-esc="round(value_y['total'], 2)"/></td>
+                                    </t>
+                                    <t t-else="">
+                                        <td class="text-center">/</td>
+                                    </t>
+                                </tr>
+                            </table>
+                        </tbody>
+                    </div>
+                    <p style="page-break-before:always;"></p>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

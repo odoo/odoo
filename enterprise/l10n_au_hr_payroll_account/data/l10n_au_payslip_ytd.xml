@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="l10n_au_payslip_ytd_export_template" model="ir.exports">
+            <field name="name">Opening Balances</field>
+            <field name="resource">l10n_au.payslip.ytd</field>
+        </record>
+
+        <record id="l10n_au_payslip_ytd_export_template_line__employee" model="ir.exports.line">
+            <field name="export_id" ref="l10n_au_payslip_ytd_export_template"/>
+            <field name="name">employee_id</field>
+        </record>
+        <record id="l10n_au_payslip_ytd_export_template_line__start_date" model="ir.exports.line">
+            <field name="export_id" ref="l10n_au_payslip_ytd_export_template"/>
+            <field name="name">start_date</field>
+        </record>
+        <record id="l10n_au_payslip_ytd_export_template_line__rule_id" model="ir.exports.line">
+            <field name="export_id" ref="l10n_au_payslip_ytd_export_template"/>
+            <field name="name">rule_id</field>
+        </record>
+        <record id="l10n_au_payslip_ytd_export_template_line__l10n_au_payslip_ytd_input_ids__id" model="ir.exports.line">
+            <field name="export_id" ref="l10n_au_payslip_ytd_export_template"/>
+            <field name="name">l10n_au_payslip_ytd_input_ids/id</field>
+        </record>
+        <record id="l10n_au_payslip_ytd_export_template_line__l10n_au_payslip_ytd_input_ids__name" model="ir.exports.line">
+            <field name="export_id" ref="l10n_au_payslip_ytd_export_template"/>
+            <field name="name">l10n_au_payslip_ytd_input_ids/name</field>
+        </record>
+        <record id="l10n_au_payslip_ytd_export_template_line__l10n_au_payslip_ytd_input_ids__ytd_amount" model="ir.exports.line">
+            <field name="export_id" ref="l10n_au_payslip_ytd_export_template"/>
+            <field name="name">l10n_au_payslip_ytd_input_ids/ytd_amount</field>
+        </record>
+        <record id="l10n_au_payslip_ytd_export_template_line__start_value" model="ir.exports.line">
+            <field name="export_id" ref="l10n_au_payslip_ytd_export_template"/>
+            <field name="name">start_value</field>
+        </record>
+
+    </data>
+</odoo>

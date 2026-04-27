@@ -1,0 +1,116 @@
+.o_web_studio_icon_container {
+    &:after {
+        @include o-position-absolute(6px, auto, auto , 7px);
+        background-image: url('/web_studio/static/src/img/ui/studio_icons.png');
+        background-size: 20px auto;
+        background-repeat: no-repeat;
+        content: "";
+        width: 20px;
+        height: 20px;
+        filter: invert($o-web-studio-icon-invert);
+    }
+    &.o_web_studio_field_binary:after {
+        background-position: 0 0;
+    }
+    &.o_web_studio_field_boolean:after {
+        background-position: 0 -20px;
+    }
+    &.o_web_studio_field_char:after {
+        background-position: 0 -40px;
+    }
+    &.o_web_studio_field_columns:after {
+        background-position: 0 -60px;
+    }
+    &.o_web_studio_field_date:after {
+        background-position: 0 -80px;
+    }
+    &.o_web_studio_field_datetime:after {
+        background-position: 0 -100px;
+    }
+    &.o_web_studio_field_float:after {
+        background-position: 0 -120px;
+    }
+    &.o_web_studio_field_html:after {
+        background-position: 0 -140px;
+    }
+    &.o_web_studio_field_picture:after {
+        background-position: 0 -160px;
+    }
+    &.o_web_studio_field_integer:after {
+        background-position: 0 -180px;
+    }
+    &.o_web_studio_field_many2many:after {
+        background-position: 0 -200px;
+    }
+    &.o_web_studio_field_many2one:after {
+        background-position: 0 -220px;
+    }
+    &.o_web_studio_field_monetary:after {
+        background-position: 0 -240px;
+    }
+    &.o_web_studio_field_one2many:after {
+        background-position: 0 -260px;
+    }
+    &.o_web_studio_field_selection:after {
+        background-position: 0 -280px;
+    }
+    &.o_web_studio_field_tabs:after {
+        background-position: 0 -300px;
+    }
+    &.o_web_studio_field_tags:after {
+        background-position: 0 -320px;
+    }
+    &.o_web_studio_field_text:after {
+        background-position: 0 -340px;
+    }
+    &.o_web_studio_filter_separator:after {
+        background-position: 0 -360px;
+    }
+    &.o_web_studio_field_priority:after {
+        background-position: 0 -380px;
+    }
+    &.o_web_studio_field_related:after {
+        background-position: 0 -400px;
+    }
+    &.o_web_studio_filter:after {
+        background-position: 0 -420px;
+    }
+    &.o_web_studio_field_signature:after {
+        background-position: 0 -440px;
+    }
+    &.o_web_studio_field_lines:after {
+        background-position: 0 -460px;
+    }
+    &.o_web_studio_field_aside:after {
+        background-position: 0 -480px;
+    }
+    &.o_web_studio_field_footer:after {
+        background-position: 0 -500px;
+    }
+    &.o_web_studio_field_ribbon:after {
+        background-position: 0 -520px;
+    }
+    &.o_web_studio_field_menu:after {
+        background-position: 0 -540px;
+    }
+    &.o_web_studio_field_color_picker:after {
+        background-position: 0 -560px;
+    }
+}
+
+.o_web_studio_component {
+    padding-left: 40px;
+    width: 49%;
+    font: 11px/2.4 $font-family-base;
+    background: linear-gradient(90deg, $o-web-studio-bg-light 33px, transparent 33px);
+    &:hover {
+        background-color: $white;
+        &:before {
+            background: $o-web-studio-bg-light;
+        }
+    }
+    &.o_web_studio_debug:not(.ui-draggable-helper) {
+        height: 40px;
+        line-height: 1.9;
+    }
+}

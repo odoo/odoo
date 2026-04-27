@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp_workorder.MrpWorkcenterDialog">
+        <Dialog size="'md'" title="props.title" modalRef="modalRef">
+                <div class="o_mrp_workcenter_dialog w-100">
+                    <t t-foreach="workcenters" t-as="workcenter" t-key="workcenter.id">
+                        <div class="form-check py-2 fs-3 pointer-cursor" t-on-click="() => this.selectWorkcenter(workcenter)">
+                            <input t-att-type="props.radioMode ? 'radio' : 'checkbox'" t-att-name="workcenter.display_name" class="form-check-input" t-att-checked="active"/>
+                            <label class="form-check-label">
+                                <t t-out="workcenter.display_name"/>
+                            </label>
+                        </div>
+                    </t>
+                    <t t-set-slot="footer">
+                        <button class="btn btn-primary" t-att-class="{'disabled': props.radioMode &amp;&amp; !state.activeWorkcenters.length}" t-on-click="confirm">Confirm</button>
+                        <a t-if="!isDisplayStandalone &amp;&amp; !props.radioMode" class="btn btn-secondary" t-attf-href="/scoped_app?app_id=mrp_shop_floor&amp;path=scoped_app/shop-floor&amp;app_name={{appName}}" target="_blank">Install App</a>
+                    </t>
+                </div>
+        </Dialog>
+    </t>
+</templates>

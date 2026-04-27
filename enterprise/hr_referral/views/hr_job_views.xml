@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_hr_job_employee_referral_kanban" model="ir.ui.view">
+        <field name="name">hr.job.employee.referral.kanban</field>
+        <field name="model">hr.job</field>
+        <field name="arch" type="xml">
+            <kanban create="false" can_open="0" class="o_kanban_referral_job" js_class="referral_kanban">
+                <field name="website_url"/>
+                <templates>
+                    <t t-name="card" class="px-3">
+                        <field name="name" class="fw-bold fs-4"/>
+                        <div class="d-flex align-items-start flex-row border-bottom pb-2 justify-content-between">
+                            <div class="mt-2 h6 flex-grow-1">
+                                <field name="no_of_recruitment"/>
+                                <t t-if="record.no_of_recruitment.raw_value > 1">
+                                    Open Positions
+                                </t>
+                                <t t-else="">
+                                    Open Position
+                                </t>
+                            </div>
+                            <div class="d-flex align-items-center flex-grow-0 mt-1">
+                                <img src="/hr_referral/static/src/img/points.svg" class="me-2" height="20px" alt="Points icon"/>
+                                <span class="text-nowrap"><field name="max_points"/> Points</span>
+                            </div>
+                        </div>
+                        <field name="description" class="text-muted pb-2 mt-2"/>
+                        <div class="d-flex flex-column mt-auto">
+                            <div class="o_button_referral d-flex gap-1">
+                                <a  role="button"
+                                    name="%(hr_referral_send_mail_action)d"
+                                    type="action"
+                                    class="btn btn-secondary w-25 flex-shrink-1">
+                                    <i  class="fa fa-2x fa-envelope-o"
+                                        role="img"
+                                        aria-label="Send by Mail"/>
+                                    <br/>
+                                    <span title='Send by Mail'>Send Email</span>
+                                </a>
+                                <a  role="button"
+                                    name="%(hr_referral_send_sms_action)d"
+                                    type="action"
+                                    class="btn btn-secondary w-25 flex-shrink-1">
+                                    <i  class="fa fa-2x fa-mobile"
+                                        role="img"
+                                        aria-label="Send by SMS"/>
+                                    <br/>
+                                    <span title='Send by SMS'>Send SMS</span>
+                                </a>
+                                <a  role="button"
+                                    t-attf-href="#{record.website_url.raw_value}"
+                                    target="_blank"
+                                    class="btn btn-secondary w-25 flex-shrink-1 o_hr_referral_job_url">
+                                    <i  class="fa fa-2x fa-globe"
+                                        role="img"
+                                        aria-label="Job Page"/>
+                                    <br/>
+                                    <span title='More info'>Job Page</span>
+                                </a>
+                                <!-- Empty div to ensure the shrinking without the presence of a 4th button -->
+                                <div class="w-25 flex-shrink-1"/>
+                            </div>
+                            <div class="o_to_share d-flex gap-1">
+                                <field  name="id" widget="CopyClipboardReferralButton" class="w-25 flex-shrink-1"/>
+                                <a role="button" name="action_share_external" type="object" class="btn btn-secondary w-25 flex-shrink-1" context="{'default_channel': 'facebook'}">
+                                    <span title="Share on Facebook">
+                                        <i class="fa fa-lg fa-facebook" role="img" aria-label="Share on facebook"/>
+                                    </span>
+                                    <span class="d-block mt-2 text-primary">
+                                        <t t-if="record.facebook_clicks &gt; 0"><field name="facebook_clicks"/> click(s)</t>
+                                        <t t-else="">Share Now</t>
+                                    </span>
+                                </a>
+                                <a role="button" name="action_share_external" type="object" class="btn btn-secondary w-25 flex-shrink-1" context="{'default_channel': 'twitter'}">
+                                    <span title="Share on Twitter">
+                                        <i class="fa fa-lg fa-twitter" role="img" aria-label="Share on twitter"/>
+                                    </span>
+                                    <span class="d-block mt-2 text-primary">
+                                        <t t-if="record.twitter_clicks &gt; 0"><field name="twitter_clicks"/> click(s)</t>
+                                        <t t-else="">Share Now</t>
+                                    </span>
+                                </a>
+                                <a role="button" name="action_share_external" type="object" class="btn btn-secondary w-25 flex-shrink-1" context="{'default_channel': 'linkedin'}">
+                                    <span title="Share on Linkedin">
+                                        <i class="fa fa-lg fa-linkedin" role="img" aria-label="Share on linkedin"/>
+                                    </span>
+                                    <span class="d-block mt-2 text-primary">
+                                        <t t-if="record.linkedin_clicks &gt; 0"><field name="linkedin_clicks"/> click(s)</t>
+                                        <t t-else="">Share Now</t>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_hr_job_kanban_inherit_referral" model="ir.ui.view">
+        <field name="name">hr.job.kanban.referral</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='menu_new_applications']" position="after">
+                <div role="menuitem" groups="hr_recruitment.group_hr_recruitment_manager">
+                    <a name="action_referral_campaign" type="object" title="Referral Campaign">Referral Campaign</a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_job_filter_referral" model="ir.ui.view">
+        <field name="name">hr.referral.job.search</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="website_hr_recruitment.hr_job_search_view_inherit"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='published']" position="replace"/>
+            <xpath expr="//separator[@name='published_separator']" position="replace"/>
+            <xpath expr="//filter[@name='groupby_published']" position="replace"/>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_hr_job_employee_referral">
+        <field name="name">Job Positions</field>
+        <field name="res_model">hr.job</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="hr_referral.view_hr_job_employee_referral_kanban"/>
+        <field name="search_view_id" ref="hr_referral.view_job_filter_referral"/>
+        <field name="domain">[('is_published', '=', True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_referral_job_kanban">
+                No job positions are available to share.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_hr_job_launch_referral_campaign" model="ir.actions.server">
+        <field name="name">Referral Campaign</field>
+        <field name="model_id" ref="model_hr_job"/>
+        <field name="binding_model_id" ref="model_hr_job"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="groups_id" eval="[(4, ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
+        <field name="code">
+            action = records.action_referral_campaign()
+        </field>
+    </record>
+</odoo>

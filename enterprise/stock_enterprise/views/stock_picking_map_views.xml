@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_map_view" model="ir.ui.view">
+        <field name="name">stock.picking.view.map</field>
+        <field name="model">stock.picking</field>
+        <field name="priority" eval="3"/>
+        <field name="arch" type="xml">
+            <map res_partner="partner_id" hide_address="1" js_class="stock_map">
+                <field name="name" string="Reference"/>
+                <field name="scheduled_date" string="Scheduled Date"/>
+            </map>
+        </field>
+    </record>
+
+    <record id="stock.action_picking_tree_waiting" model="ir.actions.act_window">
+        <field name="view_mode">list,kanban,form,calendar,map</field>
+    </record>
+    
+    <record id="stock.action_picking_tree_all" model="ir.actions.act_window">
+        <field name="view_mode">list,kanban,form,calendar,map</field>
+    </record>
+
+    <record id="stock.action_picking_tree_late" model="ir.actions.act_window">
+        <field name="view_mode">list,kanban,form,calendar,map</field>
+    </record>
+
+    <record id="stock.stock_picking_action_picking_type" model="ir.actions.act_window">
+        <field name="view_mode">list,kanban,form,calendar,map</field>
+    </record>
+
+    <record id="stock.action_picking_tree_ready" model="ir.actions.act_window">
+        <field name="view_mode">list,kanban,form,calendar,map</field>
+    </record>
+</odoo>

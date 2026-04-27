@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="marketing_activity_view_form" model="ir.ui.view">
+        <field name="name">marketing.activity.view.form</field>
+        <field name="model">marketing.activity</field>
+        <field name="inherit_id" ref="marketing_automation.marketing_activity_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='mass_mailing_id']" position="after">
+                <div invisible="not whatsapp_error"
+                    class="oe_clear oe_edit_only o_ma_text_error"
+                    style="font-size:100%">
+                    Make sure you select url tracking under buttons option, otherwise those links won't be tracked
+                </div>
+                <separator invisible="not whatsapp_error"> </separator>
+            </xpath>
+
+            <xpath expr="//label[@for='mass_mailing_id']" position="after">
+                <field name="whatsapp_template_id" domain="[('model', '=', model_name), ('status', '=', 'approved')]" 
+                invisible="activity_type != 'whatsapp'" placeholder="Pick a Template..." context="{'default_model_id': model_id}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

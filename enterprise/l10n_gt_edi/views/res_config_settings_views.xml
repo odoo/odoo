@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_form_inherit_l10n_gt_edi" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n_gt_edi</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='invoicing_settings']" position="after">
+                <block id="l10n_gt_edi_settings"
+                       title="Guatemala Localization"
+                       invisible="country_code != 'GT'">
+
+                    <setting id="l10n_gt_edi_service_provider"
+                             company_dependent="1"
+                             help="Select the environment for the Guatemalan webservice. Demo or test mode should NOT be used in production."
+                             invisible="not l10n_gt_edi_is_root_company"
+                             string="Web Services">
+                        <field name="l10n_gt_edi_service_provider"
+                               class="o_light_label mt16"
+                               required="country_code == 'GT' and l10n_gt_edi_is_root_company"
+                               widget="radio"/>
+                    </setting>
+
+                    <setting id="l10n_gt_edi_ws_credentials"
+                             company_dependent="1"
+                             help="Get your credentials from Infile and enter them here to connect and generate electronic invoices."
+                             invisible="not (l10n_gt_edi_is_root_company and l10n_gt_edi_service_provider in ('test', 'production'))"
+                             string="Infile Credentials">
+                        <div class="row">
+                            <label class="col-lg-6 o_light_label" for="l10n_gt_edi_ws_prefix"/>
+                            <field name="l10n_gt_edi_ws_prefix" required="l10n_gt_edi_service_provider in ('test', 'production')"/>
+                        </div>
+                        <div class="row">
+                            <label class="col-lg-6 o_light_label" for="l10n_gt_edi_infile_token"/>
+                            <field name="l10n_gt_edi_infile_token" password="True" required="l10n_gt_edi_service_provider in ('test', 'production')"/>
+                        </div>
+                        <div class="row">
+                            <label class="col-lg-6 o_light_label" for="l10n_gt_edi_infile_key"/>
+                            <field name="l10n_gt_edi_infile_key" password="True" required="l10n_gt_edi_service_provider in ('test', 'production')"/>
+                        </div>
+                    </setting>
+
+                    <div invisible="l10n_gt_edi_is_root_company">
+                        Please configure your Infile credentials from the root company.
+                    </div>
+
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

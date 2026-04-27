@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="l10n_ar_reports.L10nArReportsFilterTaxType">
+        <Dropdown>
+            <button class="btn btn-secondary">
+                <span class="fa fa-filter me-1"/>Tax Type: <t t-out="selectedTaxType"/>
+            </button>
+
+            <t t-set-slot="content">
+                <t t-foreach="Object.entries(controller.options.ar_vat_book_tax_types_available)" t-as="taxType" t-key="taxType[0]">
+                    <DropdownItem
+                        class="{ 'selected': taxType[1]['selected'] }"
+                        onSelected="() => this.selectArVatBookTaxType(taxType[0])"
+                        closingMode="'none'"
+                    >
+                        <t t-esc="taxType[1]['name']"/>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

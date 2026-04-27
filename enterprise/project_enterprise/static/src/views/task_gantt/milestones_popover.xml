@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="project_enterprise.MilestonesPopover">
+        <div class="popover-body">
+            <ul class="mb-0 list-unstyled">
+                <li t-foreach="Object.values(props.projects)" t-as="project" t-key="project.id">
+                    <t t-if="props.displayProjectName">
+                        <div><u><t t-out="project.name"/></u></div>
+                    </t>
+                    <em t-if="project.isStartDate">Project start</em>
+                    <em t-if="project.isDeadline">Project due</em>
+                    <ul class="mb-0 list-unstyled">
+                        <li t-foreach="project.milestones" t-as="milestone" t-key="milestone_index">
+                            <t t-if="milestone.is_deadline_exceeded">
+                                <i t-attf-class="fa fa-square-o fa-fw text-start o_unreached_milestones"></i>
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-fw text-start" t-attf-class="{{milestone.is_reached ? 'fa-check-square-o o_milestones_reached' : 'fa-square-o'}}"></i>
+                            </t>
+                            <strong><t t-out="milestone.name"/></strong>
+                            <span t-if="props.displayMilestoneDates"><br/><t t-out="getDeadline(milestone)"/></span>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </t>
+
+</templates>

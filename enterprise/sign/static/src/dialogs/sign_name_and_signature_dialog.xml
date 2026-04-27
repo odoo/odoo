@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="sign.SignNameAndSignatureDialog">
+        <Dialog t-props="dialogProps">
+            <SignNameAndSignature t-props="nameAndSignatureProps"/>
+            <div class="mt16 small">
+                By clicking Adopt &amp; Sign, I agree that the chosen signature/initials will be a valid electronic representation of my hand-written signature/initials for all purposes when it is used on documents, including legally binding contracts.
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-if="props.onConfirmAll" t-on-click="props.onConfirmAll" t-att-disabled="footerState.signAllButtonsDisabled">Sign all</button>
+                <button class="btn btn-secondary" t-on-click="props.onConfirm" t-att-disabled="footerState.signButtonDisabled">Sign</button>
+                <button class="btn btn-secondary" t-on-click="props.close">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+
+    <t t-name="sign.NameAndSignature" t-inherit="web.NameAndSignature" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('division')]" position="after">
+            <div t-attf-class="col-auto form-check btn border-0 {{ showFrameCheck ? '' : 'd-none'}}">
+                <input type="checkbox" t-attf-class="o_web_frame_button form-check-input" id="switchFrame" t-att-checked="state.activeFrame" t-on-change="onFrameChange"/>
+                <label class="form-check-label" for="switchFrame" data-tooltip="Include a visual security frame around your signature">Frame</label>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_signature_stroke')]" position="before">
+            <div t-attf-class="o_sign_frame {{ signFrameClass }}" t-ref="signFrame">
+                <p t-att-hash="props.hash" t-attf-sign_label="Signed with Odoo Sign"/>
+            </div>
+        </xpath>
+        <xpath expr="//canvas[hasclass('o_web_sign_signature')]" position="attributes">
+            <attribute name="t-on-click">onSignatureAreaClick</attribute>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_report_async_export_tree" model="ir.ui.view">
+        <field name="name">account.report.async.export.view.list</field>
+        <field name="model">account.report.async.export</field>
+        <field name="arch" type="xml">
+            <list string="Reports">
+                <field name="name"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="state"
+                       widget="badge"
+                       decoration-danger="state == 'rejected'"
+                       decoration-success="state == 'accepted'"
+                       decoration-info="state in ('to_send', 'sent')"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_account_report_async_export_form" model="ir.ui.view">
+        <field name="name">account.report.async.export.view.form</field>
+        <field name="model">account.report.async.export</field>
+        <field name="arch" type="xml">
+            <form string="VAT Report">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="sent,accepted"/>
+                </header>
+                <div class="alert alert-info" role="alert"
+                     invisible="state in ['accepted', 'rejected']">
+                    <div>This export will be processed asynchronously</div>
+                    <button name="button_process_report" type="object" class="oe_link" string="Process now"/>
+                </div>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="date_from" readonly="1"/>
+                            <field name="date_to" readonly="1"/>
+                            <field name="recipient"/>
+                            <field name="state" readonly="1"/>
+                            <field name="attachment_ids" widget="many2many_binary" readonly="1"/>
+                            <field name="message" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_account_report_async_export_search" model="ir.ui.view">
+        <field name="name">account.report.async.export.search</field>
+        <field name="model">account.report.async.export</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Rejected" name="state_rejected" domain="[('state', '=', 'rejected')]"/>
+                <filter string="To send" name="state_to_send" domain="[('state', '=', 'to_send')]"/>
+                <filter string="Sent" name="state_sent" domain="[('state', '=', 'sent')]"/>
+                <filter string="Accepted" name="state_accepted" domain="[('state', '=', 'accepted')]"/>
+                <group string="Group By">
+                    <filter string="State" name="state" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_account_report_async_export" model="ir.actions.act_window">
+        <field name="name">EDI exports</field>
+        <field name="res_model">account.report.async.export</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_account_report_async_export_tree"/>
+    </record>
+
+    <menuitem id="menu_action_account_report_async_export"
+              name="EDI exports"
+              parent="account.account_reports_legal_statements_menu"
+              action="l10n_fr_reports.action_account_report_async_export"
+              sequence="60"/>
+</odoo>

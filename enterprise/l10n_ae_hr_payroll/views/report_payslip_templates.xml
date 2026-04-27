@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="report_payslip_ae" inherit_id="hr_payroll.report_payslip" primary="True">
+        <xpath expr="//h2[@id='payslip_name']" position="attributes">
+            <attribute name="class" separator=" " add="d-none" />
+        </xpath>
+        <xpath expr="//h2[@id='payslip_name']" position="after">
+            <t t-set="eos"
+                t-value="o.employee_id.departure_reason_id and o.employee_id.departure_date" />
+            <t t-if="eos">
+                <h2 id="payslip_name_new">
+                    <span
+                        t-out="'End of Service Slip - ' + o.employee_id.name + ' - ' + o.date_from.strftime('%B %Y')" />
+                </h2>
+            </t>
+            <t t-else="">
+                <h2 id="payslip_name_new">
+                    <span t-field="o.name">August 2023 Payslip</span>
+                </h2>
+            </t>
+        </xpath>
+
+        <div id="employee_marital" position="attributes">
+            <attribute name="class" separator=" " add="d-none" />
+        </div>
+
+        <div id="pay_period" position="attributes">
+            <attribute name="class" separator=" " add="d-none" />
+        </div>
+        <div id="pay_period"
+            position="after">
+            <div id="pay_period_ae">
+                <strong class="me-2">Pay Period:</strong>
+                <span t-if="o.date_from &lt; o.contract_id.date_start"
+                    t-field="o.contract_id.date_start" t-options='{"format": "MMM-yy"}'>Start
+                    Date</span>
+                <span t-else="" t-field="o.date_from" t-options='{"format": "MMM-yy"}'>From</span>
+            </div>
+        </div>
+
+        <div id="contract_start" position="attributes">
+            <attribute name="class" separator=" " add="d-none" />
+        </div>
+        <div
+            id="contract_start" position="after">
+            <div id="contract_start_ae">
+                <strong class="me-2">
+                    <span t-if="eos">First Contract Date:</span>
+                    <span t-else="">Contract Start Date:</span>
+                </strong>
+                <span t-if="eos" t-field="o.employee_id.first_contract_date" />
+                <span t-else="" t-field="o.employee_id.contract_id.date_start" />
+            </div>
+        </div>
+
+        <div id="contract_type" position="attributes">
+            <attribute name="class" separator=" " add="d-none" />
+        </div> 
+        <div id="contract_type" position="after">
+            <div id="contract_end_ae" t-if="o.employee_id.contract_id.date_end">
+                <strong class="me-2">Contract End Date:</strong>
+                <span t-field="o.employee_id.contract_id.date_end" />
+            </div>
+        </div>
+
+        <div id="working_schedule" position="attributes">
+            <attribute name="class" separator=" " add="d-none" />
+        </div>
+        <div id="working_schedule" position="after">
+            <div id="working_schedule_ae">
+                <strong class="me-2">
+                    <span t-if="eos">Years Worked:</span>
+                    <span t-else="">Working Schedule:</span>
+                </strong>
+                <span t-if="eos" t-out="round(o.employee_id._l10n_ae_get_worked_years(), 2)"/>
+                <span t-else="" t-field="o.employee_id.contract_id.hours_per_week" />
+            </div>
+            <div>
+                <strong t-if="eos" class="me-2">
+                    <span>Unpaid Days:</span>
+                </strong>
+                <span t-if="eos" t-out="round(o.employee_id.l10n_ae_total_unpaid_days, 2)" />
+            </div>
+        </div>
+
+        <td id="worked_days_amount" position="attributes">
+            <attribute name="class" separator=" " add="d-none" />
+        </td>
+        <td id="worked_days_amount" position="after">
+            <td />
+        </td>
+    </template>
+
+    <template id="report_payslip_ae_lang">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="o" t-value="o.with_context(lang=o.employee_id.lang or o.env.lang)"/>
+                <t t-call="l10n_ae_hr_payroll.report_payslip_ae" t-lang="o.env.lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>

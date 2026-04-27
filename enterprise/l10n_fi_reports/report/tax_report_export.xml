@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- First line starting directly to avoid empty line when generated-->
+        <template id="l10n_fi_reports.tax_report_export"><t t-translation="off">000:VSRALVKV
+198:<t t-esc="data['timestamp']"/>
+048:Odoo
+014:0000000-0
+010:<t t-esc="data['business_id']"/>
+050:<t t-esc="data['tax_period_length']"/>
+<t t-if="data['tax_period_length'] != 'V'">
+052:<t t-esc="data['tax_period']"/>
+</t>
+053:<t t-esc="data['tax_period_year']"/>
+042:<t t-esc="data['contact_phone_number']"/>
+<t t-if="data['has_no_activity']">
+056:1
+</t>
+<t t-else="">
+301:<t t-esc="data['sale_25_5_and_24']"/>
+302:<t t-esc="data['sale_14']"/>
+303:<t t-esc="data['sale_10']"/>
+304:<t t-esc="data['goods_no_eu']"/>
+305:<t t-esc="data['goods_eu']"/>
+306:<t t-esc="data['service_eu']"/>
+307:<t t-esc="data['deductible']"/>
+308:<t t-esc="data['payable_refundable_tax']"/>
+309:<t t-esc="data['sales_O_vat_rate']"/>
+310:<t t-esc="data['base_goods_no_eu']"/>
+311:<t t-esc="data['base_goods_eu']"/>
+312:<t t-esc="data['base_services_eu']"/>
+313:<t t-esc="data['purchases_base_goods_eu']"/>
+314:<t t-esc="data['purchases_base_services_eu']"/>
+<t t-if="data.get('is_cash_basis')">
+337:1
+</t>
+318:<t t-esc="data['construct']"/>
+319:<t t-esc="data['base_construct']"/>
+320:<t t-esc="data['base_purchase_construct']"/>
+</t>
+999:1</t>
+        </template>
+    </data>
+</odoo>

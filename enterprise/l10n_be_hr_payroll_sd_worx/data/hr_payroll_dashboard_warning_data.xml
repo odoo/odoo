@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="hr_payroll_dashboard_warning_missing_sdworx_code_companies" model="hr.payroll.dashboard.warning">
+            <field name="name">Companies without SD Worx Code</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="evaluation_code">
+missing_code_companies = self.env['res.company'].search([
+    ('partner_id.country_code', '=', 'BE'),
+    ('sdworx_code', '=', False)
+])
+
+if missing_code_companies:
+    warning_count = len(missing_code_companies)
+    warning_records = missing_code_companies
+            </field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_missing_sdworx_code_wet" model="hr.payroll.dashboard.warning">
+            <field name="name">Work Entry Types without SD Worx Code</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="evaluation_code">
+missing_code_work_types = self.env['hr.work.entry.type'].search([
+    ('active', '=', True),
+    ('sdworx_code', '=', False)
+])
+
+if missing_code_work_types:
+    warning_count = len(missing_code_work_types)
+    warning_records = missing_code_work_types
+            </field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_missing_sdworx_code_contracts" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees without SD Worx Code</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="evaluation_code">
+belgian_companies = self.env['res.company'].search([('partner_id.country_code', '=', 'BE')])
+missing_code_employees = self.env['hr.employee'].search([
+    ('company_id', 'in',  belgian_companies.ids),
+    ('active', '=', True),
+    ('sdworx_code', '=', False)
+])
+
+if missing_code_employees:
+    warning_count = len(missing_code_employees)
+    warning_records = missing_code_employees
+            </field>
+        </record>
+
+    </data>
+</odoo>

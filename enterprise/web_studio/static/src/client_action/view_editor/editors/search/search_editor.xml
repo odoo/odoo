@@ -1,0 +1,117 @@
+<templates>
+    <t t-name="web_studio.SearchEditorController">
+        <div class="o_web_studio_search_view_editor d-flex flex-wrap align-items-start">
+            <div t-ref="root" class="o_web_studio_search_view_container position-relative bg-light m-3 overflow-hidden rounded-3 shadow">
+                <div class="o_web_studio_search_sample_ui w-100 pt-1">
+                    <i class="oi oi-search d-block fs-3 text-end opacity-25 m-2" />
+                    <hr class="my-0 mx-3 border" />
+                </div>
+                <div class="o_web_studio_search_container d-flex p-2 w-100">
+                    <div class="o_web_studio_search_sub_item o-web-studio-search--filters w-lg-auto mb-lg-0 w-100 px-3 mb-4 border-end">
+                        <div class="o-web-studio-search-subitem-header">
+                            <i class="fa fa-filter me-2 text-primary" />
+                            <h5 class="o_dropdown_title d-inline">Filters</h5>
+                        </div>
+
+                        <div class="d-flex flex-column">
+                            <t t-set="firstHook" t-value="getFirstHookProps('filter')" />
+                            <StudioHook t-if="firstHook" t-props="firstHook" />
+                            <t t-foreach="filtersGroups" t-as="filterGroup" t-key="filterGroup_index">
+                                <div t-if="filterGroup_index !== 0 and filterGroup.separator" class="o-web-studio-editor--element-clickable" t-on-click="(ev) => this.onItemClicked(ev, filterGroup.separator)" t-att-data-studio-xpath="filterGroup.separator">
+                                    <hr class="border my-2" />
+                                </div>
+
+                                <hr t-elif="filterGroup_index !== 0 and filterGroup !== filterGroup_last and filterGroup.items.length !==0" />
+
+                                <StudioHook t-if="filterGroup.items.length" position="'before'" xpath="filterGroup.items[0].studioXpath" type="'filter'" />
+
+                                <t t-foreach="getItems(filterGroup.items)" t-as="item" t-key="item_index">
+                                    <div t-esc="getItemLabel('filter', item)" t-on-click="(ev) => this.onItemClicked(ev, item.studioXpath)" class="o-web-studio-editor--element-clickable p-1" t-att-data-studio-xpath="item.studioXpath" />
+                                    <StudioHook position="'after'" xpath="item.studioXpath" type="'filter'" />
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="o_web_studio_search_sub_item o-web-studio-search--groupbys w-lg-auto mb-lg-0 w-100 px-3 mb-4 border-end">
+                        <div class="o-web-studio-search-subitem-header">
+                            <i class="me-2 text-action oi oi-group" />
+                            <h5 class="o_dropdown_title d-inline">Group by</h5>
+                        </div>
+
+                        <div class="d-flex flex-column p-3">
+                            <t t-set="firstHook" t-value="getFirstHookProps('groupBy')" />
+                            <StudioHook t-if="firstHook" t-props="firstHook" />
+                            <t t-foreach="groupByGroups" t-as="groupByGroup" t-key="groupByGroup_index">
+                                <hr t-if="groupByGroup_index !== 0 and groupByGroup !== groupByGroup_last and groupByGroup.items.length !==0" />
+
+                                <StudioHook t-if="groupByGroup.items.length" position="'before'" xpath="groupByGroup.items[0].studioXpath" type="'groupBy'" />
+                                <t t-foreach="getItems(groupByGroup.items)" t-as="item" t-key="item_index">
+                                    <div t-esc="getItemLabel('groupBy', item)" t-on-click="(ev) => this.onItemClicked(ev, item.studioXpath)" class="o-web-studio-editor--element-clickable p-1" t-att-data-studio-xpath="item.studioXpath" />
+                                    <StudioHook position="'after'" xpath="item.studioXpath" type="'groupBy'" />
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="o_web_studio_search_sub_item w-lg-auto w-100 px-3 mb-4">
+                        <div class="o-web-studio-search-subitem-header opacity-25">
+                            <i class="me-2 text-favourite fa fa-star" />
+                            <h5 class="o_dropdown_title d-inline">Favourites</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="o_web_studio_search_autocompletion_container bg-light m-3 overflow-hidden rounded-3 shadow o-web-studio-search--fields">
+                <div class="o-web-studio-search-subitem-header p-3">
+                    <h3 class="fw-normal">
+                        <i class="fa fa-magic me-2" />
+                        Autocompletion Fields
+                    </h3>
+                </div>
+                <div class="d-flex flex-column border p-2">
+                    <StudioHook t-if="!autoCompleteFields.length" position="'inside'" xpath="'/search'" type="'field'" />
+                    <StudioHook t-else="" position="'before'" xpath="autoCompleteFields[0].studioXpath" type="'field'" />
+                    <t t-foreach="getItems(autoCompleteFields)" t-as="item" t-key="item_index">
+                        <div t-esc="getItemLabel('field', item)" t-on-click="(ev) => this.onItemClicked(ev, item.studioXpath)" class="o-web-studio-editor--element-clickable p-2" t-att-data-studio-xpath="item.studioXpath" />
+                        <StudioHook position="'after'" xpath="item.studioXpath" type="'field'" />
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web_studio.ViewEditor.SearchEditorSidebar">
+        <InteractiveEditorSidebar>
+            <t t-set-slot="new">
+                <SearchComponents />
+                <ExistingFields resModel="viewEditorModel.resModel" fields="viewEditorModel.fields" fieldsInArch="viewEditorModel.fieldsInArch" folded="false" filterFields="false" />
+            </t>
+            <t t-set-slot="view">
+                <t t-call="web_studio.ViewEditor.ShowInvisibleToggler" />
+                <SidebarViewToolbox onMore="props.openViewInForm" canEditXml="!env.viewEditorModel.isEditingSubview" canEditDefaultValues="false" />
+            </t>
+            <t t-set-slot="properties">
+                <SimpleElementEditor t-if="currentNode" node="currentNode" />
+            </t>
+        </InteractiveEditorSidebar>
+    </t>
+
+    <t t-name="web_studio.SearchEditor.Sidebar.Components">
+        <div class="o_web_studio_field_type_container o_web_studio_new_components d-flex flex-row">
+            <h3 class="w-100">Components</h3>
+            <t t-foreach="structures" t-as="struct" t-key="struct_index">
+                <SidebarDraggableItem string="struct_value.name" className="struct_value.class" structure="struct" />
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web_studio.SearchEditor.SimpleElementEditor">
+        <h3 class="text-capitalize" t-out="viewEditorModel.activeNode.humanName" />
+        <Property t-if="node.type !== 'separator'" name="'label'" type="'char'" value="label" onChange.bind="onChangeLabel">
+            Label
+        </Property>
+        <Property  t-if="node.type === 'filter'" name="'domain'" type="'domain'" value="domain" onChange.bind="onChangeDomain" childProps="{relation: viewEditorModel.resModel}">
+            Domain
+        </Property>
+        <SidebarPropertiesToolbox />
+    </t>
+</templates>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="pos_delivery_provider_careem" model="pos.delivery.provider">
+        <field name="name">Careem</field>
+        <field name="technical_name">careem</field>
+        <field name="journal_code">CRM</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Careem.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.ae'), ref('base.sa'), ref('base.jo'), ref('base.kw')])]"/>
+    </record>
+    <record id="pos_delivery_provider_talabat" model="pos.delivery.provider">
+        <field name="name">Talabat</field>
+        <field name="technical_name">talabat</field>
+        <field name="journal_code">TLB</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Talabat.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.ae'), ref('base.kw'), ref('base.sa'), ref('base.iq'), ref('base.jo'), ref('base.om'), ref('base.qa'), ref('base.bh'), ref('base.eg')])]"/>
+    </record>
+    <record id="pos_delivery_provider_doordash" model="pos.delivery.provider">
+        <field name="name">DoorDash</field>
+        <field name="technical_name">doordash</field>
+        <field name="journal_code">DRS</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Doordash.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.us'), ref('base.au'), ref('base.ca')])]"/>
+    </record>
+    <record id="pos_delivery_provider_grubhub" model="pos.delivery.provider">
+        <field name="name">Grubhub</field>
+        <field name="technical_name">grubhub</field>
+        <field name="journal_code">GRH</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Grubhub.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.au'), ref('base.at'), ref('base.be'), ref('base.bg'), ref('base.us'),
+                ref('base.ca'), ref('base.dk'), ref('base.fr'), ref('base.de'), ref('base.ie'), ref('base.il'), ref('base.it'), ref('base.lu'),
+                ref('base.nl'), ref('base.nz'), ref('base.no'), ref('base.pl'), ref('base.pt'), ref('base.ro'), ref('base.es'), ref('base.ch'), 
+                ref('base.uk')])]"/>
+    </record>
+    <record id="pos_delivery_provider_deliveroo" model="pos.delivery.provider">
+        <field name="name">Deliveroo</field>
+        <field name="technical_name">deliveroo</field>
+        <field name="journal_code">DLO</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Deliveroo.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.us'), ref('base.uk'), ref('base.fr'), ref('base.be'), ref('base.ie'), ref('base.it'), ref('base.sg'), ref('base.hk'), ref('base.ae'), ref('base.kw'), ref('base.qa')])]"/>
+    </record>
+    <record id="pos_delivery_provider_justeat" model="pos.delivery.provider">
+        <field name="name">Just Eat</field>
+        <field name="technical_name">justeat</field>
+        <field name="journal_code">JET</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Justeat.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.us'), ref('base.uk'), ref('base.de'), ref('base.ca'), ref('base.nl'),
+                ref('base.au'), ref('base.at'), ref('base.be'), ref('base.bg'), ref('base.dk'), ref('base.fr'), ref('base.ie'), ref('base.il'),
+                ref('base.it'), ref('base.lu'), ref('base.pl'), ref('base.sk'), ref('base.es'), ref('base.ch')])]"/>
+    </record>
+    <record id="pos_delivery_provider_eateasy" model="pos.delivery.provider">
+        <field name="name">EatEasy</field>
+        <field name="technical_name">eateasy</field>
+        <field name="journal_code">ETY</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Eateasy.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.ae')])]"/>
+    </record>
+    <record id="pos_delivery_provider_postmates" model="pos.delivery.provider">
+        <field name="name">Postmates</field>
+        <field name="technical_name">postmates</field>
+        <field name="journal_code">PMT</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Postmates.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.us')])]"/>
+    </record>
+    <record id="pos_delivery_provider_glovo" model="pos.delivery.provider">
+        <field name="name">Glovo</field>
+        <field name="technical_name">glovo</field>
+        <field name="journal_code">GLV</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Glovo.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.es'), ref('base.it'), ref('base.ua'), ref('base.ro'), ref('base.ge'),
+                ref('base.pt'), ref('base.pl'), ref('base.ma'), ref('base.kz'), ref('base.hr'), ref('base.ke'), ref('base.rs'), ref('base.ug'),
+                ref('base.kg'), ref('base.ba'), ref('base.bg'), ref('base.gh'), ref('base.me'), ref('base.sl'), ref('base.ng'), ref('base.am'),
+                ref('base.ad'), ref('base.tn'), ref('base.cl'), ref('base.md')])]"/>
+    </record>
+    <record id="pos_delivery_provider_noonfood" model="pos.delivery.provider">
+        <field name="name">NoonFood</field>
+        <field name="technical_name">noonfood</field>
+        <field name="journal_code">NFD</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Noonfood.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.ae'), ref('base.sa')])]"/>
+    </record>
+    <record id="pos_delivery_provider_hungrypanda" model="pos.delivery.provider">
+        <field name="name">HungryPanda</field>
+        <field name="technical_name">hungrypanda</field>
+        <field name="journal_code">HPA</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Hungrypanda.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.au'), ref('base.ca'), ref('base.fr'), ref('base.it'), ref('base.jp'),
+                ref('base.nz'), ref('base.sg'), ref('base.kr'), ref('base.us'), ref('base.uk')])]"/>
+    </record>
+    <record id="pos_delivery_provider_chownow" model="pos.delivery.provider">
+        <field name="name">ChowNow</field>
+        <field name="technical_name">chownow</field>
+        <field name="journal_code">CNW</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Chownow.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.ca'), ref('base.us')])]"/>
+    </record>
+    <record id="pos_delivery_provider_cari" model="pos.delivery.provider">
+        <field name="name">Cari</field>
+        <field name="technical_name">cari</field>
+        <field name="journal_code">CRI</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Cari.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.ae'), ref('base.kw'), ref('base.sa')])]"/>
+    </record>
+    <record id="pos_delivery_provider_hungerstation" model="pos.delivery.provider">
+        <field name="name">HungerStation</field>
+        <field name="technical_name">hungerstation</field>
+        <field name="journal_code">HST</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Hungerstation.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.sa')])]"/>
+    </record>
+    <record id="pos_delivery_provider_mrsool" model="pos.delivery.provider">
+        <field name="name">Mrsool</field>
+        <field name="technical_name">mrsool</field>
+        <field name="journal_code">MSL</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Mrsool.png"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.eg'), ref('base.sa')])]"/>
+    </record>
+    <record id="pos_delivery_provider_jahez" model="pos.delivery.provider">
+        <field name="name">Jahez</field>
+        <field name="technical_name">jahez</field>
+        <field name="journal_code">JHZ</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Jahez.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.sa'), ref('base.kw'), ref('base.bh')])]"/>
+    </record>
+    <record id="pos_delivery_provider_skipthedishes" model="pos.delivery.provider">
+        <field name="name">SkipTheDishes</field>
+        <field name="technical_name">skipthedishes</field>
+        <field name="journal_code">SKD</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/SkipTheDishes.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.ca'), ref('base.us')])]"/>
+    </record>
+    <record id="pos_delivery_provider_rafeeq" model="pos.delivery.provider">
+        <field name="name">Rafeeq</field>
+        <field name="technical_name">rafeeq</field>
+        <field name="journal_code">RFQ</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Rafeeq.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.qa')])]"/>
+    </record>
+    <record id="pos_delivery_provider_ninja" model="pos.delivery.provider">
+        <field name="name">Ninja</field>
+        <field name="technical_name">ninja</field>
+        <field name="journal_code">NJA</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Ninja.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.qa'), ref('base.bh'), ref('base.kw'), ref('base.sa'), ref('base.ae')])]"/>
+    </record>
+    <record id="pos_delivery_provider_rappi" model="pos.delivery.provider">
+        <field name="name">Rappi</field>
+        <field name="technical_name">rappi</field>
+        <field name="journal_code">RPI</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Rappi.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.ar'), ref('base.br'), ref('base.cl'), ref('base.co'), ref('base.cr'), ref('base.ec'),ref('base.mx'), ref('base.pe'), ref('base.uy')])]"/>
+    </record>
+    <record id="pos_delivery_provider_wolt" model="pos.delivery.provider">
+        <field name="name">Wolt</field>
+        <field name="technical_name">wolt</field>
+        <field name="journal_code">WOL</field>
+        <field name="image_128" type="base64" file="pos_urban_piper/static/img/Wolt.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.al'), ref('base.at'), ref('base.az'), ref('base.bg'), ref('base.hr'),
+                ref('base.cy'), ref('base.cz'), ref('base.dk'), ref('base.ee'), ref('base.fi'), ref('base.ge'), ref('base.de'), ref('base.gr'),
+                ref('base.hu'), ref('base.is'), ref('base.il'), ref('base.jp'), ref('base.kz'), ref('base.lv'), ref('base.lt'), ref('base.lu'),
+                ref('base.mt'), ref('base.mk'), ref('base.no'), ref('base.pl'), ref('base.ro'), ref('base.rs'), ref('base.sk'), ref('base.si'),
+                ref('base.se'), ref('base.uz')])]"/>
+    </record>
+</odoo>

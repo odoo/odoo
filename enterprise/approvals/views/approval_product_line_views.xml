@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="approval_product_line_view_tree_independent" model="ir.ui.view">
+        <field name="name">approval.product.line.view.list</field>
+        <field name="model">approval.product.line</field>
+        <!-- This priority should be lower than the regular list view,
+        so studio takes it instead of the regular view,
+        which is embedded in a form view by default -->
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" string="Products">
+                <field name="approval_request_id"/>
+                <field name="company_id" column_invisible="True"/>
+                <field name="product_id"/>
+                <field name="description"/>
+                <field name="quantity"/>
+                <field name="product_uom_id" groups="uom.group_uom"
+                    options="{'no_create': True, 'no_open': True}"/>
+                <field name="product_uom_category_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="approval_product_line_view_tree" model="ir.ui.view">
+        <field name="name">approval.product.line.view.list</field>
+        <field name="model">approval.product.line</field>
+        <field name="priority">15</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" string="Products">
+                <field name="company_id" column_invisible="True"/>
+                <field name="product_id" required="parent.has_product == 'required'" context="{'search_default_filter_to_purchase': 1}"/>
+                <field name="description"/>
+                <field name="quantity" column_invisible="parent.has_quantity == 'no'" required="parent.has_quantity == 'required' and parent.request_status != 'new'"/>
+                <field name="product_uom_id" groups="uom.group_uom"
+                    options="{'no_create': True, 'no_open': True}"/>
+                <field name="product_uom_category_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="approval_product_line_view_form" model="ir.ui.view">
+        <field name="name">approval.product.line.view.form</field>
+        <field name="model">approval.product.line</field>
+        <field name="arch" type="xml">
+            <form string="Products">
+                <sheet>
+                    <group>
+                        <field name="company_id" invisible="1"/>
+                        <field name="product_id"/>
+                        <field name="description"/>
+                        <field name="quantity"/>
+                        <field name="product_uom_id" groups="uom.group_uom"/>
+                        <field name="product_uom_category_id" invisible="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="approval_product_kanban_mobile_view" model="ir.ui.view">
+        <field name="name">approval.product.kanban.mobile</field>
+        <field name="model">approval.product.line</field>
+        <field name="priority">15</field>
+        <field name="arch" type="xml">
+            <kanban editable="bottom" string="Products">
+                <templates>
+                        <t t-name="card" class="d-flex justify-content-between">
+                            <field name="product_id" class="fw-bolder fs-5"/>
+                            <field name="quantity" class="fw-bolder fs-5"/>
+                        </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

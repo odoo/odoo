@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_work_entry.work_entry_type_attendance" model="hr.work.entry.type">
+        <field name="sequence">1</field>
+        <field name="l10n_au_is_ote" eval="True"/>
+        <field name="l10n_au_work_stp_code">G</field>
+    </record>
+    <record id="hr_work_entry.overtime_work_entry_type" model="hr.work.entry.type">
+        <field name="l10n_au_work_stp_code">T</field>
+    </record>
+
+    <!-- Time Off Entries -->
+    <!-- We need a unique work entry type for each time off -->
+    <record id="l10n_au_work_entry_paid_time_off" model="hr.work.entry.type">
+        <field name="name">Paid Time Off</field>
+        <field name="color">5</field>
+        <field name="code">AU.PT</field>
+        <field name="is_leave" eval="True"/>
+        <field name="l10n_au_is_ote" eval="True"/>
+        <field name="l10n_au_work_stp_code">O</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="l10n_au_work_entry_long_service_leave" model="hr.work.entry.type">
+        <field name="name">Long Service Leave</field>
+        <field name="color">5</field>
+        <field name="code">AU.LS</field>
+        <field name="is_leave" eval="True"/>
+        <field name="l10n_au_is_ote" eval="True"/>
+        <field name="l10n_au_work_stp_code">O</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="l10n_au_work_entry_personal_leave" model="hr.work.entry.type">
+        <field name="name">Personal Leave</field>
+        <field name="color">5</field>
+        <field name="code">AU.PL</field>
+        <field name="is_leave" eval="True"/>
+        <field name="l10n_au_is_ote" eval="True"/>
+        <field name="l10n_au_work_stp_code">O</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="l10n_au_work_entry_type_other" model="hr.work.entry.type">
+        <field name="name">Other Paid Leave</field>
+        <field name="color">5</field>
+        <field name="code">AU.O</field>
+        <field name="is_leave" eval="True"/>
+        <field name="l10n_au_is_ote" eval="True"/>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_work_stp_code">O</field>
+    </record>
+
+    <record id="l10n_au_work_entry_type_parental" model="hr.work.entry.type">
+        <field name="name">Paid Parental Leave</field>
+        <field name="color">5</field>
+        <field name="code">AU.P</field>
+        <field name="is_leave" eval="True"/>
+        <field name="l10n_au_is_ote" eval="True"/>
+        <field name="l10n_au_work_stp_code">P</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="l10n_au_work_entry_type_compensation" model="hr.work.entry.type">
+        <field name="name">Workers Compensation</field>
+        <field name="color">5</field>
+        <field name="code">AU.W</field>
+        <field name="l10n_au_is_ote" eval="True"/>
+        <field name="l10n_au_work_stp_code">W</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="l10n_au_work_entry_type_defence" model="hr.work.entry.type">
+        <field name="name">Ancillary and Defence Leave</field>
+        <field name="color">5</field>
+        <field name="code">AU.A</field>
+        <field name="is_leave" eval="True"/>
+        <field name="l10n_au_is_ote" eval="True"/>
+        <field name="l10n_au_work_stp_code">A</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="l10n_au_work_entry_type_cash_out" model="hr.work.entry.type">
+        <field name="name">Cash Out of Leave in Service</field>
+        <field name="color">5</field>
+        <field name="code">AU.C</field>
+        <field name="l10n_au_is_ote" eval="True"/>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="l10n_au_work_entry_type_termination" model="hr.work.entry.type">
+        <field name="name">Unused Leave on Termination</field>
+        <field name="color">5</field>
+        <field name="code">AU.U</field>
+        <field name="l10n_au_is_ote" eval="True"/>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <!-- Overtime Entries -->
+    <!-- Remove the record in master, switch to hr_work_entry.overtime_work_entry_type -->
+    <record id="l10n_au_work_entry_type_overtime_regular" model="hr.work.entry.type">
+        <field name="name">Overtime: Regular</field>
+        <field name="color">4</field>
+        <field name="code">l10n_au_overtime_regular</field>
+        <field name="l10n_au_work_stp_code">T</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="l10n_au_work_entry_type_overtime_saturday" model="hr.work.entry.type">
+        <field name="name">Overtime: Saturday</field>
+        <field name="color">4</field>
+        <field name="code">l10n_au_overtime_saturday</field>
+        <field name="l10n_au_work_stp_code">T</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="l10n_au_work_entry_type_overtime_sunday" model="hr.work.entry.type">
+        <field name="name">Overtime: Sunday</field>
+        <field name="color">4</field>
+        <field name="code">l10n_au_overtime_sunday</field>
+        <field name="l10n_au_work_stp_code">T</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="l10n_au_work_entry_type_overtime_pto" model="hr.work.entry.type">
+        <field name="name">Overtime: Public Time Off</field>
+        <field name="color">4</field>
+        <field name="code">l10n_au_overtime_pto</field>
+        <field name="l10n_au_work_stp_code">T</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="l10n_au_work_entry_type_overtime_saturday_pto" model="hr.work.entry.type">
+        <field name="name">Overtime: Saturday &amp; Public Time Off</field>
+        <field name="color">4</field>
+        <field name="code">l10n_au_overtime_saturday_pto</field>
+        <field name="l10n_au_work_stp_code">T</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="l10n_au_work_entry_type_overtime_sunday_pto" model="hr.work.entry.type">
+        <field name="name">Overtime: Sunday &amp; Public Time Off</field>
+        <field name="color">4</field>
+        <field name="code">l10n_au_overtime_sunday_pto</field>
+        <field name="l10n_au_work_stp_code">T</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+</odoo>

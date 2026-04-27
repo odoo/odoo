@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+        <record id="ir_rule_worksheet_template_multi_company" model="ir.rule">
+            <field name="name">Worksheet: Multi Company</field>
+            <field name="model_id" ref="model_worksheet_template"/>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        </record>
+
+</odoo>

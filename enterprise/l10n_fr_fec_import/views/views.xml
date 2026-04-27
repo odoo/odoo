@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fec_import_form" model="ir.ui.view">
+        <field name="name">fec.import.form</field>
+        <field name="model">account.fec.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="FEC Import">
+                <group>
+                    <group class="d-flex flex-column">
+                        <span colspan="2" class="fw-bold">Import your accounting data from FEC file formats.</span>
+                        <field
+                            name="attachment_id"
+                            string="Select File"
+                            aria-label="Select File"
+                            nolabel="1"
+                            widget="binary"
+                            filename="attachment_name"/>
+                    </group>
+                    <group class="d-flex flex-column">
+                        <span colspan="2" class="fw-bold">Import options</span>
+                        <label for="document_prefix" string="Add a prefix to document:"/>
+                        <field name="document_prefix" nolabel="1"/>
+                        <label for="duplicate_documents_handling" string="What should we do wtih duplicate document name:"/>
+                        <field name="duplicate_documents_handling" widget="radio" nolabel="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_import" string="Import" data-hotkey="q" type="object" class="btn-primary"/>
+                    <button special="cancel" data-hotkey="x" string="Cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="import_action" model="ir.actions.act_window">
+        <field name="name">FEC Import</field>
+        <field name="res_model">account.fec.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Open Wizard -->
+    <record model="ir.actions.server" id="fec_import_action">
+        <field name="name">FEC import</field>
+        <field name="model_id" ref="model_res_company"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = env.company.fec_import_action()
+        </field>
+    </record>
+
+</odoo>

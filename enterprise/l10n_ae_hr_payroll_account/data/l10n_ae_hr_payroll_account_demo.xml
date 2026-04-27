@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="base.partner_demo_company_ae" model="res.partner" forcecreate="1">
+        <field name="name">My Emirati Company</field>
+        <field name="street">Emirati Street</field>
+        <field name="zip">1000</field>
+        <field name="city">Dubai</field>
+        <field name="country_id" ref="base.ae"/>
+    </record>
+
+    <record id="base.demo_company_ae" model="res.company" forcecreate="1">
+        <field name="name">AE Company</field>
+        <field name="currency_id" ref="base.AED"/>
+        <field name="partner_id" ref="base.partner_demo_company_ae"/>
+    </record>
+
+    <record id="res_partner_employee_ae" model="res.partner">
+        <field name="name">Jake Cypher</field>
+        <field name="company_id" ref="base.demo_company_ae"/>
+    </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_ae'))]"/>
+        <field name="tz">Asia/Dubai</field>
+    </record>
+
+    <record id="hr_employee_ae" model="hr.employee">
+        <field name="company_id" ref="base.demo_company_ae"/>
+        <field name="name">Jake Cypher</field>
+        <field name="work_contact_id" ref="l10n_ae_hr_payroll_account.res_partner_employee_ae"/>
+        <field name="job_title">Salesperson</field>
+        <field name="work_phone">0123 456 789</field>
+        <field name="work_email">jake.cypher@example.com</field>
+        <field name="private_street">Emirati Street</field>
+        <field name="private_city">Dubai</field>
+        <field name="private_country_id" ref="base.ae"/>
+        <field name="birthday" eval="datetime(1985, 5, 12).date()"/>
+        <field name="image_1920" type="base64" file="hr/static/img/employee_jgo-image.jpg"/>
+        <field name="gender">male</field>
+    </record>
+
+    <record id="hr_contract_ae" model="hr.contract">
+        <field name="company_id" ref="base.demo_company_ae"/>
+        <field name="employee_id" ref="l10n_ae_hr_payroll_account.hr_employee_ae"/>
+        <field name="name">Jake Cypher Contract</field>
+        <field name="date_start" eval="datetime(2020, 1, 1).date()"/>
+        <field name="wage">25000</field>
+        <field name="structure_type_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure_type"/>
+        <field name="state">open</field>
+        <field name="l10n_ae_transportation_allowance">200</field>
+        <field name="l10n_ae_housing_allowance">5000</field>
+        <field name="l10n_ae_other_allowances">600</field>
+    </record>
+
+    <data noupdate="1">
+        <function model="account.chart.template" name="try_loading">
+            <value eval="[]"/>
+            <value>ae</value>
+            <value model="res.company" eval="obj().env.ref('base.demo_company_ae')"/>
+            <value name="install_demo" eval="True"/>
+        </function>
+    </data>
+</odoo>

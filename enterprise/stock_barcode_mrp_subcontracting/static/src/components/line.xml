@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-inherit="stock_barcode.LineLowerButtons" t-inherit-mode="extension">
+        <xpath expr="//button[@name='fulfillButton']" position="after">
+            <button t-if="env.model.showSubcontractingDetails(line)"
+                t-on-click="showSubcontractingDetails" title="Show subcontract Details"
+                class="o_line_button btn"
+                t-attf-class="btn-{{isSelected || isComplete ? 'light' : 'secondary'}}">
+                <i class="fa fa-sitemap"/>
+            </button>
+        </xpath>
+    </t>
+
+</templates>

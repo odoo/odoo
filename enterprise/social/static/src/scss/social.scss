@@ -1,0 +1,501 @@
+// Variables
+// ===================================================
+$o-social-border-radius-base: 3px;
+$o-social-border-radius-bubble: 16px;
+$o-social-font-family-reset: $o-font-family-sans-serif;
+
+// Form Views
+// ===================================================
+.o_social_post_view_form {
+    .o_form_sheet {
+        position: relative;
+
+        .o_social_post_empty_preview {
+            pointer-events: auto;
+            left: 50%;
+            @include media-breakpoint-down(lg) {
+                display: none !important;
+            }
+
+            &.o_view_nocontent {
+                padding-top: 5%;
+            }
+        }
+
+        .o_social_post_form_attachments .o_attachments,
+        .o_social_post_form_attachments .o_attachment {
+            width: 250px;
+            padding-left: 0;
+        }
+
+        .o_social_post_form_content td {
+            position: relative;
+        }
+
+        .o_social_post_message_wrapper {
+            &, & + textarea[disabled] {
+                padding-right: 50px;
+
+                @include media-breakpoint-up(sm) {
+                    width: 100%!important;
+                }
+            }
+
+            ~ .o_social_icon_dropdown {
+                @include o-position-absolute(0, 30px);
+
+                .dropdown-toggle:after {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    .o_social_preview_wrapper {
+        > .o_readonly {
+            width: 100%;
+        }
+
+        .o_social_preview {
+            font-family: $o-social-font-family-reset;
+            font-size: 1rem;
+
+            .o_social_preview_icon_wrapper {
+                width: 2em;
+                height: 2em;
+            }
+
+            .o_social_stream_post_image img {
+                max-height: 120px;
+
+                @media (min-height: 800px) {
+                    max-height: 200px;
+                }
+            }
+        }
+
+    }
+}
+
+// Kanban Views (Both Feed & Posts)
+// ===================================================
+.o_social_stream_post_message_body {
+    .o_social_stream_post_message_text,
+    .o_social_stream_post_message_text span {
+        display: -webkit-box;
+        max-height: 9.8rem;
+        // Doesn't work in all browser but we have no real solutions here
+        // Other browsers will just hide the overflow so it's fine anyway
+        -webkit-line-clamp: 6;
+        -webkit-box-orient: vertical;
+
+        .o_mail_emoji {
+            font-size: 1rem;
+            display: inline-block;
+        }
+    }
+
+    &.o_social_stream_post_with_attachments {
+        .o_social_stream_post_message_text {
+            max-height: 5rem;
+            -webkit-line-clamp: 3;
+        }
+    }
+}
+
+// Kanban View (Feed)
+// ===================================================
+.o_social_stream_post_kanban_new_content {
+    display: block;
+
+    &:hover, &:focus {
+        background: rgba($info, 0.4);
+    }
+}
+
+.o_social_stream_post_kanban_before {
+    &:empty {
+        // Hide entire section if no streams
+        display: none;
+    }
+
+    &, .o_social_stream_stat_box {
+        margin-bottom: -1px;
+    }
+}
+
+.o_content.o_social_stream_post_kanban_view_wrapper {
+    .o_kanban_renderer {
+        background-color: transparent;
+
+        .o_social_stream_post_published_date {
+            color: lighten($o-main-text-color, 10%);
+            &:hover {
+                color: $o-enterprise-action-color;
+            }
+        }
+    }
+
+    .o_kanban_group {
+        border-top: 1px solid $border-color;
+        background-color: map-get($grays, '100');
+        padding: 1rem 8px 0 16px;
+
+        &:not(.o_column_folded) {
+            width: 310px;
+        }
+
+        &.o_column_folded .o_kanban_header_title img {
+            display: none;
+        }
+
+        + .o_kanban_group {
+            padding: 1rem 8px 0;
+        }
+
+        &:last-child {
+            padding: 1rem 16px 0 8px;
+        }
+    }
+
+    .o_kanbanheader_media_image {
+        object-fit: contain;
+    }
+
+    .o_kanban_header_title {
+        align-items: center;
+    }
+}
+
+.o_social_stream_post_author_name {
+    max-width: 190px;
+}
+
+.o_stream_post_kanban_refresh_now .fa-circle-o-notch {
+    margin-left: 5px;
+}
+
+// Record Design
+.o_social_stream_post_kanban_global {
+    border-radius: $o-social-border-radius-base;
+    &:hover {
+        cursor: pointer;
+        box-shadow: 1px 1px 1px 0px #6c757d;
+    }
+}
+
+// Kanban View (Posts)
+// ===================================================
+.oe_kanban_global_click {
+    .oe_kanban_avatar {
+        width: 1.6em;
+        height: 1.6em;
+    }
+
+    #post-stats {
+        div:nth-child(2):last-child {
+            margin-left: 2rem;
+        }
+    }
+}
+
+.o_social_post_kanban_error {
+    border-color: map-get($theme-colors, 'danger');
+}
+
+// General Components
+// ===================================================
+.o_social_subtle_btn {
+    cursor: pointer;
+    color: lighten($o-main-text-color, 10%);
+
+    &:hover, &:focus {
+        outline: none;
+        color: darken($o-main-text-color, 20%);
+    }
+}
+
+.o_social_subtle_btn_disabled {
+    color: lighten($o-main-text-color, 10%);
+}
+
+.o_social_bubble_radius {
+    border-radius: $o-social-border-radius-bubble;
+}
+
+.o_social_stream_post_link {
+    border-radius: $o-social-border-radius-base;
+
+    img {
+        width: 2.6em;
+        height: 2.6em;
+    }
+
+    .o_social_stream_post_link_text {
+        min-width: 0; // allow text-truncate on flexbox
+        line-height: 1.35;
+    }
+}
+
+.o_social_stream_post_image {
+    &.o_social_stream_post_image_clickable {
+        cursor: pointer;
+    }
+
+    img {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        max-height: 50px;
+        object-fit: cover;
+        object-position: center;
+
+        @media (min-height: 800px) {
+            max-height: 100px;
+        }
+    }
+
+}
+
+.o_social_stream_post_image_more_overlay {
+    cursor: pointer;
+    background-color: rgba(black, .2);
+
+    &:hover {
+        background-color: rgba(black, .35);
+    }
+}
+
+// "Fullwidth" images carousel
+.o_stream_post_images_carousel {
+    height: 85vh;
+
+    .carousel-item {
+        transition: none;
+        max-width: 80%;
+
+        img {
+            max-width: 100%;
+            max-height: 73vh;
+        }
+    }
+}
+
+// Modals
+// ===================================================
+
+// Add a new stream
+.o_social_add_stream_form {
+    margin: $modal-inner-padding * -1;
+    padding: ($spacer * 1.5);
+    padding-bottom: ($spacer * 4);
+
+    .o_social_media {
+        background-color: $list-group-bg;
+        cursor: pointer;
+
+        &:hover, &:focus {
+            background-color: $list-group-hover-bg;
+        }
+    }
+
+    select.form-select.o_social_add_stream_form_select {
+        background: str-replace(url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='175' height='100' fill='#000'><polygon points='0,0 100,0 50,50'/></svg>"), "#", "%23") ;
+        background-color: #fff;
+        background-size: 20px;
+        background-position: 100% 75%;
+        background-repeat: no-repeat;
+        min-width: 180px;
+    }
+}
+
+
+.o_social_live_post_kanban {
+    // avoid blank space when the cards have different height
+    height: fit-content !important;
+
+    .o_field_widget.badge {
+        display: inline-block;
+        width: auto;
+    }
+
+    .o_social_live_post_kanban_failure_reason {
+        max-height: 2rem;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    img {
+        max-height: 60px;
+    }
+}
+
+.o_social_account_feed {
+    .o_social_media_image {
+        position: absolute;
+        right: 5px;
+    }
+
+    .o_social_feed_stats {
+        font-weight: bold;
+        font-size: 1.6rem;
+        line-height: 1.2rem;
+        text-align: center;
+
+        .o_social_feed_stats_item {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 8px;
+
+            div {
+                display: inline-block;
+                text-align: left;
+            }
+
+            .o_social_feed_stat_trend {
+                font-size: 1.2rem;
+                font-weight: normal;
+            }
+        }
+    }
+}
+
+// Comments
+.o_social_comments_modal {
+    min-height: 280px;
+    overflow-x: hidden;
+    font-family: $o-social-font-family-reset;
+
+    .o_social_comment_controls, .o_social_manage_comment, .o_social_manage_post {
+        .dropdown-toggle:after {
+            content: none;
+        }
+    }
+
+    .o_social_add_comment, .o_social_comment_image {
+        border-radius: $o-social-border-radius-base;
+
+        &.o_social_bubble_radius {
+            border-radius: $o-social-border-radius-bubble;
+        }
+    }
+
+    .o_social_comment_image {
+        max-width: 300px;
+        max-height: 200px;
+    }
+
+    .o_social_add_comment {
+        // Emulate form-control-lg design without adding the class
+        // to avoid issues with JS resize code.
+        @include font-size($input-font-size-lg);
+        min-height: $input-height-lg;
+        resize: none;
+    }
+
+    .o_social_comment_published_date, .o_social_post_published_date {
+        color: lighten($o-main-text-color, 10%);
+        &:hover {
+            color: $o-enterprise-action-color;
+        }
+    }
+
+    .o_social_author_image img {
+        width: 32px;
+        height: 32px;
+    }
+
+    .o_social_comment_user_likes{
+        font-weight: bold;
+    }
+
+    // Original Post
+    .o_social_comments_modal_original_post {
+        .o_social_author_image img {
+            width: 42px;
+            height: 42px;
+        }
+
+        .o_social_original_post_message_text {
+            max-height: 160px;
+        }
+
+        .o_social_comments_modal_original_post_content {
+            min-width: 0; // allow text-truncate on flexbox
+        }
+
+        .o_social_manage_post {
+            margin-left: auto;
+        }
+
+        .o_social_stream_post_image img {
+            @media (min-height: 800px) {
+                max-height: 200px;
+            }
+        }
+
+        .o_social_original_post_single {
+            @media (min-height: 800px) {
+                max-height: 400px;
+            }
+        }
+
+        .o_social_stream_post_link img {
+            width: 4em;
+            height: 4em;
+        }
+    }
+
+    .o_social_comment_message {
+        .o_social_manage_comment {
+            margin: 0 0 auto auto;
+        }
+
+        .o_social_comment_text {
+            height: fit-content;
+            margin: auto 0;
+        }
+    }
+
+    .o_social_load_more_comments {
+        display: block;
+    }
+    a {
+        text-decoration: none!important;
+    }
+    .o_social_icon_dropdown {
+        .dropdown-toggle:after {
+            display: none;
+        }
+    }
+}
+
+.o_social_comments_modal,
+.o_social_quote_modal {
+    .o_social_comment_controls {
+        @include o-position-absolute(0, 0);
+        height: 75%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+
+        .o_mail_add_emoji {
+            bottom: auto;
+            margin-top: 0;
+        }
+    }
+}
+
+.o_social_comment_delete_modal {
+    padding-top: 12.5%;
+    text-align: center;
+
+    .modal-dialog {
+        display: inline-block;
+    }
+}
+
+.o_social_media_cards {
+    width: fit-content;
+}

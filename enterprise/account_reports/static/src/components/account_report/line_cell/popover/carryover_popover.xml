@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportCarryoverPopover">
+        <table class="carryover_popover">
+            <t t-if="props.carryoverData.carryover || props.carryoverData.applied_carryover">
+                <tr>
+                    <td>
+                        <strong>Carryover</strong>
+                    </td>
+                    <td/>
+                </tr>
+
+                <t t-if="props.carryoverData.applied_carryover">
+                    <tr>
+                        <td colspan="2">
+                            <span>
+                                <strong t-out="props.carryoverData.applied_carryover"/> were carried over to this line from previous period.
+                            </span>
+                        </td>
+                    </tr>
+                </t>
+
+                <t t-if="props.carryoverData.carryover">
+                    <tr>
+                        <td colspan="2">
+                            <t t-if="props.carryoverData.carryover_target">
+                                <span>
+                                    <strong t-out="props.carryoverData.carryover"/> will be carried over to <strong t-out="props.carryoverData.carryover_target"/> in the next period.
+                                </span>
+                            </t>
+                            <t t-else="">
+                                <span>
+                                    <strong t-out="props.carryoverData.carryover"/> will be carried over to this line in the next period.
+                                </span>
+                            </t>
+                        </td>
+                    </tr>
+                </t>
+
+                <t t-if="props.carryoverData.allow_carryover_audit">
+                    <tr>
+                        <td/>
+                        <td>
+                            <button
+                                class="btn btn-secondary"
+                                t-on-click="() => this.viewCarryoverLinesAction(props.carryoverData.expression_id, props.carryoverData.column_group_key)"
+                            >
+                                View Carryover Lines
+                            </button>
+                        </td>
+                    </tr>
+                </t>
+            </t>
+        </table>
+    </t>
+</templates>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_appraisal_survey_user_input_view_tree" model="ir.ui.view">
+        <field name="name">survey.user.input.view.list.inherit.appraisal</field>
+        <field name="model">survey.user_input</field>
+        <field name="arch" type="xml">
+            <list create="0">
+                <header>
+                    <button string="All answers" name="action_open_all_survey_inputs" icon="fa-external-link" type="object"/>
+                    <button string="Resend all" name="action_ask_feedback" icon="fa-repeat" type="object"/>
+                </header>
+                <field name="partner_id" string="Employee"/>
+                <field name="state" widget="badge"
+                    decoration-success="state == 'done'"
+                    decoration-info="state == 'new'"
+                    decoration-warning="state == 'in_progress'"
+                />
+                <field name="deadline"/>
+                <field name="survey_id"/>
+                <button class="oe_stat_button" string="See Answers" invisible="state != 'done'" name="action_open_survey_inputs" icon="fa-external-link" type="object"/>
+                <button class="oe_stat_button" string="Resend" invisible="state == 'done'" name="action_ask_feedback" icon="fa-check-square-o" type="object"/>
+            </list>
+        </field>
+    </record>
+</odoo>

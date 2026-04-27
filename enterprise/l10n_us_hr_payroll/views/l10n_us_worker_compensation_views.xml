@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="l10n_us_worker_compensation_view_form" model="ir.ui.view">
+        <field name="name">l10n.us.worker.compensation.view.form</field>
+        <field name="model">l10n.us.worker.compensation</field>
+        <field name="arch" type="xml">
+            <form string="Worker's Compensation">
+                <sheet>
+                    <div class="oe_title pe-0 w-100 mw-100" name="title">
+                        <h1 class="d-flex flex-row justify-content-between">
+                            <field name="name" class="text-truncate" placeholder="Worker Compensation Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category"/>
+                            <field name="subcategory"/>
+                            <label for="composite_rate"/>
+                            <div class="o_row mw-50" name="composite_rate">
+                                <field name="composite_rate" nolabel="1"/>
+                                <div>$</div>
+                            </div>
+                            <label for="payroll_deduction"/>
+                            <div class="o_row mw-50" name="payroll_deduction">
+                                <field name="payroll_deduction" nolabel="1"/>
+                                <div>$</div>
+                            </div>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_us_worker_compensation_view_list" model="ir.ui.view">
+        <field name="name">l10n.us.worker.compensation.view.list</field>
+        <field name="model">l10n.us.worker.compensation</field>
+        <field name="arch" type="xml">
+            <list string="Worker's Compensations">
+                <field name="name"/>
+                <field name="category"/>
+                <field name="subcategory"/>
+                <field name="composite_rate"/>
+                <field name="payroll_deduction"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_us_worker_compensation_action" model="ir.actions.act_window">
+        <field name="name">Worker's Compensation</field>
+        <field name="res_model">l10n.us.worker.compensation</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

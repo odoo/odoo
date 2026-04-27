@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="event.mailTemplateReferenceField" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('event_template_reference_mail')]" position="after">
+            <span class="event_template_reference_social fa fa-solid fa-thumbs-up" t-if="relation === 'social.post.template'"/>
+        </xpath>
+    </t>
+</templates>

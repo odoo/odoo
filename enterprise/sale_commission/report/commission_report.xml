@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_commission_report_view_list" model="ir.ui.view">
+        <field name="name">sale.commission.report.view.list</field>
+        <field name="model">sale.commission.report</field>
+        <field name="arch" type="xml">
+            <list create="0" delete="0" editable="top">
+                <field name="user_id"/>
+                <field name="team_id" optional="hide"/>
+                <field name="plan_id" optional="visible"/>
+                <field name="date_to" string="Period"/>
+                <field name="payment_date" optional="hide"/>
+                <field name="forecast" readonly="0" optional="hide"/>
+                <field name="target_amount" invisible="target_amount == 0" sum="Total Target"/>
+                <field name="achieved" sum="Total achieved"/>
+                <field name="achieved_rate" widget="percentage" optional="hide" invisible="target_amount == 0"/>
+                <field name="commission" sum="Total commission"/>
+                <field name="currency_id" column_invisible="True"/>  <!-- Monetary field -->
+                <button name="action_achievement_detail" title="Achievements" type="object" string="Details" help="See associated achievements"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="sale_commission_report_view_graph" model="ir.ui.view">
+        <field name="name">sale.commission.report.view.graph</field>
+        <field name="model">sale.commission.report</field>
+        <field name="arch" type="xml">
+            <graph>
+                <field name="payment_date" type="col"/>
+                <field name="plan_id"/>
+                <field name="commission" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="sale_commission_report_view_pivot" model="ir.ui.view">
+        <field name="name">sale.commission.report.view.pivot</field>
+        <field name="model">sale.commission.report</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="plan_id" type="row"/>
+                <field name="user_id" type="row"/>
+                <field name="payment_date" type="col"/>
+                <field name="commission" type="measure"/>
+                <field name="achieved" type="measure"/>
+                <field name="forecast" type="measure"/>
+                <field name="achieved_rate" type="measure"/>
+                <field name="target_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="sale_commission_report_view_search" model="ir.ui.view">
+        <field name="name">sale.commission.report.view.search</field>
+        <field name="model">sale.commission.report</field>
+        <field name="arch" type="xml">
+            <search string="Commission Report">
+                <field name="user_id"/>
+                <field name="team_id"/>
+                <field name="plan_id" groups="sales_team.group_sale_manager"/>
+                <field name="company_id"/>
+                <filter string="My Commissions" name="my"
+                            domain="[('user_id', '=', uid)]"/>
+                <filter string="My Team" name="filter_my_team" domain="[('team_id.user_id', '=', uid)]"/>
+                <filter string="Active Plans" name="active_plans"
+                        domain="[('plan_id.date_from', '&lt;', context_today().strftime('%Y-%m-%d')), ('plan_id.date_to', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="By Quarter" name="quarter" context="{'group_quarter':'1'}"/>
+                <separator/>
+                <filter string="Period" name="filter_date_to" date="date_to"/>
+                <separator/>
+                <filter string="Last Quarter" name="last_quarter" domain="[('date_to', '&lt;=', (context_today() + relativedelta(days=1)).strftime('%Y-%m-%d')), ('date_to', '&gt;=', (context_today() + relativedelta(months=-3)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last Year" name="last_year" domain="[('date_to', '&lt;=', (context_today() + relativedelta(days=1)).strftime('%Y-%m-%d')), ('date_to', '&gt;=', (context_today() + relativedelta(years=-1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <group expand="1" string="Group By">
+                    <filter string="Salesperson" name="group_by_salesperson" context="{'group_by':'user_id'}"/>
+                    <filter string="Sales Team" name="group_by_salesteam" context="{'group_by':'team_id'}"/>
+                    <filter string="Period" name="group_by_date_to" context="{'group_by': 'date_to:month'}"/>
+                    <filter string="Payment Date" name="group_by_payment_date" context="{'group_by':'payment_date'}"/>
+                    <filter string="Commission Plan" name="group_by_plan" context="{'group_by':'plan_id'}" groups="sales_team.group_sale_manager"/>
+                    <filter string="Company" name="group_by_company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="sale_commission_action_report" model="ir.actions.act_window">
+        <field name="name">Commissions</field>
+        <field name="res_model">sale.commission.report</field>
+        <field name="view_mode">list,graph,pivot</field>
+        <field name="context">{'search_default_active_plans': 1}</field>
+        <field name="search_view_id" eval='sale_commission_report_view_search'/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_neutral_face">
+                Unfortunately, there are no commissions for you
+            </p>
+            <p>
+                Ensure you are assigned to a commission plan and have made sales that qualify for commissions
+            </p>
+        </field>
+    </record>
+
+    <record id="sale_commission_action_report_sale" model="ir.actions.act_window">
+        <field name="name">Commissions</field>
+        <field name="res_model">sale.commission.report</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="context">{'search_default_active_plans': 1}</field>
+        <field name="search_view_id" eval='sale_commission_report_view_search'/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_neutral_face">
+                Unfortunately, there are no commissions for you
+            </p>
+            <p>
+                Ensure you are assigned to a commission plan and have made sales that qualify for commissions
+            </p>
+        </field>
+    </record>
+
+    <record id="sale_commission_action_my_report" model="ir.actions.act_window">
+        <field name="name">My Commissions</field>
+        <field name="res_model">sale.commission.report</field>
+        <field name="view_mode">list,graph,pivot</field>
+        <field name="context">{'commission_user_ids': uid, 'search_default_active_plans': 1}</field>
+        <field name="domain">[('user_id', '=', uid)]</field>
+        <field name="search_view_id" eval='sale_commission_report_view_search'/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_neutral_face">
+                Unfortunately, there are no commissions for you
+            </p>
+            <p>
+                Ensure you are assigned to a commission plan and have made sales that qualify for commissions
+            </p>
+        </field>
+    </record>
+</odoo>

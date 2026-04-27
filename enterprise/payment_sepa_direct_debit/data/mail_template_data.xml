@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mail_template_sepa_notify_validation" model="mail.template">
+            <field name="name">SEPA Direct Debit: Validation Notification</field>
+            <field name="model_id" ref="account_sepa_direct_debit.model_sdd_mandate"/>
+            <field name="subject">Your SEPA Direct Debit Mandate with {{ object.company_id.name }}</field>
+            <field name="email_from">{{ object.company_id.email }}</field>
+            <field name="email_to">{{ object.partner_id.email_formatted }}</field>
+            <field name="report_template_ids" eval="[(4, ref('account_sepa_direct_debit.sdd_mandate_form_report_main'))]"/>
+            <field name="description">Send the SEPA mandate in attachement, to partners who signed a new mandate</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <t t-set="company" t-value="object.company_id"/>
+                    <span style="font-size: 10px;">Your SEPA Direct Debit Mandate</span><br/>
+                    <span style="font-size: 20px; font-weight: bold;" t-out="object.partner_bank_id.acc_number or ''">BE15001559627230</span>
+                </td></tr>
+                <tr><td valign="middle" align="right" t-if="not company.uses_default_logo">
+                    <img t-attf-src="/logo.png?company={{ company.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="company.name"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 13px;">
+                    Hello <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,<br/><br/>
+
+                    <p>A SEPA Direct Debit Mandate authorization has just been validated for use with <t t-out="company.name or ''">YourCompany</t>.</p>
+
+                    <p>You will find a copy of the mandate validation attached to this email.</p>
+
+                    <p>Do not hesitate to contact us if you have any question.</p>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle" align="left">
+                    <t t-out="company.name or ''">YourCompany</t>
+                </td></tr>
+                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                    <t t-if="company.phone">
+                        <t t-out="company.phone or ''">+1 650-123-4567</t> |
+                    </t>
+                    <t t-if="company.email">
+                        <a t-attf-href="'mailto:%s' % {{ company.email }}" style="text-decoration:none; color: #454748;" t-out="company.email or ''">info@yourcompany.com</a> |
+                    </t>
+                    <t t-if="company.website">
+                        <a t-attf-href="'%s' % {{ company.website }}" style="text-decoration:none; color: #454748;" t-out="company.website or ''">http://www.example.com</a>
+                    </t>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px;">
+    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+      <tr><td style="text-align: center; font-size: 13px;">
+        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=mail" style="color: #875A7B;">Odoo</a>
+      </td></tr>
+    </table>
+</td></tr>
+</table>
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

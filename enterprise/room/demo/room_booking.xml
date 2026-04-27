@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+    <record id="room_booking_room_1_booking_1" model="room.booking">
+        <field name="name">Daily Followup</field>
+        <field name="room_id" ref="room_room_main_office_room_1"/>
+        <field name="start_datetime" eval="time.strftime('%Y-%m-%d 09:00:00')"/>
+        <field name="stop_datetime" eval="time.strftime('%Y-%m-%d 10:00:00')"/>
+        <field name="organizer_id" ref="base.user_demo"/>
+    </record>
+
+    <record id="room_booking_room_1_booking_2" model="room.booking">
+        <field name="name">Product Presentation</field>
+        <field name="room_id" ref="room_room_main_office_room_1"/>
+        <field name="start_datetime" eval="time.strftime('%Y-%m-%d 11:00:00')"/>
+        <field name="stop_datetime" eval="time.strftime('%Y-%m-%d 12:00:00')"/>
+        <field name="organizer_id" ref="base.user_admin"/>
+    </record>
+
+    <record id="room_booking_room_1_booking_3" model="room.booking">
+        <field name="name">Training</field>
+        <field name="room_id" ref="room_room_main_office_room_1"/>
+        <field name="start_datetime" eval="time.strftime('%Y-%m-%d 13:00:00')"/>
+        <field name="stop_datetime" eval="time.strftime('%Y-%m-%d 15:00:00')"/>
+        <field name="organizer_id" ref="base.user_demo"/>
+    </record>
+
+    <record id="room_booking_room_1_booking_4" model="room.booking">
+        <field name="name">Meeting with clients</field>
+        <field name="room_id" ref="room_room_main_office_room_1"/>
+        <field name="start_datetime" eval="time.strftime('%Y-%m-%d 17:00:00')"/>
+        <field name="stop_datetime" eval="time.strftime('%Y-%m-%d 18:00:00')"/>
+        <field name="organizer_id" ref="base.user_demo"/>
+    </record>
+
+    <record id="room_booking_room_1_booking_5" model="room.booking">
+        <field name="name">Daily Followup</field>
+        <field name="room_id" ref="room_room_main_office_room_1"/>
+        <field name="start_datetime" eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d 09:00:00')"/>
+        <field name="stop_datetime" eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d 10:00:00')"/>
+        <field name="organizer_id" ref="base.user_demo"/>
+    </record>
+
+    <record id="room_booking_room_2_booking_1" model="room.booking">
+        <field name="name">Team Building</field>
+        <field name="room_id" ref="room_room_main_office_room_2"/>
+        <field name="start_datetime" eval="time.strftime('%Y-%m-%d 09:00:00')"/>
+        <field name="stop_datetime" eval="time.strftime('%Y-%m-%d 17:00:00')"/>
+        <field name="organizer_id" ref="base.user_demo"/>
+    </record>
+
+    <record id="room_booking_room_3_booking_1" model="room.booking">
+        <field name="name">Appraisals</field>
+        <field name="room_id" ref="room_room_main_office_room_3"/>
+        <field name="start_datetime" eval="time.strftime('%Y-%m-%d 09:00:00')"/>
+        <field name="stop_datetime" eval="time.strftime('%Y-%m-%d 12:00:00')"/>
+        <field name="organizer_id" ref="base.user_admin"/>
+    </record>
+
+    <record id="room_booking_room_3_booking_1" model="room.booking">
+        <field name="name">Job Interviews</field>
+        <field name="room_id" ref="room_room_main_office_room_3"/>
+        <field name="start_datetime" eval="time.strftime('%Y-%m-%d 14:00:00')"/>
+        <field name="stop_datetime" eval="time.strftime('%Y-%m-%d 16:00:00')"/>
+        <field name="organizer_id" ref="base.user_demo"/>
+    </record>
+
+    <record id="room_booking_floor_1_booking_1" model="room.booking">
+        <field name="name">Welcoming Newcomers</field>
+        <field name="room_id" ref="room_room_head_office_room_1"/>
+        <field name="start_datetime" eval="time.strftime('%Y-%m-%d 09:00:00')"/>
+        <field name="stop_datetime" eval="time.strftime('%Y-%m-%d 10:30:00')"/>
+        <field name="organizer_id" ref="base.user_demo"/>
+    </record>
+    <record id="room_booking_floor_1_booking_1" model="room.booking">
+        <field name="name">Newcomers Drink</field>
+        <field name="room_id" ref="room_room_head_office_room_1"/>
+        <field name="start_datetime" eval="time.strftime('%Y-%m-%d 15:00:00')"/>
+        <field name="stop_datetime" eval="time.strftime('%Y-%m-%d 16:00:00')"/>
+        <field name="organizer_id" ref="base.user_demo"/>
+    </record>
+</data>
+</odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit_delivery_ups" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.delivery.ups</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                <field name="ups_bill_my_account" invisible="1"/>
+                <field name="partner_ups_carrier_account" invisible="not ups_bill_my_account"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

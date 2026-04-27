@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_quant_package_form_inherit_stock_barcode_picking_batch" model="ir.ui.view">
+        <field name="name">stock_barcode_picking_batch.quant.package.form</field>
+        <field name="model">stock.quant.package</field>
+        <field name="inherit_id" ref="stock.view_quant_package_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='pack_date']" position="after">
+                <field name="package_use" widget="radio" readonly="quant_ids"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

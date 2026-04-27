@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <data>
+        <record id="tax_report_cis" model="account.report">
+            <field name="name">CIS Deduction</field>
+            <field name="root_report_id" ref="account.generic_tax_report"/>
+            <field name="custom_handler_model_id" ref="model_cis_tax_report_handler"/>
+            <field name="country_id" ref="base.uk"/>
+            <field name="filter_fiscal_position" eval="False"/>
+            <field name="filter_multi_company">disabled</field>
+            <field name="filter_hide_0_lines">never</field>
+            <field name="filter_period_comparison" eval="False"/>
+            <field name="default_opening_date_filter">previous_tax_period</field>
+            <field name="availability_condition">country</field>
+            <field name="column_ids">
+                <record id="cis_report_payment" model="account.report.column">
+                    <field name="name">Payment</field>
+                    <field name="expression_label">payment</field>
+                    </record>
+                <record id="cis_report_materials" model="account.report.column">
+                    <field name="name">Materials</field>
+                    <field name="expression_label">materials</field>
+                    </record>
+                <record id="cis_report_deduction" model="account.report.column">
+                    <field name="name">Deduction</field>
+                    <field name="expression_label">deduction</field>
+                </record>
+            </field>
+            <field name="line_ids">
+                <record id="account_uk_cis_report_line_purchase" model="account.report.line">
+                    <field name="name">CIS Deduction Purchase</field>
+                    <field name="groupby">partner_id, move_id</field>
+                    <field name="code">CISP</field>
+                    <field name="hide_if_zero" eval="True"/>
+                    <field name="expression_ids">
+                        <record id="account_uk_cis_report_line_purchase_expr_payment" model="account.report.expression">
+                            <field name="label">payment</field>
+                            <field name="engine">domain</field>
+                            <field name="formula" eval="[('display_type', '=', 'product'), ('move_id.move_type', 'in', ('in_invoice', 'in_refund'))]"/>
+                            <field name="subformula">sum</field>
+                        </record>
+                        <record id="account_uk_cis_report_line_purchase_expr_materials" model="account.report.expression">
+                            <field name="label">materials</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_cis_materials_purchase</field>
+                            <field name="subformula">sum</field>
+                        </record>
+                        <record id="account_uk_cis_report_line_purchase_expr_deduction" model="account.report.expression">
+                            <field name="label">deduction</field>
+                            <field name="engine">tax_tags</field>
+                            <field name="formula">CISPT</field>
+                        </record>
+                        <record id="account_uk_cis_report_line_purchase_expr_base" model="account.report.expression">
+                            <field name="label">_cis_line_base_amount</field>
+                            <field name="engine">tax_tags</field>
+                            <field name="formula">CISPB</field>
+                        </record>
+                    </field>
+                </record>
+                <record id="account_uk_cis_report_line_sales" model="account.report.line">
+                    <field name="name">CIS Deduction Sales</field>
+                    <field name="groupby">partner_id, move_id</field>
+                    <field name="code">CISS</field>
+                    <field name="hide_if_zero" eval="True"/>
+                    <field name="expression_ids">
+                        <record id="account_uk_cis_report_line_sale_expr_payment" model="account.report.expression">
+                            <field name="label">payment</field>
+                            <field name="engine">domain</field>
+                            <field name="formula" eval="[('display_type', '=', 'product'), ('move_id.move_type', 'in', ('out_invoice', 'out_refund'))]"/>
+                            <field name="subformula">-sum</field>
+                        </record>
+                        <record id="account_uk_cis_report_line_sale_expr_materials" model="account.report.expression">
+                            <field name="label">materials</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_cis_materials_sales</field>
+                            <field name="subformula">-sum</field>
+                        </record>
+                        <record id="account_uk_cis_report_line_sale_expr_deduction" model="account.report.expression">
+                            <field name="label">deduction</field>
+                            <field name="engine">tax_tags</field>
+                            <field name="formula">CISST</field>
+                        </record>
+                        <record id="account_uk_cis_report_line_sale_expr_base" model="account.report.expression">
+                            <field name="label">_cis_sales_base_amount</field>
+                            <field name="engine">tax_tags</field>
+                            <field name="formula">CISSB</field>
+                        </record>
+                    </field>
+                </record>
+            </field>
+        </record>
+    </data>
+</odoo>

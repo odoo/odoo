@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr_appraisal.AppraisalKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
+        <t t-call="web.ActionHelper" position="replace">
+            <t t-if="showNoContentHelper">
+                <AppraisalActionHelper noContentHelp="props.noContentHelp"/>
+            </t>
+        </t>
+    </t>
+</odoo>

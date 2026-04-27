@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.pos_enterprise</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="15"/>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('pos_iot_config')]" position="replace">
+                <div class="content-group pos_iot_config" invisible="not pos_is_posbox">
+                    <field name="pos_iface_print_via_proxy" invisible="1"/>
+                    <div class="mt16" id="btn_use_iot">
+                        <div class="text-warning mt16 mb4">
+                            Save this page and come back here to set up the feature.
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//block[@id='pos_bills_and_receipts_section']" position="after">
+                <block title="Food Delivery Connector" id="pos_urban_piper_section">
+                    <setting id="urban_piper_setting" string="Urban Piper" documentation="https://www.urbanpiper.com/" company_dependent="1" help="Manage your online orders with Urban Piper.">
+                        <field name="pos_module_pos_urban_piper" readonly="pos_has_active_session"/>
+                        <div class="content-group"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

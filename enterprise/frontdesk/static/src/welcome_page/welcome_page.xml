@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="frontdesk.WelcomePage">
+        <div class="position-relative d-flex flex-column flex-lg-row justify-content-center w-100 o_main_bg_img" t-att-style="'background-image: url(/frontdesk/' + props.stationInfo.id + '/background), url(/frontdesk/static/img/frontdesk.svg'">
+            <div class="position-relative d-flex flex-column align-items-center justify-content-center h-lg-100 p-4 pb-5 pb-lg-4 text-center">
+                <div class="display-2 m-0 fw-bold">
+                    Welcome to
+                    <div class="fs-1 fw-light" t-out="props.companyName"/>
+                </div>
+                <div class="btn btn-lg btn-primary mt-4" t-on-click="() => props.showScreen('VisitorForm')">Check in</div>
+            </div>
+            <div class="position-lg-absolute start-0 end-0 top-0 bottom-0 d-flex gap-3 flex-column justify-content-between align-items-center align-items-lg-stretch p-4 pe-none">
+                <div t-if="props.langs">
+                    <div class="d-flex justify-content-center justify-content-lg-end">
+                        <select class="form-select w-auto pe-auto" t-att-class="props.stationInfo.theme == 'dark' ? 'border-0 bg-800 text-white' : ' bg-white'" t-on-change="(ev) => props.onChangeLang(ev)">
+                            <t t-foreach="props.langs" t-as="lang" t-key="lang.code">
+                                <option t-att-value="lang.code" t-att-selected="lang.code === props.currentLang ? true : undefined"><t t-out="lang.name"/></option>
+                            </t>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center align-items-lg-end gap-5 mt-auto">
+                    <div class="display-5" t-out="state.today"/>
+                    <img t-if="props.stationInfo.self_check_in" class="rounded p-2 bg-white o_qrcode" t-att-src="state.qrCode" alt="QR Code"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

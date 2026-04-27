@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_in_gst_return_period_tree_view" model="ir.ui.view">
+        <field name="name">l10n_in.gst.return.period.list</field>
+        <field name="model">l10n_in.gst.return.period</field>
+        <field name="arch" type="xml">
+            <list string="Return Periods">
+                <field name="name"/>
+                <field name="company_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="periodicity"/>
+            </list>
+        </field>
+    </record>
+    <record id="l10n_in_gst_return_period_form_view" model="ir.ui.view">
+        <field name="name">l10n_in.gst.return.period.form</field>
+        <field name="model">l10n_in.gst.return.period</field>
+        <field name="arch" type="xml">
+            <form string="Return Periods">
+                <div id="gstr-alerts">
+                    <div id="gstr1_error_block" class="d-flex flex-column gap-0">
+                        <div class="alert alert-warning"
+                             role="alert"
+                             invisible="gstr1_error in ('', False) or gstr1_blocking_level != 'warning'">
+                            GSTR-1:<field name="gstr1_error" readonly="1"/>
+                        </div>
+                        <div class="alert alert-danger"
+                             role="alert"
+                             invisible="gstr1_error in ('', False) or gstr1_blocking_level != 'error'">
+                            GSTR-1:<field name="gstr1_error" readonly="1"/>
+                        </div>
+                    </div>
+                    <div id="gstr2b_error_block" class="d-flex flex-column gap-0">
+                        <div class="alert alert-warning"
+                             role="alert"
+                             invisible="gstr2b_error in ('', False) or gstr2b_blocking_level != 'warning'">
+                            GSTR-2B:<field name="gstr2b_error" readonly="1"/>
+                        </div>
+                        <div class="alert alert-danger"
+                             role="alert"
+                             invisible="gstr2b_error in ('', False) or gstr2b_blocking_level != 'error'">
+                            GSTR-2B:<field name="gstr2b_error" readonly="1"/>
+                        </div>
+                    </div>
+                </div>
+                <sheet>
+                    <div name="button_box" class="oe_button_box" invisible="l10n_in_gstr_activate_einvoice_fetch == 'do_nothing'">
+                        <button class="oe_stat_button"
+                                name="action_get_irn_data"
+                                type="object"
+                                icon="fa-download"
+                                invisible="irn_status"
+                                help="Click this button to fetch the e-invoice from the government portal.">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">
+                                    Fetch E-Invoice
+                                </span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button disabled"
+                                name="action_get_irn_data"
+                                type="object"
+                                invisible="irn_status not in ['to_download', 'to_process']"
+                                help="E-invoice fetching is in progress.">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">
+                                    <i class="fa fa-spinner fa-spin p-1"/>
+                                    Fetching
+                                </span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button text-danger"
+                                name="action_get_irn_data"
+                                type="object"
+                                icon="fa-download text-danger"
+                                invisible="irn_status != 'process_with_error'"
+                                help="An error occurred while fetching the e-invoice. Please check the logger section for details.">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">
+                                    Fetch E-Invoice
+                                </span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Done" bg_color="text-bg-success" invisible="gstr3b_status != 'filed'"/>
+                    <label for="month" string="GST Filing" class="text-muted"/>
+                    <h2>
+                        <field name="month" style="width: 150px" invisible="periodicity != 'monthly'"/>
+                        <field name="quarter" style="width: 150px" invisible="periodicity != 'trimester'"/>
+                        <field name="year" class="oe_inline ml4"/>
+                    </h2>
+                    <group class="mt8">
+                        <group>
+                            <field name="company_id" readonly="tax_unit_id not in ('', False)"/>
+                            <field name="tax_unit_id" invisible="not display_tax_unit"/>
+                            <field name="periodicity"/>
+                            <label for="gstr1_include_einvoice" string="E-Invoice in GSTR-1"/>
+                            <div class="d-flex gap-2">
+                                <field name="gstr1_include_einvoice" widget="boolean_toggle" string="E-Invoice in GSTR-1" class="oe_inline"/>
+                                <span>
+                                    <span invisible="gstr1_include_einvoice" class="text-muted">Exclude</span>
+                                    <span invisible="not gstr1_include_einvoice" class="text-success">Include</span>
+                                </span>
+                            </div>
+                        </group>
+                    </group>
+                    <ol id="gstr-headers">
+                        <h2 id="gstr1-header" class="border-bottom border-dark mt16">
+                            <li>
+                                <span>Send GSTR-1 </span>
+                                <small class="text-muted">Details of customers invoices</small>
+
+                                <div class="float-end text-white">
+                                    <field name="gstr1_status" class="badge bg-secondary" invisible="gstr1_status != 'to_send'" nolabel="1"/>
+                                    <field name="gstr1_status" class="bg-warning badge" invisible="gstr1_status != 'sending' or gstr1_blocking_level != 'warning'" nolabel="1"/>
+                                    <field name="gstr1_status" class="bg-warning badge" invisible="gstr1_status != 'waiting_for_status' or gstr1_blocking_level == 'error'" nolabel="1"/>
+                                    <field name="gstr1_status" class="badge bg-danger" invisible="gstr1_status not in ['sending', 'waiting_for_status'] or gstr1_blocking_level != 'error'" nolabel="1"/>
+                                    <field name="gstr1_status" class="badge bg-danger" invisible="gstr1_status != 'error_in_invoice'" nolabel="1"/>
+                                    <field name="gstr1_status" class="badge bg-success" invisible="gstr1_status not in ['sending', 'sent', 'filed'] or gstr1_blocking_level in ['error', 'warning']" nolabel="1"/>
+                                </div>
+                            </li>
+                        </h2>
+                        <div id="gstr1-body">
+                            <ol id="gstr1-list" style="list-style-type:decimal">
+                                <li>Verify the <button name="action_view_gstr1_return_period" type="object" class="btn btn-link p-0" string="GSTR-1 Report"/>
+                                </li>
+
+                                <li invisible="gstr1_blocking_level not in ['error', 'warning']">Error, <button name="button_send_gstr1" type="object" class="btn btn-link p-0" string="Re-Push to GSTN"/> or <button name="button_check_gstr1_status" type="object" class="btn btn-link p-0" string="Check Status"/>
+                                </li>
+
+                                <li invisible="gstr1_status not in ['to_send', 'error_in_invoice']">Then, <button name="button_send_gstr1" type="object" class="btn btn-link p-0" string="Push to GSTN"/> and Check Status
+                                </li>
+
+                                <li invisible="gstr1_status != 'waiting_for_status'">Then, Push to GSTN and <button name="button_check_gstr1_status" type="object" class="btn btn-link p-0" string="Check Status"/>
+                                </li>
+
+                                <li invisible="gstr1_status != 'sent'">Then, <button name="button_send_gstr1" type="object" class="btn btn-link p-0" string="Re-Push to GSTN"/> and Check Status
+                                </li>
+
+                                <li invisible="gstr1_status != 'sent'"><button name="button_gstr1_filed" type="object" class="btn btn-link p-0" string="Mark as Filed"/>
+                                </li>
+                            </ol>
+                        </div>
+
+                        <h2 id="gstr2b-header" class="border-bottom border-dark mt16">
+                            <li>
+                                <span>Receive GSTR-2B </span>
+                                <small class="text-muted">Details submited by vendors</small>
+
+                                <div class="float-end text-white">
+                                    <field name="gstr2b_status" class="badge bg-secondary" invisible="gstr2b_status != 'not_recived'" nolabel="1"/>
+                                    <field name="gstr2b_status" class="bg-warning badge" invisible="gstr2b_status not in ['waiting_reception', 'being_processed'] or gstr2b_blocking_level == 'error'" nolabel="1"/>
+                                    <field name="gstr2b_status" class="bg-warning badge" invisible="gstr2b_status != 'partially_matched'" nolabel="1"/>
+                                    <field name="gstr2b_status" class="badge bg-danger" invisible="gstr2b_status not in ['waiting_reception', 'being_processed'] or gstr2b_blocking_level != 'error'" nolabel="1"/>
+                                    <field name="gstr2b_status" class="badge bg-success" invisible="gstr2b_status != 'fully_matched' or gstr2b_blocking_level in ['error', 'warning']" nolabel="1"/>
+                                </div>
+                            </li>
+                        </h2>
+                        <div id="gstr2b-body">
+                            <ol id="gstr2b-list" style="list-style-type:decimal">
+                                <li invisible="gstr2b_status != 'not_recived'">
+                                    <button name="action_get_gstr2b_data" type="object" class="btn btn-link p-0" string="Fetch GSTR-2B Summary"/>
+                                </li>
+                                <li invisible="gstr2b_status == 'not_recived'">
+                                    Fetch GSTR-2B Summary
+                                </li>
+                                <li>
+                                    Match Vendor Bills
+                                </li>
+                                <li invisible="gstr2b_status == 'not_recived'">
+                                    In case of issues <button name="action_get_gstr2b_data" type="object" class="btn btn-link p-0" string="re-fetch"/> or <button name="gstr2b_match_data" type="object" class="btn btn-link p-0" string="re-match"/>
+                                </li>
+                                <li invisible="gstr2b_status != 'not_recived'">
+                                    In case of issues re-fetch or re-match
+                                </li>
+
+                                <li invisible="gstr2b_status == 'not_recived'">
+                                    <button name="action_get_gstr2b_view_reconciled_invoice" type="object" class="btn btn-link p-0" string="View Reconciled Bills"/>
+                                </li>
+                                <li invisible="gstr2b_status != 'not_recived'">
+                                    View Reconciled Bills
+                                </li>
+                            </ol>
+                        </div>
+
+                        <h2 id="gstr3-header" class="border-bottom border-dark mt16">
+                            <li>
+                                <span>GSTR-3 </span>
+                                <div class="float-end text-white">
+                                    <field name="gstr3b_status" class="badge bg-secondary" invisible="gstr3b_status != 'not_filed'" nolabel="1"/>
+                                    <field name="gstr3b_status" class="badge bg-success" invisible="gstr3b_status != 'filed'" nolabel="1"/>
+                                </div>
+                            </li>
+                        </h2>
+                        <div id="gstr3-body">
+                            <ol id="gstr3-list" style="list-style-type:decimal">
+                                <li> Verify the <button name="action_view_gstr3b_return_period" type="object" class="btn btn-link p-0" string="GSTR-3 Report"/></li>
+                                <li>Validate GSTR-3 in GST Portal</li>
+                                <li invisible="not gstr3b_closing_entry">Update &amp; Post Closing Entry: <field name="gstr3b_closing_entry"/></li>
+                            </ol>
+                        </div>
+                    </ol>
+                    <p class="text-end">
+                        Need help? Checkout our tutorial <widget name="documentation_link" string="checkout" path="/applications/finance/fiscal_localizations/india.html#india-gstr"/>
+                    </p>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_in_gst_return_period_kanban_view" model="ir.ui.view">
+        <field name="name">l10n_in.gst.return.period.kanban</field>
+        <field name="model">l10n_in.gst.return.period</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="company_id"/>
+                <field name="gstr1_status"/>
+                <field name="gstr2b_status"/>
+                <field name="gstr1_blocking_level"/>
+                <field name="gstr2b_blocking_level"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="ms-2">
+                            <field name="name" class="fw-bold fs-4"/>
+                            <span class="fw-bold fs-sm">
+                                (<field name="company_id"/>)
+                            </span>
+                        </div>
+                        <div class="mt-2 pb-3 row">
+                            <div class="col-5 ms-2">
+                                <h2> GSTR-1 </h2>
+                                <t t-if="record.gstr1_status.raw_value == 'to_send'">
+                                    <t t-if="record.gstr1_blocking_level.raw_value == 'error'">
+                                        <span class="badge rounded-pill text-bg-danger fs-xs">To Send</span>
+                                    </t>
+                                    <t t-elif="record.gstr1_blocking_level.raw_value == 'warning'">
+                                        <span class="badge rounded-pill text-bg-warning fs-xs">To Send</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="badge rounded-pill text-bg-muted fs-xs">To Send</span>
+                                    </t>
+                                </t>
+                                <t t-elif="record.gstr1_status.raw_value == 'sending'">
+                                    <t t-if="record.gstr1_blocking_level.raw_value == 'error'">
+                                        <span class="badge rounded-pill text-bg-danger fs-xs">Sending</span>
+                                    </t>
+                                    <t t-elif="record.gstr1_blocking_level.raw_value == 'warning'">
+                                        <span class="badge rounded-pill text-bg-warning fs-xs">Sending</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="badge rounded-pill text-bg-success fs-xs">Sending</span>
+                                    </t>
+                                </t>
+                                <t t-elif="record.gstr1_status.raw_value == 'waiting_for_status'">
+                                    <t t-if="record.gstr1_blocking_level.raw_value == 'error'">
+                                        <span class="badge rounded-pill text-bg-danger fs-xs">Waiting for Status</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="badge rounded-pill text-bg-warning fs-xs">Waiting for Status</span>
+                                    </t>
+                                </t>
+                                <t t-elif="record.gstr1_status.raw_value == 'sent'">
+                                    <t t-if="record.gstr1_blocking_level.raw_value == 'error'">
+                                        <span class="badge rounded-pill text-bg-danger fs-xs">Sent</span>
+                                    </t>
+                                    <t t-elif="record.gstr1_blocking_level.raw_value == 'warning'">
+                                        <span class="badge rounded-pill text-bg-warning fs-xs">Sent</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="badge rounded-pill text-bg-success fs-xs">Sent</span>
+                                    </t>
+                                </t>
+                                <t t-elif="record.gstr1_status.raw_value == 'error_in_invoice'">
+                                    <t t-if="record.gstr1_blocking_level.raw_value == 'warning'">
+                                        <span class="badge rounded-pill text-bg-warning fs-xs">Error in Invoice</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="badge rounded-pill text-bg-danger fs-xs">Error in Invoice</span>
+                                    </t>
+                                </t>
+                                <t t-elif="record.gstr1_status.raw_value == 'filed'">
+                                    <span class="badge rounded-pill text-bg-success fs-xs">Filed</span>
+                                </t>
+                            </div>
+                            <div class="col-5">
+                                <h2> GSTR-2B </h2>
+                                <t t-if="record.gstr2b_status.raw_value == 'not_recived'">
+                                    <t t-if="record.gstr2b_blocking_level.raw_value == 'error'">
+                                        <span class="badge rounded-pill text-bg-danger fs-xs">Not Received</span>
+                                    </t>
+                                    <t t-elif="record.gstr2b_blocking_level.raw_value == 'warning'">
+                                        <span class="badge rounded-pill text-bg-warning fs-xs">Not Received</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="badge rounded-pill text-bg-muted fs-xs">Not Received</span>
+                                    </t>
+                                </t>
+                                <t t-elif="record.gstr2b_status.raw_value == 'waiting_reception'">
+                                    <t t-if="record.gstr2b_blocking_level.raw_value == 'error'">
+                                        <span class="badge rounded-pill text-bg-danger fs-xs">Waiting Reception</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="badge rounded-pill text-bg-warning fs-xs">Waiting Reception</span>
+                                    </t>
+                                </t>
+                                <t t-elif="record.gstr2b_status.raw_value == 'being_processed'">
+                                    <t t-if="record.gstr2b_blocking_level.raw_value == 'error'">
+                                        <span class="badge rounded-pill text-bg-danger fs-xs">Being Processed</span>
+                                    </t>
+                                    <t t-elif="record.gstr2b_blocking_level.raw_value == 'warning'">
+                                        <span class="badge rounded-pill text-bg-warning fs-xs">Being Processed</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="badge rounded-pill text-bg-success fs-xs">Being Processed</span>
+                                    </t>
+                                </t>
+                                <t t-elif="record.gstr2b_status.raw_value == 'fully_matched'">
+                                    <t t-if="record.gstr2b_blocking_level.raw_value == 'error'">
+                                        <span class="badge rounded-pill text-bg-danger fs-xs">Matched</span>
+                                    </t>
+                                    <t t-elif="record.gstr2b_blocking_level.raw_value == 'warning'">
+                                        <span class="badge rounded-pill text-bg-warning fs-xs">Matched</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="badge rounded-pill text-bg-success fs-xs">Matched</span>
+                                    </t>
+                                </t>
+                                <t t-elif="record.gstr2b_status.raw_value == 'partially_matched'">
+                                    <t t-if="record.gstr2b_blocking_level.raw_value == 'error'">
+                                        <span class="badge rounded-pill text-bg-danger fs-xs">Partially Matched</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="badge rounded-pill text-bg-warning fs-xs">Partially Matched</span>
+                                    </t>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="l10n_in_gst_return_period_search" model="ir.ui.view">
+        <field name="name">l10n_in.gst.return.period.search</field>
+        <field name="model">l10n_in.gst.return.period</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="recent_period_filter" string="Recent Period" domain="[
+                    '|',
+                    ('start_date', 'in', [context_today().strftime('%Y-%m-01'), (context_today() - relativedelta(months=1)).strftime('%Y-%m-01')]),
+                    '&amp;', '&amp;',
+                    ('start_date', '&gt;=', (context_today() - relativedelta(months=5)).strftime('%Y-%m-01')),
+                    ('end_date', '&lt;', (context_today() + relativedelta(months=3)).strftime('%Y-%m-01')),
+                    ('periodicity', '=', 'trimester')]"/>
+                <filter name="groupby_gstr3b_status" context="{'group_by' : 'gstr3b_status'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="l10n_in_gst_return_period_action" model="ir.actions.act_window">
+        <field name="name">GST Return Period</field>
+        <field name="res_model">l10n_in.gst.return.period</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_recent_period_filter': 1}</field>
+        <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                GST Return Filing
+            </p>
+            <div style="text-align:justify;">
+                <pre style="padding-right: 40px; border: 0px">
+                    Step-1: Send GSTR-1
+                        1.Verify the GSTR-1 Report
+                        2.Then Push to GSTN
+                        3.Mark as Filed
+
+                    Step-2: Receive GSTR-2B
+                        1.Fetch GSTR-2B Summary  
+                        2.Match Vendor Bill
+
+                    Step-3: Submit GSTR-3
+                        1.Verify the GSTR-3 Report
+                        2.Validate GSTR-3 in GST Portal
+                        3.Update &amp; Post closing entry
+                </pre>
+            </div>
+        </field>
+    </record>
+
+    <menuitem id="gst_return_period_menu" name="GST Return Periods" action="l10n_in_gst_return_period_action" parent="l10n_in.account_reports_in_statements_menu" sequence="1"/>
+</odoo>

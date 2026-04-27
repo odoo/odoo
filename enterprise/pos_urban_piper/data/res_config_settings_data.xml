@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record model="res.config.settings" id="res_config_settings_enable_pos_urban_piper">
+        <field name="pos_tax_regime_selection" eval="1"/>
+        <field name="group_product_pricelist" eval="1"/>
+        <field name="pos_use_pricelist" eval="1"/>
+    </record>
+    <function model="res.config.settings" name="execute">
+        <value eval="[ref('res_config_settings_enable_pos_urban_piper')]"/>
+    </function>
+    <!--  Need to unlink settings as it cause issue in test_l10n_be_hr_payroll_account -->
+    <function model="res.config.settings" name="unlink">
+        <value eval="[ref('res_config_settings_enable_pos_urban_piper')]"/>
+    </function>
+</odoo>

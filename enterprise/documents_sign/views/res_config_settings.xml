@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_documents_sign" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.documents.sign</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="documents.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='files_centralization_section']" position="inside">
+                <setting string="Sign" help="Each document template can be configured to centralize signed documents into a specific folder.">
+                    <button name="%(sign.sign_template_action)d" icon="oi-arrow-right" type="action" string="Go to Sign Document Templates" class="btn-link"/>
+                </setting>
+                <!--
+                    This setting is hidden because the 'Sign Base Folder' feature no longer works
+                    and is deprecated in future versions. Users should manage folders through
+                    the document template configuration instead.
+                -->
+                <setting company_dependent="1" string="Sign Base Folder" invisible="1"
+                         help="Base folder for the folders created on-the-fly in the Sign App. Permission of the created folders will be inherited from this base folder.">
+                    <label class="o_form_label col-lg-3" for="documents_sign_folder_id" string="Folder"/>
+                    <field name="documents_sign_folder_id" widget="documents_folder_many2one"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

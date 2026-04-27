@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="pos_delivery_provider_swiggy" model="pos.delivery.provider">
+        <field name="name">Swiggy</field>
+        <field name="technical_name">swiggy</field>
+        <field name="journal_code">SWY</field>
+        <field name="image_128" type="base64" file="pos_urban_piper_swiggy/static/img/Swiggy.svg"/>
+        <field name="available_country_ids" eval="[Command.set([ref('base.in')])]"/>
+    </record>
+</odoo>

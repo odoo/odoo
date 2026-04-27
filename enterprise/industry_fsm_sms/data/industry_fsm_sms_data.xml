@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sms_template_data_fsm_intervention" model="sms.template">
+        <field name="name">Field Service: Intervention Scheduled</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="body">{{ object.company_id.name }}: Your intervention is scheduled {{ 'from the ' + format_datetime(object.planned_date_begin, tz=object.partner_id.tz, lang_code=object.partner_id.lang) + ' to the ' + format_datetime(object.date_deadline, tz=object.partner_id.tz, lang_code=object.partner_id.lang) if object.planned_date_begin and object.date_deadline else '' }}</field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+    </record>
+
+    <record id="sms_template_data_fsm_onway" model="sms.template">
+        <field name="name">Field Service: Our team is on its way to your location.</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="body">{{ object.company_id.name }}: We are on our way to your intervention.</field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+    </record>
+</odoo>

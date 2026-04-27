@@ -1,0 +1,28 @@
+#calendar_employee {
+    .fc-col-header, .fc-cell-shaded {
+        @include o-bg-color($o-brand-odoo, $important: false);
+        a {
+            color: inherit;
+        }
+    }
+    .fc-more-link {
+        color: $o-enterprise-action-color;
+    }
+}
+
+.o_planning_calendar_container .o_planning_toast {
+    top: 5em;
+    right: 1em;
+}
+
+.contact-assignee-popover {
+    text-align: left;
+    
+    .popover-header {
+        padding: 0.3rem 1rem;
+    }
+    
+    .popover-body {
+        padding: 0.5rem 1rem;
+    }
+}

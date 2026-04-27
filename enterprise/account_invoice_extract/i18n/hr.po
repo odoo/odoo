@@ -1,0 +1,402 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_invoice_extract
+#
+# Translators:
+# Martin Trigaux, 2024
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2024
+# Bole <bole@dajmi5.com>, 2024
+# Milan Tribuson <one.mile.code@gmail.com>, 2024
+# Luka Carević <luka@uvid.hr>, 2025
+# Alen Komljen <alen@uvid.hr>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2025-11-17 16:25+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-18/"
+"account_invoice_extract/hr/>\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__message_needaction
+msgid "Action Needed"
+msgstr "Potrebna radnja"
+
+#. module: account_invoice_extract
+#: model:ir.model,name:account_invoice_extract.model_ir_attachment
+msgid "Attachment"
+msgstr "Prilog"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__message_attachment_count
+msgid "Attachment Count"
+msgstr "Broj priloga"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_bank_statement_line__extract_can_show_banners
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__extract_can_show_banners
+msgid "Can show the ocr banners"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__extract_can_show_send_button
+msgid "Can show the ocr send button"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model:ir.model,name:account_invoice_extract.model_res_company
+msgid "Companies"
+msgstr "Tvrtke"
+
+#. module: account_invoice_extract
+#: model:ir.model,name:account_invoice_extract.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfiguracijske postavke"
+
+#. module: account_invoice_extract
+#. odoo-python
+#: code:addons/account_invoice_extract/models/account_invoice.py:0
+msgid "Couldn't reload AI data."
+msgstr ""
+
+#. module: account_invoice_extract
+#. odoo-javascript
+#: code:addons/account_invoice_extract/static/src/js/invoice_extract_form_renderer.js:0
+msgid "Create"
+msgstr "Kreiraj"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_invoice_extract_words__create_uid
+msgid "Created by"
+msgstr "Kreirao"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_invoice_extract_words__create_date
+msgid "Created on"
+msgstr "Kreirano"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_res_config_settings__extract_out_invoice_digitalization_mode
+msgid "Customer Invoices"
+msgstr "Izlazni računi"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_res_company__extract_out_invoice_digitalization_mode
+msgid "Digitization mode on customer invoices"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_res_company__extract_in_invoice_digitalization_mode
+msgid "Digitization mode on vendor bills"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model:ir.model.fields.selection,name:account_invoice_extract.selection__res_company__extract_in_invoice_digitalization_mode__auto_send
+#: model:ir.model.fields.selection,name:account_invoice_extract.selection__res_company__extract_out_invoice_digitalization_mode__auto_send
+msgid "Digitize automatically"
+msgstr "Automatski digitaliziraj"
+
+#. module: account_invoice_extract
+#: model_terms:ir.ui.view,arch_db:account_invoice_extract.view_move_form_inherit_ocr
+msgid "Digitize document"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model:ir.model.fields.selection,name:account_invoice_extract.selection__res_company__extract_in_invoice_digitalization_mode__manual_send
+#: model:ir.model.fields.selection,name:account_invoice_extract.selection__res_company__extract_out_invoice_digitalization_mode__manual_send
+msgid "Digitize on demand only"
+msgstr "Digitaliziraj samo na zahtjev"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_invoice_extract_words__display_name
+msgid "Display Name"
+msgstr "Naziv za prikaz"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields.selection,name:account_invoice_extract.selection__res_company__extract_in_invoice_digitalization_mode__no_send
+#: model:ir.model.fields.selection,name:account_invoice_extract.selection__res_company__extract_out_invoice_digitalization_mode__no_send
+msgid "Do not digitize"
+msgstr "Nemoj digitalizirati"
+
+#. module: account_invoice_extract
+#: model_terms:ir.ui.view,arch_db:account_invoice_extract.res_config_settings_view_form
+msgid "Enable to get only one invoice line per tax"
+msgstr "Omogući dobivanje samo jedne stavke računa po porezu"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__extract_error_message
+msgid "Error message"
+msgstr "Error message"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_bank_statement_line__extract_attachment_id
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__extract_attachment_id
+msgid "Extract Attachment"
+msgstr "Izdvoji privitak"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_bank_statement_line__extract_detected_layout
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__extract_detected_layout
+msgid "Extract Detected Layout Id"
+msgstr "Izdvoji ID otkrivene strukture"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_bank_statement_line__extract_partner_name
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__extract_partner_name
+msgid "Extract Detected Partner Name"
+msgstr "Izdvoji otkriveno ime partnera"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_bank_statement_line__extract_prefill_data
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__extract_prefill_data
+msgid "Extract Prefill Data"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__extract_state_processed
+msgid "Extract State Processed"
+msgstr "Stanje izdvajanja obrađeno"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_bank_statement_line__extract_word_ids
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__extract_word_ids
+msgid "Extract Word"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__extract_state
+msgid "Extract state"
+msgstr "Izvuci status"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__extract_status
+msgid "Extract status"
+msgstr "Status izdvajanja"
+
+#. module: account_invoice_extract
+#: model:ir.model,name:account_invoice_extract.model_account_invoice_extract_words
+msgid "Extracted words from invoice scan"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model_terms:ir.ui.view,arch_db:account_invoice_extract.view_move_form_inherit_ocr
+msgid "Extraction Information"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_invoice_extract_words__field
+msgid "Field"
+msgstr "Polje"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__message_follower_ids
+msgid "Followers"
+msgstr "Pratitelji"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Pratitelji (partneri)"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__has_message
+msgid "Has Message"
+msgstr "Ima poruku"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_invoice_extract_words__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__extract_document_uuid
+msgid "ID of the request to IAP-OCR"
+msgstr "ID zahtjeva za IAP-OCR"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,help:account_invoice_extract.field_account_move__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ako je označeno, nove poruke zahtijevaju Vašu pažnju."
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,help:account_invoice_extract.field_account_move__message_has_error
+#: model:ir.model.fields,help:account_invoice_extract.field_account_move__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_invoice_extract_words__invoice_id
+msgid "Invoice"
+msgstr "Račun"
+
+#. module: account_invoice_extract
+#: model:ir.actions.server,name:account_invoice_extract.ir_cron_update_ocr_status_ir_actions_server
+msgid "Invoice OCR: Update All Status"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model:ir.actions.server,name:account_invoice_extract.ir_cron_ocr_validate_ir_actions_server
+msgid "Invoice OCR: Validate Invoices"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__message_is_follower
+msgid "Is Follower"
+msgstr "Je li pratitelj"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__is_in_extractable_state
+msgid "Is In Extractable State"
+msgstr "Je u stanju za izdvajanje"
+
+#. module: account_invoice_extract
+#: model:ir.model,name:account_invoice_extract.model_account_move
+msgid "Journal Entry"
+msgstr "Temeljnica"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_invoice_extract_words__write_uid
+msgid "Last Updated by"
+msgstr "Promijenio"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_invoice_extract_words__write_date
+msgid "Last Updated on"
+msgstr "Promijenjeno"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Glavni prilog"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__message_has_error
+msgid "Message Delivery error"
+msgstr "Greška pri isporuci poruke"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__message_ids
+msgid "Messages"
+msgstr "Poruke"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Broj akcija"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__message_has_error_counter
+msgid "Number of errors"
+msgstr "Broj grešaka"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,help:account_invoice_extract.field_account_move__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Broj poruka koje zahtijevaju aktivnost"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,help:account_invoice_extract.field_account_move__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Broj poruka sa greškama pri isporuci"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_invoice_extract_words__ocr_selected
+msgid "Ocr Selected"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__rating_ids
+msgid "Ratings"
+msgstr "Ocjene"
+
+#. module: account_invoice_extract
+#: model_terms:ir.ui.view,arch_db:account_invoice_extract.view_move_form_inherit_ocr
+msgid "Reload AI Data"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Greška u slanju SMSa"
+
+#. module: account_invoice_extract
+#: model:ir.actions.server,name:account_invoice_extract.model_account_send_for_digitalization
+msgid "Send Bills for digitization"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_res_company__extract_single_line_per_tax
+#: model:ir.model.fields,field_description:account_invoice_extract.field_res_config_settings__extract_single_line_per_tax
+msgid "Single Invoice Line Per Tax"
+msgstr "Jedna stavka računa po porezu"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_invoice_extract_words__user_selected
+msgid "User Selected"
+msgstr "Odabir korisnika"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_res_config_settings__extract_in_invoice_digitalization_mode
+msgid "Vendor Bills"
+msgstr "Ulazni računi"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_move__website_message_ids
+msgid "Website Messages"
+msgstr "Poruke webstranica"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,help:account_invoice_extract.field_account_move__website_message_ids
+msgid "Website communication history"
+msgstr "Povijest komunikacije Web stranice"
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_invoice_extract_words__word_box_angle
+msgid "Word Box Angle"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_invoice_extract_words__word_box_height
+msgid "Word Box Height"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_invoice_extract_words__word_box_midX
+msgid "Word Box Midx"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_invoice_extract_words__word_box_midY
+msgid "Word Box Midy"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_invoice_extract_words__word_box_width
+msgid "Word Box Width"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_invoice_extract_words__word_page
+msgid "Word Page"
+msgstr ""
+
+#. module: account_invoice_extract
+#: model:ir.model.fields,field_description:account_invoice_extract.field_account_invoice_extract_words__word_text
+msgid "Word Text"
+msgstr ""
+
+#. module: account_invoice_extract
+#. odoo-python
+#: code:addons/account_invoice_extract/models/account_invoice.py:0
+msgid "You cannot send a expense that is not in draft state!"
+msgstr ""

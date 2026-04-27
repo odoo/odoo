@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cp200_employees_salary_atn_warrant_p_p" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Withholding Tax</field>
+        <field name="code">P.P</field>
+        <field name="sequence">110</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = categories['GROSS']</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">GROSS</field>
+        <field name="amount_percentage">-53.5</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_structure_warrant"/>
+    </record>
+
+    <record id="cp200_employees_salary_warrant_deduction" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Net Deductions from Wages</field>
+        <field name="code">PPTOTAL</field>
+        <field name="sequence">120</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = categories['GROSS']</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">GROSS</field>
+        <field name="amount_percentage">53.5</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_structure_warrant"/>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_inverse_atn_warrant" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">ATN Warrant</field>
+        <field name="code">WARRANT.DED</field>
+        <field name="sequence">130</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = categories['BASIC']</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = -categories['BASIC']</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_structure_warrant"/>
+    </record>
+</odoo>

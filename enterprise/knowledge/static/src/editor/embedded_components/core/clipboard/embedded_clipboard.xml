@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="knowledge.EmbeddedClipboard">
+        <div class="d-flex justify-content-between flex-wrap w-100">
+            <div class="o_embedded_clipboard_label px-2 py-1 text-break">Clipboard</div>
+            <EmbeddedComponentToolbar>
+                <t t-set-slot="buttons">
+                    <EmbeddedComponentToolbarButton
+                        buttonRef="copyToClipboardButtonRef"
+                        icon="'fa-clipboard'"
+                        label.translate="Copy"
+                        name="'copyToClipboard'"
+                        onClick.bind="onClickCopyToClipboard"
+                        title.translate="Copy to Clipboard"
+                    />
+                </t>
+            </EmbeddedComponentToolbar>
+        </div>
+        <div class="o_embedded_content" t-ref="clipboardContent"/>
+    </t>
+</templates>

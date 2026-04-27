@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates>
+    <t t-name="web_studio.ViewFields.ExistingFields">
+        <h3 class="o_web_studio_existing_fields_header my-3" role="button" t-on-click="() => state.folded = !state.folded">
+            Existing Fields
+            <i class="fa ms-2" t-attf-class="{{ state.folded ? 'fa-caret-right' : 'fa-caret-down' }}" />
+        </h3>
+        <div class="o_web_studio_existing_fields_section" t-if="!state.folded">
+            <h6 class="small user-select-none">The following fields are currently not in the view.</h6>
+            <input type="text" class="o_web_studio_sidebar_search_input mb-2" autocomplete="studioAutocompleteOff" placeholder="Search..." t-model="state.searchValue" />
+            <div class="o_web_studio_field_type_container o_web_studio_existing_fields">
+                <t t-foreach="existingFields" t-as="component" t-key="component.name">
+                    <SidebarDraggableItem string="component.string || component.name" description="component.name" className="'w-100 mw-100 o_web_studio_field_' + component.classType" structure="'field'" dropData="component.dropData" />
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web_studio.ViewFields.NewFields">
+        <h3 class="my-3">New Fields</h3>
+        <div class="o_web_studio_field_type_container o_web_studio_new_fields">
+            <t t-foreach="newFieldsComponents" t-as="component" t-key="component.name">
+                <SidebarDraggableItem string="component.string || component.name" description="component.name" className="'o_web_studio_field_' + component.classType" structure="'field'" dropData="component.dropData" />
+            </t>
+        </div>
+    </t>
+</templates>

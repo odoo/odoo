@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+
+    <t t-name="l10n_my_reports.AgedPartnerBalanceLineName" t-inherit="account_reports.AgedPartnerBalanceLineName" t-inherit-mode="extension">
+        <xpath expr="//t[@data-id='line_buttons']" position="inside">
+            <t t-if="props.line.unfoldable &amp;&amp; !props.line.id.includes('no_partner') &amp;&amp; controller.action.xml_id === 'account_reports.action_account_report_ar'">
+                <button
+                    class="btn btn_action"
+                    t-on-click="(ev) => controller.reportAction(ev, 'action_print_report_statement_account', { line_id: props.line.id })"
+                >
+                    Statement of Account
+                </button>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_payment_document" inherit_id="account.report_payment_receipt_document">
+        <xpath expr="//div[@name='date']" position="after">
+            <t t-set="cfdi" t-value="values.get('cfdi')"/>
+            <div t-if="cfdi and o.company_id.vat != cfdi['supplier_rfc']" class="col-6" name="l10n_mx_edi_supplier_rfc">
+                <span>XML VAT: </span>
+                <span t-out="cfdi['supplier_rfc']"/>
+            </div>
+            <div t-if="cfdi and o.l10n_mx_edi_payment_method_id" class="col-6" name="l10n_mx_edi_payment_method">
+                <strong>Payment Way:</strong>
+                <span t-out="'%s - %s' % (o.l10n_mx_edi_payment_method_id.code, o.l10n_mx_edi_payment_method_id.name)"/>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[hasclass('row')][3]" position="after">
+            <div class="row" t-if="is_cfdi_signed and o.partner_id.l10n_mx_edi_fiscal_regime" name="l10n_mx_edi_fiscal_regime">
+                <div class="col-6">
+                    Fiscal Regime: (<span t-out="o.partner_id.l10n_mx_edi_fiscal_regime"/>) <span t-field="o.partner_id.l10n_mx_edi_fiscal_regime"/>
+                </div>
+            </div>
+        </xpath>
+
+        <xpath expr="//table[@name='invoices']" position="before">
+            <t t-if="cfdi and len(cfdi['cfdi_node'])">
+                <t t-set="payment_info" t-value="cfdi.get('payment_info')"/>
+                <table class="table table-sm" t-if="payment_info" name="table_l10n_mx_edi_payment_info">
+                    <thead>
+                        <tr>
+                            <th t-if="payment_info['from_account_vat']"><t t-out="o.company_id.account_fiscal_country_id.vat_label or 'VAT'"/><span class="ps-1">Emitter Acc. Ord.</span></th>
+                            <th t-if="payment_info['from_account_name']">Bank Name Acc. Ord.</th>
+                            <th t-if="payment_info['from_account_number']">Account Ord.</th>
+                            <th t-if="payment_info['to_account_vat']"><t t-out="o.company_id.account_fiscal_country_id.vat_label or 'VAT'"/><span class="ps-1">Emitter Acc. Ben.</span></th>
+                            <th t-if="payment_info['to_account_number']">Account Ben.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td t-if="payment_info['from_account_vat']">
+                                <span t-out="payment_info['from_account_vat']"/>
+                            </td>
+                            <td t-if="payment_info['from_account_name']">
+                                <span t-out="payment_info['from_account_name']"/>
+                            </td>
+                            <td t-if="payment_info['from_account_number']">
+                                <span t-out="payment_info['from_account_number']"/>
+                            </td>
+                            <td t-if="payment_info['to_account_vat']">
+                                <span t-out="payment_info['to_account_vat']"/>
+                            </td>
+                            <td t-if="payment_info['to_account_number']">
+                                <span t-out="payment_info['to_account_number']"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+        </xpath>
+
+        <xpath expr="//table[@name='invoices']" position="after">
+            <t t-if="cfdi">
+                <table class="table table-sm" name="table_l10n_mx_edi_invoice_partiality_info">
+                    <thead>
+                        <tr>
+                            <th>Invoice</th>
+                            <th>UUID</th>
+                            <th class="text-end">Partiality</th>
+                            <th class="text-end">Previous balance</th>
+                            <th class="text-end">Amount Paid</th>
+                            <th class="text-end">Balance</th>
+                            <th>Currency</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="cfdi['invoices']" t-as="inv_values">
+                            <td><span t-out="inv_values['invoice'].name"/></td>
+                            <td><span t-out="inv_values['uuid']"/></td>
+                            <td class="text-end"><span t-out="inv_values['partiality']"/></td>
+                            <td class="text-end">
+                                <span t-out="inv_values['previous_balance']"
+                                      t-options="{'widget': 'monetary', 'display_currency': inv_values['invoice'].currency_id}"/>
+                            </td>
+                            <td class="text-end">
+                                <span t-out="inv_values['amount_paid']"
+                                      t-options="{'widget': 'monetary', 'display_currency': inv_values['invoice'].currency_id}"/>
+                            </td>
+                            <td class="text-end">
+                                <span t-out="inv_values['balance']"
+                                      t-options="{'widget': 'monetary', 'display_currency': inv_values['invoice'].currency_id}"/>
+                            </td>
+                            <td><span t-out="inv_values['currency']"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-sm" name="table_l10n_mx_edi_invoice_original_info">
+                    <thead>
+                        <tr>
+                            <th>Invoice Date</th>
+                            <th>Invoice Number</th>
+                            <th class="text-end">Original Amount</th>
+                            <th class="text-end">Amount Paid</th>
+                            <th class="text-end">Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="cfdi['invoices']" t-as="inv_values">
+                            <t t-set="invoice" t-value="inv_values['invoice']"/>
+                            <td><span t-field="invoice.invoice_date"/></td>
+                            <td><span t-field="invoice.name"/></td>
+                            <td class="text-end"><span t-field="invoice.amount_total"/></td>
+                            <td class="text-end">
+                                <span t-out="invoice.amount_total - invoice.amount_residual"
+                                      t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id}"/>
+                            </td>
+                            <td class="text-end"><span t-field="invoice.amount_residual"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="row" id='complement'>
+                    <div class="barcode col-3">
+                        <img alt="Barcode" t-att-src="cfdi['barcode_src']"/>
+                    </div>
+                    <div class="complement-details col-9">
+                        <div class="digital-stamp">
+                            <span>Digital stamp of the emitter</span>
+                        </div>
+                        <div class="digital-stamp-content">
+                            <span t-out="cfdi['sello']"/>
+                        </div>
+                        <div class="digital-stamp">
+                            <span>Digital stamp SAT</span>
+                        </div>
+                        <div class="digital-stamp-content">
+                            <span t-out="cfdi['sello_sat']"/>
+                        </div>
+                        <div class="digital-stamp">
+                            <span>Original chain complement of digital certification SAT</span>
+                        </div>
+                        <div class="digital-stamp-content">
+                            <span class="nowrap" t-out="cfdi['cadena']"/>
+                        </div>
+                        <div class="digital-stamp">
+                            <span>Extra Info</span>
+                        </div>
+                        <div class="digital-stamp-content">
+                            <span>Emitter certificate:</span> <span t-out="cfdi['certificate_number']"/>
+                            <span> | SAT Certificate:</span> <span t-out="cfdi['certificate_sat_number']"/>
+                            <span> | Expedition place:</span> <span t-out="cfdi['expedition']"/>
+                            <span> | Fiscal Regime:</span><span t-out="cfdi['fiscal_regime']"/>
+                            <span> | Emission Date:</span> <span t-out="cfdi['emission_date_str']"/>
+                            <span> | Certification Date:</span> <span t-out="cfdi['stamp_date']"/>
+                            <span> | Fiscal Folio:</span> <span t-out="cfdi['uuid']"/>
+                        </div>
+                        <div class="digital-stamp-content text-center">
+                            <strong>This document is a printed representation of a CFDI</strong>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

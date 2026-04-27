@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_journal_dashboard_inherit_online_sync" model="ir.ui.view">
+            <field name="name">account.journal.dashboard.inherit.online.sync</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+            <field name="arch" type="xml">
+                <field name="kanban_dashboard" position="after">
+                    <field name="expiring_synchronization_date"/>
+                    <field name="expiring_synchronization_due_day"/>
+                    <field name="next_link_synchronization"/>
+                    <field name="account_online_account_id"/>
+                    <field name="account_online_link_state"/>
+                    <field name="online_sync_fetching_status"/>
+                </field>
+
+                <xpath expr="//t[@t-set='bank_unconfigured']" position="attributes">
+                    <attribute name="t-value" add="!record.account_online_account_id.raw_value" separator=" and "/>
+                </xpath>
+
+                <xpath expr="//t[@name='empty_journal_helper']/span[@t-if=&quot;journal_type == &apos;bank&apos;&quot;]" position="attributes">
+                    <attribute name="t-if" add="!record.account_online_account_id.raw_value" separator=" and "/>
+                </xpath>
+
+                <xpath expr="//button[@name='action_configure_bank_journal']" position="attributes">
+                    <attribute name="t-if" add="dashboard.display_connect_bank_in_dashboard" separator=" and "/>
+                </xpath>
+
+                <xpath expr='//div[@id="dashboard_bank_cash_left"]' position='inside'>
+                    <div t-if="dashboard.bank_statements_source === 'online_sync' and dashboard.show_sync_actions">
+                        <t t-if="record.account_online_link_state.raw_value === 'connected' and record.account_online_account_id">
+                            <widget name="refresh_spin_widget" groups="account.group_account_manager"/>
+                            <span invisible="not expiring_synchronization_date" groups="account.group_account_manager">
+                                <widget name="connected_until_widget"/>
+                            </span>
+                        </t>
+                        <t t-elif="record.account_online_link_state.raw_value == 'error' || (record.expiring_synchronization_date.raw_value &amp;&amp; record.expiring_synchronization_due_day.value &lt;= 0)">
+                            <button groups="account.group_account_user" type="object" name="manual_sync" class="btn btn-danger">Reconnect Bank</button>
+                        </t>
+                        <t t-elif="record.account_online_link_state.raw_value == 'disconnected'">
+                            <button groups="account.group_account_user" type="object" name="action_reconnect_online_account" class="btn btn-danger">Reconnect Bank</button>
+                        </t>
+                    </div>
+                </xpath>
+
+                <xpath expr="//div[hasclass('o_kanban_card_manage_settings')][field[@name='show_on_dashboard']]" position="attributes">
+                    <attribute name="groups"/>
+                </xpath>
+
+                <xpath expr="//div[hasclass('o_kanban_card_manage_settings')]/field[@name='show_on_dashboard']" position="attributes">
+                    <attribute name="groups">account.group_account_manager</attribute>
+                    <attribute name="class" remove="col-4"/>
+                    <attribute name="t-att-class">dashboard.display_connect_bank_in_dashboard ? 'col-4' : 'col-6'</attribute>
+                </xpath>
+
+                <xpath expr="//div[hasclass('o_kanban_card_manage_settings')]/div[hasclass('col-6')]" position="attributes">
+                    <attribute name="groups">account.group_account_manager</attribute>
+                    <attribute name="class" remove="col-4"/>
+                    <attribute name="t-att-class">dashboard.display_connect_bank_in_dashboard ? 'col-4' : 'col-6'</attribute>
+                </xpath>
+
+                <xpath expr="//div[hasclass('o_kanban_card_manage_settings')]/field[@name='show_on_dashboard']" position="after">
+                    <t t-if="dashboard.display_connect_bank_in_dashboard and dashboard.bank_statements_source === 'online_sync'
+                        and record.account_online_link_state.raw_value != 'connected'">
+                        <div class="col-4 text-center" groups="account.group_account_basic">
+                            <a class="dropdown-item px-0" type="object" name="action_configure_bank_journal">Connect bank</a>
+                        </div>
+                    </t>
+                    <t t-elif="dashboard.display_connect_bank_in_dashboard">
+                        <div class="col-4 text-center" groups="account.group_account_manager">
+                            <a class="dropdown-item px-0" type="object" name="action_configure_bank_journal">Connect bank</a>
+                        </div>
+                    </t>
+                </xpath>
+
+                <xpath expr="//t[@t-name='bank_configuration_placeholder']" position="replace">
+                    <t t-if="bank_unconfigured and dashboard.display_connect_bank_in_dashboard">
+                        <widget name="bank_configure" groups="account.group_account_manager"/>
+                    </t>
+                    <t t-else="" t-call="JournalBodyBankCash"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="account_financial_report_lv_pnl" model="account.report">
+        <field name="name">Profit and loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.lv"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_lv_pnl_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_lv_net_turnover" model="account.report.line">
+                <field name="name">Net Turnover</field>
+                <field name="code">LV_net_turnover</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_lv_net_turnover_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LV_revenue_sales_general_tax.balance + LV_revenue_sales_special_tax.balance + LV_revenue_commission_brokerage.balance + LV_discounts.balance + LV_changes_inventory.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_lv_revenue_sales_general_tax" model="account.report.line">
+                        <field name="name">Business income subject to general taxation</field>
+                        <field name="code">LV_revenue_sales_general_tax</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_revenue_sales_general_tax_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-61</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_lv_revenue_sales_special_tax" model="account.report.line">
+                        <field name="name">Revenue from sales subject to reduced taxation</field>
+                        <field name="code">LV_revenue_sales_special_tax</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_revenue_sales_special_tax_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-62</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_lv_revenue_commission_brokerage" model="account.report.line">
+                        <field name="name">Commissions, brokerage and other income</field>
+                        <field name="code">LV_revenue_commission_brokerage</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_revenue_commission_brokerage_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-63</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_lv_discounts" model="account.report.line">
+                        <field name="name">Revenue-reducing discounts</field>
+                        <field name="code">LV_discounts</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_discounts_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-64</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_lv_changes_inventory" model="account.report.line">
+                        <field name="name">Changes in stocks and value of finished goods and work in progress</field>
+                        <field name="code">LV_changes_inventory</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_changes_inventory_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-66</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_lv_cost_goods_sold" model="account.report.line">
+                <field name="name">Cost of economic activity</field>
+                <field name="code">LV_cost_goods_sold</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_lv_cost_goods_sold_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LV_purchase_materials.balance + LV_personnel_costs.balance + LV_social_charges.balance + LV_depreciation_fixed_assets.balance + LV_other_costs.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_lv_purchase_materials" model="account.report.line">
+                        <field name="name">Expenses for the purchase of raw materials, materials and goods</field>
+                        <field name="code">LV_purchase_materials</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_purchase_materials_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">71</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_lv_personnel_costs" model="account.report.line">
+                        <field name="name">Personnel costs</field>
+                        <field name="code">LV_personnel_costs</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_personnel_costs_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">72</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_lv_social_charges" model="account.report.line">
+                        <field name="name">Social charges and costs</field>
+                        <field name="code">LV_social_charges</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_social_charges_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">73</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_lv_depreciation_fixed_assets" model="account.report.line">
+                        <field name="name">Depreciation of fixed assets and write-offs of the value of other investments</field>
+                        <field name="code">LV_depreciation_fixed_assets</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_depreciation_fixed_assets_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">74</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_lv_other_costs" model="account.report.line">
+                        <field name="name">Other economic activity costs</field>
+                        <field name="code">LV_other_costs</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_other_costs_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">75</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_lv_gross_profit_loss" model="account.report.line">
+                <field name="name">Gross profit or loss</field>
+                <field name="code">LV_gross_profit_loss</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_lv_gross_profit_loss_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LV_net_turnover.balance - LV_cost_goods_sold.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_lv_cost_sale" model="account.report.line">
+                <field name="name">Cost of selling goods</field>
+                <field name="code">LV_cost_sale</field>
+                <field name="foldable" eval="True"/>
+                <field name="groupby">account_id</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_lv_cost_sale_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">76</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_lv_administration_costs" model="account.report.line">
+                <field name="name">Administration costs</field>
+                <field name="code">LV_administration_costs</field>
+                <field name="foldable" eval="True"/>
+                <field name="groupby">account_id</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_lv_administration_costs_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">77</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_lv_other_operating_income" model="account.report.line">
+                <field name="name">Other operating income</field>
+                <field name="code">LV_other_operating_income</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_lv_other_operating_income_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LV_other_income.balance + LV_revenue_other_periods.balance + LV_revenue_social_infrastructure.balance + LV_misc_revenues.balance + LV_extraordinary_income.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_lv_other_income" model="account.report.line">
+                        <field name="name">Other company income</field>
+                        <field name="code">LV_other_income</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_other_income_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-65</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_lv_revenue_other_periods" model="account.report.line">
+                        <field name="name">Revenues of other periods relating to the reporting period</field>
+                        <field name="code">LV_revenue_other_periods</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_revenue_other_periods_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-67</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_lv_revenue_social_infrastructure" model="account.report.line">
+                        <field name="name">Revenues from social infrastructure</field>
+                        <field name="code">LV_revenue_social_infrastructure</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_revenue_social_infrastructure_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-69</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_lv_misc_revenues" model="account.report.line">
+                        <field name="name">Miscellaneous revenues</field>
+                        <field name="code">LV_misc_revenues</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_misc_revenues_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-81\(8120)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_lv_extraordinary_income" model="account.report.line">
+                        <field name="name">Extraordinary income</field>
+                        <field name="code">LV_extraordinary_income</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_extraordinary_income_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-831</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_other_operating_costs" model="account.report.line">
+                <field name="name">Other costs of economic activity</field>
+                <field name="code">LV_other_operating_costs</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_other_operating_costs_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LV_expense_other_periods.balance + LV_expense_social_infrastructure.balance + LV_misc_expenses.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_lv_expense_other_periods" model="account.report.line">
+                        <field name="name">Expenses of previous periods to be included in the reporting period</field>
+                        <field name="code">LV_expense_other_periods</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_expense_other_periods_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">781</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_lv_expense_social_infrastructure" model="account.report.line">
+                        <field name="name">Social infrastructure maintenance costs</field>
+                        <field name="code">LV_expense_social_infrastructure</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_expense_social_infrastructure_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">79</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_lv_misc_expenses" model="account.report.line">
+                        <field name="name">Miscellaneous expenses</field>
+                        <field name="code">LV_misc_expenses</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_misc_expenses_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">82\(8220)</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_lv_other_interest_income" model="account.report.line">
+                <field name="name">Other interest income and similar income</field>
+                <field name="code">LV_other_interest_income</field>
+                <field name="foldable" eval="True"/>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_lv_other_interest_income_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-8120</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_lv_interest_payments" model="account.report.line">
+                <field name="name">Interest paid and related expenses</field>
+                <field name="code">LV_interest_payments</field>
+                <field name="foldable" eval="True"/>
+                <field name="groupby">account_id</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_lv_interest_payments_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">8220</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_lv_profit_loss_before_tax" model="account.report.line">
+                <field name="name">Profit or loss before tax</field>
+                <field name="code">LV_profit_loss_before_tax</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_lv_profit_loss_before_tax_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LV_gross_profit_loss.balance - LV_cost_sale.balance - LV_administration_costs.balance + LV_other_operating_income.balance - LV_other_operating_costs.balance + LV_other_interest_income.balance - LV_interest_payments.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_lv_corporate_income_tax" model="account.report.line">
+                <field name="name">Corporate income tax for reporting year</field>
+                <field name="code">LV_corporate_income_tax</field>
+                <field name="foldable" eval="True"/>
+                <field name="groupby">account_id</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_lv_corporate_income_tax_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">88</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_lv_net_profit_loss" model="account.report.line">
+                <field name="name">Net profit or loss after tax</field>
+                <field name="code">LV_net_profit_loss</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_lv_net_profit_loss_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LV_profit_loss_before_tax.balance - LV_corporate_income_tax.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_lv_extraordinary_dividends" model="account.report.line">
+                <field name="name">Extraordinary dividends</field>
+                <field name="code">LV_extraordinary_dividends</field>
+                <field name="foldable" eval="True"/>
+                <field name="groupby">account_id</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_lv_extraordinary_dividends_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">8410</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_lv_annual_profit_loss" model="account.report.line">
+                <field name="name">Annual Profit or Loss</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">LV_annual_profit_loss</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_lv_annual_profit_loss_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LV_net_profit_loss.balance - LV_extraordinary_dividends.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+    <record id="action_account_report_lv_pnl" model="ir.actions.client">
+        <field name="name">Profit and loss</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('account_financial_report_lv_pnl')}"/>
+    </record>
+
+    <record id="account_financial_report_lv_profit_or_loss" model="account.report.line">
+        <field name="action_id" ref="action_account_report_lv_pnl"/>
+    </record>
+</odoo>

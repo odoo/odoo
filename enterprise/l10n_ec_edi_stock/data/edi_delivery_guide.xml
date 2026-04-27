@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="sri_delivery_guide">
+            <guiaRemision id="comprobante" version="1.1.0">
+                <infoTributaria>
+                    <ambiente t-out="l10n_ec_production_env"/>
+                    <tipoEmision>1</tipoEmision>
+                    <razonSocial t-out="l10n_ec_legal_name"/>
+                    <nombreComercial t-if="commercial_company_name" t-out="commercial_company_name"/>
+                    <ruc t-out="company_vat"/>
+                    <claveAcceso t-out="l10n_ec_authorization_number"/>
+                    <codDoc>06</codDoc>
+                    <estab t-out="l10n_ec_entity"/>
+                    <ptoEmi t-out="l10n_ec_emission"/>
+                    <secuencial t-out="sequence"/>
+                    <dirMatriz t-out="company_street"/>
+                </infoTributaria>
+                <infoGuiaRemision>
+                    <dirEstablecimiento t-out="warehouse_street"/>
+                    <dirPartida t-out="warehouse_street"/>
+                    <razonSocialTransportista t-out="l10n_ec_transporter_name"/>
+                    <tipoIdentificacionTransportista t-out="l10n_ec_transporter_sri_code"/>
+                    <rucTransportista t-out="l10n_ec_transporter_vat"/>
+                    <obligadoContabilidad t-out="l10n_ec_forced_accounting"/>
+                    <contribuyenteEspecial t-if="l10n_ec_special_taxpayer_number" t-out="l10n_ec_special_taxpayer_number"/>
+                    <fechaIniTransporte t-out="l10n_ec_delivery_start_date"/>
+                    <fechaFinTransporte t-out="l10n_ec_delivery_end_date"/>
+                    <placa t-out="l10n_ec_plate_number"/>
+                </infoGuiaRemision>
+                <destinatarios>
+                    <destinatario>
+                        <identificacionDestinatario t-out="partner_vat"/>
+                        <razonSocialDestinatario t-out="partner_name"/>
+                        <dirDestinatario t-out="partner_address"/>
+                        <motivoTraslado t-out="l10n_ec_transfer_reason"/>
+                        <detalles>
+                            <t t-foreach="lines" t-as="line">
+                                <detalle>
+                                    <codigoInterno t-out="line['main_code']"/>
+                                    <codigoAdicional t-if="line['l10n_ec_auxiliary_code']" t-out="line['l10n_ec_auxiliary_code']"/>
+                                    <descripcion t-if="line['product_partner_ref']" t-out="line['product_partner_ref']"/>
+                                    <cantidad t-out="line['qty_done']"/>
+                                    <detallesAdicionales t-if="line['lot_id']">
+                                        <detAdicional nombre="LoteoSerie" t-att-valor="line['lot_id'].name"/>
+                                    </detallesAdicionales>
+                                </detalle>
+                            </t>
+                        </detalles>
+                    </destinatario>
+                </destinatarios>
+                <infoAdicional t-if="note or origin">
+                    <campoAdicional nombre="Novedades" t-out="note"/>
+                    <campoAdicional nombre="Pedido" t-out="origin"/>
+                </infoAdicional>
+            </guiaRemision>
+        </template>
+    </data>
+</odoo>

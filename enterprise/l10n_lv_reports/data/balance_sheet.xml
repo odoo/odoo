@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="l10n_lv_balance_sheet" model="account.report">
+        <field name="name">Balance Sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_period_comparison" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="country_id" ref="base.lv"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_lv_balance_sheet_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_lv_active_title" model="account.report.line">
+                <field name="name">ACTIVE</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_lv_active_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LV_fixed_asset.balance + LV_curr_asset.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_lv_fixed_asset" model="account.report.line">
+                        <field name="name">Fixed asset</field>
+                        <field name="code">LV_fixed_asset</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_fixed_asset_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LV_intangible_assets.balance + LV_acc_dep_intangible_assets.balance + LV_tangible_assets.balance + LV_acc_dep_tangible_assets.balance + LV_long_financial_investment.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_lv_intangible_assets" model="account.report.line">
+                                <field name="name">Intangible assets</field>
+                                <field name="code">LV_intangible_assets</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_lv_intangible_assets_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">1110 + 1120 + 1130 + 1140 + 1180</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_lv_accumulated_amortisation_intangible_assets" model="account.report.line">
+                                <field name="name">Accumulated amortisation of intangible assets</field>
+                                <field name="code">LV_acc_dep_intangible_assets</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_lv_accumulated_amortisation_intangible_assets_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">119</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_lv_tangible_assets" model="account.report.line">
+                                <field name="name">Tangible assets</field>
+                                <field name="code">LV_tangible_assets</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_lv_tangible_assets_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">1210 + 1220 + 1230 + 1240 + 1280</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_lv_accumulated_depreciation_tangible_assets" model="account.report.line">
+                                <field name="name">Accumulated depreciation of tangible assets</field>
+                                <field name="code">LV_acc_dep_tangible_assets</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_lv_accumulated_depreciation_tangible_assets_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">1291 + 1292 + 1293</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_lv_long_financial_investment" model="account.report.line">
+                                <field name="name">Long-term investment</field>
+                                <field name="code">LV_long_financial_investment</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_lv_long_financial_investment_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">13</field>
+                                    </record>
+                                </field>
+                            </record>     
+                        </field>
+                    </record>
+                    <record id="account_financial_report_lv_curr_asset" model="account.report.line">
+                        <field name="name">Current Assets</field>
+                        <field name="code">LV_curr_asset</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_curr_asset_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LV_stock.balance + LV_debtors.balance + LV_securities.balance + LV_cash.balance + LV_other_current.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_lv_stock" model="account.report.line">
+                                <field name="name">Stock/Savings</field>
+                                <field name="code">LV_stock</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_lv_stock_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">LV_inventory.balance + LV_productive_working_animals.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_lv_inventory" model="account.report.line">
+                                        <field name="name">Inventory</field>
+                                        <field name="code">LV_inventory</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_lv_inventory_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">2110 + 2120 + 2130 + 2140 + 2190</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_lv_productive_working_animals" model="account.report.line">
+                                        <field name="name">Productive and working animals</field>
+                                        <field name="code">LV_productive_working_animals</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_lv_productive_working_animals_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">22</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_lv_debtors" model="account.report.line">
+                                <field name="name">Debtors</field>
+                                <field name="code">LV_debtors</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_lv_debtors_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">23 + 2410 + 2420</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_lv_securities" model="account.report.line">
+                                <field name="name">Securities as part of current assets and short-term participation in capital</field>
+                                <field name="code">LV_securities</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_lv_securities_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">25</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_lv_cash" model="account.report.line">
+                                <field name="name">Cash at bank and in hand</field>
+                                <field name="code">LV_cash</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_lv_cash_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">26</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_lv_other_current" model="account.report.line">
+                                <field name="name">Other current assets</field>
+                                <field name="code">LV_other_current</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_lv_other_current_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">27</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_lv_passif_title" model="account.report.line">
+                <field name="name">PASSIF</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_lv_passif_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">LV_shareholder_equity.balance + LV_liabilities.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_lv_shareholder_equity" model="account.report.line">
+                        <field name="name">Shareholder equity</field>
+                        <field name="code">LV_shareholder_equity</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_shareholder_equity_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LV_capital.balance + LV_reserve.balance + LV_retained_earnings_prev_years.balance +  LV_retained_earnings.balance + LV_profit_or_loss.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_lv_capital" model="account.report.line">
+                                <field name="name">Capital</field>
+                                <field name="code">LV_capital</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_lv_capital_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-31</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_lv_reserve" model="account.report.line">
+                                <field name="name">Reserve</field>
+                                <field name="code">LV_reserve</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_lv_reserve_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-33</field>
+                                    </record>
+                                </field>
+                            </record>
+                            
+                            <record id="account_financial_report_lv_retained_earnings_prev_years" model="account.report.line">
+                                <field name="name">Retained earnings of previous years or uncovered losses</field>
+                                <field name="code">LV_retained_earnings_prev_years</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_lv_retained_earnings_prev_years_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-3420</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_lv_retained_earnings" model="account.report.line">
+                                <field name="name">Retained earnings of the reporting year</field>
+                                <field name="code">LV_retained_earnings</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_lv_retained_earnings_acc_expr" model="account.report.expression">
+                                        <field name="label">accounts</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-3410</field>
+                                    </record>
+                                    <record id="account_financial_report_lv_retained_earnings_cross_report_expr" model="account.report.expression">
+                                        <field name="label">cross_report</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">LV_annual_profit_loss.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                        <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                    </record>
+                                    <record id="account_financial_report_lv_retained_earnings_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">LV_retained_earnings.accounts + LV_retained_earnings.cross_report</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_lv_profit_or_loss" model="account.report.line">
+                                <field name="name">Profit or loss for the reporting year</field>
+                                <field name="code">LV_profit_or_loss</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_lv_profit_or_loss_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">LV_annual_profit_loss.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                        <field name="date_scope">from_fiscalyear</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_lv_liabilities" model="account.report.line">
+                        <field name="name">Liabilities</field>
+                        <field name="code">LV_liabilities</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_lv_liabilities_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LV_curr_liabilities.balance + LV_long_term_liabilities.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_lv_curr_liabilities" model="account.report.line">
+                                <field name="name">Current Liabilities</field>
+                                <field name="code">LV_curr_liabilities</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_lv_curr_liabilities_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">LV_private_accounts.balance + LV_settlement_loans_short.balance + LV_settlement_advances.balance + LV_settlement_suppliers.balance + LV_bills_payable.balance + LV_settlement_company_members_staff.balance + LV_settlement_wages.balance + LV_settlement_taxes.balance + LV_settlement_dividends.balance + LV_deferred_earning.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_lv_private_accounts" model="account.report.line">
+                                        <field name="name">Private Accounts</field>
+                                        <field name="code">LV_private_accounts</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_lv_private_accounts_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-32</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_lv_settlement_loans_short" model="account.report.line">
+                                        <field name="name">Settlement of loans</field>
+                                        <field name="code">LV_settlement_loans_short</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_lv_settlement_loans_short_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-5150</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_lv_settlement_advances" model="account.report.line">
+                                        <field name="name">Settlements for advances received</field>
+                                        <field name="code">LV_settlement_advances</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_lv_settlement_advances_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-52</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_lv_settlement_suppliers" model="account.report.line">
+                                        <field name="name">Settlements with suppliers and contractors</field>
+                                        <field name="code">LV_settlement_suppliers</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_lv_settlement_suppliers_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-531</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_lv_bills_payable" model="account.report.line">
+                                        <field name="name">Promissory notes payable</field>
+                                        <field name="code">LV_bills_payable</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_lv_bills_payable_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-541</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_lv_settlement_company_members_staff" model="account.report.line">
+                                        <field name="name">Settlements with companies, memebers and staff</field>
+                                        <field name="code">LV_settlement_company_members_staff</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_lv_settlement_company_members_staff_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-55</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_lv_settlement_wages" model="account.report.line">
+                                        <field name="name">Settlements for wages and deductions</field>
+                                        <field name="code">LV_settlement_wages</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_lv_settlement_wages_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-56</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_lv_settlement_taxes" model="account.report.line">
+                                        <field name="name">Settlements for wages and deductions</field>
+                                        <field name="code">LV_settlement_taxes</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_lv_settlement_taxes_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-57</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_lv_settlement_dividends" model="account.report.line">
+                                        <field name="name">Settlements for dividends</field>
+                                        <field name="code">LV_settlement_dividends</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_lv_settlement_dividends_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-58</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_lv_deferred_earning" model="account.report.line">
+                                        <field name="name">Deferred earnings</field>
+                                        <field name="code">LV_deferred_earning</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_lv_deferred_earning_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-59</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_lv_long_term_liabilities" model="account.report.line">
+                                <field name="name">Long term Liabilities</field>
+                                <field name="code">LV_long_term_liabilities</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_lv_long_term_liabilities_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">LV_provisions_pensions.balance + LV_provisions_taxes.balance + LV_other_savings.balance + LV_settlement_borrowings_long.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_lv_provisions_pensions" model="account.report.line">
+                                        <field name="name">Provisions for liabilities equated to pensions</field>
+                                        <field name="code">LV_provisions_pensions</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_lv_provisions_pensions_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-411</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_lv_provisions_taxes" model="account.report.line">
+                                        <field name="name">Provisions for estimated taxes</field>
+                                        <field name="code">LV_provisions_taxes</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_lv_provisions_taxes_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-421</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_lv_other_savings" model="account.report.line">
+                                        <field name="name">Other savings</field>
+                                        <field name="code">LV_other_savings</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_lv_other_savings_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-431</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_lv_settlement_borrowings_long" model="account.report.line">
+                                        <field name="name">Long term debt</field>
+                                        <field name="code">LV_settlement_borrowings_long</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_lv_settlement_borrowings_long_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-5110 - 5120 - 5130 - 5140 - 5141 - 5160 - 5170</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

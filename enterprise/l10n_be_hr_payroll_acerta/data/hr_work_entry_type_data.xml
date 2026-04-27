@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- work entry -->
+    <record id="hr_work_entry.work_entry_type_attendance" model="hr.work.entry.type">
+        <field name="acerta_code">100</field>
+    </record>
+
+    <record id="hr_work_entry.overtime_work_entry_type" model="hr.work.entry.type">
+        <field name="acerta_code">135</field>
+    </record>
+
+    <!-- work entry contract -->
+    <record id="hr_work_entry_contract.work_entry_type_compensatory" model="hr.work.entry.type">
+        <field name="acerta_code">136</field>
+    </record>
+
+    <record id="hr_work_entry_contract.work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="acerta_code">230</field>
+    </record>
+
+    <record id="hr_work_entry_contract.work_entry_type_unpaid_leave" model="hr.work.entry.type">
+        <field name="acerta_code">7428</field>
+    </record>
+
+    <record id="hr_work_entry_contract.work_entry_type_home_working" model="hr.work.entry.type">
+        <field name="acerta_code">1010</field>
+    </record>
+
+    <record id="hr_work_entry_contract.work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="acerta_code">050</field>
+    </record>
+
+    <!-- base payroll -->
+    <record id="hr_payroll.hr_work_entry_type_out_of_contract" model="hr.work.entry.type">
+        <field name="acerta_code">403</field>
+    </record>
+
+    <!-- be payroll-->
+    <record id="l10n_be_hr_payroll.work_entry_type_bank_holiday" model="hr.work.entry.type">
+        <field name="acerta_code">220</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_small_unemployment" model="hr.work.entry.type">
+        <field name="acerta_code">221</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_training_time_off" model="hr.work.entry.type">
+        <field name="acerta_code">224</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_recovery" model="hr.work.entry.type">
+        <field name="acerta_code">2205</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_unpredictable" model="hr.work.entry.type">
+        <field name="acerta_code">388</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_unjustified_reason" model="hr.work.entry.type">
+        <field name="acerta_code">429</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_training" model="hr.work.entry.type">
+        <field name="acerta_code">7367</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_economic_unemployment" model="hr.work.entry.type">
+        <field name="acerta_code">371</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_corona" model="hr.work.entry.type">
+        <field name="acerta_code">4713</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_maternity" model="hr.work.entry.type">
+        <field name="acerta_code">059</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_work_accident" model="hr.work.entry.type">
+        <field name="acerta_code">065</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_breast_feeding" model="hr.work.entry.type">
+        <field name="acerta_code">323</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_parental_time_off" model="hr.work.entry.type">
+        <field name="acerta_code">303</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_paternity_legal" model="hr.work.entry.type">
+        <field name="acerta_code">3021</field>
+    </record>
+
+    <record id="work_entry_type_small_unemployment_birth" model="hr.work.entry.type">
+        <field name="name">Brief Holiday (Birth)</field>
+        <field name="code">LEAVE206</field>
+        <field name="dmfa_code">1</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="acerta_code">2214</field>    
+    </record>
+
+    <record id="holiday_type_small_unemployment_birth" model="hr.leave.type">
+        <field name="name">Brief Holiday (Birth)</field>
+        <field name="requires_allocation">yes</field>
+        <field name="employee_requests">yes</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="work_entry_type_id" ref="work_entry_type_small_unemployment_birth"></field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

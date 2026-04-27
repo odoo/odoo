@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_form_l10n_us_hr_payroll_adp" model="ir.ui.view">
+        <field name="name">hr.employee.inherit.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_payroll.payroll_hr_employee_view_form"/>
+        <field name="priority">40</field>
+        <field name="arch" type="xml">
+            <page name="hr_settings" position="inside">
+                <group string="ADP Information" invisible="company_country_code != 'US'">
+                    <group>
+                        <field name="l10n_us_adp_code"/>
+                    </group>
+                </group>
+            </page>
+        </field>
+    </record>
+</odoo>

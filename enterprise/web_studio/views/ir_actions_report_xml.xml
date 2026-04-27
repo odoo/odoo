@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="act_report_xml_view_kanban" model="ir.ui.view">
+        <field name="name">ir.actions.report.kanban</field>
+        <field name="model">ir.actions.report</field>
+        <field name="arch" type="xml">
+            <kanban js_class="studio_report_kanban">
+                <field name="report_type"/>
+                <templates>
+                    <t t-name="menu">
+                        <t t-if="widget.deletable">
+                            <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                        </t>
+                        <a role="menuitem" class="dropdown-item" type="object" name="copy_report_and_template">Duplicate</a>
+                    </t>
+                    <t t-name="card" class="row g-0">
+                        <aside class="col-2">
+                            <div t-if="record.report_type.value == 'PDF'" class="o_image" data-mimetype="application/pdf" role="img" aria-label="PDF file" title="PDF file"/>
+                            <div t-else="" class="o_image" data-mimetype="text/file" role="img" aria-label="File" title="File"/>
+                        </aside>
+                        <main class="col">
+                            <field name="name" class="fw-bolder"/>
+                            <field name="report_name" groups="base.group_no_one" class="small"/>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+</odoo>

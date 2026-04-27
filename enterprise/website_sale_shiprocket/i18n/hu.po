@@ -1,0 +1,68 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_sale_shiprocket
+#
+# Translators:
+# sixsix six, 2024
+# gezza <geza.nagy@oregional.hu>, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:50+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2024\n"
+"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_sale_shiprocket
+#: model:ir.model.fields,field_description:website_sale_shiprocket.field_payment_provider__custom_mode
+msgid "Custom Mode"
+msgstr "Egyéni mód"
+
+#. module: website_sale_shiprocket
+#: model:ir.model,name:website_sale_shiprocket.model_payment_provider
+msgid "Payment Provider"
+msgstr "Fizetési szolgáltató"
+
+#. module: website_sale_shiprocket
+#: model:ir.model.fields.selection,name:website_sale_shiprocket.selection__payment_provider__custom_mode__shiprocket_cash_on_delivery
+msgid "Shiprocket Cash On Delivery"
+msgstr "Shiprocket utánvét"
+
+#. module: website_sale_shiprocket
+#: model:payment.method,name:website_sale_shiprocket.shiprocket_payment_method_cash_on_delivery
+#: model:payment.provider,name:website_sale_shiprocket.payment_provider_shiprocket_cod
+msgid "Shiprocket: Cash on Delivery"
+msgstr "Shiprocket: utánvét"
+
+#. module: website_sale_shiprocket
+#: model_terms:payment.provider,pending_msg:website_sale_shiprocket.payment_provider_shiprocket_cod
+msgid ""
+"You payment is in pending state as you have opted for cash on delivery.<br>\n"
+"            The delivery person will gather the payment during the delivery "
+"process."
+msgstr ""
+"A fizetés függő állapotban van, mivel az utánvét lehetőséget választotta."
+"<br>\n"
+"            A szállító fogja átvenni a fizetést a kézbesítés során."
+
+#. module: website_sale_shiprocket
+#: model_terms:payment.provider,auth_msg:website_sale_shiprocket.payment_provider_shiprocket_cod
+msgid "Your payment has been authorized."
+msgstr "A fizetés jóváhagyásra került."
+
+#. module: website_sale_shiprocket
+#: model_terms:payment.provider,cancel_msg:website_sale_shiprocket.payment_provider_shiprocket_cod
+msgid "Your payment has been cancelled."
+msgstr "A fizetés visszavonásra került."
+
+#. module: website_sale_shiprocket
+#: model_terms:payment.provider,done_msg:website_sale_shiprocket.payment_provider_shiprocket_cod
+msgid "Your payment has been successfully processed."
+msgstr "A fizetés sikeresen feldolgozásra került."

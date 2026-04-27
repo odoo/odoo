@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+        <record id="fsm_project" model="project.project">
+            <field name="allow_milestones">False</field>
+            <field name="type_ids" eval="[Command.link(ref('project.project_stage_0')), Command.link(ref('planning_project_stage_1')), Command.link(ref('planning_project_stage_2')), Command.link(ref('project.project_stage_2')), Command.link(ref('project.project_stage_3'))]"/>
+        </record>
+
+        <function model="project.task.type" name="unlink">
+            <value model="project.task.type" eval="ref('planning_project_stage_0')"/>
+        </function>
+        <function model="project.task.type" name="unlink">
+            <value model="project.task.type" eval="ref('planning_project_stage_3')"/>
+        </function>
+        <function model="project.task.type" name="unlink">
+            <value model="project.task.type" eval="ref('planning_project_stage_4')"/>
+        </function>
+
+        <record id="planning_task_0" model="project.task">
+            <field name="sequence">1</field>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="partner_id" ref="base.res_partner_address_28"/>
+            <field name="name">Boiler maintenance</field>
+            <field name="color">4</field>
+            <field name="priority">1</field>
+            <field name="project_id" ref="industry_fsm.fsm_project"/>
+            <field name="stage_id" ref="project.project_stage_0" />
+            <field name="planned_date_begin" eval="DateTime.today().strftime('%Y-%m-%d 07:00:00')"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d 09:00:00')"/>
+        </record>
+
+        <record id="planning_task_1" model="project.task">
+            <field name="sequence">1</field>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="partner_id" ref="base.res_partner_address_31"/>
+            <field name="name">Fix sink</field>
+            <field name="project_id" ref="industry_fsm.fsm_project"/>
+            <field name="stage_id" ref="project.project_stage_0" />
+            <field name="planned_date_begin" eval="DateTime.today().strftime('%Y-%m-%d 09:00:00')"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d  10:00:00')"/>
+        </record>
+
+        <record id="planning_task_2" model="project.task">
+            <field name="sequence">1</field>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="partner_id" ref="base.res_partner_address_11"/>
+            <field name="name">Filter replacement</field>
+            <field name="project_id" ref="industry_fsm.fsm_project"/>
+            <field name="stage_id" ref="project.project_stage_0" />
+            <field name="planned_date_begin" eval="DateTime.today().strftime('%Y-%m-%d 10:00:00')"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d  11:00:00')"/>
+        </record>
+
+        <record id="planning_task_3" model="project.task">
+            <field name="sequence">1</field>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="partner_id" ref="base.res_partner_address_30"/>
+            <field name="name">Check joints</field>
+            <field name="color">2</field>
+            <field name="priority">1</field>
+            <field name="project_id" ref="industry_fsm.fsm_project"/>
+            <field name="stage_id" ref="project.project_stage_0" />
+            <field name="planned_date_begin" eval="DateTime.today().strftime('%Y-%m-%d 11:00:00')"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d  12:00:00')"/>
+        </record>
+
+        <record id="planning_task_4" model="project.task">
+            <field name="sequence">1</field>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="partner_id" ref="base.res_partner_address_34"/>
+            <field name="name">Bathroom ventilation</field>
+            <field name="project_id" ref="industry_fsm.fsm_project"/>
+            <field name="stage_id" ref="project.project_stage_0" />
+            <field name="planned_date_begin" eval="DateTime.today().strftime('%Y-%m-%d 13:00:00')"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d  14:30:00')"/>
+        </record>
+
+        <record id="planning_task_5" model="project.task">
+            <field name="sequence">1</field>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="partner_id" ref="base.res_partner_address_17"/>
+            <field name="name">3-port Valve replacement</field>
+            <field name="project_id" ref="industry_fsm.fsm_project"/>
+            <field name="stage_id" ref="project.project_stage_0" />
+            <field name="planned_date_begin" eval="DateTime.today().strftime('%Y-%m-%d 15:00:00')"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d  16:00:00')"/>
+        </record>
+
+        <record id="planning_task_6" model="project.task">
+            <field name="sequence">1</field>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="partner_id" ref="base.res_partner_address_27"/>
+            <field name="name">Two radiators installation</field>
+            <field name="project_id" ref="industry_fsm.fsm_project"/>
+            <field name="stage_id" ref="project.project_stage_0" />
+            <field name="planned_date_begin" eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d 08:00:00')"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d  16:30:00')"/>
+        </record>
+
+        <record id="planning_task_7" model="project.task">
+            <field name="sequence">1</field>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="partner_id" ref="base.res_partner_address_16"/>
+            <field name="name">Install pipeline system</field>
+            <field name="project_id" ref="industry_fsm.fsm_project"/>
+            <field name="stage_id" ref="project.project_stage_0" />
+            <field name="planned_date_begin" eval="(DateTime.today() + relativedelta(days=2)).strftime('%Y-%m-%d 08:00:00')"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=2)).strftime('%Y-%m-%d  16:30:00')"/>
+        </record>
+
+        <record id="planning_task_8" model="project.task">
+            <field name="sequence">1</field>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="partner_id" ref="base.res_partner_address_3"/>
+            <field name="name">Install air extractor</field>
+            <field name="project_id" ref="industry_fsm.fsm_project"/>
+            <field name="stage_id" ref="project.project_stage_0" />
+            <field name="planned_date_begin" eval="(DateTime.today() + relativedelta(days=3)).strftime('%Y-%m-%d 08:00:00')"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=3)).strftime('%Y-%m-%d  10:30:00')"/>
+        </record>
+
+        <record id="planning_task_9" model="project.task">
+            <field name="sequence">1</field>
+            <field name="user_ids" eval="[(4, ref('base.user_demo'))]"/>
+            <field name="partner_id" ref="base.res_partner_address_5"/>
+            <field name="name">Fix Clogged line</field>
+            <field name="project_id" ref="industry_fsm.fsm_project"/>
+            <field name="stage_id" ref="project.project_stage_0" />
+            <field name="planned_date_begin" eval="(DateTime.today() + relativedelta(days=3)).strftime('%Y-%m-%d 10:30:00')"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=3)).strftime('%Y-%m-%d  13:00:00')"/>
+        </record>
+
+        <record id="planning_task_10" model="project.task">
+            <field name="sequence">1</field>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="partner_id" ref="base.res_partner_address_33"/>
+            <field name="name">Water Heater</field>
+            <field name="project_id" ref="industry_fsm.fsm_project"/>
+            <field name="stage_id" ref="project.project_stage_0" />
+            <field name="planned_date_begin" eval="(DateTime.today() + relativedelta(days=4)).strftime('%Y-%m-%d 08:00:00')"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=4)).strftime('%Y-%m-%d  12:30:00')"/>
+        </record>
+
+        <record id="planning_task_12" model="project.task">
+            <field name="sequence">1</field>
+            <field name="user_ids" eval="False"/>
+            <field name="partner_id" ref="base.res_partner_address_1"/>
+            <field name="name">Light switch replacement</field>
+            <field name="project_id" ref="industry_fsm.fsm_project"/>
+            <field name="stage_id" ref="project.project_stage_0" />
+            <field name="planned_date_begin" eval="DateTime.today().strftime('%Y-%m-%d 09:00:00')"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d  10:00:00')"/>
+        </record>
+
+        <record id="planning_task_14" model="project.task">
+            <field name="sequence">1</field>
+            <field name="user_ids" eval="False"/>
+            <field name="partner_id" ref="base.res_partner_address_2"/>
+            <field name="name">Radiator replacement</field>
+            <field name="project_id" ref="industry_fsm.fsm_project"/>
+            <field name="stage_id" ref="project.project_stage_0" />
+            <field name="planned_date_begin" eval="DateTime.today().strftime('%Y-%m-%d 11:00:00')"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d  12:00:00')"/>
+        </record>
+
+        <record id="planning_task_16" model="project.task">
+            <field name="sequence">1</field>
+            <field name="user_ids" eval="False"/>
+            <field name="partner_id" ref="base.res_partner_address_34"/>
+            <field name="name">Replace defective shower head</field>
+            <field name="project_id" ref="industry_fsm.fsm_project"/>
+            <field name="stage_id" ref="project.project_stage_0" />
+            <field name="planned_date_begin" eval="DateTime.today().strftime('%Y-%m-%d 15:00:00')"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d  16:00:00')"/>
+        </record>
+
+        <record id="planning_task_18" model="project.task">
+            <field name="sequence">1</field>
+            <field name="user_ids" eval="False"/>
+            <field name="partner_id" ref="base.res_partner_address_15"/>
+            <field name="name">Find and fix leak</field>
+            <field name="project_id" ref="industry_fsm.fsm_project"/>
+            <field name="stage_id" ref="industry_fsm.planning_project_stage_2" />
+            <field name="planned_date_begin" eval="(DateTime.today() + relativedelta(days=2)).strftime('%Y-%m-%d 08:00:00')"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=2)).strftime('%Y-%m-%d  16:30:00')"/>
+        </record>
+
+        <record id="planning_task_20" model="project.task">
+            <field name="sequence">1</field>
+            <field name="user_ids" eval="False"/>
+            <field name="partner_id" ref="base.res_partner_address_24"/>
+            <field name="name">Radiator replacement</field>
+            <field name="project_id" ref="industry_fsm.fsm_project"/>
+            <field name="stage_id" ref="project.project_stage_3" />
+            <field name="planned_date_begin" eval="(DateTime.today() + relativedelta(days=3)).strftime('%Y-%m-%d 10:30:00')"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=3)).strftime('%Y-%m-%d  13:00:00')"/>
+        </record>
+
+        <!-- Activities -->
+        <record id="activity_1" model="mail.activity">
+            <field name="res_id" ref="industry_fsm.planning_task_2" />
+            <field name="res_model_id" ref="project.model_project_task"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="summary">Convert to quote</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+
+        <!-- Set the demo user as a project and fsm user -->
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[
+                (3, ref('industry_fsm.group_fsm_manager')),
+                (3, ref('project.group_project_manager'))]"/>
+        </record>
+
+        <record id="industry_fsm.planning_project_stage_1" model="project.task.type">
+            <field name="mail_template_id" ref="industry_fsm.mail_template_data_intervention_details"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sale_order_portal_content" inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//th[@id='taxes_header']" position="attributes">
+            <attribute name="t-if">not sale_order.fiscal_position_id.is_avatax</attribute>
+        </xpath>
+        <xpath expr="//td[@id='taxes']" position="attributes">
+            <attribute name="t-if">not sale_order.fiscal_position_id.is_avatax</attribute>
+        </xpath>
+    </template>
+</odoo>

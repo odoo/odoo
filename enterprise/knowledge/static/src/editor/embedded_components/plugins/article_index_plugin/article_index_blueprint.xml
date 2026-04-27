@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!-- data-oe-protected and contenteditable are necessary in the blueprint
+         because insert will normalize the content and the protected_node_plugin
+         is not the first plugin to normalize TODO ABD: check issue when loading
+         an article (normalize) -->
+    <t t-name="knowledge.ArticleIndexBlueprint">
+        <div data-embedded="articleIndex" data-oe-protected="true" contenteditable="false"/>
+    </t>
+</templates>

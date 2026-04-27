@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_employee_declaration_view_tree" model="ir.ui.view">
+        <field name="name">hr.payroll.employee.declaration.list.inherit.documents.hr.payroll</field>
+        <field name="model">hr.payroll.employee.declaration</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payroll_employee_declaration_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="pdf_to_generate" position="after">
+                <field name="pdf_to_post" optional="hide"/>
+                <field name="document_id" groups="base.group_no_one"/>
+            </field>
+            <button name="action_generate_pdf" position="after">
+                <button name="action_post_in_documents" string="Post PDFs" type="object"/>
+            </button>
+        </field>
+    </record>
+</odoo>

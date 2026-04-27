@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_picking_form_inherit_l10n_mx_edi_stock" model="ir.ui.view">
+        <field name="model">stock.picking</field>
+        <field name="name">stock.picking.form.inherit.l10n_mx_edi_stock</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+
+            <xpath expr="//header" position="before">
+                <!-- Invisible fields -->
+                <field name="l10n_mx_edi_is_cfdi_needed" invisible="1"/>
+                <field name="l10n_mx_edi_is_delivery_guide_needed" invisible="1"/>
+                <field name="l10n_mx_edi_external_trade" invisible="1"/>
+                <field name="l10n_mx_edi_update_sat_needed" invisible="1"/>
+                <field name="l10n_mx_edi_customs_document_type_code" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//header" position="inside">
+                <button string="Generate Delivery Guide"
+                        name="l10n_mx_edi_cfdi_try_send"
+                        type="object"
+                        invisible="not l10n_mx_edi_is_cfdi_needed or l10n_mx_edi_cfdi_state == 'sent'"/>
+                <button string="Cancel Delivery Guide"
+                        name="l10n_mx_edi_cfdi_try_cancel"
+                        type="object"
+                        invisible="not l10n_mx_edi_is_cfdi_needed or l10n_mx_edi_cfdi_state != 'sent'"/>
+                <button string="Update SAT"
+                        name="l10n_mx_edi_cfdi_try_sat"
+                        type="object"
+                        invisible="not l10n_mx_edi_update_sat_needed"/>
+                <button string="Print Carta Porte"
+                        name="l10n_mx_edi_action_print_cartaporte"
+                        type="object"
+                        invisible="l10n_mx_edi_cfdi_state != 'sent'"/>
+            </xpath>
+
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="l10n_mx_edi_cfdi_state"
+                       invisible="not l10n_mx_edi_cfdi_state"/>
+                <field name="l10n_mx_edi_cfdi_sat_state"
+                       invisible="not l10n_mx_edi_cfdi_sat_state"/>
+                <field name="l10n_mx_edi_cfdi_uuid"
+                       invisible="not l10n_mx_edi_cfdi_uuid"/>
+                <field name="l10n_mx_edi_cfdi_origin"
+                       invisible="not l10n_mx_edi_is_cfdi_needed"/>
+                <field name="l10n_mx_edi_cfdi_cancel_picking_id"
+                       invisible="not l10n_mx_edi_cfdi_cancel_picking_id"/>
+            </xpath>
+
+            <!-- Documents tab -->
+            <xpath expr="//notebook" position="inside">
+                <page id="edi_documents"
+                      string="CFDI"
+                      name="page_cfdi"
+                      invisible="not l10n_mx_edi_document_ids">
+                    <field name="l10n_mx_edi_document_ids">
+                        <list create="false" delete="false" edit="false" no_open="1">
+                            <!-- Invisible fields -->
+                            <field name="attachment_id" column_invisible="True"/>
+                            <field name="message" column_invisible="True"/>
+                            <field name="retry_button_needed" column_invisible="True"/>
+
+                            <!-- Visible fields -->
+                            <field name="datetime"/>
+                            <field name="state" widget="account_document_state"/>
+                            <field name="sat_state" invisible="not sat_state"/>
+
+                            <button name="action_download_file"
+                                    type="object"
+                                    string="Download"
+                                    invisible="not attachment_id"/>
+                            <button name="action_retry"
+                                    type="object"
+                                    string="Retry"
+                                    invisible="not retry_button_needed"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+
+            <xpath expr="//page[@name='extra']" position="inside">
+                <group string="Delivery Guide" invisible="country_code != 'MX'">
+                    <group string="Transport" name="mx_edi_group_transport">
+                         <field name="l10n_mx_edi_transport_type"
+                                readonly="l10n_mx_edi_cfdi_state == 'sent'"/>
+                         <field name="l10n_mx_edi_vehicle_id"
+                                invisible="l10n_mx_edi_transport_type != '01'"
+                                readonly="l10n_mx_edi_cfdi_state == 'sent'"
+                                required="l10n_mx_edi_transport_type == '01'"/>
+                         <field name="l10n_mx_edi_gross_vehicle_weight"
+                                invisible="not l10n_mx_edi_is_delivery_guide_needed or l10n_mx_edi_transport_type != '01'"/>
+                        <field name="l10n_mx_edi_customs_regime_ids"
+                               invisible="not l10n_mx_edi_is_delivery_guide_needed or not l10n_mx_edi_external_trade"
+                               domain="[('goods_direction', 'in', ('import' if picking_type_code == 'incoming' else 'export', 'both'))]"
+                               widget="many2many_tags"
+                               options="{'create': False}"/>
+                        <field name="l10n_mx_edi_customs_document_type_id"
+                               invisible="not l10n_mx_edi_is_delivery_guide_needed or not l10n_mx_edi_external_trade"
+                               domain="[('goods_direction', 'in', ('import' if picking_type_code == 'incoming' else 'export', 'both'))]"
+                               options="{'create': False}"/>
+                        <field name="l10n_mx_edi_pedimento_number"
+                               invisible="not l10n_mx_edi_is_delivery_guide_needed
+                                          or not l10n_mx_edi_external_trade
+                                          or l10n_mx_edi_customs_document_type_code != '01'
+                                          or picking_type_code != 'incoming'"/>
+                        <field name="l10n_mx_edi_customs_doc_identification"
+                               invisible="not l10n_mx_edi_is_delivery_guide_needed
+                                          or not l10n_mx_edi_external_trade
+                                          or l10n_mx_edi_customs_document_type_code == '01'"/>
+                        <field name="l10n_mx_edi_importer_id"
+                               invisible="not l10n_mx_edi_is_delivery_guide_needed
+                                          or not l10n_mx_edi_external_trade
+                                          or l10n_mx_edi_customs_document_type_code != '01'
+                                          or picking_type_code !='incoming'"/>
+                    </group>
+
+                    <group string="Distance" name="mx_edi_group_distance">
+                        <div colspan="2">
+                            <button name="l10n_mx_edi_action_set_partner_coordinates"
+                                    type="object"
+                                    string="Get Coordinates"
+                                    class="btn btn-secondary mx-1"
+                                    invisible="l10n_mx_edi_cfdi_state == 'sent'"/>
+                            <button name="l10n_mx_edi_action_calculate_distance"
+                                    type="object"
+                                    string="Compute Distance"
+                                    class="btn btn-secondary mx-1"
+                                    invisible="l10n_mx_edi_cfdi_state == 'sent' or l10n_mx_edi_src_lat == 0 or l10n_mx_edi_src_lon == 0 or l10n_mx_edi_des_lat == 0 or l10n_mx_edi_des_lon == 0"/>
+                        </div>
+                        <field name="l10n_mx_edi_src_lat"
+                               readonly="l10n_mx_edi_cfdi_state == 'sent'"/>
+                        <field name="l10n_mx_edi_src_lon"
+                               readonly="l10n_mx_edi_cfdi_state == 'sent'"/>
+                        <field name="l10n_mx_edi_des_lat"
+                               readonly="l10n_mx_edi_cfdi_state == 'sent'"/>
+                        <field name="l10n_mx_edi_des_lon"
+                               readonly="l10n_mx_edi_cfdi_state == 'sent'"/>
+                        <field name="l10n_mx_edi_distance"
+                               readonly="l10n_mx_edi_cfdi_state == 'sent'"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

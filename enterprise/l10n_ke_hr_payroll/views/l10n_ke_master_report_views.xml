@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ke_master_report_search" model="ir.ui.view">
+        <field name="name">l10n_ke.master.report.search</field>
+        <field name="model">l10n_ke.master.report</field>
+        <field name="arch" type="xml">
+            <search string="Search Master Report">
+                <field name="reference_year"/>
+                <field name="reference_month"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="l10n_ke_master_report_view_form" model="ir.ui.view">
+        <field name="name">l10n_ke.master.report.view.form</field>
+        <field name="model">l10n_ke.master.report</field>
+        <field name="arch" type="xml">
+            <form string="Headover">
+                <header>
+                    <button
+                        string="Export XLSX file"
+                        name="action_generate_xlsx"
+                        class="btn-primary"
+                        type="object"
+                        data-hotkey="q"
+                        invisible="xlsx_file"/>
+                    <button
+                        string="Export XLSX file"
+                        name="action_generate_xlsx"
+                        class="btn-secondary"
+                        type="object"
+                        data-hotkey="q"
+                        invisible="not xlsx_file"/> 
+                    <button
+                        string="Export PDF file"
+                        name="action_generate_pdf"
+                        class="btn-primary"
+                        type="object"
+                        data-hotkey="w"
+                        invisible="pdf_file"/>
+                    <button
+                        string="Export PDF file"
+                        name="action_generate_pdf"
+                        class="btn-secondary"
+                        type="object"
+                        data-hotkey="w"
+                        invisible="not pdf_file"/> 
+                </header>
+                <sheet>
+                    <group>
+                        <field name="reference_month" readonly="pdf_file or xlsx_file"/>
+                        <field name="reference_year" readonly="pdf_file or xlsx_file"/>
+                    </group>
+                    <div invisible="not (pdf_file or xlsx_file)">
+                        <h2>Generation Complete</h2>
+                        <div invisible="not xlsx_file">
+                            Download the Master Report XLSX file:
+                            <field name="xlsx_file_name" invisible="1"/>
+                            <field name="xlsx_file" widget="binary" filename="xlsx_file_name"/>
+                        </div>
+                        <div invisible="not pdf_file">
+                            Download the Master Report PDF file:
+                            <field name="pdf_file_name" invisible="1"/>
+                            <field name="pdf_file" widget="binary" filename="pdf_file_name"/>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_payroll_headover_view_tree" model="ir.ui.view">
+        <field name="name">l10n_ke.master.report.view.list</field>
+        <field name="model">l10n_ke.master.report</field>
+        <field name="arch" type="xml">
+            <list string="Headover">
+                <field name="reference_year"/>
+                <field name="reference_month"/>
+                <field name="pdf_file_name" column_invisible="1"/>
+                <field name="pdf_file" widget="binary" filename="pdf_file_name"/>
+                <field name="xlsx_file_name" column_invisible="1"/>
+                <field name="xlsx_file" widget="binary" filename="xlsx_file_name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_open_l10n_ke_master_report" model="ir.actions.act_window">
+        <field name="name">Master Report</field>
+        <field name="res_model">l10n_ke.master.report</field>
+        <field name="view_mode">list,form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportLineName">
+        <t t-call="{{ env.template('AccountReportLineName') }}"/>
+    </t>
+
+    <t t-name="account_reports.AccountReportLineNameCustomizable">
+        <td
+            data-id="line_name"
+            class="line_name"
+            t-att-class="lineNameClasses"
+            t-on-click="() => this.toggleFoldable()"
+            t-att-colspan="props.line.colspan || 1"
+            tabindex="-1"
+            t-ref="lineNameCell"
+        >
+            <div class="wrapper">
+                <t t-if="props.line.unfoldable">
+                    <!-- Foldable -->
+                    <button data-id="btn_foldable" class="btn btn_foldable" tabindex="-1">
+                        <i t-att-class="props.line.unfolded ? 'fa fa-caret-down' : 'fa fa-caret-right'"/>
+                    </button>
+                </t>
+                <t t-else="">
+                    <!-- This keeps the same indentation for when we don't have a btn_foldable button -->
+                    <button class="btn btn_foldable_empty" tabindex="-1"/>
+                </t>
+
+                <t t-if="props.line.action_id">
+                    <!-- Actions -->
+                    <a class="clickable" t-on-click="() => this.triggerAction()" tabindex="-1">
+                        <t t-out="props.line.name"/>
+                    </a>
+                </t>
+                <t t-elif="controller.isLoadMoreLine(props.lineIndex)">
+                    <!-- Load more -->
+                    <a class="clickable" t-on-click="() => this.loadMore()" tabindex="-1">
+                        <t t-out="props.line.name"/>
+                    </a>
+                </t>
+                <t t-else="">
+                    <div data-id="content" class="content">
+                        <t t-component="env.component('AccountReportEllipsis')" t-props="{
+                            name: props.line.name?.toString(),
+                            type: 'string',
+                            maxCharacters: 80,
+                        }"/>
+
+                        <t t-if="props.line.visible_annotations?.length">
+                            <button
+                                tabindex="-1"
+                                class="btn btn_annotation"
+                                t-on-click="toggleAnnotationPopover"
+                            >
+                                <i class="fa fa-commenting"/>
+                            </button>
+                        </t>
+
+                        <t t-if="hasCaretOptions">
+                            <!-- Caret options -->
+                            <Dropdown position="'right-start'">
+                                <button class="btn btn_dropdown" tabindex="-1">
+                                    <i class="fa fa-ellipsis-v"/>
+                                </button>
+                                <t t-set-slot="content">
+                                    <div data-id="caret_options">
+                                        <t t-foreach="caretOptions" t-as="caretOption" t-key="caretOption_index">
+                                            <DropdownItem onSelected="() => this.caretAction(caretOption)">
+                                                <t t-out="caretOption.name"/>
+                                            </DropdownItem>
+                                        </t>
+
+                                        <t t-if="!props.line.visible_annotations?.length">
+                                            <div class="o-dropdown-item dropdown-item o-navigable"
+                                                 t-on-click="(ev) => this.addAnnotation(ev, props.line.id)"
+                                            >
+                                                Annotate
+                                            </div>
+                                        </t>
+                                    </div>
+                                </t>
+                            </Dropdown>
+                        </t>
+
+                        <t data-id="line_buttons" t-if="!props.line['hide_line_buttons']"/>
+                    </div>
+                </t>
+            </div>
+        </td>
+    </t>
+</templates>

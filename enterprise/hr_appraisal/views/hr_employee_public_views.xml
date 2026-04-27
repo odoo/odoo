@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="hr_employee_public_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.public.view.form.inherit.appraisal</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
+        <field name="arch" type="xml">
+        <xpath expr="//header" position="inside">
+            <field name="parent_user_id" invisible="1"/>
+            <field name="ongoing_appraisal_count" invisible="1"/>
+            <field name="can_request_appraisal" invisible="1"/>
+            <button name="action_send_appraisal_request"
+                string="Request Appraisal"
+                type="object"
+                data-hotkey="g"
+                class="btn btn-primary"
+                invisible="not can_request_appraisal or ongoing_appraisal_count"/>
+            <button name="action_send_appraisal_request"
+                string="Request Appraisal"
+                type="object"
+                data-hotkey="g"
+                class="btn btn-secondary"
+                invisible="not can_request_appraisal or not ongoing_appraisal_count"/>
+        </xpath>
+            <xpath expr="//field[@name='work_email']" position="after">
+                <field name="is_manager" invisible="1"/>
+                <field
+                    name="next_appraisal_date" 
+                    invisible="not is_manager or not(next_appraisal_date or not ongoing_appraisal_count)"/>
+                <label 
+                    for="next_appraisal_date" 
+                    invisible="not is_manager or (next_appraisal_date or not ongoing_appraisal_count)"/> 
+                <span invisible="not is_manager or (next_appraisal_date or not ongoing_appraisal_count)">
+                    Ongoing
+                </span>
+            </xpath>
+        </field>
+    </record>
+</odoo>

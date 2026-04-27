@@ -1,0 +1,377 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* web_gantt
+#
+# Translators:
+# Wil Odoo, 2024
+# Junko Augias, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:49+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Junko Augias, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_model.js:0
+msgid "%(hour)sh%(minute)s"
+msgstr "%(hour)sh%(minute)s"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/models.py:0
+msgid "%s cannot be scheduled in the past"
+msgstr "%sは過去に予定することはできません"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_model.js:0
+msgid "%sh"
+msgstr "%sh"
+
+#. module: web_gantt
+#: model:ir.model,name:web_gantt.model_ir_actions_act_window_view
+msgid "Action Window View"
+msgstr "アクションウィンドウビュー"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.xml:0
+msgid "Activate dense mode"
+msgstr "デンスモードを有効化する"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.xml:0
+msgid "Activate sparse mode"
+msgstr "スパースモードを有効化する"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.xml:0
+msgid "Apply"
+msgstr "適用"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_controller.js:0
+msgid "Are you sure to delete this record?"
+msgstr "このレコードを削除してもよろしいですか?"
+
+#. module: web_gantt
+#: model:ir.model,name:web_gantt.model_base
+msgid "Base"
+msgstr "ベース"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.xml:0
+msgid "Collapse rows"
+msgstr "行を折りたたむ"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_controller.js:0
+msgid "Create"
+msgstr "作成"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer.js:0
+msgid "Edit"
+msgstr "編集"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer.js:0
+msgid "Ending date cannot be before the starting date"
+msgstr "終了日は開始日より前の日付にすることはできません。"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.xml:0
+msgid "Expand rows"
+msgstr "行を展開"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.xml:0
+msgid "Focus Today"
+msgstr "今日のフォーカス"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.xml:0
+msgid "From"
+msgstr "from"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.js:0
+msgid "From: %(from_date)s to: %(to_date)s"
+msgstr "開始日: %(from_date)s 終了日: %(to_date)s"
+
+#. module: web_gantt
+#: model:ir.model.fields.selection,name:web_gantt.selection__ir_actions_act_window_view__view_mode__gantt
+#: model:ir.model.fields.selection,name:web_gantt.selection__ir_ui_view__type__gantt
+msgid "Gantt"
+msgstr "ガント"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_arch_parser.js:0
+msgid "Gantt View"
+msgstr "ガントビュー"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/ir_ui_view.py:0
+msgid "Gantt child can only be field or template, got %s"
+msgstr ""
+"ガントのchildはフィールドまたはテンプレートのみにできますが、%sを取得しました"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/ir_ui_view.py:0
+msgid "Gantt must have a 'date_start' attribute"
+msgstr "ガントには'date_start'属性が必要です"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/ir_ui_view.py:0
+msgid "Gantt must have a 'date_stop' attribute"
+msgstr "ガントには'date_stop'属性が必要です"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/ir_ui_view.py:0
+msgid ""
+"Gantt must have a 'dependency_inverted_field' attribute once the "
+"'dependency_field' is specified"
+msgstr ""
+"'dependency_field' が指定されたら、ガントは 'dependency_inverted_field' を持"
+"つ必要があります。"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.js:0
+msgid "Gantt start date"
+msgstr "ガント開始日"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.js:0
+msgid "Gantt stop date"
+msgstr "ガント停止日"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/ir_ui_view.py:0
+msgid "Gantt view can contain only one templates tag"
+msgstr "ガントビューには、テンプレートタグを1つだけ含めることができます"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/models.py:0
+msgid "Impossible to schedule in the past."
+msgstr "過去に予定することはできません。"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/models.py:0
+msgid "Insufficient fields for Gantt View!"
+msgstr "ガントビューのフィールドが不十分です!"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/ir_ui_view.py:0
+msgid ""
+"Invalid attributes (%(invalid_attributes)s) in gantt view. Attributes must "
+"be in (%(valid_attributes)s)"
+msgstr ""
+"ガントビューの属性 (%(invalid_attributes)s)が無効です。属性は(%"
+"(valid_attributes)s)である必要があります。"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/ir_ui_view.py:0
+msgid "Invalid default_range '%s' in gantt"
+msgstr "ガントでの無効な default_range '%s' "
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/ir_ui_view.py:0
+msgid "Invalid default_scale '%s' in gantt"
+msgstr "ganttのdefault_scale '%s'が無効です"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/ir_ui_view.py:0
+msgid "Invalid display_mode '%s' in gantt"
+msgstr "ガントでの無効な display_mode '%s' "
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_popover.xml:0
+msgid "Name"
+msgstr "名称"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_controller.xml:0
+msgid "New"
+msgstr "新規"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_controller.js:0
+msgid "Open"
+msgstr "開く"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer.js:0
+msgid "Plan"
+msgstr "計画"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/models.py:0
+msgid "Reschedule done successfully."
+msgstr "正常に再スケジュールされました。"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_popover.xml:0
+msgid "Start"
+msgstr "開始"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer.js:0
+msgid "Starting date cannot be after the ending date"
+msgstr "開始日は終了日より前の日付にすることはできません"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_popover.xml:0
+msgid "Stop"
+msgstr "停止"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/models.py:0
+msgid "The dependencies are not valid, there is a cycle."
+msgstr "依存関係が有効でなく、サイクルがあります。"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/models.py:0
+msgid "There are no valid candidates to re-plan"
+msgstr "再計画に有効な候補者はいません"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_arch_parser.js:0
+msgid "This month"
+msgstr "今月"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_arch_parser.js:0
+msgid "This quarter"
+msgstr "今四半期"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_arch_parser.js:0
+msgid "This week"
+msgstr "今週"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_arch_parser.js:0
+msgid "This year"
+msgstr "今年"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_arch_parser.js:0
+msgid "Today"
+msgstr "今日"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.xml:0
+msgid "Toolbar menu"
+msgstr "ツールバーメニュー"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer.js:0
+msgid "Total"
+msgstr "合計"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_model.js:0
+msgid "Undefined %s"
+msgstr "未定義の%s"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer.js:0
+#: model:ir.model,name:web_gantt.model_ir_ui_view
+msgid "View"
+msgstr "ビュー"
+
+#. module: web_gantt
+#: model:ir.model.fields,field_description:web_gantt.field_ir_actions_act_window_view__view_mode
+#: model:ir.model.fields,field_description:web_gantt.field_ir_ui_view__type
+msgid "View Type"
+msgstr "ビュータイプ"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/models.py:0
+msgid "You cannot move %(record)s towards %(related_record)s."
+msgstr " %(record)sを %(related_record)sへ移動することはできません。"
+
+#. module: web_gantt
+#. odoo-python
+#: code:addons/web_gantt/models/models.py:0
+msgid "You cannot reschedule %(main_record)s towards %(other_record)s."
+msgstr " %(record)sを %(related_record)sへリスケジュールすることはできません。"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_arch_parser.js:0
+msgid "hours"
+msgstr "時間"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_arch_parser.js:0
+msgid "minutes"
+msgstr "分"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_arch_parser.js:0
+msgid "months"
+msgstr "か月"
+
+#. module: web_gantt
+#. odoo-javascript
+#: code:addons/web_gantt/static/src/gantt_renderer_controls.xml:0
+msgid "to"
+msgstr "から"

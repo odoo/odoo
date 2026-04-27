@@ -1,4 +1,5 @@
 import unittest
+import os
 
 import odoo
 from odoo.tests import TransactionCase
@@ -8,6 +9,43 @@ from odoo.tools.config import conf, configmanager, _get_default_datadir
 
 IS_POSIX = 'workers' in odoo.tools.config.options
 ROOT_PATH = odoo.tools.config.options['root_path'].removesuffix('/odoo')
+NORMALIZED_PATH_KEYS = {
+    'addons_path',
+    'data_dir',
+    'geoip_city_db',
+    'geoip_country_db',
+    'logfile',
+    'pg_path',
+    'pidfile',
+    'pre_upgrade_scripts',
+    'screencasts',
+    'screenshots',
+    'test_file',
+    'translate_in',
+    'translate_out',
+    'upgrade_path',
+}
+
+
+def _normalize_expected_paths(config, values):
+    values = values.copy()
+    for key in NORMALIZED_PATH_KEYS:
+        if key in values:
+            values[key] = config._normalize(values[key])
+    return values
+
+
+def _normalize_saved_config_lines(config, content):
+    lines = []
+    for line in content.splitlines():
+        if ' = ' not in line:
+            lines.append(line)
+            continue
+        key, value = line.split(' = ', 1)
+        if key in NORMALIZED_PATH_KEYS:
+            line = f"{key} = {config._normalize(value)}"
+        lines.append(line)
+    return lines
 
 
 class TestConfigManager(TransactionCase):
@@ -22,6 +60,7 @@ class TestConfigManager(TransactionCase):
 
     def test_01_default_config(self):
         config = configmanager(fname=file_path('base/tests/config/empty.conf'))
+        default_screenshots = config._normalize(config.casts['screenshots'].my_default)
 
         default_values = {
             # options not exposed on the command line
@@ -65,7 +104,7 @@ class TestConfigManager(TransactionCase):
             'test_enable': False,
             'test_tags': None,
             'screencasts': '',
-            'screenshots': '/tmp/odoo_tests',
+            'screenshots': default_screenshots,
 
             # logging
             'logfile': '',
@@ -142,7 +181,7 @@ class TestConfigManager(TransactionCase):
             )
 
         config._parse_config()
-        self.assertEqual(config.options, default_values, "Options don't match")
+        self.assertEqual(config.options, _normalize_expected_paths(config, default_values), "Options don't match")
 
     def test_02_config_file(self):
         values = {
@@ -268,7 +307,7 @@ class TestConfigManager(TransactionCase):
         self.assertEqual(config.rcfile, config_path, "Config file path doesn't match")
 
         config._parse_config()
-        self.assertEqual(config.options, values, "Options don't match")
+        self.assertEqual(config.options, _normalize_expected_paths(config, values), "Options don't match")
         self.assertEqual(config.rcfile, config_path)
         self.assertNotEqual(config.rcfile, config['config'])  # funny
 
@@ -286,7 +325,18 @@ class TestConfigManager(TransactionCase):
                     homedir=config._normalize('~'),
                     empty_dict=r'{}',
                 )
-                self.assertEqual(config_content.splitlines(), save_content.splitlines())
+                save_content = save_content.replace(
+                    'data_dir = {homedir}/.local/share/Odoo'.format(homedir=config._normalize('~')),
+                    f'data_dir = {_get_default_datadir()}',
+                )
+                save_content = save_content.replace(
+                    'screenshots = /tmp/odoo_tests',
+                    f"screenshots = {config._normalize(config.casts['screenshots'].my_default)}",
+                )
+                self.assertEqual(
+                    _normalize_saved_config_lines(config, config_content),
+                    _normalize_saved_config_lines(config, save_content),
+                )
 
     def test_04_odoo16_config_file(self):
         # test that loading the Odoo 16.0 generated default config works
@@ -397,7 +447,7 @@ class TestConfigManager(TransactionCase):
         config._parse_config()
         with self.assertNoLogs('py.warnings'):
             config._warn_deprecated_options()
-        self.assertEqual(config.options, assert_options, "Options don't match")
+        self.assertEqual(config.options, _normalize_expected_paths(config, assert_options), "Options don't match")
 
     def test_05_repeat_parse_config(self):
         """Emulate multiple calls to parse_config()"""
@@ -535,4 +585,4 @@ class TestConfigManager(TransactionCase):
                     'limit_request': 100,
                 }
             )
-        self.assertEqual(config.options, values)
+        self.assertEqual(config.options, _normalize_expected_paths(config, values))

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_budget_analytic_form_dialog" model="ir.ui.view">
+        <field name="name">budget.analytic.form.inherit</field>
+        <field name="model">budget.analytic</field>
+        <field name="inherit_id" ref="account_budget.view_budget_analytic_form"/>
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_budget_confirm']" position="replace"/>
+            <xpath expr="//page[@name='budget_lines']/field[@name='budget_line_ids']/list/field[@name='account_id']" position="attributes">
+                <attribute name="options">{'no_open': True}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='budget_lines']/field[@name='budget_line_ids']/list/button[@name='action_open_budget_entries']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

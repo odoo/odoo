@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_activity_type_gstr1_exception_to_be_sent" model="mail.activity.type">
+        <field name="name">GSTR-1 Exception</field>
+        <field name="summary">GSTR-1 exception sent to the responsible user of the journal entry</field>
+        <field name="category">default</field>
+        <field name="delay_count">0</field>
+        <field name="delay_unit">days</field>
+        <field name="delay_from">current_date</field>
+        <field name="res_model">account.move</field>
+        <field name="chaining_type">suggest</field>
+    </record>
+</odoo>

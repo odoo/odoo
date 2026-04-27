@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="documents.DocumentsListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="attributes">
+            <attribute name="class">o_list_renderer o_documents_view o_renderer_with_searchpanel overflow-auto position-relative</attribute>
+            <attribute name="t-on-keydown">onGlobalKeydown</attribute>
+            <attribute name="t-on-click">onGlobalClick</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="after">
+            <!-- TODO: clean -->
+            <t t-set="chatterRecord" t-value="targetRecords.length === 0  ? this.getContainerRecord() : targetRecords[0]"/>
+            <t t-set="multipleSelection" t-value="targetRecords.length &gt; 1"/>
+            <t t-set="chatterDisabled" t-value="multipleSelection || !chatterRecord?.data || typeof chatterRecord?.data.id !== 'number'"/>
+            <div t-if="this.chatterState.visible"
+                class="o_document_chatter_container o-mail-ChatterContainer"
+                t-att-class="{'mt-2': isMobile, 'h-100 o-aside': !isMobile, 'documents_chatter_disabled': chatterDisabled, 'd-flex flex-column' : !chatterDisabled}"
+                t-ref="chatterContainer">
+                <t t-if="chatterDisabled" t-call="documents.DocumentsViews.ChatterOverlay">
+                    <t t-if="multipleSelection" t-set="itemsNumber" t-value="targetRecords.length"/>
+                </t>
+                <DocumentsDetailsPanel t-if="!chatterDisabled" record="chatterRecord" nbViewItems="getNbViewItems()"/>
+                <Chatter t-if="chatterRecord.data and documentService.userIsInternal"
+                    threadId="typeof chatterRecord.data.id === 'number' and chatterRecord.data.id"
+                    threadModel="'documents.document'"
+                    compactHeight="true"
+                    isChatterAside="!isMobile"/>
+            </div>
+        </xpath>
+        <table position="before">
+            <DocumentsDropZone parentRoot="root"/>
+            <DocumentsFileViewer parentRoot="root" t-props="getDocumentsAttachmentViewerProps()"/>
+            <FileUploadProgressContainer fileUploads="this.documentUploads" Component="constructor.components.FileUploadProgressDataRow"
+                                         shouldDisplay="(upload) => !upload.data.get('document_id') &amp;&amp; !upload.data.get('thread_id')"/>
+        </table>
+        <t t-call="web.ActionHelper" position="replace">
+            <t t-if="showNoContentHelper">
+                <DocumentsActionHelper noContentHelp="props.noContentHelp"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="documents.DocumentsListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow" t-inherit-mode="primary">
+        <xpath expr="//tr[hasclass('o_data_row')]" position="attributes">
+            <attribute name="draggable">true</attribute>
+            <attribute name="t-on-dragstart.stop">(ev) => record.onDragStart(ev)</attribute>
+            <attribute name="t-on-dragenter.stop">onDragEnter</attribute>
+            <attribute name="t-on-dragleave.stop">onDragLeave</attribute>
+            <attribute name="t-on-dragover.stop.prevent">onDragOver</attribute>
+            <attribute name="t-on-drop.stop">onDrop</attribute>
+            <attribute name="t-on-click.stop.prevent.synthetic"></attribute>
+        </xpath>
+        <xpath expr="//td[hasclass('o_list_record_selector')]" position="attributes">
+            <attribute name="t-on-click.stop">() => this.toggleRecordSelection(record)</attribute>
+        </xpath>
+        <CheckBox position="replace">
+            <DocumentsListRendererCheckBox disabled="!!editedRecord or props.list.model.useSampleModel" value="record.selected" onChange.bind="() => this.toggleRecordSelection(record)"/>
+        </CheckBox>
+    </t>
+
+    <t t-name="documents.DocumentsListRendererCheckBox">
+        <div class="form-check" t-att-class="props.className" t-ref="root">
+            <input
+                t-att-id="props.id or id"
+                type="checkbox"
+                class="form-check-input"
+                t-att-disabled="props.disabled"
+                t-att-checked="props.value"
+                t-att-name="props.name"
+            />
+            <label t-att-for="props.id or id" class="form-check-label">
+                <t t-slot="default"/>
+            </label>
+        </div>
+    </t>
+</templates>

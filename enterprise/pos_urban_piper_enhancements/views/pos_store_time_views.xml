@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_pos_store_timing" model="ir.actions.act_window">
+        <field name="name">Store Timings</field>
+        <field name="res_model">pos.store.timing</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a store timing
+            </p>
+            <p>
+               Manage store timings for POS delivery order(s).
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="pos_menu_urban_piper_configuration"
+        name="UrbanPiper"
+        parent="point_of_sale.menu_point_config_product"
+        sequence="12"/>
+
+    <menuitem id="menu_products_pos_store_timing"
+        action="pos_urban_piper_enhancements.action_pos_store_timing"
+        parent="pos_urban_piper_enhancements.pos_menu_urban_piper_configuration"
+        sequence="14"/>
+
+    <record id="view_pos_store_timing_list" model="ir.ui.view">
+        <field name="name">pos.store.timing.list</field>
+        <field name="model">pos.store.timing</field>
+        <field name="arch" type="xml">
+            <list string="Store Timings" editable="top">
+                <field name="weekday" />
+                <field name="start_hour" widget="float_time"/>
+                <field name="end_hour" widget="float_time"/>
+                <field name="config_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+</odoo>

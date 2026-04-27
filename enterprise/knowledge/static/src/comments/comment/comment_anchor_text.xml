@@ -1,0 +1,10 @@
+<templates xml:space="preserve">
+    <t t-name="knowledge.CommentAnchorText">
+        <t t-foreach="anchorTextArray" t-as="anchorFragment" t-key="anchorFragment_index">
+            <t t-out="anchorFragment"/>
+            <t t-if="!anchorFragment_last">
+                <br/>
+            </t>
+        </t>
+    </t>
+</templates>

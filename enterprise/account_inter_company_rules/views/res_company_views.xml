@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_company_inter_change_inherit_form">
+            <field name="name">res.company.form.inherit</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Inter-Company Transactions" name="inter_company_transactions" groups="base.group_no_one">
+                        <group>
+                            <group>
+                                <label string="Generate Bills and Refunds" for="intercompany_generate_bills_refund" class="text-nowrap col-lg-6 o_light_label"/>
+                                <field name="intercompany_generate_bills_refund" nolabel="1"/>
+                                <field name="intercompany_user_id" options="{'no_create_edit': True}"/>
+                                <field name="intercompany_purchase_journal_id" options="{'no_create_edit': True}" invisible="not intercompany_generate_bills_refund" required="intercompany_generate_bills_refund"/>
+                                <field name="intercompany_document_state" widget="radio"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+	</data>
+</odoo>

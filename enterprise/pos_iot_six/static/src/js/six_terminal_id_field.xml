@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="pos_iot_six.SixTerminalIdField" t-inherit="web.CharField">
+        <xpath expr="//input" position="attributes">
+            <attribute name="t-on-input">onTerminalIdChanged</attribute>
+        </xpath>
+        <xpath expr="//input" position="after">
+            <t t-if="!state.isTerminalIdValid">
+                <div class="pt-1 o_form_label text-danger">
+                    Must only contain digits
+                </div>
+            </t>
+            <t t-if="state.terminalIdSentSuccessfully">
+                <div class="pt-1 o_form_label text-success">
+                    Saved Terminal ID to IoT Box
+                </div>
+            </t>
+            <t t-elif="state.terminalIdSentSuccessfully != null">
+                <div class="pt-1 o_form_label text-danger">
+                    Failed to save Terminal ID to IoT Box
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

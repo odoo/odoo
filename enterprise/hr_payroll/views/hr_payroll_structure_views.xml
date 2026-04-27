@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Salary structure -->
+    <record id="view_hr_payroll_structure_list_view" model="ir.ui.view">
+        <field name="name">hr.payroll.structure.list</field>
+        <field name="model">hr.payroll.structure</field>
+        <field name="arch" type="xml">
+            <list string="Employee Function">
+                <field name="name"/>
+                <field name="type_id" column_invisible="True"/>
+                <field name="rule_ids"/>
+                <field name="country_id" options="{'no_create': True}"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_payroll_structure_view_kanban" model="ir.ui.view">
+        <field name="name">hr.payroll.structure.kanban</field>
+        <field name="model">hr.payroll.structure</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="fw-bolder"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_hr_payroll_structure_filter" model="ir.ui.view">
+        <field name="name">hr.payroll.structure.select</field>
+        <field name="model">hr.payroll.structure</field>
+        <field name="arch" type="xml">
+            <search string="Payroll Structures">
+                <field name="name" string="Structure Name"/>
+                <field name="type_id" string="Structure Type"/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <group col="8" colspan="4" expand="0" string="Group By">
+                    <filter string="Structure Type" name="group_by_type_id" context="{'group_by': 'type_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_hr_employee_grade_form" model="ir.ui.view">
+        <field name="name">hr.payroll.structure.form</field>
+        <field name="model">hr.payroll.structure</field>
+        <field name="arch" type="xml">
+            <form string="Employee Function">
+            <sheet>
+                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                <div class="oe_title">
+                    <label for="name" string="Structure Name"/>
+                    <h1><field name="name" placeholder="e.g. Regular Pay"/></h1>
+                </div>
+                <group>
+                    <group name="salary_details">
+                        <field name="active" invisible="1"/>
+                        <field name="id" invisible="1"/>
+                        <field name="type_id"/>
+                        <field name="use_worked_day_lines"/>
+                        <field name="country_id" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="ytd_computation"/>
+                    </group>
+                    <group>
+                        <field name="report_id"/>
+                        <field name="payslip_name"/>
+                        <field name="hide_basic_on_pdf"/>
+                        <field name="schedule_pay"/>
+                    </group>
+                </group>
+                <notebook colspan="4">
+                    <page name="salary_rules" string="Salary Rules">
+                        <field name="rule_ids" readonly="not id">
+                            <list>
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="category_id"/>
+                                <field name="sequence" column_invisible="True"/>
+                                <field name="partner_id"/>
+                            </list>
+                        </field>
+                    </page>
+                    <page string="Unpaid Work Entry Types" name="unpaid_work_entry_types">
+                        <field name="unpaid_work_entry_type_ids"/>
+                    </page>
+                    <page name="other_input" string="Other Input">
+                        <field name="input_line_type_ids">
+                            <list>
+                                <field name="name"/>
+                                <field name="code"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+            </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_view_hr_payroll_structure_list_form" model="ir.actions.act_window">
+        <field name="name">Salary Structures</field>
+        <field name="res_model">hr.payroll.structure</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="context">{'search_default_group_by_type_id': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new salary structure
+            </p>
+        </field>
+    </record>
+
+    <record id="action_view_hr_payroll_structure_from_type" model="ir.actions.act_window">
+        <field name="name">Salary Structures</field>
+        <field name="res_model">hr.payroll.structure</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="context">{
+            'search_default_type_id': active_id,
+            'default_type_id': active_id,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Add a new salary structure
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,15 @@
+.o_gantt_view:has(.o_gantt_renderer:not(.o_connect)) {
+    .o_gantt_pill_wrapper {
+        .o_gantt_forbidden {
+            display: none;
+        }
+    }
+}
+.o_gantt_view:has(.o_gantt_renderer.o_connect) {
+    .o_gantt_pill_wrapper:not(:hover) {
+        .o_gantt_forbidden {
+            display: none;
+        }
+    }
+}
+

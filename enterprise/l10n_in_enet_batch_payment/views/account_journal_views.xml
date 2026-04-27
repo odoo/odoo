@@ -1,0 +1,14 @@
+<odoo>
+    <record id="view_account_journal_form_inherit_l10n_in_enet_batch_payment" model="ir.ui.view">
+        <field name="name">view.account.journal.form.inherit.l10n.in.enet.batch.payment</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@id='outbound_payment_settings']//group[@name='outgoing_payment']" position="inside">
+                <group string="Choose Bank Template (E.Net)" invisible="not has_enet_payment_method">
+                    <field name="bank_template_id" widget="many2one_avatar"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="whatsapp.Message" t-inherit="mail.Message" t-inherit-mode="extension">
+        <xpath expr="//div[contains(@class, 'o-mail-Message-header')]" position="inside">
+            <t t-if="message.message_type === 'whatsapp_message'">
+                <span class="fa fa-whatsapp ms-1" t-att-class="getWhatsappStatusClass()" t-att-title="getWhatsappStatusTitle()" />
+            </t>
+        </xpath>
+    </t>
+
+</templates>

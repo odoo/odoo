@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_onss_file_view_form" model="ir.ui.view">
+        <field name="name">l10n.be.onss.file.view.form</field>
+        <field name="model">l10n.be.onss.file</field>
+        <field name="arch" type="xml">
+            <form string="ONSS File">
+                <sheet>
+                    <group>
+                        <group string="File Configuration">
+                            <field name="name" invisible="1"/> <!-- Remove stupid warning from test_uncommented_invisible_field -->
+                            <field name="file" widget="binary" filename="name"/>
+                            <field name="onss_declaration_id" invisible="employee_id"/>
+                            <field name="employee_id" invisible="onss_declaration_id"/>
+                        </group>
+                        <group string="File Information">
+                            <field name="form_creation_date" invisible="not form_creation_date"/>
+                            <field name="form_creation_hour" invisible="not form_creation_hour"/>
+                            <field name="file_type"/>
+                            <field name="declaration_type"/>
+                            <field name="expeditor_number"/>
+                            <field name="creation_date"/>
+                            <field name="file_sequence"/>
+                            <field name="environment"/>
+                            <field name="file_count"/>
+                            <field name="file_number"/>
+                        </group>
+                    </group>
+                    <field name="file_content" invisible="not file" widget="code" options="{'mode': 'xml'}"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_be_onss_file_view_list" model="ir.ui.view">
+        <field name="name">l10n.be.onss.file.view.list</field>
+        <field name="model">l10n.be.onss.file</field>
+        <field name="arch" type="xml">
+            <list string="ONSS Files">
+                <field name="name"/>
+                <field name="file" widget="binary" filename="name" optional="hide"/>
+                <field name="file_type"/>
+                <field name="declaration_type"/>
+                <field name="expeditor_number"/>
+                <field name="creation_date"/>
+                <field name="file_sequence"/>
+                <field name="environment"/>
+                <field name="file_count"/>
+                <field name="file_number"/>
+                <field name="onss_declaration_id" invisible="employee_id"/>
+                <field name="employee_id" invisible="onss_declaration_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_be_onss_file_view_search" model="ir.ui.view">
+        <field name="name">l10n.be.onss.file.view.search</field>
+        <field name="model">l10n.be.onss.file</field>
+        <field name="arch" type="xml">
+            <search string="ONSS Files">
+                <field name="name"/>
+                <field name="onss_declaration_id"/>
+                <field name="file_content"/>
+                <filter name="declaration_files" string="Declaration Files" domain="[('file_type', 'not in', ['GO', 'FS'])]"/>
+                <filter name="unlinked_file" string="Unlinked Files" domain="[('employee_id', '=', False), ('onss_declaration_id', '=', False)]"/>
+                <group expand="1" string="Group By">
+                    <filter name="group_by_onss_declaration_id" string="Declaration" domain="[]" context="{'group_by': 'onss_declaration_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_l10n_be_onss_file" model="ir.actions.act_window">
+        <field name="name">ONSS Files</field>
+        <field name="res_model">l10n.be.onss.file</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_declaration_files': 1}</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_be_onss_file"
+        action="action_l10n_be_onss_file"
+        parent="l10n_be_hr_payroll.menu_reporting_l10n_be"
+        groups="base.group_no_one"
+        sequence="32"
+    />
+
+</odoo>

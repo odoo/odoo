@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_journal_form_inherit_l10n_uy_edi" model="ir.ui.view">
+        <field name="model">account.journal</field>
+        <field name="name">account.journal.form</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <field name="type" position="after">
+                <field name="l10n_uy_edi_type"
+                    invisible="country_code != 'UY' or not l10n_latam_use_documents or type != 'sale'"
+                    required="country_code == 'UY' and l10n_latam_use_documents and type == 'sale'"/>
+                <field name="l10n_uy_edi_send_print" invisible="l10n_uy_edi_type != 'electronic' or type != 'sale'"/>
+            </field>
+            <field name="restrict_mode_hash_table" position="attributes">
+                <attribute name="invisible" separator=" or " add="country_code == 'UY' and l10n_uy_edi_type == 'electronic' and type == 'sale'"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

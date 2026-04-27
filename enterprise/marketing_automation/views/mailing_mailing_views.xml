@@ -1,0 +1,167 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="mailing_mailing_view_tree_marketing_automation" model="ir.ui.view" >
+        <field name="name">mailing.mailing.view.list.marketing.automation</field>
+        <field name="model">mailing.mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='subject']" position="after">
+                <field name="marketing_activity_ids" string="Activities" widget="many2many_tags"/>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_mailing_view_form_marketing_automation" model="ir.ui.view" >
+        <field name="name">mailing.mailing.view.form.marketing.automation</field>
+        <field name="model">mailing.mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_form"/>
+        <field name="mode">primary</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_duplicate'][hasclass('btn-secondary')]" position="replace"></xpath>
+            <xpath expr="//field[@name='subject']" position="attributes">
+                <attribute name="readonly"/>
+                </xpath>
+            <xpath expr="//field[@name='preview']" position="attributes">
+                <attribute name="invisible">mailing_type != 'mail'</attribute>
+                <attribute name="readonly">mailing_type != 'mail'</attribute>
+            </xpath>
+            <xpath expr="//page[@name='mail_body']" position="replace">
+                <page string="Mail Body" name="mail_body">
+                    <field name="body_html" class="oe_read_only" widget="html" options="{
+                        'cssReadonly': 'mass_mailing.iframe_css_assets_readonly',
+                    }"/>
+                    <field name="body_arch" class="oe_edit_only" iframeHtmlClass="o_mass_mailing_iframe o_fullscreen" widget="mass_mailing_html" options="{
+                        'snippets': 'mass_mailing.email_designer_snippets',
+                        'cssEdit': 'mass_mailing.iframe_css_assets_edit',
+                        'inline-field': 'body_html',
+                        'dynamic_placeholder': true,
+                        'dynamic_placeholder_model_reference_field': 'mailing_model_real',
+                        'filterTemplates': true,
+                    }"/>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_launch']" position="replace"/>
+            <xpath expr="//button[@name='action_schedule']" position="replace"/>
+            <field name="mailing_domain" position="replace"/>
+            <xpath expr="//label[@for='mailing_model_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@name='mailing_model_id_container']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('o_mass_mailing_contact_list_ids')]" position="replace"/>
+            <xpath expr="//field[@name='source_id']" position="after">
+                <field name="marketing_activity_ids" string="Activities" widget="many2many_tags"/>
+            </xpath>
+            <xpath expr="//page[@name='ab_testing']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='mail_server_id']" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_mailing_view_form_marketing_activity" model="ir.ui.view">
+        <field name="name">mailing.mailing.view.form.marketing.activity</field>
+        <field name="model">mailing.mailing</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+        <form string="Mail Template">
+            <header>
+                <button type="object"
+                    name="action_set_favorite"
+                    class="btn-secondary"
+                    invisible="favorite"
+                    string="Add to Templates"/>
+                <button type="object"
+                    name="action_remove_favorite"
+                    class="btn-secondary"
+                    invisible="not favorite"
+                    string="Remove from Templates"/>
+            </header>
+            <sheet>
+                <group>
+                    <field class="o_text_overflow" options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'mailing_model_real'}" name="subject"/>
+                    <field name="email_from" readonly="state in ('sending', 'done') and not use_in_marketing_automation"/>
+                    <field name="mail_server_id" invisible="1"/>
+                    <field name="mailing_type" invisible="1"/>
+                    <label for="mailing_model_id" string="Participants" invisible="1"/>
+                    <field name="mailing_model_id" invisible="1"/>
+                    <field name="mailing_model_real" invisible="1"/>
+                    <field name="use_in_marketing_automation" invisible="1"/>
+                    <field name="campaign_id" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                </group>
+                <notebook>
+                    <page string="Mail Body" name="mail_body">
+                        <field name="body_html" class="oe_read_only" widget="html" options="{
+                            'cssReadonly': 'mass_mailing.iframe_css_assets_readonly',
+                        }"/>
+                        <field name="body_arch" class="oe_edit_only" iframeHtmlClass="o_mass_mailing_iframe o_fullscreen" widget="mass_mailing_html" options="{
+                            'snippets': 'mass_mailing.email_designer_snippets',
+                            'cssEdit': 'mass_mailing.iframe_css_assets_edit',
+                            'inline-field': 'body_html',
+                            'dynamic_placeholder': true,
+                            'dynamic_placeholder_model_reference_field': 'mailing_model_real',
+                            'filterTemplates': true,
+                        }"/>
+                    </page>
+                    <page string="Options" name="options">
+                        <group>
+                            <group string="Mailing" name="group_mailing">
+                                <field name="attachment_ids" widget="many2many_binary" string="Attach a file" class="oe_inline"/>
+                                <field name="keep_archives" groups="base.group_no_one"/>
+                                <label for="reply_to"/>
+                                <div>
+                                    <field name="reply_to_mode" widget="radio" invisible="mailing_model_real == 'mailing.contact'"/>
+                                    <field name="reply_to" invisible="reply_to_mode != 'new'" required="reply_to_mode == 'new'"/>
+                                </div>
+                            </group>
+                            <group string="Advanced" name="group_advanced" groups="base.group_no_one" invisible="not mail_server_available">
+                                <field name="mail_server_available" invisible="1"/>
+                                <field name="mail_server_id"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </sheet>
+            <chatter/>
+        </form>
+        </field>
+    </record>
+
+    <record id="mass_mailing.mailing_mailing_action_mail" model="ir.actions.act_window">
+        <field name="domain">['&amp;', ('mailing_type', '=', 'mail'), ('use_in_marketing_automation', '=', False)]</field>
+    </record>
+
+    <record id="mail_mass_mailing_action_marketing_automation" model="ir.actions.act_window">
+        <field name="name">Marketing Automation Mailings</field>
+        <field name="res_model">mailing.mailing</field>
+        <field name="view_mode">list,form,graph</field>
+        <field name="domain">[('use_in_marketing_automation', '=', True)]</field>
+    </record>
+    <record id="mail_mass_mailing_action_marketing_automation_tree" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">list</field>
+        <field name="act_window_id" ref="mail_mass_mailing_action_marketing_automation"/>
+        <field name="view_id" ref="mailing_mailing_view_tree_marketing_automation"/>
+    </record>
+    <record id="mail_mass_mailing_action_marketing_automation_form" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">form</field>
+        <field name="act_window_id" ref="mail_mass_mailing_action_marketing_automation"/>
+        <field name="view_id" ref="mailing_mailing_view_form_marketing_automation"/>
+    </record>
+
+</odoo>

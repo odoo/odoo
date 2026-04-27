@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="stock_barcode.UnlinkButton">
+        <button class="btn btn-danger text-uppercase o_delete" t-on-click="onClick" t-if="!props.record.isNew">
+            <i class="fa fa-trash-o"/> Delete
+        </button>
+    </t>
+
+    <div t-name="stock_barcode.MainComponent" class="o_content o_barcode_client_action h-100 flex-column">
+        <CountScreenRFID t-if="state.displayCountRFID" receivedRFIDs="receivedRFIDs" totalRFIDs="totalRFIDs" close.bind="closeRFIDCount"/>
+        <ImportBlockUI t-if="state.uiBlocked" message="blockUIMessage"/>
+        <header class="o_barcode_header border-bottom">
+            <div class="navbar navbar-expand p-2 m-1">
+                <nav class="navbar-nav me-auto">
+                    <button t-on-click="exit" class="o_exit btn btn-secondary me-3">
+                        <i class="oi oi-chevron-left"/>
+                    </button>
+                    <button class="o_title btn text-start p-0" t-on-click="toggleInformation">
+                        <div t-esc="env.model.name"/>
+                        <div t-if="env.model.record.partner_id" class="o_barcode_partner text-muted">
+                            <i class="fa fa-user-circle-o me-1"/>
+                            <t t-esc="env.model.record.partner_id.display_name"/>
+                        </div>
+                    </button>
+                </nav>
+                <nav class="navbar-nav">
+                    <t t-if="state.view === 'barcodeLines'">
+                        <button t-if="cameraScannerSupported"
+                                class="o_stock_mobile_barcode btn"
+                                t-att-class="cameraScannerClassState"
+                                t-att-disabled="state.cameraScannedEnabled &amp;&amp; !state.readyToToggleCamera"
+                                t-on-click="toggleCameraScanner">
+                            <i class="fa fa-barcode" role="img"/>
+                        </button>
+                        <button t-on-click="() => this.changeView('actionsView')" class="o_barcode_actions btn">
+                            <i class="fa fa-cog oi-large"/>
+                        </button>
+                    </t>
+                    <button t-else="" t-on-click="() => this.toggleBarcodeLines()" class="o_close btn">
+                        <i class="oi oi-close oi-large"/>
+                    </button>
+                </nav>
+            </div>
+            <div t-if="state.cameraScannedEnabled" class="text-bg-800">
+                <BarcodeVideoScanner t-props="barcodeVideoScannerProps"/>
+            </div>
+            <t t-if="state.view === 'barcodeLines'">
+                <div t-if="state.displayNote" class="alert alert-warning text-start mb-0">
+                    <button type="button" class="btn-close float-end" title="Close" aria-label="Close" t-on-click="() => this.state.displayNote = false"/>
+                    <t t-esc="env.model.record.note"/>
+                </div>
+                <div class="o_barcode_lines_header py-3 px-1 text-bg-800">
+                    <t t-set="info" t-value="env.model.barcodeInfo"/>
+                    <div t-if="info.warning" class="o_barcode_pic position-relative text-center my-2">
+                        <i t-attf-class="fa fa-5x fa-{{info.icon}}"/>
+                    </div>
+                    <div name="barcode_messages" class="d-flex align-items-center justify-content-center w-100">
+                        <span t-if="!info.warning &amp;&amp; info.icon" t-attf-class="fa fa-lg fa-{{info.icon}} me-3"/>
+                        <span class="o_scan_message" t-attf-class="o_{{info.class}}" t-out="info.message"/>
+                    </div>
+                </div>
+            </t>
+        </header>
+        <div t-if="state.view === 'barcodeLines' &amp;&amp; env.model.canBeProcessed"
+             class="o_barcode_lines list-group flex-grow-1 text-bg-200">
+            <t t-foreach="env.model.groupedLinesByLocation" t-as="group" t-key="group.location.id">
+                <t t-set="currentLocation" t-value="env.model.location &amp;&amp; env.model.location.id == group.location.id"/>
+                <div class="o_barcode_location_group" t-att-class="currentLocation ? 'o_current_location' : ''">
+                    <!-- Source location separator -->
+                    <div t-if="env.model.displaySourceLocation"
+                        class="o_barcode_location_line p-1 px-3 border d-flex align-items-center"
+                        t-att-class="currentLocation ? 'text-bg-800' : 'text-muted bg-secondary'"
+                        t-att-data-location-id="group.location.id"
+                        t-att-data-location="group.location.display_name">
+                        <i class="fa fa-map-marker me-2"/>
+                        <span class="o_location_name" t-out="group.location.display_name"/>
+                    </div>
+                    <!-- Barcode lines -->
+                    <t t-foreach="group.lines" t-as="line" t-key="line.virtual_id">
+                        <PackageLineComponent t-if="line.isPackageLine" line="line" displayUOM="false" openPackage.bind="onOpenPackage"/>
+                        <GroupedLineComponent t-elif="line.lines" line="line" displayUOM="groups.group_uom" editLine.bind="onOpenProductPage"/>
+                        <LineComponent t-else="" line="line" displayUOM="groups.group_uom" editLine.bind="onOpenProductPage"/>
+                    </t>
+                </div>
+            </t>
+        </div>
+        <div t-elif="state.view === 'scrapProductPage'"> <!-- Scrap Create Form View -->
+            <View t-props="scrapViewProps"/>
+        </div>
+        <div t-elif="state.view === 'productPage'"> <!-- Barcode Line Edit Form View -->
+            <View t-props="lineFormViewProps"/>
+        </div>
+        <div t-elif="state.view === 'packagePage'"> <!-- Quants (in package) Kanban View -->
+            <View type="'kanban'"
+                viewId="packageKanbanViewId"
+                display="{ controlPanel: false }"
+                resModel="'stock.quant'"
+                domain="[['package_id', '=', _inspectedPackageId]]"/>
+        </div>
+        <div t-elif="state.view === 'infoFormView'"> <!-- Res Model Form View -->
+            <View type="'form'" mode="'edit'"
+                viewId="env.model.formViewId"
+                display="{ controlPanel: false }"
+                resModel="resModel"
+                resId="resId"
+                onSave="() => this._onRefreshState({ lineId: this._editedLineParams &amp;&amp; this._editedLineParams.currentId })"
+                onDiscard="() => this.toggleBarcodeLines()"/>
+            <Chatter threadModel="resModel" threadId="resId"/>
+        </div>
+        <div t-elif="state.view === 'actionsView'"
+             class="o_barcode_settings d-flex flex-grow-1 flex-column p-2">
+            <BarcodeInput onSubmit.bind="onBarcodeSubmitted"/>
+            <div t-if="env.model.printButtons">
+                <div class="w-100 my-2 d-flex justify-contents-center">
+                    <hr class="flex-grow-1"/>
+                    <span class="fs-5 fw-bold text-center text-muted mt-1 px-2">
+                        <i class="fa fa-print me-1"/>Print
+                    </span>
+                    <hr class="flex-grow-1"/>
+                </div>
+                <t t-foreach="env.model.printButtons" t-as="button" t-key="button.class">
+                    <button class="w-100 fs-4 btn btn-secondary mb-2 py-2"
+                        t-attf-class="{{button.class}}" t-out="button.name"
+                        t-on-click="() => env.model.print(button.action, button.method)"/>
+                </t>
+            </div>
+            <div t-if="displayOperationButtons">
+                <div class="o_buttons_operations w-100 my-2 d-flex justify-contents-center">
+                    <hr class="flex-grow-1"/>
+                    <span class="fs-5 fw-bold text-center text-muted mt-1 px-2">Operations</span>
+                    <hr class="flex-grow-1"/>
+                </div>
+                <button t-if="env.model.displayReturnButton"
+                        t-on-click="returnProducts"
+                        class="o_create_return btn btn-secondary w-100 fs-4 mb-2 py-2">
+                    Return Products
+                </button>
+                <button t-if="env.model.displaySignatureButton"
+                        class="o_sign btn btn-secondary w-100 fs-4 mb-2 py-2"
+                        t-on-click="() => this.env.model.openSignatureDialog()">
+                    Sign
+                </button>
+                <button t-if="env.model.canScrap" t-on-click="newScrapProduct"
+                    class="o_scrap w-100 fs-4 btn btn-danger mb-2 py-2">
+                    Scrap
+                </button>
+                <button t-if="env.model.displayCancelButton" t-on-click="cancel"
+                    class="o_cancel_operation w-100 fs-4 btn btn-danger mb-2 py-2">
+                    <i class="fa fa-trash me-2"/><t t-out="env.model.cancelLabel"/>
+                </button>
+            </div>
+        </div>
+        <footer t-if="displayActionButtons" class="o_barcode_control o_action_buttons d-flex justify-content-between p-2 gap-2 border-top">
+            <button t-if="env.model.displayAddProductButton" class="o_add_line btn btn-secondary" t-on-click="onOpenProductPage">
+                <t t-out="addLineBtnName" />
+            </button>
+            <button t-if="env.model.displayPutInPackButton" t-on-click="putInPack"
+                    t-att-disabled="!env.model.canPutInPack"
+                    class="o_put_in_pack btn btn-secondary">
+                Put In Pack
+            </button>
+            <button t-if="env.model.displayValidateButton" t-on-click="validate"
+                class="o_validate_page btn"
+                t-att-disabled="!env.model.canBeValidate"
+                t-attf-class="{{highlightValidateButton ? 'btn-primary' : 'btn-secondary'}}">
+                <t t-out="env.model.validateButtonLabel"/>
+            </button>
+            <button t-if="env.model.displayApplyButton" t-on-click="() => this.env.model.apply()"
+                class="o_apply_page btn"
+                t-att-disabled="env.model.applyOn === 0"
+                t-attf-class="{{highlightValidateButton ? 'btn-primary' : 'btn-secondary'}}">
+                Apply
+                <span t-attf-class="{{highlightValidateButton ? '' : 'text-muted'}}">
+                    (<t t-esc="env.model.applyOn"/>)
+                </span>
+            </button>
+        </footer>
+        <footer t-if="env.model.displayReturnButton and state.view === 'barcodeLines'"
+            class="o_barcode_control o_action_buttons d-flex mt-auto">
+            <button t-on-click="returnProducts" class="o_create_return btn btn-secondary">
+                Return Products
+            </button>
+        </footer>
+    </div>
+
+    <t t-name="stock_barcode.BlockUI">
+        <div class="o_blockUI fixed-top d-flex justify-content-center align-items-center flex-column vh-100 bg-black-50">
+            <div class="o_spinner mb-4">
+                <img src="/web/static/img/spin.svg" alt="Loading..."/>
+            </div>
+            <div t-if="props.message or props.blockComponent">
+                <div class="o_message text-center px-4" t-esc="props.message" />
+                <t t-if="props.blockComponent" t-component="props.blockComponent.class" t-props="props.blockComponent.props"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -15182,7 +15182,8 @@ var ScorecardChart = class extends Component {
 		return this.env.model.getters.getChartRuntime(this.props.figure.id);
 	}
 	get title() {
-		return _t(this.env.model.getters.getChartDefinition(this.props.figure.id).title.text ?? "");
+		const title = this.env.model.getters.getChartDefinition(this.props.figure.id).title.text;
+		return title ? _t(title) : "";
 	}
 	setup() {
 		useEffect(this.createChart.bind(this), () => {
@@ -26007,7 +26008,7 @@ function createGaugeChartRuntime(chart, getters) {
 		background: getters.getStyleOfSingleCellChart(chart.background, dataRange).background,
 		title: {
 			...chart.title,
-			text: _t(chart.title.text ?? "")
+			text: chart.title.text ? _t(chart.title.text) : ""
 		},
 		minValue: {
 			value: minValue,

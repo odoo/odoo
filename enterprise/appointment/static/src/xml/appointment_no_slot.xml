@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="Appointment.appointment_info_no_slot">
+        <div class="col-md-8 col-lg-6 mx-auto">
+            <div class="px-2 pt-3 pb-5 text-center o_appointment_no_slot_overall_helper_txt">
+                <t t-if="!active">
+                    <p>
+                        Sorry, it is no longer possible to schedule an appointment.
+                    </p>
+                </t>
+                <t t-elif="staffUserName">
+                    <p>
+                        Sorry, <span t-out="staffUserName"/> has no availability for an appointment.
+                    </p>
+                </t>
+                <t t-else="">
+                    <p>
+                        Sorry, we have no availability for an appointment.
+                    </p>
+                </t>
+            </div>
+            <div class="o_appointment_no_slot_overall_helper_svg mx-auto">
+                <t t-call="Appointment.appointment_svg"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="Appointment.appointment_info_no_capacity">
+        <div class="col-8 mx-auto">
+            <div class="pt-2 o_appointment_no_slot_overall_helper_txt">
+                <p>
+                    Sorry, there is not any more availability for the asked capacity.
+                </p>
+            </div>
+            <div class="o_appointment_no_slot_overall_helper_svg mx-auto">
+                <t t-call="Appointment.appointment_svg"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="Appointment.appointment_info_no_slot_month">
+        <div class="o_appointment_no_slot_month_helper mt-4 p-3 text-center">
+            <div class="o_appointment_no_slot_month_helper_svg w-25 mx-auto">
+                <t t-call="Appointment.appointment_svg"/>
+            </div>
+            <t t-if="staffUserName">
+                <p>
+                    Sorry, <span t-out="staffUserName"/> has no more slots available for this month.
+                </p>
+                <p>
+                    Their first availability is <br/>
+                    <a href="#" id="next_available_slot" t-out="firstAvailabilityDate"/>
+                </p>
+            </t>
+            <t t-else="">
+                <p>
+                    Sorry, we have no more slots available for this month.
+                </p>
+                <p>
+                    Our first availability is <br/>
+                    <a href="#" id="next_available_slot" t-out="firstAvailabilityDate"/>
+                </p>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="Appointment.appointment_info_upcoming_appointment">
+        <div class="o_appointment_upcoming_event_info col-12 mx-auto">
+            <div class="pt-2 mb-3">
+                <span class="d-flex justify-content-center text-center mb-1">
+                    Heads-up, you already booked an appointment <span class="d-contents fw-bold" t-out="appointmentTypeName"/> on
+                </span>
+                <span t-out="appointmentStart"
+                    class="d-flex justify-content-center fw-bold mb-2"/>
+                <div class="d-flex justify-content-center gap-1">
+                    <a class="btn btn-primary" t-attf-href="/calendar/view/#{appointmentToken}?partner_id=#{partnerId}">Review Booking</a>
+                    <button class="o_appointment_show_calendar btn btn-secondary">Add Another</button>
+                </div>
+            </div>
+            <div class="o_appointment_no_slot_overall_helper_svg col-8 mx-auto">
+                <t t-call="Appointment.appointment_svg"/>
+            </div>
+        </div>
+    </t>
+</templates>

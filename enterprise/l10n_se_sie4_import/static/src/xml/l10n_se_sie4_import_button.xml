@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="sie4_import_template" t-inherit="account_base_import.accountImportTemplate" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('sie-import-buttons')]" position="inside">
+            <group>
+                <button class="btn btn-primary mb-3" t-on-click="() => this._importAccountGuideAction('l10n_se_sie4_import.action_open_load_sie4')">
+                    Import SIE 4 file
+                </button>
+            </group>
+        </xpath>
+    </t>
+</templates>

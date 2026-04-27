@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="documents.component.PdfGroupName">
+        <div class="o_documents_pdf_block_title">
+            <div class="o_pdf_group_name_block">
+                <t t-if="props.edit">
+                    <input class="o_pdf_name_input" type="text" name="group_name" t-att-value="props.name"
+                        autofocus="true" t-on-blur="onBlur" t-on-keydown="onKeyDown" t-ref="nameInput"/>
+                </t>
+                <t t-else="">
+                    <span class="o_pdf_name_display" t-esc="props.name" t-att-title="props.name"
+                        t-on-click.stop="onClickGroupName"/>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.main_company" model="res.company">
+        <field name="currency_id" ref="base.USD"/>
+        <field name="street">1034 Wildwood Street</field>
+        <field name="zip">44654</field>
+        <field name="state_id" ref="base.state_us_30"/>
+        <field name="city">Millersburg</field>
+        <field name="country_id" ref="base.us"/>
+        <field name="l10n_us_ca_ett_tax" eval="True"/>
+    </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.main_company'))]"/>
+    </record>
+
+    <record id="base.user_demo" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.main_company'))]"/>
+    </record>
+
+    <record id="hr_department_rdus" model="hr.department">
+        <field name="name">RD US</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="job_developer_united_states" model="hr.job">
+        <field name="name">Experienced Developer US</field>
+        <field name="department_id" ref="hr_department_rdus"/>
+        <field name="no_of_recruitment">5</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="res_partner_troy" model="res.partner">
+        <field name="name">Troy Cruz</field>
+        <field name="street">5 King Street</field>
+        <field name="city">Los Angeles</field>
+        <field name="zip">90001</field>
+        <field name="state_id" ref="base.state_us_5"/>
+        <field name="country_id" ref="base.us"/>
+        <field name="phone">256.424.4557</field>
+        <field name="email">troy.cruz@example.com</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="image_1920" type="base64" file="l10n_us_hr_payroll/static/img/hr_employee_troy.jpg"/>
+    </record>
+
+    <record id="hr_employee_troy" model="hr.employee">
+        <field name="name">Troy Cruz</field>
+        <field name="job_id" ref="job_developer_united_states"/>
+        <field name="country_id" ref="base.us"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="address_id" ref="res_partner_troy"/>
+        <field name="image_1920" type="base64" file="l10n_us_hr_payroll/static/img/hr_employee_troy.jpg"/>
+        <field name="gender">male</field>
+        <field name="ssnid">876545679</field>
+        <field name="l10n_us_filing_status">single</field>
+        <field name="l10n_us_state_filing_status">ca_status_1</field>
+        <field name="work_contact_id" ref="l10n_us_hr_payroll.res_partner_troy"/>
+    </record>
+
+    <record id="res_partner_maggie" model="res.partner">
+        <field name="name">Maggie Davidson</field>
+        <field name="street">3869 Mayo Street</field>
+        <field name="city">Trenton</field>
+        <field name="zip">08601</field>
+        <field name="state_id" ref="base.state_us_25"/>
+        <field name="country_id" ref="base.us"/>
+        <field name="phone">467.401.1716</field>
+        <field name="email">maggie.davidson@example.com</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="user_maggie" model="res.users">
+        <field name="partner_id" ref="l10n_us_hr_payroll.res_partner_maggie"/>
+        <field name="login">davidson@example.com</field>
+        <field name="password">davidson</field>
+        <field name="signature" type="html"><span>--<br/>+M. Davidson</span></field>
+        <field name="company_ids" eval="[(4, ref('base.main_company'))]"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
+        <field name="image_1920" type="base64" file="l10n_us_hr_payroll/static/img/hr_employe_maggie.jpg"/>
+    </record>
+
+    <record id="res_partner_maggie_work_address" model="res.partner">
+        <field name="name">US Offices</field>
+        <field name="street">4906 Crosswind Drive</field>
+        <field name="city">Alamo</field>
+        <field name="city_id" ref="l10n_us_hr_payroll.city_us_3008"/>
+        <field name="zip">94507</field>
+        <field name="state_id" ref="base.state_us_5"/>
+        <field name="country_id" ref="base.us"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="res_partner_maggie_work_contact" model="res.partner">
+        <field name="name">Maggie Davidson</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="res_partner_bank_account_norberta" model="res.partner.bank">
+        <field name="acc_number">US91417574509283017021752127</field>
+        <field name="bank_id" ref="base.bank_ing"/>
+        <field name="partner_id" ref="l10n_us_hr_payroll.res_partner_maggie_work_contact"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="hr_employee_maggie" model="hr.employee">
+        <field name="name">Maggie Davidson (mda)</field>
+        <field name="gender">female</field>
+        <field name="marital">single</field>
+        <field name="private_street">1069 Sunrise Road</field>
+        <field name="private_city">Marshfield</field>
+        <field name="private_zip">54404</field>
+        <field name="private_state_id" ref="base.state_us_50"/>
+        <field name="private_country_id" ref="base.us"/>
+        <field name="private_phone">632-878-2163</field>
+        <field name="private_email">maggie.davidson@example.com</field>
+        <field name="job_title">Software Developer</field>
+        <field name="work_contact_id" ref="l10n_us_hr_payroll.res_partner_maggie_work_contact"/>
+        <field name="address_id" ref="l10n_us_hr_payroll.res_partner_maggie_work_address"/>
+        <field name="emergency_contact">Kenneth Davidson</field>
+        <field name="emergency_phone">818-883-5177</field>
+        <field name="birthday">1991-07-28</field>
+        <field name="distance_home_work">25</field>
+        <field name="distance_home_work_unit">miles</field>
+        <field name="place_of_birth">United States</field>
+        <field name="country_of_birth" ref="base.us"/>
+        <field name="certificate">master</field>
+        <field name="study_field">Civil Engineering</field>
+        <field name="study_school">Université Catholique de Louvain-la-Neuve</field>
+        <field name="parent_id" ref="l10n_us_hr_payroll.hr_employee_troy"/>
+        <field name="country_id" ref="base.us"/>
+        <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+        <field name="identification_id">8752027365496</field>
+        <field name="ssnid">876545678</field>
+        <field name="bank_account_id" ref="l10n_us_hr_payroll.res_partner_bank_account_norberta"/>
+        <field name="image_1920" type="base64" file="l10n_us_hr_payroll/static/img/hr_employe_maggie.jpg"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="user_id" ref="l10n_us_hr_payroll.user_maggie"/>
+        <field name="l10n_us_filing_status">single</field>
+        <field name="l10n_us_state_filing_status">ca_status_1</field>
+    </record>
+
+    <record id="hr_contract_cdi_maggie_previous" model="hr.contract">
+        <field name="name">CDI - Maggie Davidson - Experienced Developer</field>
+        <field name="department_id" ref="hr_department_rdus"/>
+        <field name="employee_id" ref="hr_employee_maggie"/>
+        <field name="job_id" ref="l10n_us_hr_payroll.job_developer_united_states"/>
+        <field name="structure_type_id" ref="l10n_us_hr_payroll.structure_type_employee_us"/>
+        <field name="wage">3000</field>
+        <field name="state">close</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-2, month=1, day=1))"/>
+        <field name="date_end" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1, days=-2))"/>
+        <field name="resource_calendar_id" model="resource.calendar" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id)], limit=1)"/>
+    </record>
+
+    <record id="hr_contract_cdi_maggie" model="hr.contract">
+        <field name="name">CDI - Maggie Davidson - Experienced Developer</field>
+        <field name="department_id" ref="hr_department_rdus"/>
+        <field name="employee_id" ref="hr_employee_maggie"/>
+        <field name="job_id" ref="l10n_us_hr_payroll.job_developer_united_states"/>
+        <field name="structure_type_id" ref="l10n_us_hr_payroll.structure_type_employee_us"/>
+        <field name="wage">3600</field>
+        <field name="state">open</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1, days=-1))"/>
+        <field name="resource_calendar_id" model="resource.calendar" eval="obj().search([('company_id', '=', obj().env.ref('base.main_company').id)], limit=1)"/>
+    </record>
+
+    <record id="hr_employee_maggie" model="hr.employee">
+        <field name="contract_id" ref="l10n_us_hr_payroll.hr_contract_cdi_maggie"/>
+    </record>
+</odoo>

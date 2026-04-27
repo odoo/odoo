@@ -1,0 +1,68 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <ship:ShipmentResponse xmlns:ship="http://www.ups.com/XMLSchema/XOLTWS/Ship/v1.0">
+            <common:Response xmlns:common="http://www.ups.com/XMLSchema/XOLTWS/Common/v1.0">
+                <common:ResponseStatus>
+                    <common:Code>1</common:Code>
+                    <common:Description>Success</common:Description>
+                </common:ResponseStatus>
+                <common:Alert>
+                    <common:Code>120900</common:Code>
+                    <common:Description>User Id and Shipper Number combination is not qualified to receive negotiated rates</common:Description>
+                </common:Alert>
+                <common:TransactionReference/>
+            </common:Response>
+            <ship:ShipmentResults>
+                <ship:ShipmentCharges>
+                    <ship:TransportationCharges>
+                        <ship:CurrencyCode>EUR</ship:CurrencyCode>
+                        <ship:MonetaryValue>32.35</ship:MonetaryValue>
+                    </ship:TransportationCharges>
+                    <ship:ServiceOptionsCharges>
+                        <ship:CurrencyCode>EUR</ship:CurrencyCode>
+                        <ship:MonetaryValue>0.00</ship:MonetaryValue>
+                    </ship:ServiceOptionsCharges>
+                    <ship:TotalCharges>
+                        <ship:CurrencyCode>EUR</ship:CurrencyCode>
+                        <ship:MonetaryValue>32.35</ship:MonetaryValue>
+                    </ship:TotalCharges>
+                </ship:ShipmentCharges>
+                <ship:BillingWeight>
+                    <ship:UnitOfMeasurement>
+                        <ship:Code>KGS</ship:Code>
+                        <ship:Description>Kilograms</ship:Description>
+                    </ship:UnitOfMeasurement>
+                    <ship:Weight>1.0</ship:Weight>
+                </ship:BillingWeight>
+                <ship:ShipmentIdentificationNumber>1ZXXXXXXXXXXXXXXXX</ship:ShipmentIdentificationNumber>
+                <ship:PackageResults>
+                    <ship:TrackingNumber>1ZXXXXXXXXXXXXXXXX</ship:TrackingNumber>
+                    <ship:ServiceOptionsCharges>
+                        <ship:CurrencyCode>EUR</ship:CurrencyCode>
+                        <ship:MonetaryValue>0.00</ship:MonetaryValue>
+                    </ship:ServiceOptionsCharges>
+                    <ship:ShippingLabel>
+                        <ship:ImageFormat>
+                            <ship:Code>GIF</ship:Code>
+                            <ship:Description>GIF</ship:Description>
+                        </ship:ImageFormat>
+                        <ship:GraphicImage><!-- PLACEHOLDER LABEL GIF --></ship:GraphicImage>
+                        <ship:HTMLImage><!-- PLACEHOLDER LABEL HTML --></ship:HTMLImage>
+                    </ship:ShippingLabel>
+                </ship:PackageResults>
+                <ship:Form>
+                    <ship:Code>01</ship:Code>
+                    <ship:Description>All Requested International Forms</ship:Description>
+                    <ship:Image>
+                        <ship:ImageFormat>
+                            <ship:Code>PDF</ship:Code>
+                            <ship:Description>PDF</ship:Description>
+                        </ship:ImageFormat>
+                        <ship:GraphicImage><!-- PLACEHOLDER INVOICE --></ship:GraphicImage>
+                    </ship:Image>
+                </ship:Form>
+            </ship:ShipmentResults>
+        </ship:ShipmentResponse>
+    </soapenv:Body>
+</soapenv:Envelope>

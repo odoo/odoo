@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_payslip_run_hsbc_autopay_view_form" model="ir.ui.view">
+        <field name="name">hr.payslip.run.hsbc.autopay.wizard.form</field>
+        <field name="model">hr.payslip.run.hsbc.autopay.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate HSBC Autopay Report">
+                <field name="company_id" invisible="1" />
+                <field name="autopay_type" invisible="1" />
+                <group>
+                    <group>
+                        <field name="payment_date" />
+                        <field name="batch_type" />
+                        <field name="payment_set_code" />
+                        <field name="ref" />
+                        <field name="file_name" />
+                    </group>
+                    <group invisible="autopay_type != 'h2h'">
+                        <field name="digital_pic_id" required="autopay_type == 'h2h'" />
+                        <field name="customer_ref" />
+                        <field name="authorisation_type" required="autopay_type == 'h2h'" />
+                    </group>
+                </group>
+                <footer>
+                    <button string="Confirm" class="btn-primary" name="generate_hsbc_autopay_apc_file" type="object" data-hotkey="q" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

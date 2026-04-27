@@ -1,0 +1,39 @@
+<templates>
+    <t t-inherit="stock_barcode.MainComponent" t-inherit-mode="extension" t-translation="off">
+        <xpath expr="//header" position="inside">
+            <t t-if="env.model.resModel=='mrp.production' and state.view === 'barcodeLines' and env.model.record.product_id and !state.displayByProduct">
+                <Header line="env.model.record" displayUOM="groups.group_uom" openDetails.bind="toggleHeaderView"/>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('o_barcode_lines_header')]" position="attributes">
+             <attribute name="t-if">!state.displayByProduct</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_barcode_lines')]" position="after">
+            <div t-elif="state.view === 'headerProductPage'"> <!-- MRP Header Edit Form View -->
+                <View t-props="headerFormViewProps"/>
+            </div>
+            <div t-elif="state.view === 'scrapProductPage'"> <!-- Scrap Create Form View -->
+                <View t-props="scrapViewProps"/>
+            </div>
+        </xpath>
+        <xpath expr="//footer[hasclass('o_action_buttons')]" position="inside">
+            <button t-if="env.model.displayRegisterByProduct"
+                    class="o_by_products btn btn-secondary" t-on-click.prevent.stop="openByProductLines">
+                Register By-Product
+            </button>
+        </xpath>
+        <!-- By products page buttons -->
+        <xpath expr="//footer[hasclass('o_action_buttons')]" position="after">
+            <footer t-if="state.displayByProduct and state.view == 'barcodeLines'"
+                    class="o_barcode_control o_action_buttons d-flex justify-content-between p-2 gap-2">
+                <button class="o_add_byproduct btn btn-secondary" t-on-click="onOpenProductPage">
+                    <i class="fa fa-plus me-1"/> Add By Product
+                </button>
+                <button class="o_save_byproduct btn btn-secondary" t-on-click="onValidateByProduct">
+                    <i class="fa fa-check me-1"/> Validate
+                </button>
+            </footer>
+
+        </xpath>
+    </t>
+</templates>

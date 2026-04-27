@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="ir_cron_update_dgi_state" model="ir.cron">
+        <field name="name">UY: Update DGI Status</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model._l10n_uy_edi_cron_update_dgi_status()</field>
+    </record>
+    <record id="ir_cron_get_vendor_bills_received" model="ir.cron">
+        <field name="name">UY: Create vendor bills (sync from Uruware)</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field name="model_id" ref="model_l10n_uy_edi_document"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_l10n_uy_edi_get_vendor_bills()</field>
+        <field name="active" eval="True"/>
+    </record>
+
+</odoo>

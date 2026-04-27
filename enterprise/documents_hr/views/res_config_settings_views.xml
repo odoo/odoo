@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.documents</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="70"/>
+        <field name="inherit_id" ref="documents.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='documents']" position="attributes">
+                <attribute name="notApp">0</attribute>
+            </xpath>
+            <xpath expr="//block[@id='files_centralization_section']" position="inside">
+                <setting company_dependent="1" help="Centralize your employees' documents (contracts, payslips, etc.)">
+                    <field name="documents_hr_settings"/>
+                    <div name="documents_hr_folder" class="content-group" invisible="not documents_hr_settings">
+                        <div class="row mt16">
+                            <label class="o_form_label col-lg-3" for="documents_hr_folder" string="Workspace"/>
+                            <field name="documents_hr_folder" required="documents_hr_settings" widget="documents_folder_many2one"
+                                options="{'no_create': True, 'no_create_edit': True}"/>
+                        </div>
+                    </div>
+                    <div id="documents_hr_tags" class="mt-3"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

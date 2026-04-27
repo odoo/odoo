@@ -1,0 +1,137 @@
+<odoo>
+
+        <record id="base.module_category_productivity_documents" model="ir.module.category">
+            <field name="name">Documents</field>
+            <field name="description">Allows you to manage your documents.</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="group_documents_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="comment">Can view or edit, upload, and share their own or shared documents.</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="base.module_category_productivity_documents"/>
+        </record>
+
+        <record id="group_documents_manager" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="comment">Can configure folders, manage access rights, and oversee all documents within their areas.</field>
+            <field name="category_id" ref="base.module_category_productivity_documents"/>
+            <field name="implied_ids" eval="[(4, ref('group_documents_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record id="group_documents_system" model="res.groups">
+            <field name="name">System Administrator</field>
+            <field name="comment">Has full control over all document settings, folders, and user rights across the application.</field>
+            <field name="category_id" ref="base.module_category_productivity_documents"/>
+            <field name="implied_ids" eval="[(4, ref('group_documents_manager'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+
+        <data noupdate="1">
+            <record id="base.default_user" model="res.users">
+                <field name="groups_id" eval="[(4, ref('documents.group_documents_manager'))]"/>
+            </record>
+        </data>
+
+        <!-- documents rules -->
+        <!-- duplicated for spreadsheetCellThreads in rule documents_spreadsheet.documents_document_thread_global_rule
+        Please update aforemetioned the rule accordingly -->
+        <record id="documents_document_global_rule" model="ir.rule">
+            <field name="name">Documents.document: global read rule</field>
+            <field name="model_id" ref="model_documents_document"/>
+            <field name="domain_force">[('user_permission', '!=', 'none')]</field>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="documents_document_global_create_rule" model="ir.rule">
+            <field name="name">Documents.document: global create rule</field>
+            <field name="model_id" ref="model_documents_document"/>
+            <field name="domain_force">[
+                '|', ('folder_id.user_permission', '=', 'edit'), ('folder_id', '=', False),
+            ]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="perm_write" eval="False"/>
+        </record>
+
+        <record id="documents_document_global_write_rule" model="ir.rule">
+            <field name="name">Documents.document: global write rule</field>
+            <field name="model_id" ref="model_documents_document"/>
+            <field name="domain_force">[('user_permission', '=', 'edit')]</field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- duplicated for spreadsheetCellThreads in rule documents_spreadsheet.spreadsheet_cell_thread_write_rule -->
+        <record id="documents_document_write_base_rule" model="ir.rule">
+            <field name="name">Documents.document: write+unlink base rule</field>
+            <field name="model_id" ref="model_documents_document"/>
+            <field name="groups" eval="[
+                (4, ref('base.group_public')),
+                (4, ref('base.group_portal')),
+                (4, ref('base.group_user')),
+            ]"/>
+            <field name="domain_force">[('user_permission', '=', 'edit'), ('is_pinned_folder', '=', False)]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_create" eval="False"/>
+        </record>
+
+        <record id="documents_document_write_manager_rule" model="ir.rule">
+            <field name="name">Documents.document: write+unlink manager rule</field>
+            <field name="model_id" ref="model_documents_document"/>
+            <field name="groups" eval="[(4, ref('documents.group_documents_manager'))]"/>
+            <field name="domain_force">[('user_permission', '=', 'edit')]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_create" eval="False"/>
+        </record>
+
+        <!-- same as documents.document -->
+        <record id="documents_access_global_rule_read" model="ir.rule">
+            <field name="name">Documents.access: global read rule</field>
+            <field name="model_id" ref="model_documents_access"/>
+            <field name="domain_force">[('document_id.user_permission', '!=', 'none')]</field>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- same as documents.document -->
+        <record id="documents_access_global_rule_write" model="ir.rule">
+            <field name="name">Documents.access: global write rule</field>
+            <field name="model_id" ref="model_documents_access"/>
+            <field name="domain_force">[('document_id.user_permission', '=', 'edit')]</field>
+            <field name="perm_read" eval="False"/>
+        </record>
+
+        <record id="mail_plan_rule_group_document_manager_document" model="ir.rule">
+            <field name="name">Manager can manage document plans</field>
+            <field name="groups" eval="[(4, ref('documents.group_documents_manager'))]"/>
+            <field name="model_id" ref="mail.model_mail_activity_plan"/>
+            <field name="domain_force">[('res_model', '=', 'documents.document')]</field>
+            <field name="perm_read" eval="False"/>
+        </record>
+
+        <record id="mail_plan_template_rule_group_document_manager_document" model="ir.rule">
+            <field name="name">Manager can manage document plan templates</field>
+            <field name="groups" eval="[(4, ref('documents.group_documents_manager'))]"/>
+            <field name="model_id" ref="mail.model_mail_activity_plan_template"/>
+            <field name="domain_force">[('plan_id.res_model', '=', 'documents.document')]</field>
+            <field name="perm_read" eval="False"/>
+        </record>
+
+    <record id="documents_tag_rule_portal" model="ir.rule">
+        <field name="name">Tag portal: Read access to the tags of the documents the user has access to</field>
+        <field name="model_id" ref="model_documents_tag"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">[('document_ids.user_permission', '!=', 'none')]</field>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ch_absence_leave_view_form" model="ir.ui.view">
+        <field name="name">hr.leave.view.form</field>
+        <field name="model">hr.leave</field>
+        <field name="arch" type="xml">
+            <form string="New Absence" class="o_hr_leave_form">
+            <field name="can_reset" invisible="1"/>
+            <field name="can_approve" invisible="1"/>
+            <field name="can_cancel" invisible="1"/>
+            <field name="has_mandatory_day" invisible="1"/>
+            <field name="state" invisible="1"/>
+            <sheet>
+                <field name="state" invisible="1"/>
+                <field name="tz_mismatch" invisible="1"/>
+                <field name="leave_type_request_unit" invisible="1"/>
+                <field name="l10n_ch_swissdec_work_interruption" invisible="1"/>
+                <div >
+                    <div>
+                        <div name="title" class="o_hr_leave_title" invisible="1">
+                            <field name="employee_id" readonly="1" force_save="1" invisible="1"/>
+                        </div>
+                        <group>
+                            <field name="employee_company_id" invisible="1"/>
+                            <field name="holiday_status_id" force_save="1"
+                                domain="[('l10n_ch_swissdec_payroll_impact', '=', True)]"
+                                context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
+                                options="{'no_create': True, 'no_open': True, 'request_type': 'leave'}"
+                                readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
+                            <field name="date_from" invisible="1"/>
+                            <field name="date_to" invisible="1"/>
+                            <field name="request_date_from" invisible="1"/>
+                            <field name="request_date_to" invisible="1"/>
+                            <label for="request_date_from" invisible="not request_unit_half and not request_unit_hours" string="Date" />
+                            <label for="request_date_from" invisible="request_unit_half or request_unit_hours" string="Dates" />
+                            <div class="o_row" invisible="not request_unit_half and not request_unit_hours">
+                                <field name="request_date_from" class="oe_inline" string="Date" readonly="state not in ('draft', 'confirm')" />
+                                <field name="request_date_from_period" invisible="not request_unit_half" required="request_unit_half" readonly="state not in ('draft', 'confirm')"/>
+                            </div>
+                            <div class="o_row" invisible="request_unit_half or request_unit_hours">
+                                <field
+                                    name="request_date_from"
+                                    widget="daterange"
+                                    readonly="state not in ('draft', 'confirm')"
+                                    required="not date_from or not date_to"
+                                    options="{'end_date_field': 'request_date_to'}"/>
+                                <field name="request_date_to" invisible="1" />
+                            </div>
+                            <label for="request_unit_half" string="" invisible="leave_type_request_unit == 'day'"/>
+                            <div class="o_row o_row_readonly oe_edit_only" style="margin-left: -2px;" invisible="leave_type_request_unit == 'day'">
+                                <field name="request_unit_half" class="oe_inline" invisible="leave_type_request_unit == 'day'" readonly="state not in ('draft', 'confirm')" />
+                                <label for="request_unit_half" invisible="leave_type_request_unit == 'day'" />
+                                <field name="request_unit_hours" invisible="leave_type_request_unit != 'hour'" readonly="state not in ('draft', 'confirm')" class="ms-5" />
+                                <label for="request_unit_hours" invisible="leave_type_request_unit != 'hour'" />
+                            </div>
+                            <label for="request_hour_from" string="" invisible="not request_unit_hours"/>
+                            <div class="o_row o_row_readonly" invisible="not request_unit_hours">
+                                <label for="request_hour_from" string="From" />
+                                <field name="request_hour_from" invisible="not request_unit_hours" readonly="state == 'validate'" required="request_unit_hours" />
+                                <label for="request_hour_to" string="To" />
+                                <field name="request_hour_to" invisible="not request_unit_hours" readonly="state == 'validate'" required="request_unit_hours" />
+                            </div>
+                            <field name="l10n_ch_continued_pay_percentage" readonly="state not in ('draft', 'confirm')" widget="percentage" invisible="l10n_ch_swissdec_work_interruption"/>
+                            <field name="l10n_ch_disability_percentage" readonly="state not in ('draft', 'confirm')" widget="percentage" invisible="l10n_ch_swissdec_work_interruption"/>
+                            <field name="l10n_ch_pay_interruption" readonly="state not in ('draft', 'confirm')" invisible="not l10n_ch_swissdec_work_interruption"/>
+                            <field name="l10n_ch_lpp_interruption" readonly="state not in ('draft', 'confirm')" invisible="not l10n_ch_swissdec_work_interruption"/>
+                            <field name="name" readonly="state not in ('draft', 'confirm')" widget="text" placeholder="Add a description..." />
+                            <field name="user_id" invisible="1" />
+                        </group>
+                    </div>
+                </div>
+            </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_ch_hr_leave_view_form" model="ir.ui.view">
+        <field name="name">hr.leave.view.form</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form"/>
+        <field name="priority" eval="40"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="l10n_ch_swissdec_payroll_impact" invisible="1"/>
+                <field name="l10n_ch_swissdec_work_interruption" invisible="1"/>
+                <field name="l10n_ch_continued_pay_percentage" readonly="state not in ('draft', 'confirm')" widget="percentage" invisible="l10n_ch_swissdec_work_interruption or not l10n_ch_swissdec_payroll_impact"/>
+                <field name="l10n_ch_disability_percentage" readonly="state not in ('draft', 'confirm')" widget="percentage" invisible="l10n_ch_swissdec_work_interruption or not l10n_ch_swissdec_payroll_impact"/>
+                <field name="l10n_ch_pay_interruption" readonly="state not in ('draft', 'confirm')" invisible="not l10n_ch_swissdec_work_interruption or not l10n_ch_swissdec_payroll_impact"/>
+                <field name="l10n_ch_lpp_interruption" readonly="state not in ('draft', 'confirm')" invisible="not l10n_ch_swissdec_work_interruption or not l10n_ch_swissdec_payroll_impact"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_ch_hr_leave_employee_view_dashboard" model="ir.ui.view">
+        <field name="name">hr.leave.view.dashboard</field>
+        <field name="model">hr.leave</field>
+        <field name="arch" type="xml">
+            <calendar string="Absences"
+                    js_class="time_off_calendar_dashboard"
+                    form_view_id="%(l10n_ch_hr_payroll_elm_transmission.l10n_ch_hr_leave_view_form)d"
+                    event_open_popup="true"
+                    date_start="date_from"
+                    date_stop="date_to"
+                    mode="month"
+                    quick_create="0"
+                    color="color"
+                    hide_time="True">
+                <field name="display_name"/>
+                <field name="holiday_status_id" filters="1" invisible="1" color="color"/>
+                <field name="state" invisible="1"/>
+                <field name="is_hatched" invisible="1" />
+                <field name="is_striked" invisible="1"/>
+                <field name="can_cancel" invisible="1"/>
+            </calendar>
+        </field>
+    </record>
+</odoo>

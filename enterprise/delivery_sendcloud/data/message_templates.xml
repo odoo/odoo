@@ -1,0 +1,12 @@
+<odoo>
+    <data>
+        <template id="sendcloud_label_tracking">
+            <t t-out="type" /> created in Sendcloud. <br/>
+            <b>Tracking Numbers:</b>
+            <t t-foreach="parcels" t-as="parcel">
+                <a t-att-href="parcel['tracking_url']" target="_blank" t-out="parcel['tracking_number']" />
+                <t t-if="not parcel_last">,</t>
+            </t>
+        </template>
+    </data>
+</odoo>

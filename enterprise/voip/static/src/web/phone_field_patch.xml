@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<templates>
+
+    <t t-name="voip.PhoneField" t-inherit="web.PhoneField" t-inherit-mode="extension">
+      <xpath expr="//div[hasclass('o_phone_content')]//a" position="attributes">
+        <attribute name="t-on-click">onLinkClicked</attribute>
+      </xpath>
+    </t>
+
+    <t t-inherit="web.FormPhoneField" t-inherit-mode="extension">
+      <xpath expr="//a[hasclass('o_form_uri')]" position="attributes">
+        <attribute name="t-on-click">onLinkClicked</attribute>
+      </xpath>
+      <xpath expr="//a[hasclass('o_phone_form_link')]" position="attributes">
+        <attribute name="t-on-click">onLinkClicked</attribute>
+      </xpath>
+    </t>
+
+</templates>

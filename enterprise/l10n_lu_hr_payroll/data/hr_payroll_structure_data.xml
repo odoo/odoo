@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_structure_lux_employee_salary" model="hr.payroll.structure">
+        <field name="name">Luxembourg: Regular Pay</field>
+        <field name="code">LUX_MONTHLY</field>
+        <field name="country_id" ref="base.lu"/>
+        <field name="type_id" ref="l10n_lu_hr_payroll.structure_type_employee_lux"/>
+        <field name="report_id" ref="l10n_lu_hr_payroll.action_report_payslip_lux"/>
+        <field name="unpaid_work_entry_type_ids" eval="[
+            (4, ref('hr_work_entry_contract.work_entry_type_unpaid_leave')),
+            (4, ref('l10n_lu_hr_payroll.work_entry_type_situational_unemployment')),
+        ]"/>
+    </record>
+    <record id="l10n_lu_hr_payroll.structure_type_employee_lux" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure_lux_employee_salary"/>
+    </record>
+    <record id="hr_payroll_structure_lux_employee_gratification" model="hr.payroll.structure">
+        <field name="name">Luxembourg: Gratification</field>
+        <field name="code">LUX_GRATIFICATION</field>
+        <field name="country_id" ref="base.lu"/>
+        <field name="type_id" ref="l10n_lu_hr_payroll.structure_type_employee_lux"/>
+        <field name="report_id" ref="l10n_lu_hr_payroll.action_report_payslip_lux_gratification"/>
+        <field name="use_worked_day_lines" eval="False"/>
+        <field name="payslip_name">Gratification</field>
+    </record>
+    <record id="hr_payroll_structure_lux_employee_13th_month" model="hr.payroll.structure">
+        <field name="name">Luxembourg: 13th Month</field>
+        <field name="code">LUX_13TH_MONTH</field>
+        <field name="country_id" ref="base.lu"/>
+        <field name="type_id" ref="l10n_lu_hr_payroll.structure_type_employee_lux"/>
+        <field name="report_id" ref="l10n_lu_hr_payroll.action_report_payslip_lux_gratification"/>
+        <field name="use_worked_day_lines" eval="False"/>
+        <field name="payslip_name">13th Month</field>
+        <field name="unpaid_work_entry_type_ids" eval="[(5, 0, 0)]"/>
+    </record>
+</odoo>

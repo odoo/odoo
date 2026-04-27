@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="stock_barcode.DigipadTemplate">
+        <div class="o_digipad_widget container p-0">
+            <div class="o_digipad_digit_buttons row g-2">
+                <div t-att-class="buttonContainerClass">
+                    <button t-on-click="erase" t-att-disabled="quantity &lt;= 0" class="o_digipad_erase btn btn-secondary w-100">0</button>
+                </div>
+                <div t-att-class="buttonContainerClass">
+                    <button t-on-click="decrement" t-att-disabled="quantity &lt;= 0" class="o_digipad_decrement btn btn-secondary w-100">-1</button>
+                </div>
+                <div t-att-class="buttonContainerClass">
+                    <button t-on-click="increment" class="o_digipad_increment btn btn-secondary w-100">+1</button>
+                </div>
+                <div t-if="fulfillQuantity" class="col-3">
+                    <button t-on-click="fulfill"
+                            class="o_digipad_fufill w-100 btn"
+                            t-att-class="buttonFulfillClass">
+                        <t t-if="quantityToFulfill &gt; 0" t-esc="'+' + quantityToFulfill"/>
+                        <t t-elif="quantityToFulfill &lt; 0" t-esc="quantityToFulfill"/>
+                        <span t-else="" class="fa fa-lg fa-check"/>
+                    </button>
+                </div>
+                <t t-foreach="state.packagingButtons" t-as="packaging" t-key="packaging.id">
+                    <div class="col-6">
+                        <button t-on-click="() => this._increment(packaging.qty, this.quantity === 1)"
+                                class="btn btn-secondary w-100" t-out="packaging.name"/>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

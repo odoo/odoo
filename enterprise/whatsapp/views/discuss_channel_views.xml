@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="discuss_channel_view_form" model="ir.ui.view">
+        <field name="name">discuss.channel.view.form.inherit.whatsapp</field>
+        <field name="model">discuss.channel</field>
+        <field name="inherit_id" ref="mail.discuss_channel_view_form" />
+        <field name="priority" eval="11"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/div[hasclass('oe_title')]/h1/field" position="attributes">
+                <attribute name="readonly">channel_type == 'whatsapp'</attribute>
+            </xpath>
+            <xpath expr="//sheet/group[hasclass('o_label_nowrap')]" position="after">
+                <group class="o_label_nowrap" invisible="channel_type != 'whatsapp'">
+                    <field name="wa_account_id" readonly="1"/>
+                    <field name="last_wa_mail_message_id" readonly="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="discuss_channel_view_list_whatsapp" model="ir.ui.view">
+        <field name="name">discuss.channel.view.list.whatsapp</field>
+        <field name="model">discuss.channel</field>
+        <field name="arch" type="xml">
+            <list string="WhatsApp Chats"
+                decoration-muted="not whatsapp_channel_active"
+                default_order="last_wa_mail_message_id asc"
+                js_class="whatsapp.discuss_channel_list"
+            >
+                <field name="whatsapp_channel_active" column_invisible="1" />
+                <field name="create_date" string="Created On" />
+                <field name="name" />
+                <field name="channel_partner_ids" widget="many2many_tags" string="Members" />
+            </list>
+        </field>
+    </record>
+</odoo>

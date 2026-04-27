@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="validation_wizard_view" model="ir.ui.view">
+        <field name="name">l10n_be_codabox.validation.wizard.view.form</field>
+        <field name="model">l10n_be_codabox.validation.wizard</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form string="CodaBox Connection Validation">
+                <div invisible="not fidu_password">
+                    <div class="alert alert-success" role="alert">
+                        The connection has successfully been created on Odoo's side. Please follow these steps:
+                    </div>
+                    <ol>
+                        <li>
+                            <p>
+                                Copy and store the following password:
+                            </p>
+
+                            <label for="fidu_password" class="col-form-label"/>
+                            <field name="fidu_password" readonly="1" widget="CopyClipboardChar"/>
+
+                            <div class="alert alert-warning" role="alert">
+                                It will only be shown once, store it somewhere safe. This password will be requested to link another Odoo database to the same CodaBox account.
+                                It may be changed later to a password of your choice.
+                            </div>
+
+                        </li>
+                        <li>
+                            <p>
+                                <p>Confirm the Password</p>
+                                <field name="pasted_password" placeholder="Paste it here" class="w-100"/>
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                Validate the connection on CodaBox's side (with your usual myCodaBox credentials).
+                                This needs to be done only once.
+                            </p>
+                            <button name="validate_connection" string="Validate connection" type="object" class="btn-primary" invisible="pasted_password != fidu_password"/>
+                            <button name="validate_connection" string="Validate connection" type="object" class="btn-primary disabled" invisible="pasted_password == fidu_password"/>
+                        </li>
+                    </ol>
+                </div>
+                <div invisible="fidu_password">
+                    <p>
+                        It seems that you have not yet validated the connection on CodaBox's side.
+                    </p>
+                    <p>
+                        Click on the button below to validate the connection.
+                    </p>
+                    <p>
+                        This needs to be done only once.
+                    </p>
+                </div>
+                <footer>
+                    <button name="validate_connection" string="Validate connection" type="object" class="btn-primary" invisible="fidu_password"/>
+                    <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

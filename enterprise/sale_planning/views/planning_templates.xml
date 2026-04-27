@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="period_report_template" inherit_id="planning.period_report_template">
+        <xpath expr="//div[hasclass('o_calendar_widget')]" position="before">
+            <span class="open_slot_has_sale_line" t-att-value="open_slot_has_sale_line"/>
+            <span class="unwanted_slot_has_sale_line" t-att-value="unwanted_slot_has_sale_line"/>
+        </xpath>
+        <xpath expr="//dd[@id='role']" position="after">
+            <dt name="sale_order_item">Sales Order Item</dt>
+            <dd id="sale_line"/>
+        </xpath>
+    </template>
+
+    <template id="open_slots_list_template" inherit_id="planning.open_slots_list_template">
+        <xpath expr="//th[@name='role_column']" position="after">
+            <th t-if="open_slot_has_sale_line" name="sale_order_item" class="text-start">Sales Order Item</th>
+        </xpath>
+        <xpath expr="//td[@name='role_id']" position="after">
+            <td t-if="open_slot_has_sale_line" class="align-middle" name="sale_line_id">
+                <t t-esc="shift.sale_line_id.order_id.name"/><t t-if="shift.sale_line_id"> - </t><t t-esc="shift.sale_line_id.name"/>
+            </td>
+        </xpath>
+    </template>
+
+    <template id="unwanted_slots_list_template" inherit_id="planning.unwanted_slots_list_template">
+        <xpath expr="//th[@name='sale_order_item']" position="attributes">
+            <attribute name="t-if">unwanted_slot_has_sale_line</attribute>
+        </xpath>
+        <xpath expr="//td[@name='sale_line_id']" position="attributes">
+            <attribute name="t-if">unwanted_slot_has_sale_line</attribute>
+        </xpath>
+    </template>
+
+    <template id="planning_shift_ics_description_inherit" inherit_id="planning.planning_shift_ics_description">
+        <xpath expr="//t[@name='name']" position="before">
+<t t-if="shift['sale_order_item']"><t t-if="is_google_url"><b>Sales Order Item:</b></t><t t-else="">Sales Order Item:</t> <t t-out="shift['sale_order']"/> - <t t-out="shift['sale_order_item']"/> - <t t-out="shift['partner']"/></t>
+        </xpath>
+    </template>
+</odoo>

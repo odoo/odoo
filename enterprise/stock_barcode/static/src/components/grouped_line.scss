@@ -1,0 +1,42 @@
+.o_barcode_client_action .o_barcode_lines {
+
+    & .o_barcode_line {
+        &.o_selected.o_line_not_completed:not(.o_faulty) .o_barcode_line_summary {
+            background: var(--list-group-bg);
+        }
+
+        &:not(.o_selected).o_line_not_completed:not(.o_faulty) .o_barcode_line_summary {
+            background: var(--list-group-bg);
+        }
+
+        &.o_line_completed:not(.o_faulty) .o_barcode_line_summary {
+            background: #{mix($o-view-background-color, $success, 90%)};
+        }
+
+        &.o_faulty .o_barcode_line_summary {
+            background: #{mix($o-view-background-color, $danger, 90%)};
+        }
+    }
+
+    .o_barcode_line_summary {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        flex-basis: 100%;
+
+        &.o_unfolded {
+            border-bottom-width: 2px;
+            border-bottom-style: solid;
+            border-bottom-color: inherit;
+        }
+    }
+
+    .o_sublines .o_barcode_line {
+        border-left-width: 12px;
+
+        &:last-child {
+            margin-bottom: 0;
+            border-bottom: 0;
+        }
+    }
+}

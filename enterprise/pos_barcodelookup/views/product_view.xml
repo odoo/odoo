@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_product_view_form_normalized_pos_barcodelookup" model="ir.ui.view">
+        <field name="name">product.product.view.form.normalized.pos.barcodelookup.inherit</field>
+        <field name="model">product.product</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="product.product_product_view_form_normalized"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='barcode']" position="attributes">
+                <attribute name="widget">productScanner</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

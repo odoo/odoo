@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<templates>
+    <t t-name="voip.ActivitiesTab">
+        <div t-attf-class="o-voip-ActivitiesTab tab-content overflow-y-auto {{ props.extraClass }}" role="tabpanel">
+            <t t-if="props.activities.length">
+                <div t-foreach="props.activities" t-as="activity" t-key="activity.id" class="list-group-item-action d-flex p-3 text-truncate cursor-pointer" t-att-class="{ 'border-bottom': !activity_last }" t-on-mouseenter="(ev) => this.onMouseEnterActivity(ev, activity)" t-on-mouseleave="onMouseLeaveActivity" t-on-click="(ev) => this.onClickActivity(ev, activity)">
+                    <div class="flex-grow-1">
+                        <div class="fw-bold" t-if="activity.partner" t-esc="activity.partner.name"/>
+                        <div class="fst-italic" t-esc="activity.res_name"/>
+                    </div>
+                    <button class="btn text-danger fa fa-close" t-att-class="{ 'invisible': activity.id !== state.hoveredActivity }" title="Cancel the activity" t-on-click="(ev) => this.onClickCancelActivity(ev, activity)"/>
+                </div>
+            </t>
+            <p t-elif="voip.softphone.searchBarInputValue.trim()" class="m-4 text-center">No search results 💔</p>
+            <p t-else="" class="m-4 text-center">No calls scheduled for today 😎</p>
+        </div>
+    </t>
+</templates>

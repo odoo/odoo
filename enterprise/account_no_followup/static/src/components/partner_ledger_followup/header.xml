@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="account_no_followup.PartnerLedgerFollowupHeader" t-inherit="account_reports.AccountReportHeaderCustomizable">
+        <xpath expr="//tr[@data-id='column_headers_row']/th[1]" position="attributes">
+            <attribute name="colspan">2</attribute>
+        </xpath>
+
+        <xpath expr="//tr[@data-id='column_custom_subheaders_row']/th[1]" position="attributes">
+            <attribute name="colspan">2</attribute>
+        </xpath>
+
+        <xpath expr="//tr[@data-id='column_subheaders_row']/th[1]" position="after">
+            <th>No Follow-Up</th>
+        </xpath>
+    </t>
+</templates>

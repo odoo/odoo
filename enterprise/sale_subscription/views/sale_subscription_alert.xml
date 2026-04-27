@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_subscription_alert_view_form" model="ir.ui.view">
+        <field name="name">sale.subscription.alert.view.form</field>
+        <field name="model">sale.order.alert</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <!-- company_id invisible to be available in domains -->
+                    <field name="company_id" invisible="1"/>
+                    <field name="cron_nextcall" invisible="1"/>
+                       <button name="run_cron_manually" string="Trigger Now" type="object" class="btn-primary"
+                       confirm="This will trigger the action on all linked subsccriptions, regardless of possible timed conditions. Are you sure you want to proceed?"
+                       invisible="trigger_condition != 'on_time'"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name" string="Action Name"/>
+                        <h1><field name="name" placeholder="e.g. Closed Subscription"/></h1>
+                    </div>
+                    <div invisible="cron_nextcall or not id">
+                        The scheduled action for alerts has been deleted. Update the Subscriptions module to re-create it.
+                    </div>
+                    <group name="apply_on_panel" string="Apply on">
+                        <group name="mrr_details">
+                            <field name="currency_id" invisible="1"/>
+                            <label for="mrr_min" string="MRR Between"/>
+                            <div class="o_row">
+                                <field name="mrr_min"/>
+                                <strong> and </strong>
+                                <field name="mrr_max"/>
+                            </div>
+                            <label for="mrr_change_amount" string="MRR Change More"/>
+                            <div class="o_row">
+                                <field name="mrr_change_amount"/>
+                                <field name="mrr_change_unit"/>
+                            </div>
+                            <field name="mrr_change_period" string="Over"/>
+                            <label for="rating_percentage" string="Rating Satisfaction"/>
+                            <div class="o_row">
+                                <field name="rating_operator"/>
+                                <field name="rating_percentage" invisible="not rating_operator"/>
+                                <strong invisible="not rating_operator">%</strong>
+                            </div>
+                            <field name="order_state"/>
+                            <label for="subscription_state_from" string="Stage goes from"/>
+                            <div class="o_row">
+                                <field name="subscription_state_from" placeholder="Initial"/>
+                                <strong>to</strong>
+                                <field name="subscription_state" placeholder="Destination"/>
+                            </div>
+                            <button name="action_view_subscriptions" type="object" icon="oi-arrow-right" class="btn-link o_row">
+                                <span>
+                                    <field name="subscription_count" class="w-auto"/>
+                                </span>
+                                <strong>subscriptions</strong>
+                            </button>
+                        </group>
+                        <group name="subscription_details">
+                            <field name="active" invisible="1"/>
+                            <field name="subscription_plan_ids" widget="many2many_tags"/>
+                            <field name="product_ids" string="Products" widget="many2many_tags"/>
+                            <field name="customer_ids" widget="many2many_tags"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="team_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <group string="Action" name="action_wrapper">
+                        <group name="action_content">
+                            <field name="action" readonly="id"/>
+                            <field name="subscription_state"
+                                   invisible="action != 'set_stage'"
+                                   readonly="id"
+                                   required="action == 'set_stage'"/>
+                            <field name="template_id"
+                                   invisible="action != 'mail_post'"
+                                   readonly="id"
+                                   required="action == 'mail_post'"/>
+                            <field name="sms_template_id"
+                                   context="{'default_model_id': model_id}"
+                                   invisible="action != 'sms'"
+                                   readonly="id"
+                                   required="action == 'sms'"/>
+                            <field name="health"
+                                   invisible="action != 'set_health_value'"
+                                   readonly="id"
+                                   required="action == 'set_health_value'"/>
+                            <em class="text-muted" colspan="2" invisible="not id">
+                                Action data can not be updated to avoid unexpected behaviors. Create a new action instead.
+                            </em>
+                        </group>
+                        <group name="action_details">
+                            <field name="model_id" invisible="1"/>
+                            <field name="model_name" invisible="1"/>
+                            <field name="trigger_condition" readonly="id"/>
+                            <field name="trg_date_id"
+                                   invisible="trigger_condition != 'on_time'"
+                                   readonly="id"
+                                   required="trigger_condition == 'on_time'"
+                                   options="{'no_open': True, 'no_create_edit': True}"/>
+                            <label for="trg_date_range"
+                                   string="Delay After Trigger"
+                                   invisible="trigger_condition != 'on_time'"
+                                   readonly="id"/>
+                            <div class="o_row" invisible="trigger_condition != 'on_time'">
+                                <field name="trg_date_range" readonly="id" required="trigger_condition == 'on_time'"/>
+                                <field name="trg_date_range_type" readonly="id" required="trigger_condition == 'on_time'"/>
+                            </div>
+                            <field name="trg_date_calendar_id"
+                                   invisible="not trg_date_id or trg_date_range_type != 'day'"/>
+                        </group>
+                    </group>
+                    <group string="Activity" name="next_activity" autofocus="autofocus" invisible="action != 'next_activity'">
+                        <group name="activity_details">
+                            <field name="action" invisible="1"/>
+                            <field name="activity_type_id" options="{'no_create': True, 'no_open': True}" required="action == 'next_activity'"/>
+                            <field name="activity_summary" placeholder="e.g. Discuss proposal"/>
+                            <field name="activity_note" placeholder="Log a note..."/>
+                        </group>
+                        <group name="activitity_deadlines">
+                            <label for="activity_date_deadline_range"/>
+                            <div class="o_row">
+                                <field name="activity_date_deadline_range"/>
+                                <field name="activity_date_deadline_range_type" 
+                                       required="action == 'next_activity' and activity_date_deadline_range > 0"/>
+                            </div>
+                            <field name="activity_user"
+                                invisible="action != 'next_activity'"
+                                required="action == 'next_activity'"/>
+                            <field name="activity_user_ids" widget="many2many_tags"
+                                invisible="action != 'next_activity' or activity_user != 'users'"
+                                required="action == 'next_activity' and activity_user == 'users'"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_subscription_alert_view_tree" model="ir.ui.view">
+        <field name="name">sale.subscription.alert.view.list</field>
+        <field name="model">sale.order.alert</field>
+        <field name="arch" type="xml">
+            <list string="Automation Rules">
+                <field name="name" string="Name"/>
+                <field name="action"/>
+                <field name="trigger_condition"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="sale_subscription_alert_action" model="ir.actions.act_window">
+        <field name="name">Automation Rules</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order.alert</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Create a new subscription alert
+            </p>
+            <p>
+              Trigger alerts for salespersons or customers: churn, invoice not paid, upsell, etc.
+            </p>
+        </field>
+    </record>
+
+    <record id="sale_subscription_base_automation_form" model="ir.ui.view">
+        <field name="name">base.automation.form</field>
+        <field name="model">base.automation</field>
+        <field name="inherit_id" ref="base_automation.view_base_automation_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="is_sale_order_alert" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='action_server_ids']" position="attributes">
+                <attribute name="readonly">is_sale_order_alert</attribute>
+            </xpath>
+            <xpath expr="//field[@name='action_server_ids']" position="before">
+                <p invisible="not is_sale_order_alert">
+                    <em class="text-muted">
+                        Action data can not be updated to avoid unexpected behaviors. Create a new automation rule instead.
+                    </em>
+                </p>
+            </xpath>
+        </field>
+    </record>
+</odoo>

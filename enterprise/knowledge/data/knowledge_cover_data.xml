@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Attachments -->
+    <record id="ir_attachment_computer_monitor_with_code" model="ir.attachment">
+        <field name="name">computer_monitor_with_code.jpg</field>
+        <field name="res_model">knowledge.cover</field>
+        <field name="res_field">attachment_id</field>
+        <field name="public">True</field>
+        <field name="type">url</field>
+        <field name="url">/knowledge/static/src/img/computer_monitor_with_code.jpg</field>
+    </record>
+
+    <!-- Covers -->
+    <record id="knowledge_cover_release_note" model="knowledge.cover">
+        <field name="attachment_id" ref="ir_attachment_computer_monitor_with_code"/>
+    </record>
+
+    <record id="knowledge_cover_todo_list" model="knowledge.cover">
+        <field name="attachment_id" ref="ir_attachment_todo_list"/>
+    </record>
+
+    <record id="knowledge_cover_house" model="knowledge.cover">
+        <field name="attachment_id" ref="ir_attachment_house"/>
+    </record>
+
+    <record id="knowledge_cover_persona_1" model="knowledge.cover">
+        <field name="attachment_id" ref="ir_attachment_persona_1"/>
+    </record>
+
+    <record id="knowledge_cover_persona_2" model="knowledge.cover">
+        <field name="attachment_id" ref="ir_attachment_persona_2"/>
+    </record>
+
+    <record id="knowledge_cover_persona_3" model="knowledge.cover">
+        <field name="attachment_id" ref="ir_attachment_persona_3"/>
+    </record>
+
+    <record id="knowledge_cover_persona_4" model="knowledge.cover">
+        <field name="attachment_id" ref="ir_attachment_persona_4"/>
+    </record>
+</odoo>

@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="l10n_uy_edi_addenda_view_form" model="ir.ui.view">
+        <field name="name">l10n.uy.addenda.view.form</field>
+        <field name="model">l10n_uy_edi.addenda</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="is_legend"/>
+                    <field name="content"/>
+                    <field name="company_id"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_uy_edi_addenda_view_form_only_item" model="ir.ui.view">
+        <field name="name">l10n.uy.addenda.view.form</field>
+        <field name="model">l10n_uy_edi.addenda</field>
+        <field name="inherit_id" ref="l10n_uy_edi.l10n_uy_edi_addenda_view_form"/>
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <field name="company_id" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+            <field name="type" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_uy_edi_addenda_view_tree" model="ir.ui.view">
+        <field name="name">l10n.uy.addenda.view.tree</field>
+        <field name="model">l10n_uy_edi.addenda</field>
+        <field name="arch" type="xml">
+            <list string="Addendas" editable="bottom">
+                <field name="name"/>
+                <field name="type"/>
+                <field name="is_legend"/>
+                <field name="content"/>
+                <field name="company_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_uy_edi_addenda_view_search" model="ir.ui.view">
+        <field name="name">l10n_uy_edi.addenda.view.search</field>
+        <field name="model">l10n_uy_edi.addenda</field>
+        <field name="arch" type="xml">
+            <search string="Search Description">
+                <group expand="0" string="Group By...">
+                    <filter string="Type" name="type" domain="[]" context="{'group_by':'type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_l10n_uy_edi_addenda">
+        <field name="name">Addendas and Disclosures</field>
+        <field name="res_model">l10n_uy_edi.addenda</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_dgi_config" name="DGI" parent="account.menu_finance_configuration" sequence="25"/>
+
+    <menuitem action="action_l10n_uy_edi_addenda" id="menu_l10n_uy_addenda" sequence="5" parent="menu_dgi_config"/>
+
+</odoo>

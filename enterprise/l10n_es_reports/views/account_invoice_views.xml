@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="invoice_form_inherit" model="ir.ui.view">
+            <field name="name">l10n_es_reports.invoice.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <field name="tax_country_code" invisible="1"/>
+                    <page string="AEAT data" name="aeat_data" invisible="tax_country_code != 'ES'">
+                        <group>
+                            <field name="l10n_es_reports_mod347_available" invisible="1"/>
+                            <field name="l10n_es_reports_mod349_available" invisible="1"/>
+                            <field name="l10n_es_reports_mod347_invoice_type" invisible="not l10n_es_reports_mod347_available" readonly="state != 'draft'"/>
+                            <field name="l10n_es_reports_mod349_invoice_type" invisible="not l10n_es_reports_mod349_available" readonly="state != 'draft'"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

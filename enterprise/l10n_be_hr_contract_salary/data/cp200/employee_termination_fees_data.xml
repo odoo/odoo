@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_hr_payroll.cp200_employees_termination_fees_ch_year" model="hr.salary.rule">
+        <field name="amount_python_compute">
+result_qty = 220 - contract.holidays
+result = contract.meal_voucher_amount * (1 - 0.1463)
+        </field>
+    </record>
+</odoo>

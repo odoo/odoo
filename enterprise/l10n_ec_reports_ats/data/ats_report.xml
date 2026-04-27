@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="ats_report_template">
+        <iva>
+            <TipoIDInformante t-out="latam_identification_type"/>
+            <IdInformante t-out="company.vat or ''"/>
+            <razonSocial t-out="company.l10n_ec_legal_name or ''"/>
+            <Anio t-out="anio"/>
+            <Mes t-out="mes"/>
+            <numEstabRuc t-out="num_estab_ruc"/>
+            <totalVentas t-out="total_sales"/>
+            <codigoOperativo>IVA</codigoOperativo>
+
+            <compras t-if="purchase_vals">
+                <detalleCompras t-foreach="purchase_vals" t-as="purch_vals">
+                    <codSustento t-out="purch_vals['codSustento']"/>
+                    <tpIdProv t-out="purch_vals['tpIdProv']"/>
+                    <idProv t-out="purch_vals['idProv']"/>
+                    <tipoComprobante t-out="purch_vals['tipoComprobante']"/>
+                    <tipoProv t-out="purch_vals.get('tipoProv')"/>
+                    <denoProv t-out="purch_vals.get('denoProv')"/>
+                    <parteRel t-out="purch_vals['parteRel']"/>
+                    <fechaRegistro t-out="purch_vals['fechaRegistro']"/>
+                    <establecimiento t-out="purch_vals['establecimiento']"/>
+                    <puntoEmision t-out="purch_vals['puntoEmision']"/>
+                    <secuencial t-out="purch_vals['secuencial']"/>
+                    <fechaEmision t-out="purch_vals['fechaEmision']"/>
+                    <autorizacion t-out="purch_vals['autorizacion']"/>
+                    <!-- IVA tax amounts -->
+                    <baseNoGraIva t-out="format_float(purch_vals['baseNoGraIva'])"/>
+                    <baseImponible t-out="format_float(purch_vals['baseImponible'])"/>
+                    <baseImpGrav t-out="format_float(purch_vals['baseImpGrav'])"/>
+                    <baseImpExe t-out="format_float(purch_vals['baseImpExe'])"/>
+                    <!-- ICE is not supported. It is assumed to be zero. -->
+                    <montoIce>0.00</montoIce>
+                    <montoIva t-out="format_float(purch_vals['montoIva'])"/>
+                    <valRetBien10 t-out="format_float(purch_vals['valRetBien10'])"/>
+                    <valRetServ20 t-out="format_float(purch_vals['valRetServ20'])"/>
+                    <valorRetBienes t-out="format_float(purch_vals['valorRetBienes'])"/>
+                    <valRetServ50 t-out="format_float(purch_vals['valRetServ50'])"/>
+                    <valorRetServicios t-out="format_float(purch_vals['valorRetServicios'])"/>
+                    <valRetServ100 t-out="format_float(purch_vals['valRetServ100'])"/>
+                    <valorRetencionNc t-out="format_float(purch_vals['valorRetencionNc'])"/>
+                    <totbasesImpReemb t-out="format_float(purch_vals.get('totbasesImpReemb'))"/>
+
+                    <pagoExterior>
+                        <pagoLocExt t-out="purch_vals['pagoLocExt']"/>
+                        <tipoRegi t-out="purch_vals.get('tipoRegi')"/>
+                        <!-- Country of residence to which the general regime payment is made -->
+                        <paisEfecPagoGen t-out="purch_vals.get('paisEfecPagoGen')"/>
+                        <!-- Country of residence to which the payment is made. In general regime, the countryEfecPagoGen is copied -->
+                        <paisEfecPago t-out="purch_vals['paisEfecPago']"/>
+                        <!-- Whether a double taxation agreement applies -->
+                        <aplicConvDobTrib t-out="purch_vals['aplicConvDobTrib']"/>
+                        <!-- Whether the payment abroad is subject to withholding -->
+                        <pagExtSujRetNorLeg t-out="purch_vals['pagExtSujRetNorLeg']"/>
+                    </pagoExterior>
+
+                    <formasDePago t-if="'formasDePago' in purch_vals">
+                        <formaPago t-foreach="purch_vals['formasDePago']" t-as="forma_pago" t-out="forma_pago"/>
+                    </formasDePago>
+
+                    <reembolsos t-if="purch_vals.get('reimbursement_vals')">
+                        <reembolso t-foreach="purch_vals.get('reimbursement_vals')" t-as="reimburs_val">
+                            <tipoComprobanteReemb t-out="reimburs_val['tipoComprobanteReemb']"/>
+                            <tpIdProvReemb t-out="reimburs_val['tpIdProvReemb']"/>
+                            <idProvReemb t-out="reimburs_val['idProvReemb']"/>
+                            <establecimientoReemb t-out="reimburs_val['establecimientoReemb']"/>
+                            <puntoEmisionReemb t-out="reimburs_val['puntoEmisionReemb']"/>
+                            <secuencialReemb t-out="reimburs_val['secuencialReemb']"/>
+                            <fechaEmisionReemb t-out="reimburs_val['fechaEmisionReemb']"/>
+                            <autorizacionReemb t-out="reimburs_val['autorizacionReemb']"/>
+                            <baseImponibleReemb t-out="format_float(reimburs_val['baseImponibleReemb'])"/>
+                            <baseImpGravReemb t-out="format_float(reimburs_val['baseImpGravReemb'])"/>
+                            <baseNoGraIvaReemb t-out="format_float(reimburs_val['baseNoGraIvaReemb'])"/>
+                            <baseImpExeReemb t-out="format_float(reimburs_val['baseImpExeReemb'])"/>
+                            <montoIceRemb t-out="format_float(reimburs_val['montoIceRemb'])"/>
+                            <montoIvaRemb t-out="format_float(reimburs_val['montoIvaRemb'])"/>
+                        </reembolso>
+                    </reembolsos>
+
+                    <air t-if="purch_vals.get('air_vals')">
+                        <detalleAir t-foreach="purch_vals['air_vals']" t-as="withholding_vals">
+                            <codRetAir t-out="withholding_vals['codRetAir']"/>
+                            <baseImpAir t-out="format_float(withholding_vals['baseImpAir'])"/>
+                            <porcentajeAir t-out="format_float(withholding_vals['porcentajeAir'])"/>
+                            <valRetAir t-out="format_float(withholding_vals['valRetAir'])"/>
+                        </detalleAir>
+                    </air>
+
+                    <estabRetencion1 t-out="purch_vals.get('estabRetencion1')"/>
+                    <ptoEmiRetencion1 t-out="purch_vals.get('ptoEmiRetencion1')"/>
+                    <secRetencion1 t-out="purch_vals.get('secRetencion1')"/>
+                    <autRetencion1 t-out="purch_vals.get('autRetencion1')"/>
+                    <fechaEmiRet1 t-out="purch_vals.get('fechaEmiRet1')"/>
+
+                    <docModificado t-out="purch_vals.get('docModificado')"/>
+                    <estabModificado t-out="purch_vals.get('estabModificado')"/>
+                    <ptoEmiModificado t-out="purch_vals.get('ptoEmiModificado')"/>
+                    <secModificado t-out="purch_vals.get('secModificado')"/>
+                    <autModificado t-out="purch_vals.get('autModificado')"/>
+                </detalleCompras>
+            </compras>
+
+            <ventas t-if="sale_vals">
+                <detalleVentas t-foreach="sale_vals" t-as="id_partner">
+                    <tpIdCliente t-out="sale_vals[id_partner]['tpIdCliente']"/>
+                    <idCliente t-out="sale_vals[id_partner]['idCliente']"/>
+                    <parteRelVtas t-out="sale_vals[id_partner].get('parteRelVtas')"/>
+                    <tipoCliente t-out="sale_vals[id_partner].get('tipoCliente')"/>
+                    <denoCli t-out="sale_vals[id_partner].get('denoCli')"/>
+                    <tipoComprobante t-out="sale_vals[id_partner]['tipoComprobante']"/>
+                    <tipoEmision t-out="sale_vals[id_partner]['tipoEmision']"/>
+                    <numeroComprobantes t-out="sale_vals[id_partner]['numeroComprobantes']"/>
+                    <!-- Tax base VAT exempt -->
+                    <baseNoGraIva t-out="format_float(sale_vals[id_partner]['baseNoGraIva'])"/>
+                    <!-- Tax base VAT 0% -->
+                    <baseImponible t-out="format_float(sale_vals[id_partner]['baseImponible'])"/>
+                    <!-- Tax base rate different from 0% VAT -->
+                    <baseImpGrav t-out="format_float(sale_vals[id_partner]['baseImpGrav'])"/>
+                    <montoIva t-out="format_float(sale_vals[id_partner]['montoIva'])"/>
+                    <!-- ICE is not supported. It is assumed to be zero. -->
+                    <montoIce>0.00</montoIce>
+                    <valorRetIva t-out="format_float(sale_vals[id_partner]['valorRetIva'])"/>
+                    <valorRetRenta t-out="format_float(sale_vals[id_partner]['valorRetRenta'])"/>
+
+                    <!-- Exclude credit notes -->
+                    <formasDePago t-if="sale_vals[id_partner]['tipoComprobante'] != '04' and 'formasDePago' in sale_vals[id_partner]">
+                        <formaPago t-foreach="sale_vals[id_partner]['formasDePago']" t-as="forma_pago" t-out="forma_pago"/>
+                    </formasDePago>
+                </detalleVentas>
+            </ventas>
+
+            <ventasEstablecimiento t-if="sale_vals">
+                <ventaEst t-foreach="entities" t-as="entity">
+                    <codEstab t-out="str(entity).zfill(3)"/>
+                    <ventasEstab t-out="format_float(total_entity_vals[entity]['total'])"/>
+                    <ivaComp t-out="format_float(total_entity_vals[entity]['ivaComp'])"/>
+                </ventaEst>
+            </ventasEstablecimiento>
+
+            <anulados t-if="void_moves">
+                <detalleAnulados t-foreach="void_moves" t-as="void_move">
+                    <tipoComprobante t-out="void_move._l10n_ec_get_ats_latam_document_type_code()"/>
+                    <establecimiento t-out="void_move.journal_id.l10n_ec_entity"/>
+                    <puntoEmision t-out="void_move.journal_id.l10n_ec_emission"/>
+                    <secuencialInicio t-out="void_move.l10n_latam_document_number[-9:]"/>
+                    <secuencialFin t-out="void_move.l10n_latam_document_number[-9:]"/>
+                    <autorizacion t-out="(void_move.l10n_ec_authorization_number or '').strip()"/>
+                </detalleAnulados>
+            </anulados>
+        </iva>
+        
+    </template>
+</odoo>

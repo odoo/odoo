@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_dashboard_warning_employee_without_contact" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees Without Contacts</field>
+            <field name="country_id" eval="False"/>
+            <field name="evaluation_code">
+# Find employees without partner
+employees_without_contact = self.env['hr.employee'].search([
+    ('work_contact_id', '=', False),
+    ('user_id.partner_id', '=', False),
+])
+if employees_without_contact:
+    warning_count = len(employees_without_contact)
+    warning_records = employees_without_contact
+            </field>
+    </record>
+</odoo>

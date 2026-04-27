@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.JournalReportLineName" t-inherit="account_reports.AccountReportLineNameCustomizable">
+        <xpath expr="//td[@data-id='line_name']//div[@data-id='content']" position="replace">
+            <t t-if="'journal_id' in props.line and 'account_id' in props.line">
+                <a
+                    class="link"
+                    t-on-click="
+                    (ev) => controller.reportAction(
+                        ev,
+                        'journal_report_action_open_account_move_lines_by_account',
+                        {
+                            journal_id: props.line.journal_id,
+                            account_id: props.line.account_id
+                        }
+                    )"
+                >
+                    <t t-out="props.line.name"/>
+                </a>
+            </t>
+            <t t-else="">
+                <t t-out="props.line.name"/>
+
+                <t t-if="'journal_id' in props.line">
+                    <button
+                        class="btn btn_action"
+                        t-on-click="(ev) => controller.reportAction(ev, 'journal_report_open_aml_by_move', {
+                            journal_id: props.line.journal_id,
+                            line_id: props.line.id,
+                        })"
+                    >
+                        Audit
+                    </button>
+                </t>
+            </t>
+        </xpath>
+    </t>
+</templates>

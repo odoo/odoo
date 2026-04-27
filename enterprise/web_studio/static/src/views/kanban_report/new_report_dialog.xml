@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web_studio.NewReportDialog">
+        <Dialog title.translate="Which type of report do you want to create?" size="'md'" footer="false">
+            <div class="o_web_studio_report_layout_dialog d-flex justify-content-center">
+                <div t-foreach="layouts" t-as="layout" t-key="layout.name" t-att-data-layout="layout.name" class="o_web_studio_report_layout_item btn btn-outline-secondary border text-center m-3 p-3" t-on-click="() => this.createNewReport(layout.name)">
+                    <h3 t-esc="layout.label"/>
+                    <div t-esc="layout.description"/>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+
+</templates>

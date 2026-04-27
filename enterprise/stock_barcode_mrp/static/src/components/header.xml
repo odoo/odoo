@@ -1,0 +1,32 @@
+<templates>
+    <t t-name="stock_barcode_mrp.HeaderComponent">
+        <div class="o_barcode_line o_header p-2 p-3"
+            t-attf-class="{{componentClasses}}">
+            <div class="h6 text-primary">Producing</div>
+            <div class="o_barcode_line_details flex-grow-1 flex-column flex-nowrap p-2">
+                <t t-set="upperButtons" t-value="'stock_barcode_mrp.MOButtons'"/>
+                <t t-call="stock_barcode.LineTitle"/>
+                <t t-call="stock_barcode.LineLot"/>
+                <t t-set="lowerButtons" t-value="false"/>
+                <t t-call="stock_barcode.LineQuantity"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="stock_barcode_mrp.MOButtons">
+        <div>
+            <button t-if="isTracked and !lotName" t-on-click="() => this.env.model.generateSerial()"
+                    class="o_line_button o_add_lot btn btn-primary ms-2">
+                <i class="fa fa-plus" />
+            </button>
+            <button t-on-click="this.props.openDetails"
+                    class="o_line_button o_edit btn btn-secondary ms-2">
+                <i class="fa fa-lg fa-pencil"/>
+            </button>
+            <button t-if="!hideProduceButton" name="produceButton"
+                    t-att-disabled="hideProduceButton" t-esc="'+' + incrementQty"
+                    t-on-click.prevent.stop="() => this.env.model.produceQty(incrementQty)"
+                    class="o_line_button o_add_quantity btn btn-primary ms-2"/>
+        </div>
+    </t>
+</templates>

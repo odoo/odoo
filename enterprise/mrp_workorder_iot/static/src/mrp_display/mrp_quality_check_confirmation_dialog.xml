@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp_workorder_iot.MrpQualityCheckConfirmationDialog" t-inherit="mrp_workorder.MrpQualityCheckConfirmationDialog" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('workorder_picture')]" position="replace">
+            <div t-elif="recordData.test_type === 'picture'" class="workorder_picture">
+                 <TabletImageIoTField t-props="picInfo"/>
+            </div>
+        </xpath>
+        <xpath expr="//span[@name='measure']" position="replace">
+            <span name="measure" class="o_field_widget text-end pe-2">
+                <IoTMeasureRealTimeValue t-props="measureInfo"/>
+            </span>
+        </xpath>
+        <xpath expr="//t[@t-set-slot='footer']" position="inside">
+            <t t-if="state.showPedalStatus">
+                <PedalStatusButton pedalConnected="state.pedalConnected" takeOwnership.bind="takeOwnership" />
+            </t>
+        </xpath>
+    </t>
+
+</templates>

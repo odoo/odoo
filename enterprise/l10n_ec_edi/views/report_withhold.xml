@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Main template for withhold reports -->
+        <template id="report_withhold_document">
+            <t t-call="web.external_layout">
+                <t t-set="o" t-value="o.with_context(lang=lang)"/>
+                <div class="page">
+                    <!-- Legally required data & barcode (defined in invoice report) -->
+                    <t t-call="l10n_ec_edi.report_invoice_header"/>
+
+                    <!-- Invoice & partner information -->
+                    <div id="informations" class="row mt-4 mb-4">
+                        <t t-set="partner" t-value="o.commercial_partner_id"/>
+                        <div class="col" name="l10n_ec_partner">
+                            <strong>Partner</strong>
+                            <div>
+                                <t t-esc="partner.commercial_company_name or partner.name"/>
+                                <div t-if="partner.vat">
+                                    <t t-if="partner.l10n_latam_identification_type_id" t-out="partner.l10n_latam_identification_type_id.name" id="inv_tax_id_label"/>
+                                    <t t-else="">RUC/Cédula</t>: <span t-field="partner.vat"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col" t-if="o.l10n_ec_withhold_date" name="l10n_ec_withhold_date">
+                            <strong>Withhold Date</strong>
+                            <div t-field="o.l10n_ec_withhold_date"/>
+                        </div>
+                    </div>
+
+                    <!-- Withhold lines -->
+                    <table class="table table-borderless" name="withhold_line_table" style="font-size:11px;">
+                        <thead>
+                            <tr>
+                                <t t-set="colspan" t-value="6"/>
+                                <th name="th_description" class="text-start">
+                                    <span>Document</span>
+                                </th>
+                                <th name="th_docnumber" class="text-start">
+                                    <span>Document No.</span>
+                                </th>
+                                <th name="th_date" class="text-start">
+                                    <span>Emission Date</span>
+                                </th>
+                                <th name="th_fiscalexerc" class="text-start">
+                                    <span>Fiscal Exercise</span>
+                                </th>
+                                <th name="th_tax" class="text-start">
+                                    <span>Code</span>
+                                </th>
+                                <th name="th_tax" class="text-start">
+                                    <span>Tax</span>
+                                </th>
+                                <th name="th_baseamt" class="text-end">
+                                    <span>Base amount</span>
+                                </th>
+                                <th name="th_taxperc" class="text-end">
+                                    <span>Withhold %</span>
+                                </th>
+                                <th name="th_taxamt" class="text-end">
+                                    <span>Withheld amount</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="withhold_tbody" style="vertical-align=middle;">
+                            <t t-foreach="o._l10n_ec_get_withhold_edi_data_lines()" t-as="taxsupport_line">
+                                <tr style="border-top: 0.5px solid gray !important;">
+                                    <td t-att-rowspan="taxsupport_line['withhold_lines_count']" style="vertical-align: middle;">
+                                        <span t-esc="taxsupport_line['invoice_document_type']" t-options="{'widget': 'text'}"/>
+                                    </td>
+                                    <td t-att-rowspan="taxsupport_line['withhold_lines_count']" style="vertical-align: middle;">
+                                        <span t-esc="taxsupport_line['invoice_document_number']"/>
+                                    </td>
+                                    <td t-att-rowspan="taxsupport_line['withhold_lines_count']" style="vertical-align: middle;">
+                                        <span t-esc="taxsupport_line['invoice_document_date']"/>
+                                    </td>
+                                    <td t-att-rowspan="taxsupport_line['withhold_lines_count']" style="vertical-align: middle;">
+                                        <span t-esc="time.strftime('%m/%Y', time.strptime(taxsupport_line['invoice_document_date'],'%d/%m/%Y'))"/>
+                                    </td>
+                                    <t t-set="row_count" t-value="1"/>
+                                    <t t-foreach="taxsupport_line['withhold_lines']" t-as="withhold_line">
+                                        <t t-if="row_count > 1">
+                                            <!-- To merge cells, the unmerged cells must be inside a tr, only for the second iteration onwards  -->
+                                            <tr style="border-top: 0.5px solid gray !important;">
+                                                <t t-call="l10n_ec_edi.withhold_line_values_template"/>
+                                            </tr>
+                                        </t>
+                                        <t t-else="">
+                                            <t t-call="l10n_ec_edi.withhold_line_values_template"/>
+                                        </t>
+                                        <t t-set="row_count" t-value="row_count + 1"/>
+                                    </t>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <!-- Withhold total & additional info -->
+                    <div class="clearfix">
+
+                        <!--Tax totals per group-->
+                        <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
+                            <table class="table table-borderless" style="page-break-inside: avoid; font-size:11px;">
+                                <t t-if="o.l10n_ec_withhold_subtotals" t-call="l10n_ec_edi.document_tax_totals">
+                                    <t t-set="tax_totals" t-value="o.l10n_ec_withhold_subtotals"/>
+                                    <t t-set="currency" t-value="o.currency_id"/>
+                                </t>
+                            </table>
+                        </div>
+
+                        <!-- Additional info (defined in invoice report) -->
+                        <t t-set="additional_info" t-value="o._l10n_ec_get_invoice_additional_info()"/>
+                        <div style="font-size:11px;">
+                            <t t-call="l10n_ec_edi.report_invoice_additional_info"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Withhold line values -->
+        <template id="withhold_line_values_template">
+            <td>
+                <span t-esc="withhold_line['tax_report_code']"/>
+            </td>
+            <td>
+                <span t-esc="'IVA' if withhold_line['tax_type'] in ['withhold_vat_sale','withhold_vat_purchase'] else 'Renta'"/>
+            </td>
+            <td t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                <span class="text-nowrap" t-esc="withhold_line['tax_base_amount']"/>
+            </td>
+            <td t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                <span class="text-nowrap" t-esc="abs(withhold_line['tax_rate'])"/>
+            </td>
+            <td t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                <span class="text-nowrap" t-esc="withhold_line['tax_amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+            </td>
+        </template>
+
+        <!-- Ensure we call our own version of tax_groups_totals -->
+        <template id="document_tax_totals" inherit_id="account.document_tax_totals" primary="True">
+            <xpath expr='//t[@t-set="same_tax_base"]' position="replace">
+                <t t-set="same_tax_base" t-value="True"/>
+            </xpath>
+        </template>
+
+        <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+        <template id="report_withhold">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="lang" t-value="o.partner_id.lang"/>
+                    <t t-call="l10n_ec_edi.report_withhold_document" t-lang="lang"/>
+                </t>
+            </t>
+        </template>
+
+        <!-- Report action for Withholds -->
+        <record id="l10n_ec_edi_withhold" model="ir.actions.report">
+            <field name="name">Withholds</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_ec_edi.report_withhold</field>
+            <field name="report_file">l10n_ec_edi.report_withhold</field>
+            <field name="print_report_name">(object._get_report_base_filename())</field>
+            <field name="attachment">(object.state == 'posted') and ((object.name or 'WTH').replace('/','_')+'.pdf')</field>
+            <field name="attachment_use">True</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

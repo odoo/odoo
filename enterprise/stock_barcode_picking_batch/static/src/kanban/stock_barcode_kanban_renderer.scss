@@ -1,0 +1,14 @@
+.o_stock_barcode_picking_tabs {
+    --nav-link-font-size: var(--small-font-size, 1rem);
+    --nav-tabs-link-active-border-color: var(--primary) var(--border-color) transparent;
+    --nav-link-padding-y: var(--btn-padding-x, 0.75rem);
+    --nav-link-padding-x: var(--btn-padding-y, 0.375rem);
+
+    .nav-link {
+        border-top-width: 2px;
+    }
+
+    .nav-link:where(:not(.active)){
+        border-top-color: transparent;
+    }
+}

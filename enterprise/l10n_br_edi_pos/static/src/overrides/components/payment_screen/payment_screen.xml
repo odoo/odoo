@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="PaymentScreenButtons" t-inherit="point_of_sale.PaymentScreenButtons" t-inherit-mode="extension">
+        <xpath expr="//button[contains(@class, 'js_invoice')]" position="attributes">
+            <attribute name="t-attf-class" add="{{ pos.config.l10n_br_is_nfce ? 'd-none' : ''}}"/>
+        </xpath>
+    </t>
+</templates>

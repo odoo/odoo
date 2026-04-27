@@ -1,0 +1,12 @@
+<odoo>
+    <record id="hr_payslip_run_form" model="ir.ui.view">
+        <field name="name">hr.payslip.run.form</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll.hr_payslip_run_view_form"/>
+        <field name="arch" type="xml">
+            <button name="%(hr_payroll.action_hr_payslip_by_employees)d" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </button>
+        </field>
+    </record>
+</odoo>

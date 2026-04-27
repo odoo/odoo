@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="mrp_report_inherit_hr" inherit_id="mrp_account_enterprise.mrp_report_form_view">
+        <xpath expr="//field[@name='unit_operation_cost']" position="after">
+            <field name="employee_cost"/>
+            <field name="unit_employee_cost"/>
+        </xpath>
+    </template>
+</odoo>

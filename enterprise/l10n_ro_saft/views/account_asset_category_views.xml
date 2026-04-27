@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="l10n_ro_saft_view_account_asset_category_tree" model="ir.ui.view">
+        <field name="name">l10n_ro_saft_account.asset.category.list</field>
+        <field name="model">l10n_ro_saft.account.asset.category</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="code"/>
+                <field name="description"/>
+                <field name="depreciation_min"/>
+                <field name="depreciation_max"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_ro_saft_view_account_asset_category_form" model="ir.ui.view">
+        <field name="name">l10n_ro_saft_account.asset.category.form</field>
+        <field name="model">l10n_ro_saft.account.asset.category</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="code"/>
+                    <field name="description"/>
+                    <field name="depreciation_min"/>
+                    <field name="depreciation_max"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+</odoo>

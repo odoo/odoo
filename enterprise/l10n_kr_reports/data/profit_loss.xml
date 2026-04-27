@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_kr_pl" model="account.report">
+        <field name="name">Profit And Loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="country_id" ref="base.kr"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="filter_budgets" eval="True"/>
+        <field name="default_opening_date_filter">this_year</field>
+        <field name="column_ids">
+            <record id="l10n_kr_pl_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_kr_pl_revenue" model="account.report.line">
+                <field name="name">Revenue</field>
+                <field name="code">KR_REV</field>
+                <field name="hierarchy_level">1</field>
+                <field name="account_codes_formula">-41</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+            </record>
+            <record id="l10n_kr_pl_cost_of_sales" model="account.report.line">
+                <field name="name">Less Cost of Sales</field>
+                <field name="code">KR_COS</field>
+                <field name="hierarchy_level">1</field>
+                <field name="account_codes_formula">51</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+            </record>
+            <record id="l10n_kr_pl_gross_profit" model="account.report.line">
+                <field name="name">Gross profit (loss)</field>
+                <field name="code">KR_GRP</field>
+                <field name="hierarchy_level">0</field>
+                <field name="aggregation_formula">KR_REV.balance - KR_COS.balance</field>
+            </record>
+            <record id="l10n_kr_pl_expenses" model="account.report.line">
+                <field name="name">Less Selling and Administrative Expenses</field>
+                <field name="code">KR_EXP</field>
+                <field name="hierarchy_level">1</field>
+                <field name="account_codes_formula">61</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+            </record>
+            <record id="l10n_kr_pl_income" model="account.report.line">
+                <field name="name">Profit (loss) from Operating Activities</field>
+                <field name="code">KR_INC</field>
+                <field name="hierarchy_level">0</field>
+                <field name="aggregation_formula">KR_GRP.balance + KR_EXP.balance</field>
+            </record>
+            <record id="l10n_kr_pl_other_income" model="account.report.line">
+                <field name="name">Plus Non-operating Income</field>
+                <field name="code">KR_OIN</field>
+                <field name="hierarchy_level">1</field>
+                <field name="account_codes_formula">-42</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+            </record>
+            <record id="l10n_kr_pl_other_expenses" model="account.report.line">
+                <field name="name">Less Non-operating Expenses</field>
+                <field name="code">KR_OEXP</field>
+                <field name="hierarchy_level">1</field>
+                <field name="account_codes_formula">62</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+            </record>
+            <record id="l10n_kr_pl_profit_before_tax" model="account.report.line">
+                <field name="name">Profit (loss) Before Tax</field>
+                <field name="code">KR_PBT</field>
+                <field name="hierarchy_level">0</field>
+                <field name="aggregation_formula">KR_INC.balance + KR_OIN.balance - KR_OEXP.balance</field>
+            </record>
+            <record id="l10n_kr_pl_tax_expense" model="account.report.line">
+                <field name="name">Less Tax Expense (income)</field>
+                <field name="code">KR_TE</field>
+                <field name="hierarchy_level">1</field>
+                <field name="account_codes_formula">63</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+            </record>
+            <record id="l10n_kr_pl_net_profit" model="account.report.line">
+                <field name="name">Net Profit (loss)</field>
+                <field name="code">KR_NEP</field>
+                <field name="hierarchy_level">0</field>
+                <field name="aggregation_formula">KR_PBT.balance - KR_TE.balance</field>
+            </record>
+        </field>
+    </record>
+</odoo>

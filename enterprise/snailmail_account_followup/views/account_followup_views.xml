@@ -1,0 +1,33 @@
+<odoo>
+    <data>
+
+        <record id="view_account_followup_followup_line_tree_inherit_snailmail" model="ir.ui.view">
+            <field name="name">account_followup.followup.line.list.inherit.snailmail</field>
+            <field name="model">account_followup.followup.line</field>
+            <field name="inherit_id" ref="account_followup.view_account_followup_followup_line_tree"/>
+            <field name="arch" type="xml">
+                <field name="send_sms" position="after">
+                    <field name="send_letter"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_followup_followup_line_form_inherit_snailmail" model="ir.ui.view">
+            <field name="name">account_followup.followup.line.form.inherit.snailmail</field>
+            <field name="model">account_followup.followup.line</field>
+            <field name="inherit_id" ref="account_followup.view_account_followup_followup_line_form"/>
+            <field name="arch" type="xml">
+                <field name="send_email" position="after">
+                    <field name="send_letter"/>
+                </field>
+                <field name="mail_template_id" position="attributes">
+                    <attribute name="invisible">not send_email and not send_letter</attribute>
+                </field>
+                <field name="join_invoices" position="attributes">
+                    <attribute name="invisible">not send_email and not send_letter</attribute>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

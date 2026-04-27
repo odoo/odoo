@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+      <record id="product.product_product_3" model="product.product">
+          <field name="sequence">1</field>
+      </record>
+
+      <record id="product.product_product_12" model="product.product">
+          <field name="sequence">5</field>
+      </record>
+
+      <record id="product.product_product_13" model="product.product">
+          <field name="sequence">10</field>
+      </record>
+
+      <record id="product.product_product_16" model="product.product">
+          <field name="sequence">15</field>
+      </record>
+
+        <record id="mrp_mps_production_schedule_1" model="mrp.production.schedule">
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="enable_max_replenish">True</field>
+            <field name="max_to_replenish_qty">50</field>
+            <field name="forecast_target_qty">15</field>
+        </record>
+
+        <record id="mrp_mps_production_schedule_2" model="mrp.production.schedule">
+            <field name="product_id" ref="product.product_product_3"/>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="enable_max_replenish">True</field>
+            <field name="max_to_replenish_qty">20</field>
+            <field name="forecast_target_qty">5</field>
+        </record>
+
+        <record id="mrp_mps_production_schedule_3" model="mrp.production.schedule">
+            <field name="product_id" ref="product.product_product_13"/>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="mrp_mps_production_schedule_4" model="mrp.production.schedule">
+            <field name="product_id" ref="product.product_product_16"/>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="mrp_production_forecast_1_1" model="mrp.product.forecast">
+            <field name="date" eval="DateTime.today() + relativedelta(day=1, weeks=1, days=-1)"/>
+            <field name="forecast_qty">220</field>
+            <field name="production_schedule_id" ref="mrp_mps.mrp_mps_production_schedule_1"/>
+        </record>
+        <record id="mrp_production_forecast_1_2" model="mrp.product.forecast">
+            <field name="date" eval="DateTime.today() + relativedelta(day=1, weeks=3, days=-1)"/>
+            <field name="forecast_qty">45</field>
+            <field name="production_schedule_id" ref="mrp_mps.mrp_mps_production_schedule_1"/>
+        </record>
+        <record id="mrp_production_forecast_1_3" model="mrp.product.forecast">
+            <field name="date" eval="DateTime.today() + relativedelta(day=1, weeks=4, days=-1)"/>
+            <field name="forecast_qty">100</field>
+            <field name="production_schedule_id" ref="mrp_mps.mrp_mps_production_schedule_1"/>
+        </record>
+
+        <record id="mrp_production_forecast_2_1" model="mrp.product.forecast">
+            <field name="date" eval="DateTime.today() + relativedelta(day=1, weeks=1, days=-1)"/>
+            <field name="forecast_qty">60</field>
+            <field name="production_schedule_id" ref="mrp_mps.mrp_mps_production_schedule_2"/>
+        </record>
+        <record id="mrp_production_forecast_2_2" model="mrp.product.forecast">
+            <field name="date" eval="DateTime.today() + relativedelta(day=1, weeks=2, days=-1)"/>
+            <field name="forecast_qty">40</field>
+            <field name="production_schedule_id" ref="mrp_mps.mrp_mps_production_schedule_2"/>
+        </record>
+        <record id="mrp_production_forecast_2_3" model="mrp.product.forecast">
+            <field name="date" eval="DateTime.today() + relativedelta(day=1, weeks=3, days=-1)"/>
+            <field name="forecast_qty">100</field>
+            <field name="production_schedule_id" ref="mrp_mps.mrp_mps_production_schedule_2"/>
+        </record>
+        <record id="mrp_production_forecast_2_4" model="mrp.product.forecast">
+            <field name="date" eval="DateTime.today() + relativedelta(day=1, weeks=4, days=-1)"/>
+            <field name="forecast_qty">40</field>
+            <field name="production_schedule_id" ref="mrp_mps.mrp_mps_production_schedule_2"/>
+        </record>
+
+        <record id="mrp_production_forecast_3_1" model="mrp.product.forecast">
+            <field name="date" eval="DateTime.today() + relativedelta(day=1, weeks=2, days=-1)"/>
+            <field name="forecast_qty">40</field>
+            <field name="production_schedule_id" ref="mrp_mps.mrp_mps_production_schedule_3"/>
+        </record>
+
+
+    </data>
+</odoo>

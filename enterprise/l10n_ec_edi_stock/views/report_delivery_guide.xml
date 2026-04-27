@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <template id="custom_header">
+            <table class="table table-borderless w-100 m-1">
+                <tr>
+                    <td class="pe-1" style="width: 30%">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td class="text-center p-1">
+                                    <h4 style="letter-spacing: 2px;">
+                                        <span t-field="o.company_id.l10n_ec_legal_name"/>
+                                    </h4>
+                                    <div style="font-size: 12px;">
+                                        <strong>
+                                            <t t-if="o.company_id.partner_id.l10n_latam_identification_type_id" t-esc="o.company_id.partner_id.l10n_latam_identification_type_id.name" id="inv_tax_id_label"/>
+                                            <t t-else="">RUC/Cédula</t>:
+                                        </strong>
+                                        <span t-field="o.company_id.partner_id.vat"/>
+                                        <br/>
+                                        <t t-if="o.company_id.l10n_ec_special_taxpayer_number">
+                                            <strong>Special Taxpayer Number: </strong>
+                                            <span t-field="o.company_id.l10n_ec_special_taxpayer_number"/>
+                                            <br/>
+                                        </t>
+                                        <strong>Environment: </strong>
+                                        <t t-if="o.company_id.l10n_ec_production_env">Production</t>
+                                        <t t-else="">Testing</t>
+                                        <br/>
+                                        <strong>Emission: </strong>Normal
+                                        <br/>
+                                        <strong>Obliged to keep accounting: </strong>
+                                        <t t-if="o.company_id.l10n_ec_forced_accounting">Yes</t>
+                                        <t t-else="">No</t>
+                                        <br/>
+                                        <t t-if="o.company_id.l10n_ec_withhold_agent_number">
+                                            <strong>Withhold Agent Resolution No.: </strong>
+                                            <span t-field="o.company_id.l10n_ec_withhold_agent_number"/>
+                                            <br/>
+                                        </t>
+                                        <t t-if="o.company_id.l10n_ec_regime == 'rimpe'">
+                                            RIMPE Contributor Type
+                                            <br/>
+                                        </t>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td class="p-1" style="width: 70%">
+                        <table class="table table-condensed m-1">
+                            <tr>
+                                <td class="text-center border-top-0 p-1">
+                                    <h4 style="letter-spacing: 2px;">
+                                        Delivery Guide
+                                        <br/>
+                                        <span t-esc="o.l10n_ec_edi_document_number or '/'"/>
+                                    </h4>
+                                    <t t-if="o.l10n_ec_authorization_number">
+                                        <div class="text-center" style="font-size: 12px">
+                                            <strong>Authorization No.: <span t-field="o.l10n_ec_authorization_number"/></strong>
+                                        </div>
+                                        <div class="text-justify">
+                                            <t t-if="o.l10n_ec_authorization_number">
+                                                <img style="width:100%; height:15.5mm;"
+                                                    t-att-src="'/report/barcode/Code128/' + o.l10n_ec_authorization_number"
+                                                    alt="Missing barcode for authorization number"
+                                                />
+                                            </t>
+                                        </div>
+                                        <div class="text-center" style="font-size: 12px">
+                                            <strong>Access Key: <span t-field="o.l10n_ec_authorization_number"/></strong>
+                                        </div>
+                                    </t>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </template>
+
+        <template id="report_delivery_guide_lang">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="clearfix">
+                        <div class="page mb-4">
+                            <t t-set="o" t-value="o.with_context(lang=lang)"/>
+                            <t t-call="l10n_ec_edi_stock.custom_header"/>
+                            <div id="informations" class="mb-4">
+                                <div class="row">
+                                    <div class="col">
+                                        <strong>Identification (Carrier): </strong>
+                                        <span t-esc="o.l10n_ec_transporter_id.vat"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <strong>Company Name / Name and Surname: </strong>
+                                        <span t-esc="o.l10n_ec_transporter_id.name"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <strong>License Plate: </strong>
+                                        <span t-esc="o.l10n_ec_plate_number"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <strong>Departure Address: </strong>
+                                        <span t-esc="o.picking_type_id.warehouse_id.partner_id._display_address()"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong>Departure Date: </strong>
+                                        <span t-esc="o.l10n_ec_delivery_start_date"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong>Arrival Date: </strong>
+                                        <span t-esc="o.l10n_ec_delivery_end_date"/>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="row">
+                                    <div class="col">
+                                        <strong>Move Reason: </strong>
+                                        <span t-esc="o.l10n_ec_transfer_reason"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <strong>Identification (Recipient): </strong>
+                                        <span t-esc="o.partner_id.commercial_partner_id.vat"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <strong>Company Name / Name and Surname: </strong>
+                                        <span t-esc="o.partner_id.commercial_partner_id.name"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix invoice_main">
+                                <div class="page mb-4">
+                                    <div class="oe_structure"></div>
+                                    <table class="table table-sm o_main_table table-borderless" name="delivery_guide_line" id="delivery_guide_line_table">
+                                        <thead>
+                                            <tr>
+                                                <t t-set="colspan" t-value="6"/>
+                                                <th name="th_qty" class="text-start"><span>Quantity</span></th>
+                                                <th name="th_description" class="text-start"><span>Description</span></th>
+                                                <th name="th_code" class="text-start"><span>Main Code</span></th>
+                                                <th name="th_auxcode" class="text-start"><span>Auxiliar Code</span></th>
+                                                <th name="th_lot" class="text-start" groups="stock.group_lot_on_delivery_slip"><span>Lot</span></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="invoice_tbody">
+                                            <t t-set="lines" t-value="o.move_line_ids_without_package.sorted(key=lambda l: l.id)"/>
+
+                                            <t t-foreach="lines" t-as="line">
+                                                <tr>
+                                                    <td><span t-field="line.quantity"/></td>
+                                                    <td><span t-field="line.product_id.partner_ref" t-options="{'widget': 'text'}"/></td>
+                                                    <td><span t-esc="line.product_id.barcode or line.product_id.default_code or ''"/></td>
+                                                    <td><span t-esc="line.product_id.l10n_ec_auxiliary_code or ''"/></td>
+                                                    <td groups="stock.group_lot_on_delivery_slip"><span t-field="line.lot_id" /></td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                    <t t-set="additional_info" t-value="o._l10n_ec_get_delivery_guide_additional_info()"/>
+                                    <t t-if="additional_info">
+                                        <div t-attf-class="#{'col-5' if report_type != 'html' else 'col-12 col-md-5'} d-inline-block">
+                                            <table id="additional_info_table" class="table table-borderless w-100" style="page-break-inside: avoid">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center" colspan="2">Additional Information</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="additional_info.items()" t-as="item">
+                                                        <tr t-if="item[1]">
+                                                            <td>
+                                                                <span t-esc="str(item[0])"/>
+                                                            </td>
+                                                            <td>
+                                                                <span t-esc="str(item[1])"/>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <template id="report_delivery_guide">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.company_id.partner_id.lang or o.env.lang"/>
+                <t t-call="l10n_ec_edi_stock.report_delivery_guide_lang" t-lang="o.company_id.partner_id.lang"/>
+            </t>
+        </template>
+
+        <record id="action_delivery_guide_report_pdf" model="ir.actions.report">
+            <field name="name">Delivery Guide</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_ec_edi_stock.report_delivery_guide</field>
+            <field name="report_file">l10n_ec_edi_stock.report_delivery_guide</field>
+            <field name="print_report_name">'GuíRe %s' % (object.l10n_ec_edi_document_number or 's/n')</field>
+            <field name="binding_model_id" ref="model_stock_picking"/>
+            <field name="binding_type">report</field>
+            <field name="attachment">'GuíRe %s.pdf' % (object.l10n_ec_edi_document_number or 's/n')</field>
+        </record>
+
+    </data>
+</odoo>

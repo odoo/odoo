@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_sepa_direct_debit_partner_mandates" model="ir.actions.act_window">
+            <field name="name">Direct Debit Mandates</field>
+            <field name="res_model">sdd.mandate</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{'default_partner_id':active_id, 'search_default_account_sdd_mandate_active_filter':1}</field>
+            <field name="domain">[('partner_id', '=', active_id)]</field>
+        </record>
+        <record id="account_sdd_res_partner_view" model="ir.ui.view">
+            <field name="name">res.partner.view.account.sdd.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" groups="account.group_account_invoice" name="account_sepa_direct_debit.account_sepa_direct_debit_partner_mandates" type="action"
+                        icon="fa-pencil-square-o" help="Open this partner's mandates" title="Direct Debit Mandates">
+                        <field string='Direct Debit Mandates' name="sdd_count" widget="statinfo"/>
+                    </button>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

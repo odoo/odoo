@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="mrp_workorder.MrpQualityCheckConfirmationDialog" t-inherit-mode="extension">
+        <xpath expr="//button[@t-on-click='openWorksheet']" position="after">
+            <button
+                t-if="recordData.test_type === 'spreadsheet'"
+                class="btn btn-primary me-2"
+                t-att-disabled="state.disabled"
+                t-on-click="openSpreadsheet"
+            >
+                Open spreadsheet
+            </button>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="vat3_template">
+        <!-- We assume this is an original VAT3 return (not supplementary or amended, precision_digits=0), hence type 0.
+             Amounts must be reported in whole Euro.
+             We don't report any Unusual Expenditure. -->
+        <VAT3
+            t-att-currency="company.currency_id.name"
+            t-att-name="company.name"
+            t-att-regnum="ppsn"
+            t-att-startdate="startdate"
+            t-att-enddate="enddate"
+            t-att-sales="float_repr(sale_vat, precision_digits=0)"
+            t-att-purchs="float_repr(purchase_vat, precision_digits=0)"
+            t-att-goodsto="float_repr(eu_goods_sold, precision_digits=0)"
+            t-att-goodsfrom="float_repr(eu_goods_bought, precision_digits=0)"
+            t-att-servicesto="float_repr(eu_services_sold, precision_digits=0)"
+            t-att-servicesfrom="float_repr(eu_services_bought, precision_digits=0)"
+            type="0"
+            t-att-filefreq="filefreq"
+            formversion="1"
+            language="E"
+            t-att-postponedAccounting="float_repr(postponed_accounting, precision_digits=0)"
+            unusualExpenditure="N"
+        />
+    </template>
+</odoo>

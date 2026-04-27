@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="l10n_ch_elm_report_payslip">
+    <t t-set="company" t-value="o.company_id.sudo()"/>
+    <t t-call="web.external_layout_standard">
+        <div class="page">
+            <h2 id="payslip_name"><span t-field="o.name"/></h2>
+
+            <table class="table table-bordered table-sm o_table_ch o_table_ch_infos">
+                <tbody>
+                    <tr>
+                        <td style="width: 50%;"><strong>Name: </strong><span t-field="o.employee_id"/></td>
+                    </tr>
+                    <tr>
+                        <td t-if="o.employee_id.l10n_ch_sv_as_number"><strong>AVS Number: </strong><span t-field="o.employee_id.l10n_ch_sv_as_number"/></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Address: </strong>
+                            <span t-field="o.employee_id.private_street"/>,
+                            <span t-field="o.employee_id.private_city"/>
+                            <span t-field="o.employee_id.private_zip"/>,
+                            <span t-field="o.employee_id.private_country_id"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><div t-if="o.contract_id.job_id"><strong>Job Position: </strong><span t-field="o.contract_id.job_id"/></div></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Entry Date: </strong><span t-field="o.contract_id.date_start"/></td>
+                    </tr>
+                    <tr>
+                        <td><div t-if="o.contract_id.date_end"><strong>Withdrawal Date: </strong><span t-field="o.contract_id.date_end"/></div></td>
+                    </tr>
+                    <tr>
+                        <td><div t-if="not o.contract_id.irregular_working_time"><strong>Activity Rate: </strong><span t-field="o.contract_id.l10n_ch_current_occupation_rate"/> %</div></td>
+                    </tr>
+                    <tr>
+                        <td t-if="o.l10n_ch_is_code"><strong>Source-Tax Code: </strong><span t-field="o.l10n_ch_is_code"/></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-bordered table-sm o_table_ch o_table_ch_payslip">
+                <thead class="o_black_border">
+                    <tr>
+                        <th class="text-center" style="width: 10%;">Code</th>
+                        <th style="width: 50%;">Name</th>
+                        <th class="text-end" style="width: 15%;">Amount</th>
+                        <th class="text-end">Rate</th>
+                        <th class="text-end" style="width: 15%;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="o_section_ch">
+                        <td colspan="5">Income</td>
+                    </tr>
+                    <t t-foreach="o.line_ids.filtered(lambda line: line.salary_rule_id.l10n_ch_code and line.salary_rule_id.l10n_ch_code &lt; '5000').sorted(lambda l: l.salary_rule_id.l10n_ch_code)" t-as="line">
+                        <tr>
+                            <td class="text-center"><span t-field="line.salary_rule_id.l10n_ch_code"/></td>
+                            <td><span t-field="line.name"/></td>
+                            <td class="text-end"><span t-esc="line.amount"
+                                    t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            <td class="text-end">
+                                <span t-if="line.rate &lt; 100" t-out="str(round(line.rate, 4)) + ' %'"/>
+                                <span t-if="line.rate > 100" t-out="round(line.rate / 100, 2)"/>
+                            </td>
+                            <td class="text-end"><span t-esc="line.total"
+                                    t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                        </tr>
+                    </t>
+                    <t t-foreach="o.line_ids.filtered(lambda line: line.salary_rule_id.l10n_ch_code and line.salary_rule_id.l10n_ch_code == '5000').sorted(lambda l: l.salary_rule_id.l10n_ch_code)" t-as="line">
+                        <tr>
+                            <td class="text-center fw-bold"><span t-field="line.salary_rule_id.l10n_ch_code"/></td>
+                            <td class="fw-bold"><span t-field="line.name"/></td>
+                            <td class="text-end fw-bold"><span t-if="line.quantity > 1 or line.rate != 100" t-esc="line.amount"
+                                    t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            <td class="text-end fw-bold"><span t-if="line.rate != 100" t-out="str(round(line.rate, 4)) + ' %'"/></td>
+                            <td class="text-end fw-bold"><span t-esc="line.total"
+                                    t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                        </tr>
+                    </t>
+                    <tr class="o_section_ch">
+                        <td colspan="5">Deductions</td>
+                    </tr>
+                    <t t-foreach="o.line_ids.filtered(lambda line: line.salary_rule_id.l10n_ch_code and '5000' &lt; line.salary_rule_id.l10n_ch_code &lt; '5999').sorted(lambda l: l.salary_rule_id.l10n_ch_code)" t-as="line">
+                        <tr t-if="abs(line.total) > 0">
+                            <td class="text-center"><span t-field="line.salary_rule_id.l10n_ch_code"/></td>
+                            <td><span t-field="line.name"/></td>
+                            <td class="text-end"><span t-if="line.quantity > 1 or line.rate != 100" t-esc="line.amount"
+                                    t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            <td class="text-end"><span t-if="line.rate != 100" t-out="str(round(abs(line.rate), 4)) + ' %'"/></td>
+                            <td class="text-end"><span t-esc="line.total"
+                                    t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                        </tr>
+                    </t>
+                    <tr class="o_section_ch" t-if="o.line_ids.filtered(lambda line: line.salary_rule_id.l10n_ch_code and '5999' &lt; line.salary_rule_id.l10n_ch_code &lt; '6500')">
+                        <td colspan="5">Expenses</td>
+                    </tr>
+                    <t t-foreach="o.line_ids.filtered(lambda line: line.salary_rule_id.l10n_ch_code and '5999' &lt; line.salary_rule_id.l10n_ch_code &lt; '6500').sorted(lambda l: l.salary_rule_id.l10n_ch_code)" t-as="line">
+                        <tr class="custom-row">
+                            <td class="text-center"><span t-field="line.salary_rule_id.l10n_ch_code"/></td>
+                            <td><span t-field="line.name"/></td>
+                            <td class="text-end"><span t-if="line.quantity > 1 or line.rate != 100" t-esc="line.amount"
+                                    t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            <td class="text-end"><span t-if="line.rate != 100" t-out="str(round(abs(line.rate), 4)) + ' %'"/></td>
+                            <td class="text-end"><span t-esc="line.total"
+                                    t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+
+            <table class="table table-bordered table-sm o_table_ch o_table_ch_net">
+                <tbody>
+                    <tr>
+                        <td class="text-center fw-bold" style="width: 10%;"><span>6500</span></td>
+                        <td style="width: 75%;"><span class="fw-bold">Net Salary</span></td>
+                        <td class="text-end fw-bold"><span t-esc="o.line_ids.filtered(lambda line: line.salary_rule_id.l10n_ch_code and line.salary_rule_id.l10n_ch_code == '6500').total"
+                                t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                    </tr>
+                    <tr t-if="abs(o.line_ids.filtered(lambda line: line.salary_rule_id.l10n_ch_code and line.salary_rule_id.l10n_ch_code == '6510').total) > 0">
+                        <td class="text-center fw-bold" style="width: 10%;"><span>6510</span></td>
+                        <td><span class="fw-bold">Advance Paid</span></td>
+                        <td class="text-end fw-bold"><span t-esc="o.line_ids.filtered(lambda line: line.salary_rule_id.l10n_ch_code and line.salary_rule_id.l10n_ch_code == '6510').total"
+                                t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                    </tr>
+                    <tr t-if="abs(o.line_ids.filtered(lambda line: line.salary_rule_id.l10n_ch_code and line.salary_rule_id.l10n_ch_code == '6510').total) > 0">
+                        <td class="text-center fw-bold" style="width: 10%;"><span>6600</span></td>
+                        <td><span class="fw-bold">Net to Pay</span></td>
+                        <td class="text-end fw-bold"><span t-esc="o.line_ids.filtered(lambda line: line.salary_rule_id.l10n_ch_code and line.salary_rule_id.l10n_ch_code == '6600').total"
+                                t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-sm o_table_ch o_table_ch_net">
+                <tbody>
+                    <tr t-if="abs(o.line_ids.filtered(lambda line: line.salary_rule_id.l10n_ch_code and line.salary_rule_id.l10n_ch_code == '9000').total) > 0">
+                        <td class="text-center" style="width: 10%;"><span>9000</span></td>
+                        <td style="width: 75%;"><span>Vacation Pay Provision</span></td>
+                        <td class="text-end"><span t-esc="o.line_ids.filtered(lambda line: line.salary_rule_id.l10n_ch_code and line.salary_rule_id.l10n_ch_code == '9000').total"
+                                t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                    </tr>
+                    <tr t-if="abs(o.line_ids.filtered(lambda line: line.salary_rule_id.l10n_ch_code and line.salary_rule_id.l10n_ch_code == '9001').total) > 0">
+                        <td class="text-center" style="width: 10%;"><span>9001</span></td>
+                        <td><span>Vacation Pay Balance</span></td>
+                        <td class="text-end"><span t-esc="o.line_ids.filtered(lambda line: line.salary_rule_id.l10n_ch_code and line.salary_rule_id.l10n_ch_code == '9001').total"
+                                t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr/>
+            <div class="center" id="to_pay_ch" t-if="o.employee_id.bank_account_id">
+                <p t-if="o.net_wage &gt;= 0">To pay on <b><span t-field="o.employee_id.bank_account_id"></span></b></p>
+            </div>
+
+        </div>
+    </t>
+</template>
+
+<template id="ch_elm_report_payslip_lang">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="o" t-value="o.with_context(lang=o.employee_id.lang or o.env.lang)"/>
+            <t t-call="l10n_ch_hr_payroll_elm_transmission.l10n_ch_elm_report_payslip" t-lang="o.env.lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

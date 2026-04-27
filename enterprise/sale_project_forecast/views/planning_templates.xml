@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="period_report_template" inherit_id="planning.period_report_template">
+        <xpath expr="//dd[@id='project']" position="after">
+            <dt name="sale_order_item"  position="move"/>
+            <dd id="sale_line" position="move"/>
+        </xpath>
+    </template>
+
+    <template id="open_slots_list_template" inherit_id="planning.open_slots_list_template">
+        <xpath expr="//th[@t-if='open_slot_has_project']" position="after">
+            <th name="sale_order_item" t-if="open_slot_has_sale_line" position="move"/>
+        </xpath>
+        <xpath expr="//td[@t-if='open_slot_has_project']" position="after">
+            <td name="sale_line_id" t-if="open_slot_has_sale_line" position="move"/>
+        </xpath>
+    </template>
+
+    <template id="unwanted_slots_list_template" inherit_id="planning.unwanted_slots_list_template">
+        <xpath expr="//th[@t-if='unwanted_slot_has_project']" position="after">
+            <th name="sale_order_item" t-if="unwanted_slot_has_sale_line" position="move"/>
+        </xpath>
+        <xpath expr="//td[@t-if='unwanted_slot_has_project']" position="after">
+            <td name="sale_line_id" t-if="unwanted_slot_has_sale_line" position="move"/>
+        </xpath>
+    </template>
+</odoo>

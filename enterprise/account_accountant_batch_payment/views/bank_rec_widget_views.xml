@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Search view on batch payment to be injected inside the form (view_bank_rec_widget_form) -->
+        <record id="view_account_batch_payment_search_bank_rec_widget" model="ir.ui.view">
+            <field name="name">account.batch.payment.search.bank_rec_widget</field>
+            <field name="model">account.batch.payment</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"
+                           string="Batch Payment"
+                           filter_domain="[('name', 'ilike', self)]"/>
+                    <field name="date"/>
+                    <field name="journal_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <separator/>
+                    <filter name="amount_received" string="Received" domain="[('batch_type', '=', 'inbound')]"/>
+                    <filter name="amount_paid" string="Paid" domain="[('batch_type', '=', 'outbound')]"/>
+                    <separator/>
+                    <filter name="unreconciled" string="Unreconciled" domain="[('state', '!=', 'reconciled')]"/>
+                    <separator name="inject_after"/>
+                    <filter name="date" string="Date" date="date"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- List view on batch payment to be injected inside the form (view_bank_rec_widget_form) -->
+        <record id="view_account_batch_payment_list_bank_rec_widget" model="ir.ui.view">
+            <field name="name">account.batch.payment.list.bank_rec_widget</field>
+            <field name="model">account.batch.payment</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <list string="Suggestions"
+                      create="false"
+                      edit="false"
+                      limit="40"
+                      js_class="bank_rec_batch_payments_list_view">
+                    <!-- Invisible fields -->
+                    <field name="currency_id" column_invisible="True"/>
+                    <field name="company_currency_id" column_invisible="True"/>
+                    <field name="state" column_invisible="True"/>
+
+                    <field name="date" readonly="state != 'draft'"/>
+                    <field name="name" readonly="state != 'draft'"/>
+                    <field name="journal_id"
+                           optional="hidden" readonly="state != 'draft'"/>
+                    <field name="amount_residual_currency"
+                           string="Amount Due (in currency)"/>
+                    <field name="amount_residual"
+                           string="Amount Due"
+                           groups="base.group_multi_currency"
+                           optional="hidden"/>
+
+                    <button name="action_open_batch_payment"
+                            type="object"
+                            string="View"
+                            class="btn btn-sm btn-secondary"/>
+                </list>
+            </field>
+        </record>
+
+    </data>
+</odoo>

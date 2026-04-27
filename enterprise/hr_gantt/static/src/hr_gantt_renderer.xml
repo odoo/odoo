@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr.HrGanttRenderer.RowHeader" t-inherit="web_gantt.GanttRenderer.RowHeader">
+        <xpath expr="//t[@t-esc='row.name']" position="replace">
+            <Avatar t-if="hasAvatar(row)" t-props="getAvatarProps(row)"/>
+            <t t-else="" t-esc="row.name"/>
+        </xpath>
+    </t>
+
+</templates>

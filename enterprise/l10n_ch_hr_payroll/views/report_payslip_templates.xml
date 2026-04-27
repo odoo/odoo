@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<odoo>
+<template id="report_payslip_ch" inherit_id="hr_payroll.report_payslip" primary="True">
+    <xpath expr="//t[@t-call='web.external_layout']" position="before">
+        <t t-set="company" t-value="o.company_id.sudo()"/>
+    </xpath>
+
+    <xpath expr="//t[@t-call='web.external_layout']" position="attributes">
+        <attribute name="t-call">web.external_layout_boxed</attribute>
+    </xpath>
+
+    <th id="line_header_name" position="before">
+        <th>Code</th>
+    </th>
+
+    <td id="payslip_line_name" position="before">
+        <td t-att-class="line_class" t-att-style="line_style">
+            <span t-field="line.salary_rule_id.l10n_ch_code"/>
+        </td>
+    </td>
+</template>
+
+<template id="report_payslip_ch_lang">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="o" t-value="o.with_context(lang=o.employee_id.lang or o.env.lang)"/>
+            <t t-call="l10n_ch_hr_payroll.report_payslip_ch" t-lang="o.env.lang"/>
+        </t>
+    </t>
+</template>
+
+<template id="report_light_payslip_ch" inherit_id="hr_payroll.report_light_payslip" primary="True">
+    <th id="line_header_name" position="before">
+        <th><strong>CODE</strong></th>
+    </th>
+
+    <td id="payslip_line_name" position="before">
+        <td t-att-class="line_class" t-att-style="line_style">
+            <span t-field="line.salary_rule_id.l10n_ch_code"/>
+        </td>
+    </td>
+</template>
+
+<template id="report_light_payslip_ch_lang">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="o" t-value="o.with_context(lang=o.employee_id.lang or o.env.lang)"/>
+            <t t-call="l10n_ch_hr_payroll.report_light_payslip_ch" t-lang="o.env.lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

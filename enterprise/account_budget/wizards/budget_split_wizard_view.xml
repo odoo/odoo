@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="budget_split_wizard_form_view" model="ir.ui.view">
+        <field name="name">account_budget.budget_split_wizard.form</field>
+        <field name="model">budget.split.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Budget">
+                <sheet>
+                    <group>
+                        <label for="date_from" string="From"/>
+                        <div class="o_row">
+                            <field name="date_from" nolabel="1" class="oe_inline"/>
+                            <i class="fa fa-long-arrow-right mx-2" aria-label="to" title="to"/>
+                            <field name="date_to" nolabel="1" class="oe_inline"/>
+                        </div>
+                    </group>
+                    <group>
+                        <field name="period" widget="radio"/>
+                        <field name="analytical_plan_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_budget_split" string="Split" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="budget_split_wizard_action" model="ir.actions.act_window">
+        <field name="name">Generate Budget</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">budget.split.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'dialog_size': 'medium'}</field>
+    </record>
+</odoo>

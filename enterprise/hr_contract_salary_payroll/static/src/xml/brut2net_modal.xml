@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <div t-name="hr_contract_salary_payroll.salary_package_brut_to_net_modal" class="px-3">
+        <t t-if="datas?.length === 0">
+            <h5>There is no defined payroll structure for your contract. Please contact a responsible for more information.</h5>
+        </t>
+        <t t-foreach="datas" t-as="data" t-key="data_index">
+            <div class="border-top">
+                <div class="row">
+                    <label class="col-md-9 col-form-label" t-att-for="data[2]">
+                        <t t-if="data[3] !== 'no_sign' &amp;&amp; data[3] &gt; 0">
+                            <i class="fa fa-1x fa-plus fa-fw text-success"/>
+                        </t>
+                        <t t-if="data[3] !== 'no_sign' &amp;&amp; data[3] &lt; 0">
+                            <i class="fa fa-1x fa-minus fa-fw text-danger"/>
+                        </t>
+                        <t t-esc="data[3] === 'no_sign' ? data[0].toUpperCase() : data[0]"/>
+                    </label>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <t t-if="data[4] == 'before'">
+                                <input class="form-control" type="text" t-att="{value: data[5], name: data[2]}" disabled="disabled"/>
+                                <div class="input-group-text"><t t-esc="data[1]"/></div>
+                            </t>
+                            <t t-if="data[4] == 'after'">
+                                <input class="form-control" type="text" t-att="{value: data[1], name:data[2]}" disabled="disabled"/>
+                                <div class="input-group-text"><t t-esc="data[5]"/></div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+        <div class="alert alert-info mt16 mb0" role="status">
+                <p>Please note that this information may be inaccurate and should be used for reference only.<br/> The amounts are calculated  based on a full time permanent contract.</p>
+        </div>
+    </div>
+</templates>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_eh_payroll_fetch_payrun" model="ir.actions.server">
+        <field name="name">Fetch Payruns</field>
+        <field name="model_id" ref="base_setup.model_res_config_settings"/>
+        <field name="state">code</field>
+        <field name="code">
+action = records.action_eh_payroll_fetch_payrun()
+        </field>
+    </record>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.employment_hero</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <block id="analytic" position="after">
+                <block title="Employment Hero" id="employment_hero" groups="account.group_account_manager" invisible="country_code not in ['AU', 'NZ', 'GB', 'SG', 'MY']">
+                    <field name="country_code" invisible="1" />
+                    <setting help="Allows to synchronize Employment Hero payroll for this company" company_dependent="1"
+                    documentation="/applications/finance/fiscal_localizations/employment_hero.html">
+                        <field name="employment_hero_enable"/>
+                        <div class="content-group" invisible="not employment_hero_enable">
+                            <div class="mt8">
+                                <button name="%(action_eh_payroll_fetch_payrun)d" type="action" string="Fetch Payruns Manually" class="oe_link" id="action_eh_payroll_fetch_payrun"/>
+                            </div>
+                        </div>
+                        <div class="content-group mt8" invisible="not employment_hero_enable">
+                            <div class="row">
+                                <label for="employment_hero_api_key" class="col-lg-4"/>
+                                <field name="employment_hero_api_key" required="employment_hero_enable and country_code in ['AU', 'NZ', 'GB', 'SG', 'MY']"/>
+                            </div>
+                            <div class="row" title="The URL toward which API calls will be made. The expected values are:&#013;
+For Australia: 'https://api.yourpayroll.com.au/'&#013;
+For Malaysia: 'https://apimy.yourpayroll.io/'&#013;
+For New Zealand: 'https://api.nzpayroll.co.nz/'&#013;
+For Singapore: 'https://apisg.yourpayroll.io/'&#013;
+For the United Kingdom: 'https://api.yourpayroll.co.uk/'">
+                                <label for="employment_hero_base_url" class="col-lg-4"/>
+                                <field name="employment_hero_base_url"  required="employment_hero_enable"/>
+                            </div>
+                            <div class="row">
+                                <label for="employment_hero_identifier" class="col-lg-4"/>
+                                <field name="employment_hero_identifier" required="employment_hero_enable"/>
+                            </div>
+                            <div class="row">
+                                <label for="employment_hero_lock_date" class="col-lg-4 o_light_label"/>
+                                <field name="employment_hero_lock_date"/>
+                            </div>
+                            <div class="row">
+                                <label for="employment_hero_journal_id" class="col-lg-4 o_light_label"/>
+                                <field name="employment_hero_journal_id"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </block>
+        </field>
+    </record>
+</odoo>

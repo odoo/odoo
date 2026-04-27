@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_referral_send_sms_view_form" model="ir.ui.view">
+          <field name="name">hr.referral.send.sms.form</field>
+          <field name="model">hr.referral.send.sms</field>
+          <field name="arch" type="xml">
+            <form string="Send Job by sms">
+                <group>
+                    <field name="job_id" invisible="1"/>
+                    <field name="url" invisible="1"/>
+                    <field name="recipient" placeholder="+1 123 456 789"/>
+                    <field name="body_plaintext" widget="sms_widget"/>
+                </group>
+                <footer>
+                    <button name="send_sms_referral" type="object" string="Send SMS" class="oe_highlight" data-hotkey="q"/>
+                    <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+          </field>
+    </record>
+
+    <record id="hr_referral_send_sms_action" model="ir.actions.act_window">
+      <field name="name">Send Job Offer by SMS</field>
+      <field name="res_model">hr.referral.send.sms</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+    </record>
+</odoo>

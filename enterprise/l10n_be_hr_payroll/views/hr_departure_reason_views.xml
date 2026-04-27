@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_departure_reason_view_list" model="ir.ui.view">
+            <field name="model">hr.departure.reason</field>
+            <field name="inherit_id" ref="hr.hr_departure_reason_view_list"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="reason_code" groups="base.group_no_one" />
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

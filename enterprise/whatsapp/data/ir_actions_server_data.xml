@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="ir_actions_server_resend_whatsapp_queue" model="ir.actions.server">
+        <field name="name">WhatsApp : Resend failed Messages</field>
+        <field name="model_id" ref="whatsapp.model_whatsapp_message"/>
+        <field name="state">code</field>
+        <field name="binding_view_types">list</field>
+        <field name="code">action = records._resend_failed()</field>
+        <field name="binding_model_id" eval="ref('whatsapp.model_whatsapp_message')"/>
+        <field name="binding_type">action</field>
+    </record>
+</odoo>

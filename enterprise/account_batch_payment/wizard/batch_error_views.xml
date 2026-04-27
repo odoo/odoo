@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="batch_error_wizard_form">
+            <field name="name">account.batch.error.wizard.form</field>
+            <field name="model">account.batch.error.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div invisible="not error_line_ids">
+                            <div role="alert" class="alert alert-danger">
+                                The batch could not be validated
+                            </div>
+
+                            <strong>The following errors occurred</strong>
+
+                            <field name="error_line_ids"/>
+
+                            <strong invisible="not warning_line_ids">The following warnings were also raised; they do not impeach validation</strong>
+                        </div>
+
+                        <div invisible="error_line_ids">
+                            <div role="alert" class="alert alert-success">
+                                The batch cannot be validated.
+                            </div>
+
+                            <strong>Please first consider the following warnings</strong>
+                        </div>
+
+                        <field name="warning_line_ids" invisible="not warning_line_ids"/>
+                    </sheet>
+                    <footer>
+                        <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        <button string="Proceed with validation" type="object" name="proceed_with_validation" class="btn btn-primary" invisible="error_line_ids" data-hotkey="q"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="batch_error_wizard_line_tree">
+            <field name="name">account.batch.error.wizard.line.list</field>
+            <field name="model">account.batch.error.wizard.line</field>
+            <field name="arch" type="xml">
+                <list create="0" delete="0" editable="bottom">
+                    <field name="show_remove_button" column_invisible="True"/>
+                    <field name="description" readonly="1"/>
+                    <field name="help_message" readonly="1"/>
+                    <button string="Show" name="open_payments" type="object" class="btn-link"/>
+                    <button string="Exclude Payments" name="remove_payments_from_batch" type="object" invisible="not show_remove_button" class="oe_highlight"/>
+                </list>
+            </field>
+        </record>
+
+    </data>
+</odoo>

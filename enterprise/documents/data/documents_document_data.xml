@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+
+    <!-- Folders -->
+    <record id="document_internal_folder" model="documents.document" forcecreate="0">
+        <field name="type">folder</field>
+        <field name="access_internal">view</field>
+        <field name="name">Internal</field>
+        <field name="is_pinned_folder">True</field>
+    </record>
+
+    <function model="documents.document" name="_add_inbox_alias_if_not_used"/>
+
+    <record id="document_finance_folder" model="documents.document" forcecreate="0">
+        <field name="type">folder</field>
+        <field name="access_internal">edit</field>
+        <field name="name">Finance</field>
+        <field name="is_pinned_folder">True</field>
+    </record>
+
+    <record id="document_marketing_folder" model="documents.document" forcecreate="0">
+        <field name="type">folder</field>
+        <field name="name">Marketing</field>
+        <field name="access_internal">edit</field>
+        <field name="is_pinned_folder">True</field>
+    </record>
+
+    <record id="document_support_folder" model="documents.document" forcecreate="True">
+        <field name="name">Support</field>
+        <field name="type">folder</field>
+        <field name="access_internal">none</field>
+        <field name="access_via_link">none</field>
+    </record>
+
+    <!-- base data -->
+    <record id="documents_attachment_video_documents" model="documents.document" forcecreate="0">
+        <field name="name">Video: Odoo Documents</field>
+        <field name="type">url</field>
+        <field name="url">https://youtu.be/Ayab6wZ_U1A</field>
+        <field name="folder_id" ref="documents.document_internal_folder"/>
+        <field name="tag_ids" eval="[(6,0,[ref('documents.documents_tag_presentations'),
+                                           ref('documents.documents_tag_validated')])]"/>
+    </record>
+
+</data></odoo>

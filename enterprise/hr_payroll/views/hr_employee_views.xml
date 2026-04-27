@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Employee View -->
+    <record id="payroll_hr_employee_view_form" model="ir.ui.view">
+        <field name="name">payroll.hr.employee.view.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="priority" eval="10"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="currency_id" invisible="1"/>
+            </field>
+            <page name="hr_settings" position="before">
+                <page name="hr_payroll" string="Payroll" groups="hr.group_hr_user">
+                    <group>
+                        <group name="payroll_group" string="Payroll">
+                            <field name="legal_name"/>
+                            <field name="lang" string="Payslip Language"/>
+                            <field name="registration_number"/>
+                            <field name="disabled"/>
+                        </group>
+                    </group>
+                </page>
+            </page>
+            <xpath expr="//field[@name='country_of_birth']" position="after">
+                <field name="is_non_resident" eval="False"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="payroll_hr_employee_view_tree_employee_trends" model="ir.ui.view">
+    <field name="name">payroll.hr.employee.view.list.inherit</field>
+    <field name="model">hr.employee</field>
+    <field name="inherit_id" ref="hr_contract.view_employee_tree"/>
+    <field name="priority" eval="100" />
+    <field name="arch" type="xml">
+        <field name="first_contract_date" position="attributes">
+            <attribute name="optional">show</attribute>
+        </field>
+    </field>
+    </record>
+
+    <record id="payroll_hr_employee_view_search" model="ir.ui.view">
+        <field name="name">hr.employee.search.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="registration_number" string="Employee Code"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

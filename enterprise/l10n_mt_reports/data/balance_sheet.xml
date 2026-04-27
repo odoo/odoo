@@ -1,0 +1,838 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_mt_balance_sheet" model="account.report">
+        <field name="name">Balance sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_period_comparison" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="country_id" ref="base.mt"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_mt_balance_sheet_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_mt_active_title" model="account.report.line">
+                <field name="name">ACTIVE</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_mt_active_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">MT_fixed_asset.balance + MT_curr_asset.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_mt_fixed_asset" model="account.report.line">
+                        <field name="name">Fixed asset</field>
+                        <field name="code">MT_fixed_asset</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_mt_fixed_asset_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MT_intangible_assets.balance + MT_acc_dep_intangible_assets.balance + MT_tangible_assets.balance + MT_acc_dep_tangible_assets.balance + MT_long_term_assets.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_mt_intangible_assets" model="account.report.line">
+                                <field name="name">Intangible assets</field>
+                                <field name="code">MT_intangible_assets</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mt_intangible_assets_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">1000 + 1002 + 1004 + 1006 + 1008</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mt_accumulated_amortisation_intangible_assets" model="account.report.line">
+                                <field name="name">Accumulated amortisation of intangible assets</field>
+                                <field name="code">MT_acc_dep_intangible_assets</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mt_accumulated_amortisation_intangible_assets_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">1001 + 1003 + 1005 + 1007 + 1009</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mt_tangible_assets" model="account.report.line">
+                                <field name="name">Tangible assets</field>
+                                <field name="code">MT_tangible_assets</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mt_tangible_assets_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MT_land_building.balance + MT_wasted_assets.balance + MT_plant_machinery.balance + MT_other_tangible_assets.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mt_land_building" model="account.report.line">
+                                        <field name="name">Land and Building</field>
+                                        <field name="code">MT_land_building</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_land_building_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1200 + 1202 + 1204 + 1206 + 1208 + 1210</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_wasting_asset" model="account.report.line">
+                                        <field name="name">Wasting assets</field>
+                                        <field name="code">MT_wasted_assets</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_wasting_asset_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1300 + 1302 + 1304 + 1306</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_plant_machinery" model="account.report.line">
+                                        <field name="name">Plant and machinery</field>
+                                        <field name="code">MT_plant_machinery</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_plant_machinery_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1350 + 1352 + 1354 + 1356 + 1358 + 1360 + 1362 + 1364 + 1366 + 1368 + 1370 + 1372 + 1374 + 1376 + 1378 + 1380 + 1382 + 1384 + 1386 + 1387 + 1389 + 1391 + 1393 + 1395 + 1397</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_other_tangible" model="account.report.line">
+                                        <field name="name">Other tangible assets</field>
+                                        <field name="code">MT_other_tangible_assets</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_other_tangible_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1600 + 1602 + 1604 + 1606 + 1608 + 1610 + 1612</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mt_accumulated_depreciation_tangible_assets" model="account.report.line">
+                                <field name="name">Accumulated depreciation of tangible assets</field>
+                                <field name="code">MT_acc_dep_tangible_assets</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mt_accumulated_depreciation_tangible_assets_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MT_acc_dep_land_building.balance + MT_acc_dep_wasting_assets.balance + MT_acc_dep_plant_machinery.balance + MT_acc_dep_other_tangible.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mt_acc_dep_land_building" model="account.report.line">
+                                        <field name="name">Accumulated depreciation of land and buildings</field>
+                                        <field name="code">MT_acc_dep_land_building</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_acc_dep_land_building_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1201 + 1203 + 1205 + 1207 + 1209</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_acc_dep_wasting_assets" model="account.report.line">
+                                        <field name="name">Accumulated depreciation of wasting assets</field>
+                                        <field name="code">MT_acc_dep_wasting_assets</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_acc_dep_wasting_assets_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1301 + 1303 + 1305 + 1307</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_acc_dep_plant_machinery" model="account.report.line">
+                                        <field name="name">Accumulated depreciation of plant and machinery</field>
+                                        <field name="code">MT_acc_dep_plant_machinery</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_acc_dep_plant_machinery_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1351 + 1353 + 1355 + 1357 + 1359 + 1361 + 1363 + 1365 + 1367 + 1369 + 1371 + 1373 + 1375 + 1377 + 1379 + 1381 + 1383 + 1385 + 1388 + 1390 + 1392 + 1394 + 1396 + 1398</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_acc_dep_other_tangible" model="account.report.line">
+                                        <field name="name">Accumulated depreciation of other tangible assets</field>
+                                        <field name="code">MT_acc_dep_other_tangible</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_acc_dep_other_tangible_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1601 + 1603 + 1605 + 1607 + 1609 + 1611</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mt_long_term_assets" model="account.report.line">
+                                <field name="name">Long term assets</field>
+                                <field name="code">MT_long_term_assets</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mt_long_term_assets_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MT_due_shareholder.balance + MT_due_members.balance + MT_joint_venture.balance + MT_due_investment.balance + MT_loans_third_parties.balance + MT_soft_loans.balance + MT_long_term_invest.balance + MT_provision_loss_investments.balance + MT_other_long_term_assets.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mt_due_shareholder" model="account.report.line">
+                                        <field name="name">Due from shareholder(s) and / or director(s)</field>
+                                        <field name="code">MT_due_shareholder</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_due_shareholder_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1700 + 1701 + 1702 + 1703</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_due_members" model="account.report.line">
+                                        <field name="name">Due from members</field>
+                                        <field name="code">MT_due_members</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_due_members_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1715</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_due_joint_venture" model="account.report.line">
+                                        <field name="name">Due from joint venture(s) and / or partnership(s)</field>
+                                        <field name="code">MT_joint_venture</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_joint_venture_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1720</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_due_investment" model="account.report.line">
+                                        <field name="name">Due from and / or investment in related parties</field>
+                                        <field name="code">MT_due_investment</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_due_investment_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">173</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_loans_third_parties" model="account.report.line">
+                                        <field name="name">Loans to third parties</field>
+                                        <field name="code">MT_loans_third_parties</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_loans_third_parties_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">174</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_soft_loans" model="account.report.line">
+                                        <field name="name">Soft loans</field>
+                                        <field name="code">MT_soft_loans</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_soft_loans_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">175</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_long_term_investments" model="account.report.line">
+                                        <field name="name">Long-term investments</field>
+                                        <field name="code">MT_long_term_invest</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_long_term_investments_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1760</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_provision_loss_investments" model="account.report.line">
+                                        <field name="name">Provision(s) for loss in value of investments</field>
+                                        <field name="code">MT_provision_loss_investments</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_provision_loss_investments_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">176\(1760) + 177</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_other_long_term_assets" model="account.report.line">
+                                        <field name="name">Other long-term assets</field>
+                                        <field name="code">MT_other_long_term_assets</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_other_long_term_assets_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">18</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_mt_current_asset" model="account.report.line">
+                        <field name="name">Current Asset</field>
+                        <field name="code">MT_curr_asset</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_mt_current_asset_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MT_stocks.balance + MT_account_receivable.balance + MT_provision_doubtful.balance + MT_due_shareholders_current_portion.balance + MT_due_third_parties_current_portion.balance + MT_customer_liability.balance + MT_cash.balance + MT_other_current.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_mt_stocks" model="account.report.line">
+                                <field name="name">Stocks</field>
+                                <field name="code">MT_stocks</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mt_stocks_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">200</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mt_account_receivable" model="account.report.line">
+                                <field name="name">Account Receivable</field>
+                                <field name="code">MT_account_receivable</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mt_account_receivable_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">2050 + 204</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mt_provision_doubtful" model="account.report.line">
+                                <field name="name">Provision for doubtful accounts</field>
+                                <field name="code">MT_provision_doubtful</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mt_provision_doubtful_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">205\(2050) + 206</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mt_due_shareholders_current_portion" model="account.report.line">
+                                <field name="name">Due from shareholder(s) and / or director(s) and related parties - current portion</field>
+                                <field name="code">MT_due_shareholders_current_portion</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mt_due_shareholders_current_portion_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">210</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mt_due_third_parties_current_portion" model="account.report.line">
+                                <field name="name">Due from third parties - current portion</field>
+                                <field name="code">MT_due_third_parties_current_portion</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mt_due_third_parties_current_portion_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">213</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mt_customer_liability" model="account.report.line">
+                                <field name="name">Customers' liability under acceptances</field>
+                                <field name="code">MT_customer_liability</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mt_customer_liability_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">214</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mt_cash" model="account.report.line">
+                                <field name="name">Cash at bank and in hand</field>
+                                <field name="code">MT_cash</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mt_cash_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">215</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mt_other_current" model="account.report.line">
+                                <field name="name">Other current assets</field>
+                                <field name="code">MT_other_current</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mt_other_current_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">22 + 23</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_mt_passif_title" model="account.report.line">
+                <field name="name">PASSIF</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_mt_passif_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">MT_liabilities.balance + MT_shareholder_equity.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_mt_liabilities" model="account.report.line">
+                        <field name="name">Liabilities</field>
+                        <field name="code">MT_liabilities</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_mt_liabilities_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MT_curr_liabilities.balance + MT_long_term_liabilities.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_mt_current_liabilities" model="account.report.line">
+                                <field name="name">Current Liabilities</field>
+                                <field name="code">MT_curr_liabilities</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mt_current_liabilities_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MT_bank_overdraft.balance + MT_short_term_debt.balance + MT_curr_long_term_liab.balance + MT_bankers_acceptances.balance + MT_deferred_income.balance + MT_amounts_payable_accrued_liabilities.balance + MT_taxes_licences_fees_payable.balance + MT_due_shareholders_director_parties.balance + MT_short_term_loans_advance_members.balance + MT_short_term_loans_advance_joint_venture.balance + MT_short_term_loans_third_parties.balance + MT_other_current_liabilities.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mt_bank_overdraft" model="account.report.line">
+                                        <field name="name">Bank overdraft</field>
+                                        <field name="code">MT_bank_overdraft</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_bank_overdraft_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-300</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_short_term_debt" model="account.report.line">
+                                        <field name="name">Short term debt</field>
+                                        <field name="code">MT_short_term_debt</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_short_term_debt_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-302</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_current_portion_long_term_liability" model="account.report.line">
+                                        <field name="name">Current portion of long term liability</field>
+                                        <field name="code">MT_curr_long_term_liab</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_current_portion_long_term_liability_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-304</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_bankers_acceptances" model="account.report.line">
+                                        <field name="name">Bankers' Acceptances</field>
+                                        <field name="code">MT_bankers_acceptances</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_bankers_acceptances_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-305</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_deferred_income" model="account.report.line">
+                                        <field name="name">Deferred income [current portion]</field>
+                                        <field name="code">MT_deferred_income</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_deferred_income_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-308</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_amounts_payable_accrued_liabilities" model="account.report.line">
+                                        <field name="name">Amounts payable and accrued liabilities</field>
+                                        <field name="code">MT_amounts_payable_accrued_liabilities</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_amounts_payable_accrued_liabilities_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-310</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_taxes_licences_fees_payable" model="account.report.line">
+                                        <field name="name">Taxes, licences and fees payable</field>
+                                        <field name="code">MT_taxes_licences_fees_payable</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_taxes_licences_fees_payable_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-320</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_due_shareholders_director_parties" model="account.report.line">
+                                        <field name="name">Due to shareholder(s) and / or director(s) and / or related parties</field>
+                                        <field name="code">MT_due_shareholders_director_parties</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_due_shareholders_director_parties_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-330</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_short_term_loans_advance_members" model="account.report.line">
+                                        <field name="name">Short-term loans and / or advances due to members [NPOs]</field>
+                                        <field name="code">MT_short_term_loans_advance_members</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_short_term_loans_advance_members_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-337</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_short_term_loans_advance_joint_ventures" model="account.report.line">
+                                        <field name="name">Short-term loans and / or advances due to joint venture(s)/partnership(s)</field>
+                                        <field name="code">MT_short_term_loans_advance_joint_venture</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_short_term_loans_advance_joint_ventures_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-338</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_short_term_loans_third_parties" model="account.report.line">
+                                        <field name="name">Short-term loans to third parties</field>
+                                        <field name="code">MT_short_term_loans_third_parties</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_short_term_loans_third_parties_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-339</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_other_current_liabilities" model="account.report.line">
+                                        <field name="name">Other current liabilities</field>
+                                        <field name="code">MT_other_current_liabilities</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_other_current_liabilities_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-34</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mt_long_term_liabilities" model="account.report.line">
+                                <field name="name">Long term Liabilities</field>
+                                <field name="code">MT_long_term_liabilities</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mt_long_term_liabilities_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MT_long_term_debt.balance + MT_deposit_liabilities.balance + MT_bonds_debentures.balance + MT_deferred_income_long.balance + MT_long_amounts_shareholder_related_parties.balance + MT_long_loans_due_members.balance + MT_long_term_loans_due_joint_venture.balance + MT_other_long_term_liabilities.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mt_long_term_debt" model="account.report.line">
+                                        <field name="name">Long term debt</field>
+                                        <field name="code">MT_long_term_debt</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_long_term_debt_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-350</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_deposit_liabilities" model="account.report.line">
+                                        <field name="name">Deposit liabilities</field>
+                                        <field name="code">MT_deposit_liabilities</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_deposit_liabilities_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-352</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_bonds_debentures" model="account.report.line">
+                                        <field name="name">Bonds debentures</field>
+                                        <field name="code">MT_bonds_debentures</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_bonds_debentures_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-353</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_deferred_income_long" model="account.report.line">
+                                        <field name="name">Deferred income - long-term</field>
+                                        <field name="code">MT_deferred_income_long</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_deferred_income_long_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-354</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_long_term_amount_shareholder_related_parties" model="account.report.line">
+                                        <field name="name">Long-term amounts due to shareholder(s) /director(s) and / or related parties</field>
+                                        <field name="code">MT_long_amounts_shareholder_related_parties</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_long_term_amount_shareholder_related_parties_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-355</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_long_term_loans_due_members" model="account.report.line">
+                                        <field name="name">Long-term loans due to members [NPO's]</field>
+                                        <field name="code">MT_long_loans_due_members</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_long_term_loans_due_members_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-357</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_long_term_loans_due_joint_venture" model="account.report.line">
+                                        <field name="name">Long-term loans due to members [NPO's]</field>
+                                        <field name="code">MT_long_term_loans_due_joint_venture</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_long_term_loans_due_joint_venture_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-358</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_other_long_term_liabilities" model="account.report.line">
+                                        <field name="name">Other long term liabilities</field>
+                                        <field name="code">MT_other_long_term_liabilities</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_other_long_term_liabilities_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-36</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_mt_shareholder_equity" model="account.report.line">
+                        <field name="name">Shareholder equity</field>
+                        <field name="code">MT_shareholder_equity</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_mt_shareholder_equity_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MT_capital.balance + MT_reserve.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_mt_capital" model="account.report.line">
+                                <field name="name">Capital</field>
+                                <field name="code">MT_capital</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mt_capital_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-38</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_mt_reserve" model="account.report.line">
+                                <field name="name">Reserve</field>
+                                <field name="code">MT_reserve</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_mt_reserve_expr" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MT_other_reserve.balance + MT_retained_earnings.balance + MT_current_year.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_mt_other_reserve" model="account.report.line">
+                                        <field name="name">Other reserve</field>
+                                        <field name="code">MT_other_reserve</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_other_reserve_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-39</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_retained_earnings" model="account.report.line">
+                                        <field name="name">Retained earnings</field>
+                                        <field name="code">MT_retained_earnings</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_retained_earnings_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">MT_income_statement.balance</field>
+                                                <field name="subformula">cross_report</field>
+                                                <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_mt_current_year_earnings" model="account.report.line">
+                                        <field name="name">Current Year Earnings</field>
+                                        <field name="code">MT_current_year</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_mt_current_year_earnings_expr" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">MT_income_statement.balance</field>
+                                                <field name="subformula">cross_report</field>
+                                                <field name="date_scope">from_fiscalyear</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

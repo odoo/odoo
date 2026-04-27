@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_salary_register" model="ir.ui.view">
+            <field name="name">Salary Register</field>
+            <field name="model">salary.register.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Salary Register">
+                    <span class="o_form_label text-muted">Generate an Excel report based on Paid payslips for the selected period of time.</span>
+                    <footer>
+                        <button name="action_export_xlsx" string="Export XLSX" type="object" class="btn-primary disabled" data-hotkey="q" invisible="employee_ids"/>
+                        <button name="action_export_xlsx" string="Export XLSX" type="object" class="btn-primary" data-hotkey="q" invisible="not employee_ids"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
+                    </footer>
+                    <group class="mt-2">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="struct_id" string="Salary Structure"/>
+                        <separator string="Employees" />
+                        <field name="employee_ids" nolabel="1" colspan="2" context="{'list_view_ref' : 'l10n_in_hr_payroll.hr_employee_tree_inherit'}">
+                            <list no_open="True" create="False">
+                                <field name="name" string="Employee Name"/>
+                                <field name="registration_number" string="Employee Code"/>
+                                <field name="department_id" string="Department"/>
+                                <field name="job_id" string="Job Position"/>
+                            </list>
+                        </field>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_salary_register" model="ir.actions.act_window">
+            <field name="name">Salary Register</field>
+            <field name="res_model">salary.register.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="hr_employee_tree_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.list.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="activity_ids" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <field name="activity_date_deadline" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <field name="company_id" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <field name="parent_id" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_reporting_l10n_in"
+            name="India"
+            sequence="30"
+            parent="hr_payroll.menu_hr_payroll_report"/>
+
+        <menuitem
+            name="Salary Register"
+            parent="l10n_in_hr_payroll.menu_reporting_l10n_in"
+            action="action_salary_register"
+            sequence="300"
+            id="menu_salary_register"
+            groups="hr_payroll.group_hr_payroll_manager,hr_payroll.group_hr_payroll_user"
+           />
+</odoo>

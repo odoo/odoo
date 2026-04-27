@@ -1,0 +1,816 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_fedex_rest
+#
+# Translators:
+# Wil Odoo, 2024
+# Tony Ng, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-20 18:48+0000\n"
+"PO-Revision-Date: 2024-12-01 01:20+0000\n"
+"Last-Translator: Tony Ng, 2025\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid ""
+"<b>After finishing creation of the project, you will see your test API key, "
+"secret key and account number:</b>\n"
+"                                <br/>"
+msgstr ""
+"<b>完成建立專案後，你會看到你的測試 API 金鑰、秘密密鑰，以及帳戶號碼：</b>\n"
+"                                <br/>"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid ""
+"<b>Once your account is created, go to the My Projects tab and create a new "
+"API project. Make sure to select the options indicated below:</b>\n"
+"                                <br/>"
+msgstr ""
+"<b>建立帳戶後，請前往「我的專案」分頁，建立一個新的 API 專案。請確保選擇下列"
+"選項：</b>\n"
+"                                <br/>"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid ""
+"<b>To enable the creation of FedEx shipping labels, the last step is the "
+"Certification Process, click on 'Go to API certification' and follow the "
+"required steps to get your account certified for label creation.</b>\n"
+"                                <br/>These certifications usually require "
+"that you contact the FedEx support team by email."
+msgstr ""
+"<b>要建立 FedEx 貨運標籤，最後一個步驟是認證流程。按一下「前往 API 認證」，然"
+"後按照所需的步驟操作，使你的帳戶獲得建立標籤的認證。</b>\n"
+"                                <br/>這些認證通常會要求你，透過電子郵件聯絡 "
+"FedEx 支援團隊。"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid ""
+"<b>To move to production, generate a production key and link it to a FedEx "
+"account number (you can add/create one if necessary), you will receive "
+"production API and secret keys:</b>\n"
+"                                <br/>"
+msgstr ""
+"<b>若要轉移至正式運行環境，請產生一個正式運行金鑰，並將其連結至 FedEx 帳戶號"
+"碼（如有需要，可新增/建立一個帳戶號碼）。你將會收到正式運行 API 及秘密密鑰："
+"</b>\n"
+"                                <br/>"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid ""
+"<b>When asked to select APIs for the project, make sure to enable at least "
+"the following APIs:</b>\n"
+"                                <br/>"
+msgstr ""
+"<b>系統要求你為專案選擇 API 時，請確保至少啟用以下 API：</b>\n"
+"                                <br/>"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "<span class=\"o_form_label\">Package Length Unit</span>"
+msgstr "<span class=\"o_form_label\">包裝長度單位</span>"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid ""
+"<span invisible=\"fedex_rest_weight_unit != 'KG'\">Centimeters</span>\n"
+"                                <span invisible=\"fedex_rest_weight_unit != "
+"'LB'\">Inches</span>"
+msgstr ""
+"<span invisible=\"fedex_rest_weight_unit != 'KG'\">厘米</span>\n"
+"                                <span invisible=\"fedex_rest_weight_unit != "
+"'LB'\">英寸</span>"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_developer_key
+msgid "API Key"
+msgstr "API 金鑰"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Account Number"
+msgstr "帳戶號碼"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_residential_address__always
+msgid "Always"
+msgstr "總是"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid ""
+"Automated return label generation is not supported by FedEx for multi-"
+"package shipments. Please generate the return labels manually."
+msgstr ""
+"FedEx 不支援為多件包裝的貨件，自動產生退貨標籤。請手動產生該些退貨標籤。"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_stock_package_type__package_carrier_type
+msgid "Carrier"
+msgstr "承運商"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_residential_address__check
+msgid "Check using FedEx Address API"
+msgstr "使用 FedEx 地址 API 檢查"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_droppoff_type__contact_fedex_to_schedule
+msgid "Contact FedEx for pickup"
+msgstr "聯絡 FedEx 上門收件"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/fedex_request.py:0
+msgid "Could not decode response"
+msgstr "未能解碼回應"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,help:delivery_fedex_rest.field_delivery_carrier__fedex_rest_residential_address
+msgid ""
+"Determines whether to mark the recipient address as residential (to "
+"correctly calculate any possible surcharges). Please note: when retrieving "
+"this information using the FedEx Address API, we assume that the address is "
+"residential unless it is marked explicitly as a BUSINESS address."
+msgstr ""
+"決定是否將收件人地址標記為住宅地址（以便正確計算任何可能的附加費）。請注意："
+"使用 FedEx 地址 API 讀取此資訊時，我們會假定該地址是住宅地址，除非已明確標記"
+"為商業地址。"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_droppoff_type__dropoff_at_fedex_location
+msgid "Drop off at FedEx location"
+msgstr "前往 FedEx 服務站投寄"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Duties paid by"
+msgstr "關稅由誰繳付"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_file_type__epl2
+msgid "EPL2"
+msgstr "EPL2"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_documentation_type__etd
+msgid "Electronic Trade Documents"
+msgstr "電子貿易文件"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_email_notifications
+msgid "Email Notifications"
+msgstr "電郵通知"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid ""
+"Error(s) from FedEx:\n"
+"%s"
+msgstr ""
+"FedEx 發送的錯誤資料：\n"
+"%s"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Extra Data"
+msgstr "額外數據"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_extra_data_rate_request
+msgid "Extra data for rate"
+msgstr "費用率額外數據"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_extra_data_return_request
+msgid "Extra data for return"
+msgstr "退貨額外數據"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_extra_data_ship_request
+msgid "Extra data for ship"
+msgstr "運輸額外數據"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__delivery_type__fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__stock_package_type__package_carrier_type__fedex_rest
+msgid "FedEx"
+msgstr "FedEx"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_1_day_freight
+msgid "FedEx 1Day® Freight"
+msgstr "FedEx 1Day® 次日送達大貨"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_2_day
+msgid "FedEx 2Day®"
+msgstr "FedEx 2Day® 兩日送達"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_2_day_am
+msgid "FedEx 2Day® AM"
+msgstr "FedEx 2Day® 兩日上午送達"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_2_day_freight
+msgid "FedEx 2Day® Freight"
+msgstr "FedEx 2Day® 兩日送達大貨"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_3_day_freight
+msgid "FedEx 3Day® Freight"
+msgstr "FedEx 3Day® 三日送達大貨"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_access_token
+msgid "FedEx Access Token"
+msgstr "FedEx 存取權杖"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_account_number
+msgid "FedEx Account Number"
+msgstr "FedEx 帳戶號碼"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_droppoff_type
+msgid "FedEx Drop-Off Type"
+msgstr "FedEx 投寄類型"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_economy
+msgid "FedEx Economy"
+msgstr "FedEx 經濟速遞"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_economy_select
+msgid "FedEx Economy (Only U.K.)"
+msgstr "FedEx 經濟速遞（只限英國）"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_economy_freight
+msgid "FedEx Economy Freight"
+msgstr "FedEx 經濟速遞大貨"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__europe_first_international_priority
+msgid "FedEx Europe First®"
+msgstr "FedEx 歐洲特早速遞"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_express_saver
+msgid "FedEx Express Saver®"
+msgstr "FedEx Express Saver® 特惠特快速遞"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_first
+msgid "FedEx First"
+msgstr "FedEx 特早速遞"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__first_overnight
+msgid "FedEx First Overnight®"
+msgstr "FedEx 隔夜特早速遞"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_first_freight
+msgid "FedEx First Overnight® Freight"
+msgstr "FedEx 隔夜特早速遞大貨"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__smart_post
+msgid "FedEx Ground® Economy (Formerly known as FedEx SmartPost®)"
+msgstr "FedEx 經濟陸運（前稱 FedEx SmartPost）"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__ground_home_delivery
+msgid "FedEx Home Delivery® "
+msgstr "FedEx 住宅送遞"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_international_connect_plus
+msgid "FedEx International Connect Plus®"
+msgstr "FedEx 國際電商易"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__international_economy_distribution
+msgid "FedEx International Economy DirectDistribution"
+msgstr "FedEx 國際經濟分送"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__international_economy_freight
+msgid "FedEx International Economy® Freight"
+msgstr "FedEx 國際經濟速遞大貨"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__international_first
+msgid "FedEx International First®"
+msgstr "FedEx 國際特早速遞"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_ground
+msgid "FedEx International Ground® and FedEx Domestic Ground®"
+msgstr "FedEx 國際陸運；FedEx 本地陸運"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__international_priority_distribution
+msgid "FedEx International Priority DirectDistribution®"
+msgstr "FedEx 國際優先分送"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__international_distribution_freight
+msgid "FedEx International Priority DirectDistribution® Freight"
+msgstr "FedEx 國際優先分送大貨"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_international_priority
+msgid "FedEx International Priority®"
+msgstr "FedEx 國際優先速遞"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_international_priority_express
+msgid "FedEx International Priority® Express"
+msgstr "FedEx 國際優先速遞特快"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__international_priority_freight
+msgid "FedEx International Priority® Freight"
+msgstr "FedEx 國際優先速遞大貨"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_default_package_type_id
+msgid "FedEx Package Type"
+msgstr "FedEx 包裝類型"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_priority
+msgid "FedEx Priority"
+msgstr "FedEx 優先速遞"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_priority_express
+msgid "FedEx Priority Express"
+msgstr "FedEx 優先速遞特快"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_priority_express_freight
+msgid "FedEx Priority Express Freight"
+msgstr "FedEx 優先速遞特快大貨"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_priority_freight
+msgid "FedEx Priority Freight"
+msgstr "FedEx 優先速遞大貨"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__priority_overnight
+msgid "FedEx Priority Overnight®"
+msgstr "FedEx 隔夜優先速遞"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__same_day
+msgid "FedEx SameDay®"
+msgstr "FedEx 同日速遞"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__same_day_city
+msgid "FedEx SameDay® City"
+msgstr "FedEx 同日速遞城市"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_service_type
+msgid "FedEx Service Type"
+msgstr "FedEx 服務類型"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__standard_overnight
+msgid "FedEx Standard Overnight®"
+msgstr "FedEx 標準隔夜速遞"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_international_deferred_freight
+msgid "FedEx® International Deferred Freight"
+msgstr "FedEx 國際空運大貨"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__international_economy
+msgid "FedEx® International Economy"
+msgstr "FedEx 國際經濟速遞"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_regional_economy
+msgid "FedEx® Regional Economy"
+msgstr "FedEx 區域經濟速遞"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__fedex_regional_economy_freight
+msgid "FedEx® Regional Economy Freight"
+msgstr "FedEx 區域經濟速遞大貨"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_uom_uom__fedex_code
+msgid "Fedex Code"
+msgstr "Fedex 代碼"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Fedex Configuration"
+msgstr "Fedex 配置"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Fedex Developer Website"
+msgstr "Fedex 開發人員網站"
+
+#. module: delivery_fedex_rest
+#: model:delivery.carrier,name:delivery_fedex_rest.delivery_carrier_fedex_inter
+#: model:product.template,name:delivery_fedex_rest.product_product_delivery_fedex_inter_product_template
+msgid "Fedex International"
+msgstr "Fedex 國際"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_duty_payment
+msgid "Fedex Rest Duty Payment"
+msgstr "Fedex Rest 關稅繳付"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_weight_unit
+msgid "Fedex Rest Weight Unit"
+msgstr "Fedex Rest 重量單位"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Fedex Tutorial"
+msgstr "Fedex 教學"
+
+#. module: delivery_fedex_rest
+#: model:delivery.carrier,name:delivery_fedex_rest.delivery_carrier_fedex_us
+#: model:product.template,name:delivery_fedex_rest.product_product_delivery_fedex_us_product_template
+msgid "Fedex US"
+msgstr "Fedex 美國"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,help:delivery_fedex_rest.field_delivery_carrier__fedex_rest_documentation_type
+msgid ""
+"For international shipments (or some intra-country shipments), a commercial "
+"invoice might be required for customs clearance. This commercial invoice can "
+"be generated by FedEx based on shipment data and returned as PDF for "
+"printing and attaching to the shipment or manual electronic submission to "
+"FedEx. It can also be submitted directly as ETD information to FedEx upon "
+"shipment validation."
+msgstr ""
+"國際運送貨件（以及某些國內貨件）可能需要商業發票以辦理清關。此商業發票可由 "
+"FedEx 根據送貨資料產生，並以 PDF 格式傳回，以便列印並附在貨件中，或手動透過電"
+"子方式提交給 FedEx。你也可在驗證送貨後，將商業發票作為 ETD（電子貿易文件）資"
+"訊，直接向 FedEx 提交。"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid "Freight services for Fedex are not implemented."
+msgstr ""
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_documentation_type
+msgid "Generate invoice"
+msgstr "產生發票"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Go to"
+msgstr "前往"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__intl_ground_distribution
+msgid "International Ground® Distribution (IGD)"
+msgstr "國際陸運分送（IGD）"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/fedex_request.py:0
+msgid "Invalid syntax for FedEx extra data."
+msgstr "FedEx 額外數據語法無效。"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_weight_unit__kg
+msgid "Kilograms"
+msgstr "公斤"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_label_file_type
+msgid "Label File Type"
+msgstr "標籤檔案類型"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Label Format"
+msgstr "標籤格式"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_label_stock_type
+msgid "Label Size"
+msgstr "標籤大小"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_residential_address__never
+msgid "Never"
+msgstr "從不"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_documentation_type__none
+msgid "No"
+msgstr "否"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Options"
+msgstr "選項"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__paper_4x6
+msgid "PAPER_4X6"
+msgstr "PAPER_4X6"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__paper_4x6_75
+msgid "PAPER_4X6.75"
+msgstr "PAPER_4X6.75"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__paper_4x8
+msgid "PAPER_4X8"
+msgstr "PAPER_4X8"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__paper_4x9
+msgid "PAPER_4X9"
+msgstr "PAPER_4X9"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__paper_7x4_75
+msgid "PAPER_7X4.75"
+msgstr "PAPER_7X4.75"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__paper_8_5x11_bottom_half_label
+msgid "PAPER_8.5X11_BOTTOM_HALF_LABEL"
+msgstr "PAPER_8.5X11_BOTTOM_HALF_LABEL"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__paper_8_5x11_top_half_label
+msgid "PAPER_8.5X11_TOP_HALF_LABEL"
+msgstr "PAPER_8.5X11_TOP_HALF_LABEL"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__paper_letter
+msgid "PAPER_LETTER"
+msgstr "PAPER_LETTER"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_file_type__pdf
+msgid "PDF"
+msgstr "PDF"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_file_type__png
+msgid "PNG"
+msgstr "PNG"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Package Weight Unit"
+msgstr "包裝重量單位"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid "Packages:"
+msgstr "貨件："
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_droppoff_type__use_scheduled_pickup
+msgid "Part of regular scheduled pickup"
+msgstr "等候正常預定收件"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_weight_unit__lb
+msgid "Pounds"
+msgstr "磅"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_documentation_type__invoice
+msgid "Print PDF"
+msgstr "列印 PDF"
+
+#. module: delivery_fedex_rest
+#: model:ir.model,name:delivery_fedex_rest.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "產品計量單位"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "服務商"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_duty_payment__recipient
+msgid "Recipient"
+msgstr "收件人"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid "Required documents:"
+msgstr "所需文件："
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_residential_address
+msgid "Residential delivery"
+msgstr "住宅送遞"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid "Return Label"
+msgstr "退貨單"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__stock_4x6
+msgid "STOCK_4X6"
+msgstr "STOCK_4X6"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__stock_4x6_75
+msgid "STOCK_4X6.75"
+msgstr "STOCK_4X6.75"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__stock_4x6_75_leading_doc_tab
+msgid "STOCK_4X6.75_LEADING_DOC_TAB"
+msgstr "STOCK_4X6.75_LEADING_DOC_TAB"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__stock_4x6_75_trailing_doc_tab
+msgid "STOCK_4X6.75_TRAILING_DOC_TAB"
+msgstr "STOCK_4X6.75_TRAILING_DOC_TAB"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__stock_4x8
+msgid "STOCK_4X8"
+msgstr "STOCK_4X8"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__stock_4x9
+msgid "STOCK_4X9"
+msgstr "STOCK_4X9"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__stock_4x9_leading_doc_tab
+msgid "STOCK_4X9_LEADING_DOC_TAB"
+msgstr "STOCK_4X9_LEADING_DOC_TAB"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_stock_type__stock_4x9_trailing_doc_tab
+msgid "STOCK_4X9_TRAILING_DOC_TAB"
+msgstr "STOCK_4X9_TRAILING_DOC_TAB"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "Screenshot"
+msgstr "螢幕截圖"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_developer_password
+msgid "Secret Key"
+msgstr "密鑰"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_duty_payment__sender
+msgid "Sender"
+msgstr "發送者"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid "Shipment %s has been cancelled"
+msgstr "送貨「%s」已取消"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid "Shipment created into Fedex"
+msgstr "已向 Fedex 建立送貨"
+
+#. module: delivery_fedex_rest
+#: model:ir.model,name:delivery_fedex_rest.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "運送方式"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/fedex_request.py:0
+msgid "Something went wrong, please try again later!!"
+msgstr "出錯了，請稍後再試。"
+
+#. module: delivery_fedex_rest
+#: model:ir.model,name:delivery_fedex_rest.model_stock_package_type
+msgid "Stock package type"
+msgstr "庫存包裝類型"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,help:delivery_fedex_rest.field_delivery_carrier__fedex_rest_extra_data_rate_request
+#: model:ir.model.fields,help:delivery_fedex_rest.field_delivery_carrier__fedex_rest_extra_data_return_request
+#: model:ir.model.fields,help:delivery_fedex_rest.field_delivery_carrier__fedex_rest_extra_data_ship_request
+msgid ""
+"The extra data in FedEx is organized like the inside of a json file.\n"
+"This functionality is advanced/technical and should only be used if you know "
+"what you are doing.\n"
+"More info on https://www.developer.fedex.com"
+msgstr ""
+"FedEx 中的額外資料，組織方式類似 json 檔案的內部。\n"
+"這是進階/技術功能，請只在清楚知道自己在做甚麼時，才使用此功能。\n"
+"更多資訊：https://www.developer.fedex.com"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid "Tracking Numbers:"
+msgstr "追蹤編號："
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_service_type__transborder_distribution
+msgid "Transborder distribution"
+msgstr "跨境分送"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,field_description:delivery_fedex_rest.field_delivery_carrier__fedex_rest_override_shipper_vat
+msgid "Union tax id (EORI/IOSS)"
+msgstr "歐盟稅務識別碼（EORI / IOSS）"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,help:delivery_fedex_rest.field_uom_uom__fedex_code
+msgid "UoM Code sent to FedEx"
+msgstr "計量單位代碼已傳送至 FedEx"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/delivery_fedex.py:0
+msgid ""
+"Warning(s) from FedEx:\n"
+"%s"
+msgstr ""
+"FedEx 發送的警告：\n"
+"%s"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,help:delivery_fedex_rest.field_delivery_carrier__fedex_rest_email_notifications
+msgid ""
+"When enabled, the customer will receive email notifications from FedEx about "
+"this shipment (when an email address is configured on the customer)"
+msgstr ""
+"啟用後，客戶將收到 FedEx 發出有關此貨件的電郵通知（若有客戶電郵地址資料）"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields,help:delivery_fedex_rest.field_delivery_carrier__fedex_rest_override_shipper_vat
+msgid ""
+"Will be provided to Fedex as primary company tax identifier of type "
+"BUSINESS_UNION to put on the generated invoice. Use this when you need to "
+"use an IOSS or EORI number in addition to the national tax number. When not "
+"provided the regular tax id on the company will be used with type "
+"BUSINESS_NATIONAL."
+msgstr ""
+"將提供予 Fedex 作為 BUSINESS_UNION 類型的主要公司稅務識別碼，以在產生的發票上"
+"提供此資料。若除了全國稅務編號之外，還需要使用 IOSS 或 EORI 號碼，便應使用此"
+"選項。若未有提供，公司的一般稅務編號將設為 BUSINESS_NATIONAL 類型使用。"
+
+#. module: delivery_fedex_rest
+#. odoo-python
+#: code:addons/delivery_fedex_rest/models/fedex_request.py:0
+msgid "You must setup a client ID and secret on the carrier first"
+msgstr "你必須先在貨運商上設定客戶識別碼及秘密"
+
+#. module: delivery_fedex_rest
+#: model:ir.model.fields.selection,name:delivery_fedex_rest.selection__delivery_carrier__fedex_rest_label_file_type__zplii
+msgid "ZPLII"
+msgstr "ZPLII"
+
+#. module: delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:delivery_fedex_rest.view_delivery_carrier_form_with_provider_fedex
+msgid "to create a FedEx developer account"
+msgstr "以建立 FedEx 開發人員帳戶"

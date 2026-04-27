@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record model="ir.ui.view" id="view_hr_appraisal_template_form">
+        <field name="name">hr.appraisal.template.form</field>
+        <field name="model">hr.appraisal.template</field>
+        <field name="arch" type="xml">
+            <form string="Appraisal Template" class="o_appraisal_form">
+                <sheet>
+                    <label for="description" string="Description"/>
+                    <div class="oe_title mw-100">
+                        <h2>
+                            <field name="description" placeholder="e.g. Annual Appraisal" required="True"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <div class="o_appraisal_both_feedback d-flex flex-column flex-md-row flex-wrap align-items-stretch">
+                        <div class="o_appraisal_feedback col-md-6 ps-0 pt-1">
+                            <label for="appraisal_employee_feedback_template" string="Employee Feedback"/>
+                            <div class="row mt-2">
+                                <div class="o_appraisal_input container border o_appraisal_height">
+                                    <field name="appraisal_employee_feedback_template" class="o_appraisal_template"
+                                    placeholder='Use this area to write the content that will be displayed for the Employee.
+                                        You can use a lot of options with the html editor, accessible by pressing / on the keyboard.'/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="o_appraisal_feedback col-md-6 pe-0 pt-1">
+                            <label for="appraisal_manager_feedback_template" string="Manager Feedback"/>
+                            <div class="row mt-2">
+                                <div class="o_appraisal_input position-relative o_appraisal_manager_feedback container border o_appraisal_height">
+                                    <field name="appraisal_manager_feedback_template" class="o_appraisal_template"
+                                    placeholder="Use this area to write the content that will be displayed for the Manager.
+                                        You can use a lot of options with the html editor, accessible by pressing / on the keyboard."/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_appraisal_template_view_tree" model="ir.ui.view">
+        <field name="name">hr.appraisal.template.list</field>
+        <field name="model">hr.appraisal.template</field>
+        <field name="arch" type="xml">
+            <list string="Appraisal Template">
+                <field name="description"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_appraisal_config_templates_action" model="ir.actions.act_window">
+        <field name="name">Appraisal Template</field>
+        <field name="res_model">hr.appraisal.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new template
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="hr_appraisal_template_menu"
+        name="Appraisal Templates"
+        parent="menu_hr_appraisal_configuration"
+        sequence="3"
+        action="hr_appraisal_config_templates_action"
+        groups="hr_appraisal.group_hr_appraisal_user"/>
+</odoo>

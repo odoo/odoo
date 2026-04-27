@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="account_tag_action" model="ir.actions.act_window">
+        <field name="name">Account Tags</field>
+        <field name="res_model">account.account.tag</field>
+        <field name="search_view_id" ref="account.account_tag_view_search"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Add a new tag
+          </p>
+        </field>
+    </record>
+
+    <record id="action_account_group_tree" model="ir.actions.act_window">
+        <field name="name">Account Groups</field>
+        <field name="res_model">account.group</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="account.view_account_group_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new account group
+            </p>
+        </field>
+    </record>
+
+    <record id="view_account_form" model="ir.ui.view">
+        <field name="name">account.account.form</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <field name="currency_id" position="after">
+                <label for="reconcile" invisible="account_type in ('asset_cash', 'liability_credit_card', 'off_balance')"/>
+                <div invisible="account_type in ('asset_cash', 'liability_credit_card', 'off_balance')">
+                   <field name="reconcile"/>
+                   <button name="action_open_reconcile" class="oe_link" type="object" string=" -> Reconcile" invisible="not reconcile"/>
+                </div>
+            </field>
+        </field>
+    </record>
+
+</odoo>

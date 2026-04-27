@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="base.partner_demo_company_in" model="res.partner" forcecreate="1">
+            <field name="name">IN Company</field>
+            <field name="street">Block no. 401</field>
+            <field name="street2">Street 2</field>
+            <field name="city">Gandhinagar</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="state_id" ref="base.state_in_gj"/>
+            <field name="zip">382002</field>
+            <field name="phone">+91 81234 56789</field>
+        </record>
+
+        <record id="base.demo_company_in" model="res.company" forcecreate="1">
+            <field name="name">IN Company</field>
+            <field name="partner_id" ref="base.partner_demo_company_in"/>
+            <field name="currency_id" ref="base.INR"/>
+            <field name="vat">24DUMMY1234AAZA</field>
+        </record>
+
+        <record id="bank_hdfc" model="res.bank">
+            <field name="name">HDFC Bank</field>
+            <field name="bic">HDFC0000123</field>
+        </record>
+
+        <record id="bank_sbi" model="res.bank">
+            <field name="name">State Bank</field>
+            <field name="bic">SBIS0000321</field>
+        </record>
+
+        <function model="res.users" name="write">
+            <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+            <value eval="{'company_ids': [(4, ref('base.demo_company_in'))]}"/>
+        </function>
+
+        <record id="l10n_in_res_partner_vihaan" model="res.partner">
+            <field name="name">Vihaan Sengupta</field>
+            <field name="street">A-4 Gunj Society</field>
+            <field name="street2">near AK Hospital</field>
+            <field name="city">Hyderabad</field>
+            <field name="zip">385426</field>
+            <field name="state_id" ref="base.state_in_ap"/>
+            <field name="country_id" ref="base.in"/>
+            <field name="phone">+91 98765 43021</field>
+            <field name="email">vihaan.sengupta@example.com</field>
+            <field name="company_id" ref="base.demo_company_in"/>
+        </record>
+        <record id="l10n_in_partner_aisha_sharma" model="res.partner">
+            <field name="name">Alisha Sharma</field>
+            <field name="company_id" ref="base.demo_company_in"/>
+        </record>
+
+        <record id="l10n_in_partner_shaurya_khurana" model="res.partner">
+            <field name="name">Shaurya Khurana</field>
+            <field name="company_id" ref="base.demo_company_in"/>
+        </record>
+
+        <record id="l10n_in_emp_vihaan_bank_account" model="res.partner.bank">
+            <field name="acc_number">1245670000123</field>
+            <field name="bank_id" ref="l10n_in_hr_payroll.bank_sbi"/>
+            <field name="company_id" ref="base.demo_company_in" />
+            <field name="partner_id" ref="l10n_in_hr_payroll.l10n_in_res_partner_vihaan"/>
+            <field name="currency_id" ref="base.INR"/>
+            <field name="allow_out_payment" eval="True"/>
+        </record>
+
+        <record id="l10n_in_emp_alisha_sharma_bank_account" model="res.partner.bank">
+            <field name="acc_number">0112340000998</field>
+            <field name="bank_id" ref="l10n_in_hr_payroll.bank_hdfc"/>
+            <field name="company_id" ref="base.demo_company_in"/>
+            <field name="partner_id" ref="l10n_in_hr_payroll.l10n_in_partner_aisha_sharma"/>
+            <field name="currency_id" ref="base.INR"/>
+            <field name="allow_out_payment" eval="True"/>
+        </record>
+
+        <record id="l10n_in_emp_shaurya_khurana_bank_account" model="res.partner.bank">
+            <field name="acc_number">0222340000789</field>
+            <field name="bank_id" ref="l10n_in_hr_payroll.bank_hdfc"/>
+            <field name="company_id" ref="base.demo_company_in"/>
+            <field name="partner_id" ref="l10n_in_hr_payroll.l10n_in_partner_shaurya_khurana"/>
+            <field name="currency_id" ref="base.INR"/>
+            <field name="allow_out_payment" eval="True"/>
+        </record>
+
+        <record id="l10n_in_user_vihaan" model="res.users">
+            <field name="partner_id" ref="l10n_in_hr_payroll.l10n_in_res_partner_vihaan"/>
+            <field name="login">vihaan@example.com</field>
+            <field name="password">vihaan@123</field>
+            <field name="signature" type="html"><span>--<br />+V. Sengupta</span></field>
+            <field name="company_ids" eval="[(4, ref('base.demo_company_in'))]"/>
+            <field name="company_id" ref="base.demo_company_in"/>
+            <field name="groups_id" eval="[(6,0, [ref('base.group_user')])]"/>
+            <field name="tz">Asia/Kolkata</field>
+            <field name="image_1920" type="base64" file="l10n_in_hr_payroll/static/img/hr_employee_vihaan.jpg"/>
+        </record>
+
+        <!-- resource calendar -->
+        <record id="l10n_in_resource_calendar_part_time" model="resource.calendar">
+            <field name="name">Standard 24 hours/week</field>
+            <field name="company_id" ref="base.demo_company_in"/>
+            <field name="hours_per_day">8</field>
+            <field name="attendance_ids"
+                eval="[(5, 0, 0),
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+            ]"
+            />
+        </record>
+
+        <record id="l10n_in_hr_department_rd" model="hr.department">
+            <field name="name">Research &amp; Development IN</field>
+            <field name="company_id" ref="base.demo_company_in"/>
+        </record>
+        <record id="l10n_in_hr_department_tech_support" model="hr.department">
+            <field name="name">Technical Support &amp; Investigation</field>
+            <field name="company_id" ref="base.demo_company_in"/>
+        </record>
+        <record id="l10n_in_hr_department_marketing" model="hr.department">
+            <field name="name">Marketing</field>
+            <field name="company_id" ref="base.demo_company_in"/>
+        </record>
+
+        <record id="l10n_in_job_developer" model="hr.job">
+            <field name="name">Experienced Developer</field>
+            <field name="department_id" ref="l10n_in_hr_payroll.l10n_in_hr_department_rd"/>
+            <field name="no_of_recruitment">5</field>
+            <field name="company_id" ref="base.demo_company_in"/>
+        </record>
+        <record id="l10n_in_job_intern" model="hr.job">
+            <field name="name">Technical Support &amp; Investigation Intern</field>
+            <field name="department_id" ref="l10n_in_hr_payroll.l10n_in_hr_department_tech_support"/>
+            <field name="no_of_recruitment">10</field>
+            <field name="company_id" ref="base.demo_company_in"/>
+        </record>
+
+        <!-- Employee -->
+        <record id="l10n_in_hr_employee_vihaan" model="hr.employee">
+            <field name="name">Vihaan Sengupta</field>
+            <field name="gender">male</field>
+            <field name="marital">single</field>
+            <field name="work_phone">+91 8765432109</field>
+            <field name="department_id" ref="l10n_in_hr_payroll.l10n_in_hr_department_rd"/>
+            <field name="private_street">A-4 Gunj Society</field>
+            <field name="private_street2">near AK Hospital</field>
+            <field name="private_city">Hyderabad</field>
+            <field name="private_zip">385426</field>
+            <field name="private_state_id" ref="base.state_in_ap"/>
+            <field name="private_country_id" ref="base.in"/>
+            <field name="private_phone">+91 7654321098</field>
+            <field name="private_email">vihaan.sengupta123@example.com</field>
+            <field name="job_id" ref="l10n_in_hr_payroll.l10n_in_job_developer"/>
+            <field name="job_title">Software Developer</field>
+            <field name="work_contact_id" ref="l10n_in_hr_payroll.l10n_in_res_partner_vihaan"/>
+            <field name="emergency_contact">Harshiv Sengupta</field>
+            <field name="emergency_phone">+91 9348762345</field>
+            <field name="place_of_birth">India</field>
+            <field name="country_of_birth" ref="base.in"/>
+            <field name="certificate">bachelor</field>
+            <field name="study_field">Computer Engineering</field>
+            <field name="study_school">TechInnova University</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="company_id" ref="base.demo_company_in"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+            <field name="identification_id">82735682375623</field>
+            <field name="bank_account_id" ref="l10n_in_hr_payroll.l10n_in_emp_vihaan_bank_account"/>
+            <field name="image_1920" type="base64" file="l10n_in_hr_payroll/static/img/hr_employee_vihaan.jpg"/>
+            <field name="user_id" ref="l10n_in_hr_payroll.l10n_in_user_vihaan"/>
+            <field name="l10n_in_relationship">Father</field>
+            <field name="l10n_in_uan">124567334654</field>
+            <field name="l10n_in_esic_number">93874947361284657</field>
+            <field name="l10n_in_pan">HDIUE8765M</field>
+        </record>
+        <record id="l10n_in_hr_employee_shaurya" model="hr.employee">
+            <field name="name">Shaurya Khurana</field>
+            <field name="job_id" ref="l10n_in_hr_payroll.l10n_in_job_developer"/>
+            <field name="gender">male</field>
+            <field name="department_id" ref="l10n_in_hr_payroll.l10n_in_hr_department_tech_support"/>
+            <field name="work_contact_id" ref="l10n_in_hr_payroll.l10n_in_partner_shaurya_khurana"/>
+            <field name="marital">single</field>
+            <field name="work_phone">+91 7890123456</field>
+            <field name="private_street">503, highsky residency</field>
+            <field name="private_street2">VR Road</field>
+            <field name="private_city">Ahmedabad</field>
+            <field name="private_zip">385876</field>
+            <field name="private_state_id" ref="base.state_in_gj"/>
+            <field name="private_country_id" ref="base.in"/>
+            <field name="private_phone">+91 9870165432</field>
+            <field name="private_email">shaurya.khurana@example.com</field>
+            <field name="place_of_birth">India</field>
+            <field name="country_of_birth" ref="base.in"/>
+            <field name="tz">Asia/Kolkata</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="resource_calendar_id" ref="l10n_in_resource_calendar_part_time"/>
+            <field name="identification_id">82735682375623</field>
+            <field name="bank_account_id" ref="l10n_in_hr_payroll.l10n_in_emp_shaurya_khurana_bank_account"/>
+            <field name="image_1920" type="base64" file="l10n_in_hr_payroll/static/img/hr_employee_shaurya.jpg"/>
+            <field name="parent_id" ref="l10n_in_hr_payroll.l10n_in_hr_employee_vihaan"/>
+            <field name="company_id" ref="base.demo_company_in"/>
+            <field name="l10n_in_uan">387438790384</field>
+            <field name="l10n_in_esic_number">93487475300284657</field>
+            <field name="l10n_in_pan">KUPYH9876I</field>
+        </record>
+        <record id="l10n_in_hr_employee_alisha_sharma" model="hr.employee">
+            <field name="name">Alisha Sharma</field>
+            <field name="job_id" ref="l10n_in_hr_payroll.l10n_in_job_intern"/>
+            <field name="department_id" ref="l10n_in_hr_payroll.l10n_in_hr_department_marketing"/>
+            <field name="work_contact_id" ref="l10n_in_hr_payroll.l10n_in_partner_aisha_sharma"/>
+            <field name="gender">female</field>
+            <field name="tz">Asia/Kolkata</field>
+            <field name="work_phone">+91 9887756789</field>
+            <field name="private_email">alisha.sharma@example.com</field>
+            <field name="place_of_birth">India</field>
+            <field name="country_of_birth" ref="base.in"/>
+            <field name="country_id" ref="base.in"/>
+            <field name="parent_id" ref="l10n_in_hr_payroll.l10n_in_hr_employee_shaurya"/>
+            <field name="bank_account_id" ref="l10n_in_hr_payroll.l10n_in_emp_alisha_sharma_bank_account"/>
+            <field name="company_id" ref="base.demo_company_in"/>
+            <field name="image_1920" type="base64" file="l10n_in_hr_payroll/static/img/hr_employee_alisha_sharma.jpg"/>
+            <field name="l10n_in_uan">398175628304</field>
+            <field name="l10n_in_esic_number">4658302649025064783</field>
+            <field name="l10n_in_pan">GUNI5723P</field>
+        </record>
+
+         <!-- Running  Contract-->
+         <record id="l10n_in_hr_contract_alisha_sharma" model="hr.contract">
+            <field name="name">Alisha Sharma</field>
+            <field name="department_id" ref="l10n_in_hr_department_rd"/>
+            <field name="employee_id" ref="l10n_in_hr_employee_alisha_sharma"/>
+            <field name="structure_type_id" ref="l10n_in_hr_payroll.hr_payroll_salary_structure_type_ind_intern"/>
+            <field name="wage" eval="25000"/>
+            <field name="state">open</field>
+            <field name="company_id" ref="base.demo_company_in"/>
+            <field name="hr_responsible_id" ref="base.user_demo"/>
+            <field name="date_start" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1))"/>
+        </record>
+        <record id="l10n_in_hr_contract_shaurya" model="hr.contract">
+            <field name="name">Shaurya Contract</field>
+            <field name="department_id" ref="l10n_in_hr_department_rd"/>
+            <field name="employee_id" ref="l10n_in_hr_employee_shaurya"/>
+            <field name="structure_type_id" ref="hr_contract.structure_type_worker"/>
+            <field name="wage_type">hourly</field>
+            <field name="hourly_wage">250</field>
+            <field name="wage" eval="15000"/>
+            <field name="time_credit" eval="True"/>
+            <field name="time_credit_type_id" ref="hr_work_entry_contract.work_entry_type_unpaid_leave"/>
+            <field name="resource_calendar_id" ref="l10n_in_resource_calendar_part_time"/>
+            <field name="state">open</field>
+            <field name="company_id" ref="base.demo_company_in"/>
+            <field name="hr_responsible_id" ref="base.user_demo"/>
+            <field name="date_start" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1))"/>
+        </record>
+        <record id="l10n_in_hr_contract_vihaan" model="hr.contract">
+            <field name="name">Vihaan Sengupta Contract</field>
+            <field name="department_id" ref="l10n_in_hr_department_rd"/>
+            <field name="employee_id" ref="l10n_in_hr_employee_vihaan"/>
+            <field name="structure_type_id" ref="l10n_in_hr_payroll.hr_payroll_salary_structure_type_ind_emp"/>
+            <field name="wage">50000</field>
+            <field name="state">open</field>
+            <field name="company_id" ref="base.demo_company_in"/>
+            <field name="l10n_in_tds">5000</field>
+            <field name="l10n_in_gratuity">1442.50</field>
+            <field name="l10n_in_medical_insurance">6550</field>
+            <field name="l10n_in_voluntary_provident_fund">12</field>
+            <field name="l10n_in_house_rent_allowance_metro_nonmetro">12</field>
+            <field name="l10n_in_supplementary_allowance">6850</field>
+            <field name="l10n_in_leave_allowance">2750</field>
+            <field name="l10n_in_esic_amount">1560</field>
+            <field name="hr_responsible_id" ref="base.user_demo"/>
+            <field name="date_start" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1))"/>
+        </record>
+
+        <!-- Expired Contract-->
+        <record id="l10n_in_hr_contract_vihaan_expired" model="hr.contract">
+            <field name="name">Vihaan Sengupta Contract</field>
+            <field name="department_id" ref="l10n_in_hr_department_rd"/>
+            <field name="employee_id" ref="l10n_in_hr_employee_vihaan"/>
+            <field name="structure_type_id" ref="hr_contract.structure_type_employee"/>
+            <field name="wage">40000</field>
+            <field name="state">close</field>
+            <field name="company_id" ref="base.demo_company_in"/>
+            <field name="hr_responsible_id" ref="base.user_demo"/>
+            <field name="date_start" eval="(DateTime.today() + relativedelta(years=-2, month=1, day=1))"/>
+            <field name="date_end" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1, days=-1))"/>
+            <field name="l10n_in_tds">4000</field>
+            <field name="l10n_in_gratuity">1142</field>
+            <field name="l10n_in_medical_insurance">5100</field>
+            <field name="l10n_in_voluntary_provident_fund">12</field>
+            <field name="l10n_in_house_rent_allowance_metro_nonmetro">16</field>
+            <field name="l10n_in_supplementary_allowance">5560</field>
+            <field name="l10n_in_leave_allowance">2000</field>
+            <field name="l10n_in_esic_amount">1160</field>
+        </record>
+
+        <!-- allocation -->
+        <record id="l10n_in_cl_allocation_1" model="hr.leave.allocation">
+            <field name="name">Paid Time Off for Indian Employee 1</field>
+            <field name="date_from" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-01-01')"/>
+            <field name="date_to" eval="time.strftime('%Y-12-31')"/>
+            <field name="holiday_status_id" ref="hr_holidays.holiday_status_cl"/>
+            <field name="number_of_days">24</field>
+            <field name="state">confirm</field>
+            <field name="employee_id" ref="l10n_in_hr_payroll.l10n_in_hr_employee_vihaan"/>
+        </record>
+
+        <record id="l10n_in_cl_allocation_2" model="hr.leave.allocation">
+            <field name="name">Paid Time Off for Indian Employee 2</field>
+            <field name="date_from" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-01-01')"/>
+            <field name="date_to" eval="time.strftime('%Y-12-31')"/>
+            <field name="holiday_status_id" ref="hr_holidays.holiday_status_cl"/>
+            <field name="number_of_days">24</field>
+            <field name="state">confirm</field>
+            <field name="employee_id" ref="l10n_in_hr_payroll.l10n_in_hr_employee_alisha_sharma"/>
+        </record>
+
+        <record id="l10n_in_cl_allocation_3" model="hr.leave.allocation">
+            <field name="name">Paid Time Off for Indian Employee 3</field>
+            <field name="date_from" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-01-01')"/>
+            <field name="date_to" eval="time.strftime('%Y-12-31')"/>
+            <field name="holiday_status_id" ref="hr_holidays.holiday_status_cl"/>
+            <field name="number_of_days">24</field>
+            <field name="state">confirm</field>
+            <field name="employee_id" ref="l10n_in_hr_payroll.l10n_in_hr_employee_shaurya"/>
+        </record>
+
+        <!-- validate allocation -->
+        <function model="hr.leave.allocation" name="action_validate">
+            <value model="hr.leave.allocation" eval="[
+                ref('l10n_in_hr_payroll.l10n_in_cl_allocation_1'),
+                ref('l10n_in_hr_payroll.l10n_in_cl_allocation_2'),
+                ref('l10n_in_hr_payroll.l10n_in_cl_allocation_3'),
+            ]"/>
+        </function>
+
+        <!-- time-off -->
+        <record id="l10n_in_vihaan_time_off" model="hr.leave">
+            <field name="request_date_from" eval="DateTime.today() - relativedelta(years=1, month=9, day=11)"/>
+            <field name="request_date_to" eval="DateTime.today() - relativedelta(years=1, month=9, day=11)"/>
+            <field name="number_of_days">1</field>
+            <field name="holiday_status_id" ref="hr_holidays.holiday_status_cl"/>
+            <field name="employee_id" ref="l10n_in_hr_payroll.l10n_in_hr_employee_vihaan"/>
+            <field name="state">confirm</field>
+        </record>
+
+        <record id="l10n_in_alisha_half_time_off" model="hr.leave">
+            <field name="request_date_from" eval="DateTime.today() - relativedelta(years=1, month=11, day=6)"/>
+            <field name="request_date_to" eval="DateTime.today() - relativedelta(years=1, month=11, day=6)"/>
+            <field name="number_of_days">0.5</field>
+            <field name="request_unit_half" eval="True"/>
+            <field name="holiday_status_id" ref="hr_holidays.holiday_status_unpaid"/>
+            <field name="employee_id" ref="l10n_in_hr_payroll.l10n_in_hr_employee_alisha_sharma"/>
+            <field name="state">confirm</field>
+        </record>
+
+        <function model="hr.leave" name="action_validate">
+            <value model="hr.leave"
+                eval="[
+            ref('l10n_in_hr_payroll.l10n_in_vihaan_time_off'),
+            ref('l10n_in_hr_payroll.l10n_in_alisha_half_time_off'),
+        ]"/>
+        </function>
+    
+         <!-- salary attachment  -->
+         <record id="l10n_in_salary_attachement_in_health_insurance" model="hr.salary.attachment">
+            <field name="employee_ids" eval="[(4, ref('l10n_in_hr_employee_vihaan'))]"/>
+            <field name="monthly_amount">5500</field>
+            <field name="total_amount">5500</field>
+            <field name="other_input_type_id" ref="hr_payroll.input_assignment_salary"/>
+            <field name="date_start" eval="DateTime.today() - relativedelta(years=1, month=10, day=1)"/>
+            <field name="description">Health Insurance</field>
+            <field name="company_id" ref="base.demo_company_in"/>
+        </record>
+
+        <!-- payslip batch  -->
+        <record id="l10n_in_hr_payslip_batch_year_1" model="hr.payslip.run">
+            <field name="name" eval="'India batch for ' + (DateTime.today() - relativedelta(years=1, month=10)).strftime('%B %Y')"/>
+            <field name="date_start" eval="(DateTime.today() - relativedelta(years=1, month=10, day=1)).strftime('%Y-%m-%d')"/>
+            <field name="date_end" eval="(DateTime.today() - relativedelta(years=1, month=10, day=31)).strftime('%Y-%m-%d')"/>
+            <field name="company_id" ref="base.demo_company_in"/>
+        </record>
+
+
+        <!-- payslip  -->
+        <record id="l10n_in_hr_payslip_in_vihaan_sep" model="hr.payslip">
+            <field name="employee_id" ref="l10n_in_hr_employee_vihaan"/>
+            <field name="name">Vihaan Payslip September</field>
+            <field name="date_from" eval="DateTime.today() - relativedelta(years=1, month=9, day=1)"/>
+            <field name="date_to" eval="DateTime.today() - relativedelta(years=1, month=9, day=30)"/>
+            <field name="company_id" ref="base.demo_company_in"/>
+            <field name="struct_id" ref="l10n_in_hr_payroll.hr_payroll_structure_in_employee_salary"/>
+        </record>
+        <record id="l10n_in_hr_payslip_in_shaurya_sep" model="hr.payslip">
+            <field name="employee_id" ref="l10n_in_hr_employee_shaurya"/>
+            <field name="name">Shaurya Payslip September</field>
+            <field name="date_from" eval="DateTime.today() - relativedelta(years=1, month=9, day=1)"/>
+            <field name="date_to" eval="DateTime.today() - relativedelta(years=1, month=9, day=30)"/>
+            <field name="company_id" ref="base.demo_company_in"/>
+            <field name="struct_id" ref="l10n_in_hr_payroll.structure_worker_0001"/>
+        </record>
+        <record id="l10n_in_hr_payslip_in_vihaan_oct" model="hr.payslip">
+            <field name="employee_id" ref="l10n_in_hr_employee_vihaan"/>
+            <field name="name">Vihaan Payslip October</field>
+            <field name="payslip_run_id" ref="l10n_in_hr_payslip_batch_year_1"/>
+            <field name="date_from" eval="DateTime.today() - relativedelta(years=1, month=10, day=1)"/>
+            <field name="date_to" eval="DateTime.today() - relativedelta(years=1, month=10, day=31)"/>
+            <field name="company_id" ref="base.demo_company_in"/>
+            <field name="struct_id" ref="l10n_in_hr_payroll.hr_payroll_structure_in_employee_salary"/>
+        </record>
+        <record id="l10n_in_hr_payslip_in_alisha_sharma" model="hr.payslip">
+            <field name="employee_id" ref="l10n_in_hr_employee_alisha_sharma"/>
+            <field name="name">Alisha Sharma November</field>
+            <field name="date_from" eval="DateTime.today() - relativedelta(years=1, month=11, day=1)"/>
+            <field name="date_to" eval="DateTime.today() - relativedelta(years=1, month=11, day=30)"/>
+            <field name="company_id" ref="base.demo_company_in"/>
+            <field name="struct_id" ref="l10n_in_hr_payroll.hr_payroll_structure_in_stipend"/>
+        </record>
+
+        <function model="hr.payslip" name="compute_sheet">
+            <value model="hr.payslip" eval="[
+                ref('l10n_in_hr_payroll.l10n_in_hr_payslip_in_vihaan_sep'),
+                ref('l10n_in_hr_payroll.l10n_in_hr_payslip_in_vihaan_oct'),
+                ref('l10n_in_hr_payroll.l10n_in_hr_payslip_in_shaurya_sep'),
+                ref('l10n_in_hr_payroll.l10n_in_hr_payslip_in_alisha_sharma')
+            ]"/>
+        </function>
+
+        <function model="hr.payslip" name="action_payslip_done">
+            <value model="hr.payslip" eval="[
+                ref('l10n_in_hr_payroll.l10n_in_hr_payslip_in_vihaan_sep'),
+                ref('l10n_in_hr_payroll.l10n_in_hr_payslip_in_vihaan_oct'),
+                ref('l10n_in_hr_payroll.l10n_in_hr_payslip_in_alisha_sharma')
+            ]"/>
+        </function>
+    </data>
+</odoo>

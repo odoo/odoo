@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_financial_report_l10n_lu_bs_abr" model="account.report">
+        <field name="name">Balance Sheet (abridged)</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.lu"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="custom_handler_model_id" ref="model_l10n_lu_report_handler"/>
+        <field name="column_ids">
+            <record id="account_financial_report_l10n_lu_bs_abr_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_l10n_lu_bs_abr_line_1" model="account.report.line">
+                <field name="name">ASSETS</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_l10n_lu_bs_abr_line_1_1" model="account.report.line">
+                        <field name="name">A. Subscribed capital unpaid</field>
+                        <field name="code">LU_BSABR_101</field>
+                        <field name="aggregation_formula">LU_BSABR_103.balance + LU_BSABR_105.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_lu_bs_abr_line_1_1_1" model="account.report.line">
+                                <field name="name">I. Subscribed capital not called</field>
+                                <field name="code">LU_BSABR_103</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">102</field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_abr_line_1_1_2" model="account.report.line">
+                                <field name="name">II. Subscribed capital called but unpaid</field>
+                                <field name="code">LU_BSABR_105</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">103</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_bs_abr_line_1_2" model="account.report.line">
+                        <field name="name">B. Formation expenses</field>
+                        <field name="code">LU_BSABR_107</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">20</field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_bs_abr_line_1_3" model="account.report.line">
+                        <field name="name">C. Fixed assets</field>
+                        <field name="code">LU_BSABR_109</field>
+                        <field name="aggregation_formula">LU_BSABR_111.balance + LU_BSABR_125.balance + LU_BSABR_135.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_lu_bs_abr_line_1_3_1" model="account.report.line">
+                                <field name="name">I. Intangible assets</field>
+                                <field name="code">LU_BSABR_111</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">21</field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_abr_line_1_3_2" model="account.report.line">
+                                <field name="name">II. Tangible assets</field>
+                                <field name="code">LU_BSABR_125</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">22</field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_abr_line_1_3_3" model="account.report.line">
+                                <field name="name">III. Financial assets</field>
+                                <field name="code">LU_BSABR_135</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">23</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_bs_abr_line_1_4" model="account.report.line">
+                        <field name="name">D. Current assets</field>
+                        <field name="code">LU_BSABR_151</field>
+                        <field name="aggregation_formula">LU_BSABR_153.balance + LU_BSABR_163.balance + LU_BSABR_189.balance + LU_BSABR_197.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_lu_bs_abr_line_1_4_1" model="account.report.line">
+                                <field name="name">I. Stocks</field>
+                                <field name="code">LU_BSABR_153</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">30 + 34 + 37 + 36 + 32 + 31</field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_abr_line_1_4_2" model="account.report.line">
+                                <field name="name">II. Debtors</field>
+                                <field name="code">LU_BSABR_163</field>
+                                <field name="aggregation_formula">LU_BSABR_203.balance + LU_BSABR_205.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_abr_line_1_4_2_1" model="account.report.line">
+                                        <field name="name">a) becoming due and payable within one year</field>
+                                        <field name="code">LU_BSABR_203</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">4011 + 4012 + 4013 + 4014 + 4019 + 4111 + 4121 + 421 + 44113</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_abr_line_1_4_2_2" model="account.report.line">
+                                        <field name="name">b) becoming due and payable after more than one year</field>
+                                        <field name="code">LU_BSABR_205</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">4021 + 4029 + 4112 + 4122 + 422 + 44123</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_abr_line_1_4_3" model="account.report.line">
+                                <field name="name">III. Investments</field>
+                                <field name="code">LU_BSABR_189</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">50</field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_abr_line_1_4_4" model="account.report.line">
+                                <field name="name">IV. Cash at bank and in hand</field>
+                                <field name="code">LU_BSABR_197</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">5130 + 5131 + 516 + 5170 + 5171 + 518</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_bs_abr_line_1_5" model="account.report.line">
+                        <field name="name">E. Prepayments</field>
+                        <field name="code">LU_BSABR_199</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">486 + 481 + 484</field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_bs_abr_line_1_6" model="account.report.line">
+                        <field name="name">TOTAL (ASSETS)</field>
+                        <field name="code">LU_BSABR_201</field>
+                        <field name="aggregation_formula">LU_BSABR_101.balance + LU_BSABR_107.balance + LU_BSABR_109.balance + LU_BSABR_151.balance + LU_BSABR_199.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_l10n_lu_bs_abr_line_2" model="account.report.line">
+                <field name="name">CAPITAL, RESERVES AND LIABILITIES</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_l10n_lu_bs_abr_line_2_1" model="account.report.line">
+                        <field name="name">A. Capital and reserves</field>
+                        <field name="code">LU_BSABR_301</field>
+                        <field name="aggregation_formula">LU_BSABR_303.balance + LU_BSABR_305.balance + LU_BSABR_307.balance + LU_BSABR_309.balance + LU_BSABR_319.balance + LU_BSABR_321.balance + LU_BSABR_323.balance + LU_BSABR_325.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_lu_bs_abr_line_2_1_1" model="account.report.line">
+                                <field name="name">I. Subscribed capital</field>
+                                <field name="code">LU_BSABR_303</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-105 - 101 - 104 - 106</field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_abr_line_2_1_2" model="account.report.line">
+                                <field name="name">II. Share premium account</field>
+                                <field name="code">LU_BSABR_305</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-11</field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_abr_line_2_1_3" model="account.report.line">
+                                <field name="name">III. Revaluation reserve</field>
+                                <field name="code">LU_BSABR_307</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-12</field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_abr_line_2_1_4" model="account.report.line">
+                                <field name="name">IV. Reserves</field>
+                                <field name="code">LU_BSABR_309</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-13</field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_abr_line_2_1_5" model="account.report.line">
+                                <field name="name">V. Profit or loss brought forward</field>
+                                <field name="code">LU_BSABR_319</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_abr_line_2_1_5_past_pnl" model="account.report.expression">
+                                        <field name="label">past_pnl</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="subformula">cross_report</field>
+                                        <field name="formula">LU_PLABR_669.balance</field>
+                                        <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_abr_line_2_1_5_accounts" model="account.report.expression">
+                                        <field name="label">accounts</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-14</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_abr_line_2_1_5_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">LU_BSABR_319.past_pnl + LU_BSABR_319.accounts</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_abr_line_2_1_6" model="account.report.line">
+                                <field name="name">VI. Profit or loss for the financial year</field>
+                                <field name="code">LU_BSABR_321</field>
+                                <field name="action_id" ref="account_financial_report_l10n_lu_pl_abr_action"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_abr_line_2_1_6_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="subformula">cross_report</field>
+                                        <field name="formula">LU_PLABR_669.balance</field>
+                                        <field name="date_scope">from_fiscalyear</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_abr_line_2_1_7" model="account.report.line">
+                                <field name="name">VII. Interim dividends</field>
+                                <field name="code">LU_BSABR_323</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-15</field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_abr_line_2_1_8" model="account.report.line">
+                                <field name="name">VIII. Capital investment subsidies</field>
+                                <field name="code">LU_BSABR_325</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-16</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_bs_abr_line_2_2" model="account.report.line">
+                        <field name="name">B. Provisions</field>
+                        <field name="code">LU_BSABR_331</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-18</field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_bs_abr_line_2_3" model="account.report.line">
+                        <field name="name">C. Creditors</field>
+                        <field name="code">LU_BSABR_435</field>
+                        <field name="aggregation_formula">LU_BSABR_453.balance + LU_BSABR_455.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_lu_bs_abr_line_2_3_1" model="account.report.line">
+                                <field name="name">a) becoming due and payable within one year</field>
+                                <field name="code">LU_BSABR_453</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-1911 - 1921 - 1931 - 1941 - 431 - 4411\(44113) - 4421 - 4511 - 4521 - 46 - 471 - 5132 - 5172 - 4015</field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_abr_line_2_3_2" model="account.report.line">
+                                <field name="name">b) becoming due and payable after more than one year</field>
+                                <field name="code">LU_BSABR_455</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-4512 - 472 - 1912 - 4412\(44123) - 4422 - 1922 - 1942 - 1932 - 432 - 4025 - 4522</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_bs_abr_line_2_4" model="account.report.line">
+                        <field name="name">D. Deferred income</field>
+                        <field name="code">LU_BSABR_403</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-483 - 485 - 482 - 487</field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_bs_abr_line_2_5" model="account.report.line">
+                        <field name="name">TOTAL (CAPITAL, RESERVES AND LIABILITIES)</field>
+                        <field name="code">LU_BSABR_405</field>
+                        <field name="aggregation_formula">LU_BSABR_301.balance + LU_BSABR_331.balance + LU_BSABR_435.balance + LU_BSABR_403.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

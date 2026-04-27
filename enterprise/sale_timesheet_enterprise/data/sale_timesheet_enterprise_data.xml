@@ -1,0 +1,55 @@
+<odoo>
+    <data noupdate="1">
+        <record id="timesheet_tip_1" model="hr.timesheet.tip">
+            <field name="name">Timesheets are the lifeblood of our company; they have a direct impact on revenues.</field>
+        </record>
+        <record id="timesheet_tip_2" model="hr.timesheet.tip">
+            <field name="name">If you help a colleague on a project, your time should be recorded on this project's timesheet as well.</field>
+        </record>
+        <record id="timesheet_tip_3" model="hr.timesheet.tip">
+            <field name="name">It's part of the job to search for information. A customer can't expect you to know everything on the spot. These hours should also be billable.</field>
+        </record>
+        <record id="timesheet_tip_4" model="hr.timesheet.tip">
+            <field name="name">Make it a habit to record timesheets every day.</field>
+        </record>
+        <record id="timesheet_tip_5" model="hr.timesheet.tip">
+            <field name="name">Even small tasks like answering an email should be recorded and rounded up to a quarter of an hour.</field>
+        </record>
+    </data>
+
+    <!-- Employee export template -->
+    <record id="employee_costs_billing_targets_export_template" model="ir.exports">
+        <field name="name">Employee Costs &amp; Billing Targets</field>
+        <field name="resource">hr.employee</field>
+    </record>
+
+    <record id="employee_costs_billing_targets_export_template_line_id" model="ir.exports.line">
+        <field name="export_id" ref="employee_costs_billing_targets_export_template"/>
+        <field name="name">id</field>
+    </record>
+
+     <record id="employee_costs_billing_targets_export_template_line_name" model="ir.exports.line">
+        <field name="export_id" ref="employee_costs_billing_targets_export_template"/>
+        <field name="name">name</field>
+    </record>
+
+    <record id="employee_costs_billing_targets_export_template_line_department_id" model="ir.exports.line">
+        <field name="export_id" ref="employee_costs_billing_targets_export_template"/>
+        <field name="name">department_id</field>
+    </record>
+
+    <record id="employee_costs_billing_targets_export_template_line_job_id" model="ir.exports.line">
+        <field name="export_id" ref="employee_costs_billing_targets_export_template"/>
+        <field name="name">job_id</field>
+    </record>
+
+    <record id="employee_costs_billing_targets_export_template_line_billable_time_target" model="ir.exports.line">
+        <field name="export_id" ref="employee_costs_billing_targets_export_template"/>
+        <field name="name">billable_time_target</field>
+    </record>
+
+    <record id="employee_costs_billing_targets_export_template_line_hourly_cost" model="ir.exports.line">
+        <field name="export_id" ref="employee_costs_billing_targets_export_template"/>
+        <field name="name">hourly_cost</field>
+    </record>
+</odoo>

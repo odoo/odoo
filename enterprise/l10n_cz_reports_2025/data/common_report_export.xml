@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id='veta_d'>
+        <VetaD
+            t-att-dokument="veta_d['document']"
+            t-att-ctvrt="veta_d.get('quarter')"
+            t-att-mesic="veta_d.get('month')"
+            t-att-rok="veta_d['year']"
+            t-att-khdph_forma="veta_d.get('control_report_form')"
+            t-att-shvies_forma="veta_d.get('vies_report_form')"
+            t-att-dapdph_forma="veta_d.get('vat_report_form')"
+            t-att-typ_platce="veta_d.get('vat_report_submitter_type')"
+            k_uladis="DPH"
+        />
+    </template>
+    <template id='veta_p'>
+        <VetaP
+            t-att-c_pracufo="veta_p.get('workplace_code')"
+            t-att-c_ufo="veta_p['office_code']"
+            t-att-dic="veta_p['vat']"
+            t-att-email="veta_p.get('email')"
+            t-att-typ_ds="veta_p['company_type']"
+            t-att-zkrobchjm="veta_p.get('company_name')"
+        />
+    </template>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Approval Category Approver -->
+    <record id="approval_category_approver_view_tree" model="ir.ui.view">
+        <field name="name">approval.category.approver.view.list</field>
+        <field name="model">approval.category.approver</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="existing_user_ids" column_invisible="True"/>
+                <field name="company_id" column_invisible="True"/>
+                <field name="sequence" widget="handle" />
+                <field name="user_id" options="{'no_create': True}"/>
+                <field name="required"/>
+            </list>
+        </field>
+    </record>
+</odoo>

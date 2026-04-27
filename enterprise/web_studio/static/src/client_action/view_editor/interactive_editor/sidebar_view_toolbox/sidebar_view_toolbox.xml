@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+  <t t-name="web_studio.ViewEditor.ViewToolbox">
+    <div
+      t-if="env.debug"
+      class="o_web_studio_sidebar_toolbox d-flex flex-wrap border-top pt-3 mt-4 gap-2 border-secondary"
+    >
+      <button
+        class="o_web_studio_parameters btn btn-secondary btn-lg w-30"
+        t-on-click="() => props.onMore()"
+      >
+        <i class="fa fa-cog me-2"/>More
+      </button>
+      <button t-if="props.canEditXml"
+        class="o_web_studio_open_xml_editor btn btn-secondary btn-lg"
+        t-on-click="() => env.viewEditorModel.switchMode()"
+      >
+        <i class="fa fa-code me-2"/>XML
+      </button>
+      <button t-if="props.canEditDefaultValues" class="o_web_studio_defaults btn btn-secondary btn-lg" t-on-click="props.openDefaultValues">
+        Default Values
+      </button>
+      <button
+        class="o_web_studio_restore btn btn-danger btn-lg mt-0 w-100"
+        t-on-click="() => env.viewEditorModel.restoreDefaultView(env.viewEditorModel.mainView.id)"
+      >
+        Restore Default View
+      </button>
+    </div>
+  </t>
+
+  <t t-name="web_studio.ViewEditor.ShowInvisibleToggler">
+    <Property
+      name="'show_invisible'"
+      type="'boolean'"
+      value="env.viewEditorModel.showInvisible"
+      onChange.bind="(value) => env.viewEditorModel.showInvisible = value"
+    >
+        Show Invisible Elements
+    </Property>
+  </t>
+
+</templates>

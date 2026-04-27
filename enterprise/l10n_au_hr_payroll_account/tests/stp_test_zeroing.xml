@@ -1,0 +1,87 @@
+<data>
+<Record_Delimiter DocumentID="20210912S123" DocumentType="PARENT" DocumentName="PAYEVNT" RelatedDocumentID=""/>
+<tns:PAYEVNT xsi:schemaLocation="http://www.sbr.gov.au/ato/payevnt ato.payevnt.0004.2020.01.00.xsd" xmlns:tns="http://www.sbr.gov.au/ato/payevnt" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<tns:Rp>
+    <tns:SoftwareInformationBusinessManagementSystemId>6a99448e-20ec-4ca1-9f8a-93524aeb244d</tns:SoftwareInformationBusinessManagementSystemId>
+    <tns:AustralianBusinessNumberId>11225459588</tns:AustralianBusinessNumberId>
+    <tns:OrganisationDetailsOrganisationBranchC>1</tns:OrganisationDetailsOrganisationBranchC>
+    <tns:OrganisationName>
+        <tns:DetailsOrganisationalNameT>Employer A</tns:DetailsOrganisationalNameT>
+        <tns:PersonUnstructuredNameFullNameT>Employer A contact name</tns:PersonUnstructuredNameFullNameT>
+    </tns:OrganisationName>
+    <tns:ElectronicContact>
+        <tns:ElectronicMailAddressT>EmployerA@Email.address</tns:ElectronicMailAddressT>
+        <tns:TelephoneMinimalN>0400000000</tns:TelephoneMinimalN>
+    </tns:ElectronicContact>
+    <tns:AddressDetailsPostal>
+        <tns:PostcodeT>3000</tns:PostcodeT>
+        <tns:CountryC>au</tns:CountryC>
+    </tns:AddressDetailsPostal>
+    <tns:Payroll>
+        <tns:PaymentRecordTransactionD>___ignore___</tns:PaymentRecordTransactionD>
+        <tns:InteractionRecordCt>1</tns:InteractionRecordCt>
+        <tns:MessageTimestampGenerationDt>___ignore___</tns:MessageTimestampGenerationDt>
+        <tns:InteractionTransactionId>___ignore___</tns:InteractionTransactionId>
+        <tns:AmendmentI>false</tns:AmendmentI>
+        </tns:Payroll>
+    <tns:Declaration>
+        <tns:SignatoryIdentifierT>Employer A contact name</tns:SignatoryIdentifierT>
+        <tns:SignatureD>___ignore___</tns:SignatureD>
+        <tns:StatementAcceptedI>true</tns:StatementAcceptedI>
+    </tns:Declaration>
+    </tns:Rp>
+</tns:PAYEVNT>
+<Record_Delimiter DocumentID="101" DocumentType="CHILD" DocumentName="PAYEVNTEMP" RelatedDocumentID="20210912S123"/>
+<tns:PAYEVNTEMP xmlns:tns="http://www.sbr.gov.au/ato/payevntemp" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sbr.gov.au/ato/payevntemp ato.payevntemp.0004.2020.01.00.xsd">
+  <tns:Payee>
+    <tns:Identifiers>
+      <tns:TaxFileNumberId>800000008</tns:TaxFileNumberId>
+      <tns:EmploymentPayrollNumberId>481</tns:EmploymentPayrollNumberId>
+      <tns:PreviousPayrollIDEmploymentPayrollNumberId>___ignore___</tns:PreviousPayrollIDEmploymentPayrollNumberId>
+    </tns:Identifiers>
+    <tns:PersonNameDetails>
+      <tns:FamilyNameT>Potter</tns:FamilyNameT>
+      <tns:GivenNameT>Harry</tns:GivenNameT>
+    </tns:PersonNameDetails>
+    <tns:PersonDemographicDetailsBirth>
+      <tns:Dm>1</tns:Dm>
+      <tns:M>3</tns:M>
+      <tns:Y>2000</tns:Y>
+    </tns:PersonDemographicDetailsBirth>
+    <tns:AddressDetails>
+      <tns:Line1T>1 Test Street</tns:Line1T>
+      <tns:LocalityNameT>Sydney</tns:LocalityNameT>
+      <tns:StateOrTerritoryC>NSW</tns:StateOrTerritoryC>
+      <tns:PostcodeT>2000</tns:PostcodeT>
+      <tns:CountryC>au</tns:CountryC>
+    </tns:AddressDetails>
+    <tns:ElectronicContact>___ignore___</tns:ElectronicContact>
+    <tns:EmployerConditions>
+      <tns:EmploymentStartD>2023-01-01</tns:EmploymentStartD>
+      <tns:PaymentBasisC>F</tns:PaymentBasisC>
+      <tns:TaxTreatmentC>RTXXXX</tns:TaxTreatmentC>
+    </tns:EmployerConditions>
+    <tns:PayrollPeriod>
+      <tns:StartD>___ignore___</tns:StartD>
+      <tns:EndD>___ignore___</tns:EndD>
+      <tns:RemunerationPayrollEventFinalI>false</tns:RemunerationPayrollEventFinalI>
+      <tns:RemunerationCollection>
+        <tns:Remuneration>
+          <tns:IncomeStreamTypeC>SAW</tns:IncomeStreamTypeC>
+          <tns:IncomeTaxPayAsYouGoWithholdingTaxWithheldA>0.0</tns:IncomeTaxPayAsYouGoWithholdingTaxWithheldA>
+        </tns:Remuneration>
+      </tns:RemunerationCollection>
+      <tns:SuperannuationContributionCollection>
+        <tns:SuperannuationContribution>
+          <tns:EntitlementTypeC>O</tns:EntitlementTypeC>
+          <tns:EmployerContributionsYearToDateA>0.0</tns:EmployerContributionsYearToDateA>
+        </tns:SuperannuationContribution>
+        <tns:SuperannuationContribution>
+          <tns:EntitlementTypeC>L</tns:EntitlementTypeC>
+          <tns:EmployerContributionsYearToDateA>0.0</tns:EmployerContributionsYearToDateA>
+        </tns:SuperannuationContribution>
+      </tns:SuperannuationContributionCollection>
+    </tns:PayrollPeriod>
+  </tns:Payee>
+</tns:PAYEVNTEMP>
+</data>

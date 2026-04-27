@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="ups_bill_my_account_dialog" name="UPS Bill My Account Dialog">
+        <div role="dialog" class="modal fade" id="ups_bill_my_account_service">
+            <div class="modal-dialog">
+                <form id="set_property_ups_carrier_account" action="/shop/property_ups_carrier_account/set" method="post">
+                    <div class="modal-content">
+                        <header class="modal-header">
+                            <h4 class="modal-titled">UPS Bill My Account</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </header>
+                        <main class="modal-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="alert alert-warning d-none" id='ups_service_error' role="alert"></div>
+                                    <div id="service_type">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                        <input type="hidden" name="sale_order_id" t-att-value="order.id"/>
+                                    </div>
+                                    <div id="account_info">
+                                        <label class="mt8">Your UPS Account Number</label>
+                                        <div>
+                                            <input type="hidden" name="carrier_id" t-att-value="order.carrier_id.id"/>
+                                            <input type="text" class="form-control mr4" id="" name="property_ups_carrier_account" required="required" t-att-value="order.partner_ups_carrier_account or user_id.partner_id.property_ups_carrier_account"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                        <footer class="modal-footer">
+                            <button type="button" data-bs-dismiss="modal" class="btn">Cancel</button>
+                            <button type="submit" class="btn btn-primary o_apply_ups_bill_my_account">Apply</button>
+                        </footer>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <template id="payment_delivery" name="Delivery Costs" inherit_id="website_sale.delivery_form">
+        <form id="o_delivery_form" position="after">
+            <t t-call="website_sale_ups.ups_bill_my_account_dialog"/>
+        </form>
+    </template>
+
+    <template id="ups_delivery_method" inherit_id="website_sale.delivery_method">
+        <xpath expr="//input[@name='o_delivery_radio']" position="attributes">
+            <attribute name="t-att-data-ups-cod">dm.ups_cod</attribute>
+        </xpath>
+        <xpath expr="//label[@t-field='dm.name']" position="after">
+            <t t-if="dm.delivery_type == 'ups' and dm.ups_bill_my_account">
+                <span name="ups_bill_my_account" class="ml4 position-relative">
+                    <t t-if="not order.partner_ups_carrier_account">
+                        <a
+                            href="#"
+                            data-bs-toggle="modal"
+                            data-bs-target="#ups_bill_my_account_service"
+                            class="disabled"
+                        >
+                            (Bill My Account)
+                        </a>
+                    </t>
+                    <t t-if="order.partner_ups_carrier_account">
+                        <a href="/shop/property_ups_carrier_account/unset">
+                            Using Account <strong><t t-esc="order.partner_ups_carrier_account"/></strong>
+                            <i class="fa fa-trash-o" role="img" aria-label="Delete" title="Delete"/>
+                        </a>
+                        <span>(UPS Billing will remain to the customer)</span>
+                    </t>
+                </span>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="property_ups_carrier_account_inherit_portal_details" inherit_id="portal.portal_my_details">
+        <xpath expr="//div[hasclass('o_portal_details')]//div[hasclass('row')]" position="inside">
+            <div t-attf-class="mb-1 #{error.get('property_ups_carrier_account') and 'o_has_error' or ''} col-xl-6">
+                <label class="col-form-label label-optional" for="property_ups_carrier_account">UPS Number Account</label>
+                <input type="text" name="property_ups_carrier_account" t-attf-class="form-control" t-att-value="property_ups_carrier_account or partner.property_ups_carrier_account"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="payment_method_form" inherit_id="payment.method_form">
+        <xpath expr="//input[@name='o_payment_radio']" position="attributes">
+            <attribute name="t-att-data-provider-custom-mode">provider_sudo.custom_mode</attribute>
+        </xpath>
+    </template>
+</odoo>

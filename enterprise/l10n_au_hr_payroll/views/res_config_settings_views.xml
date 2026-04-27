@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_au_hr_payroll</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="45"/>
+        <field name="inherit_id" ref="hr_payroll.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='hr_payroll_accountant']" position="after">
+                <field name="company_country_code" invisible="1"/>
+                <block title="Australian Localization" id="l10n_au_hr_payroll" invisible="company_country_code != 'AU'">
+                    <div class="alert alert-warning mb-2" role="alert">
+                        <strong>Disclaimer</strong> <br/>
+                        Odoo is currently in the process of becoming compliant with STP Phase 2 and SuperStream.
+                        Using any Australian payroll-related features will not actually submit compliant data to the ATO.
+                        An announcement will be made as soon as companies can use Odoo for payroll as a one-stop platform.
+                    </div>
+                    <setting string="Company Information">
+                        <div name="au_company_information" class="mt16 content-group">
+                            <div class="row mt16 ms-2">
+                                <label for="l10n_au_branch_code"
+                                    class="col-md-6 p-0 m-0 o_light_label"/>
+                                <field name="l10n_au_branch_code" class="col-lg-6 p-0"/>
+                            </div>
+                            <div class="row mt16 ms-2">
+                                <label for="l10n_au_wpn_number"
+                                    class="col-md-6 p-0 m-0 o_light_label"/>
+                                <field name="l10n_au_wpn_number" class="col-lg-6 p-0"/>
+                            </div>
+                            <div class="row mt16 ms-2">
+                                <label for="l10n_au_registered_for_whm"
+                                    class="col-md-6 p-0 m-0 o_light_label"/>
+                                <field name="l10n_au_registered_for_whm" class="col-lg-6 p-0"/>
+                            </div>
+                            <div class="row mt16 ms-2">
+                                <label for="l10n_au_registered_for_palm"
+                                    class="col-md-6 p-0 m-0 o_light_label"/>
+                                <field name="l10n_au_registered_for_palm" class="col-lg-6 p-0"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

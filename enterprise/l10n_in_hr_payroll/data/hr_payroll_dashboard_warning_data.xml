@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="hr_payroll_dashboard_warning_missing_pan" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees Without PAN Number</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="evaluation_code">
+indian_companies = self.env.companies.filtered(lambda c: c.country_id.code == 'IN')
+if indian_companies:
+    # Employees Without PAN Number
+    employees_wo_pan = self.env['hr.employee'].search([
+        ('l10n_in_pan', '=', False),
+        ('company_id', 'in', indian_companies.ids),
+    ])
+    if employees_wo_pan:
+        warning_count = len(employees_wo_pan)
+        warning_records = employees_wo_pan
+            </field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_missing_uan" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees Without UAN Number</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="evaluation_code">
+indian_companies = self.env.companies.filtered(lambda c: c.country_id.code == 'IN')
+if indian_companies:
+    # Employees Without PAN Number
+    employees_wo_uan = self.env['hr.employee'].search([
+        ('l10n_in_uan', '=', False),
+        ('company_id', 'in', indian_companies.ids),
+    ])
+    if employees_wo_uan:
+        warning_count = len(employees_wo_uan)
+        warning_records = employees_wo_uan
+            </field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_missing_esic" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees Without ESIC Number</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="evaluation_code">
+indian_companies = self.env.companies.filtered(lambda c: c.country_id.code == 'IN')
+if indian_companies:
+    # Employees Without PAN Number
+    employees_wo_esic = self.env['hr.employee'].search([
+        ('l10n_in_esic_number', '=', False),
+        ('company_id', 'in', indian_companies.ids),
+    ])
+    if employees_wo_esic:
+        warning_count = len(employees_wo_esic)
+        warning_records = employees_wo_esic
+            </field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_incoming_probation" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees Probation ends within a week</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="evaluation_code">
+indian_companies = self.env.companies.filtered(lambda c: c.country_id.code == 'IN')
+if indian_companies:
+    # Employees who are on the probation and their contracts expire within a week
+    probation_contract_type = self.env.ref('l10n_in_hr_payroll.l10n_in_contract_type_probation', raise_if_not_found=False)
+    if probation_contract_type:
+        nearly_expired_contracts = self.env['hr.contract'].search([
+            ('contract_type_id', '=', probation_contract_type.id),
+            ('state', '=', 'open'), ('kanban_state', '!=', 'blocked'),
+            ('date_end', '&lt;=', date.today() + relativedelta(days=7)),
+            ('date_end', '&gt;=', date.today() + relativedelta(days=1)),
+        ])
+        if nearly_expired_contracts:
+            warning_count = len(nearly_expired_contracts.employee_id)
+            warning_records = nearly_expired_contracts.employee_id
+            </field>
+        </record>
+    </data>
+</odoo>

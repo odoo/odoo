@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <record id="mail_documents_activity_data_Inbox" model="mail.activity.type">
+        <field name="name">Inbox</field>
+        <field name="res_model">documents.document</field>
+    </record>
+
+    <record id="mail_documents_activity_data_tv" model="mail.activity.type">
+        <field name="name">To validate</field>
+        <field name="res_model">documents.document</field>
+    </record>
+
+    <record id="mail_documents_activity_data_md" model="mail.activity.type">
+        <field name="name">Requested Document</field>
+        <field name="category">upload_file</field>
+        <field name="res_model">documents.document</field>
+        <field name="mail_template_ids" eval="[(4, ref('documents.mail_template_document_request_reminder'))]"/>
+    </record>
+</data></odoo>

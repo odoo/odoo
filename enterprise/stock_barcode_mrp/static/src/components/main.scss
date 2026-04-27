@@ -1,0 +1,31 @@
+.o_barcode_client_action {
+    // Line form
+    // =====================================
+    .o_barcode_line_form {
+        .row  div {
+            &[name="product_id"] {
+                width: 100%;
+            }
+
+            &[name="qty_producing"],[name="product_qty"] {
+                margin-bottom: 0;
+
+                & .o_input {
+                    font-size: 2rem;
+                }
+            }
+        }
+        span[name="product_uom_qty"] {
+            font-size: 2rem;
+        }
+    }
+
+    .o_field_change_production_qty {
+        width: 100%;
+        margin-bottom: 0;
+
+        .o_button_qty_done {
+            padding-top: 6px;
+        }
+    }
+}

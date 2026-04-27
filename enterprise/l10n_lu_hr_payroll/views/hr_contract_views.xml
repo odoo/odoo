@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.inherit.l10n.lu.hr.payroll</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+        <field name="arch" type="xml">
+            <group name="salary" position="inside">
+                <label for="l10n_lu_indexed_wage" invisible="country_code != 'LU'"/>
+                <div class="o_row mw-50" name="wage" invisible="country_code != 'LU'">
+                    <field name="l10n_lu_indexed_wage" string="Indexed Wage"/>
+                    <div invisible="wage_type != 'monthly'">/ month</div>
+                    <div invisible="wage_type != 'hourly'">/ hour</div>
+                </div>
+            </group>
+            <group name="salary" position="after">
+                <group>
+                    <field name="l10n_lu_index_on_contract_signature" string="Index on Contract Signature" class="w-50"/>
+                    <field name="l10n_lu_current_index" string="Current Index"/>
+                </group>
+            </group>
+            <field name="wage_type" position="attributes">
+                <attribute name="invisible">country_code == 'LU'</attribute>
+            </field>
+            <field name="schedule_pay" position="attributes">
+                <attribute name="invisible">country_code == 'LU'</attribute>
+            </field>
+            <group name="salary_info" position="inside">
+                <group/>
+                <group name="l10n_lu_bik" string="Benefits in Kind" invisible="country_code != 'LU'">
+                    <label for="l10n_lu_bik_vehicle"/>
+                    <div class="o_row mw-75">
+                        <field name="l10n_lu_bik_vehicle" string="Vehicle"/>
+                        <div>/ month</div>
+                        <field name="l10n_lu_bik_vehicle_vat_included"/>
+                        <div>VAT Included</div>
+                    </div>
+                </group>
+
+                <group name="l10n_lu_alw" string="Allowances" invisible="country_code != 'LU'">
+                    <label for="l10n_lu_alw_vehicle"/>
+                    <div class="o_row mw-50">
+                        <field name="l10n_lu_alw_vehicle" string="Vehicle Package"/>
+                        <div>/ month</div>
+                    </div>
+                </group>
+
+                <group name="l10n_lu_advantages" string="Other Advantages" invisible="country_code != 'LU'">
+                    <label for="l10n_lu_meal_voucher_amount"/>
+                    <div class="o_row mw-50">
+                        <field name="l10n_lu_meal_voucher_amount" string="Meal Vouchers"/>
+                        <div>/ worked day</div>
+                    </div>
+                    <label for="l10n_lu_meal_voucher_employer_cost"/>
+                    <div class="o_row mw-50">
+                        <field name="l10n_lu_meal_voucher_employer_cost" string="Meal Vouchers (Employer Contribution)"/>
+                        <div>/ worked day</div>
+                    </div>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

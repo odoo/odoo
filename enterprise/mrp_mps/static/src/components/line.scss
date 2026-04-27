@@ -1,0 +1,111 @@
+.o_mrp_mps {
+
+    button {
+        &.o_mrp_mps_procurement {
+            padding: 1px 3px;
+        }
+        &.o_no_padding {
+            padding: 0 0 0 0;
+        }
+    }
+
+    input:not(.form-check-input) {
+        border-style: groove;
+        height: 100%;
+        padding-top: 0;
+
+        &.o_highlight{
+            background-color: $primary-bg-subtle;
+        }
+        &.o_zero_qty {
+            color: $gray-400;
+        }
+    }
+
+    .o_zero_qty {
+        color: $gray-400;
+    }
+
+    table {
+        thead th {
+            @include o-position-sticky($top: 0px, $left: 0px);
+            z-index: 10;
+            border-top: none;
+            &:first-child,&:nth-child(2) {
+                z-index: 11;
+                height: 1em;
+            }
+            &:nth-child(2) {
+                @include o-position-sticky($top: 0px, $left: 31px);
+            }
+        }
+        tbody th {
+            @include o-position-sticky($left: 0px);
+            &:first-child,&:nth-child(2) {
+                z-index: 1;
+                background-color: $gray-100;
+            }
+            &:nth-child(2){
+                @include o-position-sticky($left: 31px);
+                padding-left: 0;
+            }
+        }
+        th {
+            vertical-align: middle;
+
+            &.o_text_align {
+                text-align: center;
+                padding-right: 10px;
+            }
+            span {
+                white-space: pre;
+            }
+        }
+        .o_mps_inline {
+            display: flex;
+            align-items: center;
+            justify-content: right;
+            a {
+                text-align: right;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                min-width: 45%;
+            }
+            input {
+                min-width: 45%;
+            }
+        }
+    }
+
+    tr {
+        line-height: 1em;
+        min-height: 1em;
+        height: 1em;
+    }
+
+    .btn {
+        line-height: 1em;
+    }
+
+    .form-control {
+        padding: 0em 0em;
+        color: $black;
+    }
+
+    .o_input {
+        line-height: 1em;
+    }
+
+    .o_mrp_mps_hover {
+        background-color: #d6d8d9;
+
+        &.bg-success-subtle {
+            background-color: darken(#dff0d8, 10%);
+        }
+
+        &.bg-warning-subtle {
+            background-color: darken(#fcf8e3, 10%);
+        }
+    }
+
+}

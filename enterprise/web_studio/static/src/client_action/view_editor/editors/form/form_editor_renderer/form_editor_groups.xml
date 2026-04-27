@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<!-- OUTERGROUP -->
+<t t-name="web_studio.Form.OuterGroup" t-inherit="web.Form.OuterGroup">
+  <xpath expr="//div[contains(@class,'o_group')]" position="attributes">
+    <attribute name="t-att-data-studio-xpath">props.studioXpath</attribute>
+    <attribute name="t-ref">rootRef</attribute>
+    <attribute name="t-on-click">onGroupClicked</attribute>
+  </xpath>
+  <xpath expr="//div[contains(@class,'o_group')]" position="after">
+    <StudioHook xpath="props.studioXpath" position="'after'" type="'afterGroup'"/>
+  </xpath>
+</t>
+
+<!-- INNERGROUP -->
+<!-- Push a StudioHook at the beginning of the inner group -->
+<t t-name="web_studio.Form.InnerGroup" t-inherit="web.Form.InnerGroup">
+  <xpath expr="./div" position="attributes">
+    <attribute name="t-att-data-studio-xpath">props.studioXpath</attribute>
+    <attribute name="t-ref">rootRef</attribute>
+    <attribute name="t-on-click">onGroupClicked</attribute>
+  </xpath>
+  <xpath expr="//div[@t-foreach='getRows()']" position="before">
+    <t t-set="studioHooks" t-value="getStudioHooks()" />
+    <StudioHook t-if="studioHooks.has('beforeFirst')" t-props="studioHooks.get('beforeFirst')" />
+  </xpath>
+
+  <xpath expr="//div[@t-foreach='getRows()']" position="inside">
+    <StudioHook t-if="studioHooks.has(`afterRow ${row_index}`)" t-props="studioHooks.get(`afterRow ${row_index}`)"/>
+  </xpath>
+
+  <xpath expr="//t[@t-call='web.Form.InnerGroup.ItemComponent']" position="replace">
+      <InnerGroupItemComponent t-if="cell.studioIsVisible or viewEditorModel.showInvisible" cell="cell" slots="props.slots"/>
+  </xpath>
+
+  <xpath expr="//div[@t-foreach='getRows()']" position="after">
+    <StudioHook t-if="studioHooks.has('inside')" t-props="studioHooks.get('inside')"/>
+  </xpath>
+</t>
+
+<t t-name="web_studio.Form.InnerGroup.ItemComponent" t-inherit="web.Form.InnerGroup.ItemComponent">
+  <xpath expr="//div[hasclass('o_wrap_label')]" position="attributes">
+    <attribute name="t-ref">labelRef</attribute>
+    <attribute name="t-on-click">onClicked</attribute>
+    <attribute name="t-att-data-field-name">cell.props.fieldName</attribute>
+    <attribute name="t-att-data-studio-xpath">cell.studioXpath</attribute>
+    <attribute name="data-studio-structure">field</attribute>
+  </xpath>
+  <xpath expr="//div[hasclass('o_wrap_field_boolean')]/div[hasclass('o_wrap_label')]" position="attributes">
+    <attribute name="t-ref">labelRef</attribute>
+    <attribute name="t-on-click">onClicked</attribute>
+    <attribute name="t-att-data-field-name">cell.props.fieldName</attribute>
+    <attribute name="t-att-data-studio-xpath">cell.studioXpath</attribute>
+    <attribute name="data-studio-structure">field</attribute>
+  </xpath>
+  <xpath expr="//div[hasclass('o_wrap_input')]" position="attributes">
+    <attribute name="t-on-click">onClicked</attribute>
+    <attribute name="t-ref">fieldRef</attribute>
+    <attribute name="t-on-mouseover">onMouseFieldIO</attribute>
+    <attribute name="t-on-mouseout">onMouseFieldIO</attribute>
+  </xpath>
+</t>
+
+</templates>

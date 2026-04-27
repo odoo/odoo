@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="ir_rule_l10n_mx_hr_fonacot_multi_company" model="ir.rule">
+            <field name="name">MX Payroll Fonacot: Multi Company</field>
+            <field name="model_id" ref="model_l10n_mx_hr_fonacot"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="ir_rule_l10n_mx_hr_infonavit_multi_company" model="ir.rule">
+            <field name="name">MX Payroll Infonavit: Multi Company</field>
+            <field name="model_id" ref="model_l10n_mx_hr_infonavit"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+    </data>
+</odoo>

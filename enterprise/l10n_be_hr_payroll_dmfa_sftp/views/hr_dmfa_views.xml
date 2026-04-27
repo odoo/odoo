@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_dmfa_view_form" model="ir.ui.view">
+        <field name="name">l10n.be.dmfa.view.form</field>
+        <field name="model">l10n_be.dmfa</field>
+        <field name="inherit_id" ref="l10n_be_hr_payroll.l10n_be_dmfa_view_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button
+                    name="action_create_onss_declaration"
+                    string="Generate ONSS Declaration"
+                    type="object"
+                    class="oe_highlight"
+                    invisible="declaration_type == 'web' or not dmfa_xml"/>
+            </header>
+            <div name="button_box" position="inside">
+                <button name="action_open_onss_declaration"
+                    class="oe_stat_button"
+                    icon="fa-book"
+                    type="object"
+                    invisible="not onss_declaration_count">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="onss_declaration_count"/>
+                        </span>
+                        <span invisible="onss_declaration_count == 1" class="o_stat_text">ONSS Declaration</span>
+                        <span invisible="onss_declaration_count &gt; 1" class="o_stat_text">ONSS Declarations</span>
+                    </div>
+                </button>
+            </div>
+            <sheet position="after">
+                <chatter/>
+            </sheet>
+        </field>
+    </record>
+</odoo>

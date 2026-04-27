@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web_enterprise.BurgerMenu" t-inherit="web.BurgerMenu" t-inherit-mode="primary">
+    <xpath expr="//button[hasclass('o_sidebar_close')]" position="replace">
+        <div class="d-flex align-items-center h-100 bg-transparent">
+            <button class="o_burger_menu_share fa fa-share-alt btn border-0 fs-5 text-reset" aria-label="Share URL" title="Share URL" t-on-click.stop="shareUrl"/>
+            <button class="o_sidebar_close oi oi-close btn border-0 fs-2 text-reset" aria-label="Close menu" title="Close menu" t-on-click.stop="_closeBurger"/>
+        </div>
+    </xpath>
+</t>
+
+</templates>

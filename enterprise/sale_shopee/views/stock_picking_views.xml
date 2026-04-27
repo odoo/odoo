@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="picking_list" model="ir.ui.view">
+        <field name="name">Shopee Picking List</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field
+                    name="shopee_delivery_status"
+                    widget="badge"
+                    invisible="not shopee_order_ref"
+                    decoration-info="shopee_delivery_status in ['draft', 'confirmed']"
+                    decoration-success="shopee_delivery_status == 'done'"
+                    decoration-danger="shopee_delivery_status == 'cancelled'"
+                    decoration-warning="shopee_delivery_status == 'error'"
+                    optional="hide"
+                />
+            </field>
+        </field>
+    </record>
+
+    <record id="picking_view_form" model="ir.ui.view">
+        <field name="name">shopee.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <button name="action_cancel" position="before">
+                <button name="action_shopee_sync_pickings" string="Fetch Shopee Label"
+                        type="object" class="btn-primary"
+                        invisible="not shopee_order_ref or shopee_delivery_status in ['done', 'cancelled']"
+                />
+            </button>
+            <div name="button_box" position="after">
+                <div class="badge rounded-pill text-bg-info fs-6 float-end"
+                     invisible="not shopee_order_ref or shopee_delivery_status != 'draft'">
+                    Ready to arrange shipment via Shopee
+                </div>
+                <div class="badge rounded-pill text-bg-info fs-6 float-end"
+                     invisible="shopee_delivery_status != 'confirmed'">
+                    Shipment arranged via Shopee
+                </div>
+                <div class="badge rounded-pill text-bg-success fs-6 float-end"
+                     invisible="shopee_delivery_status != 'done'">
+                    Shipped via Shopee
+                </div>
+                <div class="badge rounded-pill text-bg-danger fs-6 float-end"
+                     invisible="shopee_delivery_status != 'cancelled'">
+                    Cancelled on Shopee
+                </div>
+                <div class="badge rounded-pill text-bg-warning fs-6 float-end"
+                     invisible="shopee_delivery_status != 'error'">
+                    Need to rearrange shipment on Shopee
+                </div>
+            </div>
+            <field name="origin" position="after">
+                <field name="shopee_order_ref" readonly="1" invisible="not shopee_order_ref"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="action_fetch_shipping_label" model="ir.actions.server">
+        <field name="name">Fetch Shipping Label</field>
+        <field name="model_id" ref="model_stock_picking"/>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records._sync_shopee_pickings()</field>
+    </record>
+</odoo>

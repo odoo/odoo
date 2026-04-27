@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="project.project_2_task_1" model="project.task">
+            <field name="planned_date_begin" eval="(DateTime.now() + relativedelta(days=-15)).strftime('%Y-%m-%d 06:00:00')"/>
+            <field name="date_deadline" eval="(DateTime.now() + relativedelta(days=-13)).strftime('%Y-%m-%d 10:00:00')"/>
+        </record>
+        <record id="project.project_2_task_2" model="project.task">
+            <field name="planned_date_begin" eval="(DateTime.now() + relativedelta(days=-12)).strftime('%Y-%m-%d 06:00:00')"/>
+            <field name="date_deadline" eval="(DateTime.now() + relativedelta(days=-9)).strftime('%Y-%m-%d 10:00:00')"/>
+        </record>
+        <record id="project.project_2_task_3" model="project.task">
+            <field name="planned_date_begin" eval="(DateTime.now() + relativedelta(days=-8)).strftime('%Y-%m-%d 06:00:00')"/>
+            <field name="date_deadline" eval="(DateTime.now() + relativedelta(days=-6)).strftime('%Y-%m-%d 15:00:00')"/>
+        </record>
+        <record id="project.project_2_task_4" model="project.task">
+            <field name="planned_date_begin" eval="(DateTime.now() + relativedelta(days=-4)).strftime('%Y-%m-%d 06:00:00')"/>
+            <field name="date_deadline" eval="(DateTime.now() + relativedelta(days=-1)).strftime('%Y-%m-%d 15:00:00')"/>
+        </record>
+        <record id="project.project_2_task_5" model="project.task">
+            <field name="planned_date_begin" eval="(DateTime.now() + relativedelta(days=-5)).strftime('%Y-%m-%d 06:00:00')"/>
+            <field name="date_deadline" eval="(DateTime.now() + relativedelta(days=2)).strftime('%Y-%m-%d 15:00:00')"/>
+        </record>
+        <record id="project.project_2_task_6" model="project.task">
+            <field name="planned_date_begin" eval="(DateTime.now() + relativedelta(days=-3)).strftime('%Y-%m-%d 06:00:00')"/>
+            <field name="date_deadline" eval="(DateTime.now() + relativedelta(days=2)).strftime('%Y-%m-%d 15:00:00')"/>
+        </record>
+        <record id="project.project_2_task_7" model="project.task">
+            <field name="planned_date_begin" eval="(DateTime.now() + relativedelta(days=-5)).strftime('%Y-%m-%d 06:00:00')"/>
+            <field name="date_deadline" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d 15:00:00')"/>
+        </record>
+        <record id="project.project_2_task_8" model="project.task">
+            <field name="planned_date_begin" eval="(DateTime.now() + relativedelta(days=3)).strftime('%Y-%m-%d 06:00:00')"/>
+            <field name="date_deadline" eval="(DateTime.now() + relativedelta(days=7)).strftime('%Y-%m-%d 10:00:00')"/>
+        </record>
+        <record id="project.project_2_task_9" model="project.task">
+            <field name="planned_date_begin" eval="(DateTime.now() + relativedelta(days=6)).strftime('%Y-%m-%d 06:00:00')"/>
+            <field name="date_deadline" eval="(DateTime.now() + relativedelta(days=12)).strftime('%Y-%m-%d 10:00:00')"/>
+        </record>
+        <record id="project.project_2_task_10" model="project.task">
+            <field name="planned_date_begin" eval="(DateTime.now() + relativedelta(days=9)).strftime('%Y-%m-%d 06:00:00')"/>
+            <field name="date_deadline" eval="(DateTime.now() + relativedelta(days=13)).strftime('%Y-%m-%d 15:00:00')"/>
+        </record>
+
+    </data>
+</odoo>

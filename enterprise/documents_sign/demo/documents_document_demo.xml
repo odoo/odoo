@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+<!-- data files -->
+
+        <record id="documents_sign_cla" model="documents.document">
+            <field name="name">Odoo CLA.pdf</field>
+            <field name="type">binary</field>
+            <field name="attachment_id" ref="sign.attachment_sign_3"/>
+            <field name="folder_id" ref="documents.document_internal_folder"/>
+            <field name="tag_ids" eval="[(6,0,[ref('documents.documents_tag_validated'),
+                                               ref('documents.documents_tag_contracts'),
+                                               ref('documents.documents_tag_hr')])]"/>
+        </record>
+
+        <record id="documents_sign_employment" model="documents.document">
+            <field name="name">Employment Contract.pdf</field>
+            <field name="type">binary</field>
+            <field name="attachment_id" ref="sign.attachment_sign_1"/>
+            <field name="folder_id" ref="documents.document_internal_folder"/>
+            <field name="tag_ids" eval="[(6,0,[ref('documents.documents_tag_validated'),
+                                               ref('documents.documents_tag_contracts'),
+                                               ref('documents.documents_tag_hr')])]"/>
+        </record>
+
+        <record id="documents_attachment_video_studio_document" model="documents.document">
+            <field name="name">sample-nda.pdf</field>
+            <field name="type">binary</field>
+            <field name="attachment_id" ref="sign.attachment_sign_2"/>
+            <field name="folder_id" ref="documents.document_internal_folder"/>
+            <field name="tag_ids" eval="[(6,0,[ref('documents.documents_tag_contracts')])]"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_picking_type_view_kanban" model="ir.ui.view">
+        <field name="name">stock.picking.view.kanban</field>
+        <field name="model">stock.picking.type</field>
+        <field name="arch" type="xml">
+            <kanban highlight_color="color" create="0" group_create="false" action="%(action_mrp_display)d" type="action">
+                <header>
+                    <button string="Workcenter Control Panel" type="action" name="%(mrp.mrp_workcenter_kanban_action)d" groups="mrp.group_mrp_routings" display="always"/>
+                </header>
+                <templates>
+                    <t t-name="menu" t-if="!selection_mode">
+                        <div class="container">
+                            <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                <div class="col-8" role="menuitem" aria-haspopup="true">
+                                    <field name="color" widget="kanban_color_picker"/>
+                                </div>
+                                <div role="menuitem" class="col-4">
+                                    <a class="dropdown-item" role="menuitem" type="open">Configuration</a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-name="card">
+                        <a t-if="!selection_mode" type="object" name="get_stock_picking_action_picking_type">
+                            <field name="name" class="fw-bold fs-4 ms-2"/>
+                        </a>
+                        <field t-if="selection_mode" name="name" class="fw-bold fs-4 ms-2"/>
+                        <field name="warehouse_id" readonly="1" groups="stock.group_stock_multi_warehouses" class="ms-2"/>
+                        <span t-if="!selection_mode" class="mt-3 pb-4 ms-2"><field name="count_mo_todo"/> To Process</span>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="mrp_stock_picking_type_action" model="ir.actions.act_window">
+        <field name="name">Overview</field>
+        <field name="res_model">stock.picking.type</field>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="stock_picking_type_view_kanban"/>
+        <field name="domain">[('code', '=', 'mrp_operation')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new operation type
+            </p><p>
+            The operation type system allows you to assign each stock
+            operation a specific type which will alter its views accordingly.
+            On the operation type you could e.g. specify if packing is needed by default,
+            if it should show the customer.
+            </p>
+        </field>
+    </record>
+</odoo>

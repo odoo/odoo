@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+    <t t-name="account_accountant.ListViewReconcile.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+            <button class="btn btn-primary"
+                    t-on-click="() => this.openAutoReconcileWizard()"
+                    groups="account.group_account_user">
+                Auto-reconcile
+            </button>
+        </xpath>
+    </t>
+
+    <t t-name="account_accountant.AccountMoveLineReconcileGroupRow" t-inherit="web.ListRenderer.GroupRow">
+        <xpath expr="//div[@class='o_group_buttons']" position="before">
+            <t t-set="grouped_by_account" t-value="group.list.evalContext.default_account_id"/>
+            <t t-if="group.groupByField.name == 'account_id' or (group.groupByField.name == 'partner_id' and grouped_by_account)">
+                <button class="btn btn-link"
+                        t-on-click.stop.prevent="() => this.env.callAutoReconcileAction(group)"
+                        groups="account.group_account_user">
+                    Auto-reconcile
+                </button>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

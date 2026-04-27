@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cfdi:Comprobante
+	xmlns:cfdi="http://www.sat.gob.mx/cfd/4"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" SubTotal="71910.48" TipoCambio="1" TipoDeComprobante="I" Total="80553.28" Version="4.0" xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd">
+	<cfdi:Emisor Nombre="Bacon Inc" RegimenFiscal="400" Rfc="BBA90751LJ8" />
+	<cfdi:Receptor DomicilioFiscalReceptor="89560" Nombre="Pasta" RegimenFiscalReceptor="601" Rfc="GODE561231GR8" UsoCFDI="G03" />
+	<cfdi:Conceptos>
+		<cfdi:Concepto Cantidad="1.00" ClaveProdServ="84121500" ClaveUnidad="E48" Descripcion="INTERESES SUJETOS A IVA" Descuento="0.000000" Importe="54017.480000" ObjetoImp="02" Unidad="Servicio" ValorUnitario="54017.48">
+			<cfdi:Impuestos>
+				<cfdi:Traslados>
+					<cfdi:Traslado Base="54017.48" Importe="8642.80" Impuesto="002" TasaOCuota="0.160000" TipoFactor="Tasa" />
+				</cfdi:Traslados>
+			</cfdi:Impuestos>
+		</cfdi:Concepto>
+		<cfdi:Concepto Cantidad="1.00" ClaveProdServ="84121500" ClaveUnidad="E48" Descripcion="INTERESES NO SUJETOS A IVA" Descuento="0.000000" Importe="17893.000000" ObjetoImp="02" Unidad="Servicio" ValorUnitario="17893.00">
+			<cfdi:Impuestos>
+				<cfdi:Traslados>
+					<cfdi:Traslado Base="17893.00" Impuesto="002" TipoFactor="azerty" />
+				</cfdi:Traslados>
+			</cfdi:Impuestos>
+		</cfdi:Concepto>
+	</cfdi:Conceptos>
+	<cfdi:Impuestos TotalImpuestosTrasladados="8642.80">
+		<cfdi:Traslados>
+			<cfdi:Traslado Base="54017.48" Importe="8642.80" Impuesto="002" TasaOCuota="0.160000" TipoFactor="Tasa" />
+		</cfdi:Traslados>
+	</cfdi:Impuestos>
+</cfdi:Comprobante>

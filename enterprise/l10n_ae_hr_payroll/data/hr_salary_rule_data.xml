@@ -1,0 +1,520 @@
+<odoo>
+    <data noupdate="1">
+        <function model="hr.salary.rule" name="write">
+            <value model="hr.salary.rule" search="[
+                ('struct_id', '=', ref('l10n_ae_hr_payroll.uae_employee_payroll_structure')),
+                ('code', '=', 'BASIC')]"/>
+            <value eval="{'amount_python_compute': 'result = payslip.l10n_ae_basic_salary'}"/>
+        </function>
+
+        <record id="uae_salary_rule_input_housing_allowance" model="hr.salary.rule">
+            <field name="name">Housing Allowance Input</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">HOUALLOWINP</field>
+            <field name="sequence">1</field>
+            <field name="condition_select">input</field>
+            <field name="condition_other_input_id" ref="l10n_ae_hr_payroll.l10n_ae_input_housing_allowance"/>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="l10n_ae_hr_payroll.l10n_ae_input_housing_allowance"/>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_salary_rule_conveyance_allowance" model="hr.salary.rule">
+            <field name="name">Conveyance Allowance Input</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">CONVALLOWINP</field>
+            <field name="sequence">1</field>
+            <field name="condition_select">input</field>
+            <field name="condition_other_input_id" ref="l10n_ae_hr_payroll.l10n_ae_input_conveyance_allowance"/>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="l10n_ae_hr_payroll.l10n_ae_input_conveyance_allowance"/>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_salary_rule_medical_allowance" model="hr.salary.rule">
+            <field name="name">Medical Allowance Input</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">MEDALLOWINP</field>
+            <field name="sequence">1</field>
+            <field name="condition_select">input</field>
+            <field name="condition_other_input_id" ref="l10n_ae_hr_payroll.l10n_ae_input_medical_allowance"/>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="l10n_ae_hr_payroll.l10n_ae_input_medical_allowance"/>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_salary_rule_annual_passage_allowance" model="hr.salary.rule">
+            <field name="name">Annual Passage Allowance Input</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">ANNUALPASSALLOWINP</field>
+            <field name="sequence">1</field>
+            <field name="condition_select">input</field>
+            <field name="condition_other_input_id" ref="l10n_ae_hr_payroll.l10n_ae_input_annual_passage_allowance"/>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="l10n_ae_hr_payroll.l10n_ae_input_annual_passage_allowance"/>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_salary_rule_overtime_allowance" model="hr.salary.rule">
+            <field name="name">Overtime Allowance Input</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">OVERTIMEALLOWINP</field>
+            <field name="sequence">1</field>
+            <field name="condition_select">input</field>
+            <field name="condition_other_input_id" ref="l10n_ae_hr_payroll.l10n_ae_input_overtime_allowance"/>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="l10n_ae_hr_payroll.l10n_ae_input_overtime_allowance"/>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_salary_rule_other_allowance" model="hr.salary.rule">
+            <field name="name">Other Allowance Input</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">OTALLOWINP</field>
+            <field name="sequence">1</field>
+            <field name="condition_select">input</field>
+            <field name="condition_other_input_id" ref="l10n_ae_hr_payroll.l10n_ae_input_other_allowance"/>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="l10n_ae_hr_payroll.l10n_ae_input_other_allowance"/>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_salary_rule_leave_encashment" model="hr.salary.rule">
+            <field name="name">Leave Encashment Input</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">LEAVEENCASHINP</field>
+            <field name="sequence">1</field>
+            <field name="condition_select">input</field>
+            <field name="condition_other_input_id" ref="l10n_ae_hr_payroll.l10n_ae_input_leave_encashment"/>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="l10n_ae_hr_payroll.l10n_ae_input_leave_encashment"/>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_salary_arrears_salary_rule" model="hr.salary.rule">
+            <field name="name">Salary Arrears</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">SALARY_ARREARS</field>
+            <field name="sequence">1</field>
+            <field name="condition_select">input</field>
+            <field name="condition_other_input_id" ref="l10n_ae_hr_payroll.input_salary_arrears"/>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="l10n_ae_hr_payroll.input_salary_arrears"/>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_other_earnings_salary_rule" model="hr.salary.rule">
+            <field name="name">Other Earnings</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">OTHER_EARNINGS</field>
+            <field name="sequence">1</field>
+            <field name="condition_select">input</field>
+            <field name="condition_other_input_id" ref="l10n_ae_hr_payroll.input_other_earnings"/>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="l10n_ae_hr_payroll.input_other_earnings"/>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_bonus_salary_rule" model="hr.salary.rule">
+            <field name="name">Bonus</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">BONUS</field>
+            <field name="sequence">1</field>
+            <field name="condition_select">input</field>
+            <field name="condition_other_input_id" ref="l10n_ae_hr_payroll.input_bonus_earnings"/>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="l10n_ae_hr_payroll.input_bonus_earnings"/>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_airfare_allowance_salary_rule" model="hr.salary.rule">
+            <field name="name">Airfare Allowance</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">AIRFARE_ALLOWANCE</field>
+            <field name="sequence">1</field>
+            <field name="condition_select">input</field>
+            <field name="condition_other_input_id" ref="l10n_ae_hr_payroll.input_airfare_allowance_earnings"/>
+            <field name="amount_select">input</field>
+            <field name="amount_other_input_id" ref="l10n_ae_hr_payroll.input_airfare_allowance_earnings"/>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_salary_deduction_salary_rule" model="hr.salary.rule">
+            <field name="name">Salary Deduction</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="code">SALARY_DEDUCTIONS</field>
+            <field name="sequence">1</field>
+            <field name="condition_select">input</field>
+            <field name="condition_other_input_id" ref="l10n_ae_hr_payroll.input_salary_deduction"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = -inputs['SALARY_DEDUCTIONS'].amount
+result_name = inputs['SALARY_DEDUCTIONS'].name
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_other_deduction_salary_rule" model="hr.salary.rule">
+            <field name="name">Other Deduction</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="code">OTHER_DEDUCTIONS</field>
+            <field name="sequence">1</field>
+            <field name="condition_select">input</field>
+            <field name="condition_other_input_id" ref="l10n_ae_hr_payroll.input_other_deduction"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = -inputs['OTHER_DEDUCTIONS'].amount
+result_name = inputs['OTHER_DEDUCTIONS'].name
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_housing_allowance_salary_rule" model="hr.salary.rule">
+            <field name="name">Housing Allowance</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">HOUALLOW</field>
+            <field name="sequence">5</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.wage_type != 'hourly'</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = contract.l10n_ae_housing_allowance if contract.work_entry_source == 'calendar' else payslip.l10n_ae_hours_worked * payslip._get_l10n_ae_hourly_allowance_value('housing')
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_transportation_allowance_salary_rule" model="hr.salary.rule">
+            <field name="name">Transportation Allowance</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">TRAALLOW</field>
+            <field name="sequence">10</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.wage_type != 'hourly'</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = contract.l10n_ae_transportation_allowance if contract.work_entry_source == 'calendar' else payslip.l10n_ae_hours_worked * payslip._get_l10n_ae_hourly_allowance_value('transportation')
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_other_allowances_salary_rule" model="hr.salary.rule">
+            <field name="name">Other Allowances</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">OTALLOW</field>
+            <field name="sequence">15</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.wage_type != 'hourly'</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = contract.l10n_ae_other_allowances if contract.work_entry_source == 'calendar' else payslip.l10n_ae_hours_worked * payslip._get_l10n_ae_hourly_allowance_value('other')
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_end_of_service_salary_rule" model="hr.salary.rule">
+            <field name="name">End of Service</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">EOS</field>
+            <field name="sequence">20</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = not employee.active and employee.departure_reason_id</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = 0
+years, months, days = employee._l10n_ae_get_worked_duration()
+
+salary = 0
+if contract.l10n_ae_is_computed_based_on_daily_salary:
+    salary = contract.l10n_ae_eos_daily_salary * 30
+else:
+    salary = contract.wage
+
+total_months = years * 12 + months
+
+# compensation for time less than 5 years
+sub5_ratio = (21 / 30)
+compensation_sub5_day = (salary * sub5_ratio) / 365
+compensation_sub5_month = (salary * sub5_ratio) / 12
+
+# compensation for time more than 5 years
+compensation_after5_day = salary / 365
+compensation_after5_month = salary / 12
+
+if total_months &lt; 12:
+    result = 0
+elif total_months &lt; (6 * 12):
+    result = ceil(compensation_sub5_month * total_months) + ceil(compensation_sub5_day * days)
+else:
+    result = ceil(compensation_sub5_month * 60) + ceil(compensation_after5_month * (total_months - 60)) + ceil(compensation_after5_day * days)
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_end_of_service_provision_salary_rule" model="hr.salary.rule">
+            <field name="name">End of Service Provision</field>
+            <field name="category_id" ref="hr_payroll.COMP"/>
+            <field name="code">EOSP</field>
+            <field name="appears_on_payslip">False</field>
+            <field name="sequence">25</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = employee.active</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+eos_daily_wage = payslip._l10n_ae_get_eos_daily_salary()
+empty_worked_day = payslip.env['hr.payslip.worked_days']
+unpaid_worked_days = 0
+for code in ('LEAVE90', 'SICKLEAVE0', 'OUT'):
+    unpaid_worked_days += worked_days.get(code, empty_worked_day).number_of_days * eos_daily_wage
+
+start = employee.first_contract_date
+end = payslip.date_to
+if employee.departure_date:
+    if payslip.date_from &lt;= employee.departure_date &lt;= payslip.date_to:
+        end = employee.departure_date
+years = relativedelta(end, start).years
+provision_month = 0
+if years &lt;= 5:
+    provision_month = contract.wage * 21 / 30 / 12
+elif years &gt; 5 :
+    provision_month = contract.wage / 12
+
+if contract.work_entry_source == 'calendar':
+    result = provision_month - unpaid_worked_days
+elif payslip.l10n_ae_total_paid_hours:
+    provision_per_worked_day = provision_month / payslip.l10n_ae_total_paid_hours
+    result = provision_per_worked_day * payslip.l10n_ae_hours_worked
+else:
+    result = 0
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_annual_leave_provision_salary_rule" model="hr.salary.rule">
+            <field name="name">Annual Leave Provision</field>
+            <field name="category_id" ref="hr_payroll.COMP"/>
+            <field name="code">ALP</field>
+            <field name="sequence">30</field>
+            <field name="amount_select">code</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = employee.active</field>
+            <field name="amount_python_compute">
+gross_salary = contract.wage + contract.l10n_ae_housing_allowance + contract.l10n_ae_transportation_allowance + contract.l10n_ae_other_allowances
+number_of_leave_days = contract.l10n_ae_number_of_leave_days
+provision_month = gross_salary * number_of_leave_days / 30 / 12
+
+if contract.work_entry_source == 'calendar':
+    result = provision_month
+elif payslip.l10n_ae_total_paid_hours:
+    provision_per_worked_day = provision_month / payslip.l10n_ae_total_paid_hours
+    result = provision_per_worked_day * payslip.l10n_ae_hours_worked
+else:
+    result = 0
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_social_insurance_company_contribution_salary_rule" model="hr.salary.rule">
+            <field name="name">Social Insurance Company Contribution</field>
+            <field name="category_id" ref="hr_payroll.COMP"/>
+            <field name="code">SICC</field>
+            <field name="sequence">35</field>
+            <field name="amount_select">code</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = employee.active and employee.country_id.code == 'AE'</field>
+            <field name="amount_python_compute">
+gross_salary = contract.wage + contract.l10n_ae_housing_allowance + contract.l10n_ae_transportation_allowance + contract.l10n_ae_other_allowances
+company_contribution = 0
+if employee.private_state_id.code != "AZ":
+    company_contribution = gross_salary * 0.125
+else:
+    company_contribution = gross_salary * 0.15
+result = company_contribution
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_social_insurance_employee_contribution_salary_rule" model="hr.salary.rule">
+            <field name="name">Social Insurance Employee Contribution</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="code">SIEC</field>
+            <field name="sequence">40</field>
+            <field name="amount_select">code</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = employee.active and employee.country_id.code == 'AE'</field>
+            <field name="amount_python_compute">
+gross_salary = contract.wage + contract.l10n_ae_housing_allowance + contract.l10n_ae_transportation_allowance + contract.l10n_ae_other_allowances
+result = -(gross_salary * 0.05)
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_sick_leave_50_salary_rule" model="hr.salary.rule">
+            <field name="name">Sick Leave at 50%</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="code">SL50</field>
+            <field name="sequence">45</field>
+            <field name="amount_select">code</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.work_entry_source == "calendar" and employee.active and 'SICKLEAVE50' in worked_days</field>
+            <field name="amount_python_compute">
+gross_salary = contract.wage + contract.l10n_ae_housing_allowance + contract.l10n_ae_transportation_allowance + contract.l10n_ae_other_allowances
+result = - worked_days['SICKLEAVE50'].number_of_days * gross_salary / 30 * 0.5
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_sick_leave_0_salary_rule" model="hr.salary.rule">
+            <field name="name">Sick Leave at 0%</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="code">SL0</field>
+            <field name="sequence">50</field>
+            <field name="amount_select">code</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.work_entry_source == 'calendar' and employee.active and 'SICKLEAVE0' in worked_days</field>
+            <field name="amount_python_compute">
+gross_salary = contract.wage + contract.l10n_ae_housing_allowance + contract.l10n_ae_transportation_allowance + contract.l10n_ae_other_allowances
+result = - worked_days['SICKLEAVE0'].number_of_days * gross_salary / 30
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_dews_salary_rule" model="hr.salary.rule">
+            <field name="name">DEWS</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="code">DEWS</field>
+            <field name="sequence">55</field>
+            <field name="amount_select">code</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.l10n_ae_is_dews_applied</field>
+            <field name="amount_python_compute">
+start_date = employee.first_contract_date
+end_date = payslip.date_to
+years = relativedelta(end_date, start_date).years
+salary = contract.wage
+if years &lt; 5:
+    result = - salary * 0.0583
+else:
+    result = - salary * 0.0833
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_unpaid_leave_salary_rule" model="hr.salary.rule">
+            <field name="name">Unpaid Leave</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="code">AEUNPAID</field>
+            <field name="sequence">60</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.work_entry_source == 'calendar' and 'LEAVE90' in worked_days</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+gross_salary = contract.wage + contract.l10n_ae_housing_allowance + contract.l10n_ae_transportation_allowance + contract.l10n_ae_other_allowances
+result = - worked_days['LEAVE90'].number_of_days * (gross_salary / 30)
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="l10n_ae_regular_pay_paid_leave" model="hr.salary.rule">
+            <field name="name">Paid Leave</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">AEPAID</field>
+            <field name="sequence">61</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.work_entry_source != 'calendar'</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+hours = sum([line.number_of_hours for line in payslip.worked_days_line_ids if line.code == 'LEAVE120'])
+result = payslip.l10n_ae_hourly_wage * hours
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="l10n_ae_regular_pay_sick_leave_50" model="hr.salary.rule">
+            <field name="name">50% Paid Sick Leave</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">AESPAID50</field>
+            <field name="sequence">62</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.work_entry_source != 'calendar'</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+hours = sum([line.number_of_hours for line in payslip.worked_days_line_ids if line.code == 'SICKLEAVE50'])
+result = payslip.l10n_ae_hourly_wage * 0.5 * hours
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="l10n_ae_regular_pay_overtime" model="hr.salary.rule">
+            <field name="name">Overtime</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">OT</field>
+            <field name="sequence">63</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = 'OVERTIME' in worked_days</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = worked_days['OVERTIME'].number_of_hours * payslip.l10n_ae_hourly_wage * payslip._rule_parameter('l10n_ae_overtime')
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_out_of_contract_salary_rule" model="hr.salary.rule">
+            <field name="name">Out of Contract</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="code">OOC</field>
+            <field name="sequence">65</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.work_entry_source == 'calendar' and 'OUT' in worked_days</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+gross_salary = contract.wage + contract.l10n_ae_housing_allowance + contract.l10n_ae_transportation_allowance + contract.l10n_ae_other_allowances
+start_date = payslip.date_from
+end_date = payslip.date_to
+number_of_days_in_month = (end_date - start_date).days + 1
+
+out_of_contract_days =  max(0, (contract.date_start - start_date).days) + max(0, (end_date - (contract.date_end or end_date)).days)
+
+result = - out_of_contract_days * (gross_salary / number_of_days_in_month)
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_annual_leaves_eos_allowance_salary_rule" model="hr.salary.rule">
+            <field name="name">Annual Leave Remaining Balance Allowance</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">ALEA</field>
+            <field name="sequence">70</field>
+            <field name="amount_select">code</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = not employee.active</field>
+            <field name="amount_python_compute">
+gross_salary = contract.wage + contract.l10n_ae_housing_allowance + contract.l10n_ae_transportation_allowance + contract.l10n_ae_other_allowances
+employee_annual_leaves_due = employee.l10n_ae_annual_leave_days_total / 12 * payslip.date_from.month - employee.l10n_ae_annual_leave_days_taken 
+if employee_annual_leaves_due &gt; 0:
+    result = employee_annual_leaves_due * (gross_salary / 30)
+else:
+    result = 0
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+
+        <record id="uae_annual_leaves_eos_deduction_salary_rule" model="hr.salary.rule">
+            <field name="name">Annual Leave Remaining Balance Deduction</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="code">ALED</field>
+            <field name="sequence">71</field>
+            <field name="amount_select">code</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = not employee.active</field>
+            <field name="amount_python_compute">
+gross_salary = contract.wage + contract.l10n_ae_housing_allowance + contract.l10n_ae_transportation_allowance + contract.l10n_ae_other_allowances
+employee_annual_leaves_due = employee.l10n_ae_annual_leave_days_total / 12 * payslip.date_from.month - employee.l10n_ae_annual_leave_days_taken 
+if employee_annual_leaves_due &lt; 0:
+    result = employee_annual_leaves_due * gross_salary / 30
+else:
+    result = 0
+            </field>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+        </record>
+    </data>
+</odoo>

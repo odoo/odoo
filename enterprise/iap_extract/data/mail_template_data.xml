@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="iap_extract_no_credit" model="mail.template">
+            <field name="name">IAP Extract Notification</field>
+            <field name="email_from">iap@odoo.com</field>
+            <field name="email_to">iap@odoo.com</field>
+            <field name="subject">IAP Extract Notification</field>
+            <field name="model_id" ref="iap.model_iap_account"/>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p>Dear,<br/></p>
+    <p>There are no more credits on your IAP OCR account.<br/>
+    You can charge your IAP OCR account in the settings page.</p>
+    <p>Best regards,<br/></p>
+    <p>Odoo S.A.</p>
+</div></field>
+        </record>
+    </data>
+</odoo>

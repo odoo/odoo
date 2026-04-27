@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_ma_tax_report_template">
+        <DeclarationReleveDeduction>
+            <idf t-out="vat_id"/>
+            <annee t-out="year"/>
+            <periode t-out="period"/>
+            <regime t-out="regime_code"/>
+            <releveDeductions>
+                <rd t-foreach="bills" t-as="bill">
+                    <ordre t-out="bill['sequence']"/>
+                    <num t-out="bill['name']"/>
+                    <des t-out="bill['name']"/>
+                    <mht t-out="bill['base_amount']"/>
+                    <tva t-out="bill['tax_amount']"/>
+                    <ttc t-out="bill['total_amount']"/>
+                    <refF>
+                        <if t-out="bill['partner_vat']"/>
+                        <nom t-out="bill['partner_name']"/>
+                        <ice t-out="bill['partner_ice']"/>
+                    </refF>
+                    <tx t-out="bill['tax_rate']"/>
+                    <t t-if="prorata">
+                        <prorata t-out="prorata"/>
+                    </t>
+                    <mp>
+                        <id t-out="bill['payment_method']"/>
+                    </mp>
+                    <dpai t-out="bill['payment_date']"/>
+                    <dfac t-out="bill['invoice_date']"/>
+                </rd>
+            </releveDeductions>
+        </DeclarationReleveDeduction>
+    </template>
+</odoo>

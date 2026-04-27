@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportFilters">
+        <t t-call="{{ env.template('AccountReportFilters') }}"/>
+    </t>
+
+    <t t-name="account_reports.AccountReportFiltersCustomizable">
+        <!-- Date filter -->
+        <t t-if="'date' in controller.options">
+            <div id="filter_date" class="filter_date">
+                <t t-call="account_reports.AccountReportFilterDate"/>
+            </div>
+        </t>
+
+        <!-- Comparison filter -->
+        <t t-if="controller.filters.show_period_comparison">
+            <div id="filter_comparison" class="filter_comparison">
+                <t t-call="account_reports.AccountReportFilterComparison"/>
+            </div>
+        </t>
+
+        <!-- Journal filter -->
+        <t t-if="'journals' in controller.options">
+            <div id="filter_journal">
+                <t t-call="account_reports.AccountReportFilterJournal"/>
+            </div>
+        </t>
+
+        <!-- Account type filter -->
+        <t t-if="'account_type' in controller.options">
+            <div id="filter_account_type">
+                <t t-call="account_reports.AccountReportFilterAccountType"/>
+            </div>
+        </t>
+
+        <!-- Analytic filter -->
+        <t t-if="controller.groups.analytic_accounting and controller.filters.show_analytic">
+            <div id="filter_analytic" class="filter_analytic">
+                <t t-call="account_reports.AccountReportFilterAnalytic"/>
+            </div>
+        </t>
+
+        <!-- Analytic groupby filter -->
+        <t t-if="hasAnalyticGroupbyFilter">
+            <div id="filter_analytic_groupby" class="filter_analytic_groupby">
+                <t t-call="account_reports.AccountReportFilterAnalyticGroupby"/>
+            </div>
+        </t>
+
+        <!-- Horizontal groups filter -->
+        <t t-if="controller.options.available_horizontal_groups.length > 0">
+            <div id="filter_horizontal_groups">
+                <t t-call="account_reports.AccountReportFilterHorizontalGroups"/>
+            </div>
+        </t>
+
+        <!-- Partner filter -->
+        <t t-if="'partner' in controller.options">
+            <div id="filter_partner" class="filter_partner">
+                <t t-call="account_reports.AccountReportFilterPartner"/>
+            </div>
+        </t>
+
+        <!-- Extra options filter -->
+        <t t-if="hasExtraOptionsFilter">
+            <div id="filter_extra_options">
+                <t t-call="account_reports.AccountReportFilterExtraOptions"/>
+            </div>
+        </t>
+
+        <!-- Variant filter -->
+        <t t-if="controller.options.available_variants.length > 1">
+            <div id="filter_variant">
+                <t t-call="account_reports.AccountReportFilterVariant"/>
+            </div>
+        </t>
+
+        <!-- Tax unit filter -->
+        <t t-if="'available_tax_units' in this.controller.options and controller.options.available_tax_units.length > 0">
+            <div id="filter_tax_unit">
+                <t t-call="account_reports.AccountReportFilterTaxUnit"/>
+            </div>
+        </t>
+
+        <!-- Fiscal position filter -->
+        <t t-if="hasFiscalPositionFilter">
+            <div id="filter_fiscal_position">
+                <t t-call="account_reports.AccountReportFilterFiscalPosition"/>
+            </div>
+        </t>
+
+        <!-- Budget filter -->
+        <t t-if="'budgets' in controller.options">
+            <div id="filter_budget">
+                <t t-call="account_reports.AccountReportFilterBudget"/>
+            </div>
+        </t>
+
+        <!-- User defined filter on journal items -->
+        <t t-if="'aml_ir_filters' in controller.options and controller.options.aml_ir_filters.length > 0">
+            <div id="filter_aml_ir_filters">
+                <t t-call="account_reports.AccountReportAmlIrFilters"/>
+            </div>
+        </t>
+
+        <div id="filter_rounding_unit">
+            <t t-call="account_reports.AccountReportFilterRoundingUnit"/>
+        </div>
+
+        <t t-if="env.debug">
+            <div id="filter_configuration" class="o-dropdown dropdown o-dropdown--no-caret">
+                <button
+                    class="btn btn-secondary"
+                    t-on-click="(ev) => this.controller.reportAction(ev, 'action_open_report_form', {}, true)"
+                >
+                    <i class="fa fa-cogs me-1"/>
+                </button>
+            </div>
+        </t>
+    </t>
+</templates>

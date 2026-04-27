@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ke_edi_customs_import_view_tree" model="ir.ui.view">
+        <field name="name">l10n.ke.edi.oscu.stock.customs.import.list</field>
+        <field name="model">l10n_ke_edi.customs.import</field>
+        <field name="arch" type="xml">
+            <list string="Customs Imports">
+                <field name="declaration_number"/>
+                <field name="declaration_date"/>
+                <field name="task_code"/>
+                <field name="item_name"/>
+                <field name="quantity" optional="hide"/>
+                <field name="uom_code_id" optional="hide"/>
+                <field name="number_packages" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="product_id"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_ke_edi_customs_import_view_branch_form" model="ir.ui.view">
+        <field name="name">l10n.ke.edi.oscu.stock.customs.import.form</field>
+        <field name="model">l10n_ke_edi.customs.import</field>
+        <field name="arch" type="xml">
+            <form string="Customs Import">
+                <header>
+                    <button name="button_approve" string="Match &amp; Approve" type="object" class="oe_highlight" invisible="state != '2' or not product_id"/>
+                    <button name="button_approve" string="Match &amp; Approve" type="object" invisible="state == '2' and product_id"/>
+                    <button name="button_reject" string="Match &amp; Reject" type="object"/>
+                    <field name="state" widget="statusbar" readonly="1"/>
+                </header>
+                <div class="m-0" name="warnings">
+                    <field name="warning_msg" class="o_field_html" widget="actionable_errors"/>
+                </div>
+                <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button class="oe_stat_button"
+                                name="action_view_purchase_order"
+                                type="object"
+                                groups="purchase.group_purchase_user"
+                                icon="fa-pencil-square-o"
+                                invisible="not purchase_id">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Purchase Order</span>
+                                </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group string="Match">
+                            <field name="product_id"
+                                context="{'default_l10n_ke_packaging_unit_id': package_unit_code_id,
+                                          'default_uom_id': uom_id,
+                                          'default_l10n_ke_origin_country_id': origin_country_id,
+                                          'default_name': item_name,
+                                          'default_type': 'consu',
+                                          'default_is_storable': True,
+                                          }"/>
+                            <field name="partner_id" context="{'default_country_id': export_country_id}"/>
+                            <field name="purchase_id" domain="[('partner_id', '=', partner_id)]" options="{'no_create': True}"/>
+                            <button name="action_create_purchase_order" type="object" class="oe_link" string="Create PO"
+                                invisible="purchase_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Customs Import Identification">
+                            <field name="declaration_date"/>
+                            <field name="declaration_number"/>
+                            <field name="task_code"/>
+                            <field name="item_seq"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="supplier_name"/>
+                            <field name="remark"/>
+                        </group>
+                        <group string="Product Information">
+                            <field name="item_name"/>
+                            <field name="number_packages"/>
+                            <field name="package_unit_code_id"/>
+                            <field name="quantity"/>
+                            <field name="uom_code_id"/>
+                            <field name="uom_id" invisible="1"/>
+                            <field name="hs_code"/>
+                            <field name="origin_country_id"/>
+                            <field name="export_country_id"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_ke_customs_import_search_view" model="ir.ui.view">
+        <field name="name">l10n.ke.edi.oscu.stock.customs.import.search</field>
+        <field name="model">l10n_ke_edi.customs.import</field>
+        <field name="arch" type="xml">
+            <search string="Product">
+                <field name="task_code" string="Task Code"/>
+                <field name="item_name" string="Item Name"/>
+                <field name="product_id" string="Assigned Product"/>
+                <field name="hs_code" string="HS Code"/>
+                <field name="declaration_number"/>
+                <separator/>
+                <filter string="Matched" name="matched" domain="[('product_id','!=', False)]"/>
+                <separator/>
+                <filter string="Waiting" name="waiting" domain="[('state', '=', '2')]"/>
+                <filter string="Approved" name="approved" domain="[('state', '=', '3')]"/>
+                <filter string="Rejected" name="rejected" domain="[('state', '=', '4')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_l10n_ke_edi_oscu_customs_import" model="ir.actions.act_window">
+        <field name="name">Customs Import</field>
+        <field name="res_model">l10n_ke_edi.customs.import</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            The Customs Imports will be fetched automatically from the government.
+          </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_action_l10n_ke_edi_customs_import" action="action_l10n_ke_edi_oscu_customs_import"
+          parent="account.menu_finance_payables" sequence="8" name="Customs Imports"/>
+
+    <record id="purchase_create" model="ir.actions.server">
+        <field name="name">Create Purchase</field>
+        <field name="state">code</field>
+        <field name="model_id" ref="model_l10n_ke_edi_customs_import"/>
+        <field name="binding_model_id" ref="model_l10n_ke_edi_customs_import"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="code">
+            if records:
+                action = records.action_create_purchase_order()
+        </field>
+    </record>
+</odoo>

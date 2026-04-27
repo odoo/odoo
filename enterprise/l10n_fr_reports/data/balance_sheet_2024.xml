@@ -1,0 +1,1452 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_financial_report_l10n_fr_bilan_2024" model="account.report">
+        <field name="name">Balance sheet (2024)</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.fr"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_l10n_fr_bilan_column00_2024" model="account.report.column">
+                <field name="name">Gross</field>
+                <field name="expression_label">brut</field>
+            </record>
+            <record id="account_financial_report_l10n_fr_bilan_column01_2024" model="account.report.column">
+                <field name="name">Amort. &amp; Prov</field>
+                <field name="expression_label">amort</field>
+            </record>
+            <record id="account_financial_report_l10n_fr_bilan_column02_2024" model="account.report.column">
+                <field name="name">Net</field>
+                <field name="expression_label">net</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_line_fr_bilan_actif_passif_total_2024" model="account.report.line">
+                <field name="name">ACTIVE - PASSIVE</field>
+                <field name="code">ACTIF_PASSIF_TOTAL_2024</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_fr_bilan_actif_passif_total_column3_2024" model="account.report.expression">
+                        <field name="label">net</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACTIF_TOT_2024.net - PASSIF_TOT_2024.net</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_fr_bilan_actif_total_2024" model="account.report.line">
+                        <field name="name">TOTAL ACTIVE (I + II + III + IV + V)</field>
+                        <field name="code">ACTIF_TOT_2024</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_fr_bilan_actif_total_column3_2024" model="account.report.expression">
+                                <field name="label">net</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CAPITAL_NON_APPELE_2024.net + ACTIF_IMMOBILISE_2024.net + ACTIF_CIRCULANT_2024.net + REGULARISATION_2024.net </field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <!-- Capital souscrit -->
+                            <record id="account_financial_report_line_01_0_fr_bilan_actif_2024" model="account.report.line">
+                                <field name="name">Subscribed capital - uncalled</field>
+                                <field name="code">CAPITAL_NON_APPELE_2024</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_01_0_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">109</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <!-- ACTIF IMMO -->
+                            <record id="account_financial_report_line_02_0_fr_bilan_actif_2024" model="account.report.line">
+                                <field name="name">Fixed assets</field>
+                                <field name="code">ACTIF_IMMOBILISE_2024</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_02_0_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">IMMOBILIS_INCORPO_2024.net + IMMOBILIS_COPORELLES_2024.net + IMMOBILIS_FINANCIERES_2024.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <!-- Immo incor -->
+                                    <record id="account_financial_report_line_02_1_0_fr_bilan_actif_2024" model="account.report.line">
+                                        <field name="name">Intangible assets</field>
+                                        <field name="code">IMMOBILIS_INCORPO_2024</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_02_1_0_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">FRAIS_ETABLISS_2024.net + FRAIS_DEVELOPEMENT_2024.net + CONCESSION_SIMILAIRES_2024.net + AUTRES_2024.net + FONDS_COMMERCIAL_2024.net + IMMOBILIS_COURS_2024.net + AVANCES_ACOMPTES_CORPORE_2024.net</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_02_1_0_1_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Establishment costs</field>
+                                                <field name="code">FRAIS_ETABLISS_2024</field>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_02_1_0_1_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">201</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_1_0_1_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-2801</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_1_0_1_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">201 + 2801</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_02_1_0_2_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Research and development costs</field>
+                                                <field name="code">FRAIS_DEVELOPEMENT_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_02_1_0_2_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">203</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_1_0_2_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-2803</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_1_0_2_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">203 + 2803</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_02_1_0_3_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Concessions, patents, licences, trademarks, rights and similar assets</field>
+                                                <field name="code">CONCESSION_SIMILAIRES_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_02_1_0_3_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">205</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_1_0_3_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-2905 - 2805</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_1_0_3_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">205 + 2905 + 2805</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_02_1_0_4_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Commercial fund</field>
+                                                <field name="code">FONDS_COMMERCIAL_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_02_1_0_4_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">206+207</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_1_0_4_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-2807 - 2907 - 2806 - 2906</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_1_0_4_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">206 + 207 +2807 + 2907 + 2806 + 2906</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_02_1_0_5_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Others</field>
+                                                <field name="code">AUTRES_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_02_1_0_5_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">208</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_1_0_5_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-2908 - 2808</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_1_0_5_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">208 + 2908 + 2808</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_02_1_0_6_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Intangible assets in progress</field>
+                                                <field name="code">IMMOBILIS_COURS_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_02_1_0_6_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">232</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_1_0_6_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-2932</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_1_0_6_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">232 + 2932</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_02_1_0_7_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Advance payments</field>
+                                                <field name="code">AVANCES_ACOMPTES_CORPORE_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_02_1_0_7_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">237</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_1_0_7_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-2937</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_1_0_7_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">237 + 2937</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <!-- Immo cor -->
+                                    <record id="account_financial_report_line_02_2_fr_bilan_actif_2024" model="account.report.line">
+                                        <field name="name">Property, plant and equipment</field>
+                                        <field name="code">IMMOBILIS_COPORELLES_2024</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_02_2_0_0_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">TERRAINS_2024.net + CONSTRUCTIONS_2024.net + INSTALLATION_OUTILLAGE_2024.net + AUTRES_CORPORE_2024.net + IMMOBILLIS_COURS_2024.net + AVANCES_ACOMPTES_CORP_2024.net</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_02_2_0_1_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Land</field>
+                                                <field name="code">TERRAINS_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_02_2_0_1_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">211 + 212</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_2_0_1_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-2911 - 2811 - 2812</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_2_0_1_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">211 + 212 + 2911 + 2811 + 2812</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_02_2_0_2_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Buildings</field>
+                                                <field name="code">CONSTRUCTIONS_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_02_2_0_2_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">213 + 214</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_2_0_2_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-2813 - 2814</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_2_0_2_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">213 + 214 + 2813 + 2814 </field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_02_2_0_3_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Technical installations, equipment and tools</field>
+                                                <field name="code">INSTALLATION_OUTILLAGE_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_02_2_0_3_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">215</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_2_0_3_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-2815</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_2_0_3_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">215 + 2815</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_02_2_0_4_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Others</field>
+                                                <field name="code">AUTRES_CORPORE_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_02_2_0_4_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">218 + 22</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_2_0_4_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-292 - 282 - 2818 - 2918 - 2978</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_2_0_4_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">218 + 22 + 292 + 282 + 2818 + 2918 + 2978</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_02_2_0_5_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Property, plant and equipment in progress</field>
+                                                <field name="code">IMMOBILLIS_COURS_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_02_2_0_5_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">231</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_2_0_5_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-2931</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_2_0_5_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">231 + 2931</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_02_2_0_6_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Advance payments</field>
+                                                <field name="code">AVANCES_ACOMPTES_CORP_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_02_2_0_6_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">238</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_2_0_6_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-2938</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_2_0_6_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">238 + 2938</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <!-- Immo finan -->
+                                    <record id="account_financial_report_line_02_3_fr_bilan_actif_2024" model="account.report.line">
+                                        <field name="name">Financial assets</field>
+                                        <field name="code">IMMOBILIS_FINANCIERES_2024</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_02_3_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">PARTICIPATIONS_2024.net + CREANCES_PARTICIPATIONS_2024.net + TITRES_PORTEFEUILLE_2024.net + AUTRES_IMMOBILISES_2024.net + PRETS_2024.net + AUTRES_FINANCIAL_2024.net</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_02_3_0_1_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Shareholdings</field>
+                                                <field name="code">PARTICIPATIONS_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_02_3_0_1_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">25 + 266 + 261 + 262</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_3_0_1_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-2961 - 2966</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_3_0_1_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">25 + 266 + 261 + 262 + 2961 + 2966</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_02_3_0_2_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Receivables from participating interests</field>
+                                                <field name="code">CREANCES_PARTICIPATIONS_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_02_3_0_2_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">267 + 268</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_3_0_2_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-2967 - 2968</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_3_0_2_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">267 + 268 + 2967 + 2968</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_02_3_0_3_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Fixed assets of the portfolio activity</field>
+                                                <field name="code">TITRES_PORTEFEUILLE_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_02_3_0_3_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">273</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_3_0_3_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-2973</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_3_0_3_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">273 + 2973</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_02_3_0_4_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Other fixed assets</field>
+                                                <field name="code">AUTRES_IMMOBILISES_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_02_3_0_4_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">27682 + 278 + 272 + 271</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_3_0_4_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-2971 - 2972</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_3_0_4_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">27682 + 278 + 272 + 271 + 2971 + 2972 </field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_02_3_0_5_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Loans</field>
+                                                <field name="code">PRETS_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_02_3_0_5_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">274 + 27684</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_3_0_5_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-2974</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_3_0_5_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">274 + 27684 + 2974</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_02_3_0_6_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Other</field>
+                                                <field name="code">AUTRES_FINANCIAL_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_02_3_0_6_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">277 + 276\(27682,27684) + 275</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_3_0_6_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-2976 - 2975</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_02_3_0_6_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">277 + 276\(27682,27684) + 275 + 2976 + 2975 </field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <!-- ACTIF CIRCULANT -->
+                            <record id="account_financial_report_line_03_0_fr_bilan_actif_2024" model="account.report.line">
+                                <field name="name">Current assets</field>
+                                <field name="code">ACTIF_CIRCULANT_2024</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_0_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">STOCK_COURS_2024.net + CREANCES_2024.net + DIVERS_2024.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <!-- Stock  -->
+                                    <record id="account_financial_report_line_03_01_1_fr_bilan_actif_2024" model="account.report.line">
+                                        <field name="name">Stock in progress</field>
+                                        <field name="code">STOCK_COURS_2024</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_03_01_1_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">MATIERES_APPROVI_2024.net + EN_COURS_PRODUCTION_2024.net + PRODUITS_FINIS_2024.net + STOCK_IMMO_2024.net + MARCHANDISES_2024.net + STOCK_ACHEM_2024.net + ADVANCES_COMMANDES_2024.net </field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_03_3_1_1_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Raw materials and other supplies</field>
+                                                <field name="code">MATIERES_APPROVI_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_03_3_1_1_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">32 + 31</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_03_3_1_1_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-391 - 392</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_03_3_1_1_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">32 + 31 + 391 + 392</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_03_3_1_2_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Work in progress [goods and services]</field>
+                                                <field name="code">EN_COURS_PRODUCTION_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_03_3_1_2_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">33 + 34</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_03_3_1_2_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-394 - 393</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_03_3_1_2_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">33 + 34 + 394 + 393</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_03_3_1_3_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Intermediate and finished products</field>
+                                                <field name="code">PRODUITS_FINIS_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_03_3_1_3_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">35</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_03_3_1_3_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-395</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_03_3_1_3_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">35 + 395</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_03_3_1_4_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Stocks from fixed assets</field>
+                                                <field name="code">STOCK_IMMO_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_03_3_1_4_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">36</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_03_3_1_5_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Goods</field>
+                                                <field name="code">MARCHANDISES_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_03_3_1_5_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">37</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_03_3_1_5_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-397</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_03_3_1_5_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">37 + 397</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_03_3_1_6_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Stocks in transit</field>
+                                                <field name="code">STOCK_ACHEM_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_03_3_1_6_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">38</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_03_3_1_7_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Advances and deposits paid on orders</field>
+                                                <field name="code">ADVANCES_COMMANDES_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_03_3_1_7_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">4091</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <!-- Creance -->
+                                    <record id="account_financial_report_line_03_01_2_fr_bilan_actif_2024" model="account.report.line">
+                                        <field name="name">Claims</field>
+                                        <field name="code">CREANCES_2024</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_03_01_2_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">CREANCES_RATTACHES_2024.net + AUTRES_CREANCES_2024.net + CAPITAL_NON_VERSE_2024.net</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_03_01_2_1_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Trade receivables and related accounts</field>
+                                                <field name="code">CREANCES_RATTACHES_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_03_01_2_1_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">416 + 413 + 418 + 417 + 411 + 410</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_03_01_2_1_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-491</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_03_01_2_1_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">416 + 413 + 418 + 417 + 411 + 410 + 491</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_03_01_2_2_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Other receivables</field>
+                                                <field name="code">AUTRES_CREANCES_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_03_01_2_2_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                        <field name="label">brut</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">471 + 425 + 472 + 474 + 441 + 4098 + 475 + 473 + 465 + 4287 + 4456 + 4097 + 462 + 4096 + 456\(4562)D + 443D + 451D + 445\(4452,4455,4456,44584,44587)D + 449D + 428\(4287)D + 458D + 470D + 448D + 444D + 455D + 478D + 467D + 438D + 468\(4686)D</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_03_01_2_2_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                        <field name="label">amort</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">-496 - 495</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_03_01_2_2_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">471 + 425 + 472 + 474 + 441 + 4098 + 475 + 473 + 465 + 4287 + 4456 + 4097 + 462 + 4096 + 456\(4562)D + 443D + 451D + 445\(4452,4455,4456,44584,44587)D + 449D + 428\(4287)D + 458D + 470D + 448D + 444D + 455D + 478D + 467D + 438D + 468\(4686)D + 496 + 495</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_03_01_2_3_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Subscribed capital - called, not paid</field>
+                                                <field name="code">CAPITAL_NON_VERSE_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_03_01_2_3_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">4562</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <!-- Divers -->
+                                    <record id="account_financial_report_line_03_01_3_fr_bilan_actif_2024" model="account.report.line">
+                                        <field name="name">Various</field>
+                                        <field name="code">DIVERS_2024</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_03_01_3_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">VALEURS_PLACEMENT_2024.net + DISPONIBILITES_2024.net</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_03_01_3_1_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Marketable securities</field>
+                                                <field name="code">VALEURS_PLACEMENT_2024</field>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_03_01_3_1_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">aggregation</field>
+                                                        <field name="formula">ACTIONS_PROPRES_2024.net + AUTRES_TITRES_2024.net + INSTRMENTS_TRESORERIE_2024.net</field>
+                                                    </record>
+                                                </field>
+                                                <field name="children_ids">
+                                                    <record id="account_financial_report_line_03_5_1_fr_bilan_actif_2024" model="account.report.line">
+                                                        <field name="name">Own shares</field>
+                                                        <field name="code">ACTIONS_PROPRES_2024</field>
+                                                        <field name="groupby">account_id</field>
+                                                        <field name="foldable" eval="True"/>
+                                                        <field name="expression_ids">
+                                                            <record id="account_financial_report_line_03_5_1_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                                <field name="label">brut</field>
+                                                                <field name="engine">account_codes</field>
+                                                                <field name="formula">502</field>
+                                                            </record>
+                                                            <record id="account_financial_report_line_03_5_1_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                                <field name="label">amort</field>
+                                                                <field name="engine">account_codes</field>
+                                                                <field name="formula">-5903</field>
+                                                            </record>
+                                                            <record id="account_financial_report_line_03_5_1_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                                <field name="label">net</field>
+                                                                <field name="engine">account_codes</field>
+                                                                <field name="formula">502 + 5903</field>
+                                                            </record>
+                                                        </field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_03_5_2_fr_bilan_actif_2024" model="account.report.line">
+                                                        <field name="name">Other titles</field>
+                                                        <field name="code">AUTRES_TITRES_2024</field>
+                                                        <field name="groupby">account_id</field>
+                                                        <field name="foldable" eval="True"/>
+                                                        <field name="expression_ids">
+                                                            <record id="account_financial_report_line_03_5_2_fr_bilan_actif_column1_2024" model="account.report.expression">
+                                                                <field name="label">brut</field>
+                                                                <field name="engine">account_codes</field>
+                                                                <field name="formula">50\(502,509)</field>
+                                                            </record>
+                                                            <record id="account_financial_report_line_03_5_2_fr_bilan_actif_column2_2024" model="account.report.expression">
+                                                                <field name="label">amort</field>
+                                                                <field name="engine">account_codes</field>
+                                                                <field name="formula">-590\(5903)</field>
+                                                            </record>
+                                                            <record id="account_financial_report_line_03_5_2_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                                <field name="label">net</field>
+                                                                <field name="engine">account_codes</field>
+                                                                <field name="formula">50\(502,509) + 590\(5903)</field>
+                                                            </record>
+                                                        </field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_03_5_3_fr_bilan_actif_2024" model="account.report.line">
+                                                        <field name="name">Treasury instruments</field>
+                                                        <field name="code">INSTRMENTS_TRESORERIE_2024</field>
+                                                        <field name="groupby">account_id</field>
+                                                        <field name="foldable" eval="True"/>
+                                                        <field name="expression_ids">
+                                                            <record id="account_financial_report_line_03_5_3_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                                <field name="label">net</field>
+                                                                <field name="engine">account_codes</field>
+                                                                <field name="formula">52</field>
+                                                            </record>
+                                                        </field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_03_01_3_2_fr_bilan_actif_2024" model="account.report.line">
+                                                <field name="name">Availability</field>
+                                                <field name="code">DISPONIBILITES_2024</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_financial_report_line_03_01_3_2_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                        <field name="label">net</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">53 + 54 + 58 + 511 + 515 + 516 + 514D + 518D + 512D + 513D + 517D</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <!-- Compte de régulartisation -->
+                            <record id="account_financial_report_line_04_0_fr_bilan_actif_2024" model="account.report.line">
+                                <field name="name">Adjustment account</field>
+                                <field name="code">REGULARISATION_2024</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_04_0_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">CHARGES_DAVANCE_2024.net + CHARGES_EXERCICES_2024.net + PRIMES_EMPRUNTS_2024.net + ECARTS_ACTIF_2024.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_04_01_1_fr_bilan_actif_2024" model="account.report.line">
+                                        <field name="name">Prepaid expenses</field>
+                                        <field name="code">CHARGES_DAVANCE_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_04_01_1_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">4886 + 486</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_04_01_2_fr_bilan_actif_2024" model="account.report.line">
+                                        <field name="name">Deferred charges (III)</field>
+                                        <field name="code">CHARGES_EXERCICES_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_04_01_2_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">481</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_04_01_3_fr_bilan_actif_2024" model="account.report.line">
+                                        <field name="name">Loan repayment premiums (IV)</field>
+                                        <field name="code">PRIMES_EMPRUNTS_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_04_01_3_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">169</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_04_01_4_fr_bilan_actif_2024" model="account.report.line">
+                                        <field name="name">Translation adjustment assets (V)</field>
+                                        <field name="code">ECARTS_ACTIF_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_04_01_4_fr_bilan_actif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">476</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_fr_bilan_passif_total_2024" model="account.report.line">
+                        <field name="name">TOTAL PASSIVE (I + II + III + IV + V)</field>
+                        <field name="code">PASSIF_TOT_2024</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_fr_bilan_passif_total_column3_2024" model="account.report.expression">
+                                <field name="label">net</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CAPITAUX_PROPRES_2024.net + RESERVES_2024.net + AUTRES_FONDS_PROPRES_2024.net + PROVISIONS_2024.net + DETTES_2024.net + ECARTS_PASSIF_2024.net</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <!-- Capitaux propre-->
+                            <record id="account_financial_report_line_01_0_fr_bilan_passif_2024" model="account.report.line">
+                                <field name="name">Equity</field>
+                                <field name="code">CAPITAUX_PROPRES_2024</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_01_0_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">CAPITAL_2024.net + FONDS_FIDUCIAIRES_2024.net + PRIMES_DAPPORT_2024.net + ECARTS_REEVALUTION_2024.net + ECART_EQUIVALENCE_2024.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_01_0_1_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Share or individual capital</field>
+                                        <field name="code">CAPITAL_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_01_0_1_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-101 - 108</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_01_0_2_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Trust funds</field>
+                                        <field name="code">FONDS_FIDUCIAIRES_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_01_0_2_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-102</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_01_0_3_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Share premium, merger premium, contribution premium</field>
+                                        <field name="code">PRIMES_DAPPORT_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_01_0_3_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-104</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_01_0_4_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Revaluation differences</field>
+                                        <field name="code">ECARTS_REEVALUTION_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_01_0_4_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-105</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_01_0_5_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Equity difference</field>
+                                        <field name="code">ECART_EQUIVALENCE_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_01_0_5_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-107</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <!-- Reserve -->
+                            <record id="account_financial_report_line_02_0_fr_bilan_passif_2024" model="account.report.line">
+                                <field name="name">Reserves</field>
+                                <field name="code">RESERVES_2024</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_02_0_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">RESERVE_LEGALE_2024.net + RESERVE_INDISPONIBLE_2024.net + RESERVE_CONTRACT_2024.net + RESERVE_REGLEMENT_2024.net + AUTRES_RESERVES_2024.net + REPORT_NOUVEAU_2024.net + RESULT_LEXERCICE_2024.net + SUBVENTIONS_INVEST_2024.net + PROVISIONS_REGLEMENT_2024.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_02_0_1_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Legal reserve</field>
+                                        <field name="code">RESERVE_LEGALE_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_02_0_1_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-1061</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_02_0_2_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Regulated reserves</field>
+                                        <field name="code">RESERVE_INDISPONIBLE_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_02_0_2_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-1062</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_02_0_3_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Statutory or contractual reservations</field>
+                                        <field name="code">RESERVE_CONTRACT_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_02_0_3_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-1063</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_02_0_4_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Regulated reserves</field>
+                                        <field name="code">RESERVE_REGLEMENT_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_02_0_4_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-1064</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_02_0_5_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Other reserves</field>
+                                        <field name="code">AUTRES_RESERVES_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_02_0_5_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-1068</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_02_0_6_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Retained earnings</field>
+                                        <field name="code">REPORT_NOUVEAU_2024</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_02_0_6_fr_bilan_passif_past_pnl_2024" model="account.report.expression">
+                                                <field name="label">past_pnl</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="subformula">cross_report</field>
+                                                <field name="formula">total_all_2024.balance</field>
+                                                <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                            </record>
+                                            <record id="account_financial_report_line_02_0_6_fr_bilan_passif_accounts_2024" model="account.report.expression">
+                                                <field name="label">accounts</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula">['|', '|', ('account_id.code','=like','11%'), ('account_id.code','=like','12%'), ('account_id.account_type','=','equity_unaffected')]</field>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                            <record id="account_financial_report_line_02_0_6_fr_bilan_passif_net_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">REPORT_NOUVEAU_2024.past_pnl + REPORT_NOUVEAU_2024.accounts</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_02_0_7_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Result for the year</field>
+                                        <field name="code">RESULT_LEXERCICE_2024</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_02_0_7_fr_bilan_passif_net_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">total_all_2024.balance</field>
+                                                <field name="subformula">cross_report</field>
+                                                <field name="date_scope">from_fiscalyear</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_02_0_8_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Investment grants</field>
+                                        <field name="code">SUBVENTIONS_INVEST_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_02_0_8_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-13</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_02_0_9_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Regulated provisions</field>
+                                        <field name="code">PROVISIONS_REGLEMENT_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_02_0_9_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-14</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <!-- Autres fonds propres -->
+                            <record id="account_financial_report_line_03_0_fr_bilan_passif_2024" model="account.report.line">
+                                <field name="name">Other own funds</field>
+                                <field name="code">AUTRES_FONDS_PROPRES_2024</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_0_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MONTANT_EMISSIONS_2024.net + AVANCES_CONDITIONNEES_2024.net + COMPTES_LIAISONS_2024.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_03_0_1_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Amount of equity issues</field>
+                                        <field name="code">MONTANT_EMISSIONS_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_03_0_1_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-1671 - 1670</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_03_0_2_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Conditional advances</field>
+                                        <field name="code">AVANCES_CONDITIONNEES_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_03_0_2_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-1674 - 1672 - 1675 - 1673</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_03_0_3_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Liaison accounts</field>
+                                        <field name="code">COMPTES_LIAISONS_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_03_0_3_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-18</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <!-- Provision -->
+                            <record id="account_financial_report_line_04_0_fr_bilan_passif_2024" model="account.report.line">
+                                <field name="name">Provisions</field>
+                                <field name="code">PROVISIONS_2024</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_04_0_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">PROVISIONS_RISQUES_2024.net + PROVISIONS_CHARGES_2024.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_04_0_1_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Provisions for risks</field>
+                                        <field name="code">PROVISIONS_RISQUES_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_04_0_1_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-151</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_04_0_2_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Provisions for charges</field>
+                                        <field name="code">PROVISIONS_CHARGES_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_04_0_2_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-15\(151)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <!-- Dettes -->
+                            <record id="account_financial_report_line_05_0_fr_bilan_passif_2024" model="account.report.line">
+                                <field name="name">Debts</field>
+                                <field name="code">DETTES_2024</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_05_0_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">EMPRUNTS_CONVERT_2024.net + AUTRES_OBLIGATAIRES_2024.net + EMPRUNTS_CREDIT_2024.net + EMPRUNTS_DIVERSES_2024.net + AVANCES_COURS_2024.net + DETTES_RATTACHES_2024.net + DETTES_SOCIALES_2024.net + DETTES_SUR_RATTACHES_2024.net + AUTRES_DETTES_2024.net + PRODUITS_DAVANCE_2024.net</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_05_0_1_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Convertible bonds</field>
+                                        <field name="code">EMPRUNTS_CONVERT_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_05_0_1_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-16881 - 161</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_05_0_2_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Other bonds</field>
+                                        <field name="code">AUTRES_OBLIGATAIRES_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_05_0_2_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-162 - 16883 - 163</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_05_0_3_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Borrowings and debts with credit institutions</field>
+                                        <field name="code">EMPRUNTS_CREDIT_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_05_0_3_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-16884 - 164 - 519 - 514C - 518C - 512C - 513C - 517C</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_05_0_4_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Borrowings and other financial liabilities</field>
+                                        <field name="code">EMPRUNTS_DIVERSES_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_05_0_4_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-166 - 165 - 168\(16881,16883,16884) - 17 - 426 - 45\(457,4562)C</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_05_0_5_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Advances and deposits received on orders in progress</field>
+                                        <field name="code">AVANCES_COURS_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_05_0_5_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-4191</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_05_0_6_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Trade payables and related accounts</field>
+                                        <field name="code">DETTES_RATTACHES_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_05_0_6_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-403 - 402 - 401 - 408\(4084) - 400</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_05_0_7_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Tax and social security liabilities</field>
+                                        <field name="code">DETTES_SOCIALES_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_05_0_7_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-4455 - 44587 - 421 - 457 - 442 - 424 - 43\(438) - 422 - 427 - 447 - 446 - 4452 - 44584 - 443C - 4453C - 4457C - 449C - 428\(4287)C - 448C - 444C - 4458\(44584,44587)C - 438C</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_05_0_8_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Debts on fixed assets and related accounts</field>
+                                        <field name="code">DETTES_SUR_RATTACHES_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_05_0_8_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-279 - 4084 - 405 - 269 - 404</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_05_0_9_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Other debts</field>
+                                        <field name="code">AUTRES_DETTES_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_05_0_9_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-4198 - 509 - 4196 - 4197 - 4686 - 464 - 468\(4686)C - 470C - 478C - 467C</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_05_1_0_fr_bilan_passif_2024" model="account.report.line">
+                                        <field name="name">Deferred income</field>
+                                        <field name="code">PRODUITS_DAVANCE_2024</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_05_1_0_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-4887 - 487</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <!-- ECARTS_PASSIF -->
+                            <record id="account_financial_report_line_06_0_fr_bilan_passif_2024" model="account.report.line">
+                                <field name="name">Unrealized foreign exchange gains and losses (V)</field>
+                                <field name="code">ECARTS_PASSIF_2024</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_06_0_fr_bilan_passif_column3_2024" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-477</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_fr_off_sheet_2024" model="account.report.line">
+                <field name="name">Off-balance sheet accounts</field>
+                <field name="code">FR_OS_2024</field>
+                <field name="groupby">account_id</field>
+                <field name="hide_if_zero" eval="1"/>
+                <field name="foldable" eval="True"/>
+                <field name="domain_formula">-sum([('account_id.account_type', '=', 'off_balance')])</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+        </field>
+    </record>
+</odoo>

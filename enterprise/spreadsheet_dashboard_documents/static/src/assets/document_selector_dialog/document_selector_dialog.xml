@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="spreadsheet_dashboard_documents.DocumentSelectorDialog">
+        <Dialog title.translate="Create a Dashboard or select a Spreadsheet">
+            <div class="o-spreadsheet-templates-dialog">
+                <div class="o-sp-dialog-spreadsheets">
+                    <div class="o-sp-dialog-content">
+                        <SpreadsheetSelectorPanel
+                            model="'documents.document'"
+                            onSpreadsheetSelected.bind="onSpreadsheetSelected"
+                            onSpreadsheetDblClicked.bind="_confirm"
+                        />
+                    </div>
+                </div>
+                <t t-set-slot="footer">
+                    <button class="btn btn-primary" t-on-click="_confirm">Confirm</button>
+                    <button class="btn btn-secondary" t-on-click="_cancel">Cancel</button>
+                </t>
+            </div>
+        </Dialog>
+    </t>
+
+</templates>

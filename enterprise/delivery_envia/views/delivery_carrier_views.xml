@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_delivery_carrier_form_inherit_delivery_envia" model="ir.ui.view">
+        <field name="name">delivery.carrier.form.inherit.delivery.envia</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='destination']" position="before">
+                <page string="Envia Configuration" name="envia_configuration" invisible="delivery_type != 'envia'">
+                    <group>
+                        <group>
+                            <field name="envia_production_api_key" widget="char" password="1" required="delivery_type == 'envia'"/>
+                            <field name="envia_sandbox_api_key" widget="char" password="1" required="delivery_type == 'envia'"/>
+                            <field name="envia_label_file_type" required="delivery_type == 'envia'"/>
+                            <field name="envia_label_stock_type" required="delivery_type == 'envia'"/>
+                        </group>
+                        <group>
+                            <field name="envia_default_package_type_id" context="{'default_package_carrier_type': 'envia'}" domain="[('package_carrier_type', '=', 'envia')]" required="delivery_type == 'envia'"/>
+                            <field name="country_id" required="delivery_type == 'envia'" options="{'no_create': True, 'no_quick_create': True, 'no_open': True}"/>
+                            <field name="envia_currency_id" required="delivery_type == 'envia'" options="{'no_create': True, 'no_quick_create': True, 'no_open': True}" context="{'active_test': False}"/>
+                            <label for="envia_service_name"/>
+                            <div>
+                                <field name="envia_service_name" readonly="1" class="oe_inline" />
+                                <button name="action_open_envia_wizard" title="Sync Carriers/Services from Envia" class="fa fa-refresh oe_inline oe_link" type="object"/>
+                            </div>
+                        </group>
+                        <group string="Options">
+                            <field name="envia_return_at_senders_expense" invisible="country_id != %(base.ca)d"/>
+                            <field name="envia_lift_pickup" invisible="envia_mail_type != 'pallet' or country_id not in [%(base.mx)d, %(base.us)d]" />
+                            <field name="envia_lift_delivery" invisible="envia_mail_type != 'pallet' or country_id not in [%(base.mx)d, %(base.us)d]" />
+                            <field name="envia_residential_pickup" invisible="envia_mail_type != 'pallet' or country_id != %(base.us)d" />
+                            <field name="envia_residential_delivery" invisible="envia_mail_type != 'pallet' or country_id != %(base.us)d" />
+                        </group>
+                    </group>
+                    <group string="If you don't have an account" invisible="delivery_type != 'envia'">
+                        <ul>
+                            <li> If you don't have an account, we recommend heading to <a href="https://ship.envia.com/registro?partner_id=673">our personalized link</a>. This link will give you personalized attention plus lower prices. </li>
+                            <li> Make sure to select the appropriate country for your main billing, if you have multi country operations you can also create two separate accounts, keep in mind that your billing will be done in your main currency. <br/>
+                                <img src="/delivery_envia/static/src/img/join.png" alt="Create an Account" title="Create an Account"/>
+                            </li>
+                            <li>You will be asked to confirm your email address and phone number via SMS.</li>
+                        </ul>
+                    </group>
+                    <group string="Envia Setup" invisible="delivery_type != 'envia'">
+                        <ul>
+                            <li>For your available carriers you'll need to make sure that they are available through Envia (make sure to select all available countries):<br/>
+                                <img src="/delivery_envia/static/src/img/carriers.png" alt="Add New Carriers in Envia" title="Add New Carriers in Envia"/>
+                            </li>
+                            <li>You should also make sure that if you export to other countries, you have to select who will pay for customs duties.</li>
+                            <li>You can also preselect which services will be used, our recommendation is to not limit this as we will pick them in Odoo anyway.</li>
+                            <li>For any carriers you'd like to use that are not activated, be sure to activate it here.</li>
+                            <li>Don't worry about the printing options, just note which ones exist for your favorite carrier as we will select them in Odoo.</li>
+                            <br/>
+                            <li>Lastly, head to the Developers / API Keys section and generate a new API Key. This will be used by Odoo to communicate with Envia so note it down for later.</li>
+                        </ul>
+                    </group>
+                    <group string="Setup In Odoo" invisible="delivery_type != 'envia'">
+                        <ul>
+                            <li>Copy over the API Key from Envia into either the sandbox or production field in Delivery Methods.</li>
+                            <li>Specify the Origin country that this connector will ship from. By default this is the company's country.</li>
+                            <li>Specify the currency your Envia account is configured in. By default this is the company's currency.</li>
+                            <li>Create and edit a package for this delivery method to be used as reference for quotations and labels. This package can be of type <b>box</b>, <b>envelope</b>, or <b>pallet</b>, which determines the carriers that can be used.</li>
+                            <li>Once your delivery method is properly configured, you can sync the carriers Envia provides for your country of origin: <br />
+                                <img src="/delivery_envia/static/src/img/envia-sync-img.png" alt="Sync Envia Carriers" title="Sync Envia Carriers"/>
+                            </li>
+                            <li>You will be able to specify a specific Envia carrier and service that you intend to use in this region. Note that each service can have different pricing and availability.</li>
+                            <br/>
+                            <li>A note, some countries support unique additional services for pallet shipments or boxes. For example, Canada has the option to handle missed deliveries by returning them back to your warehouse or abandoning on the doorstep. To enable this feature, enable Returned at Shippers Expense otherwise it will be abandoned at the customer's door.</li>
+                        </ul>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_package_type_form_inherit_envia" model="ir.ui.view">
+        <field name="name">stock.package.type.forms.inherit.envia</field>
+        <field name="model">stock.package.type</field>
+        <field name="inherit_id" ref="stock.stock_package_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='package_carrier_type']" position='after'>
+                <field name="envia_mail_type" invisible="package_carrier_type != 'envia'" required="package_carrier_type == 'envia'"/>
+            </xpath>
+            <field name="shipper_package_code" position="attributes">
+                <attribute name="invisible" add="package_carrier_type == 'envia'" separator=" or "/>
+            </field>
+        </field>
+    </record>
+</odoo>

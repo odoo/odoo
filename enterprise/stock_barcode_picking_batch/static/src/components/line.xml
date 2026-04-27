@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="stock_barcode.LineDestinationLocation" t-inherit-mode="extension">
+        <xpath expr="//div[@name='destination_location']" position="after">
+            <div t-if="pickingName &amp;&amp; !props.hidePickingName" class="small">
+                <i class="fa fa-truck me-1" role="img" />
+                <span class="o_picking_label" t-esc="pickingName"/>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-inherit="stock_barcode.LineComponent" t-inherit-mode="extension" t-translation="off">
+        <xpath expr="//div[hasclass('o_barcode_line')]" position="attributes">
+            <attribute name="t-att-style">(line.colorLine or line.colorLine === 0) ? 'border-color: hsla(' + line.colorLine + ', 80%, 50%, 0.6);' : ''</attribute>
+        </xpath>
+        <xpath expr="//div[@name='package']" position="attributes">
+            <attribute name="t-if">line.package_id || line.result_package_id || line.suggested_package</attribute>
+        </xpath>
+        <xpath expr="//div[@name='package']" position="inside">
+            <span t-if="!line.result_package_id &amp;&amp; line.suggested_package"
+                  t-esc="line.suggested_package + ' ?'" class="text-muted ms-1"/>
+        </xpath>
+    </t>
+
+</templates>

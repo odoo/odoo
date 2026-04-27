@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="website_sale_confirmation_appointment" inherit_id="website_sale.confirmation">
+    <xpath expr="//div[@id='oe_structure_website_sale_confirmation_2']" position="after">
+        <t t-if="any(order.order_line.product_id.mapped('is_booking_fee'))">
+            <t t-set="successful_lines" t-value="order.order_line.filtered(lambda line: line.calendar_event_id or (line.calendar_booking_ids and not line.calendar_booking_ids.not_available))"/>
+            <t t-set="failed_lines" t-value="order.order_line.filtered(lambda line: line.calendar_booking_ids.not_available)"/>
+            <t t-if="successful_lines">
+                <h4>We are looking forward to seeing you at the following Meeting(s):</h4>
+                <t t-call="website_appointment_sale.appointment_sale_confirmation_cards">
+                    <t t-set="sale_order_lines" t-value="successful_lines"/>
+                </t>
+            </t>
+            <t t-if="failed_lines">
+                <h4>Oops, it looks like the following Meeting(s) were not booked smoothly:</h4>
+                <t t-call="website_appointment_sale.appointment_sale_confirmation_cards">
+                    <t t-set="sale_order_lines" t-value="failed_lines"/>
+                </t>
+            </t>
+        </t>
+    </xpath>
+</template>
+
+<template id="appointment_sale_confirmation_cards">
+    <div class="my-3">
+        <t t-foreach="sale_order_lines" t-as="line">
+            <t t-set="booking" t-value="line.calendar_booking_ids"/>
+            <t t-set="event" t-value="line.calendar_event_id"/>
+            <t t-set="object" t-value="event or booking"/>
+            <div class="row mx-0 my-2 border o_wappointment_sale_confirmation_card"
+                t-att-data-event-access-token="event.access_token">
+                <t t-set="tz" t-value="request.session.timezone or object.appointment_type_id.appointment_tz"/>
+                <div class="col-5 d-flex justify-content-center">
+                    <div class="position-relative w-100 m-2 o_cc o_cc3">
+                        <div t-field="object.appointment_type_id.image_1920" class="d-block h-100 w-100 overflow-hidden ratio ratio-4x3" role="img"
+                            t-options="{'widget': 'image', 'class': 'o_object_fit_cover', 'preview_image': 'image_512'}"/>
+                        <div class="position-absolute top-0 text-end w-100">
+                            <div class="ms-auto me-3 me-md-4 my-4 bg-white o_wappointment_sale_booking_date">
+                                <div class="d-flex h-100 text-center">
+                                    <div class="m-auto fw-bold text-uppercase">
+                                        <t t-out="object.start" t-options="{'widget': 'datetime', 'tz_name': tz, 'format': 'LLL'}"/><br/>
+                                        <t t-out="object.start" t-options="{'widget': 'datetime', 'tz_name': tz, 'format': 'dd'}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <small t-if="event.appointment_status == 'request'" class="bg-info position-absolute bottom-0 w-100 text-end p-3">
+                            <i class="fa fa-thumbs-up me-2"/>Reserved
+                        </small>
+                        <small t-elif="event" class="bg-success position-absolute bottom-0 w-100 text-end p-3">
+                            <i class="fa fa-check me-2"/>Booked
+                        </small>
+                        <small t-elif="booking.not_available" class="bg-warning position-absolute bottom-0 w-100 text-end p-3">
+                            Please Contact Us
+                        </small>
+                        <small t-else="" class="bg-warning position-absolute bottom-0 w-100 text-end p-3">
+                            Awaiting Payment
+                        </small>
+                    </div>
+                </div>
+                <div class="col-7 d-flex flex-column">
+                    <h4 t-out="object.appointment_type_id.name" class="text-primary m-2"/>
+                    <h6 class="mx-2">
+                        <t t-out="object.start" t-options="{'widget': 'datetime', 'tz_name': tz}"/>
+                        (<span t-out="object.duration" t-options="{'widget': 'duration', 'unit': 'hour'}"/>)
+                        <small class="text-muted fw-normal">(timezone: <t t-out="tz"/>)</small>
+                    </h6>
+                    <div t-if="not booking.not_available" t-out="object.appointment_type_id.message_intro"
+                        class="fw-light ms-2 mb-2 flex-fill d-none d-sm-block overflow-hidden o_wappointment_sale_confirmation_desc"/>
+                    <a t-if="event" role="button" class="btn btn-primary ms-2 my-2 me-auto" target="_blank"
+                        t-attf-href="/calendar/view/#{event.access_token}?#{keep_query('*', partner_id=order.partner_id.id, state='new')}">
+                        View Details
+                    </a>
+                    <a t-else="" role="button" class="btn btn-primary ms-2 my-2 me-auto" target="_blank"
+                        t-attf-href="/calendar_booking/#{booking.booking_token}/view?#{keep_query('*', partner_id=order.partner_id.id)}">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        </t>
+    </div>
+</template>
+
+</odoo>

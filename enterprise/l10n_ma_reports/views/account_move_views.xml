@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_form" model="ir.ui.view">
+            <field name="name">account.move.form.inherit.l10n_ma_reports</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='ref']" position="after">
+                    <field name="l10n_ma_reports_payment_method" invisible="country_code != 'MA' or move_type != 'in_invoice'"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_salary_offer_refusal_reasons_view_tree" model="ir.ui.view">
+        <field name="name">Offers Refusal Reasons</field>
+        <field name="model">hr.contract.salary.offer.refusal.reason</field>
+        <field name="arch" type="xml">
+            <list string="Refuse Reason" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_contract_salary_offer_refusal_reasons" model="ir.actions.act_window">
+        <field name="name">Offer Refusal Reasons</field>
+        <field name="res_model">hr.contract.salary.offer.refusal.reason</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem
+        id="menu_hr_contract_salary_offer_refusal_reasons"
+        action="hr_contract_salary_offer_refusal_reasons"
+        parent="hr_recruitment.menu_hr_recruitment_config_applications"
+        sequence="15"
+    />
+</odoo>

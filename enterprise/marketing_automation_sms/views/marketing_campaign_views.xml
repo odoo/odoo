@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="marketing_campaign_view_form" model="ir.ui.view">
+        <field name="name">marketing.campaign.view.form</field>
+        <field name="model">marketing.campaign</field>
+        <field name="inherit_id" ref="marketing_automation.marketing_campaign_view_form"/>
+        <field name="arch" type="xml">
+        	<xpath expr="//div[@name='mail_details']" position="after">
+                <div t-if="record.activity_type.raw_value == 'sms'" name="sms_details" class="row o_ma_email_details text-center">
+                    <div class="col text-uppercase">
+                        <i class="fa fa-pie-chart" /> Details
+                    </div>
+                    <a name="action_view_sent" class="col" title="SMS Sent" type="object">
+                        <field name="total_sent" class="fw-bold"/> Sent
+                    </a>
+                    <a name="action_view_opened" class="col" type="object">
+                        <strong><t t-esc="Math.round((record.total_open.raw_value/(record.total_sent.raw_value or 1)) * 100) or 0" />%</strong> Opened
+                    </a>
+                    <a name="action_view_clicked" class="col" type="object">
+                        <strong><t t-esc="Math.round((record.total_click.raw_value/(record.total_sent.raw_value or 1)) * 100) or 0" />%</strong> Clicked
+                    </a>
+                </div>
+			</xpath>
+			<xpath expr="//div[hasclass('o_ma_child_activity_buttons')]" position="inside">
+                <t t-if="record.activity_type.raw_value == 'sms'">
+                    <i data-trigger-type="sms_click" class="fa fa-hand-pointer-o o_ma_text_processed o_add_child_activity text-success"
+                        title="Clicked" role="img" aria-label="Clicked" />
+                    <i data-trigger-type="sms_not_click" class="fa fa-hand-pointer-o o_ma_text_rejected o_add_child_activity text-danger"
+                        title="Not Clicked" role="img" aria-label="Not Clicked" />
+                    <i data-trigger-type="sms_bounce" class="fa fa fa-exclamation-circle o_ma_text_rejected o_add_child_activity text-danger"
+                        title="Bounced" role="img" aria-label="Bounced" />
+                </t>
+        	</xpath>
+            <xpath expr="//div[hasclass('o_ma_interval')]" position="before">
+                <div t-if="record.trigger_type.raw_value == 'sms_click'" class="o_ma_text_processed text-success">
+                    <i class="fa fa-hand-pointer-o" /> Clicked after
+                </div>
+                <div t-if="record.trigger_type.raw_value == 'sms_not_click'" class="o_ma_text_rejected text-danger">
+                    <i class="fa fa-hand-pointer-o" /> Not clicked within
+                </div>
+                <div t-if="record.trigger_type.raw_value == 'sms_bounce'" class="o_ma_text_rejected text-danger">
+                    <i class="fa fa-exclamation-circle" /> Bounced after
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('o_ma_icon')]/span" position="after">
+                <span class="fa fa-mobile fs-2" t-elif="record.activity_type.raw_value == 'sms'" title="SMS" role="img" aria-label="SMS"/>
+            </xpath>
+            <xpath expr="//button[@name='action_view_mailings']" position="after">
+                <button name="action_view_sms" type="object" icon="fa-mobile" class="oe_stat_button"
+                    invisible="mailing_sms_count == 0">
+                    <field name="mailing_sms_count" widget="statinfo" string="SMS"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="marketing_campaign_view_tree" model="ir.ui.view">
+        <field name="name">marketing.campaign.view.list.inherit.marketing.automation.sms</field>
+        <field name="model">marketing.campaign</field>
+        <field name="inherit_id" ref="marketing_automation.marketing_campaign_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="mass_mailing_count" position="after">
+                <field name="mailing_sms_count" string="SMS"/>
+            </field>
+        </field>
+    </record>
+</odoo>

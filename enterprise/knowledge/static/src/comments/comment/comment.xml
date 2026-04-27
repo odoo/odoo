@@ -1,0 +1,65 @@
+<templates xml:space="preserve">
+    <div t-name="knowledge.KnowledgeCommentsThread"
+        t-if="hasLoaded and (hasAllDimensions or commentsState.displayMode === 'panel')"
+        t-ref="targetRef"
+        t-on-mouseenter="onMouseEnter"
+        t-on-mouseleave="onMouseLeave"
+        t-on-click="onClick"
+        t-att-data-thread-id="props.threadId"
+        class="o_knowledge_comment_box"
+        t-att-class="{
+            'o_knowledge_comment_resolved': isResolved(),
+            'commenting': isActive,
+            'o_focused_thread': hasFocus,
+            'px-0 mh-25 col-lg m-0': commentsState.displayMode === 'panel',
+            'pb-2': commentsState.displayMode === 'handler',
+        }"
+        t-att-style="style"
+    >
+        <div class="o_knowledge_comment_small_ui o_knowledge_comment_background"
+             t-if="smallUI"
+             t-on-click="onClick">
+            <img class="rounded p-0 o_object_fit_cover cursor-pointer"
+                t-att-src="authorUrl"/>
+        </div>
+        <div t-elif="editorThread or commentsState.displayMode === 'panel'"
+            class="o_knowledge_comment_background rounded">
+            <div t-if="commentsState.displayMode === 'panel' and fullAnchorText.length"
+                class="o_knowledge_comment_anchor list-unstyled ps-1 pt-1"
+                t-att-class="{
+                    'mb-0': showReadMore,
+                    'cursor-pointer': editorThread,
+                }"
+                t-on-click="showEditorAnchor">
+                <div class="px-2 opacity-75 word-break">
+                    <CommentAnchorText anchorText="state.hasFullAnchorText ? fullAnchorText : anchorText"/>
+                </div>
+            </div>
+            <t t-if="commentsState.displayMode === 'panel' and showReadMore">
+                <button t-if="!state.hasFullAnchorText" class="btn btn-sm btn-link" t-on-click="() => this.state.hasFullAnchorText = true">
+                    Show More
+                </button>
+                <button t-else="" class="btn btn-sm btn-link" t-on-click="() => this.state.hasFullAnchorText = false">
+                    Show Less
+                </button>
+            </t>
+            <div t-if="props.threadId !== 'undefined'" class="o_knowledge_comment_container">
+                <div class="o_knowledge_comment_scrollable" t-ref="threadScrollableRef">
+                    <KnowledgeThread thread="thread" showDates="false" scrollRef="threadScrollableRef"
+                        order="'asc'" showEmptyMessage="false" showJumpPresent="false"
+                    />
+                    <div class="o_knowledge_sticky_composer rounded px-2" t-ref="composerRef">
+                        <Composer t-if="isActive" placeholder.translate="Add a Comment..." composer="thread.composer"
+                            type="'note'" showFullComposer="false" mode="'extended'"/>
+                    </div>
+                </div>
+            </div>
+            <div t-else="" class="pt-2 px-2 flex-grow-1" t-ref="composerRef">
+                <KnowledgeCommentCreatorComposer placeholder.translate="Add a Comment..." composer="thread.composer"
+                    type="'note'" showFullComposer="false" mode="'extended'" autofocus="true"
+                    allowUpload="false" onPostCallback="commentsService.createThread"
+                    onCreateThreadCallback.bind="onCreateThreadCallback"/>
+            </div>
+        </div>
+    </div>
+</templates>

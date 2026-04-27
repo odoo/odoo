@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mrp_report_comp_rule" model="ir.rule">
+            <field name="name">MRP Report multi-company</field>
+            <field name="model_id" ref="model_mrp_report"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+    </data>
+</odoo>

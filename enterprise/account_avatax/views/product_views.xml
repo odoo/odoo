@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_inherit" model="ir.ui.view">
+        <field name="name">product.template.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <div name="taxes_div" position="after">
+                <field name="fiscal_country_codes" invisible="True"/>
+                <field name="avatax_category_id" invisible="fiscal_country_codes not in ('US', 'CA')"/>
+            </div>
+        </field>
+    </record>
+
+    <record id="product_category_form_inherit" model="ir.ui.view">
+        <field name="name">product.category.form.inherit</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+            <field name="parent_id" position="after">
+                <field name="avatax_category_id" class="oe_inline"/>
+            </field>
+        </field>
+    </record>
+</odoo>

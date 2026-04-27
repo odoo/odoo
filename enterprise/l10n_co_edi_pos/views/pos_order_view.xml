@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="l10n_co_edi_pos.pos_order_view_form" model="ir.ui.view">
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <button name="action_pos_order_invoice" position="attributes">
+                <attribute name="invisible" add="not l10n_co_edi_pos_enable_invoice" separator=" and "/>
+            </button>
+            <xpath expr="//button[@name='refund']" position="after">
+                <button name="l10n_co_edi_pos_action_send_document"
+                        string="Send to DIAN"
+                        type="object"
+                        invisible="not l10n_co_edi_pos_enable_send"/>
+            </xpath>
+            <xpath expr="//header" position="after">
+                <div class="alert alert-warning" invisible="not l10n_co_edi_pos_enable_send" role="alert">
+                    Warning: Order was not correctly sent to DIAN
+                </div>
+            </xpath>
+            <group name="order_fields" position="inside">
+                <field name="l10n_co_edi_pos_name"
+                       invisible="country_code != 'CO' or not l10n_co_edi_pos_name"
+                       readonly="1"/>
+            </group>
+            <xpath expr="//page[@name='notes']" position="after">
+                <page name="dian" string="DIAN" invisible="not l10n_co_edi_pos_document_ids">
+                    <field name="l10n_co_edi_pos_document_ids">
+                        <list create="false" delete="false" edit="false" no_open="1">
+                            <!-- Visible fields -->
+                            <field name="datetime"/>
+                            <field name="move_id"/>
+                            <field name="state" widget="account_document_state"/>
+                            <field name="test_environment" optional="show"/>
+                            <field name="certification_process" optional="show"/>
+
+                            <button name="action_get_status"
+                                    type="object"
+                                    string="Get Status"
+                                    invisible="not show_button_get_status"/>
+                            <button name="action_download_file"
+                                    type="object"
+                                    string="Download"
+                                    invisible="not attachment_id"/>
+                            <button name="action_get_attached_document"
+                                    type="object"
+                                    string="Fetch Attached Document"
+                                    invisible="not attachment_id"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="l10n_co_edi_pos.pos_order_view_tree" model="ir.ui.view">
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="l10n_co_edi_pos_dian_state" string="DIAN State" widget="badge"
+                       decoration-info="state == 'invoice_pending'"
+                       decoration-success="state == 'invoice_accepted'"
+                       decoration-danger="state in ('invoice_sending_failed', 'invoice_rejected')"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_intrastat.intrastat_warning_expired_services">
+        Check the expired
+        <a
+            type="action"
+            t-on-click="(ev) => controller.reportAction(ev, 'action_invalid_code_products', warningParams)"
+        >
+            product service codes
+        </a>.
+    </t>
+
+    <t t-name="account_intrastat.intrastat_warning_premature_services">
+        Check the premature
+        <a
+            type="action"
+            t-on-click="(ev) => controller.reportAction(ev, 'action_invalid_code_products', warningParams)"
+        >
+            product's service codes
+        </a>.
+    </t>
+
+    <t t-name="account_intrastat.intrastat_warning_missing_services">
+        Some products have undefined
+        <a
+            type="action"
+            t-on-click="(ev) => controller.reportAction(ev, 'action_invalid_code_products', warningParams)"
+        >
+            service codes
+        </a>.
+    </t>
+</templates>

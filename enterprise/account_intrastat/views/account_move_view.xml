@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_move_line_tree_grouped_inherit_intrastat_fields">
+            <field name="name">account.move.line.list.grouped.inherit.intrastat.fields</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='analytic_distribution']" position="after">
+                    <field name="intrastat_transaction_id" optional="hide"/>
+                    <field name="intrastat_product_origin_country_id" optional="hide" width="92px"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_deferred_entries_tree_intrastat">
+            <field name="name">account.move.line.deferral.entries.list.intrastat</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account_accountant.view_deferred_entries_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='intrastat_transaction_id']" position="attributes">
+                    <attribute name="column_invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='intrastat_product_origin_country_id']" position="attributes">
+                    <attribute name="column_invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <!--
+            VIEWS FOR REPORT ALERTS
+            These are accessible via actions that appear on the top of the intrastat report when
+            the lines are configured incorrectly or incompletely.
+        -->
+        <record id="account_move_line_tree_view_account_intrastat_transaction_codes" model="ir.ui.view">
+            <field name="name">account.move.line.list.account.intrastat</field>
+            <field name="model">account.move.line</field>
+            <field name="mode">primary</field>
+            <field eval="110" name="priority"/>
+            <field name="arch" type="xml">
+                <list string="Account move line" multi_edit="1" duplicate="false" editable="bottom" expand="context.get('expand', False)">
+                    <field name="move_id" readonly="1"/>
+                    <field name="product_id" readonly="1"/>
+                    <field name="partner_id" readonly="1"/>
+                    <field name="price_subtotal" readonly="1"/>
+                    <field name="date" column_invisible="True"/>
+                    <field name="intrastat_transaction_id"
+                           string="Intrastat transaction code"
+                           width="92px"
+                           domain="[
+                               ('type', '=', 'transaction'),
+                               '|',
+                               ('expiry_date', '&gt;', date or context_today().strftime('%Y-%m-%d')),
+                               ('expiry_date', '=', None),
+                               '|',
+                               ('start_date', '&lt;=', date or context_today().strftime('%Y-%m-%d')),
+                               ('start_date', '=', None)
+                           ]"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="account_move_line_tree_view_account_intrastat_product_origin_country_id" model="ir.ui.view">
+            <field name="name">account.move.line.list.account.intrastat.product.origin.country.id</field>
+            <field name="model">account.move.line</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <list string="Invoice Lines" multi_edit="1" duplicate="false" editable="bottom" expand="context.get('expand', False)">
+                    <field name="move_id" readonly="1"/>
+                    <field name="product_id" readonly="1"/>
+                    <field name="partner_id" readonly="1"/>
+                    <field name="price_subtotal" readonly="1"/>
+                    <field name="intrastat_product_origin_country_id"/>
+                </list>
+            </field>
+        </record>
+        
+        <record id="account_intrastat_aml_missing_product_tree" model="ir.ui.view">
+            <field name="name">account.intrastat.aml.missing.product.list</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <list multi_edit="1" editable="bottom">
+                    <field name="move_id"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="price_subtotal"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="account_move_tree_view_account_intrastat_transport_codes" model="ir.ui.view">
+            <field name="name">account.move.list.account.intrastat.transport.code</field>
+            <field name="model">account.move</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <list string="Journal Entries" multi_edit="1" duplicate="false" editable="bottom" expand="context.get('expand', False)">
+                    <field name="id" column_invisible="True"/>
+                    <field name="display_name" readonly="1"/>
+                    <field name="partner_id" readonly="1"/>
+                    <field name="amount_total" readonly="1"/>
+                    <field name="date" readonly="1"/>
+                    <field name="intrastat_transport_mode_id"/>
+                </list>
+            </field>
+        </record>
+    </data>
+</odoo>

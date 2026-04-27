@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_move_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <group name="sale_info_group" position="inside">
+                    <field name="l10n_br_cnae_code_id"
+                           invisible="country_code != 'BR' or move_type not in ('out_invoice', 'out_refund') or not l10n_br_is_avatax"
+                           readonly="state in ['cancel', 'posted']"
+                    />
+                </group>
+                <div name="journal_div" position="after">
+                    <field name="l10n_br_goods_operation_type_id"
+                           required="True"
+                           invisible="country_code != 'BR' or move_type not in ('out_invoice', 'out_refund') or
+                                      not l10n_br_is_avatax or l10n_br_is_service_transaction"
+                           readonly="state in ['cancel', 'posted']"
+                    />
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

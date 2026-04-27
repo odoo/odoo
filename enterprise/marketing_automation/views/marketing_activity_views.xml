@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="marketing_activity_view_form" model="ir.ui.view">
+        <field name="name">marketing.activity.view.form</field>
+        <field name="model">marketing.activity</field>
+        <field name="arch" type="xml">
+            <form string="Activity" class="o_marketing_activity_form">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Activity Name" />
+                        <h1><field name="name" required="1" placeholder="e.g. eCommerce Offers" /></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="activity_type" widget="radio" options="{'horizontal': true}" />
+                            <label for="mass_mailing_id" string="Mail Template" invisible="activity_type != 'email'"/>
+                            <field name="mass_mailing_id"
+                                domain="[
+                                    ('mailing_model_id', '=', model_id),
+                                    ('use_in_marketing_automation', '=', True),
+                                    ('mailing_type', '=', mass_mailing_id_mailing_type)]"
+                                context="{
+                                    'default_state': 'done',
+                                    'default_mailing_model_id': model_id,
+                                    'default_use_in_marketing_automation': True,
+                                    'default_campaign_id': utm_campaign_id,
+                                    'default_mailing_type': mass_mailing_id_mailing_type,
+                                    'form_view_ref': 'marketing_automation.mailing_mailing_view_form_marketing_activity'}"
+                                invisible="activity_type != 'email'"
+                                required="activity_type == 'email'"
+                                options="{'no_quick_create': True}"
+                                placeholder="Pick or Create a Template..."
+                                nolabel="1"/>
+                            <field name="server_action_id" domain="[('model_id', '=', model_id)]"
+                                context="{'default_model_id': model_id,
+                                          'form_view_ref': 'marketing_automation.ir_actions_server_view_form_marketing_automation'}"
+                                invisible="activity_type != 'action'"
+                                required="activity_type == 'action'"
+                                placeholder="Pick a Server Action..."/>
+                            <field name="statistics_graph_data" invisible="1" />
+                            <field name="mass_mailing_id_mailing_type" invisible="1" />
+                            <label for="interval_number" string="Trigger"/>
+                            <div>
+                                <div>
+                                    <field name="interval_number" nolabel="1" class="w-25"/>
+                                    <field name="interval_type" nolabel="1" class="w-75"/>
+                                </div>
+                                <div>
+                                    <span class="d-inline-block w-25">after</span>
+                                    <field name="trigger_type" class="w-75"/>
+                                </div>
+                            </div>
+                            <label for="parent_id" invisible="trigger_type == 'begin'"/>
+                            <div invisible="trigger_type == 'begin'">
+                                <field name="allowed_parent_ids" invisible="1"/>
+                                <field name="parent_id"
+                                    domain="[('id', 'in', allowed_parent_ids)]"
+                                    required="trigger_type != 'begin'"
+                                    options="{'no_create_edit': True, 'no_create': True}"/>
+                            </div>
+                            <field name="validity_duration" string="Expiry Duration"/>
+                            <label for="validity_duration_number" string="Cancel after" invisible="not validity_duration"/>
+                            <div invisible="not validity_duration">
+                                <field name="validity_duration_number" nolabel="1" class="w-25"/>
+                                <field name="validity_duration_type" nolabel="1" class="w-75"/>
+                            </div>
+                            <field name="model_id" invisible="1"/>
+                            <field name="model_name" invisible="1"/>
+                            <field name="utm_campaign_id" invisible="1"/>
+                        </group>
+                        <div>
+                            <div class="card card-body rounded-2">
+                                <field name="activity_summary" nolabel="1" class="ps-2"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group string="Domain">
+                        <field name="activity_domain" widget="domain" options="{'foldable': True, 'model': 'model_name'}" />
+                        <field name="domain" widget="domain" options="{'foldable': True, 'in_dialog': True, 'model': 'model_name'}" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

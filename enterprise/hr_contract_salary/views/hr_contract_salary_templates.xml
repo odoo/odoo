@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="frontend_layout_salary" name="Frontend Layout" inherit_id="web.frontend_layout" primary="True">
+    </template>
+
+    <template id="salary_package" name="My Contract">
+        <t t-call="hr_contract_salary.frontend_layout_salary">
+            <div id="wrap">
+                <form id="hr_cs_form">
+                    <section>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h1>Customize your salary</h1>
+                                </div>
+                                <input type="hidden" name="offer_id" t-att-value="offer_id"/>
+                                <input type="hidden" name="token" t-att-value="token"/>
+                                <!-- YTI PROBABLY TO REMOVE -->
+                                <input type="hidden" name="original_link" t-att-value="original_link"/>
+                                <input type="hidden" name="contract_type_id" t-att-value="contract_type_id"/>
+                                <input type="hidden" name="employee_job_id" t-att-value="employee_job_id"/>
+                                <input type="hidden" name="department_id" t-att-value="department_id"/>
+                                <input type="hidden" name="master_department_id" t-att-value="master_department_id"/>
+                                <input type="hidden" name="job_title" t-att-value="job_title"/>
+                                <input type="hidden" name="contract" t-att-value="contract.id"/>
+                                <input type="hidden" name="whitelist" t-att-value="whitelist"/>
+                                <input type="text" name="wage" applies-on="contract" t-att-value="contract.wage" class="d-none" disabled="disabled"/>
+                                <input type="text" name="final_yearly_costs" applies-on="contract" t-att-value="contract.final_yearly_costs" class="d-none" disabled="disabled"/>
+                                <t t-call="hr_contract_salary.salary_package_benefits"/>
+                                <t t-call="hr_contract_salary.salary_package_sidebar"/>
+                            </div>
+                        </div>
+                    </section>
+
+                    <t t-call="hr_contract_salary.salary_package_personal_information"/>
+                    <t t-call="hr_contract_salary.salary_package_next_step_button"/>
+                    <div role="dialog" id="hr_cs_modal" class="modal fade" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <header class="modal-header">
+                                    <h3 class="modal-title">Net calculation</h3>
+                                    <a role="button" class="btn btn-secondary close" data-bs-dismiss="modal" aria-label="close"><span t-translation="off">&amp;times</span></a>
+                                </header>
+                                <main class="modal-body"/>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </t>
+    </template>
+
+    <template id="salary_package_benefits">
+        <div id="hr_cs_configurator" class="col-lg-9 col-xl-8">
+            <t t-if="not benefits">
+                <h2>There is no available option to customize your salary</h2>
+            </t>
+            <t t-foreach="benefit_types" t-as="benefit_type">
+                <h2><t t-esc="benefit_type.name"/></h2>
+                <t t-foreach="benefits[benefit_type]" t-as="benefit">
+                    <div t-att-class="'py-4 mb-0 border-top' if benefit.show_name else ''">
+                        <div class="row">
+                            <label class="col-md-3 pt-0 ps-4 col-form-label" t-att-for="benefit.field">
+                                <i t-att-class="(benefit.icon or '') + ' fa-1x fa-fw bg-odoo'"/> <t t-if="benefit.show_name"><t t-esc="benefit.name"/></t>
+                            </label>
+                            <div class="col-md-6">
+                                <t t-if="benefit.folded">
+                                    <label class="hr_cs_control hr_cs_control_checkbox mb-2">
+                                        <t t-esc="benefit.fold_label"/>
+                                        <input
+                                            type="checkbox"
+                                            class="benefit_input folded"
+                                            applies-on="contract"
+                                            t-att-name="'fold_' + benefit.field"
+                                            t-att-checked="initial_values['fold_' + benefit.field]"
+                                            t-att-data-requested_documents="benefit.requested_documents"
+                                            t-att-data-benefit_ids-dependent="dependent_benefits[benefit]"
+                                            t-att-data-benefit_ids-mandatory="mandatory_benefits[benefit]"
+                                            t-att-data-benefit_ids-mandatory-names="mandatory_benefits_names[benefit]"
+                                            />
+                                        <div class="hr_cs_control_indicator"/>
+                                    </label>
+                                </t>
+                                <div t-att-class="'folded_content ' + ('d-none' if (benefit.res_field_id and 'fold_' + benefit.field in initial_values and not initial_values['fold_' + benefit.field]) else '')">
+                                    <t t-if="benefit.display_type == 'slider'">
+                                        <span class="badge text-bg-secondary"><t t-esc="benefit.slider_min"/></span>
+                                        <input
+                                            type="range"
+                                            class="benefit_input hr_cs_control_range"
+                                            t-att-step="benefit.slider_step or 1"
+                                            t-att-min="benefit.slider_min"
+                                            t-att-max="benefit.slider_max"
+                                            applies-on="contract"
+                                            t-att-value="initial_values[benefit.field]"
+                                            t-att-list="benefit.field + '_range'"
+                                            t-att-name="benefit.field + '_slider'"
+                                            t-att-data-benefit_ids-dependent="dependent_benefits[benefit]"
+                                            t-att-data-benefit_ids-mandatory="mandatory_benefits[benefit]"
+                                            t-att-data-benefit_ids-mandatory-names="mandatory_benefits_names[benefit]"
+                                            />
+                                        <span class="badge text-bg-secondary"><t t-esc="benefit.slider_max"/></span>
+                                        <datalist t-att-id="benefit.field + '_range'">
+                                            <t t-set="step" t-value="(benefit.slider_max - benefit.slider_min) / 10.0"/>
+                                            <t t-foreach="range(1, 10)" t-as="i">
+                                                <option><t t-esc="step * i"/></option>
+                                            </t>
+                                        </datalist>
+                                    </t>
+                                    <t t-if="benefit.display_type == 'radio'">
+                                        <t t-foreach="benefit.value_ids.filtered(lambda v: v.display_type == 'line')" t-as="value">
+                                            <label class="hr_cs_control hr_cs_control_radio benefit_input">
+                                                <input
+                                                    type="radio"
+                                                    t-att-name="benefit.field + '_radio'"
+                                                    t-att-data-value="str(value.value)"
+                                                    applies-on="contract"
+                                                    t-att-checked="not initial_values[benefit.field] if (len(benefit.value_ids) &lt;= 2 and value.value == 0) else (initial_values[benefit.field] if (len(benefit.value_ids) &lt;= 2 and value.value != 0) else (initial_values[benefit.field] == float(value.value)))"
+                                                    t-att-class="'hide_description' if not value.always_show_description else ''"
+                                                    t-att-data-requested_documents="benefit.requested_documents"
+                                                    t-att-data-benefit_ids-dependent="dependent_benefits[benefit]"
+                                                    t-att-data-benefit_ids-mandatory="mandatory_benefits[benefit]"
+                                                    t-att-data-benefit_ids-mandatory-names="mandatory_benefits_names[benefit]"
+                                                    />
+                                                <t t-esc="value.name"/>
+                                                <div t-att-class="'hr_cs_control_indicator' + (' hr_cs_control_no' if value.selector_highlight == 'red' else '')"/>
+                                            </label>
+                                        </t>
+                                    </t>
+                                    <t t-if="benefit.display_type == 'manual'">
+                                        <input
+                                            type="number" min="0"
+                                            applies-on="contract"
+                                            class="form-control form-control-primary mb8 benefit_input"
+                                            t-att-name="benefit.field + '_manual'"
+                                            t-att-data-field-type="benefit.manual_res_field_id.sudo().ttype"
+                                            t-att-data-requested_documents="benefit.requested_documents"
+                                            t-att-value="initial_values[benefit.field + '_manual']"
+                                            t-att-data-benefit_ids-dependent="dependent_benefits[benefit]"
+                                            t-att-data-benefit_ids-mandatory="mandatory_benefits[benefit]"
+                                            t-att-data-benefit_ids-mandatory-names="mandatory_benefits_names[benefit]"
+                                            />
+                                    </t>
+                                    <t t-if="benefit.display_type == 'text'">
+                                        <textarea
+                                            rows="6" cols="60"
+                                            applies-on="contract"
+                                            class="form-control form-control-primary mb8 benefit_input"
+                                            t-att-name="benefit.field + '_text'"
+                                            t-att-data-field-type="benefit.manual_res_field_id.sudo().ttype"
+                                            t-att-data-requested_documents="benefit.requested_documents"
+                                        ><t t-esc="initial_values[benefit.field + '_text']"/></textarea>
+                                    </t>
+                                    <t t-if="benefit.display_type == 'dropdown'">
+                                        <select
+                                            class="form-control form-select form-select-primary mt16 mb8 benefit_input"
+                                            applies-on="contract"
+                                            t-att-name="'select_' + benefit.field">
+                                            <t t-set="options" t-value="dropdown_options[benefit.field]"/>
+                                            <t t-foreach="options" t-as="option">
+                                                <option t-att-value="option[0]" t-att-selected="initial_values['select_' + benefit.field] == option[0]"><t t-esc="option[1]"/></option>
+                                            </t>
+                                        </select>
+                                    </t>
+                                    <t t-if="benefit.display_type == 'dropdown-group'">
+                                        <select
+                                            class="form-control form-select form-select-primary mt16 mb8 benefit_input"
+                                            applies-on="contract"
+                                            t-att-name="'select_' + benefit.field"
+                                            t-att-required="True">
+                                            <t t-set="groups" t-value="dropdown_group_options[benefit.field]"/>
+                                            <t t-foreach="groups" t-as="group">
+                                                <optgroup t-att-label="group">
+                                                    <t t-set="options" t-value="groups[group]"/>
+                                                    <t t-foreach="options" t-as="option">
+                                                        <option t-att-value="option[0]" t-att-selected="initial_values['select_' + benefit.field] == option[0]">
+                                                            <t t-esc="option[1]"/>
+                                                        </option>
+                                                    </t>
+                                                </optgroup>
+                                            </t>
+                                        </select>
+                                    </t>
+                                    <span class="form-text" t-att-name="'description_' + (benefit.field or 'undefined')"><t t-out="contract._get_benefit_description(benefit)"/></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <t t-if="benefit.res_field_id">
+                                <div class="input-group">
+                                    <div
+                                        t-if="contract.company_id.currency_id.position == 'before' and benefit.uom == 'currency'"
+                                        t-out="contract.company_id.currency_id.symbol"
+                                        class="w-25 input-group-text form-control o_left text-end d-block"/>
+                                    <input
+                                        t-att-class="'form-control text-start' if contract.company_id.currency_id.position == 'before' and benefit.uom == 'currency' else 'form-control mw-50 text-end'"
+                                        type="text"
+                                        disabled="disabled"
+                                        placeholder="0"
+                                        t-att-name="benefit.field"
+                                        t-att-value="initial_values[benefit.field]"
+                                        applies-on="contract"/>
+                                    <div class="input-group-text">
+                                        <t t-if="benefit.uom == 'days'">Days</t>
+                                        <t t-if="benefit.uom == 'percent'">%</t>
+                                        <t t-if="benefit.uom == 'currency' and contract.company_id.currency_id.position == 'after'">
+                                            <t t-out="contract.company_id.currency_id.symbol"/>
+                                        </t>
+                                    </div>
+                                </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </template>
+
+    <template id="salary_package_sidebar">
+        <div id="hr_cs_sidebar" class="col-lg-3 offset-xl-1">
+            <t t-if="redirect_to_job">
+                <a t-att-href="'https://www.odoo.com/jobs/' + redirect_to_job" target="_new">
+                    <button type="button" id="apply_now" class="hr_cs_btn_submit btn btn-primary">Apply Now</button>
+                </a>
+            </t>
+            <div name="salary_package_resume"/>
+            <t t-if="submit">
+                <div class="row">
+                    <button type="button" id="hr_cs_submit" class="btn btn-primary hr_cs_btn_submit" name="submit1">Review Contract &amp; Sign</button>
+                    <button type="button" class="btn btn-secondary" name="feedback" data-bs-toggle="collapse" data-bs-target="#feedback-form">
+                        <i class="fa fa-comment"/> Feedback
+                    </button>
+                </div>
+                <div id="feedback-form" class="collapse row">
+                    <textarea class="form-control" id="feedback-textarea" rows="3" placeholder="Write your message here and we will come back to you."></textarea>
+                    <div class="text-success p-0" style="display: none" id="feedback-form-success">
+                        <p><i class="fa fa-check"/> Your message was successfully sent!</p>
+                    </div>
+                    <div class="col mt-2 px-0">
+                        <button type="button" class="btn btn-primary o_submit_feedback">Send</button>
+                        <button type="button" class="btn btn-secondary o_cancel_feedback" data-bs-toggle="collapse" data-bs-target="#feedback-form">Discard</button>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </template>
+
+    <template id="salary_package_personal_information">
+        <section id="hr_cs_personal_information">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-md-8">
+                        <h1>Your Personal Information</h1>
+                    </div>
+
+                    <div class="col-md-4 mt48">
+                        <button t-att-class="'d-none' if need_personal_information else 'btn'" type="button" name="toggle_personal_information">Show <i class="oi oi-chevron-down"></i></button>
+                        <button class="d-none btn" type="button" name="toggle_personal_information">Hide <i class="oi oi-chevron-up"></i></button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div t-att-class="'col-md-8' if need_personal_information else 'col-md-8 d-none'" name="personal_info">
+
+                        <!-- Main Panel -->
+                        <t t-foreach="mapped_personal_infos[0]" t-as="personal_info_type">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h2 class="text-primary" t-if="personal_info_type"><t t-esc="personal_info_type"/></h2>
+                                </div>
+                                <t t-foreach="mapped_personal_infos[0][personal_info_type]" t-as="personal_info">
+                                    <t t-if="not personal_info.parent_id">
+                                        <t t-set="hidden_children" t-value="False"/>
+                                        <div t-att-class="'col-md-6' if personal_info.display_type != 'document' else 'col-md-12'" t-att-name="personal_info.field">
+                                            <div class="border-0 mb-3">
+                                                <t t-call="hr_contract_salary.salary_package_personal_information_input"/>
+                                            </div>
+                                        </div>
+                                    </t>
+                                    <t t-if="personal_info.child_ids">
+                                        <div t-att-class="'col-md-6' if personal_info.display_type != 'document' else 'col-md-12'" t-att-name="personal_info.field">
+                                            <t t-set="hidden_children" t-value="personal_info._hide_children(contract)"/>
+                                            <div t-att-name="'personal_info_child_group_' + personal_info.field" t-att-class="'card mb-2' + (' d-none' if hidden_children else '')">
+                                                <div class="card-body">
+                                                    <t t-foreach="personal_info.child_ids" t-as="child_personal_info">
+                                                        <t t-call="hr_contract_salary.salary_package_personal_information_input">
+                                                            <t t-set="personal_info" t-value="child_personal_info"/>
+                                                            <t t-set="hidden_children" t-value="hidden_children"/>
+                                                        </t>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </t>
+                            </div>
+                        </t>
+                    </div>
+
+                    <!-- Left Panel -->
+                    <div t-att-class="'col-lg-3' + (' offset-xl-1' if need_personal_information else '')" name="personal_info_withholding_taxes">
+                        <t t-foreach="mapped_personal_infos[1]" t-as="personal_info">
+                            <t t-if="not personal_info.parent_id">
+                                <t t-set="hidden_children" t-value="False"/>
+                                <div class="border-0 mb-3">
+                                    <t t-call="hr_contract_salary.salary_package_personal_information_input"/>
+                                </div>
+                            </t>
+                            <t t-if="personal_info.child_ids">
+                                <t t-set="hidden_children" t-value="personal_info._hide_children(contract)"/>
+                                <div t-att-name="'personal_info_child_group_' + personal_info.field" t-att-class="'card mb-2' + (' d-none' if hidden_children else '')">
+                                    <div class="card-body">
+                                        <t t-foreach="personal_info.child_ids" t-as="child_personal_info">
+                                            <t t-call="hr_contract_salary.salary_package_personal_information_input">
+                                                <t t-set="personal_info" t-value="child_personal_info"/>
+                                                <t t-set="hidden_children" t-value="hidden_children"/>
+                                            </t>
+                                        </t>
+                                    </div>
+                                </div>
+                            </t>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="salary_package_personal_information_input">
+        <t t-if="personal_info.display_type != 'checkbox'">
+            <label class="col-form-label" t-att-for="personal_info.field"><t t-esc="personal_info.name"/></label>
+        </t>
+        <t t-if="personal_info.helper"><span class="text-muted"><t t-esc="' ' + personal_info.helper"/></span></t>
+        <t t-if="personal_info.display_type == 'text'">
+            <input
+                type="text"
+                t-att-name="personal_info.field"
+                t-att-applies-on="personal_info.applies_on"
+                t-att-class="'form-control personal_info' + (' benefit_input' if personal_info.impacts_net_salary else '')"
+                t-att-required="personal_info.is_required and not hidden_children"
+                t-att-value="initial_values[personal_info.field]"
+                t-att-placeholder="personal_info.placeholder"/>
+        </t>
+        <t t-if="personal_info.display_type == 'radio'">
+            <div class="o_contract_radio">
+                <t t-foreach="personal_info.value_ids" t-as="value">
+                    <label class="hr_cs_control hr_cs_control_radio mt-2"><t t-esc="value.name"/>
+                        <input
+                            type="radio"
+                            t-att-name="personal_info.field"
+                            t-att-applies-on="personal_info.applies_on"
+                            t-att-required="personal_info.is_required and not hidden_children"
+                            t-att-value="value.value"
+                            t-att-data-value="value.value"
+                            t-att-checked="initial_values[personal_info.field] == value.value"
+                            t-att-class="'personal_info' + (' benefit_input' if personal_info.impacts_net_salary else '')"/>
+                        <div class="hr_cs_control_indicator hr_cs_control_indicator_white"/>
+                    </label>
+                </t>
+            </div>
+        </t>
+        <t t-if="personal_info.display_type == 'date'">
+            <input
+                type="date"
+                t-att-name="personal_info.field"
+                t-att-applies-on="personal_info.applies_on"
+                t-att-class="'form-control personal_info' + (' benefit_input' if personal_info.impacts_net_salary else '')"
+                t-att-required="personal_info.is_required and not hidden_children"
+                t-att-value="initial_values[personal_info.field]"
+                min="1900-01-01" max="9999-12-31"/>
+        </t>
+        <t t-if="personal_info.display_type == 'dropdown'">
+            <select
+                t-att-name="personal_info.field"
+                t-att-applies-on="personal_info.applies_on"
+                t-att-class="'form-control form-select personal_info' + (' benefit_input' if personal_info.impacts_net_salary else '')"
+                t-att-data-placeholder="personal_info.placeholder"
+                t-att-required="personal_info.is_required">
+                <option/>
+                <t t-foreach="dropdown_options[personal_info.field]" t-as="dropdown_option">
+                    <option
+                        t-att-value="dropdown_option[0]"
+                        t-att-selected="initial_values[personal_info.field] == dropdown_option[0]"
+                        t-att-data-additional-info="dropdown_option[2] if len(dropdown_option) == 3 else False">
+                        <t t-esc="dropdown_option[1]"/>
+                    </option>
+                </t>
+            </select>
+        </t>
+        <t t-if="personal_info.display_type == 'integer'">
+            <input
+                type="number" min="0"
+                t-att-name="personal_info.field"
+                t-att-applies-on="personal_info.applies_on"
+                t-att-data-field-type="personal_info.display_type"
+                t-att-class="'form-control personal_info' + (' benefit_input' if personal_info.impacts_net_salary else '')"
+                t-att-value="initial_values[personal_info.field] or '0'"
+                t-att-required="personal_info.is_required and not hidden_children"/>
+        </t>
+        <t t-if="personal_info.display_type == 'email'">
+            <input
+                type="email"
+                t-att-name="personal_info.field"
+                t-att-applies-on="personal_info.applies_on"
+                t-att-class="'form-control personal_info' + (' benefit_input' if personal_info.impacts_net_salary else '')"
+                t-att-required="personal_info.is_required and not hidden_children"
+                t-att-value="initial_values[personal_info.field]"/>
+        </t>
+        <t t-if="personal_info.display_type == 'document'">
+            <t t-set="document_accept" t-value="'image/*' if personal_info.field == 'image_1920' else 'application/pdf,image/*'"/>
+            <input
+                type="file"
+                t-att-name="personal_info.field"
+                t-att-applies-on="personal_info.applies_on"
+                t-att-class="'form-control document personal_info' + (' benefit_input' if personal_info.impacts_net_salary else '')"
+                t-att-required="personal_info.is_required and not initial_values[personal_info.field]"
+                t-att-accept="document_accept"/>
+            <t t-if="initial_values[personal_info.field]">
+                <span class="form-text">
+                    Existing file:
+                    <a t-att-href="initial_values[personal_info.field]" download="">
+                        <i class="fa fa-download"/>
+                    </a>
+                </span>
+            </t>
+        </t>
+        <t t-if="personal_info.display_type == 'checkbox'">
+            <label class="hr_cs_control hr_cs_control_checkbox"><t t-esc="personal_info.name"/>
+                <input
+                    type="checkbox"
+                    value=""
+                    t-att-name="personal_info.field"
+                    t-att-applies-on="personal_info.applies_on"
+                    t-att-class="'personal_info' + (' benefit_input' if personal_info.impacts_net_salary else '')"
+                    t-att-checked="initial_values[personal_info.field]"/>
+                <div class="hr_cs_control_indicator hr_cs_control_indicator_white"/>
+            </label>
+        </t>
+    </template>
+
+    <template id="salary_package_next_step_button">
+        <t t-if="redirect_to_job">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 mb8">
+                        <a t-att-href="'https://www.odoo.com/jobs/' + redirect_to_job" target="_new"><button type="button" id="apply_now" class="hr_cs_btn_submit btn btn-primary">Apply Now</button></a>
+                    </div>
+                </div>
+            </div>
+        </t>
+        <t t-if="submit">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <button type="button" id="hr_cs_submit" class="hr_cs_btn_submit btn btn-primary" name="submit2">Review Contract &amp; Sign</button>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="salary_package_thank_you" name="Submitted Salary Package">
+        <t t-call="portal.frontend_layout">
+            <div class="wrap">
+                <div class="container">
+                    <div class="text-center mt48 mb48">
+                        <h1 class="hr_cs_brand_optional"><i class="fa fa-check-circle-o mr8"/>Congratulations</h1>
+                        <p class="lead mb24">Your contract has been sent to:</p>
+                        <p class="lead mb4"> <b><t t-if="responsible_name" t-esc="responsible_name"/></b></p>
+                        <p class="mb24">
+                            <a t-if="responsible_email" t-att-href="'mailto:' + responsible_email" class="hr_cs_brand_optional">
+                                <t t-if="responsible_email" t-esc="responsible_email"/>
+                            </a>
+                            <span class="text-muted mr4 ml4">|</span>
+                            <a t-if="responsible_phone" t-att-href="'tel:' + responsible_phone" class="hr_cs_brand_optional">
+                                <t t-esc="responsible_phone"/>
+                            </a>
+                        </p>
+                        <p>They will review your contract.<br/> Feel free to contact them if you have any questions.</p>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

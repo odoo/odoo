@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="documents_spreadsheet.TemplateDialog">
+        <div>
+            <Dialog
+                t-if="state.isOpen"
+                title="dialogTitle"
+                contentClass="'o-spreadsheet-templates-dialog'"
+                footer="true"
+            >
+                <div class="d-flex pb-2">
+                    <div t-if="!props.folderId" class="flex-grow-1">
+                        <span class="text-black me-3">Workspace</span>
+                        <select class="w-50 d-inline-flex o_input" t-model.number="this.documentsSpreadsheetFolderId">
+                            <option t-foreach="props.folders" t-as="folder"
+                                t-key="folder.id" t-att-value="folder.id"
+                                t-esc="folder.display_name"/>
+                        </select>
+                    </div>
+                    <div class="ms-auto w-50">
+                        <SearchBar/>
+                    </div>
+                </div>
+                <div class="o-pager">
+                    <Pager
+                        t-if="state.templatesCount"
+                        total="state.templatesCount"
+                        offset="state.offset"
+                        limit="limit"
+                        isEditable="false"
+                        onUpdate.bind="_onPagerChanged"/>
+                </div>
+				<SpreadsheetSelectorGrid
+                    spreadsheets="state.templates"
+                    onSpreadsheetSelected.bind="_selectTemplate"
+                    onSpreadsheetDblClicked.bind="_createSpreadsheet"
+                    getThumbnailURL="getThumbnailURL"
+                    selectedSpreadsheetId="state.selectedTemplateId"
+                />
+                <t t-set-slot="footer">
+                    <button
+                        class="btn btn-primary o-spreadsheet-create"
+                        t-att-disabled="_buttonDisabled()"
+                        t-on-click="_createSpreadsheet">
+                        <t>Create</t>
+                    </button>
+                    <button class="btn btn-secondary" t-on-click="data.close">
+                        <t>Discard</t>
+                    </button>
+                </t>
+            </Dialog>
+        </div>
+    </t>
+</templates>

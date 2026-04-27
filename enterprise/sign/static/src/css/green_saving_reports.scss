@@ -1,0 +1,35 @@
+.o_in_iframe {
+    background-color: var(--gray-100);
+}
+
+.green-savings-card {
+    &, * {
+        transition: all .15s;
+    }
+    cursor: pointer;
+
+    &:hover {
+        * {
+            color: #7C6576 !important;
+        }
+        box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.1), 0 2px 2px 0 rgba(0, 0, 0, 0.05);
+        border-color: #7C6576 !important;
+    }
+}
+
+.green-savings-page-pdf {
+    text-align: center;
+}
+.green-savings-card-pdf {
+    display: -webkit-box !important; /* wkhtmltopdf flex */
+    text-decoration: none;
+    background: white;
+    margin: 1em;
+    padding: 1em 0.5em;
+    border: 1px black solid;
+    width: 500px;
+    overflow: hidden;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+}

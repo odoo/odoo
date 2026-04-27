@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="aspone_xml_edi">
+        <XmlEdi t-att-Test="is_test">
+            <GroupeFonctionnel t-att-Type="type">
+                <t t-foreach="declarations" t-as="decla">
+                    <t t-call="l10n_fr_reports.aspone_declaration">
+                        <t t-set="vals" t-value="decla"/>
+                    </t>
+                </t>
+            </GroupeFonctionnel>
+        </XmlEdi>
+    </template>
+
+    <template id="aspone_declaration">
+        <Declaration t-att-Type="vals['type']" t-att-Reference="vals['reference']">
+            <t t-if="vals.get('emitor')">
+                <Emetteur>
+                    <t t-call="l10n_fr_reports.aspone_partner">
+                        <t t-set="vals" t-value="vals['emitor']"/>
+                    </t>
+                </Emetteur>
+            </t>
+            <Redacteur>
+                <t t-call="l10n_fr_reports.aspone_partner">
+                    <t t-set="vals" t-value="vals['writer']"/>
+                </t>
+            </Redacteur>
+            <Redevable>
+                <t t-call="l10n_fr_reports.aspone_partner">
+                    <t t-set="vals" t-value="vals['debtor']"/>
+                </t>
+                <Rof t-out="vals['debtor']['rof']"/>
+                <IdentifiantRedevable2 t-out="vals['debtor'].get('identifier2')"/>
+                <SirenActivitePrincipale t-out="vals['debtor'].get('siren_principal_activity')"/>
+            </Redevable>
+            <t t-if="'edi_partner' in vals">
+                <PartenaireEdi>
+                    <t t-call="l10n_fr_reports.aspone_partner">
+                        <t t-set="vals" t-value="vals['edi_partner']"/>
+                    </t>
+                </PartenaireEdi>
+            </t>
+            <ListeDestinataires>
+                <Destinataire>
+                    <t t-foreach="vals['recipients']" t-as="recipient">
+                        <t t-call="l10n_fr_reports.aspone_partner">
+                            <t t-set="vals" t-value="recipient"/>
+                        </t>
+                    </t>
+                </Destinataire>
+            </ListeDestinataires>
+            <ListeFormulaires>
+                <Identif t-att-Millesime="vals['identif']['millesime']"
+                         t-att-Repetition="vals['identif'].get('repetition')">
+                    <t t-foreach="vals['identif']['zones']" t-as="zone">
+                        <t t-call="l10n_fr_reports.aspone_zone">
+                            <t t-set="vals" t-value="zone"/>
+                        </t>
+                    </t>
+                </Identif>
+                <Formulaire t-att-Nom="vals['form']['name']"
+                            t-att-Millesime="vals['form']['millesime']"
+                            t-att-Repetition="vals['form'].get('repetition')">
+                    <t t-foreach="vals['form']['zones']" t-as="zone">
+                        <t t-call="l10n_fr_reports.aspone_zone">
+                            <t t-set="vals" t-value="zone"/>
+                        </t>
+                    </t>
+                </Formulaire>
+            </ListeFormulaires>
+        </Declaration>
+    </template>
+
+    <template id="aspone_partner">
+        <Siret t-out="vals.get('siret')"/>
+        <Identifiant t-out="vals.get('identifier')"/>
+        <Designation t-out="vals.get('designation')"/>
+        <DesignationSuite1 t-out="vals.get('designation_cont_1')"/>
+        <DesignationSuite2 t-out="vals.get('designation_cont_2')"/>
+        <t t-if="vals.get('address')">
+            <Adresse>
+                <t t-call="l10n_fr_reports.aspone_address">
+                    <t t-set="vals" t-value="vals['address']"/>
+                </t>
+            </Adresse>
+        </t>
+        <ReferenceDossier t-out="vals.get('reference')"/>
+    </template>
+
+    <template id="aspone_address">
+        <AdresseNumero t-out="vals.get('number')"/>
+        <AdresseRepetabilite t-out="vals.get('repeatability')"/>
+        <AdresseVoie t-out="vals['street']"/>
+        <AdresseComplement t-out="vals.get('complement')"/>
+        <AdresseHameau t-out="vals.get('hamlet')"/>
+        <AdresseCodePostal t-out="vals['postal_code']"/>
+        <AdresseVille t-out="vals['city']"/>
+        <AdresseCodePays t-out="vals['country_code']"/>
+    </template>
+
+    <!-- Not used -->
+    <template id="aspone_zone_simple">
+        <Zone t-att-id="vals['id']">
+            <Valeur t-out="vals['value']"/>
+            <Unite t-out="vals.get('unit')"/>
+        </Zone>
+    </template>
+
+    <template id="aspone_zone">
+        <Zone t-att-id="vals['id']">
+            <!-- "Zone simple" -->
+            <Valeur t-out="vals.get('value')"/>
+            <Unite t-out="vals.get('unit')"/>
+
+            <!-- "Zone multiple NAD" -->
+            <Identifiant t-out="vals.get('identifier')"/>
+            <Designation t-out="vals.get('designation')"/>
+            <t t-if="vals.get('address')">
+                <t t-call="l10n_fr_reports.aspone_address">
+                    <t t-set="vals" t-value="vals['address']"/>
+                </t>
+            </t>
+            <Telephone t-out="vals.get('telephone')"/>
+            <Email t-out="vals.get('email')"/>
+
+            <!-- "Zone multiple FTX" -->
+            <TexteLibre1 t-out="vals.get('ftx_1')"/>
+            <TexteLibre2 t-out="vals.get('ftx_2')"/>
+            <TexteLibre3 t-out="vals.get('ftx_3')"/>
+            <TexteLibre4 t-out="vals.get('ftx_4')"/>
+            <TexteLibre5 t-out="vals.get('ftx_5')"/>
+
+            <!-- "Zone multiple FII" -->
+            <Iban t-out="vals.get('iban')"/>
+            <Bic t-out="vals.get('bic')"/>
+            <Compte t-out="vals.get('account_number')"/>
+            <Etablissement t-out="vals.get('bank_code')"/>
+            <Agence t-out="vals.get('office_code')"/>
+            <TitulaireDesignation t-out="vals.get('holder_name')"/>
+        </Zone>
+    </template>
+</odoo>

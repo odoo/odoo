@@ -1,0 +1,713 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_ec_edi_stock
+#
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-10 19:07+0000\n"
+"PO-Revision-Date: 2026-04-11 09:32+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
+"odoo-18-l10n/l10n_ec_edi_stock/es_419/>\n"
+"Language: es_419\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.16.2\n"
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_warehouse.py:0
+msgid ""
+"%(company)s - Stock Picking Delivery Guide Sequence for %(entity)s-%"
+"(emission)s"
+msgstr ""
+"%(company)s - Secuencia de guía de remisión de albaranes para %(entity)s-%"
+"(emission)s"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.actions.report,print_report_name:l10n_ec_edi_stock.action_delivery_guide_report_pdf
+msgid "'GuíRe %s' % (object.l10n_ec_edi_document_number or 's/n')"
+msgstr "'GuíRe %s' % (object.l10n_ec_edi_document_number or 's/n')"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.custom_header
+msgid ""
+"<br/>\n"
+"                                        <strong>Emission: </strong>Normal\n"
+"                                        <br/>\n"
+"                                        <strong>Obliged to keep accounting: "
+"</strong>"
+msgstr ""
+"<br/>\n"
+"                                        <strong>Emisión: </strong>Normal\n"
+"                                        <br/>\n"
+"                                        <strong>Obligado a llevar "
+"contabilidad: </strong>"
+
+#. module: l10n_ec_edi_stock
+#: model:mail.template,body_html:l10n_ec_edi_stock.email_template_edi_delivery_guide
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> "
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Here is your\n"
+"        <t t-if=\"object.name\">\n"
+"            document <strong t-out=\"object.l10n_ec_edi_document_number or "
+"''\">001-001-000000001</strong>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            document\n"
+"        </t>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (with reference: <t t-out=\"object.origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        Do not hesitate to contact us if you have any questions.\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.report_delivery_guide_lang
+msgid "<span>Auxiliar Code</span>"
+msgstr "<span>Código Auxiliar</span>"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.report_delivery_guide_lang
+msgid "<span>Description</span>"
+msgstr "<span>Descripción</span>"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.report_delivery_guide_lang
+msgid "<span>Lot</span>"
+msgstr "<span>Lote</span>"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.report_delivery_guide_lang
+msgid "<span>Main Code</span>"
+msgstr "<span>Código Principal </span>"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.report_delivery_guide_lang
+msgid "<span>Quantity</span>"
+msgstr "<span>Cant.</span>"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.report_delivery_guide_lang
+msgid "<strong>Arrival Date: </strong>"
+msgstr "<strong>Fecha de llegada: </strong>"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.report_delivery_guide_lang
+msgid "<strong>Company Name / Name and Surname: </strong>"
+msgstr "<strong>Razón Social / Nombres y Apellidos: </strong>"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.report_delivery_guide_lang
+msgid "<strong>Departure Address: </strong>"
+msgstr "<strong>Dirección de salida: </strong>"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.report_delivery_guide_lang
+msgid "<strong>Departure Date: </strong>"
+msgstr "<strong>Fecha de salida: </strong>"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.custom_header
+msgid "<strong>Environment: </strong>"
+msgstr "<strong>Ambiente: </strong>"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.report_delivery_guide_lang
+msgid "<strong>Identification (Carrier): </strong>"
+msgstr "<strong>Identificación (Transportista): </strong>"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.report_delivery_guide_lang
+msgid "<strong>Identification (Recipient): </strong>"
+msgstr "<strong>Identificación (Destinatario): </strong>"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.report_delivery_guide_lang
+msgid "<strong>License Plate: </strong>"
+msgstr "<strong>Placa: </strong>"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.report_delivery_guide_lang
+msgid "<strong>Move Reason: </strong>"
+msgstr "<strong>Motivo Traslado: </strong>"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.custom_header
+msgid "<strong>Special Taxpayer Number: </strong>"
+msgstr "<strong>Contribuyente Especial Nro: </strong>"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.custom_header
+msgid "<strong>Withhold Agent Resolution No.: </strong>"
+msgstr "<strong>Agente de Retención Resolución No.: </strong>"
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid "A cancellation of the Delivery Guide has been requested."
+msgstr "Se ha solicitado la cancelación de la guía de remisión."
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.custom_header
+msgid "Access Key:"
+msgstr "Clave de acceso:"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.report_delivery_guide_lang
+msgid "Additional Information"
+msgstr "Información Adicional"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,field_description:l10n_ec_edi_stock.field_stock_picking__l10n_ec_allow_send_edi
+msgid "Allow Send EDI"
+msgstr "Permitir enviar EDI"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model,name:l10n_ec_edi_stock.model_ir_attachment
+msgid "Attachment"
+msgstr "Adjunto"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.custom_header
+msgid "Authorization No.:"
+msgstr "Número de autorización:"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,field_description:l10n_ec_edi_stock.field_stock_picking__l10n_ec_authorization_date
+msgid "Authorization date"
+msgstr "Fecha de autorización"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,field_description:l10n_ec_edi_stock.field_stock_picking__l10n_ec_authorization_number
+msgid "Authorization number"
+msgstr "Número de autorización"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields.selection,name:l10n_ec_edi_stock.selection__stock_picking__l10n_ec_edi_status__cancelled
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,field_description:l10n_ec_edi_stock.field_stock_warehouse__l10n_ec_country_code
+msgid "Country Code(EC)"
+msgstr "Código de país(EC)"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.actions.report,name:l10n_ec_edi_stock.action_delivery_guide_report_pdf
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.view_l10n_ec_edi_stock_picking_form
+msgid "Delivery Guide"
+msgstr "Guía de Remisión"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.custom_header
+msgid ""
+"Delivery Guide\n"
+"                                        <br/>"
+msgstr ""
+"Guía de Remisión\n"
+"                                        <br/>"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.view_l10n_ec_edi_stock_picking_form
+msgid "Delivery Guide Number"
+msgstr "Número de guía de remisión"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,field_description:l10n_ec_edi_stock.field_stock_picking__l10n_ec_edi_document_number
+msgid "Delivery Guide Number (SRI)"
+msgstr "Número de guía de remisión (SRI)"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,field_description:l10n_ec_edi_stock.field_stock_warehouse__l10n_ec_delivery_number_sequence_id
+msgid "Delivery Guide Number Sequence"
+msgstr "Secuencia de guía de remisión"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,field_description:l10n_ec_edi_stock.field_stock_picking__l10n_ec_edi_status
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.view_l10n_ec_edi_stock_view_picking_internal_search
+msgid "Delivery Guide Status"
+msgstr "Estado de la guía de remisión"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,field_description:l10n_ec_edi_stock.field_stock_picking__l10n_ec_edi_content
+msgid "Delivery guide content (SRI)"
+msgstr "Contenido de la guía de remisión (SRI)"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,field_description:l10n_ec_edi_stock.field_stock_picking__l10n_ec_delivery_guide_error
+msgid "Delivery guide error details"
+msgstr "Errores de la guía de remisión"
+
+#. module: l10n_ec_edi_stock
+#: model:mail.template,name:l10n_ec_edi_stock.email_template_edi_delivery_guide
+msgid "Delivery guide: Send by email"
+msgstr "Guía de remisión: Enviar por correo electrónico"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.view_l10n_ec_edi_stock_picking_form
+msgid "Download"
+msgstr "Descargar"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.constraint,message:l10n_ec_edi_stock.constraint_stock_warehouse_unique_warehouse_ec_entity_and_emission
+msgid ""
+"Duplicated warehouse (entity, emission) pair. You probably encoded twice the "
+"same warehouse."
+msgstr ""
+"Existe un almacén duplicado (sucursal, emisión). Probablemente codificó dos "
+"veces el mismo almacén."
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,help:l10n_ec_edi_stock.field_stock_picking__l10n_ec_is_delivery_guide
+msgid "Ecuador: Allow to know when an stock picking is a Delivery Guide."
+msgstr "Ecuador: permite identificar los albaranes que son Guías de remisión."
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,help:l10n_ec_edi_stock.field_stock_picking__l10n_ec_allow_send_edi
+msgid "Ecuador: Allow to send the EDI document."
+msgstr "Ecuador: Permitir enviar el documento EDI."
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,help:l10n_ec_edi_stock.field_stock_picking__l10n_ec_authorization_date
+msgid ""
+"Ecuador: Date on which government authorizes the document, unset if document "
+"is cancelled."
+msgstr ""
+"Ecuador: Fecha en la que el gobierno autoriza el documento, sin establecer "
+"si el documento está cancelado."
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,help:l10n_ec_edi_stock.field_stock_picking__l10n_ec_delivery_end_date
+msgid ""
+"Ecuador: Date on which the transfer ends. By default, 15 days after the "
+"start date."
+msgstr ""
+"Ecuador: Fecha en la que finaliza la transferencia. Por defecto, 15 días "
+"después de la fecha de inicio."
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,help:l10n_ec_edi_stock.field_stock_picking__l10n_ec_delivery_start_date
+msgid "Ecuador: Date on which the transfer starts."
+msgstr "Ecuador: Fecha en la que comienza la transferencia."
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,help:l10n_ec_edi_stock.field_stock_picking__l10n_ec_edi_content
+msgid "Ecuador: Delivery guide content in XML format."
+msgstr "Ecuador: Contenido de la guía de remisión en formato XML."
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,help:l10n_ec_edi_stock.field_stock_picking__l10n_ec_authorization_number
+msgid ""
+"Ecuador: EDI authorization number (same as access key), set upon posting"
+msgstr ""
+"Ecuador: Número de autorización EDI (igual que la clave de acceso), "
+"establecido al publicar"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,help:l10n_ec_edi_stock.field_stock_warehouse__l10n_ec_entity
+msgid "Ecuador: Emission entity number that is given by the SRI."
+msgstr "Ecuador: Número de entidad de emisión que otorga el SRI."
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,help:l10n_ec_edi_stock.field_stock_warehouse__l10n_ec_emission
+msgid "Ecuador: Emission point number that is given by the SRI."
+msgstr "Ecuador: Número de punto de emisión que otorga el SRI."
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,help:l10n_ec_edi_stock.field_stock_warehouse__l10n_ec_delivery_number
+msgid "Ecuador: Hold the next sequence to use as delivery guide number."
+msgstr ""
+"Ecuador: Mantener la siguiente secuencia para usar como número de guía de "
+"remisión."
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,help:l10n_ec_edi_stock.field_stock_warehouse__l10n_ec_delivery_number_sequence_id
+msgid "Ecuador: Hold the sequence to generate a delivery guide number."
+msgstr ""
+"Ecuador: Mantener la secuencia para generar un número de guía de remisión."
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,help:l10n_ec_edi_stock.field_stock_picking__l10n_ec_plate_number
+msgid "Ecuador: Plate number of the vehicle."
+msgstr "Ecuador: Número de placa del vehículo."
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,help:l10n_ec_edi_stock.field_stock_picking__l10n_ec_transfer_reason
+msgid "Ecuador: Reason for the transfer."
+msgstr "Ecuador: Motivo de la transferencia."
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,help:l10n_ec_edi_stock.field_stock_picking__l10n_ec_transporter_id
+msgid "Ecuador: Transporter of the goods."
+msgstr "Ecuador: Transportista de la mercancía."
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid ""
+"Electronic document authorized.{}Authorization num:{}%(authorization_num)s{}"
+"Authorization date:{}%(authorization_date)s"
+msgstr ""
+"Documento electrónico autorizado.{}Número autorización:{}%"
+"(authorization_num)s{}Fecha autorización:{}%(authorization_date)s"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,field_description:l10n_ec_edi_stock.field_stock_warehouse__l10n_ec_emission
+msgid "Emission Point"
+msgstr "Punto de emisión"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,field_description:l10n_ec_edi_stock.field_stock_picking__l10n_ec_delivery_end_date
+msgid "End Date"
+msgstr "Fecha de finalización"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,field_description:l10n_ec_edi_stock.field_stock_warehouse__l10n_ec_entity
+msgid "Entity Point"
+msgstr "Entidad emisora"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,help:l10n_ec_edi_stock.field_stock_picking__l10n_ec_delivery_guide_error
+msgid "Error details when sending the delivery guide."
+msgstr "Detalles del error al enviar la guía de remisión."
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.view_l10n_ec_edi_stock_picking_form
+msgid "Generate Delivery Guide"
+msgstr "Generar guía de remisión"
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid "Goods Dispatch"
+msgstr "Despacho de mercancías"
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid "Goods Return"
+msgstr "Devolución de mercancías"
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid "Internal Transfer"
+msgstr "Transferencia interna"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,field_description:l10n_ec_edi_stock.field_stock_picking__l10n_ec_is_delivery_guide
+msgid "Is Delivery Guide"
+msgstr "Es Guía de Remisión"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.custom_header
+msgid "Missing barcode for authorization number"
+msgstr "Falta el código de barras para el número de autorización."
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,field_description:l10n_ec_edi_stock.field_stock_warehouse__l10n_ec_delivery_number
+msgid "Next Delivery Guide Number"
+msgstr "Siguiente número de guía de remisión"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.custom_header
+msgid "No"
+msgstr "No"
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid "Others"
+msgstr "Otros"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,field_description:l10n_ec_edi_stock.field_stock_picking__l10n_ec_plate_number
+msgid "Plate Number"
+msgstr "Número de placa"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.view_l10n_ec_edi_stock_picking_form
+msgid "Process now"
+msgstr "Procesar ahora"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.custom_header
+msgid "Production"
+msgstr "Producción"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.custom_header
+msgid ""
+"RIMPE Contributor Type\n"
+"                                            <br/>"
+msgstr ""
+"Tipo de Contribuyente RIMPE\n"
+"                                            <br/>"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.custom_header
+msgid "RUC/Cédula"
+msgstr ""
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.view_l10n_ec_edi_stock_picking_form
+msgid "Request Delivery Guide Cancellation"
+msgstr "Solicitar cancelación de la guía de remisión"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.view_l10n_ec_edi_stock_picking_form
+msgid "Retry"
+msgstr "Reintentar"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.view_l10n_ec_edi_stock_picking_form
+msgid "Send Delivery Guide"
+msgstr "Enviar guía de remisión"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.actions.server,name:l10n_ec_edi_stock.ir_cron_send_delivery_guides_ir_actions_server
+msgid "Send delivery guides to SRI"
+msgstr "Enviar guías de remisión al SRI"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields.selection,name:l10n_ec_edi_stock.selection__stock_picking__l10n_ec_edi_status__sent
+msgid "Sent"
+msgstr "Enviado"
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid "Some of these electronic documents are already being processed."
+msgstr "Algunos de estos documentos electrónicos ya están siendo procesados."
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,field_description:l10n_ec_edi_stock.field_stock_picking__l10n_ec_delivery_start_date
+msgid "Start Date"
+msgstr "Fecha de inicio"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,help:l10n_ec_edi_stock.field_stock_picking__l10n_ec_edi_status
+msgid "Status of the delivery guide."
+msgstr "Estado de la guía de remisión."
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model,name:l10n_ec_edi_stock.model_stock_picking
+msgid "Stock Picking - Delivery Guide (Uruguay)"
+msgstr ""
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.custom_header
+msgid "Testing"
+msgstr "Prueba"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,help:l10n_ec_edi_stock.field_stock_warehouse__l10n_ec_country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"El código ISO del país en dos caracteres.\n"
+"Puedes utilizar este campo para realizar una búsqueda rápida."
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.view_l10n_ec_edi_stock_picking_form
+msgid "The delivery guide will soon be sent to SRI"
+msgstr "La guía de remisión será enviada pronto al SRI"
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid "The partner does not have an email address."
+msgstr "El cliente no cuenta con una dirección de correo electrónico."
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid ""
+"The plate number is not set. Please set it before sending the delivery guide."
+msgstr ""
+"No se ha establecido el número de placa. Establézcalo antes de enviar la "
+"guía de remisión."
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid "The source location must be internal"
+msgstr "La ubicación de origen debe ser interna"
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid ""
+"The transfer reason is not set. Please set it before sending the delivery "
+"guide."
+msgstr ""
+"No se ha establecido el motivo de la transferencia. Establézcalo antes de "
+"enviar la guía de remisión."
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid ""
+"The transporter is not set. Please set it before sending the delivery guide."
+msgstr ""
+"No se ha establecido el transportista. Establézcalo antes de enviar la guía "
+"de remisión."
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid "The transporter must have a defined VAT and an identification type."
+msgstr ""
+"El transportista debe tener definido el número de identificación y el tipo "
+"de identificación."
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid ""
+"The warehouse must have an emission point set. Please set it before sending "
+"the delivery guide."
+msgstr ""
+"El almacén debe tener un punto de emisión establecida. Establézcala antes de "
+"enviar la guía de remisión."
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid ""
+"The warehouse must have an entity point set. Please set it before sending "
+"the delivery guide."
+msgstr ""
+"El almacén debe tener una entidad emisora establecida. Establézcala antes de "
+"enviar la guía de remisión."
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields.selection,name:l10n_ec_edi_stock.selection__stock_picking__l10n_ec_edi_status__to_cancel
+msgid "To Cancel"
+msgstr "Por cancelar"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields.selection,name:l10n_ec_edi_stock.selection__stock_picking__l10n_ec_edi_status__to_send
+msgid "To Send"
+msgstr "Por enviar"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,field_description:l10n_ec_edi_stock.field_stock_picking__l10n_ec_transfer_reason
+msgid "Transfer Reason"
+msgstr "Motivo de la transferencia"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model.fields,field_description:l10n_ec_edi_stock.field_stock_picking__l10n_ec_transporter_id
+msgid "Transporter"
+msgstr "Transportista"
+
+#. module: l10n_ec_edi_stock
+#: model:ir.model,name:l10n_ec_edi_stock.model_stock_warehouse
+msgid "Warehouse"
+msgstr "Almacén"
+
+#. module: l10n_ec_edi_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ec_edi_stock.custom_header
+msgid "Yes"
+msgstr "Sí"
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/ir_attachment.py:0
+msgid ""
+"You can't unlink an attachment being an EDI document sent to the government."
+msgstr ""
+"No es posible eliminar un adjunto que pertenece a un documento electrónico "
+"enviado al SRI."
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid "You must define a legal name in the settings for company %s"
+msgstr "Se debe definir el nombre legal de la compañia %s"
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid "You must define an address(street) for partner %s"
+msgstr "Se debe definir la dirección del cliente %s"
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid "You must define an address(street) for warehouse %s"
+msgstr "Se debe definir la dirección del almacén %s"
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid "You must define an address(street) in the settings for company %s"
+msgstr "Se debe definir la dirección para la compañia %s"
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid "You must set a VAT number for company %s"
+msgstr "Se debe definir el VAT de la compañía %s"
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid "You must set a VAT number for partner %s"
+msgstr "Se debe definir el VAT del cliente %s"
+
+#. module: l10n_ec_edi_stock
+#: model:mail.template,subject:l10n_ec_edi_stock.email_template_edi_delivery_guide
+msgid ""
+"{{ object.company_id.name }} Document (Ref "
+"{{ object.l10n_ec_edi_document_number }})"
+msgstr ""
+"{{ object.company_id.name }} Documento (Ref "
+"{{ object.l10n_ec_edi_document_number }})"
+
+#. module: l10n_ec_edi_stock
+#. odoo-python
+#: code:addons/l10n_ec_edi_stock/models/stock_picking.py:0
+msgid ""
+"{}This is a DEMO response, which means this document was not sent to the SRI."
+"{}If you want your document to be processed by the SRI, please set an {}"
+"Electronic Certificate File{} in the settings.{}Demo electronic document.{}"
+"Authorization num:{}%(authorization_num)s{}Authorization date:{}%"
+"(authorization_date)s"
+msgstr ""
+"{}Esta es una respuesta DEMO, lo cual significa que este documento no fue "
+"enviado al SRI.{}Si desea que su documento sea procesado por el SRI, por "
+"favor configure un {}Archivo de Certificado Electrónico{} en la "
+"configuraciòn.{}Documento Electrónico Demo.{}Número Autorización:{}%"
+"(authorization_num)s{}Fecha Autorización:{}%(authorization_date)s"
+
+#~ msgid "001"
+#~ msgstr "001"
+
+#~ msgid "06"
+#~ msgstr "06"
+
+#~ msgid "Transfer"
+#~ msgstr "Albarán"

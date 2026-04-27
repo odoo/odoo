@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="twitter_preview" t-name="X Preview">
+            <div class="o_social_preview o_social_twitter_preview bg-white border rounded overflow-hidden w-100">
+                <div class="w-75 d-flex m-3">
+                    <span class="o_social_preview_icon_wrapper overflow-hidden me-2">
+                        <i class="fa fa-twitter fa-2x"/>
+                    </span>
+                    <div class="o_social_preview_header">
+                        <b class="text-900">X Account</b>
+                        <span class="text-600">@x &#183;
+                            <a t-if="live_post_link" t-attf-href="#{live_post_link}" target="blank">11m</a>
+                            <t t-else="">11m</t>
+                        </span>
+                    </div>
+                </div>
+                <div class="d-table w-75 pb-3 mx-3">
+                    <span t-esc="message[:limit]" class="o_social_preview_message"/>
+                    <span t-if="is_twitter_post_limit_exceed" t-esc="message[limit:]" class="o_social_preview_message o_social_twitter_message_exceeding"/>
+                </div>
+                <a t-att-href="link_preview.get('url')" target="_blank">
+                    <div t-attf-class="o_social_stream_post_image d-flex overflow-hidden
+                        {{link_preview.get('url') and 'o_social_stream_post_image_clickable'}}">
+                        <t t-foreach="image_urls" t-as="image_url">
+                            <div t-if="image_url_index == 1 and len(image_urls) > 2"
+                                class="o_social_stream_post_image_more position-relative d-flex ms-1">
+                                <img t-att-src="image_url" alt="Post Image" />
+                                <div class="o_social_stream_post_image_more_overlay d-flex align-items-center h-100 w-100 text-white justify-content-center position-absolute h1 m-0 pe-none" style="user-select: none;">
+                                    +<t t-esc="len(image_urls) - 2"/>
+                                </div>
+                            </div>
+                            <div t-elif="image_url_index &lt; 2" class="w-100">
+                                <img t-att-src="image_url" alt="Post Image"  />
+                            </div>
+                        </t>
+                    </div>
+                    <div t-if="link_preview and image_urls"
+                        class="o_social_twitter_preview_article w-100 pb-1 d-block text-white">
+                        <small t-out="link_preview['domain']" class="p-1 mx-2 rounded"/>
+                    </div>
+                </a>
+            </div>
+        </template>
+    </data>
+</odoo>

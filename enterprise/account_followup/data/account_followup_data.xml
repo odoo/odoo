@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Mail template is done in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="1">
+        <!--Email template -->
+        <record id="email_template_followup_1" model="mail.template">
+            <field name="name">Payment Reminder</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="email_from">{{ object._get_followup_responsible().email_formatted }}</field>
+            <field name="subject">{{ (object.company_id or object._get_followup_responsible().company_id).name }} Payment Reminder - {{ object.commercial_company_name }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px;">
+                        <t t-if="object.id != object.commercial_partner_id.id">Dear <t t-out="object.name or ''"/> (<t t-out="object.commercial_partner_id.name or ''"/>),</t>
+                        <t t-else="">Dear <t t-out="object.name or ''"/>,</t>
+                        <br/>
+                        It has come to our attention that you have an outstanding balance of <t t-out="format_amount(object.total_overdue, object.currency_id) or ''"/>
+                        <br/>
+                        We kindly request that you take necessary action to settle this amount within the next 8 days.
+                        <br/>
+                        <div t-if="object._show_pay_now_button()" class="d-flex">
+                            <a t-att-href="'/my/invoices/overdue'" class="btn btn-primary">Pay now</a>
+                        </div>
+                        If you have already made the payment after receiving this message, please disregard it.
+                        Our accounting department is available if you require any assistance or have any questions.
+                        <br/>
+                        Thank you for your cooperation.
+                        <br/>
+                        Sincerely,
+                        <t t-if="not is_html_empty(object._get_followup_responsible().signature)">
+                            <br/>
+                            <t t-out="object._get_followup_responsible().signature"/>
+                        </t>
+                        <t t-else="">
+                            <br/>
+                            --
+                            <br/>
+                            <t t-out="object._get_followup_responsible().name"/>
+                        </t>
+                    </p>
+                </div>
+            </field>
+            <field name="lang">{{ object.lang }}</field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+
+        <record id="demo_followup_line1" model="account_followup.followup.line" forcecreate="False">
+            <field name="name">15 Days</field>
+            <field name="delay">15</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="send_email">True</field>
+            <field name="mail_template_id" ref="email_template_followup_1"/>
+        </record>
+        <record id="demo_followup_email_template_2" model="mail.template" forcecreate="False">
+            <field name="name">Second reminder followup</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="email_from">{{ object._get_followup_responsible().email_formatted }}</field>
+            <field name="subject">{{ (object.company_id or object._get_followup_responsible().company_id).name }} Payment Reminder - {{ object.commercial_company_name }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p>
+                        <t t-if="object.id != object.commercial_partner_id.id">Dear <t t-out="object.name or ''"/> (<t t-out="object.commercial_partner_id.name or ''"/>),</t>
+                        <t t-else="">Dear <t t-out="object.name or ''"/>,</t>
+                        <br/>
+                        We are disappointed to see that despite sending a reminder, that your account is now seriously overdue.
+                        <br/>
+                        It is essential that immediate payment is made, otherwise we will have to consider placing a stop on your account which means that we will no longer be able to supply your company with (goods/services). Please, take appropriate measures in order to carry out this payment in the next 8 days.
+                        <br/>
+                        If there is a problem with paying invoice that we are not aware of, do not hesitate to contact our accounting department, so that we can resolve the matter quickly.
+                        <br/>
+                        Details of due payments is printed below.
+                        <br/>
+                        Best Regards,
+                        <t t-if="not is_html_empty(object._get_followup_responsible().signature)">
+                            <br/>
+                            <t t-out="object._get_followup_responsible().signature"/>
+                        </t>
+                        <t t-else="">
+                            <br/>
+                            --
+                            <br/>
+                            <t t-out="object._get_followup_responsible().name"/>
+                        </t>
+                    </p>
+                </div>
+            </field>
+        </record>
+        <record id="demo_followup_line2" model="account_followup.followup.line" forcecreate="False">
+            <field name="name">30 Days</field>
+            <field name="delay">30</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="send_email">True</field>
+            <field name="mail_template_id" ref="account_followup.demo_followup_email_template_2"/>
+        </record>
+
+        <record id="action_account_followup" model="ir.actions.client">
+            <field name="name">Customers Statement</field>
+            <field name="tag">account_report_followup</field>
+            <field name="context">{'model': 'account.followup.report'}</field>
+        </record>
+    </data>
+</odoo>

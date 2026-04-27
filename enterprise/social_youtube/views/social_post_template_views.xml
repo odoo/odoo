@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="social_post_template_view_form" model="ir.ui.view">
+        <field name="name">social.post.template.view.form.inherit.youtube</field>
+        <field name="model">social.post.template</field>
+        <field name="inherit_id" ref="social.social_post_template_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='account_ids']" position="attributes">
+                <!-- Do not allow to select Youtube account for a post template -->
+                <attribute name="domain">
+                    [('media_type', '!=', 'youtube')]
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+</data>
+</odoo>

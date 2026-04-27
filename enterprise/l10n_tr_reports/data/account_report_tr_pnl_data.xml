@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="profit_and_loss" model="account.report">
+        <field name="name">Profit and Loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="country_id" ref="base.tr"/>
+        <field name="column_ids">
+            <record id="profit_and_loss_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_report_line_tr_pl_profit_lost_from_ordinary_operations"
+                    model="account.report.line">
+                <field name="name">Ordinary Profit/Loss</field>
+                <field name="code">TR_PL_PROFIT_LOST_FROM_ORDINARY_OPERATIONS</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_report_line_tr_pl_profit_lost_from_ordinary_operations_balance"
+                            model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">TR_PL_OPERATING_PROFIT_LOST.balance + TR_PL_NON_OPERATING_PROFIT_LOST.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_report_line_tr_pl_operating_profit_lost"
+                            model="account.report.line">
+                        <field name="name">Operating Profit/Loss</field>
+                        <field name="code">TR_PL_OPERATING_PROFIT_LOST</field>
+                        <field name="expression_ids">
+                            <record id="account_report_line_tr_pl_operating_profit_lost_balance"
+                                    model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TR_PL_GROSS_SALES_PROFIT_LOST.balance - TR_PL_OPERATING_EXPENSES_63.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_report_line_tr_pl_gross_sales_profit_lost"
+                                    model="account.report.line">
+                                <field name="name">Gross Profit/Loss</field>
+                                <field name="code">TR_PL_GROSS_SALES_PROFIT_LOST</field>
+                                <field name="expression_ids">
+                                    <record id="account_report_line_tr_pl_gross_sales_profit_lost_balance"
+                                            model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">TR_PL_NET_SALES.balance - TR_PL_COST_OF_SALES_62.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_report_line_tr_pl_net_sales"
+                                            model="account.report.line">
+                                        <field name="name">Net Sales</field>
+                                        <field name="code">TR_PL_NET_SALES</field>
+                                        <field name="expression_ids">
+                                            <record id="account_report_line_tr_pl_net_sales_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">TR_PL_GROSS_SALES_60.balance - TR_PL_SALES_DEDUCTIONS_61.balance</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="account_report_line_tr_pl_gross_sales_60"
+                                                    model="account.report.line">
+                                                <field name="name">Gross Sales</field>
+                                                <field name="code">TR_PL_GROSS_SALES_60</field>
+                                                <field name="expression_ids">
+                                                    <record id="account_report_line_tr_pl_gross_sales_60_balance"
+                                                            model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">- 60</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_report_line_tr_pl_sales_deductions_61"
+                                                    model="account.report.line">
+                                                <field name="name">Sales Deductions (-)</field>
+                                                <field name="code">TR_PL_SALES_DEDUCTIONS_61</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="expression_ids">
+                                                    <record id="account_report_line_tr_pl_sales_deductions_61_balance"
+                                                            model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">account_codes</field>
+                                                        <field name="formula">61</field>
+                                                        <field name="green_on_positive" eval="False"/>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_report_line_tr_pl_cost_of_sales_62"
+                                            model="account.report.line">
+                                        <field name="name">Cost of Sales (-)</field>
+                                        <field name="code">TR_PL_COST_OF_SALES_62</field>
+                                        <field name="expression_ids">
+                                            <record id="account_report_line_tr_pl_cost_of_sales_62_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">62</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_report_line_tr_pl_operating_expenses_63"
+                                    model="account.report.line">
+                                <field name="name">Operating Expenses (-)</field>
+                                <field name="code">TR_PL_OPERATING_EXPENSES_63</field>
+                                <field name="expression_ids">
+                                    <record id="account_report_line_tr_pl_operating_expenses_63_balance"
+                                            model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">63</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_report_line_tr_pl_non_operating_profit_lost"
+                            model="account.report.line">
+                        <field name="name">Non-operating Profit/Loss</field>
+                        <field name="code">TR_PL_NON_OPERATING_PROFIT_LOST</field>
+                        <field name="hide_if_zero" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_report_line_tr_pl_non_operating_profit_lost_balance"
+                                    model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TR_PL_NON_OPERATING_REVENUES_PROFIT_64.balance - TR_PL_NON_OPERATING_EXPENSES_LOSSES_65.balance - TR_PL_FINANCIAL_EXPENSES_66.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_report_line_tr_pl_non_operating_revenues_profit_64"
+                                    model="account.report.line">
+                                <field name="name">Non-operating Revenues and Profits</field>
+                                <field name="code">TR_PL_NON_OPERATING_REVENUES_PROFIT_64</field>
+                                <field name="expression_ids">
+                                    <record id="account_report_line_tr_pl_non_operating_revenues_profit_64_balance"
+                                            model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">- 64</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_report_line_tr_pl_non_operating_expenses_losses_65"
+                                    model="account.report.line">
+                                <field name="name">Extraordinary Expenses and Loses (-)</field>
+                                <field name="code">TR_PL_NON_OPERATING_EXPENSES_LOSSES_65</field>
+                                <field name="expression_ids">
+                                    <record id="account_report_line_tr_pl_non_operating_expenses_losses_65_balance"
+                                            model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">65</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_report_line_tr_pl_financial_expenses_66"
+                                    model="account.report.line">
+                                <field name="name">Financial Expenses (-)</field>
+                                <field name="code">TR_PL_FINANCIAL_EXPENSES_66</field>
+                                <field name="expression_ids">
+                                    <record id="account_report_line_tr_pl_financial_expenses_66_balance"
+                                            model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">66</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_report_line_tr_pl_extraordinary_profit_lost"
+                    model="account.report.line">
+                <field name="name">Extraordinary Profit/Loss</field>
+                <field name="code">TR_PL_EXTRAORDINARY_PROFIT_LOST</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_report_line_tr_pl_extraordinary_profit_lost_balance"
+                            model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">TR_PL_EXTRAORDINARY_REVENUES_PROFIT_67.balance - TR_PL_EXTRAORDINARY_EXPENSES_LOSSES_68.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_report_line_tr_pl_extraordinary_revenues_profit_67"
+                            model="account.report.line">
+                        <field name="name">Extraordinary Revenues and Profits</field>
+                        <field name="code">TR_PL_EXTRAORDINARY_REVENUES_PROFIT_67</field>
+                        <field name="hide_if_zero" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_report_line_tr_pl_extraordinary_revenues_profit_67_balance"
+                                    model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">- 67</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_report_line_tr_pl_extraordinary_expenses_losses_68"
+                            model="account.report.line">
+                        <field name="name">Extraordinary Expenses and Loses (-)</field>
+                        <field name="code">TR_PL_EXTRAORDINARY_EXPENSES_LOSSES_68</field>
+                        <field name="hide_if_zero" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_report_line_tr_pl_extraordinary_expenses_losses_68_balance"
+                                    model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">68</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_report_line_tr_pl_net_period_profit_or_loss_692"
+                    model="account.report.line">
+                <field name="name">Net Profit/Loss for the Period</field>
+                <field name="code">TR_PL_NET_PERIOD_PROFIT_OR_LOSS_692</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_report_line_tr_pl_net_period_profit_or_loss_692_balance"
+                            model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">TR_PL_PROFIT_OR_LOSS_FOR_THE_PERIOD_690.balance - TR_PL_PROV_TAXES_STATUTORY_OBLIG_691.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_report_line_tr_pl_profit_or_loss_for_the_period_690"
+                            model="account.report.line">
+                        <field name="name">Profit/Loss for the Period</field>
+                        <field name="code">TR_PL_PROFIT_OR_LOSS_FOR_THE_PERIOD_690</field>
+                        <field name="expression_ids">
+                            <record id="account_report_line_tr_pl_profit_or_loss_for_the_period_690_balance"
+                                    model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">- 690</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_report_line_tr_pl_prov_taxes_statutory_oblig_691"
+                            model="account.report.line">
+                        <field name="name">Provisions for Taxes Payable and Other Statuary Obligations (-)</field>
+                        <field name="code">TR_PL_PROV_TAXES_STATUTORY_OBLIG_691</field>
+                        <field name="hide_if_zero" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_report_line_tr_pl_prov_taxes_statutory_oblig_691_balance"
+                                    model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">691</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="profit_and_loss" model="account.report">
+        <field name="name">Profit and Loss</field>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="filter_budgets" eval="True"/>
+        <field name="default_opening_date_filter">this_year</field>
+        <field name="column_ids">
+            <record id="profit_and_loss_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_revenue0" model="account.report.line">
+                <field name="name">Revenue</field>
+                <field name="code">REV</field>
+                <field name="hierarchy_level">1</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_revenue0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">domain</field>
+                        <field name="formula" eval="[('account_id.account_type', '=', 'income')]"/>
+                        <field name="subformula">-sum</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_cost_sales0" model="account.report.line">
+                <field name="name">Less Costs of Revenue</field>
+                <field name="code">COS</field>
+                <field name="parent_id" eval="False"/>
+                <field name="hierarchy_level">1</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_cost_sales0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">domain</field>
+                        <field name="formula" eval="[('account_id.account_type', '=', 'expense_direct_cost')]"/>
+                        <field name="subformula">sum</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_gross_profit0" model="account.report.line">
+                <field name="name">Gross Profit</field>
+                <field name="code">GRP</field>
+                <field name="parent_id" eval="False"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_gross_profit0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">REV.balance - COS.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_expense0" model="account.report.line">
+                <field name="name">Less Operating Expenses</field>
+                <field name="code">EXP</field>
+                <field name="parent_id" eval="False"/>
+                <field name="hierarchy_level">1</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_expense0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">domain</field>
+                        <field name="formula" eval="[('account_id.account_type', '=', 'expense')]"/>
+                        <field name="subformula">sum</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_operating_income0" model="account.report.line">
+                <field name="name">Operating Income (or Loss)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">INC</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_operating_income0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">REV.balance - COS.balance - EXP.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_other_income0" model="account.report.line">
+                <field name="name">Plus Other Income</field>
+                <field name="code">OIN</field>
+                <field name="parent_id" eval="False"/>
+                <field name="hierarchy_level">1</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_other_income0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">domain</field>
+                        <field name="formula" eval="[('account_id.account_type', '=', 'income_other')]"/>
+                        <field name="subformula">-sum</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_depreciation0" model="account.report.line">
+                <field name="name">Less Other Expenses</field>
+                <field name="code">OEXP</field>
+                <field name="parent_id" eval="False"/>
+                <field name="hierarchy_level">1</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_depreciation0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">domain</field>
+                        <field name="formula" eval="[('account_id.account_type', '=', 'expense_depreciation')]"/>
+                        <field name="subformula">sum</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_net_profit0" model="account.report.line">
+                <field name="name">Net Profit</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">NEP</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_net_profit0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">REV.balance + OIN.balance - COS.balance - EXP.balance - OEXP.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

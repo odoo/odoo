@@ -1,0 +1,63 @@
+<odoo>
+    <data>
+        <record id="view_partner_bank_search_inherit" model="ir.ui.view">
+            <field name="name">res.partner.bank.search.inherit</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='supplier']" position="after">
+                    <filter
+                        string="Employees"
+                        name="employee_bank_account"
+                        domain="[('partner_id.employee_ids.active','=', True)]"/>
+                    <separator/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_partner_bank_form_inherit_hr_payroll_account" model="ir.ui.view">
+            <field name="name">res.partner.bank.form.inherit.hr.payroll.account</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="account.view_partner_bank_form_inherit_account"/>
+            <field name="mode">primary</field>
+            <field name="priority">14</field>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="attributes">
+                    <attribute name="domain">[('employee_ids.company_id', 'in', allowed_company_ids)]</attribute>
+                </field>
+                <field name="partner_id" position="after">
+                    <div/> <!-- to fill label column -->
+                    <div
+                        class="alert alert-warning my-2"
+                        role="alert"
+                        invisible="not partner_id or not has_alt_bank_account">
+                        This will replace the employee existing bank account.
+                    </div>
+                </field>
+            </field>
+        </record>
+
+        <record id="action_res_partner_bank_account_form" model="ir.actions.act_window">
+            <field name="name">Bank Accounts</field>
+            <field name="res_model">res.partner.bank</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{'search_default_employee_bank_account': True, 'from_employee_bank_account': True}</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'list', 'view_id': ref('base.view_partner_bank_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('view_partner_bank_form_inherit_hr_payroll_account')})]"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Create a Bank Account</p>
+                <p>From here you can manage all bank accounts linked to you and your contacts.</p>
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_hr_employee_bank_account"
+            name="Bank Accounts"
+            action="action_res_partner_bank_account_form"
+            groups="hr.group_hr_user"
+            parent="hr.menu_hr_employee_payroll"
+            sequence="7"
+        />
+    </data>
+</odoo>

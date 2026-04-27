@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_restaurant_table_form" model="ir.ui.view">
+        <field name="name">Restaurant Table</field>
+        <field name="model">restaurant.table</field>
+        <field name="inherit_id" ref="pos_restaurant.view_restaurant_table_form"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <field name="appointment_resource_id"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_restaurant_floor_form" model="ir.ui.view">
+        <field name="name">Restaurant Floors</field>
+        <field name="model">restaurant.floor</field>
+        <field name="inherit_id" ref="pos_restaurant.view_restaurant_floor_form"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='table_ids']//field[@name='shape']" position="after">
+                <field name="appointment_resource_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

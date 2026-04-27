@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_work_entry.work_entry_type_attendance" model="hr.work.entry.type">
+        <field name="meal_voucher">True</field>
+        <field name="leave_right">True</field>
+    </record>
+
+    <record id="hr_work_entry_contract.work_entry_type_leave" model="hr.work.entry.type">
+        <field name="leave_right">True</field>
+        <field name="representation_fees">True</field>
+        <field name="dmfa_code">1</field>
+    </record>
+
+    <record id="hr_work_entry_contract.work_entry_type_compensatory" model="hr.work.entry.type">
+        <field name="leave_right">True</field>
+        <field name="dmfa_code">1</field> <!-- 1, as this is paid, unpaid would be 20 -->
+    </record>
+
+    <record id="hr_work_entry_contract.work_entry_type_home_working" model="hr.work.entry.type">
+        <field name="leave_right">True</field>
+    </record>
+
+    <record id="hr_work_entry_contract.work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="leave_right">True</field>
+    </record>
+
+    <record id="work_entry_type_bank_holiday" model="hr.work.entry.type">
+        <field name="name">Public Holiday</field>
+        <field name="code">LEAVE500</field>
+        <field name="is_leave">True</field>
+        <field name="color">3</field>
+        <field name="representation_fees">True</field>
+        <field name="dmfa_code">1</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_solicitation_time_off" model="hr.work.entry.type">
+        <field name="name">Solicitation Time Off</field>
+        <field name="code">LEAVE600</field>
+        <field name="leave_right" eval="True"/>
+        <field name="is_leave">True</field>
+        <field name="dmfa_code">1</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_training" model="hr.work.entry.type">
+        <field name="name">Training</field>
+        <field name="meal_voucher">True</field>
+        <field name="code">WORK400</field>
+        <field name="dmfa_code">1</field>
+    </record>
+
+    <record id="work_entry_type_unjustified_reason" model="hr.work.entry.type">
+        <field name="name">Unjustified Reason</field>
+        <field name="code">LEAVE700</field>
+        <field name="is_leave">True</field>
+        <field name="dmfa_code">30</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="hr_work_entry.work_entry_type_attendance" model="hr.work.entry.type">
+        <field name="dmfa_code">1</field>
+        <field name="private_car">True</field>
+        <field name="representation_fees">True</field>
+    </record>
+
+    <record id="hr_work_entry_contract.work_entry_type_home_working" model="hr.work.entry.type">
+        <field name="dmfa_code">1</field>
+        <field name="meal_voucher">True</field>
+        <field name="representation_fees">True</field>
+    </record>
+
+    <record id="hr_work_entry_contract.work_entry_type_unpaid_leave" model="hr.work.entry.type">
+        <field name="dmfa_code">30</field>
+    </record>
+
+    <record id="hr_work_entry_contract.work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="dmfa_code">1</field>
+        <field name="representation_fees" eval="True"/>
+        <field name="leave_right">True</field>
+    </record>
+
+    <record id="hr_work_entry_contract.work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="dmfa_code">1</field>
+        <field name="representation_fees">True</field>
+    </record>
+
+    <record id="hr_payroll.hr_work_entry_type_out_of_contract" model="hr.work.entry.type">
+        <field name="meal_voucher" eval="False"/>
+        <field name="leave_right" eval="False"/>
+        <field name="is_unforeseen" eval="False"/>
+        <field name="dmfa_code">-1</field>
+    </record>
+
+    <record id="work_entry_type_small_unemployment" model="hr.work.entry.type">
+        <field name="name">Small Unemployment (Brief Holiday)</field>
+        <field name="code">LEAVE205</field>
+        <field name="dmfa_code">1</field>   <!-- YTI: 1 as it is paid, would be 70 otherwise -->
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_economic_unemployment" model="hr.work.entry.type">
+        <field name="name">Economic Unemployment</field>
+        <field name="code">LEAVE6665</field>
+        <field name="dmfa_code">71</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_corona" model="hr.work.entry.type">
+        <field name="name">Corona Unemployment</field>
+        <field name="code">LEAVE6666</field>
+        <field name="dmfa_code">77</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_maternity" model="hr.work.entry.type">
+        <field name="name">Maternity Time Off</field>
+        <field name="code">LEAVE210</field>
+        <field name="dmfa_code">51</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_paternity_company" model="hr.work.entry.type">
+        <field name="name">Paternity Time Off (Paid by Company)</field>
+        <field name="code">LEAVE220</field>
+        <field name="dmfa_code">1</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="representation_fees">True</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_paternity_legal" model="hr.work.entry.type">
+        <field name="name">Paternity Time Off (Legal)</field>
+        <field name="code">LEAVE230</field>
+        <field name="dmfa_code">52</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_unpredictable" model="hr.work.entry.type">
+        <field name="name">Unpredictable Reason</field>
+        <field name="code">LEAVE250</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="dmfa_code">24</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_training" model="hr.work.entry.type">
+        <field name="name">Training</field>
+        <field name="code">LEAVE265</field>
+        <field name="color">5</field>
+        <field name="meal_voucher">True</field>
+        <field name="private_car">True</field>
+        <field name="representation_fees">True</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_training_time_off" model="hr.work.entry.type">
+        <field name="name">Educational Time Off</field>
+        <field name="code">LEAVE260</field>
+        <field name="dmfa_code">5</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_flemish_training_time_off" model="hr.work.entry.type">
+        <field name="name">Flemish Educational Time Off</field>
+        <field name="code">LEAVE261</field>
+        <field name="dmfa_code">5</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_long_sick" model="hr.work.entry.type">
+        <field name="name">Long Term Sick</field>
+        <field name="code">LEAVE280</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <!-- 50, not 30 -->
+        <field name="dmfa_code">50</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_breast_feeding" model="hr.work.entry.type">
+        <field name="name">Breastfeeding Break</field>
+        <field name="code">LEAVE290</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="meal_voucher">True</field>
+        <field name="private_car">True</field>
+        <field name="representation_fees">True</field>
+        <field name="dmfa_code">51</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_medical_assistance" model="hr.work.entry.type">
+        <field name="name">Medical Assistance</field>
+        <field name="code">MEDIC01</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="dmfa_code">-1</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_youth_time_off" model="hr.work.entry.type">
+        <field name="name">Youth Time Off</field>
+        <field name="code">YOUNG01</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="dmfa_code">73</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_recovery_additional" model="hr.work.entry.type">
+        <field name="name">Recovery Additional Time</field>
+        <field name="code">LEAVE295</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="dmfa_code">1</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_additional_paid" model="hr.work.entry.type">
+        <field name="name">Additional Time (Paid)</field>
+        <field name="code">LEAVE297</field>
+        <field name="color">5</field>
+        <field name="dmfa_code">1</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_notice" model="hr.work.entry.type">
+        <field name="name">Notice (Unprovided)</field>
+        <field name="code">LEAVE211</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="dmfa_code">1</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_phc" model="hr.work.entry.type">
+        <field name="name">Public Holiday Compensation</field>
+        <field name="code">PHC1</field>
+        <field name="color">3</field>
+        <field name="is_leave">True</field>
+        <field name="dmfa_code">1</field>
+        <field name="representation_fees" eval="True"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_extra_legal" model="hr.work.entry.type">
+        <field name="name">Extra Legal Time Off</field>
+        <field name="code">LEAVE213</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="representation_fees">True</field>
+        <field name="dmfa_code">1</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_part_sick" model="hr.work.entry.type">
+        <field name="name">Sick Time Off (Without Guaranteed Salary)</field>
+        <field name="code">LEAVE214</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="dmfa_code">50</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_recovery" model="hr.work.entry.type">
+        <field name="name">Recovery Bank Holiday</field>
+        <field name="code">LEAVE215</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="representation_fees">True</field>
+        <field name="dmfa_code">1</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_european" model="hr.work.entry.type">
+        <field name="name">European Time Off</field>
+        <field name="code">LEAVE216</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="dmfa_code">14</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_credit_time" model="hr.work.entry.type">
+        <field name="name">Credit Time</field>
+        <field name="code">LEAVE300</field>
+        <field name="is_leave">True</field>
+        <field name="color">8</field>
+        <field name="dmfa_code">-1</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_parental_time_off" model="hr.work.entry.type">
+        <field name="name">Parental Time Off</field>
+        <field name="code">LEAVE301</field>
+        <field name="is_leave">True</field>
+        <field name="color">8</field>
+        <field name="dmfa_code">-1</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_simple_holiday_pay_variable_salary" model="hr.work.entry.type">
+        <field name="name">Simple Holiday Pay - Variable Salary</field>
+        <field name="code">LEAVE1731</field>
+        <field name="color">3</field>
+        <field name="is_leave">True</field>
+        <field name="dmfa_code">1</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_work_accident" model="hr.work.entry.type">
+        <field name="name">Work Accident</field>
+        <field name="code">LEAVE115</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="dmfa_code">1</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_partial_incapacity" model="hr.work.entry.type">
+        <field name="name">Partial Incapacity (due to illness)</field>
+        <field name="code">LEAVE281</field>
+        <field name="is_leave" eval="False"/>
+        <field name="is_unforeseen" eval="False"/>
+        <field name="leave_right" eval="True"/>
+        <field name="dmfa_code">50</field>
+        <field name="color">4</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="work_entry_type_strike" model="hr.work.entry.type">
+        <field name="name">Strike</field>
+        <field name="code">LEAVE251</field>
+        <field name="dmfa_code">21</field>
+        <field name="color">5</field>
+        <field name="meal_voucher" eval="False"/>
+        <field name="private_car" eval="False"/>
+        <field name="representation_fees" eval="False"/>
+        <field name="is_leave" eval="True"/>
+        <field name="leave_right" eval="True"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+</odoo>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_config_settings_l10n_ec_edi" model="ir.ui.view">
+            <field name="name">res.config.settings.l10n.ec.edi</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//block[@id='invoicing_settings']" position="after">
+                    <block id="l10n_ec_edi_settings" title="Ecuadorian Localization" invisible="country_code != 'EC'">
+                        <setting id="l10n_ec_edi_invoicing" string="Electronic Invoicing">
+                            <div class="mt16">
+                                <div>
+                                    <label for="l10n_ec_legal_name" class="o_light_label"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                                    <field name="l10n_ec_legal_name"/>
+                                </div>
+                                <div>
+                                    <label for="l10n_ec_regime" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_ec_regime"/>
+                                </div>
+                                <div>
+                                    <label for="l10n_ec_special_taxpayer_number" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_ec_special_taxpayer_number"/>
+                                </div>
+                                <div>
+                                    <label for="l10n_ec_forced_accounting" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_ec_forced_accounting"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting id="l10n_ec_edi_connection" string="SRI Connection">
+                            <div>
+                                <label for="l10n_ec_edi_certificate_id" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_ec_edi_certificate_id" options="{'no_create': True}" domain="[('company_id', '=', company_id), ('is_valid', '=', True)]"/>
+                                <button type="action" name="%(certificate.certificate_certificate_action_view_list)d" string="SRI Certificates" class="btn-link" icon="oi-arrow-right"/>
+                            </div>
+                            <div>
+                                <field name="l10n_ec_production_env"/>
+                                <label for="l10n_ec_production_env" class="o_light_label"/>
+                                <div class="text-muted" invisible="not l10n_ec_production_env">
+                                    Production mode: EDI data is sent to the government.
+                                </div>
+                                <div class="text-muted" invisible="l10n_ec_production_env">
+                                    Test mode: EDI data is sent to test servers.
+                                </div>
+                            </div>
+                        </setting>
+                        <setting id="l10n_ec_edi_withholding" string="Withholding" company_dependent="1" help="Default taxes for withholdings">
+                            <div class="content-group">
+                                <div class="row">
+                                    <label for="l10n_ec_withhold_goods_tax_id" string="Consumables" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_ec_withhold_goods_tax_id" domain="[('tax_group_id.l10n_ec_type', '=', 'withhold_income_purchase'), ('company_id', '=', company_id)]"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_ec_withhold_services_tax_id" string="Services" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_ec_withhold_services_tax_id" domain="[('tax_group_id.l10n_ec_type', '=', 'withhold_income_purchase'), ('company_id', '=', company_id)]"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_ec_withhold_credit_card_tax_id" string="Credit Card" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_ec_withhold_credit_card_tax_id" domain="[('tax_group_id.l10n_ec_type', '=', 'withhold_income_purchase'), ('company_id', '=', company_id)]"/>
+                                </div>
+                                <div class="row">
+                                    <span class="col-lg-4 o_light_label">
+                                        Withhold Agent Number
+                                        <a class="o-tooltip"><sup title="Last 8 digits">?</sup></a>
+                                    </span>
+                                    <field name="l10n_ec_withhold_agent_number"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting id="l10n_ec_wth" string="Withholding accounts">
+                            <div class="row">
+                                <label for="l10n_ec_tax_base_sale_account_id" class="col-lg-6 o_light_label"/>
+                                <field name="l10n_ec_tax_base_sale_account_id"/>
+                            </div>
+                            <div class="row">
+                                <label for="l10n_ec_tax_base_purchase_account_id" class="col-lg-6 o_light_label"/>
+                                <field name="l10n_ec_tax_base_purchase_account_id"/>
+                            </div>
+                        </setting>
+                    </block>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

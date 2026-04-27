@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="documents.ExitToolsDialog">
+        <Dialog size="'md'" title.translate="Exit Split Tools" modalRef="modalRef">
+            <t t-if="this.props.isEmbeddedActionApplied">
+                What do you want to do with the remaining pages ?
+            </t>
+            <t t-else="">
+                Do you want to exit without saving or gather pages into one document ?
+            </t>
+            <t t-set-slot="footer">
+                <button t-if="props.isEmbeddedActionApplied" class="btn btn-primary" t-on-click="deleteRemainingPages">Delete</button>
+                <button t-else="" class="btn btn-primary" t-on-click="deleteRemainingPages">Exit without saving</button>
+                <button class="btn btn-primary" t-on-click="gatherRemainingPages">Gather in one document</button>
+                <button class="btn btn-secondary" t-on-click="props.close">Stay here</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

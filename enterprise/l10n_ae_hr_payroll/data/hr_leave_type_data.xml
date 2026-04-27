@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="uae_sick_leave_50_leave_type" model="hr.leave.type">
+            <field name="name">Sick Leave 50%</field>
+            <field name="requires_allocation">no</field>
+            <field name="leave_validation_type">hr</field>
+            <field name="support_document">True</field>
+            <field name="work_entry_type_id" ref="l10n_ae_hr_payroll.uae_sick_leave_50_entry_type"/>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="uae_sick_leave_0_leave_type" model="hr.leave.type">
+            <field name="name">Sick Leave 0%</field>
+            <field name="requires_allocation">no</field>
+            <field name="leave_validation_type">hr</field>
+            <field name="support_document">True</field>
+            <field name="work_entry_type_id" ref="l10n_ae_hr_payroll.uae_sick_leave_0_entry_type"/>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

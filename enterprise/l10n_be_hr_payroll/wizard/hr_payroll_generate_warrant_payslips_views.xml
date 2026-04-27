@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_generate_warrant_payslips_view_form" model="ir.ui.view">
+        <field name="name">hr.payroll.generate.warrant.payslips.view.form</field>
+        <field name="model">hr.payroll.generate.warrant.payslips</field>
+        <field name="arch" type="xml">
+            <form string="Generate Warrant Payslips" js_class="generate_warrant_payslips">
+                <group>
+                    <group>
+                        <label for="date_start" string="Period"/>
+                        <div class="o_row">
+                              <field name="date_start" class="oe_inline o_hr_narrow_field"/> - <field name="date_end" class="oe_inline o_hr_narrow_field"/>
+                        </div>
+                        <field name="id" invisible="1"/>
+                        <field name="department_id"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="state" invisible="1"/>
+                        <field name="import_file" widget="binary_commission" filename="filename" options="{'accepted_file_extensions': 'text/csv'}"/>
+                    </group>
+                </group>
+                <field name="line_ids" nolabel="1">
+                    <list editable="bottom">
+                        <field name="employee_id"/>
+                        <field name="commission_amount"/>
+                        <field name="currency_id" column_invisible="True"/>
+                    </list>
+                </field>
+                <div invisible="state != 'export'">
+                    <h2>Export Complete</h2>
+                    <p>The file has been downloaded.</p>
+                    <p>CSV format: you may edit it directly with your favorite spreadsheet software, the rightmost column (value) contains the commission value over 3 months. When you're done, reimport the file to generate the commission payslips with the accurate commissions.</p>
+                </div>
+                <div invisible="state != 'import'">
+                    <h2>Import Complete</h2>
+                    <p>When you're done with the commission edition, click on the 'Generate Payslip' button to generate a batch of payslips using the commissions you've provided.</p>
+                </div>
+                <footer>
+                    <button name="generate_warrant_payslips" string="Generate Payslips" type="object" class="oe_highlight o_generate" data-hotkey="q"/>
+                    <button name="export_warrant_payslips" string="Export" class="btn-secondary"/>
+                    <button special="cancel" data-hotkey="x" string="Cancel" type="object" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_payroll_generate_warrant_payslips" model="ir.actions.act_window">
+        <field name="name">Generate Warrant Payslips</field>
+        <field name="res_model">hr.payroll.generate.warrant.payslips</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+</odoo>

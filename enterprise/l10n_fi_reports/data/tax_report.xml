@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="l10n_fi.vat_report" model="account.report">
+            <field name="custom_handler_model_id" ref="model_l10n_fi_reports_tax_report_handler"/>
+        </record>
+
+        <record id="l10n_fi_reports.action_generate_tax_report_export" model="ir.actions.report">
+            <field name="name">Generate Tax report export</field>
+            <field name="model">account.report</field>
+            <field name="report_type">qweb-text</field>
+            <field name="report_name">l10n_fi_reports.tax_report_export</field>
+        </record>
+    </data>
+</odoo>

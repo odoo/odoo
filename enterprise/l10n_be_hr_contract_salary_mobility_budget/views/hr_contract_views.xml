@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.form</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract_salary.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+
+            <label name="label_wage_with_holidays" position="before">
+                <label name="l10n_be_wage_with_mobility_budget" for="l10n_be_wage_with_mobility_budget" invisible="not l10n_be_mobility_budget"/>
+                <div class="o_row o_hr_narrow_field" name="div_wage_with_mobility_budget" invisible="not l10n_be_mobility_budget">
+                    <field name="l10n_be_wage_with_mobility_budget" nolabel="1"/>
+                    <span>/ Month</span>
+                </div>
+            </label>
+
+            <group name="yearly_benefits" position="inside">
+                    <label for="l10n_be_mobility_budget" invisible="country_code != 'BE'"/>
+                    <div class="o_row" invisible="country_code != 'BE'">
+                        <field name="l10n_be_mobility_budget" nolabel="1"/>
+                        <field name="l10n_be_mobility_budget_amount" class="o_hr_narrow_field" nolabel="1"/>
+                        <span class="ms-3">/ Year</span>
+                    </div>
+                    <label for="l10n_be_mobility_budget_amount_monthly" invisible="country_code != 'BE'"/>
+                    <div class="o_row" invisible="country_code != 'BE'">
+                        <field name="l10n_be_mobility_budget_amount_monthly" class="o_hr_narrow_field" nolabel="1"/>
+                        <span class="ms-3">/ Month</span>
+                    </div>
+            </group>
+        </field>
+    </record>
+</odoo>

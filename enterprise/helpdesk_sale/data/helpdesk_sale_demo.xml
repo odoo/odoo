@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="sale_order_helpdesk_1" model="sale.order">
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="partner_invoice_id" ref="base.res_partner_2"/>
+        <field name="partner_shipping_id" ref="base.res_partner_2"/>
+    </record>
+    <record id="sale_order_line_helpdesk_1" model="sale.order.line">
+        <field name="product_id" ref="product.product_product_27"/>
+        <field name="price_unit">3645.00</field>
+        <field name="order_id" ref="sale_order_helpdesk_1"/>
+    </record>
+
+    <record id="sale_order_helpdesk_2" model="sale.order">
+        <field name="partner_id" ref="base.res_partner_10"/>
+        <field name="partner_invoice_id" ref="base.res_partner_10"/>
+        <field name="partner_shipping_id" ref="base.res_partner_10"/>
+    </record>
+    <record id="sale_order_line_helpdesk_2" model="sale.order.line">
+        <field name="product_id" ref="product.product_product_10"/>
+        <field name="price_unit">14.00</field>
+        <field name="order_id" ref="sale_order_helpdesk_2"/>
+    </record>
+
+    <record id="sale_order_helpdesk_3" model="sale.order">
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="partner_invoice_id" ref="base.res_partner_2"/>
+        <field name="partner_shipping_id" ref="base.res_partner_2"/>
+    </record>
+    <record id="sale_order_line_helpdesk_3" model="sale.order.line">
+        <field name="product_id" ref="product.product_product_12"/>
+        <field name="price_unit">12.50</field>
+        <field name="order_id" ref="sale_order_helpdesk_3"/>
+    </record>
+
+    <record id="helpdesk.helpdesk_ticket_13" model="helpdesk.ticket">
+        <field name="sale_order_id" ref="sale_order_helpdesk_2"/>
+    </record>
+    <record id="helpdesk.helpdesk_ticket_16" model="helpdesk.ticket">
+        <field name="sale_order_id" ref="sale_order_helpdesk_1"/>
+    </record>
+    <record id="helpdesk.helpdesk_ticket_10" model="helpdesk.ticket">
+        <field name="sale_order_id" ref="sale_order_helpdesk_3"/>
+    </record>
+
+</odoo>

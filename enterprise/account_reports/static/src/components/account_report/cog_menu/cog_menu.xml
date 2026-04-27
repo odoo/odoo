@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="account_reports.AccountReportCogMenu">
+        <t t-if="cogButtons.length">
+            <Dropdown>
+                <button class="btn p-0 ms-1 border-0">
+                    <i class="fa fa-fw fa-cog"/>
+                </button>
+                <t t-set-slot="content">
+                    <t t-foreach="cogButtons" t-as="cogButton" t-key="cogButton_index">
+                        <DropdownItem
+                            onSelected="(ev) => controller.buttonAction(ev, cogButton)"
+                        >
+                            <t t-out="cogButton.name"/>
+                        </DropdownItem>
+                    </t>
+                </t>
+            </Dropdown>
+        </t>
+    </t>
+</templates>

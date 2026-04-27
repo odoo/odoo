@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.SidebarDraggableItem">
+    <div t-attf-class="o_web_studio_component o_web_studio_icon_container o-draggable bg-light position-relative mb-1 py-1 rounded-1 shadow fw-bolder text-nowrap overflow-hidden text-truncate {{ props.className }}" t-att-data-structure="props.structure" t-att-data-hook="props.structure.hook" t-att-data-drop="props.dropData">
+        <t t-esc="props.string" />
+        <div t-if="props.description and env.debug" class="o_web_studio_component_description border border-dark p-1 font-monospace lh-1 fw-bolder text-nowrap overflow-hidden text-truncate" t-esc="props.description" />
+    </div>
+</t>
+
+</templates>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="spreadsheet_edition.FilterComponent">
+        <div t-attf-class="btn o_topbar_filter_icon d-flex align-items-center p-0 {{activeFilter ? 'btn-link': ''}}"
+            title="Filters"
+            t-on-click="toggleDropdown">
+            <t t-call="o-spreadsheet-Icon.GLOBAL_FILTERS"/>
+            <span class="ps-1">Filters</span>
+        </div>
+    </t>
+
+</templates>

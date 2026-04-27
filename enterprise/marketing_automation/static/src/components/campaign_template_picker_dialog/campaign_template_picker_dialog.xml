@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="marketing_automation.CampaignTemplatePickerDialog">
+        <Dialog size="'lg'" title.translate="Create a Marketing Automation Campaign" bodyClass="'o_ma_campaign_template_picker_dialog px-0 pt-0 pb-3 h-100'">
+            <div class="d-sm-flex">
+                <div class="d-flex flex-column flex-grow-1 min-w-0">
+                    <div class="py-4 container">
+                        <p class="mb-0">
+                            Create one or load a template prepared by our experts.<br/>
+                            Then sit down and let Odoo handle the rest!
+                        </p>
+                    </div>
+                    <Notebook pages="notebookPages"/>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button t-on-click="onLoadTemplate" class="btn btn-primary o_ma_campaign_picker_create" data-hotkey="c">Create Campaign</button>
+                <button t-on-click="props.close" class="btn btn-light o_ma_campaign_picker_discard" data-hotkey="x">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+
+    <t t-name="marketing_automation.CampaignTemplatePickerDialogSheet">
+        <div class="o_ma_campaign_picker_page cursor-pointer row mx-0 pt-2">
+            <div t-foreach="props.templates" t-as="template" t-key="template" class="col-12 col-lg-4 py-2">
+                <div class="o_ma_campaign_picker_card card rounded p-1 d-flex align-items-stretch h-100 " 
+                    t-att-class="{'o_ma_campaign_picker_active': this.props.activeTemplate.name == template}" 
+                    t-on-click="() => this.props.setActive(template)">
+                    <div class="row m-0 w-100 h-100">
+                        <div class="col-2 p-0 d-flex align-items-center justify-content-center">
+                            <div class="o_ma_campaign_picker_icon d-flex align-items-center justify-content-center display-3 text-muted">
+                                <img t-attf-src="{{template_value.icon}}" t-attf-alt="{{template_value.title}}" aria-hidden="true" class="img-fluid mx-auto"/>
+                            </div>
+                        </div>
+                        <div class="col-10 col-lg-10 p-0">
+                            <div class="card-body d-flex flex-column align-items-start justify-content-center h-100 p-0">
+                                <h3 class="card-title" t-out="template_value.title"/>
+                                <p class="card-text" t-out="template_value.description"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

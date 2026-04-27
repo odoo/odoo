@@ -1,0 +1,151 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_payroll_account_sepa
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~17.4+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-07-16 08:45+0000\n"
+"PO-Revision-Date: 2024-07-16 08:45+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_payroll_account_sepa
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_sepa.view_employee_form
+msgid ""
+"<span class=\"d-flex gap-2 w-50\">\n"
+"                            <span invisible=\"is_trusted_bank_account\" class=\"text-muted\">Untrusted</span>\n"
+"                            <span invisible=\"not is_trusted_bank_account\" class=\"text-success\">Trusted</span>\n"
+"                        </span>"
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#: model:ir.model.fields,field_description:hr_payroll_account_sepa.field_hr_payroll_payment_report_wizard__journal_id
+msgid "Bank Journal"
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_sepa.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_sepa.hr_payslip_view_form
+msgid "Create Payment Report"
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#: model:ir.model,name:hr_payroll_account_sepa.model_hr_employee
+msgid "Employee"
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#: model:hr.payroll.dashboard.warning,name:hr_payroll_account_sepa.hr_payroll_dashboard_warning_employee_invalid_bank_account
+msgid "Employees With Invalid Bank Accounts"
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#: model:hr.payroll.dashboard.warning,name:hr_payroll_account_sepa.hr_payroll_dashboard_warning_untrusted_bank_accounts
+msgid "Employees with untrusted Bank Account numbers"
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#: model:ir.model.fields,field_description:hr_payroll_account_sepa.field_hr_payroll_payment_report_wizard__export_format
+msgid "Export Format"
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#: model:ir.model,name:hr_payroll_account_sepa.model_hr_payroll_payment_report_wizard
+msgid "HR Payroll Payment Report Wizard"
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_sepa.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_sepa.hr_payslip_view_form
+msgid "Mark as paid"
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#: model:ir.model,name:hr_payroll_account_sepa.model_hr_payslip
+msgid "Pay Slip"
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#: model:ir.model,name:hr_payroll_account_sepa.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#: model:ir.model.fields.selection,name:hr_payroll_account_sepa.selection__hr_payroll_payment_report_wizard__export_format__sepa
+msgid "SEPA"
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#: model:ir.model.fields,field_description:hr_payroll_account_sepa.field_hr_employee__is_trusted_bank_account
+msgid "Send Money"
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#: model:ir.model.fields,help:hr_payroll_account_sepa.field_hr_employee__is_trusted_bank_account
+msgid ""
+"Sending fake invoices with a fraudulent account number is a common phishing "
+"practice. To protect yourself, always verify new bank account numbers, "
+"preferably by calling the vendor, as phishing usually happens when their "
+"emails are compromised. Once verified, you can activate the ability to send "
+"money."
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#. odoo-python
+#: code:addons/hr_payroll_account_sepa/wizard/hr_payroll_payment_report_wizard.py:0
+msgid "Some employees (%s) don't have a valid name on the work contact."
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#. odoo-python
+#: code:addons/hr_payroll_account_sepa/wizard/hr_payroll_payment_report_wizard.py:0
+msgid "Some employees (%s) don't have a work contact."
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#. odoo-python
+#: code:addons/hr_payroll_account_sepa/models/hr_employee.py:0
+msgid ""
+"The following employees have invalid bank accounts and could not be trusted:\n"
+"%s"
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#. odoo-python
+#: code:addons/hr_payroll_account_sepa/wizard/hr_payroll_payment_report_wizard.py:0
+msgid ""
+"The journal '%s' requires a proper IBAN account to pay via SEPA. Please "
+"configure it first."
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_sepa.view_employee_form
+msgid "Trust Bank Account"
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#: model:ir.model.fields,field_description:hr_payroll_account_sepa.field_hr_payslip__sepa_uetr
+msgid "UETR"
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#: model:ir.model.fields,help:hr_payroll_account_sepa.field_hr_payslip__sepa_uetr
+msgid "Unique end-to-end transaction reference"
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_sepa.view_employee_form
+msgid "Untrust Bank Account"
+msgstr ""
+
+#. module: hr_payroll_account_sepa
+#. odoo-python
+#: code:addons/hr_payroll_account_sepa/models/hr_employee.py:0
+msgid "You do not have the right to trust or un-trust a bank account."
+msgstr ""

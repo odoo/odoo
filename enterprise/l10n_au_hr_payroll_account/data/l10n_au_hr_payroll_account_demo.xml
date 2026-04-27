@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.demo_company_au" model="res.company">
+        <field name="currency_id" ref="base.AUD"/>
+        <field name="street">Darling Street</field>
+        <field name="zip">2039</field>
+        <field name="city">Rozelle</field>
+        <field name="resource_calendar_id" ref="l10n_au_hr_payroll.resource_calendar_au_38"/>
+    </record>
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_au'))]"/>
+    </record>
+    <record id="base.user_demo" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_au'))]"/>
+    </record>
+
+    <record id="l10n_au_payevent_transaction_sequence_demo" model="ir.sequence">
+        <field name="company_id" ref="base.demo_company_au"/>
+        <field name="name">STP Transaction Sequence demo</field>
+        <field name="code">stp.transaction</field>
+        <field name="implementation">standard</field>
+        <field name="prefix">PAYEVENT0004</field>
+        <field name="padding">10</field>
+        <field name="number_increment">1</field>
+        <field name="number_next_actual">1</field>
+    </record>
+
+    <record id="hr_department_rdau" model="hr.department">
+        <field name="name">RD AU</field>
+        <field name="company_id" ref="base.demo_company_au"/>
+    </record>
+
+    <record id="job_developer_australian" model="hr.job">
+        <field name="name">Experienced Developer AU</field>
+        <field name="department_id" ref="hr_department_rdau"/>
+        <field name="no_of_recruitment">5</field>
+        <field name="company_id" ref="base.demo_company_au"/>
+    </record>
+
+    <record id="hr_employee_sharon" model="hr.employee">
+        <field name="name">Sharon Jacket</field>
+        <field name="work_phone">0431 415 926</field>
+        <field name="job_id" ref="job_developer_australian"/>
+        <field name="country_id" ref="base.au"/>
+        <field name="company_id" ref="base.demo_company_au"/>
+        <field name="image_1920" type="base64" file="hr/static/img/employee_chs-image.jpg"/>
+        <field name="private_street">Hotline St. 82d</field>
+        <field name="private_city">Miami</field>
+        <field name="private_zip">1600</field>
+        <field name="private_country_id" ref="base.au"/>
+        <field name="private_phone">0431 415 926</field>
+        <field name="private_email">sharon.jacket@example.com</field>
+        <field name="birthday">1978-08-09</field>
+        <field name="gender">other</field>
+        <field name="l10n_au_tax_treatment_category">N</field>
+    </record>
+
+    <record id="res_partner_dennis" model="res.partner">
+        <field name="name">Dennis Cactus</field>
+        <field name="street">Dennaton St. 82d</field>
+        <field name="city">Canberra</field>
+        <field name="zip">2600</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="phone">0431 415 926</field>
+        <field name="email">dennis.cactus@example.com</field>
+        <field name="company_id" ref="base.demo_company_au"/>
+    </record>
+
+    <record id="user_dennis" model="res.users">
+        <field name="partner_id" ref="l10n_au_hr_payroll_account.res_partner_dennis"/>
+        <field name="login">denniscactus@example.com</field>
+        <field name="password">denniscactus</field>
+        <field name="signature" type="html"><span>--<br/>+D. Cactus</span></field>
+        <field name="company_ids" eval="[(4, ref('base.demo_company_au'))]"/>
+        <field name="company_id" ref="base.demo_company_au"/>
+        <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
+        <field name="image_1920" type="base64" file="hr/static/img/employee_al-image.jpg"/>
+    </record>
+
+    <record id="res_partner_dennis_work_address" model="res.partner">
+        <field name="name">AU Offices</field>
+        <field name="street">Devolve Blvd. 344</field>
+        <field name="city">Canberra</field>
+        <field name="zip">2600</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="company_id" ref="base.demo_company_au"/>
+    </record>
+
+    <record id="res_partner_dennis_private_address" model="res.partner">
+        <field name="name">Dennis Cactus</field>
+        <field name="company_id" ref="base.demo_company_au"/>
+    </record>
+
+    <record id="res_partner_bank_account_dennis" model="res.partner.bank">
+        <field name="acc_number">AU20002904010518489266398616</field>
+        <field name="bank_id" ref="base.bank_ing"/>
+        <field name="partner_id" ref="l10n_au_hr_payroll_account.res_partner_dennis"/>
+        <field name="company_id" ref="base.demo_company_au"/>
+    </record>
+
+    <record id="hr_employee_dennis" model="hr.employee">
+        <field name="name">Dennis Cactus</field>
+        <field name="gender">male</field>
+        <field name="marital">single</field>
+        <field name="job_title">Software Developer</field>
+        <field name="work_phone">0431 415 926</field>
+        <field name="private_street">Dennaton St. 82d</field>
+        <field name="private_city">Canberra</field>
+        <field name="private_zip">2600</field>
+        <field name="private_state_id" ref="base.state_au_1" />
+        <field name="private_country_id" ref="base.au"/>
+        <field name="private_phone">0431 415 926</field>
+        <field name="private_email">dennis.cactus@example.com</field>
+        <field name="address_id" ref="l10n_au_hr_payroll_account.res_partner_dennis_work_address"/>
+        <field name="emergency_contact">Jonathan Cactus</field>
+        <field name="emergency_phone">(058) 3186203</field>
+        <field name="birthday">1991-07-28</field>
+        <field name="distance_home_work">25</field>
+        <field name="place_of_birth">Sweden</field>
+        <field name="country_of_birth" ref="base.se"/>
+        <field name="certificate">master</field>
+        <field name="study_field">Civil Engineering</field>
+        <field name="study_school">Stockholm University</field>
+        <field name="parent_id" ref="l10n_au_hr_payroll_account.hr_employee_sharon"/>
+        <field name="country_id" ref="base.au"/>
+        <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+        <field name="identification_id">314159265358979</field>
+        <field name="bank_account_id" ref="l10n_au_hr_payroll_account.res_partner_bank_account_dennis"/>
+        <field name="image_1920" type="base64" file="hr/static/img/employee_al-image.jpg"/>
+        <field name="company_id" ref="base.demo_company_au"/>
+        <field name="user_id" ref="l10n_au_hr_payroll_account.user_dennis"/>
+        <field name="l10n_au_tfn_declaration">provided</field>
+        <field name="l10n_au_tfn">999999854</field>
+    </record>
+
+    <record id="hr_contract_cdi_dennis_previous" model="hr.contract">
+        <field name="name">CDD - Dennis Cactus - Experienced Developer</field>
+        <field name="department_id" ref="hr_department_rdau"/>
+        <field name="employee_id" ref="hr_employee_dennis"/>
+        <field name="job_id" ref="l10n_au_hr_payroll_account.job_developer_australian"/>
+        <field name="structure_type_id" ref="l10n_au_hr_payroll.structure_type_schedule_1"/>
+        <field name="wage">4940</field>
+        <field name="wage_type">hourly</field>
+        <field name="hourly_wage">30</field>
+        <field name="l10n_au_casual_loading">.25</field>
+        <field name="state">close</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="company_id" ref="base.demo_company_au"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-2, month=1, day=1))"/>
+        <field name="date_end" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1, days=-2))"/>
+        <field name="resource_calendar_id" ref="l10n_au_hr_payroll.resource_calendar_au_38"/>
+    </record>
+
+    <record id="hr_contract_cdi_dennis" model="hr.contract">
+        <field name="name">CDI - Dennis Cactus - Experienced Developer</field>
+        <field name="department_id" ref="hr_department_rdau"/>
+        <field name="employee_id" ref="hr_employee_dennis"/>
+        <field name="job_id" ref="l10n_au_hr_payroll_account.job_developer_australian"/>
+        <field name="structure_type_id" ref="l10n_au_hr_payroll.structure_type_schedule_1"/>
+        <field name="wage">4940</field>
+        <field name="wage_type">hourly</field>
+        <field name="hourly_wage">30</field>
+        <field name="l10n_au_casual_loading">.25</field>
+        <field name="state">open</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="company_id" ref="base.demo_company_au"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1))"/>
+        <field name="resource_calendar_id" ref="l10n_au_hr_payroll.resource_calendar_au_38"/>
+    </record>
+
+    <record id="hr_employee_dennis" model="hr.employee">
+        <field name="contract_id" ref="l10n_au_hr_payroll_account.hr_contract_cdi_dennis"/>
+    </record>
+
+    <record id="res_partner_example_super" model="res.partner">
+        <field name="name">Example Super</field>
+        <field name="company_id" ref="base.demo_company_au"/>
+    </record>
+
+    <record id="super_fund_example_super" model="l10n_au.super.fund">
+        <field name="display_name">Example Super</field>
+        <field name="abn">0987654321</field>
+        <field name="address_id" ref="l10n_au_hr_payroll_account.res_partner_example_super"/>
+        <field name="fund_type">APRA</field>
+        <field name="usi">1309011309</field>
+        <field name="esa">examplesuper.au</field>
+    </record>
+
+    <record id="super_account_dennis" model="l10n_au.super.account">
+        <field name="employee_id" ref="l10n_au_hr_payroll_account.hr_employee_dennis"/>
+        <field name="fund_id" ref="l10n_au_hr_payroll_account.super_fund_example_super"/>
+        <field name="member_nbr">003478191</field>
+        <field name="trustee">employee</field>
+        <field name="trustee_name_id" ref="l10n_au_hr_payroll_account.res_partner_dennis_private_address"/>
+        <field name="date_from" eval="datetime(2022, 1, 1).date()"/>
+    </record>
+
+    <record id="l10n_au_hr_payroll.l10n_au_payslip_employee_bank_account" model="res.partner.bank">
+        <field name="aba_bsb">234-456</field>
+    </record>
+
+    <data noupdate="1">
+        <function model="account.chart.template" name="try_loading">
+            <value eval="[]"/>
+            <value>au</value>
+            <value model="res.company" eval="obj().env.ref('base.demo_company_au')"/>
+            <value name="install_demo" eval="True"/>
+        </function>
+    </data>
+</odoo>

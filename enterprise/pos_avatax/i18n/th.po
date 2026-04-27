@@ -1,0 +1,83 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_avatax
+#
+# Translators:
+# Wil Odoo, 2024
+# Rasareeyar Lappiam, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:48+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: pos_avatax
+#: model:ir.model.fields,field_description:pos_avatax.field_pos_order__avatax_unique_code
+msgid "Avalara Code"
+msgstr "โค้ด Avalara"
+
+#. module: pos_avatax
+#. odoo-python
+#: code:addons/pos_avatax/models/pos_order.py:0
+msgid ""
+"Avatax requires your current location or a customer to be set on the order "
+"with a proper zip, state and country."
+msgstr ""
+"Avatax ต้องการตำแหน่งปัจจุบันของคุณหรือลูกค้าในคำสั่งซื้อพร้อมรหัสไปรษณีย์ รัฐ และประเทศที่ถูกต้อง"
+
+#. module: pos_avatax
+#. odoo-javascript
+#: code:addons/pos_avatax/static/src/app/store/pos_store.js:0
+msgid ""
+"Enable to load Avatax taxes, please verify partner information and Avatax "
+"API configuration."
+msgstr ""
+"เปิดใช้งานการโหลดภาษี Avatax โปรดตรวจสอบข้อมูลพาร์ทเนอร์และการกำหนดค่า Avatax API"
+
+#. module: pos_avatax
+#. odoo-javascript
+#: code:addons/pos_avatax/static/src/app/store/pos_store.js:0
+msgid "Error while loading Avatax taxes"
+msgstr ""
+
+#. module: pos_avatax
+#: model:ir.model.fields,field_description:pos_avatax.field_pos_order__is_avatax
+msgid "Is Avatax"
+msgstr "คือ Avatax"
+
+#. module: pos_avatax
+#: model:ir.model.fields,field_description:pos_avatax.field_pos_order__is_tax_computed_externally
+msgid "Is Tax Computed Externally"
+msgstr "เป็นภาษีที่คำนวณจากภายนอก"
+
+#. module: pos_avatax
+#: model:ir.model,name:pos_avatax.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "คำสั่งซื้อการขายหน้าร้าน"
+
+#. module: pos_avatax
+#: model:ir.model.fields,help:pos_avatax.field_pos_order__is_tax_computed_externally
+msgid ""
+"Technical field to determine if tax is calculated using an external service "
+"instead of Odoo."
+msgstr "ข้อมูลทางเทคนิคเพื่อกำหนดว่าภาษีถูกคำนวณโดยใช้บริการภายนอกแทน Odoo หรือไม่"
+
+#. module: pos_avatax
+#. odoo-javascript
+#: code:addons/pos_avatax/static/src/app/store/pos_store.js:0
+msgid "Updating Avatax taxes..."
+msgstr ""
+
+#. module: pos_avatax
+#: model:ir.model.fields,help:pos_avatax.field_pos_order__avatax_unique_code
+msgid "Use this code to cross-reference in the Avalara portal."
+msgstr "ใช้โค้ดนี้เพื่อการอ้างอิงแบบโยงในพอร์ทัล Avalara"

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main template -->
+    <template id="EcSalesLuXMLReport">
+        <eCDFDeclarations xmlns="http://www.ctie.etat.lu/2011/ecdf">
+            <FileReference><t t-out="file_ref"/></FileReference>
+            <eCDFFileVersion>2.0</eCDFFileVersion>
+            <Interface>MODL5</Interface>
+            <Agent>
+                <MatrNbr><t t-out="matr_number"/></MatrNbr>
+                <RCSNbr><t t-out="rcs_number"/></RCSNbr>
+                <VATNbr><t t-out="company_vat"/></VATNbr>
+            </Agent>
+            <Declarations>
+                <Declarer>
+                    <MatrNbr><t t-out="matr_number"/></MatrNbr>
+                    <RCSNbr><t t-out="rcs_number"/></RCSNbr>
+                    <VATNbr><t t-out="company_vat"/></VATNbr>
+                    <t t-if="l_lines or t_lines" t-call="l10n_lu_reports.LTCodeNode"/>
+                    <t t-if="s_lines" t-call="l10n_lu_reports.SCodeNode"/>
+                </Declarer>
+            </Declarations>
+        </eCDFDeclarations>
+    </template>
+     <!-- L & T code template -->
+    <template id="LTCodeNode">
+        <Declaration t-att-type="type_labes[0]" model="1" language="EN">
+            <Year><t t-out="year"/></Year>
+            <Period><t t-out="period"/></Period>
+            <FormData>
+                <NumericField id="04"><t t-out="l_sum"/></NumericField>
+                <NumericField id="08"><t t-out="t_sum"/></NumericField>
+                <NumericField id="16">0,00</NumericField>
+                <Table t-if="l_lines">
+                <t t-set="count" t-value="1" />
+                <t t-foreach="l_lines" t-as="line">
+                    <Line t-att-num="count">
+                        <TextField id="01"><t t-out="line[0]"/></TextField>
+                        <TextField id="02"><t t-out="line[1]"/></TextField>
+                        <NumericField id="03"><t t-out="line[3]"/></NumericField>
+                    </Line>
+                    <t t-set="count" t-value="count + 1"/>
+                </t>
+                </Table>
+                <Table t-if="t_lines">
+                <t t-set="count" t-value="1" />
+                <t t-foreach="t_lines" t-as="line">
+                    <Line t-att-num="count">
+                        <TextField id="05"><t t-out="line[0]"/></TextField>
+                        <TextField id="06"><t t-out="line[1]"/></TextField>
+                        <NumericField id="07"><t t-out="line[3]"/></NumericField>
+                    </Line>
+                    <t t-set="count" t-value="count + 1"/>
+                </t>
+                </Table>
+            </FormData>
+        </Declaration>
+    </template>
+     <!-- S code template -->
+    <template id="SCodeNode">
+        <Declaration t-att-type="type_labes[1]" model="1" language="EN">
+            <Year><t t-out="year"/></Year>
+            <Period><t t-out="period"/></Period>
+            <FormData>
+                <NumericField id="04"><t t-out="s_sum"/></NumericField>
+                <NumericField id="16">0,00</NumericField>
+                <Table>
+                <t t-set="count" t-value="1" />
+                <t t-foreach="s_lines" t-as="line">
+                    <Line t-att-num="count">
+                        <TextField id="01"><t t-out="line[0]"/></TextField>
+                        <TextField id="02"><t t-out="line[1]"/></TextField>
+                        <NumericField id="03"><t t-out="line[3]"/></NumericField>
+                    </Line>
+                    <t t-set="count" t-value="count + 1"/>
+                </t>
+                </Table>
+            </FormData>
+        </Declaration>
+    </template>
+
+</odoo>

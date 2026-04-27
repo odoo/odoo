@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ch_hr_employee_children_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.hr.employee.children.view.form</field>
+        <field name="model">l10n.ch.hr.employee.children</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll_elm_transmission.l10n_ch_hr_employee_children_view_form"/>
+        <field name="arch" type="xml">
+            <field name="deduction_end" position="after">
+                <separator string="Family Allowance Configuration"/>
+                <field name="allowance_eligible"/>
+                <field name="l10n_ch_child_status" invisible="not allowance_eligible"/>
+                <field name="allowance_supplementary_eligible" invisible="not allowance_eligible"/>
+                <field name="allowance_start_date" invisible="not allowance_eligible"/>
+                <field name="child_allowance_end_date" invisible="not allowance_eligible"/>
+                <field name="education_allowance_end_date"
+                       invisible="l10n_ch_child_status == 'non_responsible' or not allowance_eligible"/>
+            </field>
+        </field>
+    </record>
+</odoo>

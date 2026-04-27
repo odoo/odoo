@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_settle_due.PartnerList" t-inherit="point_of_sale.PartnerList" t-inherit-mode="extension">
+        <xpath expr="//t[@t-set-slot='header']/Input" position="before">
+             <div t-if="this.partnerInfos.overDue and this.partnerInfos.useLimit" class="ms-2 me-2 m-0 p-2 alert alert-warning">
+                <i class="fa fa-warning me-1"/> Credit limit reached!
+            </div>
+        </xpath>
+    </t>
+ </templates>

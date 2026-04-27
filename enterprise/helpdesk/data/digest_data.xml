@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data noupdate="1">
+        <record id="digest.digest_digest_default" model="digest.digest" forcecreate="False">
+            <field name="kpi_helpdesk_tickets_closed">True</field>
+        </record>
+    </data>
+
+    <data>
+        <record id="digest_tip_helpdesk_0" model="digest.tip">
+            <field name="name">Tip: Create tickets from incoming emails</field>
+            <field name="sequence">1800</field>
+            <field name="group_id" ref="helpdesk.group_helpdesk_manager" />
+            <field name="tip_description" type="html">
+<div>
+    <t t-set="record" t-value="object.env['helpdesk.team'].search([('alias_name', '!=', False), ('alias_domain_id', '!=', False)],limit=1)" />
+    <b class="tip_title">Tip: Create tickets from incoming emails</b>
+    <t t-if="record.alias_email">
+        <p class="tip_content">Emails sent to <a t-attf-href="mailto:{{record.alias_email}}" target="_blank" style="color: #714B67; text-decoration: none;"><t t-out="record.alias_email" /></a> generate tickets in your pipeline.</p>
+    </t>
+    <t t-else="">
+        <p class="tip_content">Emails sent to a Helpdesk Team alias generate tickets in your pipeline.</p>
+    </t>
+</div>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="account_accountant.BankRecMonetaryField" t-inherit="web.MonetaryField" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('o_input')]" position="before">
+            <span t-if="props.hasForcedNegativeValue and currency and currency.position === 'after'">-</span>
+        </xpath>
+
+        <xpath expr="//input" position="before">
+            <span t-if="props.hasForcedNegativeValue and currency and currency.position === 'before'">-</span>
+        </xpath>
+        <xpath expr="//span[hasclass('o_monetary_ghost_value')]" position="before">
+            <span class="opacity-0 mx-1" t-if="props.hasForcedNegativeValue">-</span>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_dimona_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n.be.dimona.wizard.view.form</field>
+        <field name="model">l10n.be.dimona.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Manage DIMONA">
+                <group>
+                    <group>
+                        <field name="contract_id"/>
+                        <field name="employee_id"/>
+                        <field name="without_niss"/>
+                        <field name="declaration_type"/>
+                    </group>
+                    <group>
+                        <field name="employee_birthday"/>
+                        <field name="contract_date_start"/>
+                        <field name="contract_date_end"/>
+                        <field name="contract_is_student" invisible="1"/>
+                        <field name="contract_wage_type" invisible="1"/>
+                        <field name="contract_country_code" invisible="1"/>
+                        <field name="contract_planned_hours" invisible="contract_wage_type != 'hourly' or contract_country_code != 'BE' or not contract_is_student"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="submit_declaration" string="Submit Declaration" type="object" class="oe_highlight" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_be_dimona_wizard_action" model="ir.actions.act_window">
+        <field name="name">DIMONA</field>
+        <field name="res_model">l10n.be.dimona.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="hr_contract.model_hr_contract"/>
+        <field name="binding_view_types">form</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_be_dimona_wizard"
+        name="DIMONA"
+        action="l10n_be_dimona_wizard_action"
+        parent="l10n_be_hr_payroll.menu_reporting_l10n_be"
+        sequence="50"
+    />
+</odoo>

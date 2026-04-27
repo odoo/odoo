@@ -1,0 +1,616 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * delivery_ups_rest
+#
+# Translators:
+# Wil Odoo, 2024
+# Junko Augias, 2024
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:45+0000\n"
+"PO-Revision-Date: 2026-02-07 10:29+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/"
+"delivery_ups_rest/ja/>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_delivery_carrier__ups_bill_my_account
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_res_partner__bill_my_account
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_res_users__bill_my_account
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_sale_order__ups_bill_my_account
+msgid "Bill My Account"
+msgstr "マイアカウントに請求する"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_delivery_carrier__ups_cod_funds_code
+msgid "COD Funding Option"
+msgstr "COD資金調達オプション"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_stock_package_type__package_carrier_type
+msgid "Carrier"
+msgstr "配送業者"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_cod_funds_code__8
+msgid "Cashier's Check or MoneyOrder"
+msgstr "銀行小切手や為替"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_package_dimension_unit__cm
+msgid "Centimeters"
+msgstr "センチ"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_cod_funds_code__0
+msgid "Check, Cashier's Check or MoneyOrder"
+msgstr "銀行小切手や為替をチェック"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_delivery_carrier__ups_cod
+msgid "Collect on Delivery"
+msgstr "代引き"
+
+#. module: delivery_ups_rest
+#: model:ir.model,name:delivery_ups_rest.model_res_partner
+msgid "Contact"
+msgstr "連絡先"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/ups_request.py:0
+msgid "Could not decode response"
+msgstr "応答をデコードできませんでした"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "Create an account on"
+msgstr "以下にアカウントを作成"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "Create an app"
+msgstr "アプリを作成"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "Duties paid by"
+msgstr "右のものにより支払われた税"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_label_file_type__epl
+msgid "EPL"
+msgstr "EPL"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/delivery_ups.py:0
+msgid ""
+"Error:\n"
+"%s"
+msgstr ""
+"エラー:\n"
+"%s"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "Fill your address and contact information"
+msgstr "住所と連絡先情報を入力して下さい"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "From there, get your <b>account number</b>"
+msgstr "そこから、 <b>アカウント番号</b>を取得して下さい。"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "How to setup UPS?"
+msgstr "UPSのセットアップ方法"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,help:delivery_ups_rest.field_delivery_carrier__ups_bill_my_account
+#: model:ir.model.fields,help:delivery_ups_rest.field_res_partner__bill_my_account
+#: model:ir.model.fields,help:delivery_ups_rest.field_res_users__bill_my_account
+#: model:ir.model.fields,help:delivery_ups_rest.field_sale_order__ups_bill_my_account
+msgid ""
+"If checked, ecommerce users will be prompted their UPS account number\n"
+"and delivery fees will be charged on it."
+msgstr ""
+"チェックした場合、eコマースのユーザーには自分のUPS口座番号を求めるメッセージ"
+"が表示されます\n"
+"そして、配達料が口座番号に課金されます。"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_package_dimension_unit__in
+msgid "Inches"
+msgstr "インチ"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/ups_request.py:0
+msgid ""
+"Invalid Authentication Information: Please check your credentials and "
+"configuration within UPS's system."
+msgstr "認証情報が無効です:UPSのシステム内の認証情報と設定を確認して下さい。"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_package_weight_unit__kgs
+msgid "Kilograms"
+msgstr "キログラム"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "Label Format"
+msgstr "ラベルフォーマット"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "Log in with your account on"
+msgstr "以下でアカウントにログイン:"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "Name your app,"
+msgstr "アプリに名前を付けて、"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid ""
+"Now go to odoo and create a shipping method for UPS, using Account Number "
+"(step2) and Client ID + Client Secret (step 8). Also ensure you use correct "
+"dimensions and weight unit for your country"
+msgstr ""
+"アカウント番号(ステップ2)とClient ID + Client Secret(ステップ8)を使用して、od"
+"ooでUPSの配送方法を作成します。また、あなたの国の正しい寸法と重量単位を使用し"
+"ていることを確認して下さい。"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid ""
+"Now open your app, you'll have your <b>Client ID</b> and <b>Client Secret</b>"
+msgstr "アプリを開けると、<b>Client ID</b>と <b>Client Secret</b>を入手できます。"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "Options"
+msgstr "オプション"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_label_file_type__gif
+msgid "PDF"
+msgstr "PDF"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_delivery_carrier__ups_package_dimension_unit
+msgid "Package Size Unit"
+msgstr "パッケージサイズの単位"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "Package Weight Unit"
+msgstr "パッケージの重量単位"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/ups_request.py:0
+msgid "Packages %s do not have a positive shipping weight."
+msgstr "パッケージ%sの出荷重量は正の数ではありません。"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/ups_request.py:0
+msgid "Please provide at least one item to ship."
+msgstr "船に少なくとも一つのアイテムを提供してください。"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_package_weight_unit__lbs
+msgid "Pounds"
+msgstr "ポンド"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "プロバイダ"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_duty_payment__recipient
+msgid "Recipient"
+msgstr "宛先"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/ups_request.py:0
+msgid "Recipient Phone must be at least 10 alphanumeric characters."
+msgstr "受信者の携帯電話は、少なくとも10個の文字の英数字でなければなりません。"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/delivery_ups.py:0
+msgid ""
+"Return label generated<br/><b>Tracking Numbers:</b> %(tracking_numbers)s<br/"
+"><b>Packages:</b> %(packages)s"
+msgstr ""
+"返品ラベルが生成されました<br/><b>追跡番号:</b> %(tracking_numbers)s<br/><b>"
+"梱包:</b> %(packages)s"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_label_file_type__spl
+msgid "SPL"
+msgstr "SPL"
+
+#. module: delivery_ups_rest
+#: model:ir.model,name:delivery_ups_rest.model_sale_order
+msgid "Sales Order"
+msgstr "販売オーダ"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "Saturday Delivery"
+msgstr "土曜日配達"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "Save and Accept terms and your app is created!"
+msgstr "保存し、条件を受け入れると、アプリが作成されます!"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_duty_payment__sender
+msgid "Sender"
+msgstr "送信者"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/delivery_ups.py:0
+msgid "Shipment #%s has been cancelled"
+msgstr "発送番号#%sがキャンセルされました"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/delivery_ups.py:0
+msgid ""
+"Shipment created into UPS<br/><b>Tracking Numbers:</b> %"
+"(tracking_numbers)s<br/><b>Packages:</b> %(packages)s"
+msgstr ""
+"UPSでの発送が作成されました<br/><b>追跡番号:</b> %(tracking_numbers)s<br/><b>"
+"梱包:</b> %(packages)s"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/ups_request.py:0
+msgid "Shipper Phone must be at least 10 alphanumeric characters."
+msgstr "荷送人の電話番号は、少なくとも10個の文字の英数字でなければなりません。"
+
+#. module: delivery_ups_rest
+#: model:ir.model,name:delivery_ups_rest.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "配送方法"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/ups_request.py:0
+msgid "Something went wrong, please try again later!!"
+msgstr "何らかの誤りが発生しました。後ほど再試行して下さい！"
+
+#. module: delivery_ups_rest
+#: model:ir.model,name:delivery_ups_rest.model_stock_package_type
+msgid "Stock package type"
+msgstr "在庫梱包タイプ"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/ups_request.py:0
+msgid ""
+"The address of your company is missing or wrong.\n"
+"(Missing field(s) : %s)"
+msgstr ""
+"会社のアドレスが見つからないか、間違っています。\n"
+"(欠落フィールド(複数ある可能性あり)：%s)"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/ups_request.py:0
+msgid ""
+"The address of your warehouse is missing or wrong.\n"
+"(Missing field(s) : %s)"
+msgstr ""
+"倉庫のアドレスが見つからないか、間違っています。\n"
+"(欠落フィールド(複数ある可能性あり)：%s)"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/ups_request.py:0
+msgid ""
+"The delivery cannot be done because the weight of your product %s is missing."
+msgstr "プロダクトの重量%sがないため、配送ができません。"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/ups_request.py:0
+msgid ""
+"The estimated shipping price cannot be computed because the weight is "
+"missing for the following product(s): \n"
+" %s"
+msgstr ""
+"以下のプロダクトの重量がないため、見積送料を計算できません: \n"
+" %s"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/ups_request.py:0
+msgid "The name of the customer should be no more than 35 characters."
+msgstr "顧客名は35文字以内にして下さい。"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/ups_request.py:0
+msgid ""
+"The recipient address is missing or wrong.\n"
+"(Missing field(s) : %s)"
+msgstr ""
+"受信者のアドレスが見つからないか、間違っています。\n"
+"(欠落フィールド(複数ある可能性あり)：%s)"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,help:delivery_ups_rest.field_delivery_carrier__ups_cod
+msgid ""
+"This value added service enables UPS to collect the payment of the shipment "
+"from your customer."
+msgstr "この付加価値サービスで、顧客からUPSが送料を収集できるようにします。"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,help:delivery_ups_rest.field_delivery_carrier__ups_saturday_delivery
+msgid ""
+"This value added service will allow you to ship the package on saturday also."
+msgstr "この付加価値サービスで、土曜日に荷物を発送することができます。"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__delivery_type__ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__stock_package_type__package_carrier_type__ups_rest
+msgid "UPS"
+msgstr "UPS"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_default_service_type__02
+msgid "UPS 2nd Day"
+msgstr "UPS 2nd Day"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_default_service_type__59
+msgid "UPS 2nd Day AM"
+msgstr "UPS 2nd Day AM"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_default_service_type__12
+msgid "UPS 3-day Select"
+msgstr "UPS 3-day Select"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_delivery_carrier__ups_access_token
+msgid "UPS Access Token"
+msgstr "UPSアクセストークン"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_delivery_carrier__ups_shipper_number
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_res_partner__property_ups_carrier_account
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_res_users__property_ups_carrier_account
+msgid "UPS Account Number"
+msgstr "UPS口座番号"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_delivery_carrier__ups_client_id
+msgid "UPS Client ID"
+msgstr "UPSClient ID"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_delivery_carrier__ups_client_secret
+msgid "UPS Client Secret"
+msgstr "UPSClient Secret"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "UPS Configuration"
+msgstr "UPSの設定"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_default_service_type__03
+msgid "UPS Ground"
+msgstr "UPS Ground"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_delivery_carrier__ups_label_file_type
+msgid "UPS Label File Type"
+msgstr "UPSラベルファイルタイプ"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_default_service_type__01
+msgid "UPS Next Day"
+msgstr "UPS Next Day"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_default_service_type__14
+msgid "UPS Next Day AM"
+msgstr "UPS Next Day AM"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_default_service_type__13
+msgid "UPS Next Day Air Saver"
+msgstr "UPS Next Day Air Saver"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_delivery_carrier__ups_default_packaging_id
+msgid "UPS Package Type"
+msgstr "UPSパッケージタイプ"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_delivery_carrier__ups_saturday_delivery
+msgid "UPS Saturday Delivery"
+msgstr "UPS土曜日配達"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_default_service_type__65
+msgid "UPS Saver"
+msgstr "UPS Saver"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_delivery_carrier__ups_default_service_type
+msgid "UPS Service Type"
+msgstr "UPSサービスタイプ"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_default_service_type__11
+msgid "UPS Standard"
+msgstr "UPS Standard"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_default_service_type__08
+msgid "UPS Worldwide Expedited"
+msgstr "UPS Worldwide Expedited"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_default_service_type__07
+msgid "UPS Worldwide Express"
+msgstr "UPS Worldwide Express"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_default_service_type__96
+msgid "UPS Worldwide Express Freight"
+msgstr "UPS Worldwide Express Freight"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_default_service_type__54
+msgid "UPS Worldwide Express Plus"
+msgstr "UPS Worldwide Express Plus"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_sale_order__partner_ups_carrier_account
+msgid "UPS account number"
+msgstr "UPS口座番号"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/ups_request.py:0
+msgid ""
+"UPS address lines can only contain a maximum of 35 characters. You can split "
+"the contacts addresses on multiple lines to try to avoid this limitation."
+msgstr ""
+"UPSのアドレスラインは、わずか35文字の最大を含めることができます。あなたは、こ"
+"の制限を回避しようとする複数行の連絡先アドレスを分割することができます。"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_delivery_carrier__ups_duty_payment
+msgid "Ups Duty Payment"
+msgstr "アップデューティ支払い"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields,field_description:delivery_ups_rest.field_delivery_carrier__ups_package_weight_unit
+msgid "Ups Package Weight Unit"
+msgstr "アップパッケージの重量単位"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/ups_request.py:0
+msgid "Warehouse Phone must be at least 10 alphanumeric characters."
+msgstr "倉庫の電話番号は、少なくとも10個の文字の英数字でなければなりません。"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/sale_order.py:0
+msgid "You must enter an UPS account number."
+msgstr "UPSの口座番号を入力する必要があります。"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/ups_request.py:0
+msgid "You must setup a client ID and secret on the carrier first"
+msgstr "最初にキャリアでClient IDとシークレットを設定する必要があります。"
+
+#. module: delivery_ups_rest
+#: model:ir.model.fields.selection,name:delivery_ups_rest.selection__delivery_carrier__ups_label_file_type__zpl
+msgid "ZPL"
+msgstr "FPO"
+
+#. module: delivery_ups_rest
+#. odoo-python
+#: code:addons/delivery_ups_rest/models/sale_order.py:0
+msgid "[UPS] UPS Billing will remain to the customer"
+msgstr "[UPS] UPSの請求は顧客負担のままです"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid ""
+"add products <b>Authorization, Address validation, Locator, Paperless "
+"Documents, Shipping and Rating</b>"
+msgstr ""
+"プロダクト追加<b>認証、住所確認、ロケーター、ペーパーレスドキュメント、配送と"
+"評価</b>"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "and go to Apps"
+msgstr "アプリに移動"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "developer.ups.com"
+msgstr "developer.ups.com"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "the callback is your odoo address https://\"mycompany\".odoo.com"
+msgstr "コールバックはOdooのアドレスです https://\"mycompany\".odoo.com"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "ups step 1"
+msgstr "ups ステップ1"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "ups step 2"
+msgstr "ups ステップ2"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "ups step 3"
+msgstr "ups ステップ3"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "ups step 4"
+msgstr "ups ステップ4"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "ups step 5"
+msgstr "ups ステップ5"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "ups step 6"
+msgstr "ups ステップ6"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "ups.com"
+msgstr "ups.com"
+
+#. module: delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:delivery_ups_rest.view_delivery_carrier_form
+msgid "you're ready to go!"
+msgstr "準備OKです!"
+
+#~ msgid ""
+#~ "The estimated price cannot be computed because the weight of your product "
+#~ "%s is missing."
+#~ msgstr "プロダクト%sの重量が不足しているため、見積価格が計算できません。"

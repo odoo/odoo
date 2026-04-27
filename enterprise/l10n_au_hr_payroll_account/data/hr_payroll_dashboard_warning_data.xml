@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+        <record id="hr_payroll_dashboard_warning_pending_stp" model="hr.payroll.dashboard.warning">
+            <field name="name">STP Reports awaiting submission</field>
+            <field name="country_id" ref="base.au"/>
+            <field name="color">1</field>
+            <field name="evaluation_code">
+pending_stp = self.env['l10n_au.stp'].search([('state', '!=', 'sent')])
+if pending_stp:
+    warning_count = len(pending_stp)
+    warning_records = pending_stp
+            </field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_previous_bms" model="hr.payroll.dashboard.warning">
+            <field name="name">Setup Previous BMS Info and YTD Values</field>
+            <field name="country_id" ref="base.au"/>
+            <field name="color">3</field>
+            <field name="evaluation_code">
+if self.env.company.country_code == "AU" and not self.env.company.l10n_au_bms_id:
+    warning_count = 1
+    warning_action = "l10n_au_hr_payroll_account.action_open_transfer_previous_payroll"
+            </field>
+        </record>
+    </data>
+
+</odoo>

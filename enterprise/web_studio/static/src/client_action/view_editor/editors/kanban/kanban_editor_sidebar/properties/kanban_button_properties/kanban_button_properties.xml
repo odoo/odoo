@@ -1,0 +1,16 @@
+<t t-name="web_studio.ViewEditor.InteractiveEditorProperties.KanbanButton">
+    <ModifiersProperties node="props.node" availableOptions="['invisible']"/>
+    <ClassAttribute
+        value="props.node.attrs.class"
+        onChange.bind="onChangeAttribute"
+    />
+    <Property
+        name="'name'"
+        type="'string'"
+        value="props.node.attrs.name"
+        onChange.bind="onChangeAttribute">
+            Method
+    </Property>
+    <LimitGroupVisibility node="props.node" />
+    <SidebarPropertiesToolbox />
+</t>

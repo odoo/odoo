@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="bd_action_account_report_corporate_tax" model="ir.actions.client">
+        <field name="name">Corporate Tax Report</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('l10n_bd_reports.bd_corporate_tax_report')}"/>
+    </record>
+
+    <menuitem id="bd_menu_action_account_report_corporate_tax"
+              name="Corporate Tax Report"
+              action="l10n_bd_reports.bd_action_account_report_corporate_tax"
+              parent="l10n_bd.account_reports_bd_corporate_report_menu"/>
+</odoo>

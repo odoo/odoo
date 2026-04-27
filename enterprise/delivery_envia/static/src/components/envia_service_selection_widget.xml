@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="delivery_envia.EnviaServiceWidget">
+        <div class="d-flex flex-column gap-1">
+            <div class="row">
+                <label class="fw-bold text-wrap text-break">Carrier:</label>
+                <div class="col-auto">
+                    <Dropdown t-if="available_carriers">
+                        <button class="btn btn-primary o-dropdown-caret">
+                            <t t-out="activeCarrier"/>
+                        </button>
+                        <t t-set-slot="content">
+                            <t t-foreach="available_carriers" t-as="e_carrier" t-key='e_carrier'>
+                                <DropdownItem onSelected="() => this._onCarrierSelected(e_carrier)"><t t-out="e_carrier.toUpperCase()"/></DropdownItem>
+                            </t>
+                        </t>
+                    </Dropdown>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="fw-bold text-wrap text-break">Service:</label>
+                <div class="col-auto">
+                    <Dropdown t-if="availableServices">
+                        <button class="btn btn-primary o-dropdown-caret">
+                            <t t-out="activeService.carrier_name.toUpperCase()"/> - <t t-out="activeService.description"/>
+                        </button>
+                        <t t-set-slot="content">
+                            <t t-foreach="availableServices" t-as="service" t-key='service.id'>
+                                <DropdownItem onSelected="() => this._onServiceSelected(service.name)"><t t-out="service.carrier_name.toUpperCase()"/> - <t t-out="service.description"/></DropdownItem>
+                            </t>
+                        </t>
+                    </Dropdown>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
+

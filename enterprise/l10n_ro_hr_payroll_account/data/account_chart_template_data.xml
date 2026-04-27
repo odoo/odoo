@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <function model="account.chart.template" name="_load_payroll_accounts">
+            <value eval="[]"/>
+            <value>ro</value>
+            <value model="res.company" eval="obj().search([('chart_template', '=', 'ro')])"/>
+        </function>
+    </data>
+</odoo>

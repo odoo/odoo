@@ -1,0 +1,169 @@
+<odoo>
+    <record id="l10n_ch_insurance_report_view_transmission_form" model="ir.ui.view">
+        <field name="name">ch.yearly.report.form</field>
+        <field name="model">ch.yearly.report</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll_elm_transmission.l10n_ch_swissdec_transmitter_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button string="Create EIV File" name="create_eiv_file" type="object" class="btn-secondary" invisible="not l10n_ch_declare_salary_data"/>
+            </header>
+            <field name="substituted_declaration_id" position="after">
+                <field name="incomplete_declaration"/>
+            </field>
+            <div name="button_box" position="inside">
+                <button type="object" name="action_open_wage_statements"
+                        class="oe_stat_button" icon="fa-book">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">
+                            Wage Statements
+                        </span>
+                        <span class="o_stat_value">
+                            <field name="wage_statement_count"/>
+                        </span>
+                    </div>
+                </button>
+            </div>
+
+            <group name="institution_group" position="inside">
+                <separator string="Institutions"/>
+
+                <group colspan="2">
+                    <label for="avs_institution_ids" string="AVS"/>
+                    <div class="d-flex align-items-center gap-3 mt-2">
+                        <field name="avs_institution_ids"
+                               nolabel="1"
+                               widget="many2many_checkboxes"
+                               options="{'no_open': True, 'no_create': True}"/>
+                        <button name="generate_ahv_report"
+                                invisible="not l10n_ch_declare_salary_data"
+                                type="object"
+                                string="AVS Report"
+                                class="btn btn-secondary me-2"
+                                icon="fa-file-pdf-o"/>
+                        <button name="generate_free_ahv_report"
+                                invisible="not l10n_ch_declare_salary_data"
+                                type="object"
+                                string="AVS Exempt Report"
+                                class="btn btn-secondary"
+                                icon="fa-file-pdf-o"/>
+                    </div>
+                </group>
+
+                <group colspan="2">
+                    <label for="caf_institution_ids" string="CAF"/>
+                    <div class="d-flex align-items-center gap-3 mt-2">
+                        <field name="caf_institution_ids"
+                               nolabel="1"
+                               widget="many2many_checkboxes"
+                               options="{'no_open': True, 'no_create': True}"/>
+                        <button name="generate_fak_report"
+                                invisible="not l10n_ch_declare_salary_data"
+                                type="object"
+                                string="CAF Report"
+                                class="btn btn-secondary"
+                                icon="fa-file-pdf-o"/>
+                    </div>
+                </group>
+
+                <group colspan="2">
+                    <label for="laa_institution_ids" string="LAA"/>
+                    <div class="d-flex align-items-center gap-3 mt-2">
+                        <field name="laa_institution_ids"
+                               nolabel="1"
+                               widget="many2many_checkboxes"
+                               options="{'no_open': True, 'no_create': True}"/>
+                        <button name="generate_laa_report"
+                                invisible="not l10n_ch_declare_salary_data"
+                                type="object"
+                                string="LAA Report"
+                                class="btn btn-secondary"
+                                icon="fa-file-pdf-o"/>
+                    </div>
+                </group>
+
+                <group colspan="2">
+                    <label for="laac_institution_ids" string="LAAC"/>
+                    <div class="d-flex align-items-center gap-3 mt-2">
+                        <field name="laac_institution_ids"
+                               nolabel="1"
+                               widget="many2many_checkboxes"
+                               options="{'no_open': True, 'no_create': True}"/>
+                        <button name="generate_laac_report"
+                                invisible="not l10n_ch_declare_salary_data"
+                                type="object"
+                                string="LAAC Report"
+                                class="btn btn-secondary"
+                                icon="fa-file-pdf-o"/>
+                    </div>
+                </group>
+
+                <group colspan="2">
+                    <label for="ijm_institution_ids" string="IJM"/>
+                    <div class="d-flex align-items-center gap-3 mt-2">
+                        <field name="ijm_institution_ids"
+                               nolabel="1"
+                               widget="many2many_checkboxes"
+                               options="{'no_open': True, 'no_create': True}"/>
+                        <button name="generate_ktg_report"
+                                invisible="not l10n_ch_declare_salary_data"
+                                type="object"
+                                string="IJM Report"
+                                class="btn btn-secondary"
+                                icon="fa-file-pdf-o"/>
+                    </div>
+                </group>
+
+                <group colspan="2">
+                    <label for="tax_cross_border_institutions" string="Tax-Crossborder"/>
+                    <div class="d-flex align-items-center gap-3 mt-2">
+                        <field name="tax_cross_border_institutions"
+                               nolabel="1"
+                               widget="many2many_checkboxes"
+                               options="{'no_open': True, 'no_create': True}"/>
+                        <button name="generate_txb_report"
+                                invisible="not l10n_ch_declare_salary_data"
+                                type="object"
+                                string="TXB Report"
+                                class="btn btn-secondary"
+                                icon="fa-file-pdf-o"/>
+                    </div>
+                </group>
+
+                <group colspan="2">
+                    <label for="tax_certificates" string="Wage Statements"/>
+                    <div class="d-flex align-items-center gap-3 mt-2">
+                        <field name="tax_certificates"
+                               nolabel="1"/>
+                        <button name="generate_tax_accounting_reports"
+                                invisible="not l10n_ch_declare_salary_data"
+                                type="object"
+                                string="Global Wage Statements"
+                                help="Print all Wage Statements in one file"
+                                class="btn btn-secondary me-2"
+                                icon="fa-file-pdf-o"/>
+                        <button name="send_tax_accounting_reports"
+                                invisible="not l10n_ch_declare_salary_data"
+                                type="object"
+                                string="Send Wage Statements"
+                                class="btn btn-secondary me-2"
+                                icon="fa-envelope"/>
+                    </div>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="l10n_ch_yearly_retrospective_action" model="ir.actions.act_window">
+        <field name="name">Yearly Salary Declaration</field>
+        <field name="res_model">ch.yearly.report</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('l10n_ch_hr_payroll_elm_transmission.l10n_ch_swissdec_transmitter_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('l10n_ch_insurance_report_view_transmission_form')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
+    </record>
+</odoo>

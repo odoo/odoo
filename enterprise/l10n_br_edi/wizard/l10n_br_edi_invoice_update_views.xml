@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_br_edi_invoice_update_form" model="ir.ui.view">
+        <field name="name">l10n_br_edi.invoice.update.form</field>
+        <field name="model">l10n_br_edi.invoice.update</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="move_id" invisible="1"/>
+                        <field name="is_service_invoice" invisible="1"/>
+                        <field name="reason" invisible="is_service_invoice" required="not is_service_invoice"/>
+                        <field name="send_email" invisible="is_service_invoice"/>
+                    </group>
+                </group>
+
+                <div class="alert alert-warning" role="alert" name="warning_service_cancellation" invisible="not is_service_invoice">
+                  This invoice will only be cancelled in Odoo. Make sure to cancel it through your city portal as well.
+                </div>
+
+                <footer>
+                    <button string="Confirm"
+                            data-hotkey="c"
+                            name="action_submit"
+                            type="object"
+                            class="btn btn-primary">
+                    </button>
+                    <button string="Cancel"
+                            data-hotkey="x"
+                            special="cancel"
+                            class="btn btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

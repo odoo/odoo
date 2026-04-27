@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_form_inherit_l10n_pe_reports" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n.pe.reports.lib</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_pe_edi.res_config_settings_form_inherit_l10n_pe_edi"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='invoicing_peruvian_settings']" position="inside">
+                <setting string="PLE Type of Financial Statement" company_dependent="1">
+                    <div class="content-group">
+                        <div class="row mt8">
+                            <label for="l10n_pe_financial_statement_type" class="col-lg-5 o_light_label" string="PLE Type of FS" />
+                            <field name="l10n_pe_financial_statement_type" />
+                            <div class="alert alert-info text-center m-2 p-0" role="alert" invisible="not l10n_pe_fs_type_warning">
+                                <field name="l10n_pe_fs_type_warning" class="w-75"/>
+                            </div>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

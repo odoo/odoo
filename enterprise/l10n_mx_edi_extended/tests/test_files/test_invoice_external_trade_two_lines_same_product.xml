@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:cce20="http://www.sat.gob.mx/ComercioExterior20" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/ComercioExterior20 http://www.sat.gob.mx/sitio_internet/cfd/ComercioExterior20/ComercioExterior20.xsd" Version="4.0" Sello="___ignore___" Fecha="___ignore___" Folio="___ignore___" Serie="___ignore___" FormaPago="99" NoCertificado="___ignore___" Certificado="___ignore___" SubTotal="26000.00" Moneda="USD" TipoCambio="16.999500" Total="26000.00" TipoDeComprobante="I" Exportacion="02" MetodoPago="PPD" LugarExpedicion="20914">
+    <cfdi:Emisor Nombre="ESCUELA KEMPER URGATE" RegimenFiscal="601" Rfc="EKU9003173C9"/>
+    <cfdi:Receptor DomicilioFiscalReceptor="20914" Nombre="PARTNER_US" NumRegIdTrib="123456789" RegimenFiscalReceptor="616" ResidenciaFiscal="USA" Rfc="XEXX010101000" UsoCFDI="S01"/>
+    <cfdi:Conceptos>
+        <cfdi:Concepto Cantidad="3.000000" ClaveProdServ="01010101" ClaveUnidad="KGM" Descripcion="[product_mx] product_mx" Importe="6000.000000" NoIdentificacion="product_mx" ObjetoImp="02" Unidad="KG" ValorUnitario="2000.000000">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="6000.000000" Importe="0.000000" Impuesto="002" TasaOCuota="0.000000" TipoFactor="Tasa"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+        <cfdi:Concepto Cantidad="5.000000" ClaveProdServ="01010101" ClaveUnidad="KGM" Descripcion="[product_mx] product_mx" Importe="20000.000000" NoIdentificacion="product_mx" ObjetoImp="02" Unidad="KG" ValorUnitario="4000.000000">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="20000.000000" Importe="0.000000" Impuesto="002" TasaOCuota="0.000000" TipoFactor="Tasa"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+    </cfdi:Conceptos>
+    <cfdi:Impuestos TotalImpuestosTrasladados="0.00">
+        <cfdi:Traslados>
+            <cfdi:Traslado Base="26000.00" Importe="0.00" Impuesto="002" TasaOCuota="0.000000" TipoFactor="Tasa"/>
+        </cfdi:Traslados>
+    </cfdi:Impuestos>
+    <cfdi:Complemento>
+        <cce20:ComercioExterior CertificadoOrigen="0" ClaveDePedimento="A1" Incoterm="FCA" TipoCambioUSD="16.999500" TotalUSD="26000.00" Version="2.0">
+            <cce20:Emisor>
+                <cce20:Domicilio Calle="Campobasso Norte" CodigoPostal="20914" Estado="AGU" Municipio="005" NumeroExterior="3206" NumeroInterior="9000" Pais="MEX"/>
+            </cce20:Emisor>
+            <cce20:Receptor NumRegIdTrib="123456789">
+                <cce20:Domicilio Calle="77 Santa Barbara Rd" CodigoPostal="94523" Estado="CA" Pais="USA"/>
+            </cce20:Receptor>
+            <cce20:Mercancias>
+                <cce20:Mercancia CantidadAduana="8.000" FraccionArancelaria="7212100399" NoIdentificacion="product_mx" UnidadAduana="01" ValorDolares="26000.0000" ValorUnitarioAduana="3250.000000">
+				</cce20:Mercancia>
+            </cce20:Mercancias>
+        </cce20:ComercioExterior>
+        <tfd:TimbreFiscalDigital xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" Version="1.1" UUID="___ignore___" FechaTimbrado="___ignore___" NoCertificadoSAT="___ignore___" RfcProvCertif="___ignore___" SelloCFD="___ignore___" SelloSAT="___ignore___"/>
+    </cfdi:Complemento>
+</cfdi:Comprobante>

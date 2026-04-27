@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="SAT">
+        <dte:GTDocumento xmlns:dte="http://www.sat.gob.gt/dte/fel/0.2.0" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Version="0.1">
+            <dte:SAT ClaseDocumento="dte">
+                <dte:DTE ID="DatosCertificados">
+                    <dte:DatosEmision ID="DatosEmision">
+                        <dte:DatosGenerales
+                                t-att-Tipo="dte_tipo"
+                                t-att-Exp="dte_exp"
+                                t-att-FechaHoraEmision="dte_fecha"
+                                t-att-CodigoMoneda="dte_codigo_moneda"/>
+                        <dte:Emisor
+                                t-att-NITEmisor="emisor_nit"
+                                t-att-NombreEmisor="emisor_nombre"
+                                t-att-CodigoEstablecimiento="emisor_codigo_establecimiento"
+                                t-att-NombreComercial="emisor_nombre_comercial"
+                                t-att-AfiliacionIVA="emisor_afiliacion_iva">
+                            <dte:DireccionEmisor>
+                                <dte:Direccion t-out="emisor_direccion_direccion"/>
+                                <dte:CodigoPostal t-out="emisor_direccion_codigo_postal"/>
+                                <dte:Municipio t-out="emisor_direccion_municipio"/>
+                                <dte:Departamento t-out="emisor_direccion_departamento"/>
+                                <dte:Pais t-out="emisor_direccion_pais"/>
+                            </dte:DireccionEmisor>
+                        </dte:Emisor>
+                        <dte:Receptor
+                                t-att-IDReceptor="receptor_id"
+                                t-att-TipoEspecial="receptor_tipo_especial"
+                                t-att-NombreReceptor="receptor_nombre">
+                            <dte:DireccionReceptor t-if="receptor_direccion_show">
+                                <dte:Direccion t-out="receptor_direccion_direccion"/>
+                                <dte:CodigoPostal t-out="receptor_direccion_codigo_postal"/>
+                                <dte:Municipio t-out="receptor_direccion_municipio"/>
+                                <dte:Departamento t-out="receptor_direccion_departamento"/>
+                                <dte:Pais t-out="receptor_direccion_pais"/>
+                            </dte:DireccionReceptor>
+                        </dte:Receptor>
+                        <dte:Frases t-if="not skip_phrases">
+                            <dte:Frase
+                                    t-foreach="frases" t-as="frase"
+                                    t-att-TipoFrase="frase['tipo_frase']"
+                                    t-att-CodigoEscenario="frase['codigo_escenario']"/>
+                        </dte:Frases>
+                        <dte:Items>
+                            <dte:Item
+                                    t-foreach="items" t-as="item"
+                                    t-att-NumeroLinea="item['numero_linea']"
+                                    t-att-BienOServicio="item['bien_o_servicio']">
+                                <dte:Cantidad t-out="item['cantidad']"/>
+                                <dte:Descripcion t-out="item['descripcion']"/>
+                                <dte:PrecioUnitario t-out="item['precio_unitario']"/>
+                                <dte:Precio t-out="item['precio']"/>
+                                <dte:Descuento t-out="item['descuento']"/>
+                                <dte:Impuestos t-if="item['impuestos']">
+                                    <dte:Impuesto t-foreach="item['impuestos']" t-as="impuesto">
+                                        <dte:NombreCorto t-out="impuesto['nombre_corto']"/>
+                                        <dte:CodigoUnidadGravable t-out="impuesto['codigo_unidad_gravable']"/>
+                                        <dte:CantidadUnidadesGravables t-out="impuesto['cantidad_unidadades_gravables']"/>
+                                        <dte:MontoGravable t-out="impuesto['monto_gravable']"/>
+                                        <dte:MontoImpuesto t-out="impuesto['monto_impuesto']"/>
+                                    </dte:Impuesto>
+                                </dte:Impuestos>
+                                <dte:Total t-out="item['total']"/>
+                            </dte:Item>
+                        </dte:Items>
+                        <dte:Totales>
+                            <dte:TotalImpuestos t-if="total_impuestos">
+                                <dte:TotalImpuesto
+                                        t-foreach="total_impuestos" t-as="total_impuesto"
+                                        t-att-NombreCorto="total_impuesto['nombre_corto']"
+                                        t-att-TotalMontoImpuesto="str(total_impuesto['total_monto_impuesto'])"/>
+                            </dte:TotalImpuestos>
+                            <dte:GranTotal t-out="gran_total"/>
+                        </dte:Totales>
+                        <dte:Complementos t-if="have_exportacion or have_referencias or have_cambiaria or is_especial_fectura">
+                            <t t-if="have_exportacion" t-call="l10n_gt_edi.dte_complemento_exportacion"/>
+                            <t t-if="have_referencias" t-call="l10n_gt_edi.dte_complemento_referencias"/>
+                            <t t-if="have_cambiaria" t-call="l10n_gt_edi.dte_complemento_cambiaria"/>
+                            <t t-if="is_especial_fectura" t-call="l10n_gt_edi.dte_complemento_retencion"/>
+                        </dte:Complementos>
+                    </dte:DatosEmision>
+                </dte:DTE>
+                <dte:Adenda t-if="narration">
+                    <Documento t-out="narration"/>
+                </dte:Adenda>
+            </dte:SAT>
+        </dte:GTDocumento>
+    </template>
+
+    <template id="dte_complemento_exportacion" xmlns:dte="http://www.sat.gob.gt/dte/fel/0.2.0">
+        <dte:Complemento
+                IDComplemento="TEXT"
+                NombreComplemento="TEXT"
+                URIComplemento="TEXT">
+            <cex:Exportacion
+                    Version="1"
+                    xmlns:cex="http://www.sat.gob.gt/face2/ComplementoExportaciones/0.1.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://www.sat.gob.gt/face2/ComplementoExportaciones/0.1.0 C:\Users\User\Desktop\FEL\Esquemas\GT_Complemento_Exportaciones-0.1.0.xsd">
+                <cex:NombreConsignatarioODestinatario t-out="exportacion_nombre_consignatario_o_destinatario"/>
+                <cex:DireccionConsignatarioODestinatario t-out="exportacion_direccion_consignatario_o_destinatario"/>
+                <cex:CodigoConsignatarioODestinatario t-out="exportacion_codigo_consignatario_o_destinatario"/>
+                <cex:OtraReferencia t-out="exportacion_otra_referencia"/>
+                <cex:INCOTERM t-if="exportacion_incoterm" t-out="exportacion_incoterm"/>
+            </cex:Exportacion>
+        </dte:Complemento>
+    </template>
+
+    <template id="dte_complemento_retencion" xmlns:dte="http://www.sat.gob.gt/dte/fel/0.2.0">
+        <dte:Complemento
+                IDComplemento="TEXT"
+                NombreComplemento="TEXT"
+                URIComplemento="TEXT">
+            <cfe:RetencionesFacturaEspecial
+                    Version="1"
+                    xmlns:cfe="http://www.sat.gob.gt/face2/ComplementoFacturaEspecial/0.1.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://www.sat.gob.gt/face2/ComplementoFacturaEspecial/0.1.0 C:\Users\User\Desktop\FEL\Esquemas\GT_Complemento_Fac_Especial-0.1.0.xsd">
+                <cfe:RetencionISR t-out="retencion_isr"/>
+                <cfe:RetencionIVA t-out="retencion_iva"/>
+                <cfe:TotalMenosRetenciones t-out="retencion_gran_total"/>
+            </cfe:RetencionesFacturaEspecial>
+        </dte:Complemento>
+    </template>
+
+    <template id="dte_complemento_referencias" xmlns:dte="http://www.sat.gob.gt/dte/fel/0.2.0">
+        <dte:Complemento
+                IDComplemento="Notas"
+                NombreComplemento="Notas"
+                URIComplemento="http://www.sat.gob.gt/fel/notas.xsd">
+            <cno:ReferenciasNota
+                    xmlns:cno="http://www.sat.gob.gt/face2/ComplementoReferenciaNota/0.1.0"
+                    t-att-MotivoAjuste="referencias_motivo_ajuste"
+                    t-att-FechaEmisionDocumentoOrigen="referencias_fecha_emision_documento_origen"
+                    t-att-NumeroAutorizacionDocumentoOrigen="referencias_numero_autorizacion_documento_origen"
+                    t-att-NumeroDocumentoOrigen="referencias_numero_documento_origen"
+                    t-att-SerieDocumentoOrigen="referencias_serie_documento_origen"
+                    Version="0.0"/>
+        </dte:Complemento>
+    </template>
+
+    <template id="dte_complemento_cambiaria" xmlns:dte="http://www.sat.gob.gt/dte/fel/0.2.0">
+        <dte:Complemento
+                IDComplemento="Cambiaria"
+                NombreComplemento="Cambiaria"
+                URIComplemento="http://www.sat.gob.gt/fel/cambiaria.xsd">
+            <cfc:AbonosFacturaCambiaria
+                    Version="1"
+                    xmlns:cfc="http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://www.sat.gob.gt/dte/fel/CompCambiaria/0.1.0 C:\Users\Desktop\SAT_FEL_FINAL_V1\Esquemas\GT_Complemento_Cambiaria-0.1.0.xsd">
+                <cfc:Abono t-foreach="abonos" t-as="abono_vals">
+                    <cfc:NumeroAbono t-out="abono_vals['numero_abono']"/>
+                    <cfc:FechaVencimiento t-out="abono_vals['fecha_vencimiento']"/>
+                    <cfc:MontoAbono t-out="abono_vals['monto_abono']"/>
+                </cfc:Abono>
+            </cfc:AbonosFacturaCambiaria>
+        </dte:Complemento>
+    </template>
+
+</odoo>

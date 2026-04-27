@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr.GanttEmployeeAvatar" t-inherit="mail.Avatar">
+        <xpath expr="//div[hasclass('o-mail-Avatar')]" position="attributes">
+            <attribute name="class" add="o_field_many2one_avatar" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-Avatar')]/img" position="attributes">
+            <attribute name="t-on-click.stop.prevent">openCard</attribute>
+            <attribute name="t-att-data-tooltip">props.displayName</attribute>
+        </xpath>
+    </t>
+
+</templates>

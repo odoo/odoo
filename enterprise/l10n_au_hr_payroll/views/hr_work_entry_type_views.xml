@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_work_entry_type_view_form" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.form.inherit.l10n_au_hr_payroll</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_work_entry_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group name="l10n_au_hr_payroll" string="Australia">
+                    <group>
+                        <field name="l10n_au_penalty_rate" widget="percentage"/>
+                        <field name="l10n_au_is_ote"/>
+                        <field name="l10n_au_work_stp_code" groups="base.group_no_one"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

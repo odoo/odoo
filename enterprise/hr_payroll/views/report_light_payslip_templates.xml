@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<odoo>
+<template id="report_light_payslip">
+    <t t-call="web.basic_layout">
+        <div class="header d-flex flex-row pb-0 mb-0" id="header">
+            <div class="me-5">
+                <img t-if="o.company_id.logo" class="o_company_logo_big" t-att-src="image_data_uri(o.company_id.logo)"/>
+            </div>
+            <div class="d-flex flex-column flex-grow-1" style="border-bottom: 2px solid black">
+                <div t-field="o.company_id" style="font-size: large" class="mb-2"/>
+                <div t-field="o.name" style="font-size: x-large"/>
+            </div>
+        </div>
+        <div class="page">
+            <div id="infos_table">
+                <table class="table table-sm table-borderless">
+                    <tr id="employee_name">
+                        <td>Name:</td>
+                        <td class="text-end"><strong t-field="o.employee_id"/></td>
+                    </tr>
+                    <tr id="employee_job_title" t-if="o.employee_id.job_title">
+                        <td>Job Title:</td>
+                        <td class="text-end"><strong t-field="o.employee_id.job_title"/></td>
+                    </tr>
+                    <tr id="employee_department" t-if="o.employee_id.department_id">
+                        <td>Department:</td>
+                        <td class="text-end"><strong t-field="o.employee_id.department_id"/></td>
+                    </tr>
+                    <tr id="pay_period">
+                        <td>Pay Period:</td>
+                        <td class="text-end fw-bold">
+                            <span t-if="o.date_from &lt; o.contract_id.date_start" t-field="o.contract_id.date_start"/>
+                            <span t-else="" t-field="o.date_from"/>
+                            -
+                            <span t-if="o.contract_id.date_end and o.date_to &gt; o.contract_id.date_end" t-field="o.contract_id.date_end"/>
+                            <span t-else="" t-field="o.date_to"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="payslip_lines_table">
+                <table class="table table-sm table-borderless">
+                    <thead>
+                        <tr>
+                            <th id="line_header_name"/>
+                            <th id="line_header_currency" class="text-end">
+                                <strong t-field="o.company_id.currency_id"/>
+                            </th>
+                            <th id="line_header_ytd" class="text-end" t-if="o.ytd_computation">
+                                <strong>YTD</strong>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <span t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip)" t-as="line">
+                            <t t-set="line_styling" t-value="line.get_payslip_styling_dict()"/>
+                            <t t-set="line_style"/>
+                            <t t-set="line_class"/>
+                            <t t-if="line.code in line_styling">
+                                <t t-set="line_class" t-value="'fw-bold'"/>
+                            </t>
+                            <t t-if="line.code == 'NET'">
+                                <t t-set="line_style" t-value="'border-top: 2px solid black; border-bottom: 2px solid black'"/>
+                            </t>
+                            <tr id="line_display">
+                                <td id="payslip_line_name" t-att-class="line_class" t-att-style="line_style"><span t-field="line.name"/></td>
+                                <td id="payslip_line_total" t-attf-class="#{line_class} text-end" t-att-style="line_style">
+                                    <span t-out="line.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                </td>
+                                <td id="payslip_line_ytd" t-if="o.ytd_computation" t-attf-class="#{line_class} text-end" t-att-style="line_style">
+                                    <span t-out="line.ytd" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                                </td>
+                            </tr>
+                        </span>
+                    </tbody>
+                </table>
+            </div>
+            <div id="to_pay">
+                <p t-if="o.net_wage &gt;= 0">To pay on <b><span t-field="o.employee_id.bank_account_id">xxxxxxxxxxxx</span></b> of <i><span t-field="o.employee_id"/></i>: <span t-field="o.net_wage" class="fw-bold"/></p>
+                <p t-if="o.net_wage &lt; 0">The net amount will be recovered from the first positive remuneration established after this.</p>
+            </div>
+        </div>
+        <div class="footer" id="footer" style="font-size: large"/>
+    </t>
+</template>
+
+<template id="report_light_payslip_lang">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="o" t-value="o.with_context(lang=o.employee_id.lang or o.env.lang)"/>
+            <t t-call="hr_payroll.report_light_payslip" t-lang="o.env.lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

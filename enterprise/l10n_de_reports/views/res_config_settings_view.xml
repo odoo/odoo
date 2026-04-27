@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="res_config_settings_view_form">
+        <field name="name">res.config.settings.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account_reports.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='account_reports_settings']" position="inside">
+                <setting help="The number of digits for the account code in the DateV export">
+                    <label for="l10n_de_datev_account_length"/>
+                    <field name="l10n_de_datev_account_length"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="quality_check_on_demand_view_form" model="ir.ui.view">
+        <field name="name">quality.check.on.demand.view.form</field>
+        <field name="model">quality.check.on.demand</field>
+        <field name="arch" type="xml">
+            <form string="On-Demand Quality Check">
+                <group>
+                    <field name="show_lot_number" invisible="1"/>
+                    <field name="picking_id" invisible="1"/>
+                    <field name="product_id" options="{'no_create': True}" required="measure_on != 'operation'" readonly="measure_on == 'operation'"/>
+                    <field name="quality_point_id" options="{'no_create': True}"/>
+                    <field name="lot_id" context="{'default_product_id': product_id}"
+                     invisible="not show_lot_number"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" type="object" class="btn btn-primary" string="Confirm"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

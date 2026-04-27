@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.DocumentsListController" t-inherit="web.ListView" t-inherit-mode="primary">
+        <xpath expr="//Layout" position="attributes">
+            <attribute name="className">(model.useSampleModel ? 'o_view_sample_data' : '') + ' o_documents_content'</attribute>
+        </xpath>
+        <xpath expr="//Layout" position="inside">
+            <t t-set-slot="control-panel-create-button">
+                <t t-call="documents.DocumentsViews.ControlPanel"/>
+            </t>
+
+            <!-- Remove the search bar and let the control panel handle it -->
+            <t t-set-slot="layout-actions"/>
+            <t t-set-slot="control-panel-selection-actions">
+                <!-- ListView's default -->
+                <div t-if="hasSelectedRecords" class="o_list_selection_container m-1 m-md-0 d-flex gap-1">
+                    <t t-call="web.ListView.Selection"/>
+                </div>
+            </t>
+
+        </xpath>
+        <xpath expr="//Layout/t[@t-component='props.Renderer']" position="attributes">
+            <attribute name="previewStore">documentStates.previewStore</attribute>
+        </xpath>
+    </t>
+</templates>

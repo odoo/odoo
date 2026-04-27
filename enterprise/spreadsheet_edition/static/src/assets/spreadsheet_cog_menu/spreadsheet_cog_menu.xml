@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="spreadsheet_edition.SpreadsheetCogMenu">
+        <Dropdown>
+            <button class="opacity-trigger-hover">
+                <t t-call="spreadsheet_edition.SpreadsheetIcon"/>
+                Spreadsheet
+            </button>
+            <t t-set-slot="content">
+                <InsertViewSpreadsheet />
+                <InsertListSpreadsheetMenu t-if="env.config.viewType === 'list'" />
+            </t>
+        </Dropdown>
+    </t>
+
+    <t t-name="spreadsheet_edition.SpreadsheetIcon">
+        <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" class="o_ui_app_icon oi-large">
+            <path fill="var(--oi-color, #1AD3BB)" d="M19 19L46 19L46 42C46 44.2091 44.2091 46 42 46L19 46L19 19Z" class="opacity-50 opacity-100-hover"/>
+            <path fill="var(--oi-color, #1AD3BB)" d="M17 17L4 17L4 8C4 5.79086 5.79086 4 8 4L17 4L17 17Z" class="opacity-50 opacity-100-hover"/>
+            <rect fill="var(--oi-color, #03AF89)" x="4" y="19" width="13" height="27"/>
+            <rect fill="var(--oi-color, #03AF89)" x="19" y="4" width="27" height="13"/>
+        </svg>
+    </t>
+
+</templates>

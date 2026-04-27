@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="winbooks_import_form" model="ir.ui.view">
+        <field name="name">Winbooks.import.form</field>
+        <field name="model">account.winbooks.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Stage Search">
+               <group>
+                    <field name="zip_file"/>
+                    <field name="only_open"/>
+                    <span invisible="only_open"/>
+                    <span class="text-warning mb4 mt16" invisible="only_open">
+                        The export of data from Winbooks for closed years might contain unbalanced entries. However if you want to try to import everything, Odoo will set the difference of balance in a Suspense Account.
+                    </span>
+                    <field name="suspense_code" required="not only_open"/>
+               </group>
+               <footer>
+                    <button name="import_winbooks_file" string="Import" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button special="cancel" string="Cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="winbooks_import_action" model="ir.actions.act_window">
+        <field name="name">Winbooks Import</field>
+        <field name="res_model">account.winbooks.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

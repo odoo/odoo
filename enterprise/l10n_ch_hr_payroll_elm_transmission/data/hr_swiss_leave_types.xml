@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Work Entries -->
+        <record id="l10n_ch_swissdec_monthly_wt" model="hr.work.entry.type">
+            <field name="name">Monthly Salary</field>
+            <field name="code">CH_1000</field>
+            <field name="is_leave">False</field>
+            <field name="sequence">0</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="l10n_ch_swissdec_hourly_wt" model="hr.work.entry.type">
+            <field name="name">Hourly Salary</field>
+            <field name="code">CH_1005</field>
+            <field name="is_leave">False</field>
+            <field name="sequence">5</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="l10n_ch_swissdec_lesson_wt" model="hr.work.entry.type">
+            <field name="name">Lesson Salary</field>
+            <field name="code">CH_1006</field>
+            <field name="is_leave">False</field>
+            <field name="sequence">10</field>
+            <field name="color">5</field>
+        </record>
+
+
+        <record id="l10n_ch_swissdec_overtime_wt" model="hr.work.entry.type">
+            <field name="name">Overtime 100%</field>
+            <field name="code">CH_1065</field>
+            <field name="is_leave">False</field>
+            <field name="sequence">6</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="l10n_ch_swissdec_overtime_125_wt" model="hr.work.entry.type">
+            <field name="name">Overtime 125%</field>
+            <field name="code">CH_1061</field>
+            <field name="is_leave">False</field>
+            <field name="sequence">7</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="l10n_ch_swissdec_overtime_150_wt" model="hr.work.entry.type">
+            <field name="name">Overtime 150%</field>
+            <field name="code">CH_1066</field>
+            <field name="is_leave">False</field>
+            <field name="sequence">6</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="l10n_ch_swissdec_overtime_200_wt" model="hr.work.entry.type">
+            <field name="name">Overtime 200%</field>
+            <field name="code">CH_1068</field>
+            <field name="is_leave">False</field>
+            <field name="sequence">6</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="l10n_ch_swissdec_night_110_wt" model="hr.work.entry.type">
+            <field name="name">Night Shift 110%</field>
+            <field name="code">CH_1075</field>
+            <field name="is_leave">False</field>
+            <field name="sequence">6</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="l10n_ch_swissdec_oncall_125_wt" model="hr.work.entry.type">
+            <field name="name">On-call duty 125%</field>
+            <field name="code">CH_1071</field>
+            <field name="is_leave">False</field>
+            <field name="sequence">6</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="l10n_ch_swissdec_unpaid_wt" model="hr.work.entry.type">
+            <field name="name">Unpaid Salary</field>
+            <field name="code">CH_UNPAID</field>
+            <field name="is_leave">True</field>
+            <field name="sequence">15</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="l10n_ch_swissdec_illness_wt" model="hr.work.entry.type">
+            <field name="name">Salary in case of Illness</field>
+            <field name="code">CH_ILLNESS</field>
+            <field name="is_leave">True</field>
+            <field name="sequence">20</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="l10n_ch_swissdec_accident_wt" model="hr.work.entry.type">
+            <field name="name">Salary in case of Accident</field>
+            <field name="code">CH_ACCIDENT</field>
+            <field name="is_leave">True</field>
+            <field name="sequence">25</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="l10n_ch_swissdec_maternity_wt" model="hr.work.entry.type">
+            <field name="name">Salary in case of Maternity / Paternity Leave</field>
+            <field name="code">CH_MATERNITY</field>
+            <field name="is_leave">True</field>
+            <field name="sequence">30</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="l10n_ch_swissdec_military_wt" model="hr.work.entry.type">
+            <field name="name">Salary in case of Military Leave</field>
+            <field name="code">CH_MILITARY</field>
+            <field name="is_leave">True</field>
+            <field name="sequence">35</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="l10n_ch_swissdec_illness_wt_hourly" model="hr.work.entry.type">
+            <field name="name">Hourly Salary in case of Illness</field>
+            <field name="code">CH_ILLNESS_HOURLY</field>
+            <field name="is_leave">True</field>
+            <field name="sequence">20</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="l10n_ch_swissdec_accident_wt_hourly" model="hr.work.entry.type">
+            <field name="name">Hourly Salary in case of Accident</field>
+            <field name="code">CH_ACCIDENT_HOURLY</field>
+            <field name="is_leave">True</field>
+            <field name="sequence">25</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="l10n_ch_swissdec_maternity_wt_hourly" model="hr.work.entry.type">
+            <field name="name">Hourly Salary in case of Maternity / Paternity Leave</field>
+            <field name="code">CH_MATERNITY_HOURLY</field>
+            <field name="is_leave">True</field>
+            <field name="sequence">30</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="l10n_ch_swissdec_military_wt_hourly" model="hr.work.entry.type">
+            <field name="name">Hourly Salary in case of Military Leave</field>
+            <field name="code">CH_MILITARY_HOURLY</field>
+            <field name="is_leave">True</field>
+            <field name="sequence">35</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="l10n_ch_swissdec_interruption_wt" model="hr.work.entry.type">
+            <field name="name">Interruption of Work</field>
+            <field name="code">CH_Interruption</field>
+            <field name="is_leave">True</field>
+            <field name="sequence">40</field>
+            <field name="color">5</field>
+        </record>
+
+        <!-- Leaves -->
+        <record id="l10n_ch_swissdec_unpaid_lt" model="hr.leave.type">
+            <field name="name">Unpaid leave</field>
+            <field name="employee_requests">no</field>
+            <field name="requires_allocation">no</field>
+            <field name="leave_validation_type">no_validation</field>
+            <field name="request_unit">half_day</field>
+            <field name="l10n_ch_swissdec_payroll_impact" eval="True"/>
+            <field name="company_id" eval="False"/>
+            <field name="sequence">1</field>
+            <field name="color">1</field>
+            <field name="work_entry_type_id" ref="l10n_ch_hr_payroll_elm_transmission.l10n_ch_swissdec_unpaid_wt"/>
+        </record>
+
+        <record id="l10n_ch_swissdec_illness_lt" model="hr.leave.type">
+            <field name="name">Illness leave</field>
+            <field name="employee_requests">no</field>
+            <field name="requires_allocation">no</field>
+            <field name="leave_validation_type">no_validation</field>
+            <field name="request_unit">half_day</field>
+            <field name="l10n_ch_swissdec_payroll_impact" eval="True"/>
+            <field name="sequence">2</field>
+            <field name="company_id" eval="False"/>
+            <field name="color">2</field>
+            <field name="work_entry_type_id" ref="l10n_ch_hr_payroll_elm_transmission.l10n_ch_swissdec_illness_wt"/>
+        </record>
+
+        <record id="l10n_ch_swissdec_accident_lt" model="hr.leave.type">
+            <field name="name">Accident leave</field>
+            <field name="employee_requests">no</field>
+            <field name="requires_allocation">no</field>
+            <field name="leave_validation_type">no_validation</field>
+            <field name="request_unit">half_day</field>
+            <field name="l10n_ch_swissdec_payroll_impact" eval="True"/>
+            <field name="sequence">3</field>
+            <field name="company_id" eval="False"/>
+            <field name="color">3</field>
+            <field name="work_entry_type_id" ref="l10n_ch_hr_payroll_elm_transmission.l10n_ch_swissdec_accident_wt"/>
+        </record>
+
+        <record id="l10n_ch_swissdec_maternity_lt" model="hr.leave.type">
+            <field name="name">Maternity / Paternity leave</field>
+            <field name="employee_requests">no</field>
+            <field name="requires_allocation">no</field>
+            <field name="leave_validation_type">no_validation</field>
+            <field name="request_unit">half_day</field>
+            <field name="l10n_ch_swissdec_payroll_impact" eval="True"/>
+            <field name="sequence">4</field>
+            <field name="company_id" eval="False"/>
+            <field name="color">4</field>
+            <field name="work_entry_type_id" ref="l10n_ch_hr_payroll_elm_transmission.l10n_ch_swissdec_maternity_wt"/>
+        </record>
+
+        <record id="l10n_ch_swissdec_military_lt" model="hr.leave.type">
+            <field name="name">Military leave</field>
+            <field name="employee_requests">no</field>
+            <field name="requires_allocation">no</field>
+            <field name="leave_validation_type">no_validation</field>
+            <field name="request_unit">half_day</field>
+            <field name="l10n_ch_swissdec_payroll_impact" eval="True"/>
+            <field name="sequence">4</field>
+            <field name="company_id" eval="False"/>
+            <field name="color">5</field>
+            <field name="work_entry_type_id" ref="l10n_ch_hr_payroll_elm_transmission.l10n_ch_swissdec_military_wt"/>
+        </record>
+
+        <record id="l10n_ch_swissdec_interruption_of_work_lt" model="hr.leave.type">
+            <field name="name">Interruption of Work</field>
+            <field name="employee_requests">no</field>
+            <field name="requires_allocation">no</field>
+            <field name="leave_validation_type">no_validation</field>
+            <field name="request_unit">day</field>
+            <field name="l10n_ch_swissdec_payroll_impact" eval="True"/>
+            <field name="l10n_ch_swissdec_work_interruption" eval="True"/>
+            <field name="sequence">5</field>
+            <field name="company_id" eval="False"/>
+            <field name="color">6</field>
+            <field name="work_entry_type_id" ref="l10n_ch_hr_payroll_elm_transmission.l10n_ch_swissdec_interruption_wt"/>
+        </record>
+    </data>
+</odoo>

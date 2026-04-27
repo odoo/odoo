@@ -1,0 +1,19 @@
+.documents_chatter_disabled {
+    pointer-events: none;
+    filter: grayscale(1);
+
+    .documents_chatter_disabled_overlay {
+        z-index: 100;
+        margin-right: -100%;
+        &.dark {
+            border-left: 1px solid var(--border-color);
+            background-color: rgba(0,0,0,0.6);
+            h1 {
+                margin-top: 30%;
+            }
+        }
+        &.light {
+            background-color: rgba(255,255,255,0.6);
+        }
+    }
+}

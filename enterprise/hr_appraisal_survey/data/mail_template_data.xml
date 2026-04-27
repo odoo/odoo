@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mail_template_appraisal_ask_feedback" model="mail.template">
+            <field name="name">Appraisal: Ask Feedback</field>
+            <field name="model_id" ref="model_survey_user_input"/>
+            <field name="subject">Take part in {{ object.employee_id.name or 'this' }} appraisal</field>
+            <field name="description">Sent to employees to gather appraisal feedback</field>
+            <field name="body_html" type="html">
+                <t t-set="logged_user" t-value="ctx.get('logged_user')"/>
+                <t t-set="employee" t-value="ctx.get('employee')"/>
+                <t t-set="deadline" t-value="ctx.get('deadline')"/>
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <p style="margin-left:5px">Dear <t t-out="object.partner_id.name or 'participant'">[participant]</t></p>
+                        <span>
+                            <t t-out="logged_user">[Current user]</t> invites you to participate in a survey and provide your feedback on <t t-out="employee">[employee]</t>.
+                            Please complete the survey before the <t t-out="deadline">[specified deadline]</t>.
+                        </span>
+                        <br/>
+                        Thank you!
+                        <br/><br/>
+                        <div style="margin: 16px 0px 16px 0px; text-align: center;">
+                            <a t-att-href="object.get_start_url()"
+                                style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                                Give your feedback
+                            </a>
+                        </div>
+                    </p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

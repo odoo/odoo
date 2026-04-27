@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="l10n_co_dian_operation_mode_action" model="ir.actions.act_window">
+        <field name="name">l10n_co_dian.operation_mode.action</field>
+        <field name="res_model">l10n_co_dian.operation_mode</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="l10n_co_dian_operation_mode_view_form" model="ir.ui.view">
+        <field name="name">l10n_co_dian.operation_mode.view.form</field>
+        <field name="model">l10n_co_dian.operation_mode</field>
+        <field name="arch" type="xml">
+            <form string="Operation mode">
+                <sheet>
+                    <group>
+                        <field name="dian_software_operation_mode"/>
+                        <field name="dian_software_id"/>
+                        <field name="dian_software_security_code"/>
+                        <field name="dian_testing_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_co_dian_operation_mode_view_search" model="ir.ui.view">
+        <field name="name">l10n_co_dian.operation_mode.view.search</field>
+        <field name="model">l10n_co_dian.operation_mode</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="dian_software_security_code"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="l10n_co_dian_operation_mode_view_tree" model="ir.ui.view">
+        <field name="name">l10n_co_dian.operation_mode.view.list</field>
+        <field name="model">l10n_co_dian.operation_mode</field>
+        <field name="arch" type="xml">
+            <list string="Operation Modes" delete="false">
+                <field name="dian_software_operation_mode"/>
+                <field name="dian_software_id"/>
+                <field name="dian_software_security_code"/>
+                <field name="dian_testing_id"/>
+                <button string="Delete" icon="fa-remove" name="unlink" type="object" confirm="Are you sure you want to delete this record?"/>
+            </list>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,35 @@
+<odoo>
+
+    <record id="industry_fsm_sale_product_catalog_kanban_view" model="ir.ui.view">
+        <field name="name">industry_fsm.product.catalog.kanban.view.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_view_kanban_catalog"/>
+        <!-- make sure it's bigger than existing catalog view -->
+        <field name="priority">20</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <kanban position="attributes">
+                <attribute name="js_class">fsm_product_kanban</attribute>
+            </kanban>
+        </field>
+    </record>
+
+<!-- Material kanban -->
+    <record id="industry_fsm_sale_product_catalog_inherit_search_view" model="ir.ui.view">
+        <field name="name">industry.fsm.sale.product.catalog.inherit.search.view</field>
+        <field name="inherit_id" ref="product.product_view_search_catalog"/>
+        <field name="model">product.product</field>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='favorites']" position="before">
+                <filter string="Added Products" name="fsm_quantity" domain="[('fsm_quantity', '>', 0)]"/>
+                <separator/>
+            </xpath>
+            <xpath expr="//filter[@name='products_in_order']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

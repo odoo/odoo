@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="document_view_search" model="ir.ui.view">
+        <field name="name">Document search view</field>
+        <field name="model">documents.document</field>
+        <field name="arch" type="xml">
+            <search string="Documents">
+                <field name="name" string="Name / Extension"/>
+                <field name="tag_ids"/>
+                <field name="owner_id"/>
+                <field name="partner_id" string="Contact"/>
+                <field name="index_content"/>
+                <field name="create_uid" string="Created by"/>
+                <filter string="My Documents" name="my_documents_filter" domain="['|', ('owner_id', '=', uid), ('partner_id.user_ids', '=', uid)]"/>
+                <filter string="My Activities" name="my_activities_filter" domain="[('activity_user_id','=',uid)]"/>
+                <filter string="Starred" name="my_favorites_filter" domain="[('favorited_ids', 'in', uid)]"/>
+                <separator/>
+                <filter string="Documents" name="pdf_doc" domain="[('type', '!=', 'folder')]"/>
+                <filter string="Folders" name="pdf_doc" domain="[('type', '=', 'folder')]"/>
+                <filter string="Hide shortcuts" name="no_shortcuts" domain="[('shortcut_document_id', '=', False)]"/>
+                <separator/>
+                <filter string="Requested Documents" name="requested_filter" domain="[('type', '=', 'binary'), ('attachment_id', '=', False)]"/>
+                <separator/>
+                <field name="type"/>
+                <group expand="0" string="Group By">
+                    <filter string="Contact" name="filter_partner_id" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Owner" name="filter_owner_id" domain="[]" context="{'group_by': 'owner_id'}"/>
+                    <filter string="Type" name="filter_type" domain="[]" context="{'group_by': 'type'}"/>
+                    <filter string="Model" name="filter_res_model" domain="[]" context="{'group_by': 'res_model'}"/>
+                    <filter string="Creation Date" name="filter_create_date" domain="[]" context="{'group_by':'create_date'}"/>
+                    <filter string="File Extension" name="filter_file_extension" domain="[]" context="{'group_by': 'file_extension'}"/>
+                </group>
+                <searchpanel class="o_documents_search_panel">
+                    <field name="folder_id" string="Folders"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="document_view_kanban" model="ir.ui.view">
+        <field name="name">documents.document kanban</field>
+        <field name="model">documents.document</field>
+        <field name="arch" type="xml">
+            <kanban js_class="documents_kanban" create="false" sample="1">
+                <field name="id"/>
+                <field name="active"/>
+                <field name="mimetype"/>
+                <field name="favorited_ids"/>
+                <field name="attachment_id"/>
+                <field name="res_id"/>
+                <field name="folder_id"/>
+                <field name="lock_uid"/>
+                <field name="type"/>
+                <field name="shortcut_document_id"/>
+                <field name="create_uid"/>
+                <field name="url"/>
+                <field name="url_preview_image"/>
+                <field name="checksum"/>
+                <field name="name"/>
+                <field name="display_name"/>
+                <field name="res_model_name"/>
+                <field name="res_model"/>
+                <field name="activity_state"/>
+                <field name="is_multipage"/>
+                <field name="is_pinned_folder" invisible="1"/>
+                <field name="thumbnail_status"/>
+                <field name="user_permission"/>
+                <field name="access_token"/>
+                <field name="access_url"/>
+                <field name="access_via_link"/>
+                <field name="access_internal"/>
+                <field name="is_access_via_link_hidden"/>
+                <field name="available_embedded_actions_ids" groups="base.group_user"/>
+                <field name="partner_id"/>
+                <field name="file_size"/>
+                <field name="alias_name"/>
+                <field name="alias_domain_id"/>
+                <field name="create_activity_type_id"/>
+                <field name="create_activity_user_id"/>
+                <field name="alias_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/> <!-- fetch `color` too -->
+                <templates>
+                    <t t-name="card">
+                        <div draggable="true" class="o_documents_pre_18_1 d-flex flex-column o_kanban_attachment o_documents_attachment h-100 pb-2"
+                             t-attf-class="#{record.is_multipage.raw_value ? 'o_kanban_stack' : ''}" t-att-data-id="record.id.raw_value">
+                            <t t-set="fileRequest" t-value="record.type.raw_value === 'binary' and !record.attachment_id.raw_value and !record.shortcut_document_id.raw_value"/>
+                            <div t-if="record.type.raw_value != 'folder'" t-attf-class="#{fileRequest ? 'o_request_image' : ''}">
+                                <t t-set="hasStoredThumbnail" t-value="record.thumbnail_status.raw_value === 'present'"/>
+                                <!-- should be made more generic if we support different websites for videos -->
+                                <t t-set="youtubeUrlMatch" t-value="record.url.raw_value ? record.url.raw_value.match('youtu(?:\.be|be\.com)/(?:.*v(?:/|=)|(?:.*/)?)([a-zA-Z0-9-_]{11})') : false"/>
+                                <t t-set="youtubeVideoToken" t-value="youtubeUrlMatch ? youtubeUrlMatch.length > 1 ? youtubeUrlMatch[1] : false : false"/>
+                                <div name="document_preview" class="o_kanban_image_wrapper d-flex justify-content-center position-relative" t-att-title="fileRequest ? 'Upload file' : ''">
+                                    <field name="is_favorited" nolabel="1" widget="boolean_favorite" class="position-absolute top-0 end-0 p-1 pt-2"/>
+                                    <img t-if="youtubeVideoToken" alt="Document"
+                                         t-attf-src="https://img.youtube.com/vi/{{youtubeVideoToken}}/0.jpg"/>
+                                    <a t-elif="record.type.raw_value =='url'" target="_blank" t-att-href="record.url.raw_value" class="o_kanban_image_wrapper">
+                                        <img t-if="record.url_preview_image.raw_value"
+                                            t-att-src="record.url_preview_image.raw_value" t-att-alt="record.name.raw_value"/>
+                                        <t t-else="">
+                                            <span class="fa fa-link fa-3x text-muted"/>
+                                        </t>
+                                    </a>
+                                    <t t-elif="hasStoredThumbnail">
+                                        <t t-set="unique" t-value="record.checksum.value ? record.checksum.value.slice(-8) : ''"/>
+                                        <img t-attf-src="/documents/thumbnail/#{window.encodeURIComponent(record.access_token.raw_value)}?unique=#{unique}" alt="Document preview"/>
+                                    </t>
+                                    <div t-elif="fileRequest" class="fa fa-upload fa-3x text-muted">
+                                        <input type="file" class="o_input_file o_hidden o_kanban_replace_document"/>
+                                    </div>
+                                    <div t-else="!hasStoredThumbnail" class="o_image o_image_thumbnail" t-att-data-mimetype="mimetype"/>
+                                </div>
+                            </div>
+                            <div class="flex-shrink-1 flex-auto">
+                                <t t-set="discoverable" t-value="record.access_via_link.raw_value === 'none'
+                                    or record.access_internal.raw_value !== 'none' or !record.is_access_via_link_hidden.raw_value"/>
+                                <div t-if="record.type.raw_value == 'folder'" class="d-flex align-items-center text-truncate p-2 pb-0">
+                                    <t t-if="record.shortcut_document_id.raw_value">
+                                        <i class="fa fa-external-link me-2" title="This is a shortcut"/>
+                                    </t>
+                                    <i t-else="" class="fa fa-folder-o me-2" title="This is a folder"/>
+                                    <field name="name" class="text-truncate me-1" required="True" string="Document"/>
+                                    <i t-if="!discoverable" class="fa fa-eye-slash me-1" title="Must have the link to access"/>
+                                    <field name="is_favorited" nolabel="1" widget="boolean_favorite" class="ms-auto"/>
+                                </div>
+                                <div t-else="" class="p-2 pb-0">
+                                    <div t-att-title="record.name.raw_value" class="fw-bolder w-100 d-flex align-items-center">
+                                        <a t-if="record.type.raw_value == 'url'" t-att-href="record.url.raw_value" class="me-1" t-att-title="record.url.raw_value">
+                                            <i class="fa fa-link"/>
+                                        </a>
+                                        <div class="d-flex flex-grow-1 align-items-center gap-2 overflow-hidden">
+                                            <field name="name" class="text-truncate" required="True" string="Document"/>
+                                            <t t-if="record.shortcut_document_id.raw_value">
+                                                <i class="fa fa-external-link text-gray-500" title="This is a shortcut"/>
+                                            </t>
+                                            <t t-if="record.lock_uid.raw_value">
+                                                <i class="fa fa-lock" t-att-title="record.lock_uid.value"/>
+                                            </t>
+                                        </div>
+                                        <div class="d-flex d-flex-row align-items-center ms-2 gap-2">
+                                            <i t-if="!discoverable" class="fa fa-eye-slash" title="Must have the link to access"/>
+                                            <field name="activity_ids" widget="documents_kanban_activity"/>
+                                            <field name="owner_id" widget="many2one_avatar_user"/>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_record_body text-truncate">
+                                        <t t-if="record.res_model_name.raw_value &amp;&amp; record.res_model.raw_value !== 'documents.document'">
+                                            <t t-if="record.res_name.raw_value">
+                                                <field name="res_name" class="text-muted"/>
+                                            </t>
+                                            <t t-elif="fileRequest">
+                                                 <span><b> Request</b></span>
+                                            </t>
+                                        </t>
+                                        <t t-elif="fileRequest">
+                                            <span><b>Requested Document</b></span>
+                                        </t>
+                                    </div>
+                                </div>
+                                <div t-if="record.type.raw_value == 'folder' and inFolder"
+                                    class="px-2 fw-light text-nowrap overflow-hidden text-overflow-ellipsis" >
+                                    <!-- exact same padding as folder name above -->
+                                    <i t-if="record.type.raw_value === 'folder'" class="fa fa-folder-o me-2 invisible"/>
+                                    <span class="o_documents_in_folder">In <span t-out="inFolder"/></span>
+                                </div>
+                            </div>
+                            <footer t-if="record.type.raw_value != 'folder' and record.tag_ids.raw_value.length" class="d-flex px-2">
+                                <field name="tag_ids" class="d-block text-wrap" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            </footer>
+                        </div>
+                        <t t-if="record.is_multipage.raw_value">
+                            <div class="o_kanban_stack"/>
+                            <div class="o_kanban_stack"/>
+                        </t>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="document_view_form" model="ir.ui.view">
+        <field name="name">documents form</field>
+        <field name="model">documents.document</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form create="false">
+                <header>
+                    <button type="object" name="access_content" string="Access" class="oe_highlight" invisible="not url"/>
+                    <button type="object" name="access_content" string="Download" class="oe_highlight" invisible="type != 'binary'"/>
+                    <button type="object" name="toggle_lock" string="Lock" invisible="lock_uid"/>
+                    <button type="object" name="toggle_lock" string="Unlock" invisible="not lock_uid"/>
+                    <button type="object" name="action_unarchive" string="Restore" invisible="active"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="open_resource" type="object" class="oe_stat_button" icon="fa-external-link" invisible="not res_id or res_model in [False, 'documents.document']">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Related <br/> Record</span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Moved to trash" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="thumbnail" nolabel="1" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;:&quot;thumbnail&quot;}" invisible="not thumbnail"/>
+                    <div class="oe_title" aria-label="Name">
+                        <h1>
+                            <field name="name" class="oe_inline" placeholder="Document Name" required="True" readonly="is_locked"/> <i class="fa fa-lock oe_inline" title="Locked" invisible="not lock_uid"/>
+                        </h1>
+                    </div>
+                    <field name="is_locked" invisible="1"/>
+                    <field name="active" invisible="1"/>
+                    <field name="res_id" invisible="1"/>
+                    <field name="res_model" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="datas" string="File" filename="name" invisible="type in ['url', 'folder']" readonly="is_locked"/>
+                            <field name="url" invisible="type != 'url'" readonly="is_locked"/>
+                            <field name="folder_id" widget="documents_folder_many2one"
+                                domain="[('type', '=', 'folder'), ('shortcut_document_id', '=', False)]"
+                                options="{'no_create_edit': True, 'no_create': True}"/>
+                            <field name="owner_id" widget="many2one_avatar_user" readonly="is_locked"/>
+                            <field name="partner_id" widget="many2one_avatar_user"/>
+                            <field name="tag_ids" widget="many2many_tags"
+                                options="{'color_field': 'color'}"/>
+                        </group>
+                        <group>
+                            <field name="type" readonly="1"/>
+                            <field name="create_date"/>
+                            <field name="create_uid" widget="many2one_avatar_user"/>
+                            <field name="lock_uid" readonly="1" invisible="not lock_uid"/>
+                        </group>
+                    </group>
+                    <group groups="base.group_no_one">
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="file_size" invisible="type != 'binary'"/>
+                        <field name="mimetype" invisible="type != 'binary'"/>
+                    </group>
+                    <group>
+                        <field name="create_activity_option"/>
+                    </group>
+                    <group string="Activity" name="activity" autofocus="autofocus" invisible="not create_activity_option">
+                        <group>
+                            <field name="create_activity_type_id" options="{'no_create': True, 'no_open': True}" required="create_activity_option"/>
+                            <field name="create_activity_summary" placeholder="e.g. Discuss proposal"/>
+                        </group>
+                        <group>
+                            <label for="create_activity_date_deadline_range"/>
+                            <div class="o_row">
+                                <field name="create_activity_date_deadline_range"/>
+                                <field name="create_activity_date_deadline_range_type"/>
+                            </div>
+                            <field name="create_activity_user_id"/>
+                        </group>
+                        <group>
+                            <field name="create_activity_note" placeholder="Log a note..."/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+                <footer class="justify-content-between">
+                    <div class="btn-group">
+                        <button class="btn btn-primary me-2 rounded w-auto" special="save" data-hotkey="q">Save</button>
+                        <button class="btn btn-secondary rounded w-auto" special="cancel" data-hotkey="x">Discard</button>
+                    </div>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="document_view_form_details" model="ir.ui.view">
+        <field name="name">documents form details</field>
+        <field name="model">documents.document</field>
+        <field name="priority" eval="32"/>
+        <field name="arch" type="xml">
+            <form create="false">
+                <notebook>
+                    <page string="General">
+                        <group>
+                            <field name="name" readonly="not context.get('editable')"/>
+                            <field name="owner_id" readonly="not context.get('editable')"/>
+                            <field name="partner_id" readonly="not context.get('editable')"/>
+                            <field name="file_size" readonly="True" invisible="type == 'folder'"/>
+                            <field name="folder_id" widget="documents_folder_many2one"
+                                domain="[('type', '=', 'folder'), ('shortcut_document_id', '=', False)]"
+                                options="{'no_create_edit': True, 'no_create': True}"/>
+                            <field name="write_date" readonly="True"/>
+                            <field name="create_date" readonly="True"/>
+                            <field name="tag_ids" readonly="not context.get('editable')" widget="many2many_tags"
+                                options="{'color_field': 'color'}" invisible="type == 'folder'"/>
+                            <field name="document_count" readonly="True" invisible="type != 'folder'"/>
+                        </group>
+                    </page>
+                    <page string="Email Upload" invisible="type !='folder' or shortcut_document_id">
+                        <group>
+                            <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" dir="ltr">
+                                <label for="alias_name"/>
+                                <field name="alias_name" placeholder="alias" class="oe_inline" readonly="not context.get('editable')"/>@
+                                <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
+                                       options="{'no_create': True, 'no_open': True}" readonly="not context.get('editable')"/>
+                                <button name="%(settings_action)d" icon="oi-arrow-right" type="action" invisible="alias_domain_id"
+                                       string="Choose or Configure Email Servers" class="btn btn-sm btn-link"/>
+                            </div>
+                            <field name="alias_tag_ids" readonly="not context.get('editable')" widget="many2many_tags"/>
+                        </group>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <record id="document_view_form_rename" model="ir.ui.view">
+        <field name="name">Rename form</field>
+        <field name="model">documents.document</field>
+        <field name="priority" eval="32"/>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="e.g. Finance" options="{'line_breaks': False}" widget="text" readonly="False" required="True"/></h1>
+                    </div>
+                </sheet>
+                <footer>
+                    <button special="save" data-hotkey="q" string="Rename" class="btn btn-primary"/>
+                    <button special="cancel" data-hotkey="x" string="Discard" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="documents_upload_url_view" model="ir.ui.view">
+        <field name="name">upload url</field>
+        <field name="priority" eval="5"/>
+        <field name="model">documents.document</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="url" string="URL" widget="url" required="1" placeholder="e.g. https://www.youtube.com/watch?v=CP96yVnXNrY"/>
+                        <field name="name" required="True"/>
+                        <field name="url_preview_image" invisible="1" force_save="1"/>
+                        <field name="folder_id" string="Folder" widget="documents_folder_many2one" context="{'default_type':'folder'}"
+                               domain="[('type', '=', 'folder'), ('shortcut_document_id', '=', False), ('user_permission', '=', 'edit')]"/>
+                        <field name="tag_ids" invisible="1"/>
+                    </group>
+                <footer>
+                    <button special="save" data-hotkey="q" string="Add" class="btn btn-primary"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="documents_view_list_main" model="ir.ui.view">
+        <field name="name">documents list</field>
+        <field name="model">documents.document</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <list create="false"
+                  multi_edit="1"
+                  decoration-info="shortcut_document_id"
+                  sample="1" default_order="is_folder, create_date DESC, id DESC">
+                <field name="is_favorited" widget="boolean_favorite" nolabel="1"/>
+                <field name="is_pinned_folder" column_invisible="1"/>
+                <field name="type" width="25px" widget="documents_type_icon" nolabel="1" optional="show"/>
+                <field name="name" required="True" readonly="False"/>
+                 <!-- before 18.2, assume only folder_id.id is available (column_invisible = True) -->
+                <field name="folder_id" optional="show"/>
+                <field name="display_name" column_invisible="1"/>
+                <field name="owner_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="access_url" column_invisible="1"/>
+                <field name="partner_id" optional="show"/>
+                <field name="tag_ids" widget="many2many_tags" optional="hide" options="{'color_field': 'color'}"/>
+                <field name="url" optional="hide"/>
+                <field name="lock_uid" groups="base.group_user" optional="hide"/>
+                <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+                <field name="document_count" string="" widget="document_count"/>
+                <field name="available_embedded_actions_ids" optional="hide" widget="many2many_tags" groups="base.group_user"/>
+                <field name="create_date" optional="hide"/>
+                <field name="write_date" optional="show"/>
+                <field name="file_extension" optional="hide"/>
+                <field name="file_size" optional="show"/>
+                <field name="id" column_invisible="1"/>
+                <field name="access_token" column_invisible="1"/>
+                <field name="active" column_invisible="1"/>
+                <field name="user_permission" column_invisible="1"/>
+                <field name="attachment_id" column_invisible="1"/>
+                <field name="res_id" column_invisible="1"/>
+                <field name="res_model" column_invisible="1"/>
+                <field name="res_name" column_invisible="1"/>
+                <field name="shortcut_document_id" column_invisible="1"/>
+                <field name="mimetype" column_invisible="1"/>
+                <field name="alias_email" groups="base.group_user" optional="hide" widget="email"/>
+                <field name="alias_name" column_invisible="1"/>
+                <field name="alias_domain_id" column_invisible="1"/>
+                <field name="alias_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" column_invisible="1"/> <!-- fetch `color` too -->
+                <field name="create_activity_type_id" column_invisible="1"/>
+                <field name="create_activity_user_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="documents_view_list" model="ir.ui.view">
+        <field name="name">documents list</field>
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents_view_list_main"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="js_class">documents_list</attribute>
+            </xpath>
+            <field name="create_date" position="after">
+                <field name="activity_exception_decoration" widget="activity_exception" nolabel="True"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="documents_view_activity" model="ir.ui.view">
+        <field name="name">documents.document activity</field>
+        <field name="model">documents.document</field>
+        <field name="arch" type="xml">
+            <activity string="Documents" js_class="documents_activity">
+                <field name="folder_id" required="True"/>
+                <field name="access_token" invisible="1"/>
+                <templates>
+                    <div t-name="activity-box">
+                        <img class="rounded" t-att-src="activity_image('res.users', 'avatar_128', record.owner_id.raw_value)"
+                            role="img" t-att-title="record.owner_id.value" t-att-alt="record.owner_id.value"/>
+                        <div class="ms-2">
+                            <field class="o_text_block" name="name" display="full" required="True"/>
+                            <field name="owner_id" muted="1" display="full" class="o_text_block" invisible="1"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    <record id="action_url_form" model="ir.actions.act_window">
+        <field name="name">Add Url</field>
+        <field name="res_model">documents.document</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'form_view_ref': 'documents.documents_upload_url_view', 'default_type': 'url'}</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="document_action" model="ir.actions.act_window">
+        <field name="name">Documents</field>
+        <field name="path">documents</field>
+        <field name="res_model">documents.document</field>
+        <field name="view_mode">kanban,list,activity</field>
+        <field name="domain">[]</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('documents.document_view_kanban')}),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('documents.documents_view_list')}),
+            (0, 0, {'view_mode': 'activity', 'view_id': ref('documents.documents_view_activity')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Upload <span class="fw-normal">a file or</span> drag <span class="fw-normal">it here.</span></p>
+        </field>
+    </record>
+
+    <record id="documents_view_kanban_portal" model="ir.ui.view">
+        <field name="name">documents.document kanban portal</field>
+        <field name="model">documents.document</field>
+        <field name="priority">999</field>
+        <field name="inherit_id" ref="document_view_kanban"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='activity_ids']" position="replace"/>
+            <xpath expr="//field[@name='activity_state']" position="replace"/>
+        </field>
+    </record>
+
+    <record id="documents_view_list_portal" model="ir.ui.view">
+        <field name="name">documents.document.list.portal</field>
+        <field name="model">documents.document</field>
+        <field name="priority">999</field>
+        <field name="inherit_id" ref="documents_view_list"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='activity_exception_decoration']" position="replace"/>
+        </field>
+    </record>
+
+    <record id="document_action_portal" model="ir.actions.act_window">
+        <field name="name">Documents</field>
+        <field name="path">documents_portal</field>
+        <field name="res_model">documents.document</field>
+        <field name="view_mode">kanban</field>
+        <field name="domain">[]</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('documents.documents_view_kanban_portal')}),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('documents.documents_view_list_portal')}),
+        ]"/>
+
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Upload <span class="fw-normal">a file or</span> drag <span class="fw-normal">it here.</span></p>
+        </field>
+    </record>
+
+</odoo>

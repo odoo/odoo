@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <template id="marketing_activity_summary_template_sms" inherit_id="marketing_automation.marketing_activity_summary_template">
+            <xpath expr="//t[@name='activity_action_or_template']" position="before">
+                <t t-elif="activity.trigger_type == 'sms_click'">
+                    after the Participant <strong>clicked</strong>,<br/>on any link included in the <strong>SMS text message</strong> sent by the Activity "<strong t-out="parent_activity_name"/>,"
+                </t>
+                <t t-elif="activity.trigger_type == 'sms_not_click'">
+                    if no link included in the <strong>SMS text message</strong> sent by the Activity "<strong t-out="parent_activity_name"/>" gets clicked,
+                </t>
+                <t t-elif="activity.trigger_type == 'sms_bounce'">
+                    after the <strong>SMS text message</strong> sent by the Activity "<strong t-out="parent_activity_name"/>" <strong>bounced</strong>,
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:cce20="http://www.sat.gob.mx/ComercioExterior20" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/ComercioExterior20 http://www.sat.gob.mx/sitio_internet/cfd/ComercioExterior20/ComercioExterior20.xsd" Version="4.0" Sello="___ignore___" Fecha="___ignore___" Folio="___ignore___" Serie="___ignore___" FormaPago="99" NoCertificado="___ignore___" Certificado="___ignore___" SubTotal="85000.00" Descuento="17000.00" Moneda="CHF" TipoCambio="0.058824" Total="68000.00" TipoDeComprobante="I" Exportacion="02" MetodoPago="PPD" LugarExpedicion="20914">
+	<cfdi:Emisor Rfc="EKU9003173C9" Nombre="ESCUELA KEMPER URGATE" RegimenFiscal="601"/>
+	<cfdi:Receptor Rfc="XEXX010101000" Nombre="PARTNER_US" ResidenciaFiscal="USA" DomicilioFiscalReceptor="20914" RegimenFiscalReceptor="616" UsoCFDI="S01" NumRegIdTrib="123456789"/>
+	<cfdi:Conceptos>
+		<cfdi:Concepto ClaveProdServ="01010101" NoIdentificacion="product_mx" Cantidad="5.000000" ClaveUnidad="KGM" Unidad="KG" Descripcion="[product_mx] product_mx" ValorUnitario="17000.000000" Importe="85000.000000" ObjetoImp="02" Descuento="17000.000000">
+			<cfdi:Impuestos>
+				<cfdi:Traslados>
+					<cfdi:Traslado Base="68000.000000" Importe="0.000000" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.000000"/>
+				</cfdi:Traslados>
+			</cfdi:Impuestos>
+		</cfdi:Concepto>
+	</cfdi:Conceptos>
+	<cfdi:Impuestos TotalImpuestosTrasladados="0.00">
+		<cfdi:Traslados>
+			<cfdi:Traslado Base="68000.00" Importe="0.00" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.000000"/>
+		</cfdi:Traslados>
+	</cfdi:Impuestos>
+	<cfdi:Complemento>
+		<cce20:ComercioExterior Version="2.0" ClaveDePedimento="A1" CertificadoOrigen="0" Incoterm="FCA" TipoCambioUSD="16.999500" TotalUSD="294.13">
+			<cce20:Emisor>
+				<cce20:Domicilio Calle="Campobasso Norte" NumeroExterior="3206" NumeroInterior="9000" Municipio="005" Estado="AGU" Pais="MEX" CodigoPostal="20914"/>
+			</cce20:Emisor>
+			<cce20:Receptor NumRegIdTrib="123456789">
+				<cce20:Domicilio Calle="77 Santa Barbara Rd" Estado="CA" Pais="USA" CodigoPostal="94523"/>
+			</cce20:Receptor>
+			<cce20:Mercancias>
+				<cce20:Mercancia NoIdentificacion="product_mx" FraccionArancelaria="7212100399" CantidadAduana="5.000" UnidadAduana="01" ValorUnitarioAduana="58.825260" ValorDolares="294.1300">
+                                    </cce20:Mercancia>
+			</cce20:Mercancias>
+		</cce20:ComercioExterior>
+		<tfd:TimbreFiscalDigital xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" Version="1.1" UUID="___ignore___" FechaTimbrado="___ignore___" RfcProvCertif="___ignore___" SelloCFD="___ignore___" NoCertificadoSAT="___ignore___" SelloSAT="___ignore___"/>
+	</cfdi:Complemento>
+</cfdi:Comprobante>

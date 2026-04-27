@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_order_form_inherit_l10n_mx_edi" model="ir.ui.view">
+        <field name="name">pos.order.form</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//header" position="inside">
+                <!-- Invisible fields -->
+                <field name="l10n_mx_edi_is_cfdi_needed" invisible="1"/>
+                <field name="l10n_mx_edi_update_sat_needed" invisible="1"/>
+
+                <button string="Update SAT"
+                        name="l10n_mx_edi_cfdi_try_sat"
+                        type="object"
+                        invisible="not l10n_mx_edi_update_sat_needed"/>
+            </xpath>
+
+            <xpath expr="//group[@name='order_fields']" position="inside">
+                <field name="l10n_mx_edi_cfdi_state"
+                       invisible="not l10n_mx_edi_cfdi_state or country_code != 'MX'"/>
+                <field name="l10n_mx_edi_cfdi_sat_state"
+                       invisible="not l10n_mx_edi_cfdi_sat_state or country_code != 'MX'"/>
+                <field name="l10n_mx_edi_cfdi_uuid"
+                       invisible="not l10n_mx_edi_cfdi_uuid or country_code != 'MX'"/>
+                <field name="l10n_mx_edi_usage"
+                       invisible="not l10n_mx_edi_usage or country_code != 'MX'"/>
+                <field name="l10n_mx_edi_cfdi_to_public"
+                       invisible="not l10n_mx_edi_is_cfdi_needed or country_code != 'MX'"
+                       readonly="l10n_mx_edi_cfdi_state in ('sent', 'global_sent')"/>
+            </xpath>
+
+            <!-- Documents tab -->
+            <xpath expr="//page[@name='notes']" position="after">
+                <page id="edi_documents"
+                      string="CFDI"
+                      invisible="not l10n_mx_edi_document_ids or country_code != 'MX'">
+                    <field name="l10n_mx_edi_document_ids">
+                        <list create="false" delete="false" edit="false" no_open="1">
+                            <!-- Invisible fields -->
+                            <field name="attachment_id" column_invisible="1"/>
+                            <field name="cancel_button_needed" column_invisible="1"/>
+                            <field name="retry_button_needed" column_invisible="1"/>
+                            <field name="show_button_needed" column_invisible="1"/>
+                            <field name="message" column_invisible="1"/>
+
+                            <!-- Visible fields -->
+                            <field name="datetime"/>
+                            <field name="state" widget="account_document_state"/>
+                            <field name="sat_state" invisible="not sat_state"/>
+                            <field name="attachment_uuid" optional="hide"/>
+                            <field name="attachment_origin" optional="hide"/>
+                            <field name="cancellation_reason" optional="hide"/>
+
+                            <button name="action_show_document"
+                                    type="object"
+                                    string="Show"
+                                    invisible="not show_button_needed"/>
+                            <button name="action_download_file"
+                                    type="object"
+                                    string="Download"
+                                    invisible="not attachment_id"/>
+                            <button name="action_retry"
+                                    type="object"
+                                    string="Retry"
+                                    invisible="not retry_button_needed"/>
+                            <button name="action_cancel"
+                                    type="object"
+                                    string="Cancel"
+                                    invisible="not cancel_button_needed"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="pos_order_tree_inherit_l10n_mx_edi" model="ir.ui.view">
+        <field name="name">pos.order.list.inherit.l10n_mx_edi</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="l10n_mx_edi_cfdi_uuid" optional="hide"/>
+                <field name="l10n_mx_edi_cfdi_state" optional="hide"/>
+                <field name="l10n_mx_edi_cfdi_sat_state" optional="hide"/>
+            </field>
+        </field>
+    </record>
+</odoo>

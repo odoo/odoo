@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_mrp_production_additional_workorder_wizard" model="ir.ui.view">
+        <field name="name">MRP Additional Workorder</field>
+        <field name="model">mrp_production.additional.workorder</field>
+        <field name="arch" type="xml">
+            <form string="Add Work Order">
+                <group>
+                    <group>
+                        <field name="blocked_by_workorder_id" placeholder="Will be placed at the beginning if emtpy" options="{'no_create': True, 'no_edit':True}"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="name"/>
+                        <field name="workcenter_id"/>
+                        <field name="duration_expected" widget="mrp_timer"/>
+                        <field name="date_start"/>
+                        <field name="employee_assigned_ids" widget="many2many_avatar_user"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="add_workorder" type="object" string="Add Work Order" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-default btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

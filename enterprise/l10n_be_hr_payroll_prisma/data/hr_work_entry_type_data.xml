@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- work entry -->
+    <record id="hr_work_entry.work_entry_type_attendance" model="hr.work.entry.type">
+        <field name="prisma_code">0001</field>
+    </record>
+
+    <record id="hr_work_entry.overtime_work_entry_type" model="hr.work.entry.type">
+        <field name="prisma_code">0140</field>
+    </record>
+
+    <!-- work entry contract -->
+    <record id="hr_work_entry_contract.work_entry_type_compensatory" model="hr.work.entry.type">
+        <field name="prisma_code">0120</field>
+    </record>
+
+    <record id="hr_work_entry_contract.work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="prisma_code">0380</field> 
+    </record>
+
+    <record id="hr_work_entry_contract.work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="prisma_code">0200</field>
+    </record>
+
+    <record id="hr_work_entry_contract.work_entry_type_home_working" model="hr.work.entry.type">
+        <field name="prisma_code">0001</field>
+    </record>
+
+    <record id="hr_work_entry_contract.work_entry_type_unpaid_leave" model="hr.work.entry.type">
+        <field name="prisma_code">0650</field>
+    </record>
+
+    <!-- base payroll-->
+    <record id="hr_payroll.hr_work_entry_type_out_of_contract" model="hr.work.entry.type">
+        <field name="prisma_code">0001</field>
+    </record>
+
+    <!-- be payroll-->
+    <record id="l10n_be_hr_payroll.work_entry_type_work_accident" model="hr.work.entry.type">
+        <field name="prisma_code"></field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_small_unemployment" model="hr.work.entry.type">
+        <field name="prisma_code">0110</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_phc" model="hr.work.entry.type">
+        <field name="prisma_code">0101</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_maternity" model="hr.work.entry.type">
+        <field name="prisma_code">ZV </field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_paternity_legal" model="hr.work.entry.type">
+        <field name="prisma_code">0532</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_training" model="hr.work.entry.type">
+        <field name="prisma_code">0005</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_training_time_off" model="hr.work.entry.type">
+        <field name="prisma_code">0160</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_flemish_training_time_off" model="hr.work.entry.type">
+        <field name="prisma_code">0161</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_recovery_additional" model="hr.work.entry.type">
+        <field name="prisma_code">0130</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_bank_holiday" model="hr.work.entry.type">
+        <field name="prisma_code">0100</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_unjustified_reason" model="hr.work.entry.type">
+        <field name="prisma_code">0652</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_european" model="hr.work.entry.type">
+        <field name="prisma_code">0203</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_breast_feeding" model="hr.work.entry.type">
+        <field name="prisma_code">0352</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_economic_unemployment" model="hr.work.entry.type">
+        <field name="prisma_code">0400</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_additional_paid" model="hr.work.entry.type">
+        <field name="prisma_code">0141</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_unpredictable" model="hr.work.entry.type">
+        <field name="prisma_code">0660</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_credit_time" model="hr.work.entry.type">
+        <field name="prisma_code">0505</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_medical_assistance" model="hr.work.entry.type">
+        <field name="prisma_code">0653</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_strike" model="hr.work.entry.type">
+        <field name="prisma_code">0470</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_youth_time_off" model="hr.work.entry.type">
+        <field name="prisma_code">0202</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_solicitation_time_off" model="hr.work.entry.type">
+        <field name="prisma_code">0165</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_paternity_company" model="hr.work.entry.type">
+        <field name="prisma_code">0111</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_long_sick" model="hr.work.entry.type">
+        <field name="prisma_code">0345</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_extra_legal" model="hr.work.entry.type">
+        <field name="prisma_code">0201</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_part_sick" model="hr.work.entry.type">
+        <field name="prisma_code">0308</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_recovery" model="hr.work.entry.type">
+        <field name="prisma_code">0138</field>
+    </record>
+
+    <record id="l10n_be_hr_payroll.work_entry_type_partial_incapacity" model="hr.work.entry.type">
+        <field name="prisma_code">0340</field>
+    </record>
+</odoo>

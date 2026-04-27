@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record model="ir.module.category" id="module_category_subscription_management">
+            <field name="name">Subscriptions</field>
+            <field name="description">Helps you handle subscriptions and recurring invoicing.</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="base.group_user" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('sale.group_discount_per_so_line'))]"/>
+        </record>
+
+
+        <record model="ir.rule" id="sale_subscription_log_multicompany">
+            <field name="name">Subscription log multi-company</field>
+            <field name="model_id" ref="model_sale_order_log"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="sale_subscription_plan_rule_company" model="ir.rule">
+            <field name="name">Subscription Plan multi-company</field>
+            <field name="model_id" ref="model_sale_subscription_plan"/>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        </record>
+
+        <record id="sale_subscription_pricing_rule_company" model="ir.rule">
+            <field name="name">Subscription Pricing multi-company</field>
+            <field name="model_id" ref="model_sale_subscription_pricing"/>
+            <field name="domain_force">['&amp;', ('company_id', 'in', [False] + company_ids), '|', ('pricelist_id', '=', False), ('pricelist_id.company_id', 'in', [False] + company_ids)]</field>
+        </record>
+
+        <!-- Reporting -->
+        <record model="ir.rule" id="sale_subscription_report_comp_rule">
+            <field name="name">Subscription Analysis multi-company</field>
+            <field name="model_id" ref="model_sale_subscription_report"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="sale_subscription_report_personal_rule" model="ir.rule">
+            <field name="name">Personal Subscription Analysis</field>
+            <field ref="model_sale_subscription_report" name="model_id"/>
+            <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
+            <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        </record>
+
+        <record id="sale_order_report_see_all" model="ir.rule">
+            <field name="name">All Orders Analysis</field>
+            <field ref="model_sale_subscription_report" name="model_id"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+        </record>
+
+    <record id="mail_plan_rule_group_sale_manager_order" model="ir.rule">
+        <field name="name">Manager can manage sale order plans</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+        <field name="model_id" ref="mail.model_mail_activity_plan"/>
+        <field name="domain_force">[('res_model', '=', 'sale.order')]</field>
+        <field name="perm_read" eval="False"/>
+    </record>
+
+    <record id="mail_plan_templates_rule_group_sale_manager_order" model="ir.rule">
+        <field name="name">Manager can manage sale order plan templates</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+        <field name="model_id" ref="mail.model_mail_activity_plan_template"/>
+        <field name="domain_force">[('plan_id.res_model', '=', 'sale.order')]</field>
+        <field name="perm_read" eval="False"/>
+    </record>
+
+    <record model="ir.rule" id="sale_subscription_log_report_multicompany">
+        <field name="name">Subscription log report multi-company</field>
+        <field name="model_id" ref="model_sale_order_log_report"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    </data>
+</odoo>

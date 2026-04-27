@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="job_board_campaign_manager_start" model="ir.cron">
+        <field name="name">Automatic Job Posting on job boards</field>
+        <field name="model_id" ref="model_hr_job_post"/>
+        <field name="state">code</field>
+        <field name="code">model._start_new_campaign()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+    </record>
+
+    <record id="job_board_campaign_manager_stop" model="ir.cron">
+        <field name="name">Automatic job posting deleting on job boards</field>
+        <field name="model_id" ref="model_hr_job_post"/>
+        <field name="state">code</field>
+        <field name="code">model._stop_finished_campaign()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+    </record>
+</odoo>

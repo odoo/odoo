@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_job_form" model="ir.ui.view">
+        <field name="name">hr.job.form.inherit.hr.recruitment.integration.base</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="priority">200</field>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="action_post_job"
+                        string="Publish on Job Board"
+                        type="object"
+                        class="oe_highlight"
+                        invisible="job_post_count"/>
+                <button name="action_post_job"
+                        string="Publish on Job Board"
+                        type="object"
+                        invisible="not job_post_count"/>
+            </header>
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button"
+                    icon="fa-newspaper-o"
+                    name="%(action_open_hr_job_post)d"
+                    context="{'search_default_job_id': id}"
+                    invisible="not job_post_count"
+                    type="action">
+                    <field
+                        name="job_post_count"
+                        widget="statinfo"
+                        string="Job Board"/>
+                </button>
+            </div>
+            <field name="contract_type_id" position="after">
+                <field name="schedule_id"/>
+                <field name="currency_id" invisible="True"/> <!-- necessary for the display of monetary fields -->
+                <label for="salary_min" string="Salary Range"/>
+                <div>
+                    <field name="salary_min" class="oe_inline"/> -
+                    <field name="salary_max" class="oe_inline"/> per
+                    <field name="payment_interval" class="oe_inline"/>
+                </div>
+            </field>
+
+            <xpath expr="//page[@name='job_description_page']" position="after">
+                <page string="Job Boards" name="job_boards">
+                    <separator string="Posts" name="posts"/>
+                    <div>
+                        <field name="job_post_ids">
+                            <list string="Posts">
+                                <field name="platform_id" widget="many2one_avatar"/>
+                                <field name="apply_method"/>
+                                <field name="status"
+                                    decoration-danger="status == 'failure'"
+                                    decoration-warning="status not in ('success', 'failure')"
+                                    decoration-success="status == 'success'"/>
+                            </list>
+                        </field>
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_job_kanban" model="ir.ui.view">
+        <field name="name">hr.job.kanban.inherit.hr.recruitment.integration.base</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='menu_view_job_posts']" position="after">
+                <div role="menuitem" name="open_job_posts">
+                    <a
+                        role="button"
+                        name="%(action_open_hr_job_post)d"
+                        context="{'search_default_job_id': id}"
+                        type="action">
+                        Job Board Posts
+                    </a>
+                </div>
+            </xpath>
+
+            <xpath expr="//div[@name='menu_new_applications']" position="after">
+                <div role="menuitem" name="post_job_on_job_board">
+                    <a name="action_post_job" type="object">Job Board Posts</a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

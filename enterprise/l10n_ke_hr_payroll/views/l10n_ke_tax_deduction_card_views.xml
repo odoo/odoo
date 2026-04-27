@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ke_tax_deduction_card_view_form" model="ir.ui.view">
+        <field name="name">l10n_ke.tax.deduction.card.form</field>
+        <field name="model">l10n_ke.tax.deduction.card</field>
+        <field name="arch" type="xml">
+            <form string="Tax Deduction Card">
+                <header>
+                    <button name="action_generate_declarations" string="Populate" type="object" class="btn-primary" invisible="lines_count" options="{'reload_on_button': true}"/>
+                    <button name="action_generate_declarations" string="Populate" type="object" class="btn-secondary" invisible="not lines_count" options="{'reload_on_button': true}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_declarations" type="object" class="oe_stat_button" icon="fa-users" invisible="not lines_count">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="lines_count"/></span>
+                                <span class="o_stat_text">Eligible Employees</span>
+                            </div>
+                        </button>
+                    </div>
+                    <group name="first_group">
+                        <group>
+                            <field name="year" class="o_hr_narrow_field"/>
+                            <field name="name"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <p name="save_warning">The files won't be posted in the employee portal if you don't have the Documents app.</p>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_ke_tax_deduction_card_action" model="ir.actions.act_window">
+        <field name="name">Tax Deduction Card</field>
+        <field name="res_model">l10n_ke.tax.deduction.card</field>
+        <field name="view_mode">list,form</field>
+        <field name="target">current</field>
+    </record>
+
+    <record id="action_report_tax_deduction_card" model="ir.actions.report">
+        <field name="name">Tax Deduction Card</field>
+        <field name="model">hr.employee</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_ke_hr_payroll.report_tax_deduction_card</field>
+        <field name="report_file">l10n_ke_hr_payroll.report_tax_deduction_card</field>
+        <field name="paperformat_id" ref="l10n_ke_hr_payroll.paperformat_ke_tax_deduction_card"/>
+        <field name="print_report_name">(object._get_report_base_filename())</field>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

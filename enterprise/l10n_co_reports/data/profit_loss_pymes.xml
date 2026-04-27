@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_co_pl_account_report_pymes" model="account.report">
+        <field name="name">Profit and Loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="country_id" ref="base.co"/>
+        <field name="filter_date_range" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_co_pl_account_report_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_co_pl_account_report_income" model="account.report.line">
+                <field name="name">Income</field>
+                <field name="code">L10N_CO_PNL_INCOME</field>
+                <field name="aggregation_formula">L10N_CO_PNL_IO.balance + L10N_CO_PNL_INO.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_co_pl_account_report_income_operational" model="account.report.line">
+                        <field name="code">L10N_CO_PNL_IO</field>
+                        <field name="name">Operational</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-41</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="l10n_co_pl_account_report_income_non_operational" model="account.report.line">
+                        <field name="code">L10N_CO_PNL_INO</field>
+                        <field name="name">Non-operational</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-42</field>
+                        <field name="groupby">account_id</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_co_pl_account_report_expenses" model="account.report.line">
+                <field name="name">Expenses</field>
+                <field name="code">L10N_CO_PNL_EXPENSES</field>
+                <field name="aggregation_formula" eval="False"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_co_pl_account_report_expenses_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">L10N_CO_PNL_E_ADMIN.balance + L10N_CO_PNL_E_SALES.balance + L10N_CO_PNL_DEPR.balance + L10N_CO_PNL_E_NO.balance</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_co_pl_account_report_expenses_admin" model="account.report.line">
+                        <field name="code">L10N_CO_PNL_E_ADMIN</field>
+                        <field name="name">Administrative Operations</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="groupby">account_id</field>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_co_pl_account_report_expenses_admin_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">51\(5160,5165)</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_co_pl_account_report_expenses_sales" model="account.report.line">
+                        <field name="code">L10N_CO_PNL_E_SALES</field>
+                        <field name="name">Sales Operations</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="groupby">account_id</field>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_co_pl_account_report_expenses_sales_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">52</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_co_pl_account_report_depreciation" model="account.report.line">
+                        <field name="code">L10N_CO_PNL_DEPR</field>
+                        <field name="name">Depreciation and Amortization</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="groupby">account_id</field>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_co_pl_account_report_depreciation_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">5160 + 5165</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_co_pl_account_report_expenses_non_operational" model="account.report.line">
+                        <field name="code">L10N_CO_PNL_E_NO</field>
+                        <field name="name">Non-operational</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="groupby">account_id</field>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_co_pl_account_report_expenses_non_operational_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">53</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_co_pl_account_report_sales_cost" model="account.report.line">
+                <field name="code">L10N_CO_PNL_COST_SALES</field>
+                <field name="name">Cost of Sales</field>
+                <field name="foldable" eval="True"/>
+                <field name="aggregation_formula" eval="False"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_co_pl_account_report_sales_cost_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">L10N_CO_PNL_COST_SNS.balance + L10N_CO_PNL_COST_PURCHASE.balance</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_co_pl_account_report_cost_sales_services" model="account.report.line">
+                        <field name="code">L10N_CO_PNL_COST_SNS</field>
+                        <field name="name">Cost of sales and provision of services</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="groupby">account_id</field>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_co_pl_account_report_cost_sales_services_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">61</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_co_pl_account_report_purchase_cost" model="account.report.line">
+                        <field name="code">L10N_CO_PNL_COST_PURCHASE</field>
+                        <field name="name">Purchases</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="groupby">account_id</field>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_co_pl_account_report_purchase_cost_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">62</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_co_pl_account_report_cost_production" model="account.report.line">
+                <field name="code">L10N_CO_PNL_COST_PROD</field>
+                <field name="name">Cost of Production</field>
+                <field name="foldable" eval="True"/>
+                <field name="aggregation_formula" eval="False"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_co_pl_account_report_cost_production_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">
+                            L10N_CO_PNL_RAW_MATERIAL.balance + L10N_CO_PNL_COST_LABOR.balance +
+                            L10N_CO_PNL_INDIRECT.balance + L10N_CO_PNL_COST_CONTRACTS.balance
+                        </field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_co_pl_account_report_raw_material" model="account.report.line">
+                        <field name="code">L10N_CO_PNL_RAW_MATERIAL</field>
+                        <field name="name">Raw Material</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="groupby">account_id</field>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_co_pl_account_report_raw_material_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">71</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_co_pl_account_report_cost_labor" model="account.report.line">
+                        <field name="code">L10N_CO_PNL_COST_LABOR</field>
+                        <field name="name">Direct Labor</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="groupby">account_id</field>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_co_pl_account_report_cost_labor_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">72</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_co_pl_account_report_cost_indirect" model="account.report.line">
+                        <field name="code">L10N_CO_PNL_INDIRECT</field>
+                        <field name="name">Indirect Costs</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="groupby">account_id</field>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_co_pl_account_report_cost_indirect_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">73</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_co_pl_account_report_cost_contracts" model="account.report.line">
+                        <field name="code">L10N_CO_PNL_COST_CONTRACTS</field>
+                        <field name="name">Service Contracts</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="groupby">account_id</field>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_co_pl_account_report_cost_contracts_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">74</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_co_pl_account_report_gains_losses" model="account.report.line">
+                <field name="code">L10N_CO_PNL_GAINS_LOSSES</field>
+                <field name="name">Gains and Losses</field>
+                <field name="foldable" eval="True"/>
+                <field name="groupby">account_id</field>
+                <field name="hierarchy_level">0</field>
+                <field name="account_codes_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_co_pl_account_report_gains_losses_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">59</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_co_pl_account_report_income_before_tax" model="account.report.line">
+                <field name="code">L10N_CO_PNL_BEFORE_TAX</field>
+                <field name="name">Net Income before Tax</field>
+                <field name="aggregation_formula">L10N_CO_PNL_INCOME.balance - L10N_CO_PNL_EXPENSES.balance - L10N_CO_PNL_COST_SALES.balance - L10N_CO_PNL_COST_PROD.balance + L10N_CO_PNL_GAINS_LOSSES.balance</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="l10n_co_pl_account_report_income_tax" model="account.report.line">
+                <field name="code">L10N_CO_PNL_TAX</field>
+                <field name="name">Income Tax</field>
+                <field name="foldable" eval="True"/>
+                <field name="groupby">account_id</field>
+                <field name="hierarchy_level">0</field>
+                <field name="account_codes_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_co_pl_account_report_income_tax_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">54</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_co_pl_account_report_net_income" model="account.report.line">
+                <field name="code">L10N_CO_PNL_NET_INCOME</field>
+                <field name="name">Net Income</field>
+                <field name="aggregation_formula">L10N_CO_PNL_BEFORE_TAX.balance - L10N_CO_PNL_TAX.balance</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+        </field>
+    </record>
+    <record id="action_l10n_co_pl_report" model="ir.actions.client">
+        <field name="name">Profit and Loss</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'model': 'account.report', 'report_id': ref('l10n_co_pl_account_report_pymes')}"/>
+    </record>
+</odoo>

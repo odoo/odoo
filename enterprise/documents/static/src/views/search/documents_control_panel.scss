@@ -1,0 +1,42 @@
+
+.o_documents_kanban_view, .o_documents_list_view {
+    .btn-group {
+        > .btn, .btn-group {
+            // Overriding rules from bootstrap_review_backend to ensure active
+            // button will always be rendered on top of stacked kanban cards or
+            // document previews.
+            &:active, &.active, &:active:hover, &.active:hover {
+                z-index: $zindex-dropdown;
+            }
+        }
+    }
+
+    @media (min-width: 992px) {
+        .o_control_panel_breadcrumbs {
+            min-height: 2.4125rem;
+        }
+    }
+
+    @include media-breakpoint-down(md) {
+        .o_control_panel_actions {
+            overflow: auto;
+            max-height: 3rem;
+            .o_list_selection_box {
+                position: fixed;
+                top: 0;
+                left: 0;
+            }
+            .btn-group {
+                position: unset;
+                max-height: 2.5rem;
+                .btn {
+                    width: fit-content;
+                    margin-top: 0.25rem;
+                }
+                .dropdown:first-of-type {
+                    position: unset;
+                }
+            }
+        }
+    }
+}

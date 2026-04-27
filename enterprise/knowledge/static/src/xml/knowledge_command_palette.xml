@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="KnowledgeCommandTemplate">
+        <div class="o_command_default px-4 py-2">
+            <div class="o_command_palette_box_header d-flex align-items-center">
+                <span class="pe-2" t-if="props.icon_string" t-out="props.icon_string"/>
+                <span class="pe-2 text-ellipsis">
+                    <t t-slot="name"/>
+                </span>
+                <icon t-if="props.isFavorite" class="fa fa-star o_favorite pe-2 position-static"/>
+                <span t-if="props.subjectName" class="text-muted small pe-2">—</span>
+                <span t-if="props.subjectName" class="o_command_name text-ellipsis text-muted small">
+                    <t t-foreach="props.splitSubjectName" t-as="name" t-key="name_index">
+                        <t t-if="name" t-out="name"/>
+                        <t t-else="">Untitled</t>
+                    </t>
+                </span>
+                <span class="ms-auto flex-shrink-0">
+                    <t t-slot="focusMessage"/>
+                </span>
+            </div>
+            <div t-if="props.headline"
+                t-out="props.headline"
+                class="border rounded text-muted my-2 p-2"/>
+        </div>
+    </t>
+
+    <t t-name="Knowledge404CommandTemplate">
+        <div class="o_command_hotkey">
+            <span>
+                No Article found.
+                <span class="text-primary">
+                    Create "<u t-out="props.articleName" />"
+                </span>
+            </span>
+        </div>
+    </t>
+
+    <t t-name="KnowledgeExtraCommandTemplate">
+        <div class="o_command_hotkey">
+            <span>
+                <icon class="fa fa-arrows-alt pe-2" />
+                <t t-if="props.name" t-out="props.name"/>
+                <t t-else="">Untitled</t>
+            </span>
+            <span>
+                <t t-foreach="getKeysToPress(props)" t-as="key" t-key="key_index">
+                    <kbd t-out="key" />
+                    <span t-if="!key_last"> + </span>
+                </t>
+            </span>
+        </div>
+    </t>
+
+    <t t-inherit="web.CommandPalette" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_command_palette_search')]/input" position="after">
+            <a t-if="this.state.namespace === '$'" role="button" class="btn btn-dark disabled py-0 rounded-pill">
+                Hidden
+            </a>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_loan_close_wizard" model="ir.ui.view">
+            <field name="name">account.loan.close.wizard.form</field>
+            <field name="model">account.loan.close.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        All draft entries after the
+                        <field name="date" class="oe-inline col-1"/>
+                        will be deleted and the loan will be marked as closed.
+                    </sheet>
+                    <footer>
+                        <button string="Apply" name="action_save" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_view_account_loan_close_wizard" model="ir.actions.act_window">
+            <field name="name">Close Loan Wizard</field>
+            <field name="res_model">account.loan.close.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_loan_close_wizard"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_normal_form_view_mps" model="ir.ui.view">
+        <field name="name">product.product.view.form.inherit.mrp.mps</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button groups="mrp.group_mrp_manager" class="oe_stat_button" name="mrp_mps.action_mrp_mps" type="action"
+                   icon="fa-area-chart" context="{'search_default_product_id': id}"  invisible="schedule_count == 0">
+                   <field string="Schedules" name="schedule_count" widget="statinfo" />
+               </button>
+           </xpath>
+       </field>
+   </record>
+</odoo>

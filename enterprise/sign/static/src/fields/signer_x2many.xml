@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="sign.SignerX2Many">
+        <div class="d-flex gap-2 mb-2 d-contents o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900" t-foreach="list.records" t-as="record" t-key="record.id">
+            <div class="d-flex flex-row">
+                <div t-if="shouldShowOrder" class="o_signer_one2many_mail_sent_order me-1" t-att-class="{ 'small': env.isSmall }">
+                    <IntegerField name="'mail_sent_order'" record="record"/>
+                </div>
+                <t t-set="labelId" t-value="record.id + partnerIdFieldInfo.name"/>
+                <label t-att-for="labelId" t-out="record.data['role_id'][1]" class="o_form_label"/>
+            </div>
+            <div class="o_field_wrap">
+                <Many2OneField id="labelId" name="partnerIdFieldInfo.name" record="record" t-props="partnerIdFieldInfo.additionalProps"/>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="l10n_ch_hr_payroll_elm_transmission.StatusResultWidgetTemplate">
+        <t t-if="this.state.parsedData">
+            <t t-if="this.state.parsedData.ResponseState">
+                <t t-set="response_state" t-value="this.state.parsedData.ResponseState"/>
+                <t t-set="error" t-value="None"/>
+            </t>
+            <t t-elif="this.state.parsedData.Info or this.state.parsedData.Warning">
+                <t t-set="response_state" t-value="this.state.parsedData"/>
+                <t t-set="error" t-value="None"/>
+            </t>
+            <t t-else="">
+                <t t-set="response_state" t-value="None"/>
+                <t t-set="error" t-value="this.state.parsedData"/>
+            </t>
+        </t>
+        <t t-else="">
+            <t t-set="response_state" t-value="None"/>
+            <t t-set="error" t-value="None"/>
+        </t>
+
+        <div class="o_swissdec_json_widget p-3">
+            <t t-if="response_state">
+                <!-- Warnings -->
+                <t t-if="response_state.Warning">
+                    <SwissdecNotification type="'warning'" notifications="response_state.Warning.Notification"/>
+                </t>
+                <!-- Infos -->
+                <t t-if="response_state.Info">
+                    <SwissdecNotification type="'info'" notifications="response_state.Info.Notification"/>
+                </t>
+            </t>
+            <t t-if="error">
+                <t t-if="error.EndUserInformation">
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading"><i class="fa fa-times-circle me-2"></i>Error</h4>
+                        <hr/>
+                        <p class="mb-0 text-muted" t-esc="error.EndUserInformation"/>
+                    </div>
+                </t>
+                <t t-if="error.DetailInformation">
+                    <div class="alert alert-danger mt-2" role="alert">
+                        <h4 class="alert-heading"><i class="fa fa-times-circle me-2"></i>Details</h4>
+                        <hr/>
+                        <p class="mb-0 text-muted" t-esc="error.DetailInformation"/>
+                    </div>
+                </t>
+                <t t-if="error.FaultInformation">
+                    <t t-set="fault_context" t-value="error.FaultInformation.FaultContext"/>
+                    <t t-set="Fault_state" t-value="error.FaultInformation.FaultState"/>
+
+                    <div class="card mt-2 border-danger">
+                        <div class="card-header bg-danger text-white">
+                            <i class="fa fa-bug me-2"></i>Fault Information
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mb-2">
+                                <li><b>InstitutionName:</b> <t t-esc="fault_context.InstitutionName"/></li>
+                                <li><b>TransmissionDate:</b> <t t-esc="fault_context.TransmissionDate"/></li>
+                                <li><b>ResponseID:</b> <t t-esc="fault_context.ResponseID"/></li>
+                                <li><b>RequestID:</b> <t t-esc="fault_context.RequestID"/></li>
+                            </ul>
+
+                            <!-- Fault Notifications -->
+                            <t t-if="Fault_state.Error">
+                                <SwissdecNotification type="'error'" notifications="Fault_state.Error.Notification"/>
+                            </t>
+                            <t t-if="Fault_state.Warning">
+                                <SwissdecNotification type="'warning'" notifications="Fault_state.Warning.Notification"/>
+                            </t>
+                            <t t-if="Fault_state.Info">
+                                <SwissdecNotification type="'info'" notifications="Fault_state.Info.Notification"/>
+                            </t>
+                        </div>
+                </div>
+            </t>
+            </t>
+        </div>
+    </t>
+</templates>

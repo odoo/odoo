@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="stock_warehouse_form_view_inherit_stock_intrastat" model="ir.ui.view">
+            <field name="name">stock.warehouse.form.inherit.stock.intrastat</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="company_country_id" invisible="1"/>
+                    <field name="intrastat_region_id"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

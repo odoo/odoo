@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <record id="view_select_printers_wizard" model="ir.ui.view">
+        <field name="name">select.printers.wizard.form</field>
+        <field name="model">select.printers.wizard</field>
+        <field name="arch" type="xml">
+            <form js_class="select_printers_wizard" string="Sales Details">
+                <field name="display_device_ids" invisible="1"/>
+                <group>
+                    <field name="device_ids" widget="many2many_tags" domain="[('id', 'in', display_device_ids)]" string="Printers"/>
+                </group>
+                <footer>
+                    <button string="Print" class="btn-primary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

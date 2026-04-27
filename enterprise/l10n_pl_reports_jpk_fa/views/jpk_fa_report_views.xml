@@ -1,0 +1,20 @@
+<odoo>
+    <data>
+
+        <record id="action_l10n_pl_jpk_fa_report" model="ir.actions.client">
+            <field name="name">JPK FA</field>
+            <field name="tag">account_report</field>
+            <field name="path">jpk-fa</field>
+            <field name="context" eval="{'report_id': ref('l10n_pl_reports_jpk_fa.jpk_fa_report')}"/>
+        </record>
+
+        <menuitem id="menu_action_l10n_pl_jpk_fa_report"
+                  name="JPK FA"
+                  action="action_l10n_pl_jpk_fa_report"
+                  parent="account.account_reports_legal_statements_menu"
+                  sequence="10"
+                  groups="account.group_account_readonly"
+        />
+
+    </data>
+</odoo>

@@ -1,0 +1,254 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_winbooks_import
+#
+# Translators:
+# Martin Trigaux, 2024
+# Manav Shah, 2025
+# Ujjawal Pathak, 2025
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2025-11-17 14:07+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/"
+"account_winbooks_import/hi/>\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.winbooks_import_form
+msgid ""
+"<span invisible=\"only_open\"/>\n"
+"                    <span class=\"text-warning mb4 mt16\" "
+"invisible=\"only_open\">\n"
+"                        The export of data from Winbooks for closed years "
+"might contain unbalanced entries. However if you want to try to import "
+"everything, Odoo will set the difference of balance in a Suspense Account.\n"
+"                    </span>"
+msgstr ""
+"<span invisible=\"only_open\"/>\n"
+"<span class=\"text-warning mb4 mt16\" invisible=\"only_open\">\n"
+"अगर आप Winbooks से पुराने सालों का डेटा Odoo में डालते हैं, तो हो सकता है कि कुछ लेन-देन "
+"का हिसाब बराबर न हो. ऐसे में, Odoo अपने आप उस फ़र्क को एक 'सस्पेंस अकाउंट' में डाल देगा, "
+"ताकि बाक़ी का डेटा सही से इंपोर्ट हो सके.\n"
+"</span>"
+
+#. module: account_winbooks_import
+#: model:ir.model,name:account_winbooks_import.model_account_winbooks_import_wizard
+msgid "Account Winbooks import wizard"
+msgstr "अकाउंट Winbooks इंपोर्ट विज़ॉर्ड"
+
+#. module: account_winbooks_import
+#: model:ir.model,name:account_winbooks_import.model_account_import_summary
+msgid "Account import summary view"
+msgstr "अकाउंट इंपोर्ट समरी व्यू"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+msgid "Accounting Settings"
+msgstr "अकाउंटिंग सेटिंग"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+msgid ""
+"At least one automatic counterpart has been created at import. This is "
+"probably an error. Please check entry lines with reference: Counterpart "
+"(generated at import from Winbooks)"
+msgstr ""
+"Winbooks का डेटा डालते समय सिस्टम ने अपने-आप कुछ एंट्री बना दी हैं. यह एक गलती हो सकती "
+"है. आप 'काउंटरपार्ट' नाम वाली सभी एंट्रीज़ को चेक कर लें."
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.winbooks_import_form
+msgid "Cancel"
+msgstr "रद्द"
+
+#. module: account_winbooks_import
+#: model:ir.model,name:account_winbooks_import.model_res_company
+msgid "Companies"
+msgstr "कंपनियां"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+msgid "Company Settings"
+msgstr "कंपनी सेटिंग"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+msgid "Counterpart (generated at import from Winbooks)"
+msgstr "काउंटरपार्ट (Winbooks से इंपोर्ट करते हुए बनाया गया)"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__create_uid
+msgid "Created by"
+msgstr "द्वारा निर्मित"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__create_date
+msgid "Created on"
+msgstr "इस तारीख को बनाया गया"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__display_name
+msgid "Display Name"
+msgstr "डिस्प्ले नाम"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__zip_file
+msgid "File"
+msgstr "फ़ाइल"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__id
+msgid "ID"
+msgstr "आईडी"
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.winbooks_import_form
+msgid "Import"
+msgstr "इंपोर्ट करें"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_import_summary__import_summary_analytic_ids
+msgid "Import Summary Analytic"
+msgstr "समरी एनालिटिक इंपोर्ट करें"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_import_summary__import_summary_analytic_line_ids
+msgid "Import Summary Analytic Line"
+msgstr "समरी एनालिटिक लाइन इंपोर्ट करें"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_import_summary__import_summary_len_analytic
+msgid "Import Summary Len Analytic"
+msgstr "समरी लेन एनालिटिक इंपोर्ट करें"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_import_summary__import_summary_len_analytic_line
+msgid "Import Summary Len Analytic Line"
+msgstr "समरी लेन एनालिटिक लाइन इंपोर्ट करें"
+
+#. module: account_winbooks_import
+#. odoo-javascript
+#: code:addons/account_winbooks_import/static/src/xml/account_winbooks_import.xml:0
+msgid "Import WBK"
+msgstr "WBK इंपोर्ट करें"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__only_open
+msgid "Import only open years"
+msgstr "सिर्फ़ उन सालों का डेटा इंपोर्ट करें जिनका हिसाब-किताब अभी चल रहा है"
+
+#. module: account_winbooks_import
+#: model:ir.model,name:account_winbooks_import.model_account_move_line
+msgid "Journal Item"
+msgstr "जर्नल आइटम"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__write_uid
+msgid "Last Updated by"
+msgstr "इन्होंने आखिरी बार अपडेट किया"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__write_date
+msgid "Last Updated on"
+msgstr "आखिरी बार अपडेट हुआ"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,help:account_winbooks_import.field_account_move_line__winbooks_line_id
+msgid "Line ID that was used in Winbooks"
+msgstr "Winbooks में इस्तेमाल किया गया लेन-देन का आईडी नंबर"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+msgid ""
+"No data zip in the main archive. Please use the complete Winbooks export."
+msgstr ""
+"आप Winbooks से जो डेटा लाए हैं, उसमें एक ज़रूरी ज़िप फ़ाइल नहीं है. आपको Winbooks का पूरा "
+"डेटा फिर से लाना होगा."
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+msgid "Please define the country on your company."
+msgstr "अपनी कंपनी का देश चुनें या बताएं."
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.winbooks_import_form
+msgid "Stage Search"
+msgstr "स्टेज सर्च"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__suspense_code
+msgid "Suspense Account Code"
+msgstr "सस्पेंस अकाउंट कोड"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+msgid "The code for the Suspense Account you entered doesn't match any account"
+msgstr "आपने जो सस्पेंस अकाउंट का कोड डाला है, वह किसी भी अकाउंट से नहीं मिल रहा है"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,help:account_winbooks_import.field_account_winbooks_import_wizard__suspense_code
+msgid ""
+"This is the code of the account in which you want to put the counterpart of "
+"unbalanced moves. This might be an account from your Winbooks data, or an "
+"account that you created in Odoo before the import."
+msgstr ""
+"यह वह अकाउंट है जिसमें आप उन एंट्रीज़ को डालेंगे जिनका हिसाब-किताब Winbooks से इंपोर्ट "
+"करते समय बराबर नहीं था. यह अकाउंट या तो Winbooks में पहले से था या फिर आपने खास तौर "
+"पर Odoo में बनाया है."
+
+#. module: account_winbooks_import
+#: model:ir.actions.act_window,name:account_winbooks_import.winbooks_import_action
+msgid "Winbooks Import"
+msgstr "Winbooks इंपोर्ट"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_move_line__winbooks_line_id
+msgid "Winbooks Line"
+msgstr "Winbooks लाइन"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,help:account_winbooks_import.field_account_winbooks_import_wizard__only_open
+msgid ""
+"Years closed in Winbooks are likely to have incomplete data. The counter "
+"part of incomplete entries will be set in a suspense account"
+msgstr ""
+"जिन सालों का हिसाब-किताब Winbooks में बंद हो चुका है, उनका डेटा पूरी तरह से सही नहीं "
+"हो सकता है. ऐसे में, जो भी एंट्रीज़ अधूरी या बेमेल होंगी, उनका हिसाब एक सस्पेंस अकाउंट में "
+"डाल दिया जाएगा."
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+msgid "You should install a Fiscal Localization first."
+msgstr "आपको पहले अपने देश के टैक्स और अकाउंटिंग नियम इंस्टॉल करने होंगे."
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.account_import_summary_form
+msgid "account analytic lines imported"
+msgstr "अकाउंट एनालिटिक लाइन इंपोर्ट किया गया"
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.account_import_summary_form
+msgid "account analytics imported"
+msgstr "अकाउंट एनालिटिक इंपोर्ट किया गया"
+
+#~ msgid "Tax Group"
+#~ msgstr "टैक्स ग्रुप"

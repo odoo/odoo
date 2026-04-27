@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="account_online_synchronization.AOSKanbanView" t-inherit="account.BankRecoKanbanController" t-inherit-mode="extension">
+        <xpath expr="//Layout" position="before">
+            <t t-if="displayDuplicateWarning">
+                <div class="alert alert-warning text-center mb-0" role="alert">
+                    Some transactions <a class="alert-link" href="" t-on-click.prevent="onWarningClick">may be duplicates.</a>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

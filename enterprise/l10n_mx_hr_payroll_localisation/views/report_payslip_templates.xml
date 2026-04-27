@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="report_payslip_mx_temp" inherit_id="l10n_mx_hr_payroll.report_payslip_mx" primary="True">
+        <td id="other_infos" position="inside">
+            <div>
+                <strong class="me-2">Integration Factor:</strong>
+                <span t-field="o.l10n_mx_integration_factor"/>
+            </div>
+        </td>
+    </template>
+</odoo>

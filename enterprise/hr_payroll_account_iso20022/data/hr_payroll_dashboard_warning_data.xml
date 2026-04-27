@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="hr_payroll_dashboard_warning_employee_invalid_bank_account" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees With Invalid Bank Accounts</field>
+            <field name="country_id" eval="False"/>
+            <field name="evaluation_code">
+employee_bank_data = self.env['hr.employee']._get_account_holder_employees_data()
+invalid_iban_emp_ids = self.env['hr.employee']._get_invalid_iban_employee_ids(employee_bank_data)
+if invalid_iban_emp_ids:
+    warning_count = len(invalid_iban_emp_ids)
+    warning_records = self.env['hr.employee'].browse(invalid_iban_emp_ids)
+            </field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_untrusted_bank_accounts" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees with untrusted Bank Account numbers</field>
+            <field name="country_id" eval="False"/>
+            <field name="evaluation_code">
+employee_bank_data = self.env['hr.employee']._get_account_holder_employees_data()
+untrusted_bank_employee_ids = self.env['hr.employee']._get_untrusted_bank_employee_ids(employee_bank_data)
+untrusted_bank_accounts = (self.env['hr.employee'].browse(untrusted_bank_employee_ids))['bank_account_id']
+if untrusted_bank_accounts:
+    warning_count = len(untrusted_bank_accounts)
+    warning_records = untrusted_bank_accounts
+            </field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_employee_no_country" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees Without Any Country</field>
+            <field name="country_id" eval="False"/>
+            <field name="color">1</field>
+            <field name="evaluation_code">
+employees_no_country = self.env['hr.employee'].search([
+    ('private_country_id', '=', False), ('user_partner_id.country_id', '=', False)])
+if employees_no_country:
+    warning_count = len(employees_no_country)
+    warning_records = employees_no_country
+            </field>
+        </record>
+
+    </data>
+</odoo>

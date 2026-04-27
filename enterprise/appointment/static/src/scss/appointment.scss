@@ -1,0 +1,129 @@
+.o_appointment_index {
+    .o_half_screen_height {
+        min-height: 200px !important;
+    }
+    .o_appointment_appointments_list {
+        .o_appointment_unpublished {
+            bottom: 0;
+            padding: $card-spacer-y $card-spacer-x;
+        }
+        .o_wappointment_card_staff_users {
+            padding-bottom: $card-spacer-y/1.5;
+        }
+    }
+    .o_appointment_appointments_list_selection {
+        #appointment_type_id {
+            height: 2.5rem;
+            &:disabled {
+                background-color: #FAFAFA;
+            }
+        }
+    }
+    .o_appointment_svg {
+        max-width: 400px;
+    }
+}
+
+.o_appointment_days {
+    .o_today {
+        & .o_day_wrapper::after {
+            content: "";
+            @include o-position-absolute($left: 50%);
+            width: 2.5em;
+            height: .16em;
+            bottom: map-get($spacers, 1);
+            transform: translateX(-50%);
+            background-color: map-get($theme-colors, 'danger');
+            border-radius: $border-radius-pill;
+            transition: $btn-transition;
+        }
+
+        & .o_day_wrapper.active::after, .o_slot_button:hover::after {
+            $-danger-hue: hue(map-get($theme-colors, 'danger'));
+            $-primary-hue: hue(map-get($theme-colors, 'primary'));
+
+            background-color: if($-primary-hue > ($-danger-hue + 70) or $-primary-hue < ($-danger-hue - 70), map-get($theme-colors, 'danger'), currentColor);
+        }
+    }
+}
+
+.o_appointment_month {
+    min-height: 336px;
+}
+
+.o_appointment_add_to_calendar_btns a {
+    border: 1px solid #DEE2E6;
+    &:hover {
+        background-color: $gray-200;
+    }
+}
+
+.o_appointment_avatar_container {
+    position: relative;
+
+    .o_appointment_avatar_background {
+        @include o-position-absolute(0, 0, 0, 0);
+
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+}
+
+.o_appointment_avatar_background {
+    background-color: mix(map-get($theme-colors, 'primary'), $body-bg, 20%);
+}
+
+.o_appointment_user_avatar {
+    width: 32px;
+    height: 32px;
+    margin-left: -8px;
+    border: 1px solid #fff;
+    font-size: 12px;
+    background-size: cover;
+    &:first-child {
+        margin-left: 0px;
+    }
+    &:only-child {
+        margin-right: 0.5rem;
+    }
+}
+
+.o_appointment_disable_calendar {
+    pointer-events: none;
+    opacity: 60%;
+}
+
+@media (max-width: 768px) {
+    .o_website_calendar_weekdays th {
+        font-size: 14px;
+        padding: 0px;
+    }
+    
+    .o_appointment_days td {
+        font-size: 14px;
+        padding: 0px;
+    }
+    
+    .o_day_wrapper {
+        font-size: 14px;
+        padding: 0px;
+    }
+}
+
+@media (max-width: 340px) {
+    .o_website_calendar_weekdays th {
+        font-size: 11px;
+        padding: 0px;
+    }
+    
+    .o_appointment_days td {
+        font-size: 11px;
+        padding: 0px;
+    }
+    
+    .o_day_wrapper {
+        font-size: 11px;
+        padding: 0px;
+    }
+}

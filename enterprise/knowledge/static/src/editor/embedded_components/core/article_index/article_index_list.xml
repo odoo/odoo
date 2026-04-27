@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="knowledge.ArticleIndexList">
+        <t t-call="knowledge.ArticleIndexNestedList">
+            <t t-set="articles" t-value="props.articles"/>
+        </t>
+    </t>
+
+    <t t-name="knowledge.ArticleIndexNestedList">
+        <ol>
+            <t t-foreach="articles" t-as="article" t-key="article_index">
+                <li>
+                    <a class="d-block p-1"
+                       t-attf-href="/knowledge/article/#{article.id}"
+                       t-out="article.name"
+                       t-on-click="(ev) => this.onArticleLinkClick(ev, article.id)"/>
+                </li>
+                <li t-if="article.childIds and article.childIds.length !== 0">
+                    <t t-call="knowledge.ArticleIndexNestedList">
+                        <t t-set="articles" t-value="article.childIds"/>
+                    </t>
+                </li>
+            </t>
+        </ol>
+    </t>
+</templates>

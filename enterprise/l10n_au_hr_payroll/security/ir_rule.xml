@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="ir_rule_l10n_au_super_account_multi_company" model="ir.rule">
+        <field name="name">HR Payroll AU Super Accounts: Multi Company</field>
+        <field name="model_id" ref="model_l10n_au_super_account"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+</odoo>

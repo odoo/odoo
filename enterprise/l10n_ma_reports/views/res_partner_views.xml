@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_partner_property_form" model="ir.ui.view">
+            <field name="name">res.partner.property.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='accounting']/group" position="inside">
+                    <group string="morocco" name="l10n_ma_group">
+                        <field name="l10n_ma_customs_vat" invisible="country_code != 'MA'" groups="base.group_no_one"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

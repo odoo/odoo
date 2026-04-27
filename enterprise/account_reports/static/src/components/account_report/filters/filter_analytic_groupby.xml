@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportFilterAnalyticGroupby">
+        <Dropdown
+            menuClass="'account_report_filter analytic_groupby'"
+        >
+            <button class="btn btn-secondary">
+                <i class="oi oi-group me-1"/>Analytic
+            </button>
+
+            <t t-set-slot="content">
+                <div class="dropdown-item gap-2 align-items-center">
+                    <label>Accounts</label>
+                    <MultiRecordSelector t-props="getMultiRecordSelectorProps('account.analytic.account', 'analytic_accounts_groupby')"/>
+                </div>
+
+                <div class="dropdown-item gap-2 align-items-center">
+                    <label>Plans</label>
+                    <MultiRecordSelector t-props="getMultiRecordSelectorProps('account.analytic.plan', 'analytic_plans_groupby')"/>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

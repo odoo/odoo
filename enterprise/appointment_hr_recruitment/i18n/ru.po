@@ -1,0 +1,144 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* appointment_hr_recruitment
+#
+# Translators:
+# Anastasiia Koroleva, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Anastasiia Koroleva, 2025\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,body_html:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; "
+"border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <h2>Hello,</h2>\n"
+"            <div style=\"font-size: 13px;\">\n"
+"                Thanks for your application and interest in <t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t>.<br/>\n"
+"                <br/>\n"
+"                I would like to organize a phone interview with you, it "
+"should last about 30 min.\n"
+"                We'll go through your resume and motivations to join the <t "
+"t-out=\"object.company_id.name or ''\">YourCompany</t> team.\n"
+"                You can book a slot in our agenda by cliking on the button "
+"below.<br/>\n"
+"            </div>\n"
+"            <br/>\n"
+"            <a t-att-"
+"href=\"env['ir.config_parameter'].sudo().get_param('web.base.url') + '/book/"
+"interview'\" style=\"background-color: #875a7b; text-decoration: none; "
+"color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Schedule my "
+"interview</a><br/>\n"
+"            <br/>\n"
+"            Best regards,\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; "
+"border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <h2>Здравствуйте!</h2>\n"
+"            <div style=\"font-size: 13px;\">\n"
+"                Спасибо за вашу заявку и интерес к <t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t>.<br/>\n"
+"                <br/>\n"
+"                 Я хотел бы организовать с вами собеседование по телефону, "
+"оно продлиться около 30 минут.\n"
+"                Мы рассмотрим ваше резюме и обсудим мотивацию присоединиться "
+"к команде <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"                Вы можете забронировать слот в нашем календаре, нажав на "
+"кнопку ниже.<br/>\n"
+"            </div>\n"
+"            <br/>\n"
+"            <a t-att-"
+"href=\"env['ir.config_parameter'].sudo().get_param('web.base.url') + '/book/"
+"interview'\" style=\"background-color: #875a7b; text-decoration: none; "
+"color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Запланировать "
+"собеседование</a><br/>\n"
+"            <br/>\n"
+"            С наилучшими пожеланиями,\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
+
+#. module: appointment_hr_recruitment
+#: model:ir.model.fields,field_description:appointment_hr_recruitment.field_appointment_invite__applicant_id
+#: model:ir.model.fields,field_description:appointment_hr_recruitment.field_calendar_event__applicant_id
+msgid "Applicant"
+msgstr "Кандидат"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model,name:appointment_hr_recruitment.model_appointment_invite
+msgid "Appointment Invite"
+msgstr "Приглашение на встречу"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model,name:appointment_hr_recruitment.model_appointment_type
+msgid "Appointment Type"
+msgstr "Тип встречи"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model,name:appointment_hr_recruitment.model_calendar_event
+msgid "Calendar Event"
+msgstr "Календарное событие"
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,subject:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid ""
+"Can we plan an interview together for your {{ (object.job_id.name + ' ') if "
+"object.job_id else '' }}application?"
+msgstr ""
+"Можем ли мы вместе запланировать собеседование по вашей заявке на должность "
+"{{ (object.job_id.name + ' ') if object.job_id else '' }}?"
+
+#. module: appointment_hr_recruitment
+#: model:appointment.type,name:appointment_hr_recruitment.appointment_type_interviews
+msgid "Interviews availabilities"
+msgstr "Возможность проведения собеседований"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model.fields,help:appointment_hr_recruitment.field_appointment_invite__applicant_id
+#: model:ir.model.fields,help:appointment_hr_recruitment.field_calendar_event__applicant_id
+msgid ""
+"Link an applicant to the appointment invite created.\n"
+"Used when creating an invitation from the Meeting action in the applicant "
+"form view."
+msgstr ""
+"Связывает кандидата с созданным приглашением на встречу.\n"
+"Используется при создании приглашения из действия «Встреча» в представлении "
+"формы кандидата."
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,name:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid "Recruitment: Schedule interview"
+msgstr "Подбор персонала: Запланируйте собеседование"
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,description:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid "Send this email when you want to schedule an interview with a candidate"
+msgstr ""
+"Отправить это электронное письмо, если вы хотите назначить собеседование с "
+"кандидатом"

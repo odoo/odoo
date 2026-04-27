@@ -1,0 +1,360 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* documents_project
+#
+# Translators:
+# Chloe Wang, 2024
+# 何彬 <vnsoft.he@gmail.com>, 2025
+# Raymond Yu <cl_yu@hotmail.com>, 2025
+# Wil Odoo, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:47+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_add_draft
+msgid "Add Tag Draft"
+msgstr "添加草稿标签"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_add_to_validate
+msgid "Add Tag To Validate"
+msgstr "添加待验证标签"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_add_validated
+msgid "Add Tag Validated"
+msgstr "添加已验证标签"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_ask_for_validation_code
+msgid "Ask For Validation - Check conditions"
+msgstr "请求验证-检查条件"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_ask_for_validation
+msgid "Ask for validation"
+msgstr "请求验证"
+
+#. module: documents_project
+#: model:ir.model,name:documents_project.model_ir_attachment
+msgid "Attachment"
+msgstr "附件"
+
+#. module: documents_project
+#: model_terms:ir.ui.view,arch_db:documents_project.edit_project_document_form_inherit
+msgid "Categorize and share your documents with your customers"
+msgstr "将文档分类并与客户共享"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_create_a_task_code
+#: model:ir.actions.server,name:documents_project.ir_actions_server_create_project_task
+msgid "Create a Task"
+msgstr "创建一个任务"
+
+#. module: documents_project
+#: model:ir.model.fields,field_description:documents_project.field_project_project__documents_tag_ids
+msgid "Default Tags"
+msgstr "默认标记"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_create_project_deprecate
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_add_deprecated
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_remove_deprecated
+msgid "Deprecate"
+msgstr "不赞成"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_deprecate_code
+msgid "Deprecate - Check conditions"
+msgstr "废弃-检查条件"
+
+#. module: documents_project
+#: model:ir.model,name:documents_project.model_documents_document
+msgid "Document"
+msgstr "单据"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/controllers/portal.py:0
+#: code:addons/documents_project/models/project_project.py:0
+#: model:ir.actions.act_window,name:documents_project.action_view_documents_project_project
+#: model:ir.actions.act_window,name:documents_project.action_view_documents_project_task
+#: model:ir.embedded.actions,name:documents_project.project_embedded_action_documents
+#: model:ir.embedded.actions,name:documents_project.project_embedded_action_documents_dashboard
+#: model:ir.model.fields,field_description:documents_project.field_project_project__use_documents
+#: model:ir.model.fields,field_description:documents_project.field_project_task__document_ids
+#: model_terms:ir.ui.view,arch_db:documents_project.portal_my_task
+#: model_terms:ir.ui.view,arch_db:documents_project.portal_tasks_list
+#: model_terms:ir.ui.view,arch_db:documents_project.project_sharing_project_task_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:documents_project.project_view_kanban_inherit_documents
+#: model_terms:ir.ui.view,arch_db:documents_project.view_task_form2_document_inherit
+msgid "Documents"
+msgstr "文档"
+
+#. module: documents_project
+#: model_terms:ir.ui.view,arch_db:documents_project.edit_project_document_form_inherit
+msgid "Documents &amp; Analytics"
+msgstr "文档和分析"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "Documents already linked to a task."
+msgstr "文档已链接到任务。"
+
+#. module: documents_project
+#: model:ir.model.fields,field_description:documents_project.field_project_project__documents_folder_id
+msgid "Folder"
+msgstr "文件夹"
+
+#. module: documents_project
+#: model:ir.model.fields,help:documents_project.field_project_project__documents_folder_id
+#: model:ir.model.fields,help:documents_project.field_project_task__documents_folder_id
+msgid ""
+"Folder in which all of the documents of this project will be categorized. "
+"All of the attachments of your tasks will be automatically added as "
+"documents in this workspace as well."
+msgstr ""
+"此项目所有文件进行分类的文件夹。 所有任务附件也会以文件形式，自动加入此工作"
+"区。"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "Impossible to create a task on a deprecated document"
+msgstr "无法在已弃用的文件上创建任务"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid ""
+"Impossible to update write `res_id` without `access_internal` for records "
+"with different `res_models` when some are linked to projects or tasks."
+msgstr ""
+"当一些记录与项目或任务相关联时，对于具有不同 `res_models` 的记录，无法在没有 "
+"`access_internal` 的情况下更新写入的 `res_id`。"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "Invalid project search"
+msgstr "无效项目搜索"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "Invalid task search"
+msgstr "无效任务搜索"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_mark_as_draft_code
+msgid "Mark As Draft - Check conditions"
+msgstr "标记为草稿 - 检查条件"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_mark_as_draft
+msgid "Mark as draft"
+msgstr "标记为草稿"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "New task from Documents"
+msgstr "来自文档的新任务"
+
+#. module: documents_project
+#: model:ir.model,name:documents_project.model_project_project
+#: model_terms:ir.ui.view,arch_db:documents_project.document_view_search_inherit
+msgid "Project"
+msgstr "项目"
+
+#. module: documents_project
+#: model:ir.model.fields,field_description:documents_project.field_documents_document__project_ids
+msgid "Projects"
+msgstr "项目"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_remove_draft
+msgid "Remove Tag Draft"
+msgstr "移除草稿标签"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_remove_to_validate
+msgid "Remove Tag To Validate"
+msgstr "移除标签以进行验证"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_tag_remove_validated
+msgid "Remove Tag Validated"
+msgstr "移除已验证的标签"
+
+#. module: documents_project
+#: model:ir.model,name:documents_project.model_documents_tag
+msgid "Tag"
+msgstr "标签"
+
+#. module: documents_project
+#: model:ir.model,name:documents_project.model_project_task
+#: model_terms:ir.ui.view,arch_db:documents_project.document_view_search_inherit
+msgid "Task"
+msgstr "任务"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "Task created from document %s"
+msgstr "从文档创建的任务 %s"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "Task created from documents"
+msgstr "从文档创建的任务"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/project_task.py:0
+msgid "Task's Documents"
+msgstr "任务文档"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/project_project.py:0
+msgid ""
+"The \"%(folder)s\" folder should either be in the \"%(company)s\" company "
+"like this project or be open to all companies."
+msgstr ""
+"%(folder)s 文件夹应与本项目一样位于%(company)s公司内，或者对所有公司开放。"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid ""
+"The \"%s\" workspace is required by the Project application and cannot be "
+"archived."
+msgstr "\"%s\" 工作区是项目管理所需要的，不可以归档。"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid ""
+"The \"%s\" workspace is required by the Project application and cannot be "
+"deleted."
+msgstr "“%s”工作区是项目应用程序所需的，无法删除"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid ""
+"This action can't be performed, as it would remove the workspaces used by "
+"the following projects:\n"
+"%(projects)s\n"
+"To continue, choose different workspaces or turn off the Documents feature "
+"for these projects."
+msgstr ""
+"不能执行此操作，因为它会删除以下项目使用的工作区：\n"
+"%(projects)s\n"
+"要继续，请为这些项目选择不同的工作空间或关闭文档功能。"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid ""
+"This folder should remain in the same company as the \"%(project)s\" project "
+"to which it is linked. Please update the company of the \"%(project)s\" "
+"project, or leave the company of this workspace empty."
+msgstr ""
+"该文件夹应与所链接的 “%(project)s” 项目位于同一公司。请更新 “%(project)s” 项"
+"目的公司，或将此工作区的公司留空。"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid ""
+"This folder should remain in the same company as the following projects to "
+"which it is linked:\n"
+"%s\n"
+"\n"
+"Please update the company of those projects, or leave the company of this "
+"workspace empty."
+msgstr ""
+"该文件夹应与它所链接的下列项目位于同一公司：\n"
+"%s\n"
+"\n"
+"请更新这些项目的公司，或将此工作区的公司留空。"
+
+#. module: documents_project
+#: model_terms:ir.actions.act_window,help:documents_project.action_view_documents_project_project
+#: model_terms:ir.actions.act_window,help:documents_project.action_view_documents_project_task
+msgid ""
+"Upload <span class=\"fw-normal\">a file or </span>drag <span class=\"fw-"
+"normal\">it here.</span>"
+msgstr ""
+"上传<span class=\"fw-normal\">一个文件或者</span>拖动<span class=\"fw-"
+"normal\">到这里。</span>"
+
+#. module: documents_project
+#: model:ir.model.fields,field_description:documents_project.field_project_task__folder_user_permission
+msgid "User permission"
+msgstr "用户权限"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_ask_validate
+msgid "Validate"
+msgstr "验证"
+
+#. module: documents_project
+#: model:ir.actions.server,name:documents_project.ir_actions_server_validate_code
+msgid "Validate - Check conditions"
+msgstr "验证 - 检查条件"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/project_project.py:0
+msgid ""
+"You cannot change the company of this project, because its workspace is "
+"linked to the other following projects that are still in the \"%"
+"(other_company)s\" company:\n"
+"%(other_workspaces)s\n"
+"\n"
+"Please update the company of all projects so that they remain in the same "
+"company as their workspace, or leave the company of the \"%(workspace)s\" "
+"workspace blank."
+msgstr ""
+"不可变更此项目的公司，因为它的工作区仍连接至属于%(other_company)s公司的以下其"
+"他项目：\n"
+"%(other_workspaces)s\n"
+"\n"
+"请更新所有项目的公司，使它们与工作区保持在同一家公司；或者，您可将%"
+"(workspace)s工作区的公司字段留空。"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "You cannot create a task from a folder."
+msgstr "您无法从文件夹创建任务。"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "You cannot set a company on the %s folder."
+msgstr "不能在%s文件夹中设置公司。"
+
+#. module: documents_project
+#. odoo-python
+#: code:addons/documents_project/models/documents_document.py:0
+msgid "new %(model)s from %(new_record)s"
+msgstr "新增%(model)s建基于%(new_record)s"

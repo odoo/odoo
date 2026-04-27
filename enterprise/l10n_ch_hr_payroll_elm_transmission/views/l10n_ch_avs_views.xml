@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_ch_social_insurance_view_tree" model="ir.ui.view">
+        <field name="name">l10n.ch.social.insurance.view.tree</field>
+        <field name="model">l10n.ch.social.insurance</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll.l10n_ch_social_insurance_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="insurance_company" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_ch_social_insurance_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.social.insurance.view.form</field>
+        <field name="model">l10n.ch.social.insurance</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll.l10n_ch_social_insurance_view_form"/>
+        <field name="arch" type="xml">
+        <sheet position="replace">
+            <sheet string="Swiss Social Insurance (AVS)">
+                <div class="oe_title">
+                    <label for="name" class="o_form_label" />
+                    <h1>
+                        <field name="name" placeholder="e.g. 'Social Insurance AK Bern'"/>
+                    </h1>
+                </div>
+
+                <group>
+                    <group>
+                        <field name="company_id" required="1" groups="base.group_multi_company"/>
+                        <field name="insurance_code"
+                            placeholder="e.g. '003.000'"
+                            required="1"
+                            string="Insurance Code (AK-Nr.)"/>
+                        <field name="member_number"
+                            placeholder="e.g. '100-9976.9'"
+                            required="1"
+                            string="Member Number"/>
+                        <field name="member_subnumber"
+                            placeholder="e.g. '001'"
+                            string="Sub-Number"/>
+                    </group>
+                    <group>
+                        <field name="age_start"
+                            required="1"
+                            string="Minimum Contributing Age"/>
+                        <field name="age_stop_male"
+                            required="1"
+                            string="Retirement Age (Male)"/>
+                        <field name="age_stop_female"
+                            required="1"
+                            string="Retirement Age (Female)"/>
+                    </group>
+                </group>
+
+                <separator string="Other Company Insurances" colspan="4"/>
+
+                <group colspan="2" col="2">
+                    <group string="LAA Insurance (Accident)" >
+                        <field name="laa_insurance_id" />
+                        <field name="laa_insurance_from"
+                            required="laa_insurance_id"
+                            string="Valid From"/>
+                        <field name="no_laa_reason"
+                            invisible="laa_insurance_id"
+                            required="not laa_insurance_id"
+                            string="If no LAA, specify reason"/>
+                    </group>
+                    <group string="LPP Insurance (Pension Fund)">
+                        <field name="lpp_insurance_id" />
+                        <field name="lpp_insurance_from"
+                            required="lpp_insurance_id"
+                            string="Valid From"/>
+                        <field name="no_lpp_reason"
+                            invisible="lpp_insurance_id"
+                            required="not lpp_insurance_id"
+                            string="If no LPP, specify reason"/>
+                    </group>
+                </group>
+
+                <notebook>
+                    <page string="AVS / AC Rates">
+                        <group string="Old-age and Survivors' Insurance (AVS)" colspan="2">
+                            <field name="avs_line_ids" nolabel="1" colspan="2">
+                                <list editable="top">
+                                    <field name="date_from" string="Valid From"/>
+                                    <field name="date_to" string="Until"/>
+                                    <field name="employee_rate" string="Employee Rate"/>
+                                    <field name="employer_rate" string="Employer Rate"/>
+                                    <field name="admin_fees" string="Admin Fees %"/>
+                                </list>
+                            </field>
+                        </group>
+                        <group string="Unemployment Insurance (AC)" colspan="2">
+                            <field name="ac_line_ids" nolabel="1" colspan="2">
+                                <list editable="top">
+                                    <field name="date_from" string="Valid From"/>
+                                    <field name="date_to" string="Until"/>
+                                    <field name="employee_rate" string="AC Employee Rate"/>
+                                    <field name="employer_rate" string="AC Employer Rate"/>
+                                    <field name="employee_additional_rate" string="ACC Employee Rate"/>
+                                    <field name="employer_additional_rate" string="ACC Employer Rate"/>
+                                </list>
+                            </field>
+                        </group>
+                    </page>
+
+                    <page string="Exoneration and Thresholds">
+                        <group string="Yearly AC Maximum Salary" colspan="2">
+                            <field name="l10n_ch_avs_ac_threshold_ids" nolabel="1" colspan="2">
+                                <list editable="top">
+                                    <field name="date_from" string="Valid From"/>
+                                    <field name="date_to" string="Until"/>
+                                    <field name="amount" string="AC Threshold"/>
+                                </list>
+                            </field>
+                        </group>
+                        <group string="Yearly ACC Maximum Salary" colspan="2">
+                            <field name="l10n_ch_avs_acc_threshold_ids" nolabel="1" colspan="2">
+                                <list editable="top">
+                                    <field name="date_from" string="Valid From"/>
+                                    <field name="date_to" string="Until"/>
+                                    <field name="amount" string="ACC Threshold"/>
+                                </list>
+                            </field>
+                        </group>
+                        <group string="Monthly Retired Employees AVS/AC Exoneration" colspan="2">
+                            <field name="l10n_ch_avs_rente_ids" nolabel="1" colspan="2">
+                                <list editable="top">
+                                    <field name="date_from" string="Valid From"/>
+                                    <field name="date_to" string="Until"/>
+                                    <field name="amount" string="Exoneration Amount"/>
+                                </list>
+                            </field>
+                        </group>
+                    </page>
+                </notebook>
+            </sheet>
+        </sheet>
+        </field>
+    </record>
+</odoo>

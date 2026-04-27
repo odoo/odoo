@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_co_reports_iva" model="account.report">
+        <field name="name">Retención en IVA</field>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_partner" eval="False"/>
+        <field name="filter_show_draft" eval="False"/>
+        <field name="filter_unreconciled" eval="False"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_date_range" eval="True"/>
+        <field name="default_opening_date_filter">this_year</field>
+        <field name="search_bar" eval="True"/>
+        <field name="custom_handler_model_id" ref="model_l10n_co_iva_report_handler"/>
+        <field name="column_ids">
+            <record id="l10n_co_reports_iva_bimestre" model="account.report.column">
+                <field name="name">Bimestre</field>
+                <field name="expression_label">bimestre</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="l10n_co_reports_iva_balance" model="account.report.column">
+                <field name="name">Retenido Consignado</field>
+                <field name="expression_label">balance</field>
+            </record>
+            <record id="l10n_co_reports_iva_balance_15_over_19" model="account.report.column">
+                <field name="name">Monto del Pago Sujeto Retención</field>
+                <field name="expression_label">balance_15_over_19</field>
+            </record>
+            <record id="l10n_co_reports_iva_tax_base_amount" model="account.report.column">
+                <field name="name">Monto Total Operación</field>
+                <field name="expression_label">tax_base_amount</field>
+                <field name="blank_if_zero" eval="True"/>
+            </record>
+            <record id="l10n_co_reports_iva_percentage" model="account.report.column">
+                <field name="name">%</field>
+                <field name="expression_label">percentage</field>
+                <field name="figure_type">percentage</field>
+                <field name="blank_if_zero" eval="True"/>
+            </record>
+        </field>
+    </record>
+
+    <record id="action_account_report_iva" model="ir.actions.client">
+        <field name="name">Certificado de Retención en IVA</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('l10n_co_reports.l10n_co_reports_iva')}" />
+    </record>
+
+    <menuitem id="menu_action_account_report_iva" name="Certificado de Retención en IVA" action="action_account_report_iva" parent="account_reports_co_statements_menu"/>
+</odoo>

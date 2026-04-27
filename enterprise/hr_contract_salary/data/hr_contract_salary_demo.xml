@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.user_demo" model="res.users">
+        <field name="groups_id" eval="[(4, ref('sign.group_sign_user'))]"/>
+    </record>
+
+    <record id="benefit_extra_time_off" model="hr.contract.salary.benefit">
+        <field name="name">Extra Time Off</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.contract'), ('name', '=', 'holidays')])"/>
+        <field name="sequence">35</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_monthly_benefit"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee"/>
+        <field name="icon">fa fa-suitcase</field>
+        <field name="display_type">slider</field>
+        <field name="uom">days</field>
+        <field name="description">In addition to your legal leaves, you can chose up to 30 extra days off.
+            The amount of annual time off (legal leaves) you get depends on your work schedule in the previous year. A full-time work schedule through the 12 months of the last year, under your contract, will grant you 20 annual time off (legal leaves).</field>
+        <field name="slider_min">0</field>
+        <field name="slider_max">30</field>
+    </record>
+
+    <record id="ir_attachment_cdi_developer_contract" model="ir.attachment">
+        <field name="type">binary</field>
+        <field name="datas" type="base64" file="hr_contract_salary/static/src/demo/employee_contract.pdf"/>
+        <field name="name">employee_contract.pdf</field>
+    </record>
+
+    <record id="sign_template_cdi_developer" model="sign.template">
+        <field name="attachment_id" ref="hr_contract_salary.ir_attachment_cdi_developer_contract"/>
+        <field name="sign_item_ids" eval="[(6, 0, [])]"/>
+    </record>
+
+    <record id="ir_attachment_cdi_developer_contract" model="ir.attachment">
+        <field name="res_model">sign.template</field>
+        <field name="res_id" ref="sign_template_cdi_developer"/>
+    </record>
+
+    <record id="sign_item_cdi_developer_01" model="sign.item">
+        <field name="type_id" ref="sign.sign_item_type_text"/>
+        <field name="name">employee_id.legal_name</field>
+        <field name="required" eval="True"/>
+        <field name="responsible_id" ref="sign.sign_item_role_employee"/>
+        <field name="page">1</field>
+        <field name="posX">0.257</field>
+        <field name="posY">0.160</field>
+        <field name="template_id" ref="hr_contract_salary.sign_template_cdi_developer"/>
+        <field name="width">0.150</field>
+        <field name="height">0.015</field>
+    </record>
+
+    <record id="sign_item_cdi_developer_02" model="sign.item">
+        <field name="type_id" ref="sign.sign_item_type_date"/>
+        <field name="name"></field>
+        <field name="required" eval="True"/>
+        <field name="responsible_id" ref="sign.sign_item_role_employee"/>
+        <field name="page">1</field>
+        <field name="posX">0.693</field>
+        <field name="posY">0.160</field>
+        <field name="template_id" ref="hr_contract_salary.sign_template_cdi_developer"/>
+        <field name="width">0.150</field>
+        <field name="height">0.015</field>
+    </record>
+
+    <record id="sign_item_cdi_developer_03" model="sign.item">
+        <field name="type_id" ref="sign.sign_item_type_text"/>
+        <field name="name">employee_id.private_city</field>
+        <field name="required" eval="True"/>
+        <field name="responsible_id" ref="sign.sign_item_role_employee"/>
+        <field name="page">1</field>
+        <field name="posX">0.480</field>
+        <field name="posY">0.184</field>
+        <field name="template_id" ref="hr_contract_salary.sign_template_cdi_developer"/>
+        <field name="width">0.170</field>
+        <field name="height">0.015</field>
+    </record>
+
+    <record id="sign_item_cdi_developer_04" model="sign.item">
+        <field name="type_id" ref="sign.sign_item_type_text"/>
+        <field name="name">employee_id.private_country_id.name</field>
+        <field name="required" eval="True"/>
+        <field name="responsible_id" ref="sign.sign_item_role_employee"/>
+        <field name="page">1</field>
+        <field name="posX">0.663</field>
+        <field name="posY">0.184</field>
+        <field name="template_id" ref="hr_contract_salary.sign_template_cdi_developer"/>
+        <field name="width">0.150</field>
+        <field name="height">0.015</field>
+    </record>
+
+    <record id="sign_item_cdi_developer_05" model="sign.item">
+        <field name="type_id" ref="sign.sign_item_type_text"/>
+        <field name="name">employee_id.private_street</field>
+        <field name="required" eval="True"/>
+        <field name="responsible_id" ref="sign.sign_item_role_employee"/>
+        <field name="page">1</field>
+        <field name="posX">0.189</field>
+        <field name="posY">0.185</field>
+        <field name="template_id" ref="hr_contract_salary.sign_template_cdi_developer"/>
+        <field name="width">0.270</field>
+        <field name="height">0.015</field>
+    </record>
+
+    <record id="sign_item_cdi_developer_06" model="sign.item">
+        <field name="type_id" ref="sign.sign_item_type_date"/>
+        <field name="name"></field>
+        <field name="required" eval="True"/>
+        <field name="responsible_id" ref="hr_contract_sign.sign_item_role_job_responsible"/>
+        <field name="page">2</field>
+        <field name="posX">0.649</field>
+        <field name="posY">0.613</field>
+        <field name="template_id" ref="hr_contract_salary.sign_template_cdi_developer"/>
+        <field name="width">0.150</field>
+        <field name="height">0.015</field>
+    </record>
+
+    <record id="sign_item_cdi_developer_07" model="sign.item">
+        <field name="type_id" ref="sign.sign_item_type_signature"/>
+        <field name="name"></field>
+        <field name="required" eval="True"/>
+        <field name="responsible_id" ref="hr_contract_sign.sign_item_role_job_responsible"/>
+        <field name="page">2</field>
+        <field name="posX">0.287</field>
+        <field name="posY">0.579</field>
+        <field name="template_id" ref="hr_contract_salary.sign_template_cdi_developer"/>
+        <field name="width">0.200</field>
+        <field name="height">0.050</field>
+    </record>
+
+    <record id="sign_item_cdi_developer_08" model="sign.item">
+        <field name="type_id" ref="sign.sign_item_type_signature"/>
+        <field name="name"></field>
+        <field name="required" eval="True"/>
+        <field name="responsible_id" ref="sign.sign_item_role_employee"/>
+        <field name="page">2</field>
+        <field name="posX">0.285</field>
+        <field name="posY">0.661</field>
+        <field name="template_id" ref="hr_contract_salary.sign_template_cdi_developer"/>
+        <field name="width">0.200</field>
+        <field name="height">0.050</field>
+    </record>
+
+    <record id="sign_item_cdi_developer_09" model="sign.item">
+        <field name="type_id" ref="sign.sign_item_type_date"/>
+        <field name="name"></field>
+        <field name="required" eval="True"/>
+        <field name="responsible_id" ref="sign.sign_item_role_employee"/>
+        <field name="page">2</field>
+        <field name="posX">0.649</field>
+        <field name="posY">0.695</field>
+        <field name="template_id" ref="hr_contract_salary.sign_template_cdi_developer"/>
+        <field name="width">0.150</field>
+        <field name="height">0.015</field>
+    </record>
+
+    <record id="hr_contract_cdi_experienced_developer" model="hr.contract">
+        <field name="name">Experienced Developer</field>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee"/>
+        <field name="job_id" ref="hr.job_developer"/>
+        <field name="wage">2650</field>
+        <field name="wage_on_signature">2650</field>
+        <field name="sign_template_id" ref="sign_template_cdi_developer"/>
+        <field name="contract_update_template_id" ref="sign_template_cdi_developer"/>
+    </record>
+
+    <record id="hr.job_developer" model="hr.job">
+        <field name="default_contract_id" ref="hr_contract_cdi_experienced_developer"/>
+    </record>
+
+    <record id="partner_developper" model="res.partner">
+        <field name='is_company'>false</field>
+        <field name="name">Billy Kyle</field>
+        <field name="email">billy_kyle@example.com</field>
+        <field name="image_1920" type="base64" file="hr_contract_salary/static/img/employee_chs-image.jpg"/>
+    </record>
+
+    <record id="hr_candidate_developper" model="hr.candidate">
+        <field name="email_from">billy_kyle@example.com</field>
+        <field name="partner_name">Billy Kyle</field>
+        <field name="partner_phone">(555)-233-3213</field>
+        <field name="partner_id" ref="partner_developper"/>
+    </record>
+
+    <record id="hr_applicant_developper" model="hr.applicant">
+        <field name="candidate_id" ref="hr_candidate_developper"/>
+        <field name="job_id" ref="hr.job_developer"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="type_id" ref="hr_recruitment.degree_graduate"/>
+        <field name="categ_ids" eval="[(6,0,[ref('hr_recruitment.tag_applicant_it')])]"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="priority">0</field>
+        <field name="stage_id" ref="hr_recruitment.stage_job5"/>
+    </record>
+
+    <function model="hr.applicant" name="action_generate_offer" eval="[[ref('hr_applicant_developper')]]"/>
+    <function model="hr.applicant" name="create_employee_from_applicant" eval="[[ref('hr_applicant_developper')]]"/>
+
+    <record id="hr_contract_applicant_developer" model="hr.contract">
+        <field name="name">Billy Kyle Contract</field>
+        <field name="date_start" eval="(DateTime.now())"/>
+        <field name="employee_id" model="hr.employee" search="[('name', '=', 'Billy Kyle')]"/>
+        <field eval="3100.0" name="wage"/>
+        <field eval="3100.0" name="wage_on_signature"/>
+        <field name="state">open</field>
+        <field name="kanban_state">normal</field>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee"/>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="default_contract_id" ref="hr_contract_cdi_experienced_developer"/>
+        <field name="sign_template_id" ref="hr_contract_salary.sign_template_cdi_developer"/>
+        <field name="contract_update_template_id" ref="hr_contract_salary.sign_template_cdi_developer"/>
+        <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+        <field name="applicant_id" ref="hr_applicant_developper"/>
+    </record>
+
+    <function model="hr.contract.salary.offer" name="write">
+        <value model="hr.contract.salary.offer" search="[('applicant_id','=',ref('hr_applicant_developper'))]"/>
+        <value eval="{'state': 'full_signed'}"/>
+    </function>
+
+    <function model="hr.employee" name="write">
+        <value model="hr.employee" search="[('name','=','Billy Kyle')]"/>
+        <value model="res.partner" eval="{'image_1920': obj(ref('partner_developper')).image_1920}"/>
+    </function>
+</odoo>

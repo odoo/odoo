@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="crm_opportunity_view_graph" model="ir.ui.view">
+            <field name="name">crm.lead.graph.view</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <graph string="Opportunities" sample="1">
+                    <field name="stage_id"/>
+                    <field name="date_deadline" interval="month"/>
+                    <field name="color" invisible="1"/>
+                    <field name="automated_probability" invisible="1"/>
+                    <field name="message_bounce" invisible="1"/>
+                    <field name="probability" invisible="1"/>
+                    <field name="recurring_revenue_monthly" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_monthly_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_pivot" model="ir.ui.view">
+            <field name="name">crm.lead.pivot.view</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <pivot string="Leads" display_quantity="1" sample="1">
+                    <field name="user_id" type="row"/>
+                    <field name="expected_revenue" type="measure"/>
+                    <field name="prorated_revenue" type="measure"/>
+                    <field name="day_close" type="measure"/>
+                    <field name="color" invisible="1"/>
+                    <field name="automated_probability" invisible="1"/>
+                    <field name="message_bounce" invisible="1"/>
+                    <field name="probability" invisible="1"/>
+                    <field name="recurring_revenue_monthly" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_monthly_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_pivot_forecast" model="ir.ui.view">
+            <field name="name">crm.lead.view.pivot.forecast.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_pivot_forecast"/>
+            <field name="arch" type="xml">
+                <xpath expr="field[@name='probability']" position="after">
+                    <field name="days_to_convert" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_graph" model="ir.ui.view">
+            <field name="name">crm.lead.graph.view</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <graph string="leads" type="line" sample="1">
+                    <field name="create_date" interval="week"/>
+                    <field name="color" invisible="1"/>
+                    <field name="automated_probability" invisible="1"/>
+                    <field name="message_bounce" invisible="1"/>
+                    <field name="probability" invisible="1"/>
+                    <field name="recurring_revenue_monthly" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_monthly_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_graph_forecast" model="ir.ui.view">
+            <field name="name">crm.lead.view.graph.forecast.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_graph_forecast"/>
+            <field name="arch" type="xml">
+                <xpath expr="field[@name='probability']" position="after">
+                    <field name="days_to_convert" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_map" model="ir.ui.view">
+            <field name="name">crm.lead.view.map</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <map res_partner="partner_id">
+                    <field name="partner_id" string="Customer"/>
+                </map>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_cohort" model="ir.ui.view">
+            <field name="name">crm.lead.view.cohort</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <cohort string="Opportunities" date_start="create_date" date_stop="date_closed" interval="week" mode="churn" sample="1">
+                    <field name="color" invisible="1"/>
+                    <field name="automated_probability" invisible="1"/>
+                    <field name="message_bounce" invisible="1"/>
+                    <field name="probability" invisible="1"/>
+                    <field name="recurring_revenue_monthly" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_monthly_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                </cohort>
+            </field>
+        </record>
+
+        <record id="crm.action_report_crm_lead_salesteam" model="ir.actions.act_window">
+            <field name="view_mode">graph,pivot,list,form,cohort</field>
+        </record>
+
+        <!-- dashboard action -->
+        <record id="crm_opportunity_action_dashboard" model="ir.actions.act_window">
+            <field name="name">Pipeline Analysis</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">graph,pivot,cohort,list,form</field>
+            <field name="context">{
+                'list_view_ref': 'crm.crm_case_tree_view_oppor',
+                'default_type': 'opportunity',
+                'search_default_filter_opportunity': True,
+                'search_default_filter_create_date': 1}</field>
+            <field name="search_view_id" ref="crm.crm_opportunity_report_view_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data found!
+                </p><p>
+                    Use this menu to have an overview of your Pipeline.
+                </p>
+            </field>
+        </record>
+
+        <record id="crm_opportunity_action_dashboard_pivot" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="crm.crm_lead_view_pivot"/>
+            <field name="act_window_id" ref="crm_enterprise.crm_opportunity_action_dashboard"/>
+        </record>
+
+        <record id="crm_opportunity_action_dashboard_graph" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="crm_enterprise.crm_opportunity_view_graph"/>
+            <field name="act_window_id" ref="crm_enterprise.crm_opportunity_action_dashboard"/>
+        </record>
+
+        <record id="crm_opportunity_action_dashboard_cohort" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">cohort</field>
+            <field name="view_id" ref="crm_enterprise.crm_lead_view_cohort"/>
+            <field name="act_window_id" ref="crm_enterprise.crm_opportunity_action_dashboard"/>
+        </record>
+
+        <record id="crm_opportunity_action_dashboard_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="4"/>
+            <field name="view_mode">list</field>
+            <field name="view_id" ref="crm.crm_lead_view_tree_opportunity_reporting"/>
+            <field name="act_window_id" ref="crm_enterprise.crm_opportunity_action_dashboard"/>
+        </record>
+
+        <!-- add map to pipeline action -->
+        <record id="crm_lead_action_pipeline_view_map" model="ir.actions.act_window.view">
+            <field name="sequence" eval="7"/>
+            <field name="view_mode">map</field>
+            <field name="view_id" ref="crm_enterprise.crm_lead_view_map"/>
+            <field name="act_window_id" ref="crm.crm_lead_action_pipeline"/>
+        </record>
+
+        <!-- add cohort to res partner action -->
+        <record id="crm_opportunity_partner_add_cohort" model="ir.actions.act_window.view">
+            <field name="sequence" eval="6"/>
+            <field name="view_mode">cohort</field>
+            <field name="act_window_id" ref="crm.crm_lead_opportunities"/>
+        </record>
+
+        <!-- add dashboard to lead report action -->
+        <record id="crm.crm_opportunity_report_action_lead" model="ir.actions.act_window">
+            <field name="view_mode">graph,pivot,list</field>
+        </record>
+
+        <!-- menuitem -->
+        <record id="crm.crm_opportunity_report_menu" model="ir.ui.menu">
+            <field name="action" ref="crm_enterprise.crm_opportunity_action_dashboard"/>
+        </record>
+
+    </data>
+</odoo>

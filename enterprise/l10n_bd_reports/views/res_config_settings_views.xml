@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_bd_reports</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='default_accounts']" position="inside">
+                <setting id="l10n_bd_enable_corporate" string="Corporate Tax Closing" company_dependent="1" invisible="country_code != 'BD'" help="Select a liability and an expense account for the corporate tax closing entry.">
+                    <div class="content-group">
+                        <div class="row">
+                            <label for="l10n_bd_corporate_tax_liability" class="col-lg-4 o_light_label"/>
+                            <field name="l10n_bd_corporate_tax_liability" class="w-50"/>
+                        </div>
+                        <div class="row">
+                            <label for="l10n_bd_corporate_tax_expense" class="col-lg-4 o_light_label"/>
+                            <field name="l10n_bd_corporate_tax_expense" class="w-50"/>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

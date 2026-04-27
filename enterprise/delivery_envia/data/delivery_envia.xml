@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Default Package Types -->
+        <record id="envia_packaging_box" model="stock.package.type">
+            <field name="name">Envia Box</field>
+            <field name="shipper_package_code">box</field>
+            <field name="envia_mail_type">box</field>
+            <field name="package_carrier_type">envia</field>
+            <field name="packaging_length">300</field>
+            <field name="width">300</field>
+            <field name="height">250</field>
+        </record>
+        <record id="envia_packaging_envelope" model="stock.package.type">
+            <field name="name">Envia Envelope</field>
+            <field name="shipper_package_code">envelope</field>
+            <field name="envia_mail_type">envelope</field>
+            <field name="package_carrier_type">envia</field>
+            <field name="packaging_length">200</field>
+            <field name="width">20</field>
+            <field name="height">150</field>
+        </record>
+        <record id="envia_packaging_pallet" model="stock.package.type">
+            <field name="name">Envia Pallet</field>
+            <field name="shipper_package_code">pallet</field>
+            <field name="envia_mail_type">pallet</field>
+            <field name="package_carrier_type">envia</field>
+            <field name="packaging_length">1000</field>
+            <field name="width">1200</field>
+            <field name="height">1600</field>
+        </record>
+
+        <!-- Envia Delivery Carrier Data -->
+        <record id="product_product_delivery_envia" model="product.product">
+            <field name="name">Envia.com</field>
+            <field name="default_code">Envia</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="delivery.product_category_deliveries"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">0.0</field>
+            <field name="taxes_id" eval='[(5,)]'/>  <!-- no taxes -->
+        </record>
+        <record id="delivery_carrier_envia" model="delivery.carrier">
+            <field name="name">Envia.com</field>
+            <field name="product_id" ref="delivery_envia.product_product_delivery_envia"/>
+            <field name="envia_default_package_type_id" ref="envia_packaging_box"/>
+            <field name="delivery_type">envia</field>
+        </record>
+    </data>
+</odoo>
+

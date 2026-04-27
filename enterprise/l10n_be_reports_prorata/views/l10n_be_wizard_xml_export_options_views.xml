@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_account_financial_report_export" model="ir.ui.view">
+            <field name="name">l10n_be_reports_prorata.periodic.vat.xml.export.form</field>
+            <field name="model">l10n_be_reports.periodic.vat.xml.export</field>
+            <field name="inherit_id" ref="l10n_be_reports.view_account_financial_report_export"/>
+            <field name="arch" type="xml">
+                <xpath  expr="/form/div" position="before">
+                    <div class="alert alert-warning oe_edit_only" role="alert"
+                        invisible="special_prorata_deduction == 0
+                                   or special_prorata_1 != 0
+                                   or special_prorata_2 != 0
+                                   or special_prorata_3 != 0
+                                   or special_prorata_4 != 0
+                                   or special_prorata_5 != 0">
+                        If the field '% Special pro rata deduction' is filled, one of the fields 'Special pro rata' must be filled
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='comment']" position="after">
+                    <field name="is_prorata_necessary" invisible="not show_prorata"/>
+                    <field name="prorata_year" invisible="not is_prorata_necessary" required="is_prorata_necessary"/>
+                    <field name="prorata" invisible="not is_prorata_necessary"/>
+                </xpath>
+                <xpath expr="//group" position="inside">
+                    <div name="prorata_percentages" invisible="not is_prorata_necessary">
+                        <span>Actual Use Incoming Transactions</span>
+                        <group>
+                            <field name="prorata_at_100"/>
+                            <field name="prorata_at_0"/>
+                            <field name="special_prorata_deduction"/>
+                            <field name="special_prorata_1" invisible="special_prorata_deduction == 0"/>
+                            <field name="special_prorata_2" invisible="special_prorata_deduction == 0"/>
+                            <field name="special_prorata_3" invisible="special_prorata_deduction == 0"/>
+                            <field name="special_prorata_4" invisible="special_prorata_deduction == 0"/>
+                            <field name="special_prorata_5" invisible="special_prorata_deduction == 0"/>
+                            <field name="submit_more" invisible="special_prorata_1 == 0
+                                                                 or special_prorata_2 == 0
+                                                                 or special_prorata_3 == 0
+                                                                 or special_prorata_4 == 0
+                                                                 or special_prorata_5 == 0"/>
+                        </group>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

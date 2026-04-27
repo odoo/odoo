@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+        <record id="stock_valuation_layer_tree_inherit" model="ir.ui.view">
+            <field name="name">stock.valuation.layer.list.inherit</field>
+            <field name="model">stock.valuation.layer</field>
+            <field name="inherit_id" ref="stock_account.stock_valuation_layer_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_valuation_at_date']" position="after">
+                    <button
+                        name="action_get_pe_ple_reports"
+                        string="PLE Reports"
+                        type="object"
+                        class="btn-primary ms-1"
+                        display="always"
+                    />
+                </xpath>
+            </field>
+        </record>
+</odoo>

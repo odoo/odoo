@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_task" inherit_id="project.portal_my_task">
+        <xpath expr="//div[@t-if='task.date_deadline']" position="replace">
+            <div t-if="task.planned_date_begin">
+                <strong>Planned Date:</strong>
+                <span t-field="task.planned_date_begin" t-options='{"widget": "datetime"}'/>
+                <i class="fa fa-long-arrow-right"/>
+                <span t-field="task.date_deadline" t-options='{"widget": "datetime"}'/>
+            </div>
+            <div t-elif="task.date_deadline">
+                <strong>Deadline:</strong> <span t-field="task.date_deadline" t-options='{"widget": "datetime"}'/>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

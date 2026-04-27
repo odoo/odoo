@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="l10n_ec_edi.report_invoice_document">
+        <!-- Replaces the payment methods table so that it shows multiple payment methods and their amount. -->
+        <xpath expr="//div[@id='sri_payment_method']//tbody" position="attributes">
+            <attribute name="t-if">not o.sudo().pos_order_ids</attribute>
+        </xpath>
+        <xpath expr="//div[@id='sri_payment_method']//tbody" position="after">
+                <tbody t-else="">
+                    <t t-foreach="o._l10n_ec_get_payment_data()" t-as="payment">
+                        <tr>
+                            <td t-esc="payment['payment_name']"/>
+                            <td class="text-end">
+                                <span t-esc="payment['payment_total']"
+                                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+        </xpath>
+    </template>
+</odoo>

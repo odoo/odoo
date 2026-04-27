@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="sale_timesheet_enterprise.TimesheetLeaderboard">
+        <div class="d-flex align-items-center z-1 o_timesheet_leaderboard">
+            <img t-if="props.showLeaderboard and props.leaderboard.current_employee?.index === 0" class="o_timesheet_leaderboard_confetti position-absolute top-0 end-0 o_object_fit_cover h-100 w-100" src="/base/static/img/onboarding_confetti.svg" alt="o_timesheet_leaderboard_confetti"/>
+            <div t-if="props.showLeaderboard" class="position-relative btn btn-outline-secondary d-flex align-items-center justify-content-between px-2 py-1 gap-2" t-on-click="openLeaderboardPopup" role="button">
+                <t t-if="props.leaderboard.leaderboard?.length &gt; 0">
+                    <t t-foreach="props.leaderboard.leaderboard.slice(0, avatarDisplayLimit)" t-as="employee" t-key="employee_index">
+                        <Many2OneAvatarRankField rank="employee_index + 1" id="employee.id" size="'button'"/>
+                    </t>
+                    <t t-if="props.leaderboard.current_employee?.index + 1 &gt; avatarDisplayLimit">
+                        <span class="fs-2">···</span>
+                        <Many2OneAvatarRankField rank="props.leaderboard.current_employee.index + 1" id="props.leaderboard.current_employee.id" size="'button'"/>
+                    </t>
+                </t>
+                <t t-else="">
+                    <div class="px-1" t-foreach="[1, 2, 3].slice(0, avatarDisplayLimit)" t-as="rank" t-key="rank">
+                        <Many2OneAvatarRankField rank="rank" class="'pe-1'"/>
+                    </div>
+                </t>
+            </div>
+            <div t-if="props.showIndicators" class="d-flex flex-column flex-nowrap text-muted ms-2">
+                <span>
+                    <t t-if="props.leaderboard.current_employee">
+                        <span>Billing: </span>
+                        <span t-if="!isMobile" t-esc="currentBillingText"/>
+                        <span t-attf-class="{{ props.leaderboard.current_employee.billing_rate &gt;= 100 ? 'text-success' : 'text-danger' }}" t-esc="currentBillingRateText"/>
+                        <br/>
+                        <span>Total: </span>
+                        <span t-att-class="{'text-danger': props.leaderboard.current_employee.total_valid_time &lt; props.leaderboard.total_time_target}">
+                            <t t-esc="currentTotalTimeText"/>
+                        </span>
+                    </t>
+                    <t t-else="">
+                        <t t-if="props.showLeaderboard">Record timesheets to earn your rank!</t>
+                        <t t-else="">Record timesheets to determine your billing rate!</t>
+                    </t>
+                </span>
+            </div>
+        </div>
+    </t>
+
+</templates>

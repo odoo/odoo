@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record model="discuss.channel" id="demo_whatsapp_channel">
+            <field name="name">Brandon Freeman (demo)</field>
+            <field name="channel_type">whatsapp</field>
+            <field name="whatsapp_number">(355)-687-3262</field>
+            <field name="whatsapp_partner_id" ref="base.res_partner_address_15"/>
+            <field name="channel_partner_ids" eval="[Command.link(ref('base.res_partner_address_15'))]"/>
+            <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
+        </record>
+        <record model="mail.message" id="welcome_mail_message">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="demo_whatsapp_channel"/>
+            <field name="message_type">whatsapp_message</field>
+            <field name="author_id" ref="base.res_partner_address_15"/>
+            <field name="body"><![CDATA[<p>This channel is for demo purpose only.</p>]]></field>
+        </record>
+    </data>
+</odoo>

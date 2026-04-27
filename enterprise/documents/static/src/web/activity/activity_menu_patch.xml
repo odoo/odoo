@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ActivityMenu" t-inherit-mode="extension">
+        <xpath expr="//*[@name='activityGroups']" position="inside">
+            <a t-if="store.hasDocumentsUserGroup" t-on-click="onClickRequestDocument" href="#"
+                class="o_sys_documents_request list-group-item list-group-item-action p-2 border-0 text-primary text-center">
+                Request a Document
+            </a>
+        </xpath>
+    </t>
+</templates>

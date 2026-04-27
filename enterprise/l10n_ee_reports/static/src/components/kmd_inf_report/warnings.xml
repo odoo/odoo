@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="l10n_ee_reports.kmd_inf_listing_missing_partners_warning">
+        You have
+        <t t-out="warningParams.count"/>
+        <t t-if="warningParams.count > 1"> transaction partners</t>
+        <t t-else=""> transaction partner</t>
+         with eligible invoices in the selected period who are not included in the report due to a missing tax number or missing country. Click
+        <a t-on-click="(ev) => controller.reportAction(ev, 'action_warning_partners', warningParams)">here</a>
+        to see the list.
+    </t>
+</templates>

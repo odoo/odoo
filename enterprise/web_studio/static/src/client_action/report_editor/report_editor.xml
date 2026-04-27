@@ -1,0 +1,76 @@
+<templates>
+
+<t t-name="web_studio.ReportEditor">
+    <div class="o-web-studio-report-editor h-100 w-100 d-flex flex-row">
+        <ReportEditorWysiwyg t-if="reportEditorModel.mode === 'wysiwyg'" paperFormatStyle="paperFormatStyle" />
+
+        <ReportEditorXml t-if="reportEditorModel.mode === 'xml'" paperFormatStyle="paperFormatStyle" />
+    </div>
+</t>
+
+<t t-name="web_studio.ReportEditor.Iframe">
+    <div class="h-100 w-100 overflow-auto position-relative" t-on-scroll="onContainerScroll">
+        <div class="o-web-studio-report-container shadow my-0 mx-auto my-lg-5 d-flex" t-att-style="paperFormatStyle">
+            <iframe t-if="!reportEditorModel.fullErrorDisplay" class="w-100" t-ref="iframeRef" t-att-srcdoc="iframeSource" t-key="iframeKey" t-att-style="iframeStyle" type="text/plain" t-on-load="onIframeLoaded"/>
+            <ErrorDisplay t-if="reportEditorModel.fullErrorDisplay" error="reportEditorModel.fullErrorDisplay" />
+        </div>
+    </div>
+</t>
+
+<t t-name="web_studio.ReportEditor.NotificationError">
+    <div>
+        Saving the report "<t t-esc="reportName" />" failed.
+        <p>This may be due to an incorrect syntax in the edited parts.</p>
+        <p t-if="!recordId">This could also be due to the absence of a real record to render the report with.</p>
+        <div t-if="error">
+            <p>Error message: <t t-esc="error.message" /></p>
+            <p t-if="error.viewError">On view (ir.ui.view): <t t-esc="error.viewError.resIds.join(', ')" /></p>
+        </div>
+    </div>
+</t>
+
+<t t-name="web_studio.ErrorDisplay" >
+    <div class="d-flex flex-column gap-2">
+        <span>The report could not be loaded as some error occured. Usually it means that some view inherits from another but targets a node that doesn't exist. It might be due to the mutations of the base views during the upgrade process.</span>
+        <div><span class="me-1">Error name:</span><strong class="fs-3" t-esc="error.name"/></div>
+        <div><span class="me-1">Error message:</span><strong class="fs-4" t-esc="error.message"/></div>
+        <div t-if="error.viewError" class="d-flex flex-column">
+            <t t-set="viewError" t-value="error.viewError"/>
+            <span class="fs-4">View in Error:</span>
+            <table>
+                <thead>
+                    <th>IDs</th>
+                    <th>Name</th>
+                    <th>Model</th>
+                    <th>Parent View (inherit_id)</th>
+                </thead>
+                <tbody>
+                    <td>
+                        <t t-foreach="viewError.resIds" t-as="resId" t-key="resId">
+                            <a t-att-href="urlFor('ir.ui.view', resId)" t-on-click.synthetic.prevent="() => this.openRecord(viewError.viewModel, resId)" t-esc="resId"/>
+                            <span class="me-2">,</span>
+                        </t>
+                    </td>
+                    <td t-esc="viewError.completeName" />
+                    <td>
+                        <t t-if="viewError.model" t-esc="viewError.model"/><t t-else="">N/A</t>
+                    </td>
+                    <td>
+                        <t t-foreach="viewError.parentIds" t-as="resId" t-key="resId">
+                            <a t-att-href="urlFor('ir.ui.view', resId)" t-on-click.synthetic.prevent="() => this.openRecord(viewError.viewModel, resId)" t-esc="resId"/>
+                            <span class="me-2">,</span>
+                        </t>
+                    </td>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <button class="btn btn-primary" t-on-click="() => state.showTrace = !state.showTrace">Show Traceback</button>
+        </div>
+        <div t-if="state.showTrace">
+            <pre class="d-flex flex-column alert alert-info bg-100" t-esc="error.traceback" />
+        </div>
+    </div>
+</t>
+
+</templates>

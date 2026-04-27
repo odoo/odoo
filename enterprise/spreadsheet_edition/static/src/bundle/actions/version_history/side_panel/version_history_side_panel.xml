@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+  <t t-name="spreadsheet_edition.VersionHistory2">
+    <div class="o-version-history-wrapper o-spreadsheet d-flex flex-column flex-shrink-0 border">
+      <div class="header fs-3 d-flex lh-1 align-items-center justify-content-between px-3 py-2">
+        <div class="title o-fw-bold">Version History</div>
+        <div class="cursor-pointer" t-on-click="props.onCloseSidePanel">✕</div>
+      </div>
+      <div
+        class="o-version-history border-top overflow-auto"
+        tabindex="0"
+        t-ref="container"
+        t-on-keydown.self="onKeyDown"
+      >
+        <VersionHistoryItem
+          t-foreach="loadedRevisions"
+          t-as="revision"
+          t-key="revision.nextRevisionId"
+          active="state.currentRevisionId === revision.nextRevisionId"
+          onActivation.bind="onRevisionClick"
+          revision="revision"
+          onBlur.bind="focus"
+          getRevisions="props.getRevisions"
+          renameRevision="props.renameRevision"
+          forkHistory="props.forkHistory"
+          getLocale="props.getLocale"
+          restoreRevision="props.restoreRevision"
+        />
+
+        <div t-if="state.loaded &lt; revisions.length"
+          class="d-flex justify-content-center o-version-history-load-more-container">
+          <div class="o-sidePanelButtons">
+            <button t-on-click="onLoadMoreClicked" class="o-button o-version-history-load-more">
+              Load More
+            </button>
+          </div>
+        </div>
+
+        <t t-if="!revisions.length">
+          <Section>
+            There are no prior revisions for this spreadsheet.
+          </Section>
+          <div class="o-sidePanelButtons">
+            <button t-on-click="props.onCloseSidePanel" class="o-button">Back</button>
+          </div>
+        </t>
+      </div>
+    </div>
+  </t>
+</templates>

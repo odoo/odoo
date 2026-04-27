@@ -1,0 +1,23 @@
+.o_calendar_container {
+    --Calendar__slotSelection-background: #{rgba($gray-400, .5)};
+
+    .o_calendar_renderer .fc-view {
+        .fc-bg-event.o_calendar_slot {
+            opacity: 1;
+        }
+        .fc-day-past.o_calendar_slot_selection, .fc-day-today.fc-daygrid-day.o_calendar_slot_selection, .o_calendar_slot_selection_now {
+            background-color: var(--Calendar__slotSelection-background);
+        }
+        .o_event.o_calendar_slot {
+            border-color: $o-success;
+            background: #{mix($o-success, $o-view-background-color, 50%)};
+        }
+    }
+    .fc-dayGridYear-view .o_calendar_slot_selection .fc-daygrid-day-frame,
+    .o_calendar_widget.o_calendar_slots_in_creation .fc-event:not(.o_calendar_slot) {
+        pointer-events: none;
+    }
+    .o_calendar_slot_delete {
+        z-index: 3;
+    }
+}

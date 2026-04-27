@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ch_individual_account_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.individual.account.view.form.inherit</field>
+        <field name="model">l10n.ch.individual.account</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll.l10n_ch_individual_account_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//p[@name='save_warning']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <p name="save_warning" position="after">
+                <field name="documents_enabled" invisible="1"/>
+                <div>
+                    <div invisible="documents_enabled">
+                        <p><strong>Warning: </strong>In order to post the individual account sheets in the employee portal, you have to Enable "Human Resources" in the <a name="%(documents.configuration_action)d" type="action" class="oe_link">"Documents" app settings</a>.</p>
+                    </div>
+                </div>
+            </p>
+        </field>
+    </record>
+
+</odoo>

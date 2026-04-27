@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="jpk_kr_pd_template">
+        <JPK xmlns="http://jpk.mf.gov.pl/wzor/2024/09/04/09041/" xmlns:etd="http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2022/01/05/eD/DefinicjeTypy/">
+            <Naglowek>
+                <KodFormularza kodSystemowy="JPK_KR_PD (1)" wersjaSchemy="1-1">JPK_KR_PD</KodFormularza>
+                <WariantFormularza>1</WariantFormularza>
+                <CelZlozenia>1</CelZlozenia>
+                <DataWytworzeniaJPK t-out="date_now"/>
+                <DataOd t-out="date_from"/>
+                <DataDo t-out="date_to"/>
+                <RokDataOd t-out="date_start"/>
+                <RokDataDo t-out="date_end"/>
+                <DomyslnyKodWaluty t-out="company.get('currency_name')"/>
+                <KodUrzedu t-out="company.get('tax_office')"/>
+            </Naglowek>
+            <Podmiot1>
+                <IdentyfikatorPodmiotu>
+                    <etd:NIP t-out="company.get('nip')"/>
+                    <etd:PelnaNazwa t-out="company.get('display_name')"/>
+                </IdentyfikatorPodmiotu>
+                <Adres>
+                    <AdresPol>
+                        <etd:KodKraju t-out="company.get('country_code')" />
+                        <etd:Wojewodztwo t-out="company.get('state_name')"/>
+                        <etd:Powiat t-out="company.get('city')"/>
+                        <etd:Gmina t-out="company.get('city')"/>
+                        <etd:NrDomu t-out="company.get('building_nr')"/>
+                        <etd:Miejscowosc t-out="company.get('city')"/>
+                        <etd:KodPocztowy t-out="company.get('zip')"/>
+                    </AdresPol>
+                </Adres>
+            </Podmiot1>
+            <Kontrahent t-foreach="partners" t-as="p">
+                <T_1 t-out="p.get('name')"/>
+                <T_2 t-out="p.get('country_code')"/>
+                <T_3 t-out="p.get('vat')"/>
+            </Kontrahent>
+            <ZOiS>
+                <ZOiS7 t-foreach="account_lines" t-as="line">
+                    <S_1 t-out="line.get('account_code')"/>
+                    <S_2 t-out="line.get('account_name')"/>
+                    <S_3 t-out="line.get('parent_account_code')"/>
+                    <S_4 t-out="line.get('initial_debit')"/>
+                    <S_5 t-out="line.get('initial_credit')"/>
+                    <S_6 t-out="line.get('turnover_debit')"/>
+                    <S_7 t-out="line.get('turnover_credit')"/>
+                    <S_8 t-out="line.get('cum_turnover_debit')"/>
+                    <S_9 t-out="line.get('cum_turnover_credit')"/>
+                    <S_10 t-out="line.get('closing_debit')"/>
+                    <S_11 t-out="line.get('closing_credit')"/>
+                    <S_12_1 t-out="line.get('bs_tag')"/>
+                </ZOiS7>
+            </ZOiS>
+            <Dziennik t-foreach="moves" t-as="m">
+                <D_1 t-out="m.get('name')"/>
+                <D_2 t-out="m.get('journal_name')"/>
+                <D_3 t-out="m.get('partner_name')"/>
+                <D_4 t-out="m.get('ref')"/>
+                <D_5 t-out="m.get('journal_code')"/>
+                <D_6 t-out="m.get('invoice_date')"/>
+                <D_7 t-out="m.get('date')"/>
+                <D_8 t-out="m.get('create_date')"/>
+                <D_9>System</D_9>
+                <D_10 t-out="m.get('description_of_operation')"/>
+                <D_11 t-out="m.get('amount_total')"/>
+                <KontoZapis t-foreach="m.get('lines')" t-as="aml">
+                    <Z_1 t-out="aml_index+1"/>
+                    <Z_2 t-out="aml.get('name')"/>
+                    <Z_3 t-out="aml.get('account_code')"/>
+                    <t t-if="aml.get('is_debit')">
+                        <Z_4 t-out="aml.get('debit')"/>
+                        <Z_5 t-out="aml.get('debit_currency')"/>
+                        <Z_6 t-out="aml.get('currency')"/>
+                    </t>
+                    <t t-else="">
+                        <Z_7 t-out="aml.get('credit')"/>
+                        <Z_8 t-out="aml.get('credit_currency')"/>
+                        <Z_9 t-out="aml.get('currency')"/>
+                    </t>
+                </KontoZapis>
+            </Dziennik>
+            <Ctrl>
+                <C_1 t-out="totals.get('moves_count')"/>
+                <C_2 t-out="totals.get('total_balance')"/>
+                <C_3 t-out="totals.get('move_lines_count')"/>
+                <C_4 t-out="totals.get('total_debit')"/>
+                <C_5 t-out="totals.get('total_credit')"/>
+            </Ctrl>
+            <RPD>
+                <K_1 t-out="tax_totals.get('K_1')"/>
+                <K_2 t-out="tax_totals.get('K_2')"/>
+                <K_3 t-out="tax_totals.get('K_3')"/>
+                <K_4 t-out="tax_totals.get('K_4')"/>
+                <K_5 t-out="tax_totals.get('K_5')"/>
+                <K_6 t-out="tax_totals.get('K_6')"/>
+                <K_7 t-out="tax_totals.get('K_7')"/>
+                <K_8 t-out="tax_totals.get('K_8')"/>
+            </RPD>
+        </JPK>
+    </template>
+</odoo>

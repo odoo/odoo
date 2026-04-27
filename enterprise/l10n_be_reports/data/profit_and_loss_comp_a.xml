@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data auto_sequence="1">
+        <record id="account_financial_report_pl_comp_a" model="account.report">
+            <field name="name">Profit and Loss (Abbr)</field>
+            <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+            <field name="availability_condition">coa</field>
+            <field name="chart_template">be_comp</field>
+            <field name="filter_unfold_all" eval="True"/>
+            <field name="filter_analytic_groupby" eval="True"/>
+            <field name="filter_journals" eval="True"/>
+            <field name="country_id" ref="base.be"/>
+            <field name="filter_multi_company">selector</field>
+            <field name="column_ids">
+                <record id="account_financial_report_pl_comp_a_column" model="account.report.column">
+                    <field name="name">Balance</field>
+                    <field name="expression_label">balance</field>
+                </record>
+            </field>
+            <field name="line_ids">
+                <record id="account_financial_report_pl_comp_a_pl" model="account.report.line">
+                    <field name="name">PROFIT AND LOSS ACCOUNT</field>
+                    <field name="hierarchy_level">0</field>
+                    <field name="children_ids">
+                        <record id="account_financial_report_pl_comp_a_pl_oioc" model="account.report.line">
+                            <field name="name">Operating Income and Operating Charges</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_pl_comp_a_pl_oioc_gm" model="account.report.line">
+                                    <field name="name">9900 - Gross Margin (+)/(-)</field>
+                                    <field name="code">BE_PL_COMP_A_9900</field>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_pl_comp_a_pl_oioc_gm_remaining_balance" model="account.report.expression">
+                                            <field name="label">remaining_balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">-71 - 72 - 74</field>
+                                        </record>
+                                        <record id="account_financial_report_pl_comp_a_pl_oioc_gm_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">BE_PL_76A.balance + BE_PL_70.balance - BE_PL_A_60_61.balance + BE_PL_COMP_A_9900.remaining_balance</field>
+                                        </record>
+                                    </field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_pl_comp_a_pl_oioc_gm_nroi" model="account.report.line">
+                                            <field name="name">76A - Of Which: Non-Recurring Operating Income</field>
+                                            <field name="code">BE_PL_76A</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">-760 - 7620 - 7630 - 764 - 765 - 766 - 767 - 768</field>
+                                        </record>
+                                        <record id="account_financial_report_pl_comp_a_pl_oioc_gm_t" model="account.report.line">
+                                            <field name="name">70 - Turnover</field>
+                                            <field name="code">BE_PL_70</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">-70</field>
+                                        </record>
+                                        <record id="account_financial_report_pl_comp_a_pl_oioc_gm_grrmcsog" model="account.report.line">
+                                            <field name="name">60/61 - Goods for Resale, Raw Materials, Consumables, Services and Other Goods</field>
+                                            <field name="code">BE_PL_A_60_61</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_pl_comp_a_pl_oioc_gm_grrmcsog_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">60 + 61</field>
+                                                    <field name="green_on_positive" eval="False"/>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_pl_comp_a_pl_oioc_rssp" model="account.report.line">
+                                    <field name="name">62 - Remuneration, Social Security and Pensions (+)/(-)</field>
+                                    <field name="code">BE_PL_62</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_pl_comp_a_pl_oioc_rssp_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">62</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_pl_comp_a_pl_oioc_aoawdfefa" model="account.report.line">
+                                    <field name="name">630 - Amortisations of and Other Amounts Written Down on Formation Expenses, Intangible and Tangible Fixed Assets</field>
+                                    <field name="code">BE_PL_630</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_pl_comp_a_pl_oioc_aoawdfefa_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">630</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_pl_comp_a_pl_oioc_awdscptd" model="account.report.line">
+                                    <field name="name">631/4 - Amounts Written Down on Stocks, Contracts in Progress and Trade Debtors: Additions (Write-Backs) (+)/(-)</field>
+                                    <field name="code">BE_PL_631_4</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_pl_comp_a_pl_oioc_awdscptd_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">631 + 632 + 633 + 634</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_pl_comp_a_pl_oioc_plca" model="account.report.line">
+                                    <field name="name">635/8 - Provisions for Liabilities and Charges: Appropriations (Uses and Write-Backs) (+)/(-)</field>
+                                    <field name="code">BE_PL_COMP_635_8</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_pl_comp_a_pl_oioc_plca_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">635 + 636 + 637 + 638</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_pl_comp_a_pl_oioc_ooc" model="account.report.line">
+                                    <field name="name">640/8 - Other Operating Charges</field>
+                                    <field name="code">BE_PL_640_8</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_pl_comp_a_pl_oioc_ooc_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">640 + 641 + 642 + 643 + 644 + 645 + 646 + 647 + 648</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_pl_comp_a_pl_oioc_ocraurc" model="account.report.line">
+                                    <field name="name">649 - Operating Charges Reported as Assets Under Restructuring Costs (-)</field>
+                                    <field name="code">BE_PL_649</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_pl_comp_a_pl_oioc_ocraurc_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">649</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_pl_comp_a_pl_oioc_nroc" model="account.report.line">
+                                    <field name="name">66A - Non-Recurring Operating Charges</field>
+                                    <field name="code">BE_PL_66A</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_pl_comp_a_pl_oioc_nroc_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">660 + 6620 + 6630 + 664 + 665 + 666 + 667 + 6690</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="account_financial_report_pl_comp_a_pl_opl" model="account.report.line">
+                            <field name="name">9901 - Operating Profit (Loss) (+)/(-)</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_PL_COMP_A_9901</field>
+                            <field name="aggregation_formula">BE_PL_COMP_A_9900.balance - BE_PL_62.balance - BE_PL_630.balance - BE_PL_631_4.balance - BE_PL_COMP_635_8.balance - BE_PL_640_8.balance - BE_PL_649.balance - BE_PL_66A.balance</field>
+                        </record>
+                        <record id="account_financial_report_pl_comp_a_pl_fi" model="account.report.line">
+                            <field name="name">75/76B - Financial Income</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_PL_A_75_76B</field>
+                            <field name="aggregation_formula">BE_PL_A_75.balance + BE_PL_76B.balance</field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_pl_comp_a_pl_fi_rfi" model="account.report.line">
+                                    <field name="name">75 - Recurring Financial Income</field>
+                                    <field name="code">BE_PL_A_75</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-75</field>
+                                </record>
+                                <record id="account_financial_report_pl_comp_a_pl_fi_rfi_cis" model="account.report.line">
+                                    <field name="name">753 - Of Which: Capital and Interest Subsidies</field>
+                                    <field name="hierarchy_level">5</field>
+                                    <field name="code">BE_PL_A_753</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-753</field>
+                                </record>
+                                <record id="account_financial_report_pl_comp_a_pl_fi_nrfi" model="account.report.line">
+                                    <field name="name">76B - Non-Recurring Financial Income</field>
+                                    <field name="code">BE_PL_76B</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-761 - 7621 - 763\(7630) - 769</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="account_financial_report_pl_comp_a_pl_fc" model="account.report.line">
+                            <field name="name">65/66B - Financial Charges</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_PL_A_65_66B</field>
+                            <field name="expression_ids">
+                                <record id="account_financial_report_pl_comp_a_pl_fc_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">BE_PL_A_65.balance + BE_PL_66B.balance</field>
+                                    <field name="green_on_positive" eval="False"/>
+                                </record>
+                            </field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_pl_comp_a_pl_fc_rfc" model="account.report.line">
+                                    <field name="name">65 - Recurring Financial Charges</field>
+                                    <field name="code">BE_PL_A_65</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_pl_comp_a_pl_fc_rfc_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">65</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_pl_comp_a_pl_fc_nrfc" model="account.report.line">
+                                    <field name="name">66B - Non-Recurring Financial Charges</field>
+                                    <field name="code">BE_PL_66B</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_pl_comp_a_pl_fc_nrfc_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">661 + 6621 + 6631 + 668 + 6691</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="account_financial_report_pl_comp_a_pl_plpbt" model="account.report.line">
+                            <field name="name">9903 - Profit (Loss) for the Period Before Taxes (+)/(-)</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_PL_COMP_A_9903</field>
+                            <field name="aggregation_formula">BE_PL_COMP_A_9901.balance + BE_PL_A_75_76B.balance - BE_PL_A_65_66B.balance</field>
+                        </record>
+                        <record id="account_financial_report_pl_comp_a_pl_tfdt" model="account.report.line">
+                            <field name="name">780 - Transfer From Deferred Taxes</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_PL_780</field>
+                            <field name="groupby">account_id</field>
+                            <field name="foldable" eval="True"/>
+                            <field name="account_codes_formula">-780</field>
+                        </record>
+                        <record id="account_financial_report_pl_comp_a_pl_ttdt" model="account.report.line">
+                            <field name="name">680 - Transfer to Deferred Taxes</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_PL_680</field>
+                            <field name="groupby">account_id</field>
+                            <field name="foldable" eval="True"/>
+                            <field name="expression_ids">
+                                <record id="account_financial_report_pl_comp_a_pl_ttdt_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">account_codes</field>
+                                    <field name="formula">680</field>
+                                    <field name="green_on_positive" eval="False"/>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="account_financial_report_pl_comp_a_pl_itor" model="account.report.line">
+                            <field name="name">67/77 - Income Taxes on the Result (+)/(-)</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_PL_A_67_77</field>
+                            <field name="groupby">account_id</field>
+                            <field name="foldable" eval="True"/>
+                            <field name="expression_ids">
+                                <record id="account_financial_report_pl_comp_a_pl_itor_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">account_codes</field>
+                                    <field name="formula">67 + 77</field>
+                                    <field name="green_on_positive" eval="False"/>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="account_financial_report_pl_comp_a_pl_plp" model="account.report.line">
+                            <field name="name">9904 - Profit (Loss) of the Period (+)/(-)</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_PL_COMP_A_9904</field>
+                            <field name="aggregation_formula">BE_PL_COMP_A_9903.balance + BE_PL_780.balance - BE_PL_680.balance - BE_PL_A_67_77.balance</field>
+                        </record>
+                        <record id="account_financial_report_pl_comp_a_pl_tfur" model="account.report.line">
+                            <field name="name">789 - Transfer From Untaxed Reserves</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_PL_789</field>
+                            <field name="groupby">account_id</field>
+                            <field name="foldable" eval="True"/>
+                            <field name="account_codes_formula">-789</field>
+                        </record>
+                        <record id="account_financial_report_pl_comp_a_pl_ttur" model="account.report.line">
+                            <field name="name">689 - Transfer to Untaxed Reserves</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_PL_689</field>
+                            <field name="groupby">account_id</field>
+                            <field name="foldable" eval="True"/>
+                            <field name="expression_ids">
+                                <record id="account_financial_report_pl_comp_a_pl_ttur_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">account_codes</field>
+                                    <field name="formula">689</field>
+                                    <field name="green_on_positive" eval="False"/>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="account_financial_report_pl_comp_a_pl_plpafa" model="account.report.line">
+                            <field name="name">9905 - Profit (Loss) of the Period Available for Appropriation (+)/(-)</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_PL_COMP_A_9905</field>
+                            <field name="aggregation_formula">BE_PL_COMP_A_9904.balance + BE_PL_789.balance - BE_PL_689.balance</field>
+                        </record>
+                    </field>
+                </record>
+                <record id="account_financial_report_pl_comp_a_a" model="account.report.line">
+                    <field name="name">APPROPRIATION ACCOUNT</field>
+                    <field name="hierarchy_level">0</field>
+                    <field name="print_on_new_page" eval="True"/>
+                    <field name="children_ids">
+                        <record id="account_financial_report_pl_comp_a_a_pltba" model="account.report.line">
+                            <field name="name">9906 - Profit (Loss) to Be Appropriated (+)/(-)</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_PL_COMP_A_9906</field>
+                            <field name="aggregation_formula">BE_PL_COMP_A_9905.balance + BE_PL_14P.balance</field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_pl_comp_a_a_pltba_plpafa" model="account.report.line">
+                                    <field name="code">BE_PL_COMP_A_9905_C</field>
+                                    <field name="name">(9905) - Profit (Loss) of the Period Available for Appropriation (+)/(-)</field>
+                                    <field name="aggregation_formula">BE_PL_COMP_A_9905.balance</field>
+                                </record>
+                                <record id="account_financial_report_pl_comp_a_a_pltba_plppbf" model="account.report.line">
+                                    <field name="name">14P - Profit (Loss) of the Preceding Period Brought Forward (+)/(-)</field>
+                                    <field name="code">BE_PL_14P</field>
+                                    <field name="groupby" eval="False"/>
+                                    <field name="foldable" eval="False"/>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_pl_comp_a_a_pltba_plppbf_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">-6 - 7 - 14</field>
+                                            <field name="date_scope">to_beginning_of_period</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="account_financial_report_pl_comp_a_a_tfe" model="account.report.line">
+                            <field name="name">791/2 - Transfers From Equity</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_PL_COMP_A_791_2</field>
+                            <field name="groupby">account_id</field>
+                            <field name="foldable" eval="True"/>
+                            <field name="account_codes_formula">-791 - 792</field>
+                        </record>
+                        <record id="account_financial_report_pl_comp_a_a_ate" model="account.report.line">
+                            <field name="name">691/2 - Appropriations to Equity</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_PL_COMP_691_2</field>
+                            <field name="expression_ids">
+                                <record id="account_financial_report_pl_comp_a_a_ate_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">BE_PL_COMP_691.balance + BE_PL_COMP_6920.balance + BE_PL_COMP_6921.balance</field>
+                                    <field name="green_on_positive" eval="False"/>
+                                </record>
+                            </field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_pl_comp_a_a_ate_tc" model="account.report.line">
+                                    <field name="name">691 - To Contributions</field>
+                                    <field name="code">BE_PL_COMP_691</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_pl_comp_a_a_ate_tc_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">691</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_pl_comp_a_a_ate_tlr" model="account.report.line">
+                                    <field name="name">6920 - To Legal Reserve</field>
+                                    <field name="code">BE_PL_COMP_6920</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_pl_comp_a_a_ate_tlr_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">6920</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_pl_comp_a_a_ate_tor" model="account.report.line">
+                                    <field name="name">6921 - To Other Reserves</field>
+                                    <field name="code">BE_PL_COMP_6921</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_pl_comp_a_a_ate_tor_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">6921</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="account_financial_report_pl_comp_a_a_plcf" model="account.report.line">
+                            <field name="name">(14) - Profit (Loss) to Be Carried Forward (+)/(-)</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_PL_COMP_A_14</field>
+                            <field name="aggregation_formula">BE_PL_COMP_A_9906.balance + BE_PL_COMP_A_791_2.balance - BE_PL_COMP_691_2.balance + BE_PL_COMP_794.balance - BE_PL_COMP_694_7.balance</field>
+                        </record>
+                        <record id="account_financial_report_pl_comp_a_a_scirol" model="account.report.line">
+                            <field name="name">794 - Shareholders' Contribution in Respect of Losses</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_PL_COMP_794</field>
+                            <field name="groupby">account_id</field>
+                            <field name="foldable" eval="True"/>
+                            <field name="account_codes_formula">-794</field>
+                        </record>
+                        <record id="account_financial_report_pl_comp_a_a_ptbd" model="account.report.line">
+                            <field name="name">694/7 - Profit to Be Distributed</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_PL_COMP_694_7</field>
+                            <field name="expression_ids">
+                                <record id="account_financial_report_pl_comp_a_a_ptbd_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">BE_PL_COMP_694.balance + BE_PL_COMP_695.balance + BE_PL_COMP_696.balance + BE_PL_COMP_697.balance</field>
+                                    <field name="green_on_positive" eval="False"/>
+                                </record>
+                            </field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_pl_comp_a_a_ptbd_cfc" model="account.report.line">
+                                    <field name="name">694 - Compensation for Contributions</field>
+                                    <field name="code">BE_PL_COMP_694</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_pl_comp_a_a_ptbd_cfc_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">694</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_pl_comp_a_a_ptbd_dom" model="account.report.line">
+                                    <field name="name">695 - Directors or Managers</field>
+                                    <field name="code">BE_PL_COMP_695</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_pl_comp_a_a_ptbd_dom_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">695</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_pl_comp_a_a_ptbd_e" model="account.report.line">
+                                    <field name="name">696 - Employees</field>
+                                    <field name="code">BE_PL_COMP_696</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_pl_comp_a_a_ptbd_e_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">696</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_pl_comp_a_a_ptbd_ob" model="account.report.line">
+                                    <field name="name">697 - Other Beneficiaries</field>
+                                    <field name="code">BE_PL_COMP_697</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_pl_comp_a_a_ptbd_ob_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">697</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                </record>
+            </field>
+        </record>
+    </data>
+</odoo>

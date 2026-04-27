@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="spreadsheet_dashboard_employees" model="spreadsheet.dashboard">
+        <field name="name">Employees</field>
+        <field name="spreadsheet_binary_data" type="base64" file="spreadsheet_dashboard_hr_contract/data/files/employees_dashboard.json"/>
+        <field name="main_data_model_ids" eval="[(4, ref('hr.model_hr_employee')),(4, ref('hr_contract_reports.model_hr_contract_employee_report'))]"/>
+        <field name="sample_dashboard_file_path">spreadsheet_dashboard_hr_contract/data/files/employees_sample_dashboard.json</field>
+        <field name="dashboard_group_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_group_hr"/>
+        <field name="group_ids" eval="[Command.link(ref('hr_contract.group_hr_contract_manager'))]"/>
+        <field name="sequence">100</field>
+        <field name="is_published">True</field>
+    </record>
+
+</odoo>

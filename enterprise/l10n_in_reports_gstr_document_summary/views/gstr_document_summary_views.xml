@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="view_gstr_document_summary_line_tree" model="ir.ui.view">
+        <field name="name">l10n_in.gstr.document.summary.line.tree</field>
+        <field name="model">l10n_in.gstr.document.summary.line</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="nature_of_document"/>
+                <field name="serial_from"/>
+                <field name="serial_to"/>
+                <field name="total_issued" sum="Total Issued"/>
+                <field name="total_cancelled" sum="Total Cancelled"/>
+                <field name="net_issued" sum="Total Net Issued"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gstr_document_summary_line_search" model="ir.ui.view">
+        <field name="name">l10n_in.gstr.document.summary.line.search</field>
+        <field name="model">l10n_in.gstr.document.summary.line</field>
+        <field name="arch" type="xml">
+            <search string="GSTR Document Summary Lines">
+                <group expand="0" string="Group By">
+                    <filter name="group_by_doc_type" string="Nature of Document" context="{'group_by': 'nature_of_document'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_l10n_br_edi_check_status" model="ir.cron">
+        <field name="name">BR EDI: Update status of all pending invoices</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="code">model._cron_l10n_br_get_invoice_statuses()</field>
+        <field name="state">code</field>
+    </record>
+</odoo>

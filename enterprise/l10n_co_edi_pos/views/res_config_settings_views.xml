@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="res_config_settings_form_inherit_l10n_co_edi_pos" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n_co_edi_pos</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='restaurant_section']" position="inside">
+                <setting id="l10n_co_edi_pos_serial_number" invisible="country_code != 'CO' or l10n_co_dian_provider != 'dian'">
+                    <div class="mt-1">
+                        <label for="pos_l10n_co_edi_pos_serial_number"/>
+                    </div>
+                    <div class="mt-1">
+                        <field name="pos_l10n_co_edi_pos_serial_number"/>
+                    </div>
+                </setting>
+            </xpath>
+            <xpath expr="//setting[@id='pos_default_journals']/div" position="inside">
+                <div class="row" invisible="country_code != 'CO' or l10n_co_dian_provider != 'dian'">
+                    <label string="Credit Notes" for="pos_l10n_co_edi_credit_note_journal_id" class="col-lg-3 o_light_label"/>
+                    <field name="pos_l10n_co_edi_credit_note_journal_id"
+                           domain="[('company_id', '=', company_id), ('type', '=', 'sale')]"
+                           context="{'default_company_id': company_id, 'default_type': 'sale'}"/>
+                </div>
+                <div class="row" invisible="country_code != 'CO' or l10n_co_dian_provider != 'dian'">
+                    <label string="Final Consumer Invoices" for="pos_l10n_co_edi_final_consumer_invoices_journal_id" class="col-lg-3 o_light_label"/>
+                    <field name="pos_l10n_co_edi_final_consumer_invoices_journal_id"
+                           domain="[('company_id', '=', company_id), ('type', '=', 'sale')]"
+                           context="{'default_company_id': company_id, 'default_type': 'sale'}"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp_workorder.StockMove">
+        <li class="o_mrp_record_line list-group-item d-flex justify-content-between align-items-center"
+            t-att-class="cssClass"
+            t-on-click="onClick"
+            t-on-animationend="onAnimationEnd">
+            <span class="text-truncate" t-att-class="isComplete ? 'text-decoration-line-through' : ''"
+                  t-esc="props.label || props.record.data.product_id[1]"/>
+            <button t-on-click.stop="toggleQuantityDone" class="btn btn-sm text-nowrap" t-att-class="{
+                'btn-outline-secondary opacity-50 bg-transparent text-black': isComplete,
+                'btn-secondary': !isComplete,
+                'text-danger': quantityDone > toConsumeQuantity,
+                }">
+                <t t-if="quantityDone &amp;&amp; quantityDone != toConsumeQuantity">
+                    <t t-out="quantityDone"/> /
+                </t>
+                <t t-esc="toConsumeQuantity"/>
+                <span class="ms-1" t-esc="uom"/>
+            </button>
+        </li>
+    </t>
+</templates>

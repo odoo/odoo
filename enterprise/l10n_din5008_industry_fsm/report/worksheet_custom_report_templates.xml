@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="worksheet_custom" inherit_id="industry_fsm.worksheet_custom">
+            <xpath expr="//t[@t-call='web.external_layout']" position="before">
+                <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
+            </xpath>
+
+            <xpath expr="//t[@t-call='industry_fsm.worksheet_custom_page']" position="before">
+                <t t-set="fallback_address" t-value="doc.partner_id"/>
+                <t t-set="din5008_document_information">
+                    <div class="information_block" t-if="doc and doc._name=='project.task'">
+                        <table>
+                            <tr>
+                                <td>Date:</td>
+                                <td><t t-out="doc.l10n_din5008_date" t-options="{'widget': 'date'}"/></td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

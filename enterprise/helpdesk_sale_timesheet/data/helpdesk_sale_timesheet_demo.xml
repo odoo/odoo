@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="helpdesk.helpdesk_team3" model="helpdesk.team">
+        <field name="use_helpdesk_sale_timesheet" eval="True"/>
+    </record>
+
+    <record id="product.product_product_1" model="product.product">
+        <field name="project_id" model="product.product" eval="obj().env.ref('helpdesk.helpdesk_team3').project_id.id"/>
+    </record>
+
+    <!-- set product template from product varient on helpdesk.sla -->
+    <function model="helpdesk.sla" name="write">
+        <value model="helpdesk.sla" eval="obj().search([('id', '=', ref('helpdesk.helpdesk_sla_2'))]).ids"/>
+        <value model="product.product" eval="{
+            'product_ids': obj().search([
+                ('id', 'in', [
+                    ref('product.product_product_2'),
+                    ref('sale_timesheet.product_service_order_timesheet')
+                ])
+            ]).product_tmpl_id.ids}"/>
+    </function>
+
+    <function model="helpdesk.sla" name="write">
+        <value model="helpdesk.sla" eval="obj().search([('id', '=', ref('helpdesk.helpdesk_sla_3'))]).ids"/>
+        <value model="product.product" eval="{
+            'product_ids': obj().search([
+                ('id', 'in', [
+                    ref('product.product_product_1'),
+                    ref('sale_timesheet.product_service_deliver_timesheet_1')
+                ])
+            ]).product_tmpl_id.ids}"/>
+    </function>
+
+    <!-- timesheet on ticket -->
+    <record id="helpdesk_sale_timesheet_1" model="account.analytic.line">
+        <field name="name">Changed the location and colour of dining area.</field>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-1)).strftime('%Y-%m-%d')"/>
+        <field name="employee_id" ref="hr.employee_qdp"/>
+        <field name="unit_amount">5.00</field>
+        <field name="helpdesk_ticket_id" ref="helpdesk.helpdesk_ticket_17"/>
+        <field name="account_id" ref="analytic.analytic_internal"/>
+    </record>
+    <record id="helpdesk_sale_timesheet_2" model="account.analytic.line">
+        <field name="name">Setting the location for TV, Sofa and dining room.</field>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=+1)).strftime('%Y-%m-%d')"/>
+        <field name="employee_id" ref="hr.employee_qdp"/>
+        <field name="unit_amount">15.0</field>
+        <field name="helpdesk_ticket_id" ref="helpdesk.helpdesk_ticket_17"/>
+        <field name="account_id" ref="analytic.analytic_internal"/>
+    </record>
+
+    <!-- res.partner -->
+    <record id="res_partner_19" model="res.partner">
+        <field name="name">Alexa Laza</field>
+        <field name="category_id" eval="[Command.set([ref('base.res_partner_category_14')])]"/>
+        <field name="is_company">1</field>
+        <field name="street">77 Santa Barbara Rd</field>
+        <field name="city">Pleasant Hill</field>
+        <field name="state_id" ref='base.state_us_5'/>
+        <field name="zip">94523</field>
+        <field name="country_id" ref="base.us"/>
+        <field name="email">alexalaza69@example.com</field>
+        <field name="phone">(603)-996-3829</field>
+        <field name="website">http://www.alexa_laza.example.com</field>
+        <field name="vat">US12345699</field>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <!-- create order and link with ticket -->
+    <record id="sale_order_helpdesk_sale_timesheet_1" model="sale.order">
+        <field name="partner_id" ref="base.partner_demo"/>
+        <field name="partner_invoice_id" ref="base.partner_demo"/>
+        <field name="partner_shipping_id" ref="base.partner_demo"/>
+    </record>
+    <record id="sale_order_line_helpdesk_sale_timesheet_1" model="sale.order.line">
+        <field name="order_id" ref="sale_order_helpdesk_sale_timesheet_1"/>
+        <field name="product_id" ref="product.product_product_1"/>
+        <field name="price_unit">30.75</field>
+    </record>
+    <function model="sale.order" name="action_confirm" eval="[ref('sale_order_helpdesk_sale_timesheet_1')]"/>
+
+    <!-- create sla for sale order -->
+    <record id="helpdesk_sla_4" model="helpdesk.sla">
+        <field name="name">4 hours to finish</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="stage_id" ref="helpdesk.stage_solved"/>
+        <field name="time">4</field>
+        <field name="exclude_stage_ids" eval="[Command.link(ref('helpdesk.stage_in_progress'))]"/>
+    </record>
+    <function model="helpdesk.sla" name="write">
+        <value model="helpdesk.sla" eval="obj().search([('id', '=', ref('helpdesk_sla_4'))]).ids"/>
+        <value model="product.product" eval="{
+            'product_ids': obj().search([
+                ('id', 'in', [
+                    ref('product.product_product_1'),
+                    ref('sale_timesheet.product_service_order_timesheet')
+                ])
+            ]).product_tmpl_id.ids}"/>
+    </function>
+    <record id="helpdesk_ticket_24" model="helpdesk.ticket">
+        <field name="name">Where can I shop the chair cover?</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="priority">1</field>
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="sale_line_id" ref="sale_order_line_helpdesk_sale_timesheet_1"/>
+    </record>
+    <record id="helpdesk_ticket_28" model="helpdesk.ticket">
+        <field name="name">Bed legs are broken</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="partner_id" ref="helpdesk_sale_timesheet.res_partner_19"/>
+        <field name="stage_id" ref="helpdesk.stage_in_progress"/>
+        <field name="priority">3</field>
+        <field name="tag_ids" eval="[Command.set([ref('helpdesk.tag_repair'), ref('helpdesk.tag_service')])]"/>
+        <field name="kanban_state">done</field>
+        <field name="description" type="html">
+            <p>Hi,<br/><br/>
+            A few days ago, I bought a bed. While assembling it in my room, I found that the legs of the bed were not properly balanced.
+            Could you please come and fix this as soon as possible?<br/><br/>
+            Best,<br/>
+            Alexa Laza</p>
+        </field>
+    </record>
+    <record id="helpdesk_ticket_29" model="helpdesk.ticket">
+        <field name="name">LED Light is blinking</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="partner_id" ref="helpdesk_sale_timesheet.res_partner_19"/>
+        <field name="stage_id" ref="helpdesk.stage_solved"/>
+        <field name="priority">1</field>
+        <field name="tag_ids" eval="[Command.set([ref('helpdesk.tag_repair'), ref('helpdesk.tag_service')])]"/>
+        <field name="kanban_state">done</field>
+    </record>
+    <!-- fail the sla status -->
+    <function model="helpdesk.sla.status" name="write">
+        <value model="helpdesk.sla.status" search="[('ticket_id', '=', ref('helpdesk_ticket_24'))]"/>
+        <value eval="{'deadline': DateTime.now() - relativedelta(hour=5)}"/>
+    </function>
+
+    <record id="helpdesk.helpdesk_ticket_17" model="helpdesk.ticket">
+        <field name="sale_line_id" ref="sale_order_line_helpdesk_sale_timesheet_1"/>
+    </record>
+    <!-- make project allow_billable True as project is already created from another module -->
+    <function model="project.project" name="write">
+        <value model="helpdesk.team" eval="obj().search([('id', '=', ref('helpdesk.helpdesk_team3'))]).project_id.id"/>
+        <value eval="{'allow_billable' : 1, 'timesheet_product_id' : ref('sale_timesheet.time_product')}"/>
+    </function>
+
+</odoo>

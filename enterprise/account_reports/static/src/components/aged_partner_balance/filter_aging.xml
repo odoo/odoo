@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportAgingBasedOn">
+        <Dropdown>
+            <button class="btn btn-secondary">
+                <i class="fa fa-file me-1"/>Based on
+                <t t-if="controller.options.aging_based_on === 'base_on_invoice_date'">
+                    Invoice Date
+                </t>
+                <t t-else="">
+                    Due Date
+                </t>
+            </button>
+            <t t-set-slot="content">
+                <DropdownItem
+                    class="{ 'selected': controller.options.aging_based_on === 'base_on_maturity_date' }"
+                    onSelected="() => this.filterClicked({ optionKey: 'aging_based_on', optionValue: 'base_on_maturity_date', reload: true})"
+                >
+                    Due Date
+                </DropdownItem>
+
+                <DropdownItem
+                    class="{ 'selected': controller.options.aging_based_on === 'base_on_invoice_date' }"
+                    onSelected="() => this.filterClicked({ optionKey: 'aging_based_on', optionValue: 'base_on_invoice_date', reload: true})"
+                >
+                    Invoice Date
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+
+    <t t-name="account_reports.AccountReportAgingInterval">
+        <Dropdown
+            menuClass="'account_report_filter intervals'"
+        >
+            <button class="btn btn-secondary">
+                <i class="fa fa-calendar-o me-1"/>
+                <t t-out="controller.options.aging_interval"/> Days
+            </button>
+            <t t-set-slot="content">
+                <div class="dropdown-item interval">
+                    <input
+                        min="1"
+                        type="number"
+                        t-att-value="controller.options.aging_interval"
+                        t-on-change="(ev) => this.setAgingInterval(ev)"
+                    />
+                    <span class="mx-2">Days</span>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

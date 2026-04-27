@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp_workorder.MrpDisplayRecord">
+        <div class="o_mrp_display_record border card rounded m-0 mb-2"
+             t-att-class="cssClass"
+             t-on-animationend="onAnimationEnd">
+            <div class="card-header" t-att-class="props.record.resModel=='mrp.workorder' ? 'cursor-pointer' : ''"
+                 t-on-click="onClickHeader" t-att-barcode_trigger="props.barcodeTarget ? 'PAUS' : false">
+                <div class="card-title d-flex justify-content-between align-items-center">
+                    <t t-if="props.record.resModel=='mrp.production'" t-call="mrp_workorder.MrpDisplayProductionHeader"/>
+                    <t t-if="props.record.resModel=='mrp.workorder'" t-call="mrp_workorder.MrpDisplayWorkorderHeader"/>
+                </div>
+                <div class="d-flex justify-content-between flex-wrap" style="min-height:25px;">
+                    <div class="o_finished_product mt-auto mb-0 d-flex mw-100">
+                        <span class="text-truncate me-1"><t t-esc="record.product_id[1]"/> - </span>
+                        <span class="text-nowrap">
+                            <t t-if="quantityProducing">
+                                <t t-esc="quantityProducing"/> /
+                            </t>
+                            <t t-esc="quantityToProduce"/>
+                            <span class="ms-1">
+                                <t t-if="displayUOM" t-esc="uom"/>
+                                <t t-else="">Unit<t t-if="quantityToProduce != 1">s</t></t>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="pt-1 d-flex">
+                        <t t-foreach="this.props.record.data.employee_ids.records" t-as="employee" t-key="employee.resId">
+                            <img t-attf-src="/web/image/hr.employee/{{employee.resId}}/avatar_128" class="rounded o_avatar_connected me-1"/>
+                        </t>
+                        <div
+                            t-if="props.record.resModel === 'mrp.workorder' and record.state === 'progress' and props.groups.timer"
+                            class="bg-light rounded p-1 ms-1">
+                            <MrpTimerField name="'duration'" record="props.record" readonly="true"/>
+                        </div>
+                        <div t-if="(record.state === 'pending' or record.state === 'waiting') and props.groups.timer">Pending</div>
+                    </div>
+                </div>
+                <div class="o_finished_product mt-auto mb-0">
+                    <span><t t-esc="record.product_description_variants"/></span>
+                </div>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li t-if="logNote"
+                    class="o_mrp_display list-group-item d-flex justify-content-between align-items-center"
+                    t-on-click="() => this.editLogNote()">
+                        <div class="text-truncate" t-out="logNote" />
+                        <button class="btn fa fa-pencil-square-o" title="Display Log Note"></button>
+                </li>
+                <MrpWorksheet t-if="showWorksheetCheck" record="props.record" clickable="true"/>
+                <t t-foreach="workorders" t-as="workorder" t-key="workorder.data.id">
+                    <MrpWorkorder t-if="workorder.data.state != 'cancel'" t-props="subRecordProps(workorder)"/>
+                </t>
+                <li t-if="this.displayRegisterProduction" t-on-click="registerProduction"
+                    class="o_mrp_record_line list-group-item d-flex justify-content-between align-items-center"
+                    t-attf-class="{{(productionComplete || state.underValidation ) ? 'text-muted' : ''}}">
+                    <span class="btn-link" t-attf-class="{{(productionComplete || state.underValidation ) ? 'text-decoration-line-through' : ''}}">
+                        Register Production
+                    </span>
+                    <t t-if="['lot', 'serial', 'mass_produce'].includes(trackingMode)">
+                        <button t-if="!props.production.data.lot_producing_id" class="btn btn-info fa fa-plus"
+                                t-on-click.stop="generateSerialNumber"/>
+                        <span t-else="" t-out="props.production.data.lot_producing_id[1]"/>
+                    </t>
+                    <button t-else="" t-on-click.stop="quickRegisterProduction" class="btn btn-secondary btn-sm text-nowrap"
+                            t-att-class="productionComplete ? 'opacity-50 bg-transparent text-black' : ''">
+                            <span t-if="quantityProducing &amp;&amp; quantityProducing != quantityToProduce">
+                                <t t-out="quantityProducing"/> /
+                            </span>
+                        <t t-out="quantityToProduce"/>
+                        <span class="ms-1" t-esc="uom"/>
+                    </button>
+                </li>
+                <t t-foreach="moves" t-as="move" t-key="move.data.id">
+                    <StockMove t-props="subRecordProps(move)"/>
+                </t>
+                <div class="accordion" t-if="checks.length > 0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button class="btn btn-default" t-on-click="openNextQC">
+                            Instructions (<t t-esc="checks.filter(c => c.data.quality_state !== 'none').length"/>/<t t-esc="checks.length"/>)
+                        </button>
+                        <a class="accordion-button d-inline-flex w-auto collapsed" data-bs-toggle="collapse" t-att-href="'#' + props.record.id" role="button" aria-expanded="false" />
+                    </div>
+                    <div t-att-id="props.record.id" class="collapse">
+                        <t t-foreach="checks" t-as="check" t-key="check.data.id">
+                            <QualityCheck t-props="subRecordProps(check)"/>
+                        </t>
+                    </div>
+                </div>
+                <!-- Display a line to register each byproduct who isn't linked to a workorder.
+                Only displayed in the production card. -->
+                <t t-foreach="byProducts" t-as="byproductMove" t-key="byproductMove.id">
+                    <StockMove t-props="subRecordProps(byproductMove)" label="getByproductLabel(byproductMove)"/>
+                </t>
+            </ul>
+            <div class="card-footer d-flex justify-content-between align-items-center my-1"
+                t-att-class="{'py-0': !state.underValidation, 'pe-0': !displayCloseProductionButton}">
+                <t t-if="props.record.resModel=='mrp.production'" t-call="mrp_workorder.MrpDisplayProductionFooter"/>
+                <t t-if="props.record.resModel=='mrp.workorder'" t-call="mrp_workorder.MrpDisplayWorkorderFooter"/>
+                <button t-if="!state.underValidation" class="btn btn-light py-3 px-4 ms-auto rounded-0 fa fa-gear" t-on-click="onClickOpenMenu"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mrp_workorder.MrpDisplayProductionHeader">
+        <t t-set="displayTrackingNumber" t-value="!['none', 'mass_produce'].includes(this.trackingMode)"/>
+        <span class="d-flex align-items-center">
+            <span class="o_field_widget o_priority px-1 pt-1">
+                <PriorityField name="'priority'" record="props.record" autosave="true"/>
+            </span>
+            <span class="h5 mb-0 text-truncate" t-esc="record.display_name"/>
+        </span>
+        <small class="rounded-pill px-2 text-nowrap"
+            t-att-class="{
+                'text-bg-light border border-secondary': record.state === 'confirmed',
+                'text-bg-warning': record.state === 'progress',
+                'text-bg-danger': record.state === 'to_close',
+            }">
+            <SelectionField name="'state'" record="props.record" readonly="true"/>
+        </small>
+    </t>
+    <t t-name="mrp_workorder.MrpDisplayWorkorderHeader">
+        <span class="h5 text-truncate" t-esc="record.display_name"/>
+        <span class="text-capitalize d-flex flex-column ms-1">
+            <div t-if="this.props.record.data.employee_assigned_ids.records.length > 0" class="pt-1">
+                <t t-foreach="this.props.record.data.employee_assigned_ids.records" t-as="employee" t-key="employee.resId">
+                    <img t-attf-src="/web/image/hr.employee/{{employee.resId}}/avatar_128" class="rounded o_avatar_connected me-1"/>
+                </t>
+            </div>
+        </span>
+        <i class="fa" t-att-class="this.active ? 'fa-pause' : 'fa-play'"></i>
+    </t>
+    <t t-name="mrp_workorder.MrpDisplayProductionFooter">
+        <t t-if="state.underValidation" t-set="_btn_type" t-value="'btn-outline-secondary'"/>
+        <t t-elif="props.record.data.state === 'to_close'" t-set="_btn_type" t-value="'btn-primary'"/>
+        <t t-else="" t-set="_btn_type" t-value="'btn-secondary'"/>
+        <button t-if="displayDoneButton" t-attf-class="btn #{_btn_type}"
+                t-on-click="onClickValidateButton" t-att-barcode_trigger="props.barcodeTarget ? 'CLMO' : false">
+            <t t-if="state.underValidation">Undo</t>
+            <t t-elif="trackingMode === 'mass_produce'">Mass Produce</t>
+            <t t-else="">Close Production</t>
+        </button>
+    </t>
+    <t t-name="mrp_workorder.MrpDisplayWorkorderFooter">
+        <t t-if="state.underValidation" t-set="_btn_type" t-value="'btn-outline-secondary'"/>
+        <t t-else="" t-set="_btn_type" t-value="'btn-primary'"/>
+        <button t-if="displayDoneButton" t-attf-class="btn #{_btn_type}"
+                t-on-click="onClickValidateButton" t-att-barcode_trigger="props.barcodeTarget ? 'CLWO' : false">
+            <t t-if="state.underValidation">Undo</t>
+            <t t-else="">Mark as Done</t>
+        </button>
+        <button t-if="displayCloseProductionButton" class="btn btn-primary flex-grow-1 ms-5"
+                barcode_trigger="CLMO" t-on-click="onClickCloseProduction">
+            Close Production
+        </button>
+        <button t-elif="state.underValidation" class="me-4" t-attf-class="btn #{_btn_type}" t-on-click="nextOperation">Next Operation</button>
+    </t>
+</templates>

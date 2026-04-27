@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<templates>
+    <t t-name="voip.Softphone">
+        <div class="o-voip-Softphone position-absolute d-flex flex-column bottom-0 shadow d-print-none" t-att-class="{ 'w-100 h-100': isOnSmallDevice, 'ms-2': !isOnSmallDevice }">
+            <div class="o-voip-Softphone-topbar d-flex align-items-center" t-att-class="{ 'rounded-top-3 cursor-pointer': !isOnSmallDevice }" t-on-click="onClickTopbar">
+                <i class="oi-large ms-3 me-1" t-att-class="icon" role="img"/>
+                <span class="mx-1 text-truncate" t-esc="topbarText" t-att-title="topbarText"/>
+                <!-- Plain separator. It is its own element to avoid spreading attributes of its siblings over the entire width. -->
+                <span class="flex-grow-1"/>
+                <button class="oi oi-large oi-close btn h-100 opacity-50 opacity-100-hover text-reset" title="Close" t-on-click="onClickClose"/>
+            </div>
+            <div t-if="!isFolded" class="o-voip-Softphone-content position-relative d-flex flex-column flex-grow-1 bg-view" t-att-class="{ 'h-100': isOnSmallDevice }">
+                <CallInvitation t-if="shouldDisplayCallInvitation" correspondence="softphone.selectedCorrespondence" extraClass="'flex-grow-1'"/>
+                <t t-else="">
+                    <div t-if="voip.error" class="o-voip-Softphone-error position-absolute w-100 h-100 overflow-auto d-flex px-2" t-on-click="onClickError">
+                        <div class="m-auto text-center" t-out="voip.error.text"/>
+                    </div>
+                    <Numpad t-if="softphone.numpad.isOpen" extraClass="'flex-grow-1'"/>
+                    <CorrespondenceDetails t-elif="shouldDisplayCorrespondenceDetails" correspondence="softphone.selectedCorrespondence" extraClass="'flex-grow-1'"/>
+                    <t t-else="">
+                        <div class="d-flex">
+                            <input class="flex-grow-1 w-100 p-2 border-0" placeholder="Search" t-model="softphone.searchBarInputValue" t-ref="search" t-on-input="onInputSearchBar"/>
+                            <button class="oi oi-search btn shadow-none px-2"/>
+                        </div>
+                        <div class="d-flex flex-column flex-grow-1 overflow-auto">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li t-foreach="tabList" t-as="tab" t-key="tab.id" class="nav-item flex-grow-1 text-center">
+                                    <a t-att-aria-controls="tab.id" class="nav-link" t-att-class="{ active: tab.id === activeTabId }" href="#" data-bs-toggle="tab" t-att-data-tab-id="tab.id" role="tab" t-esc="tab.name" t-on-click="onClickTab"/>
+                                </li>
+                            </ul>
+                            <RecentTab t-if="activeTabId === 'recent'" recentCalls="softphone.recentCalls" extraClass="'o-voip-Softphone-tab'"/>
+                            <ActivitiesTab t-if="activeTabId === 'activity'" activities="softphone.activities" extraClass="'o-voip-Softphone-tab'"/>
+                            <ContactsTab t-if="activeTabId === 'contacts'" extraClass="'o-voip-Softphone-tab'"/>
+                        </div>
+                    </t>
+                    <div class="d-flex border-top">
+                        <button class="fa fa-fw fs-2 fa-keyboard-o btn flex-grow-1 py-4" t-att-title="numpadButtonTitleText" t-on-click="onClickNumpad"/>
+                        <button t-if="softphone.isInAutoCallMode and softphone.selectedCorrespondence?.call?.isInProgress" class="fa fa-fw fs-2 fa-user-times btn flex-grow-1 py-4" title="Hang up but keep call in queue" t-on-click="onClickPostpone"/>
+                        <button class="fa fa-fw fs-2 fa-phone btn flex-grow-1 py-4" t-att-class="{ 'text-danger': softphone.selectedCorrespondence?.call?.isInProgress }" t-att-title="callButtonTitleText" t-on-click="onClickPhone"/>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="product_barcodelookup.barcodeformbarcode" t-inherit="web.CharField">
+        <xpath expr="//input" position="after">
+            <button t-on-click="onBarcodeBtnClick" class="bg-white border-0" tabindex="-1">
+                <i class="fa fa-barcode"/>
+            </button>
+        </xpath>
+    </t>
+</templates>

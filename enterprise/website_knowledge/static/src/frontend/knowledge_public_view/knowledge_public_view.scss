@@ -1,0 +1,143 @@
+.o_knowledge_public_view {
+    --knowledge-article-sidebar-size: 300px;
+    // Header
+    // --------------------------------------------------------------------------
+    .o_knowledge_header {
+        cursor: default;
+    }
+
+    .o_knowledge_public_virality {
+        table-layout: fixed;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        transition: background-color 0.5s ease;
+        &.o_embedded_toc_header_highlight {
+            border-radius: 0.25rem;
+            background-color: rgba($knowledge-bg--active, 0.2);
+        }
+    }
+
+    .o_view_nocontent_empty_folder:before {
+        @extend %o-nocontent-empty-document;
+    }
+
+    // Body, cover and icon
+    // --------------------------------------------------------------------------
+    .o_knowledge_icon:not(.o_full_width),
+    .o_knowledge_article:not(.o_full_width) {
+        width: 750px;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .o_knowledge_cover + .o_knowledge_icon {
+        margin-top: -70px;
+    }
+    .o_knowledge_icon {
+        @include font-size(80px);
+    }
+
+    // = Resizer
+    // --------------------------------------------------------------------------
+    .o_knowledge_article_form_resizer {
+        // Use '$spacers' measures to match surrounding elements padding
+        $-resizer-spacing: map-get($spacers, 1);
+        $-resizer-line-width: map-get($spacers, 1);
+
+        @include o-position-absolute(0, auto, 0, $-resizer-spacing * -1);
+
+        span {
+            @include o-position-absolute(0, auto, 0, $-resizer-spacing + ($-resizer-line-width * -0.5));
+        }
+    }
+
+    // Sidebar
+    // --------------------------------------------------------------------------
+    .o_knowledge_sidebar_owl_component:empty {
+        width: clamp(200px, var(--knowledge-article-sidebar-size), 576px);
+        border-right: 4px solid $o-gray-200;
+    }
+
+    .o_knowledge_sidebar {
+        width: clamp(200px, var(--knowledge-article-sidebar-size), 576px);
+        transition: width 0.15s linear;
+        height: 100%;
+        border-right: 4px solid $o-gray-200;
+
+        .o_article_handle {
+            &.o_article_active {
+                .o_article_name {
+                    background-color: rgba($knowledge-bg--active, 0.2);
+                    &:hover {
+                        background-color: rgba($knowledge-bg--active, 0.3);
+                    }
+                }
+            }
+            &:not(.o_article_active) {
+                .o_article_name:hover {
+                    background-color: rgba($knowledge-bg--hover, 0.3);
+                }
+            }
+        }
+        .o_scroll_view {
+            @include o-position-absolute(0, 0, 0, 0);
+            overflow-y: auto;
+        }
+    }
+
+    .o_knowledge_embedded_view_placeholder {
+        .o_knowledge_embedded_view_placeholder_cover {
+            @include o-position-absolute(0, 0, 0, 0);
+            background: radial-gradient($white, transparent);
+        }
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .o_knowledge_public_view {
+        .o_knowledge_sidebar {
+            width: 100%;
+        }
+    }
+}
+
+@include media-breakpoint-down(md) {
+    .o_knowledge_public_view {
+        .o_knowledge_sidebar.o_knowledge_desktop_sidebar {
+            transform: translateX(-100%);
+        }
+        .o_knowledge_sidebar,
+        .o_knowledge_main {
+            transition: transform .2s ease;
+        }
+        .o_knowledge_sidebar {
+            position: fixed;
+            top: 0;
+            right: 50px;
+            bottom: 0;
+            left: 0;
+            background-color: $white;
+            z-index: 3; // should be greater than the backdrop z-index
+        }
+        .o_knowledge_backdrop {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: rgba(19, 16, 16, 0.3);
+            z-index: 2; // should be greater than the action helper z-index
+        }
+    }
+}
+
+@include media-breakpoint-up(sm) {
+    .o_knowledge_public_view {
+        .o_scroll_view {
+            @include o-position-absolute(0, 0, 0, 0);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+    }
+}

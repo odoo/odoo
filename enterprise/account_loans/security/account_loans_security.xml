@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_loan_rule" model="ir.rule">
+        <field name="name">Account Loan multi-company</field>
+        <field name="model_id" ref="model_account_loan"/>
+        <field name="domain_force">[('company_id', 'parent_of', company_ids)]</field>
+    </record>
+
+    <record id="account_loan_line_rule" model="ir.rule">
+        <field name="name">Account Loan Line multi-company</field>
+        <field name="model_id" ref="model_account_loan_line"/>
+        <field name="domain_force">[('company_id', 'parent_of', company_ids)]</field>
+    </record>
+</odoo>

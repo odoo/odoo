@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_financial_report_br_balancesheet0" model="account.report">
+        <field name="name">Balance Sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="country_id" ref="base.br"/>
+        <field name="column_ids">
+            <record id="account_financial_report_br_balancesheet0_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_total_assets0" model="account.report.line">
+                <field name="name">ASSETS</field>
+                <field name="code">BR_TA</field>
+                <field name="aggregation_formula">BR_CA.balance + BR_PNCA.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_current_assets_view0" model="account.report.line">
+                        <field name="name">Current assets</field>
+                        <field name="code">BR_CA</field>
+                        <field name="aggregation_formula">BR_DI.balance + BR_CRE.balance + BR_EST.balance + BR_DES.balance + BR_BIO.balance + BR_NCFS.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_disponibilidades" model="account.report.line">
+                                <field name="name">Bank and Cash accounts</field>
+                                <field name="code">BR_DI</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1.01.01</field>
+                            </record>
+                            <record id="account_financial_report_creditos" model="account.report.line">
+                                <field name="name">Credits</field>
+                                <field name="code">BR_CRE</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1.01.02</field>
+                            </record>
+                            <record id="account_financial_report_estoques" model="account.report.line">
+                                <field name="name">Stocks</field>
+                                <field name="code">BR_EST</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1.01.03</field>
+                            </record>
+                            <record id="account_financial_report_despesas" model="account.report.line">
+                                <field name="name">Expenditure in the following year</field>
+                                <field name="code">BR_DES</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1.01.05</field>
+                            </record>
+                            <record id="account_financial_report_bio_assets" model="account.report.line">
+                                <field name="name">Current biological assets</field>
+                                <field name="code">BR_BIO</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1.01.10</field>
+                            </record>
+                            <record id="account_financial_report_noncurrent_assets_for_sale" model="account.report.line">
+                                <field name="name">Non-current assets held for sale</field>
+                                <field name="code">BR_NCFS</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1.01.11</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_non_current_assets_view0" model="account.report.line">
+                        <field name="name">Non-current assets</field>
+                        <field name="code">BR_PNCA</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="aggregation_formula">BR_RLP.balance + BR_INV.balance + BR_IMOB.balance + BR_INT.balance + BR_DIF.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_long_term" model="account.report.line">
+                                <field name="name">Long-term assets</field>
+                                <field name="code">BR_RLP</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1.02.01</field>
+                            </record>
+                            <record id="account_financial_report_investments" model="account.report.line">
+                                <field name="name">Investments</field>
+                                <field name="code">BR_INV</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1.02.02</field>
+                            </record>
+                            <record id="account_financial_report_immobilized" model="account.report.line">
+                                <field name="name">Fixed Assets</field>
+                                <field name="code">BR_IMOB</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1.02.03</field>
+                            </record>
+                            <record id="account_financial_report_intangible" model="account.report.line">
+                                <field name="name">Intangible Assets</field>
+                                <field name="code">BR_INT</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1.02.05</field>
+                            </record>
+                            <record id="account_financial_report_diferido" model="account.report.line">
+                                <field name="name">Deferred</field>
+                                <field name="code">BR_DIF</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1.02.06</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_liabilities_view0" model="account.report.line">
+                <field name="name">LIABILITIES</field>
+                <field name="code">BR_L</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_liabilities_view0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">BR_CL.balance + BR_NC.balance + BR_EQ.balance + BR_LUCRO.balance</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_current_revenue" model="account.report.line">
+                        <field name="name">Current year profit</field>
+                        <field name="code">BR_LUCRO</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_current_revenue_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-3.12.01 - 3.11.01 - 3.02.01 - 3.01.01 - 3.01.05 - 3.11.05 - 999</field>
+                                <field name="date_scope">from_beginning</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_current_liabilities0" model="account.report.line">
+                        <field name="name">Current liabilities</field>
+                        <field name="code">BR_CL</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_current_liabilities0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">BR_CL1.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_current_liabilities1" model="account.report.line">
+                                <field name="name">Current Liabilities</field>
+                                <field name="code">BR_CL1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_current_liabilities1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-2.01</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_non_current_liabilities0" model="account.report.line">
+                        <field name="name">Non-current liabilities</field>
+                        <field name="code">BR_NC</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_non_current_liabilities0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">BR_LP.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_non_current_liabilities1" model="account.report.line">
+                                <field name="name">Long-term liabilities</field>
+                                <field name="code">BR_LP</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_non_current_liabilities1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-2.02</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_equity0" model="account.report.line">
+                        <field name="name">Equity</field>
+                        <field name="code">BR_EQ</field>
+                        <field name="aggregation_formula">BR_CAPITAL_SOCIAL.balance + BR_RESERVAS.balance + BR_AJ.balance + BR_OC.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_share_capital" model="account.report.line">
+                                <field name="name">Equity capital</field>
+                                <field name="code">BR_CAPITAL_SOCIAL</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2.03.01</field>
+                            </record>
+                            <record id="account_financial_retained_earnings0" model="account.report.line">
+                                <field name="name">Reserves</field>
+                                <field name="code">BR_RESERVAS</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2.03.02</field>
+                            </record>
+                            <record id="account_financial_ajustes" model="account.report.line">
+                                <field name="name">Equity valuation adjustments</field>
+                                <field name="code">BR_AJ</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2.03.03</field>
+                            </record>
+                            <record id="account_financial_outras_contas" model="account.report.line">
+                                <field name="name">Other equity accounts</field>
+                                <field name="code">BR_OC</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2.03.04</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_off_sheet" model="account.report.line">
+                <field name="name">Off-balance sheet accounts</field>
+                <field name="code">BR_OS</field>
+                <field name="groupby">account_id</field>
+                <field name="hide_if_zero" eval="1"/>
+                <field name="foldable" eval="True"/>
+                <field name="domain_formula">-sum([('account_id.account_type', '=', 'off_balance')])</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+        </field>
+    </record>
+    <record id="account_financial_report_pnl_br" model="account.report">
+        <field name="name">Profit and Loss Statement</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_pnl_br_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_profit" model="account.report.line">
+                <field name="name">Net profit for the period</field>
+                <field name="code">BR_PROFIT</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_profit_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">BR_RLAG.balance + BR_CSLL_IRPJ.balance + BR_RLAR.balance + BR_CSLL_AR.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_pnl_resultado_geral" model="account.report.line">
+                        <field name="name">Net profit for the period before IRPJ and CSLL - general activity</field>
+                        <field name="code">BR_RLAG</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pnl_resultado_geral_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">BR_ROAG.balance + BR_PART_AG.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_resultado_ag" model="account.report.line">
+                                <field name="name">Operating profit</field>
+                                <field name="code">BR_ROAG</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_resultado_ag_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-999001 - 999002 - 3.01.01</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_participacoes_ag" model="account.report.line">
+                                <field name="name">Shares</field>
+                                <field name="code">BR_PART_AG</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_participacoes_ag_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">3.01.05</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_csll_irpj" model="account.report.line">
+                        <field name="name">Provision for CSLL and IRPJ</field>
+                        <field name="code">BR_CSLL_IRPJ</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_csll_irpj_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">3.02</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pnl_resultado_rural" model="account.report.line">
+                        <field name="name">Net profit for the period before IRPJ and CSLL - rural activity</field>
+                        <field name="code">BR_RLAR</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pnl_resultado_rural_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">BR_ROAR.balance + BR_PART_AR.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_resultado_ar" model="account.report.line">
+                                <field name="name">Operating profit - rural activity</field>
+                                <field name="code">BR_ROAR</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_resultado_ar_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-3.11.01</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_participacoes_ar" model="account.report.line">
+                                <field name="name">Shares</field>
+                                <field name="code">BR_PART_AR</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_participacoes_ar_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">3.11.05</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_csll_ar" model="account.report.line">
+                        <field name="name">Provision for CSLL - rural activity</field>
+                        <field name="code">BR_CSLL_AR</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_csll_ar_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">3.12</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

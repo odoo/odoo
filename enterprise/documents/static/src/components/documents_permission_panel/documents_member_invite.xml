@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.MemberInvite">
+        <label t-if="props.invitePage" class="form-label">Add people or email addresses:</label>
+        <div t-att-class="`d-flex align-items-center ${ props.invitePage ? '' : 'px-3'} py-1 position-relative`">
+            <i t-if="!props.invitePage" class="fa fa-w fa-user-plus col-form-label ps-1 pe-4 fs-4"/>
+            <DocumentsPermissionSelectMenu
+                buttonText.translate="Add people or email addresses..."
+                choices="state.fetchedPartners.map((p) => ({value: p.id, label: p.display_name, email: p.email}))"
+                class="'flex-grow-1'"
+                multiSelect="true"
+                onSelect.bind="onSelectPartnerToInvite"
+                onInput.bind="onSearchPartners"
+                onOpen.bind="() => this.onSearchPartners('')"
+                required="true"
+                searchPlaceholder.translate="Search people"
+                togglerClass="props.invitePage ? 'o_documents_permission_panel_select_invite' : ''"
+                value="state.selectedPartners"
+                fuzzyLookupFn="this.matchPartners"
+            >
+                <t t-set-slot="choice" t-slot-scope="choice">
+                    <span class="o_documents_permission_panel_avatar o_avatar d-flex align-items-center">
+                        <img t-attf-src="/web/image?model=res.partner&amp;field=avatar_128&amp;id={{ choice.data.value }}" alt="" class="rounded me-1"/>
+                        <span class="d-flex flex-column">
+                            <span t-out="choice.data.label || choice.data.value"/>
+                            <span class="text-muted" t-if="choice.data.email" t-out="choice.data.email"/>
+                        </span>
+                    </span>
+                </t>
+                <t t-set-slot="bottomArea" t-slot-scope="select">
+                    <DropdownItem
+                            t-if="isEmail(select.data.searchValue)"
+                            class="'btn text-primary'"
+                            onSelected.bind="() => this.createPartners(select.data.searchValue)"
+                        >
+                            Create new contact "<i t-out="select.data.searchValue"/>"
+                    </DropdownItem>
+                    <DropdownItem
+                            t-if="select.data.searchValue"
+                            class="'btn text-primary'"
+                            onSelected.bind="() => this.createPartners(select.data.searchValue, true)"
+                        >
+                            Create and edit new contact "<i t-out="select.data.searchValue"/>"
+                    </DropdownItem>
+                </t>
+            </DocumentsPermissionSelectMenu>
+            <DocumentsPermissionSelect t-if="props.invitePage"
+                ariaLabel.translate="User Access Role"
+                onChange.bind="onChangeRoleForMemberToInvite"
+                options="props.roles"
+                value="props.selectedPartnersRole"
+                selectClass="'ms-1 w-auto text-truncate'"
+                noEditorMessage="noEditorMessage"/>
+        </div>
+        <t t-if="props.invitePage">
+            <div class="py-2">
+                <div class="form-check form-switch">
+                    <input t-on-click="onClickNotify" class="form-check-input" type="checkbox" id="notifyCheckBox" t-att-checked="state.notify"/>
+                    <label class="form-check-label" for="notifyCheckBox">Notify</label>
+                </div>
+                <div t-if="state.notify" class="border-bottom pt-3">
+                    <Wysiwyg config="wysiwyg.config" onLoad.bind="onLoadWysiwyg"/>
+                </div>
+            </div>
+            <t t-portal="'#o_document_member_invite_share_btn'" t-call="documents.MemberInviteShareBtn"/>
+            <t t-portal="'#o_document_member_invite_discard_btn'" t-call="documents.MemberInviteDiscardBtn"/>
+        </t>
+        <div t-if="props.disabled" class="o_documents_permission_panel_select_menu_overlay"/>
+    </t>
+
+    <t t-name="documents.MemberInviteShareBtn">
+        <button type="button" class="btn btn-primary w-100" t-on-click="onShare" t-att-disabled="state.sharing">
+            <span t-if="state.sharing">Sharing...</span>
+            <span t-elif="state.notify">Send</span>
+            <span t-else="">Share</span>
+        </button>
+    </t>
+
+    <t t-name="documents.MemberInviteDiscardBtn">
+        <button type="button" class="btn btn-secondary w-100" t-on-click="onDiscard">
+            <span>Discard</span>
+        </button>
+    </t>
+</templates>

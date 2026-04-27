@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+         <!-- crm.lead -->
+        <record model="data_merge.model" id="data_merge_model_crm_lead">
+            <field name="name">Lead/Opportunity</field>
+            <field name="res_model_id" ref="crm.model_crm_lead"/>
+            <field name="domain">[('probability', '&lt;', 100)]</field>
+            <field name="notify_user_ids" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record model="data_merge.rule" id="data_merge_field_crm_lead_partner_id">
+            <field name="model_id" ref="data_merge_model_crm_lead"/>
+            <field name="field_id" ref="crm.field_crm_lead__partner_id"/>
+            <field name="match_mode">exact</field>
+        </record>
+        <record model="data_merge.rule" id="data_merge_field_crm_lead_email_from">
+            <field name="model_id" ref="data_merge_model_crm_lead"/>
+            <field name="field_id" ref="crm.field_crm_lead__email_from"/>
+            <field name="match_mode">exact</field>
+        </record>
+        <record model="data_merge.rule" id="data_merge_field_crm_lead_partner_name">
+            <field name="model_id" ref="data_merge_model_crm_lead"/>
+            <field name="field_id" ref="crm.field_crm_lead__partner_name"/>
+            <field name="match_mode">exact</field>
+        </record>
+        <record model="data_merge.rule" id="data_merge_field_crm_lead_contact_name">
+            <field name="model_id" ref="data_merge_model_crm_lead"/>
+            <field name="field_id" ref="crm.field_crm_lead__contact_name"/>
+            <field name="match_mode">exact</field>
+        </record>
+
+        <!-- crm.tag -->
+        <record model="data_merge.model" id="data_merge_model_crm_tag">
+            <field name="name">CRM Tag</field>
+            <field name="res_model_id" ref="sales_team.model_crm_tag"/>
+            <field name="notify_user_ids" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record model="data_merge.rule" id="data_merge_field_crm_tag_name">
+            <field name="model_id" ref="data_merge_model_crm_tag"/>
+            <field name="field_id" ref="sales_team.field_crm_tag__name"/>
+            <field name="match_mode">exact</field>
+        </record>
+ 
+        <!-- crm.lost.reason -->
+        <record model="data_merge.model" id="data_merge_model_crm_lost_reason">
+            <field name="name">Opp. Lost Reason</field>
+            <field name="res_model_id" ref="crm.model_crm_lost_reason"/>
+            <field name="notify_user_ids" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record model="data_merge.rule" id="data_merge_field_crm_lost_reason_name">
+            <field name="model_id" ref="data_merge_model_crm_lost_reason"/>
+            <field name="field_id" ref="crm.field_crm_lost_reason__name"/>
+            <field name="match_mode">exact</field>
+        </record>
+    </data>
+    <data noupdate="1">
+        <function model="data_merge.rule" name="_update_default_rules">
+            <value eval="[ref('data_merge_field_crm_lead_email_from'),
+                ref('data_merge_field_crm_lead_partner_name'),
+                ref('data_merge_field_crm_lead_contact_name'),
+                ref('data_merge_field_crm_tag_name'),
+                ref('data_merge_field_crm_lost_reason_name')]"/>
+        </function>
+    </data>
+</odoo>

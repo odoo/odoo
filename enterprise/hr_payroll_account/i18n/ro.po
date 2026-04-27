@@ -1,0 +1,439 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_payroll_account
+#
+# Translators:
+# Wil Odoo, 2024
+# Larisa_nexterp, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:47+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_bank_statement_line__payslip_count
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_move__payslip_count
+msgid "# of Payslips"
+msgstr "Nr. fluturași de salariu"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_view_form
+msgid ""
+"<span class=\"o_stat_text\" invisible=\"move_state != 'draft'\">Journal "
+"Entry <br/>(Draft)</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"move_state !"
+"= 'posted'\">Journal Entry <br/>(Posted)</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"move_state !"
+"= 'cancel'\">Journal Entry <br/>(Canceled)</span>"
+msgstr ""
+"<span class=\"o_stat_text\" invisible=\"move_state != 'draft'\">Înregistrare "
+"de jurnal <br/>(Schiță)</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"move_state !"
+"= 'posted'\">Înregistrare de jurnal <br/>(Postată)</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"move_state !"
+"= 'cancel'\">Înregistrare de jurnal <br/>(Anulată)</span>"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.view_move_form_inherit
+msgid "<span class=\"o_stat_text\">Payslip</span>"
+msgstr "<span class=\"o_stat_text\">Fluturaș de salariu</span>"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "Șablon plan de conturi"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_chart_template.py:0
+msgid "Account Payslip Houserental"
+msgstr "Cont chirie pe fluturașul de salariu"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_salary_rule_view_form
+msgid "Accounting"
+msgstr "Contabilitate"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__move_id
+msgid "Accounting Entry"
+msgstr "Înregistrare contabilă"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "Adjustment Entry"
+msgstr "Înregistrare de ajustare"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract__analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract_history__analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__analytic_account_id
+msgid "Analytic Account"
+msgstr "Cont analitic"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_view_form
+msgid "Are you sure you want to proceed?"
+msgstr "Sunteți sigur că doriți să continuați?"
+
+#. module: hr_payroll_account
+#: model:ir.actions.act_window,name:hr_payroll_account.action_res_partner_bank_account_form
+#: model:ir.model,name:hr_payroll_account.model_res_partner_bank
+#: model:ir.ui.menu,name:hr_payroll_account.menu_hr_employee_bank_account
+msgid "Bank Accounts"
+msgstr "Conturi bancare"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.res_config_settings_view_form
+msgid "Batch Account Move Lines"
+msgstr "Linii de mișcare conturi în lot"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__batch_payroll_move_lines
+#: model:ir.model.fields,field_description:hr_payroll_account.field_res_company__batch_payroll_move_lines
+#: model:ir.model.fields,field_description:hr_payroll_account.field_res_config_settings__batch_payroll_move_lines
+msgid "Batch Payroll Move Lines"
+msgstr "Linii de mișcare salarii în lot"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_res_company
+msgid "Companies"
+msgstr "Companii"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_res_config_settings
+msgid "Config Settings"
+msgstr "Setări de configurare"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_contract_history
+msgid "Contract history"
+msgstr "Istoric contract"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_view_form
+msgid "Create Draft Entry"
+msgstr "Creați o înregistrare de schiță"
+
+#. module: hr_payroll_account
+#: model_terms:ir.actions.act_window,help:hr_payroll_account.action_res_partner_bank_account_form
+msgid "Create a Bank Account"
+msgstr "Creați un cont bancar"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__account_credit
+msgid "Credit Account"
+msgstr "Cont de credit"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__credit_tag_ids
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__credit_tag_ids
+msgid "Credit Tax Grids"
+msgstr "Grile taxe credit"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__date
+msgid "Date Account"
+msgstr "Dată cont"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__account_debit
+msgid "Debit Account"
+msgstr "Cont de debit"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__debit_tag_ids
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__debit_tag_ids
+msgid "Debit Tax Grids"
+msgstr "Grile taxe debit"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_contract
+msgid "Employee Contract"
+msgstr "Contract angajat"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.view_partner_bank_search_inherit
+msgid "Employees"
+msgstr "Angajați"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_res_config_settings__batch_payroll_move_lines
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.res_config_settings_view_form
+msgid ""
+"Enable this option to merge all the accounting entries for the same period "
+"into a single account move line. This will anonymize the accounting entries "
+"but also disable single payment generations."
+msgstr ""
+"Activați această opțiune pentru a uni toate înregistrările contabile pentru "
+"aceeași perioadă într-o singură linie de mișcare a contului. Aceasta va "
+"anonimiza înregistrările contabile, dar va dezactiva și generarea de plăți "
+"unice."
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_salary_rule__split_move_lines
+msgid ""
+"Enable this option to split the accountig entries for this rule according to "
+"the payslip line name. It could be useful for deduction/reimbursement or "
+"salary attachments for instance."
+msgstr ""
+"Activați această opțiune pentru a separa înregistrările contabile pentru "
+"această regulă în funcție de denumirea liniei de fluturaș de salariu. Poate "
+"fi util, de exemplu, pentru deduceri/rambursări sau popriri salariale."
+
+#. module: hr_payroll_account
+#: model_terms:ir.actions.act_window,help:hr_payroll_account.action_res_partner_bank_account_form
+msgid ""
+"From here you can manage all bank accounts linked to you and your contacts."
+msgstr ""
+"De aici puteți gestiona toate conturile bancare legate de dvs. și de "
+"contactele dvs."
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payroll_payment_report_wizard
+msgid "HR Payroll Payment Report Wizard"
+msgstr "Asistent raport plăți salarizare HR"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_setup_bank_manual_config__has_alt_bank_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_res_partner_bank__has_alt_bank_account
+msgid "Has Alt Bank Account"
+msgstr "Are cont bancar alternativ"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payroll_structure.py:0
+msgid ""
+"Incorrect journal: The journal must be in the same currency as the company"
+msgstr ""
+"Jurnal incorect: jurnalul trebuie să fie în aceeași monedă ca și compania"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/wizard/hr_payroll_payment_report_wizard.py:0
+msgid ""
+"Invalid IBAN for the following employees:\n"
+"%s"
+msgstr ""
+"IBAN invalid pentru următorii angajați:\n"
+"%s"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_journal
+msgid "Journal"
+msgstr "Jurnal"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+#: code:addons/hr_payroll_account/models/hr_payslip_run.py:0
+#: model:ir.model,name:hr_payroll_account.model_account_move
+msgid "Journal Entry"
+msgstr "Înregistrare de jurnal"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip__date
+msgid "Keep empty to use the period of the validation(Payslip) date."
+msgstr ""
+"Lăsați necompletat pentru a folosi perioada pentru data validării (fluturaș "
+"de salariu)."
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_run__move_id
+msgid "Move"
+msgstr "Mișcare"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_run__move_state
+msgid "Move State"
+msgstr "Stare mișcare"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__not_computed_in_net
+msgid "Not computed in net accountably"
+msgstr "Nu se calculează în contabilitatea netă"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "One of the contract for these payslips has no structure type."
+msgstr ""
+"Unul dintre contractele pentru acești fluturași de salariu nu are niciun tip "
+"de structură."
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_payment_register
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_view_form
+msgid "Pay"
+msgstr "Plată"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Fluturaș de salariu"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/wizard/account_payment_register.py:0
+msgid "Payment done at %s"
+msgstr "Plată efectuată la %s"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_payment
+msgid "Payments"
+msgstr "Plăți"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "Loturi fluturași de salariu"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_line
+msgid "Payslip Line"
+msgstr "Linie fluturaș de salariu"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_bank_statement_line__payslip_ids
+#: model:ir.model.fields,field_description:hr_payroll_account.field_account_move__payslip_ids
+msgid "Payslips"
+msgstr "Fluturași de salariu"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_chart_template.py:0
+msgid "SLR"
+msgstr "SLR"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_chart_template.py:0
+msgid "Salaries"
+msgstr "Salarii"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payroll_structure__journal_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__journal_id
+msgid "Salary Journal"
+msgstr "Jurnal salarii"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr "Regulă salarială"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payroll_structure
+msgid "Salary Structure"
+msgstr "Structură salariu"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__split_move_lines
+msgid "Split account line based on name"
+msgstr "Împarte linia de cont pe baza denumirii"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip_line__credit_tag_ids
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_salary_rule__credit_tag_ids
+msgid ""
+"Tags assigned to this line will impact financial reports when translated "
+"into an accounting journal entry.They will be applied on the credit account "
+"line in the journal entry."
+msgstr ""
+"Etichetele atribuite acestei linii vor afecta rapoartele financiare atunci "
+"când sunt transpuse într-o înregistrare contabilă. Ele vor fi aplicate pe "
+"linia de cont de credit din înregistrarea contabilă."
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip_line__debit_tag_ids
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_salary_rule__debit_tag_ids
+msgid ""
+"Tags assigned to this line will impact financial reports when translated "
+"into an accounting journal entry.They will be applied on the debit account "
+"line in the journal entry."
+msgstr ""
+"Etichetele atribuite acestei linii vor afecta rapoartele financiare atunci "
+"când sunt transpuse într-o înregistrare contabilă. Ele vor fi aplicate pe "
+"linia de cont de debit din înregistrarea contabilă."
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the default Account!"
+msgstr "Jurnalul de cheltuieli \"%s\" nu a configurat corect contul implicit!"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "The credit account on the NET salary rule is not reconciliable"
+msgstr "Contul de credit din regula salariului NET nu este reconciliabil"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "The employee bank account is untrusted"
+msgstr "Contul bancar al angajatului nu este de încredere"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_salary_rule__not_computed_in_net
+msgid ""
+"This field allows you to delete the value of this rule in the \"Net Salary\" "
+"rule at the accounting level to explicitly display the value of this rule in "
+"the accounting. For example, if you want to display the value of your "
+"representation fees, you can check this field."
+msgstr ""
+"Acest câmp vă permite să ștergeți valoarea acestei reguli din regula "
+"\"Salariu net\" la nivel contabil pentru a afișa explicit valoarea acestei "
+"reguli în contabilitate. De exemplu, dacă doriți să afișați valoarea "
+"onorariilor dumneavoastră de reprezentare, puteți bifa acest câmp."
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.view_partner_bank_form_inherit_hr_payroll_account
+msgid "This will replace the employee existing bank account."
+msgstr "Aceasta va înlocui contul bancar existent al angajatului."
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "You can only register payment for posted journal entries."
+msgstr "Puteți înregistra doar plăți pentru înregistrările contabile postate."
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "You can only register payments for unpaid documents."
+msgstr "Puteți înregistra plăți doar pentru documentele neplătite."
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+msgid "You can't create a journal entry for a paid payslip."
+msgstr ""
+"Nu puteți crea o înregistrare contabilă pentru un fluturaș de salariu plătit."
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_journal.py:0
+msgid "You cannot delete the journal linked to a Salary Structure"
+msgstr "Nu puteți șterge jurnalul legat de o structură salarială"
+
+#~ msgid "One of the payroll structures has no account journal defined on it."
+#~ msgstr ""
+#~ "Una dintre structurile de salarizare nu are definit niciun jurnal de cont."

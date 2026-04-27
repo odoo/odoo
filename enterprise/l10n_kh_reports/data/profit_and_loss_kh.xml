@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_kh_profit_and_loss" model="account.report">
+        <field name="name">Profit and Loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="country_id" ref="base.kh"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="filter_budgets" eval="True"/>
+        <field name="filter_hierarchy">by_default</field>
+        <field name="default_opening_date_filter">this_year</field>
+        <field name="column_ids">
+            <record id="l10n_kh_profit_and_loss_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_kh_profit_and_loss_kh_pl_rev" model="account.report.line">
+                <field name="name">B0. Operating Revenues</field>
+                <field name="code">KH_PL_REV</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_profit_and_loss_kh_pl_rev_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KH_PL_SOP.balance + KH_PL_SOG.balance + KH_PL_SOS.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kh_profit_and_loss_kh_pl_sop" model="account.report.line">
+                <field name="name">B1. Sales of Products</field>
+                <field name="code">KH_PL_SOP</field>
+                <field name="hierarchy_level">1</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_profit_and_loss_kh_pl_sop_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-401</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kh_profit_and_loss_kh_pl_sog" model="account.report.line">
+                <field name="name">B2. Sales of Goods</field>
+                <field name="code">KH_PL_SOG</field>
+                <field name="hierarchy_level">1</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_profit_and_loss_kh_pl_sog_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-402</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kh_profit_and_loss_kh_pl_sos" model="account.report.line">
+                <field name="name">B3. Supplies of Services</field>
+                <field name="code">KH_PL_SOS</field>
+                <field name="hierarchy_level">1</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_profit_and_loss_kh_pl_sos_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-403</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kh_profit_and_loss_kh_pl_cops" model="account.report.line">
+                <field name="name">B4. Cost of Products Sold of Production Enterprises</field>
+                <field name="code">KH_PL_COPS</field>
+                <field name="hierarchy_level">1</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_profit_and_loss_kh_pl_cops_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">501</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kh_profit_and_loss_kh_pl_cogs" model="account.report.line">
+                <field name="name">B5. Cost of Goods Sold of Non-Production Enterprises</field>
+                <field name="code">KH_PL_COGS</field>
+                <field name="hierarchy_level">1</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_profit_and_loss_kh_pl_cogs_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">502</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kh_profit_and_loss_kh_pl_cos" model="account.report.line">
+                <field name="name">B6. Cost of Services Supplied</field>
+                <field name="code">KH_PL_COS</field>
+                <field name="hierarchy_level">1</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_profit_and_loss_kh_pl_cos_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">503</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kh_profit_and_loss_kh_pl_grp" model="account.report.line">
+                <field name="name">B7. Gross Profit</field>
+                <field name="code">KH_PL_GRP</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_profit_and_loss_kh_pl_grp_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KH_PL_REV.balance - KH_PL_COPS.balance - KH_PL_COGS.balance - KH_PL_COS.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kh_profit_and_loss_kh_pl_srev" model="account.report.line">
+                <field name="name">B8. Subsidiary Revenues</field>
+                <field name="code">KH_PL_SREV</field>
+                <field name="hierarchy_level">0</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_profit_and_loss_kh_pl_srev_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-41</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kh_profit_and_loss_kh_pl_orev" model="account.report.line">
+                <field name="name">B12. Other Revenues</field>
+                <field name="code">KH_PL_OREV</field>
+                <field name="hierarchy_level">0</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_profit_and_loss_kh_pl_orev_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-42</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kh_profit_and_loss_kh_pl_exp" model="account.report.line">
+                <field name="name">B22. Operating Expenses</field>
+                <field name="code">KH_PL_EXP</field>
+                <field name="hierarchy_level">0</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_profit_and_loss_kh_pl_exp_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">60 + 61 + 62</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kh_profit_and_loss_kh_pl_inc" model="account.report.line">
+                <field name="name">B42. Profit/Loss from Operations</field>
+                <field name="code">KH_PL_INC</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_profit_and_loss_kh_pl_inc_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KH_PL_GRP.balance + KH_PL_SREV.balance + KH_PL_OREV.balance - KH_PL_EXP.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kh_profit_and_loss_kh_pl_ier" model="account.report.line">
+                <field name="name">B43. Interest Expense Paid to Residents</field>
+                <field name="code">KH_PL_IER</field>
+                <field name="hierarchy_level">1</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_profit_and_loss_kh_pl_ier_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">631</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kh_profit_and_loss_kh_pl_ienr" model="account.report.line">
+                <field name="name">B44. Interest Expense paid to Non-Residents</field>
+                <field name="code">KH_PL_IENR</field>
+                <field name="hierarchy_level">1</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_profit_and_loss_kh_pl_ienr_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">632</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kh_profit_and_loss_kh_pl_uir" model="account.report.line">
+                <field name="name">B45. Unwinding Interest Expenses</field>
+                <field name="code">KH_PL_UIR</field>
+                <field name="hierarchy_level">1</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_profit_and_loss_kh_pl_uir_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">633</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kh_profit_and_loss_kh_pl_pbt" model="account.report.line">
+                <field name="name">B46. Profit/(Loss) Before Tax</field>
+                <field name="code">KH_PL_PBT</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_profit_and_loss_kh_pl_pbt_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KH_PL_INC.balance - KH_PL_IER.balance - KH_PL_IENR.balance - KH_PL_UIR.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kh_profit_and_loss_kh_pl_te" model="account.report.line">
+                <field name="name">B47. Income Tax</field>
+                <field name="code">KH_PL_TE</field>
+                <field name="hierarchy_level">0</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_profit_and_loss_kh_pl_te_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">64</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kh_profit_and_loss_kh_pl_nep" model="account.report.line">
+                <field name="name">B48. Net Profit After Tax</field>
+                <field name="code">KH_PL_NEP</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_kh_profit_and_loss_kh_pl_nep_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KH_PL_PBT.balance - KH_PL_TE.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Goals type -->
+        <record id="hr_appraisal_goal_tag_softskills" model="hr.appraisal.goal.tag">
+            <field name="name">Soft Skills</field>
+        </record>
+        <record id="hr_appraisal_goal_tag_hardskills" model="hr.appraisal.goal.tag">
+            <field name="name">Hard Skills</field>
+        </record>
+        <record id="hr_appraisal_goal_tag_training" model="hr.appraisal.goal.tag">
+            <field name="name">Training</field>
+        </record>
+        <record id="hr_appraisal_goal_tag_programming" model="hr.appraisal.goal.tag">
+            <field name="name">Programming</field>
+        </record>
+        <record id="hr_appraisal_goal_tag_internal" model="hr.appraisal.goal.tag">
+            <field name="name">Internal</field>
+        </record>
+        <record id="hr_appraisal_goal_tag_external" model="hr.appraisal.goal.tag">
+            <field name="name">External</field>
+        </record>
+
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[
+                (3, ref('hr.group_hr_user')),
+                (3, ref('hr_appraisal.group_hr_appraisal_user')),
+                (3, ref('hr_appraisal.group_hr_appraisal_manager')),
+            ]"/>
+        </record>
+
+        <record id="hr_appraisal_1" model="hr.appraisal">
+            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="state">new</field>
+            <field name="date_close" eval="(DateTime.now() + relativedelta(months=1)).strftime('%Y-%m-%d')"/>
+            <field name="manager_ids" eval="[(4, ref('hr.employee_admin'))]"/>
+        </record>
+
+        <record id="hr_appraisal_2" model="hr.appraisal">
+            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="state">new</field>
+            <field name="date_close" eval="(DateTime.now() + relativedelta(months=-1)).strftime('%Y-%m-%d')"/>
+            <field name="manager_ids" eval="[(4, ref('hr.employee_admin'))]"/>
+        </record>
+        <function model="hr.appraisal" name="action_cancel" eval="[ref('hr_appraisal.hr_appraisal_2')]"/>
+
+        <record id="note_good" model="hr.appraisal.note">
+            <field name="name">Good</field>
+        </record>
+        <record id="hr_appraisal_3" model="hr.appraisal">
+            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="state">new</field>
+            <field name="date_close" eval="(DateTime.now() + relativedelta(months=-12)).strftime('%Y-%m-%d')"/>
+            <field name="manager_ids" eval="[(4, ref('hr.employee_admin'))]"/>
+            <field name="manager_feedback_published" eval="True"/>
+            <field name="manager_feedback" type="html"><p>The employee is autonomous</p></field>
+            <field name="employee_feedback_published" eval="True"/>
+            <field name="employee_feedback" type="html"><p>I feel much more comfortable than last year</p></field>
+            <field name="assessment_note" ref="note_good"/>
+        </record>
+        <function model="hr.appraisal" name="action_confirm" eval="[ref('hr_appraisal.hr_appraisal_3')]"/>
+        <function model="hr.appraisal" name="action_done" eval="[ref('hr_appraisal.hr_appraisal_3')]"/>
+
+        <record id="hr_appraisal_4" model="hr.appraisal">
+            <field name="employee_id" ref="hr.employee_al"/>
+            <field name="state">new</field>
+            <field name="date_close" eval="(DateTime.now() + relativedelta(months=2)).strftime('%Y-%m-%d')"/>
+            <field name="manager_ids" eval="[(4, ref('hr.employee_admin'))]"/>
+            <field name="assessment_note" ref="note_good"/>
+        </record>
+        <function model="hr.appraisal" name="action_confirm" eval="[ref('hr_appraisal.hr_appraisal_4')]"/>
+        <function model="hr.appraisal" name="action_done" eval="[ref('hr_appraisal.hr_appraisal_4')]"/>
+
+        <record id="hr_appraisal_4bis" model="hr.appraisal">
+            <field name="employee_id" ref="hr.employee_al"/>
+            <field name="state">new</field>
+            <field name="date_close" eval="(DateTime.now() + relativedelta(months=1)).strftime('%Y-%m-%d')"/>
+            <field name="manager_ids" eval="[(4, ref('hr.employee_admin'))]"/>
+            <field name="manager_feedback_published" eval="True"/>
+            <field name="manager_feedback" type="html"><p>The employee is autonomous</p></field>
+            <field name="employee_feedback_published" eval="True"/>
+            <field name="employee_feedback" type="html"><p>I feel much more comfortable than last year</p></field>
+        </record>
+        <function model="hr.appraisal" name="action_confirm" eval="[ref('hr_appraisal.hr_appraisal_4bis')]"/>
+
+        <record id="hr_appraisal_5" model="hr.appraisal">
+            <field name="employee_id" ref="hr.employee_mit"/>
+            <field name="state">new</field>
+            <field name="date_close" eval="(DateTime.now() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
+            <field name="manager_ids" eval="[(4, ref('hr.employee_admin'))]"/>
+        </record>
+
+        <record id="hr_appraisal_6" model="hr.appraisal">
+            <field name="employee_id" ref="hr.employee_niv"/>
+            <field name="state">new</field>
+            <field name="date_close" eval="(DateTime.now() + relativedelta(months=4)).strftime('%Y-%m-%d')"/>
+            <field name="manager_ids" eval="[(4, ref('hr.employee_admin'))]"/>
+        </record>
+
+        <record id="hr_appraisal_7" model="hr.appraisal">
+            <field name="employee_id" ref="hr.employee_stw"/>
+            <field name="state">new</field>
+            <field name="date_close" eval="(DateTime.now() + relativedelta(months=5)).strftime('%Y-%m-%d')"/>
+            <field name="manager_ids" eval="[(4, ref('hr.employee_admin'))]"/>
+        </record>
+
+        <record id="hr_appraisal_8" model="hr.appraisal">
+            <field name="employee_id" ref="hr.employee_chs"/>
+            <field name="state">new</field>
+            <field name="date_close" eval="(DateTime.now() + relativedelta(months=6)).strftime('%Y-%m-%d')"/>
+            <field name="manager_ids" eval="[(4, ref('hr.employee_admin'))]"/>
+        </record>
+        <function model="hr.appraisal" name="action_confirm" eval="[ref('hr_appraisal.hr_appraisal_8')]"/>
+
+        <record id="calendar_event_appraisal_8" model="calendar.event">
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="name">Appraisal of Jennie Fletcher</field>
+            <field name="partner_ids" eval="[(6,0,[ref('hr.work_contact_chs'), ref('base.partner_admin')])]"/>
+            <field name="start" eval="DateTime.now().strftime('%Y-%m-%d 12:00:%S')"/>
+            <field name="stop" eval="DateTime.now().strftime('%Y-%m-%d 13:00:%S')"/>
+            <field name="res_model_id" ref="hr_appraisal.model_hr_appraisal"/>
+            <field name="res_model">hr.appraisal</field>
+            <field name="res_id" ref="hr_appraisal_8"/>
+        </record>
+
+        <record id="hr_appraisal_9" model="hr.appraisal">
+            <field name="employee_id" ref="hr.employee_fme"/>
+            <field name="state">new</field>
+            <field name="date_close" eval="(DateTime.now() + relativedelta(months=7)).strftime('%Y-%m-%d')"/>
+            <field name="manager_ids" eval="[(4, ref('hr.employee_admin'))]"/>
+        </record>
+
+        <record id="hr_appraisal_10" model="hr.appraisal">
+            <field name="employee_id" ref="hr.employee_fpi"/>
+            <field name="state">new</field>
+            <field name="date_close" eval="(DateTime.now() + relativedelta(months=11)).strftime('%Y-%m-%d')"/>
+            <field name="manager_ids" eval="[(4, ref('hr.employee_admin'))]"/>
+        </record>
+
+        <record id="hr_appraisal_goal_1" model="hr.appraisal.goal">
+            <field name="name">Responsible</field>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="manager_id" ref="hr.employee_admin"/>
+            <field name="progression">025</field>
+            <field name="deadline" eval="(DateTime.now() + relativedelta(months=8)).strftime('%Y-%m-%d')"/>
+        </record>
+
+        <record id="hr_appraisal_goal_2" model="hr.appraisal.goal">
+            <field name="name">Computer Skill</field>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="manager_id" ref="hr.employee_admin"/>
+            <field name="progression">000</field>
+            <field name="deadline" eval="(DateTime.now() + relativedelta(months=-1)).strftime('%Y-%m-%d')"/>
+        </record>
+
+        <record id="hr_appraisal_goal_3" model="hr.appraisal.goal">
+            <field name="name">Similar Tasks</field>
+            <field name="employee_id" ref="hr.employee_al"/>
+            <field name="manager_id" ref="hr.employee_admin"/>
+            <field name="progression">000</field>
+            <field name="deadline" eval="(DateTime.now() + relativedelta(months=2)).strftime('%Y-%m-%d')"/>
+        </record>
+
+        <record id="hr_appraisal_goal_4" model="hr.appraisal.goal">
+            <field name="name">Typing</field>
+            <field name="employee_id" ref="hr.employee_al"/>
+            <field name="manager_id" ref="hr.employee_admin"/>
+            <field name="progression">050</field>
+            <field name="deadline" eval="(DateTime.now() + relativedelta(months=12)).strftime('%Y-%m-%d')"/>
+        </record>
+
+        <record id="hr_appraisal_goal_5" model="hr.appraisal.goal">
+            <field name="name">Trascripts</field>
+            <field name="employee_id" ref="hr.employee_al"/>
+            <field name="manager_id" ref="hr.employee_admin"/>
+            <field name="progression">075</field>
+            <field name="deadline" eval="(DateTime.now() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
+        </record>
+
+        <record id="hr_appraisal_goal_6" model="hr.appraisal.goal">
+            <field name="name">Trascripts</field>
+            <field name="employee_id" ref="hr.employee_al"/>
+            <field name="manager_id" ref="hr.employee_admin"/>
+            <field name="progression">100</field>
+            <field name="deadline" eval="(DateTime.now() + relativedelta(months=-1)).strftime('%Y-%m-%d')"/>
+        </record>
+
+        <record id="hr_appraisal_goal_7" model="hr.appraisal.goal">
+            <field name="name">Deadlines</field>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="manager_id" ref="hr.employee_admin"/>
+            <field name="progression">050</field>
+            <field name="deadline" eval="(DateTime.now() + relativedelta(months=-1)).strftime('%Y-%m-%d')"/>
+        </record>
+
+        <record id="hr_appraisal_goal_8" model="hr.appraisal.goal">
+            <field name="name">Literacy</field>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="manager_id" ref="hr.employee_admin"/>
+            <field name="progression">025</field>
+            <field name="deadline" eval="(DateTime.now() + relativedelta(months=7)).strftime('%Y-%m-%d')"/>
+        </record>
+
+        <record id="hr_appraisal_goal_9" model="hr.appraisal.goal">
+            <field name="name">Confidentiality</field>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="manager_id" ref="hr.employee_admin"/>
+            <field name="progression">075</field>
+            <field name="deadline" eval="(DateTime.now() + relativedelta(months=1)).strftime('%Y-%m-%d')"/>
+        </record>
+
+        <record id="hr_appraisal_activity_1" model="mail.activity">
+            <field name="res_id" ref="hr_appraisal_4bis"/>
+            <field name="res_model_id" ref="hr_appraisal.model_hr_appraisal"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(months=+1))"/>
+            <field name="summary">Appraisal Form to Fill</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="note">Fill appraisal for Ronnie Hart</field>
+        </record>
+
+        <record id="hr_appraisal_probationary_period_template" model="hr.appraisal.template">
+            <field name="description">Probationary period</field>
+            <field name="company_id" ref=""/>
+            <field name="appraisal_employee_feedback_template" type="html">
+                <h2 class="text-o-color-1"><strong>Overall personal experience</strong></h2>
+                <strong>What are your thoughts on your overall experience during the probationary period ?</strong>
+                <p><br/></p>
+                <strong>What aspects of your role have you enjoyed the most/least ?</strong>
+                <p><br/></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td style="background-color: rgb(214, 165, 189);">
+                                <strong class="text-o-color-4">
+                                    MOST
+                                    <br/>
+                                </strong>
+                            </td>
+                            <td style="background-color: rgb(214, 165, 189);">
+                                <strong class="text-o-color-4">
+                                    LEAST
+                                    <br/>
+                                </strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <br/>
+                            </td>
+                            <td>
+                                <br/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr/>
+                <h2 class="text-o-color-1"><strong>Company Feedback</strong></h2>
+                <strong>How do you feel about the support and resources provided to you during this period ?</strong>
+                <p><br/></p>
+                <strong>What are your thoughts on the company culture and work environment ?</strong>
+                <p><br/></p>
+                <strong>What change would you see in the company ?</strong>
+                <p><br/></p>
+                <hr/>
+                <h2 class="text-o-color-1"><strong>Motivations</strong></h2>
+                <strong>What motivates you to continue working with us, and what are your career aspirations here ?</strong>
+                <p><br/></p>
+            </field>
+            <field name="appraisal_manager_feedback_template" type="html">
+                <h2 class="text-o-color-1"><strong>Overall experience feedback</strong></h2>
+                <p><br/></p>
+                <hr/>
+                <h2 class="text-o-color-1"><strong>SWOT</strong></h2>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>Strength</strong>
+                                <p><br/></p>
+                            </td>
+                            <td>
+                                <strong>Weakness</strong>
+                                <p><br/></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Opportunity</strong>
+                                <p><br/></p>
+                            </td>
+                            <td>
+                                <strong>Threats</strong>
+                                <p><br/></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr/>
+                <h2 class="text-o-color-1"><strong>Career opportunities</strong></h2>
+                <p><br/></p>
+            </field>
+        </record>
+        <record id="hr_appraisal_yearly_template" model="hr.appraisal.template">
+            <field name="description">Yearly meeting</field>
+            <field name="company_id" ref=""/>
+            <field name="appraisal_employee_feedback_template" type="html">
+                <h2 class="text-o-color-1"><strong>Overall personal experience</strong></h2>
+                <strong>What is your overall feeling about the previous year ?</strong>
+                <p><br/></p>
+                <strong>Which emotions were prevalent ?</strong>
+                <p><br/></p>
+                <strong>What are your thoughts on the recent changes in the company ? Were you able to adapt ?</strong>
+                <p><br/></p>
+                <strong>What are your thoughts on working with your team ?</strong>
+                <p><br/></p>
+                <hr/>
+                <h2 class="text-o-color-1"><strong>Create your SWOT</strong></h2>
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>
+                                    Strengths
+                                    <p><br/></p>
+                                </strong>
+                            </td>
+                            <td>
+                                <strong>
+                                    Weaknesses
+                                    <p><br/></p>
+                                </strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>
+                                    Threats
+                                    <p><br/></p>
+                                </strong>
+                            </td>
+                            <td>
+                                <strong>
+                                    Opportunities
+                                    <p><br/></p>
+                                </strong>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <strong>Which skills would you like to prioritize for training, and why ?</strong>
+                <p><br/></p>
+                <strong>Which skills do you possess that you feel the company is not utilizing ?</strong>
+                <p><br/></p>
+                <hr/>
+                <h2 class="text-o-color-1"><strong>Career objective</strong></h2>
+                <strong>Are you happy with your current role ?</strong>
+                <p><br/></p>
+                <strong>Do you seek any particular career path ?</strong>
+                <p><br/></p>
+                <hr/>
+                <h2 class="text-o-color-1"><strong>Time to assess the leadership team:</strong></h2>
+                <strong>Things to keep doing ?</strong>
+                <p><br/></p>
+                <strong>Things to start doing ?</strong>
+                <p><br/></p>
+                <strong>Things to stop doing ?</strong>
+                <p><br/></p>
+            </field>
+            <field name="appraisal_manager_feedback_template" type="html">
+                <h2 class="text-o-color-1"><strong>Management feedback and assessment</strong></h2>
+                <h2><strong>SWOT results</strong></h2>
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>
+                                    Strengths
+                                    <p><br/></p>
+                                </strong>
+                            </td>
+                            <td>
+                                <strong>
+                                    Weaknesses
+                                    <p><br/></p>
+                                </strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>
+                                    Threats
+                                    <p><br/></p>
+                                </strong>
+                            </td>
+                            <td>
+                                <strong>
+                                    Opportunities
+                                    <p><br/></p>
+                                </strong>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h2><strong>360 feedback :</strong></h2>
+                <p><br/></p>
+                <h2><strong>GOALS :</strong></h2>
+                <p><br/></p>
+            </field>
+        </record>
+        <record id="hr_appraisal_post_training_template" model="hr.appraisal.template">
+            <field name="description">Post-training</field>
+            <field name="company_id" ref=""/>
+            <field name="appraisal_employee_feedback_template" type="html">
+                <h2 class="text-o-color-1"><strong>Overall personal experience</strong></h2>
+                <h2><strong>Skills at stakes :</strong></h2>
+                <p><br/></p>
+                <hr/>
+                <h2><strong>Training assessment</strong></h2>
+                <strong>How would you asses your level before the training ?</strong>
+                <p><br/></p>
+                <strong>How would you assess your level post training ?</strong>
+                <p><br/></p>
+                <strong>How confident do you feel in using the skills and knowledge gained from the training in your work ?</strong>
+                <p><br/></p>
+                <strong>How helpful were the provided materials ?</strong>
+                <p><br/></p>
+                <strong>Would you need extra help from the management team ?</strong>
+                <p><br/></p>
+                <strong>Any particular remark on the training ?</strong>
+                <p><br/></p>
+            </field>
+            <field name="appraisal_manager_feedback_template" type="html">
+                <h2 class="text-o-color-1"><strong>Management feedback and assessment</strong></h2>
+                <hr/>
+                <strong>Can the employee accurately recall and explain the key concepts from the training ?</strong>
+                <p><br/></p>
+                <strong>Has the employee effectively integrated the new skills or knowledge into their daily work tasks ?</strong>
+                <p><br/></p>
+                <strong>How actively did the employee participate during the training sessions (e.g., asking questions, contributing to discussions) ?</strong>
+                <p><br/></p>
+                <strong>On a scale of 1 to 10, how would you rate the employee’s overall improvement since the training ?</strong>
+                <p><br/></p>
+                <strong>How would you rate the employee's proficiency in the skill on a scale from 1 to 10 ?</strong>
+                <p><br/></p>
+                <strong>What further actions (e.g., additional training, mentoring) do you recommend to support the employee’s continued development ?</strong>
+                <p><br/></p>
+            </field>
+        </record>
+        <record id="hr_appraisal_exit_interview_template" model="hr.appraisal.template">
+            <field name="description">Exit Interview</field>
+            <field name="company_id" ref=""/>
+            <field name="appraisal_employee_feedback_template" type="html">
+                <h2 class="text-o-color-1"><strong>Overall personal experience</strong></h2>
+                <h2><strong>Feedback on management</strong></h2>
+                <ul>
+                    <li><strong>What aspects of management and leadership at the company were most effective in helping you succeed ?</strong></li>
+                    <li class="oe-nested">
+                        <ul>
+                            <li><strong>Could you provide examples ?</strong></li>
+                        </ul>
+                    </li>
+                </ul>
+                <p><br/></p>
+                <ul>
+                    <li><strong>What advice do you have for improving management's leadership and support for future employees ?</strong></li>
+                </ul>
+                <p><br/></p>
+                <hr/>
+                <h2><strong>Position succession and candidate suggestion</strong></h2>
+                <ul>
+                    <li><strong>What advice would you give to the successor ?</strong></li>
+                </ul>
+                <p><br/></p>
+                <ul>
+                    <li><strong>What were the key challenges in your position ?</strong></li>
+                </ul>
+                <p><br/></p>
+                <ul>
+                    <li><strong>What key skills should the management team focus on for a smooth transition ?</strong></li>
+                </ul>
+                <p><br/></p>
+                <ul>
+                    <li><strong>Who would you see as your successor ?</strong></li>
+                </ul>
+                <p><br/></p>
+            </field>
+            <field name="appraisal_manager_feedback_template" type="html">
+                <h1 class="text-o-color-1">Overall experience feedback</h1>
+                <strong>We wish you the best of success and sincerely thank you for your invaluable contribution to the company's achievements.</strong>
+                <p><br/></p>
+                <hr/>
+                <strong>Handover to manage inside the team</strong>
+                <p><br/></p>
+            </field>
+        </record>
+    </data>
+</odoo>

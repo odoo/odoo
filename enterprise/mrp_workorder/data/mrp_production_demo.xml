@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- <function model="mrp.production" name="button_plan" eval="[ref('mrp.mrp_production_1')]"/> -->
+
+        <record id="quality_point_picture" model="quality.point">
+            <field name="product_ids" eval="[(4, ref('mrp.product_product_computer_desk'))]"/>
+            <field name="picking_type_ids" model="stock.warehouse" eval="[(4, obj().env.ref('stock.warehouse0').manu_type_id.id)]"/>
+            <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
+            <field name="test_type_id" ref="quality.test_type_picture"/>
+            <field name="note">Take a picture of the table head serial number.</field>
+            <field name="title">Picture of the SN</field>
+            <field name="worksheet_page">1</field>
+            <field name="sequence">10</field>
+        </record>
+
+    </data>
+</odoo>

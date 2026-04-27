@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="documents_spreadsheet.SpreadsheetCloneXlsxDialog" t-inherit="web.ConfirmationDialog" t-inherit-mode="primary">
+        <xpath expr="//p[@t-out='props.body']" position="replace">
+            <p>Excel files cannot be previewed or edited directly in Odoo. Opening your file with Odoo Spreadsheet will allow you to do so.</p>
+            <label for="willArchive" class="o_form_label me-4">Send source file to trash</label>
+            <input class="form-check-input" type="checkbox" id="willArchive" name="willArchive" t-model="this.archiveDocumentState.willArchive"/>
+        </xpath>
+    </t>
+
+</templates>

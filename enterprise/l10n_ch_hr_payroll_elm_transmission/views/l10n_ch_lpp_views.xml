@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ch_lpp_insurance_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.lpp.insurance.view.form</field>
+        <field name="model">l10n.ch.lpp.insurance</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll.l10n_ch_lpp_insurance_view_form"/>
+        <field name="arch" type="xml">
+            <sheet position="replace">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder='e.g. "LPP Insurance AK Bern"'/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="company_id" required="1" groups="base.group_multi_company"/>
+                            <field name="insurance_code"/>
+                            <field name="uid_bfs" placeholder="Unknown"/>
+                            <field name="customer_number"/>
+                            <field name="contract_number"/>
+                            <field name="fund_number" string="Payroll Unit"/>
+                        </group>
+                    </group>
+                    <group string="LPP Solution" colspan="2">
+                        <field name="solutions_ids" nolabel="1" colspan="2">
+                            <list editable="top">
+                                <field name="name"/>
+                                <field name="code"/>
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+            </sheet>
+        </field>
+    </record>
+</odoo>

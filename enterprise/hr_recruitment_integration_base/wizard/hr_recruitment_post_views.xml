@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_recruitment_post_job_wizard_view_form" model="ir.ui.view">
+        <field name="name">hr.recruitment.post.job.wizard.form</field>
+        <field name="model">hr.recruitment.post.job.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Post Job">
+                <sheet>
+                    <group name="base_parameters">
+                        <field name="job_id" readonly="1"/>
+                        <field name="platform_ids" widget="many2many_tags_avatar"/>
+                        <field name="job_apply_mail" invisible="apply_method != 'email'"/>
+                        <div class="o_td_label">
+                            <strong>From</strong>
+                        </div>
+                        <div class="o_row">
+                            <field name="campaign_start_date" class="oe_inline narrow"/>
+                            <strong>to</strong>
+                            <field name="campaign_end_date"
+                                class="oe_inline narrow"
+                                placeholder="No Limit"/>
+                        </div>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <group name="content" style="max-height:30em; overflow: auto;">
+                                <div>
+                                    <field name="post_html"/>
+                                </div>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_post_job"
+                            string="Post"
+                            type="object"
+                            class="btn-primary"
+                            invisible="not post_html"
+                            data-hotkey="q"/>
+                    <button string="Cancel"
+                            class="btn-secondary"
+                            special="cancel"
+                            data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

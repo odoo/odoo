@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="l10n_co_dian.dian_key_demo" model="certificate.key">
+            <field name="name">DIAN Private Key</field>
+            <field name="content" type="base64" file="l10n_co_dian/demo/demo_key.pem"/>
+            <field name="company_id" eval="ref('base.demo_company_co')"/>
+        </record>
+    
+        <record id="l10n_co_dian.dian_certificate_demo" model="certificate.certificate">
+            <field name="name">Demo DIAN Certificate</field>
+            <field name="content" type="base64" file="l10n_co_dian/demo/demo_cert.crt"/>
+            <field name="private_key_id" ref="l10n_co_dian.dian_key_demo"/>
+            <field name="company_id" eval="ref('base.demo_company_co')"/>
+        </record>
+    </data>
+
+    <record id="l10n_co_dian.dian_operation_mode_demo" model="l10n_co_dian.operation_mode">
+        <field name="dian_software_id">Odoo</field>
+        <field name="dian_software_operation_mode">invoice</field>
+        <field name="dian_software_security_code">12345</field>
+        <field name="company_id" eval="ref('base.demo_company_co')"/>
+    </record>
+
+    <record id="base.partner_demo_company_co" model="res.partner">
+        <field name="l10n_latam_identification_type_id" eval="ref('l10n_co.rut')"/>
+        <field name="city_id" eval="ref('l10n_co_edi.city_co_150')"/>
+        <field name="l10n_co_edi_obligation_type_ids" eval="[(4, ref('l10n_co_edi.obligation_type_1'))]"/>
+    </record>
+
+    <record id="base.demo_company_co" model="res.company">
+        <field name="vat">1018419008-5</field>
+        <field name="zip">11001</field>
+        <field name="street">CL 12A</field>
+        <field name="country_id" eval="ref('base.co')"/>
+        <field name="state_id" eval="ref('base.state_co_03')"/>
+        <field name="l10n_co_dian_operation_mode_ids" eval="[(4, ref('l10n_co_dian.dian_operation_mode_demo'))]"/>
+        <field name="l10n_co_dian_test_environment" eval="True"/>
+        <field name="l10n_co_dian_certificate_ids" eval="[(4, ref('l10n_co_dian.dian_certificate_demo'))]"/>
+    </record>
+
+    <!-- One journal for Invoices / Credit Notes (dedicated sequence for credit notes) -->
+    <record id="l10n_co_dian.invoice_journal" model="account.journal">
+        <field name="name">DIAN Customer Invoices</field>
+        <field name="code">SETP</field>
+        <field name="type">sale</field>
+        <field name="default_account_id" model="res.company"
+               eval="obj().browse(ref('base.demo_company_co')).account_journal_suspense_account_id.id"/>
+        <field name="l10n_co_edi_dian_authorization_number">18760000001</field>
+        <field name="l10n_co_edi_dian_authorization_date">2019-01-19</field>
+        <field name="l10n_co_edi_dian_authorization_end_date">2030-01-19</field>
+        <field name="l10n_co_edi_min_range_number">990000000</field>
+        <field name="l10n_co_edi_max_range_number">995000000</field>
+        <field name="company_id" ref="base.demo_company_co"/>
+    </record>
+
+    <!-- One journal for Debit Notes -->
+    <record id="l10n_co_dian.debit_note_journal" model="account.journal">
+        <field name="name">DIAN Debit Notes</field>
+        <field name="code">ND</field>
+        <field name="type">sale</field>
+        <field name="l10n_co_edi_debit_note" eval="True"/>
+        <field name="default_account_id" model="res.company"
+               eval="obj().browse(ref('base.demo_company_co')).account_journal_suspense_account_id.id"/>
+        <field name="l10n_co_edi_dian_authorization_number">18760000001</field>
+        <field name="l10n_co_edi_dian_authorization_date">2019-01-19</field>
+        <field name="l10n_co_edi_dian_authorization_end_date">2030-01-19</field>
+        <field name="l10n_co_edi_min_range_number">990000000</field>
+        <field name="l10n_co_edi_max_range_number">995000000</field>
+        <field name="company_id" ref="base.demo_company_co"/>
+    </record>
+
+    <!-- One journal for Support Documents -->
+    <record id="l10n_co_dian.support_document_journal" model="account.journal">
+        <field name="name">DIAN Support Documents</field>
+        <field name="code">SEDS</field>
+        <field name="type">purchase</field>
+        <field name="l10n_co_edi_is_support_document" eval="True"/>
+        <field name="default_account_id" model="res.company"
+               eval="obj().browse(ref('base.demo_company_co')).account_journal_suspense_account_id.id"/>
+        <field name="l10n_co_edi_dian_authorization_number">18760000001</field>
+        <field name="l10n_co_edi_dian_authorization_date">2019-01-19</field>
+        <field name="l10n_co_edi_dian_authorization_end_date">2030-01-19</field>
+        <field name="l10n_co_edi_min_range_number">990000000</field>
+        <field name="l10n_co_edi_max_range_number">995000000</field>
+        <field name="company_id" ref="base.demo_company_co"/>
+    </record>
+</odoo>

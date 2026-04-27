@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="holiday_type_work_risk_imss" model="hr.leave.type">
+        <field name="name">Work risk (IMSS)</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="request_unit">day</field>
+        <field name="unpaid" eval="True"/>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave_unpaid"/>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+        <field name="icon_id" ref="hr_holidays.icon_28"/>
+        <field name="color">5</field>
+        <field name="work_entry_type_id" ref="l10n_mx_work_risk_imss"/>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="holiday_type_maternity_imss" model="hr.leave.type">
+        <field name="name">Maternity (IMSS)</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="request_unit">day</field>
+        <field name="unpaid" eval="True"/>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave_unpaid"/>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+        <field name="icon_id" ref="hr_holidays.icon_11"/>
+        <field name="color">5</field>
+        <field name="work_entry_type_id" ref="l10n_mx_maternity_imss"/>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="holiday_type_disability_due_to_illness_imss" model="hr.leave.type">
+        <field name="name">Disability due to illness (IMSS)</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="request_unit">day</field>
+        <field name="unpaid" eval="True"/>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave_unpaid"/>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+        <field name="icon_id" ref="hr_holidays.icon_21"/>
+        <field name="color">5</field>
+        <field name="work_entry_type_id" ref="l10n_mx_disability_due_to_illness_imss"/>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

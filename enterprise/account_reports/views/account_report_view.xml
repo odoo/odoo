@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="account_report_tree" model="ir.ui.view">
+            <field name="name">account.report.list</field>
+            <field name="model">account.report</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="country_id"/>
+                    <field name="root_report_id"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="account_report_tree_configure_start_dates" model="ir.ui.view">
+            <field name="name">account.report.tree.configure.start.dates</field>
+            <field name="model">account.report</field>
+            <field name="arch" type="xml">
+                <list edit="True" create="False" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="display_name" readonly="1"/>
+                    <field name="tax_closing_start_date" width="180px"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="account_report_add_sections_tree" model="ir.ui.view">
+            <field name="name">account.report.add.sections.list</field>
+            <field name="model">account.report</field>
+            <field name="arch" type="xml">
+                <list editable="bottom" create="1" delete="1" decoration-muted="not active" open_form_view="True">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name" readonly="1"/>
+                    <field name="country_id" readonly="1"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_account_report_search" model="ir.ui.view">
+            <field name="name">account.report.search</field>
+            <field name="model">account.report</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <search string="Accounting Reports">
+                    <field name="name"/>
+                    <field name="root_report_id"/>
+                    <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Country" name="country_id" domain="[]" context="{'group_by':'country_id'}"/>
+                        <filter string="Root Report" name="root_report_id" domain="[]" context="{'group_by':'root_report_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_account_coa" model="ir.ui.view">
+            <field name="name">account.view.coa</field>
+            <field name="model">account.account</field>
+            <field name="arch" type="xml">
+                <list editable="top" create="1" delete="1" open_form_view="True">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="company_ids" column_invisible="True"/>
+                    <field name="account_type"/>
+                    <field name="current_balance"/>
+                    <field name="tax_ids" optional="hide" widget="many2many_tags"/>
+                    <field name="tag_ids" optional="hide" widget="many2many_tags"/>
+                    <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="account_report_form" model="ir.ui.view">
+            <field name="name">account.report.form</field>
+            <field name="model">account.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="is_account_coverage_report_available" invisible="1"/>
+                        <button class="btn btn-secondary float-end" invisible="not is_account_coverage_report_available"
+                                name="action_download_xlsx_accounts_coverage_report" type="object" string="Accounts Coverage Report"/>
+                    </header>
+
+                    <field name="custom_handler_model_id" invisible="1"/>
+                    <div class="alert alert-info text-center" invisible="not custom_handler_model_id" role="alert">
+                        This report uses report-specific code.
+                        You can customize it manually, but any change in the parameters used for its computation could lead to errors.
+                    </div>
+
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Report Name"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="root_report_id" domain="[('root_report_id', '=', None)]"/>
+                                <field name="availability_condition" required="1" invisible="not root_report_id"/>
+                                <field name="use_sections" invisible="line_ids"/>
+                            </group>
+                            <group>
+                                <field name="active" widget="boolean_toggle"/>
+                                <field name="country_id" invisible="availability_condition != 'country'" required="availability_condition == 'country'"/>
+                                <field name="chart_template" invisible="availability_condition != 'coa'" required="availability_condition == 'coa'"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Lines" name="page_lines" invisible="use_sections">
+                                <field class="w-100" name="line_ids" no_label="1" widget="account_report_lines_list_x2many">
+                                    <list limit="2000">
+                                        <field name="id" column_invisible="1"/>
+                                        <field name="sequence" column_invisible="1"/>
+                                        <field name="parent_id" column_invisible="1"/>
+                                        <field name="hierarchy_level" column_invisible="1"/>
+
+                                        <field name="name"/>
+                                        <field name="code" optional="hide"/>
+                                        <field name="print_on_new_page" optional="hide"/>
+                                        <field name="hide_if_zero" optional="hide"/>
+                                        <field name="user_groupby" optional="hide"/>
+                                        <field name="foldable" optional="hide"/>
+                                    </list>
+                                </field>
+                            </page>
+
+                            <page string="Sections" name="page_sections" invisible="not use_sections">
+                                <field
+                                    name="section_report_ids"
+                                    no_label="1"
+                                    options="{'no_create': True, 'no_quick_create': True}"
+                                    domain="[('section_report_ids', '=', False)]"
+                                    context="{'list_view_ref': 'account_reports.account_report_add_sections_tree', 'active_test': False}"
+                                />
+                            </page>
+
+                            <page string="Columns" name="page_columns" invisible="use_sections">
+                                <field name="column_ids">
+                                    <list editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="expression_label"/>
+                                        <field  name="figure_type"/>
+                                        <field name="sortable"/>
+                                        <field name="blank_if_zero"/>
+                                    </list>
+                                </field>
+                            </page>
+
+                            <page string="Options" name="page_options" invisible="use_sections">
+                                <group>
+                                    <group >
+                                        <field name="load_more_limit"/>
+                                        <field name="prefix_groups_threshold"/>
+                                        <field name="filter_hierarchy" required="1"/>
+                                        <field name="filter_multi_company" groups="base.group_multi_company" required="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="default_opening_date_filter" required="True"/>
+                                        <field name="horizontal_group_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
+                                        <field name="filter_analytic" groups="analytic.group_analytic_accounting"/>
+                                        <field name="filter_analytic_groupby" groups="analytic.group_analytic_accounting"/>
+                                    </group>
+                                    <group string="Advanced" class="oe_edit_only">
+                                        <field name="filter_date_range"/>
+                                        <field name="filter_unfold_all"/>
+                                        <field name="filter_growth_comparison"/>
+                                        <field name="filter_period_comparison"/>
+                                        <field name="integer_rounding" placeholder="None"/>
+                                        <field name="currency_translation" required="1" groups="base.group_multi_currency"/>
+                                    </group>
+                                    <group string="Filters" class="oe_edit_only">
+                                        <field name="filter_account_type"/>
+                                        <field name="filter_journals"/>
+                                        <field name="filter_partner"/>
+                                        <field name="filter_show_draft"/>
+                                        <field name="filter_unreconciled"/>
+                                        <field name="filter_aml_ir_filters"/>
+                                        <field name="filter_hide_0_lines" help="This option hides lines with a value of 0"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_report_line_form" model="ir.ui.view">
+            <field name="name">account.report.line.form</field>
+            <field name="model">account.report.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Report Line"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="groupby" invisible="1"/>
+                                <field name="display_custom_groupby_warning" invisible="1"/>
+                                <field name="action_id"/>
+                                <field name="hierarchy_level"/>
+                                <field string="Group By" name="user_groupby"/>
+                                <div colspan="2" class="alert alert-warning" role="alert" invisible="not display_custom_groupby_warning">
+                                    This line uses a custom user-defined 'Group By' value.
+                                    <button class="oe_link" type="object" name="action_reset_custom_groupby">Reset to Standard</button>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="code"/>
+                                <field name="foldable"/>
+                                <field name="print_on_new_page"/>
+                                <field name="hide_if_zero"/>
+                            </group>
+                        </group>
+
+                        <field name="expression_ids">
+                            <list>
+                                <field name="label"/>
+                                <field name="engine"/>
+                                <field name="formula"/>
+                                <field name="subformula"/>
+                                <field name="date_scope" optional="hide"/>
+                            </list>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_report_expression_form" model="ir.ui.view">
+            <field name="name">account.report.expression.form</field>
+            <field name="model">account.report.expression</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="label" placeholder="Expression"/>
+                            </h1>
+                        </div>
+
+                        <notebook>
+                            <page string="Definition" name="page_definition">
+                                <group>
+                                    <field name="engine"/>
+                                    <field name="formula"/>
+                                    <field name="subformula" required="engine == 'domain'"/>
+                                </group>
+                            </page>
+                            <page string="Options" name="page_options">
+                                <group>
+                                    <group>
+                                        <field name="date_scope"/>
+                                        <field name="figure_type"/>
+                                        <field name="carryover_target"/>
+                                    </group>
+                                    <group>
+                                        <field name="blank_if_zero"/>
+                                        <field name="green_on_positive"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_report_horizontal_group_form" model="ir.ui.view">
+            <field name="name">account.report.horizontal.group.form</field>
+            <field name="model">account.report.horizontal.group</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Group Name"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="report_ids" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                        <field name="rule_ids">
+                            <form>
+                                <group>
+                                    <field name="field_name"/>
+                                    <field name="res_model_name" invisible="1"/>
+                                    <field name="domain" widget="domain" options="{'model': 'res_model_name'}"/>
+                                </group>
+                            </form>
+                            <list>
+                                <field name="field_name"/>
+                                <field name="domain"/>
+                            </list>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_report_horizontal_group_tree" model="ir.ui.view">
+            <field name="name">account.report.horizontal.group.list</field>
+            <field name="model">account.report.horizontal.group</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="report_ids" widget="many2many_tags"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="account_report_external_value_tree" model="ir.ui.view">
+            <field name="name">account.report.external.value.list</field>
+            <field name="model">account.report.external.value</field>
+            <field name="arch" type="xml">
+                <list create="0">
+                    <field name="report_country_id" column_invisible="True"/>
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="value"/>
+                    <field name="text_value"/>
+                    <field name="target_report_expression_id" optional="hide"/>
+                    <field name="target_report_line_id" optional="hide"/>
+                    <field name="target_report_expression_label" optional="hide"/>
+                    <field name="foreign_vat_fiscal_position_id" optional="hide"/>
+                    <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="account_report_budget_tree" model="ir.ui.view">
+            <field name="name">account.report.budget.list</field>
+            <field name="model">account.report.budget</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="company_id"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="account_report_budget_form" model="ir.ui.view">
+            <field name="name">account.report.budget.form</field>
+            <field name="model">account.report.budget</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Budget Name"/>
+                            </h1>
+                        </div>
+
+                        <notebook>
+                            <page string="Budget Items" name="budget_items">
+                                <field name="item_ids" nolabel="1">
+                                    <list editable="bottom">
+                                        <field name="account_id" width="40%"/>
+                                        <field name="date" string="Months" options="{'min_precision': 'months'}" width="30%"/>
+                                        <field name="amount" width="30%"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_create_composite_report_list" model="ir.actions.server">
+            <field name="name">Create Composite Report</field>
+            <field name="model_id" ref="model_account_report"/>
+            <field name="binding_model_id" ref="model_account_report"/>
+            <field name="binding_view_types">list</field>
+            <field name="groups_id" eval="[Command.link(ref('account.group_account_user'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+if records:
+    action = records.action_create_composite_report()
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+  <t t-name="documents_spreadsheet.CommentThreadsSidePanel">
+    <div
+      class="o-threads-side-panel"
+      tabindex="0"
+      >
+      <Section>
+        <t t-set-slot="title">Filter comments</t>
+        <select t-model="state.mode" class="o-input">
+          <option value="allSheets">All sheets</option>
+          <option value="activeSheet">This sheet</option>
+        </select>
+      </Section>
+      <t t-foreach="sheetIds" t-as="sheetId" t-key="sheetId">
+        <t t-set="threads" t-value="env.model.getters.getSpreadsheetThreads([sheetId])" />
+        <Section class="'d-flex gap-2 flex-column'">
+          <div class="d-flex justify-content-between">
+            <div class="o-section-title text-truncate" t-esc="env.model.getters.getSheetName(sheetId)" />
+            <div class="text-muted text-nowrap ps-4" t-esc="getNumberOfCommentsLabel(threads.length)" />
+          </div>
+          <div
+            t-foreach="threads"
+            t-as="thread"
+            t-key="thread.threadId"
+            class="o-thread-item border border rounded d-flex"
+            t-on-click="() => this.selectThread(thread.threadId)"
+            t-att-class="{ 'selected': thread.threadId === selectedThreadId }"
+            >
+            <div class="o-sp-badge badge rounded-4 d-flex align-items-center justify-content-center" t-esc="getThreadTitle(thread.threadId)"></div>
+            <div class="d-flex align-self-center ms-auto">
+              <span
+                t-if="thread.isResolved"
+                class="fa fa-check d-flex ps-1 pe-1 resolved"
+                title="Resolved"
+                t-on-click="(ev) => this.openMenu(ev, thread.threadId)"
+              />
+              <span
+                class="cursor-pointer fa fa-ellipsis-v d-flex ps-1 pe-1 thread-menu"
+                t-on-click="(ev) => this.openMenu(ev, thread.threadId)"
+              />
+            </div>
+          </div>
+        </Section>
+      </t>
+      <Menu
+        t-if="menuState.isOpen"
+        position="menuState.position"
+        menuItems="menuItems"
+        onClose.bind="closeMenu"
+      />
+    </div>
+  </t>
+</templates>

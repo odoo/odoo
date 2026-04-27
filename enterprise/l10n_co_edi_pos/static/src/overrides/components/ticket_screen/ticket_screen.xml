@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension">
+        <xpath expr="//InvoiceButton" position="replace">
+            <!-- Remove the InvoiceButton when dian is enabled -->
+            <t t-if="!this.pos.company.l10n_co_edi_pos_dian_enabled">$0</t>
+        </xpath>
+    </t>
+</templates>

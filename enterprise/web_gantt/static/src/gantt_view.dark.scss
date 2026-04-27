@@ -1,0 +1,22 @@
+// = Gantt View
+// ============================================================================
+// No CSS hacks, variables overrides only
+
+.o_web_client .o_gantt_view {
+    --Gantt__DayOff-background-color: rgba(255, 255, 255, .05);
+    // Mix between $gantt-highlight-today-bg and $o-view-background-color
+    // to simulate the superposition of these two colors
+    --Gantt__DayOffToday-background-color: #553F3A;
+
+    .o_gantt_connector {
+        --Connector__ButtonBackground-color: #{$o-view-background-color};
+        --Connector__ButtonReschedule-color: #{darken($o-component-active-border, 10%)};
+        --Connector__ButtonBorder-color: #{$o-gray-500};
+        --Connector__ButtonAccent-color: #{$o-black};
+    }
+
+    .o_gantt_renderer {
+        --Gantt__DayOff-background-color: #{$o-gray-300};
+        --Gantt__DayOffToday-background-color: #{$gantt-highlight-today-bg};
+    }
+}

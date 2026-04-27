@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AgedPartnerBalanceFilters" t-inherit="account_reports.AccountReportFiltersCustomizable">
+        <xpath expr="//div[@id='filter_extra_options']" position="before">
+            <t t-if="'aging_based_on' in controller.options">
+                <div>
+                    <t t-call="account_reports.AccountReportAgingBasedOn"/>
+                </div>
+            </t>
+            <t>
+                <div id="filter_aging_interval">
+                    <t t-call="account_reports.AccountReportAgingInterval"/>
+                </div>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[@id='filter_extra_options']" position="replace">
+            <t t-call="account_reports.AgedPartnerBalanceFilterExtraOptions"/>
+        </xpath>
+    </t>
+</templates>

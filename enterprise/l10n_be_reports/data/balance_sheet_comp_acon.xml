@@ -1,0 +1,682 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data auto_sequence="1">
+        <record id="account_financial_report_bs_comp_acon" model="account.report">
+            <field name="name">Balance Sheet (Abbr Con)</field>
+            <field name="root_report_id" ref="account_reports.balance_sheet"/>
+            <field name="availability_condition">coa</field>
+            <field name="chart_template">be_comp</field>
+            <field name="filter_unfold_all" eval="True"/>
+            <field name="filter_date_range" eval="False"/>
+            <field name="filter_analytic_groupby" eval="True"/>
+            <field name="filter_journals" eval="True"/>
+            <field name="country_id" ref="base.be"/>
+            <field name="filter_multi_company">selector</field>
+            <field name="column_ids">
+                <record id="account_financial_report_bs_comp_acon_column" model="account.report.column">
+                    <field name="name">Balance</field>
+                    <field name="expression_label">balance</field>
+                </record>
+            </field>
+            <field name="line_ids">
+                <record id="account_financial_report_bs_comp_acon_a" model="account.report.line">
+                    <field name="name">ASSETS</field>
+                    <field name="hierarchy_level">0</field>
+                    <field name="horizontal_split_side">left</field>
+                    <field name="children_ids">
+                        <record id="account_financial_report_bs_comp_acon_a_fe" model="account.report.line">
+                            <field name="name">20 - Formation Expenses</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_BS_20</field>
+                            <field name="groupby">account_id</field>
+                            <field name="foldable" eval="True"/>
+                            <field name="account_codes_formula">20</field>
+                        </record>
+                        <record id="account_financial_report_bs_comp_acon_a_fa" model="account.report.line">
+                            <field name="name">21/28 - Fixed Assets</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_BS_A_21_28</field>
+                            <field name="aggregation_formula">BE_BS_21.balance + BE_BS_22_27.balance + BE_BS_A_28.balance</field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_bs_comp_acon_a_fa_ifa" model="account.report.line">
+                                    <field name="name">21 - Intangible Fixed Assets</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_21</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">21</field>
+                                </record>
+                                <record id="account_financial_report_bs_comp_acon_a_fa_tfa" model="account.report.line">
+                                    <field name="name">22/27 - Tangible Fixed Assets</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_22_27</field>
+                                    <field name="aggregation_formula">BE_BS_22.balance + BE_BS_23.balance + BE_BS_24.balance + BE_BS_25.balance + BE_BS_26.balance + BE_BS_27.balance</field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_comp_acon_a_fa_tfa_lb" model="account.report.line">
+                                            <field name="name">22 - Land and Buildings</field>
+                                            <field name="code">BE_BS_22</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">22</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_a_fa_tfa_pme" model="account.report.line">
+                                            <field name="name">23 - Plant, Machinery and Equipment</field>
+                                            <field name="code">BE_BS_23</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">23</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_a_fa_tfa_fv" model="account.report.line">
+                                            <field name="name">24 - Furniture and Vehicles</field>
+                                            <field name="code">BE_BS_24</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">24</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_a_fa_tfa_losr" model="account.report.line">
+                                            <field name="name">25 - Leasing and Other Similar Rights</field>
+                                            <field name="code">BE_BS_25</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">25</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_a_fa_tfa_otfa" model="account.report.line">
+                                            <field name="name">26 - Other Tangible Fixed Assets</field>
+                                            <field name="code">BE_BS_26</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">26</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_a_fa_tfa_aucap" model="account.report.line">
+                                            <field name="name">27 - Assets Under Construction and Advance Payments</field>
+                                            <field name="code">BE_BS_27</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">27</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_bs_comp_acon_a_fa_ffa" model="account.report.line">
+                                    <field name="name">28 - Financial Fixed Assets</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_A_28</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">28</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="account_financial_report_bs_comp_acon_a_ca" model="account.report.line">
+                            <field name="name">29/58 - Current Assets</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_BS_COMP_A_29_58</field>
+                            <field name="aggregation_formula">BE_BS_29.balance + BE_BS_A_3.balance + BE_BS_40_41.balance + BE_BS_COMP_A_50_53.balance + BE_BS_54_58.balance + BE_BS_490_1.balance</field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_bs_comp_acon_a_ca_aramtoy" model="account.report.line">
+                                    <field name="name">29 - Amounts Receivable After More Than One Year</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_29</field>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_bs_comp_acon_a_ca_aramtoy_remaining_balance" model="account.report.expression">
+                                            <field name="label">remaining_balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">29\(290,291)</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_a_ca_aramtoy_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">BE_BS_290.balance + BE_BS_291.balance + BE_BS_29.remaining_balance</field>
+                                        </record>
+                                    </field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_comp_acon_a_ca_aramtoy_td" model="account.report.line">
+                                            <field name="name">290 - Trade Debtors</field>
+                                            <field name="code">BE_BS_290</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">290</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_a_ca_aramtoy_oar" model="account.report.line">
+                                            <field name="name">291 - Other Amounts Receivable</field>
+                                            <field name="code">BE_BS_291</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">291</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_bs_comp_acon_a_ca_scp" model="account.report.line">
+                                    <field name="name">3 - Stocks and Contracts in Progress</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_A_3</field>
+                                    <field name="aggregation_formula">BE_BS_A_30_36.balance + BE_BS_37.balance</field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_comp_acon_a_ca_scp_s" model="account.report.line">
+                                            <field name="name">30/36 - Stocks</field>
+                                            <field name="code">BE_BS_A_30_36</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">30 + 31 + 32 + 33 + 34 + 35 + 36</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_a_ca_scp_cp" model="account.report.line">
+                                            <field name="name">37 - Contracts in Progress</field>
+                                            <field name="code">BE_BS_37</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">37</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_bs_comp_acon_a_ca_arwoy" model="account.report.line">
+                                    <field name="name">40/41 - Amounts Receivable Within One Year</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_40_41</field>
+                                    <field name="aggregation_formula">BE_BS_40.balance + BE_BS_41.balance</field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_comp_acon_a_ca_arwoy_td" model="account.report.line">
+                                            <field name="name">40 - Trade Debtors</field>
+                                            <field name="code">BE_BS_40</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">40</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_a_ca_arwoy_oar" model="account.report.line">
+                                            <field name="name">41 - Other Amounts Receivable</field>
+                                            <field name="code">BE_BS_41</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">41</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_bs_comp_acon_a_ca_ci" model="account.report.line">
+                                    <field name="name">50/53 - Current Investments</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_COMP_A_50_53</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">50 + 51 + 52 + 53</field>
+                                </record>
+                                <record id="account_financial_report_bs_comp_acon_a_ca_cbh" model="account.report.line">
+                                    <field name="name">54/58 - Cash at Bank and in Hand</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_54_58</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">54 + 55 + 56 + 57 + 58</field>
+                                </record>
+                                <record id="account_financial_report_bs_comp_acon_a_ca_adi" model="account.report.line">
+                                    <field name="name">490/1 - Accruals and Deferred Income</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_490_1</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">490 + 491 + 495 + 496</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="account_financial_report_bs_comp_acon_a_tot" model="account.report.line">
+                            <field name="name">20/58 - TOTAL ASSETS</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_BS_COMP_A_20_58</field>
+                            <field name="aggregation_formula">BE_BS_20.balance + BE_BS_A_21_28.balance + BE_BS_COMP_A_29_58.balance</field>
+                        </record>
+                    </field>
+                </record>
+                <record id="account_financial_report_bs_comp_acon_el" model="account.report.line">
+                    <field name="name">EQUITY AND LIABILITIES</field>
+                    <field name="hierarchy_level">0</field>
+                    <field name="horizontal_split_side">right</field>
+                    <field name="print_on_new_page" eval="True"/>
+                    <field name="children_ids">
+                        <record id="account_financial_report_bs_comp_acon_el_e" model="account.report.line">
+                            <field name="name">10/15 - Equity</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_BS_COMP_ACON_10_15</field>
+                            <field name="aggregation_formula">BE_BS_COMP_CON_10_11.balance + BE_BS_12.balance + BE_BS_COMP_CON_13.balance + BE_BS_COMP_A_14.balance + BE_BS_15.balance - BE_BS_COMP_19.balance</field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_bs_comp_acon_el_e_c" model="account.report.line">
+                                    <field name="name">10/11 - Contributions</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_COMP_CON_10_11</field>
+                                    <field name="expression_ids">
+                                        <record id="account_financial_report_bs_comp_acon_el_e_c_remaining_balance" model="account.report.expression">
+                                            <field name="label">remaining_balance</field>
+                                            <field name="engine">account_codes</field>
+                                            <field name="formula">-10 - 11\(110,111)</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_el_e_c_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">BE_BS_COMP_CON_110.balance + BE_BS_COMP_CON_111.balance + BE_BS_COMP_CON_10_11.remaining_balance</field>
+                                        </record>
+                                    </field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_comp_acon_el_e_c_a" model="account.report.line">
+                                            <field name="name">110 - Available</field>
+                                            <field name="code">BE_BS_COMP_CON_110</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">-110</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_el_e_c_na" model="account.report.line">
+                                            <field name="name">111 - Not Available</field>
+                                            <field name="code">BE_BS_COMP_CON_111</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">-111</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_bs_comp_acon_el_e_rs" model="account.report.line">
+                                    <field name="name">12 - Revaluation Surpluses</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_12</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-12</field>
+                                </record>
+                                <record id="account_financial_report_bs_comp_acon_el_e_r" model="account.report.line">
+                                    <field name="name">13 - Reserves</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_COMP_CON_13</field>
+                                    <field name="aggregation_formula">BE_BS_COMP_CON_130_1.balance + BE_BS_COMP_132.balance + BE_BS_COMP_133.balance</field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_comp_acon_el_e_r_rno" model="account.report.line">
+                                            <field name="name">130/1 - Reserves Not Available</field>
+                                            <field name="code">BE_BS_COMP_CON_130_1</field>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_bs_comp_acon_el_e_r_rno_remaining_balance" model="account.report.expression">
+                                                    <field name="label">remaining_balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">-130</field>
+                                                </record>
+                                                <record id="account_financial_report_bs_comp_acon_el_e_r_rno_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">aggregation</field>
+                                                    <field name="formula">BE_BS_COMP_1311.balance + BE_BS_COMP_1312.balance + BE_BS_COMP_1313.balance + BE_BS_COMP_1319.balance + BE_BS_COMP_CON_130_1.remaining_balance</field>
+                                                </record>
+                                            </field>
+                                            <field name="children_ids">
+                                                <record id="account_financial_report_bs_comp_acon_el_e_r_rno_rnos" model="account.report.line">
+                                                    <field name="name">1311 - Reserves Not Available Statutorily</field>
+                                                    <field name="code">BE_BS_COMP_1311</field>
+                                                    <field name="groupby">account_id</field>
+                                                    <field name="foldable" eval="True"/>
+                                                    <field name="account_codes_formula">-1311</field>
+                                                </record>
+                                                <record id="account_financial_report_bs_comp_acon_el_e_r_rno_pos" model="account.report.line">
+                                                    <field name="name">1312 - Purchase of Own Shares</field>
+                                                    <field name="code">BE_BS_COMP_1312</field>
+                                                    <field name="groupby">account_id</field>
+                                                    <field name="foldable" eval="True"/>
+                                                    <field name="account_codes_formula">-1312</field>
+                                                </record>
+                                                <record id="account_financial_report_bs_comp_acon_el_e_r_rno_fs" model="account.report.line">
+                                                    <field name="name">1313 - Financial Support</field>
+                                                    <field name="code">BE_BS_COMP_1313</field>
+                                                    <field name="groupby">account_id</field>
+                                                    <field name="foldable" eval="True"/>
+                                                    <field name="account_codes_formula">-1313</field>
+                                                </record>
+                                                <record id="account_financial_report_bs_comp_acon_el_e_r_rno_o" model="account.report.line">
+                                                    <field name="name">1319 - Other</field>
+                                                    <field name="code">BE_BS_COMP_1319</field>
+                                                    <field name="groupby">account_id</field>
+                                                    <field name="foldable" eval="True"/>
+                                                    <field name="account_codes_formula">-1319</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_el_e_r_ur" model="account.report.line">
+                                            <field name="name">132 - Untaxed Reserves</field>
+                                            <field name="code">BE_BS_COMP_132</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">-132</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_el_e_r_ar" model="account.report.line">
+                                            <field name="name">133 - Available Reserves</field>
+                                            <field name="code">BE_BS_COMP_133</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">-133</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_bs_comp_acon_el_e_apl" model="account.report.line">
+                                    <field name="name">14 - Accumulated Profits (Losses) (+)/(-)</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_COMP_A_14</field>
+                                    <field name="aggregation_formula">BE_BS_COMP_A_14_PLY.balance + BE_BS_14_OAY.balance + BE_BS_14_PLPY.balance</field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_comp_acon_el_e_apl_ply" model="account.report.line">
+                                            <field name="name">Profit (Loss) of the Year</field>
+                                            <field name="code">BE_BS_COMP_A_14_PLY</field>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_bs_comp_acon_el_e_apl_ply_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">aggregation</field>
+                                                    <field name="formula">BE_PL_COMP_A_9905.balance</field>
+                                                    <field name="subformula">cross_report</field>
+                                                    <field name="date_scope">from_fiscalyear</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_el_e_apl_oay" model="account.report.line">
+                                            <field name="name">Other Appropriations of the Year</field>
+                                            <field name="code">BE_BS_14_OAY</field>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_bs_comp_acon_el_e_apl_oay_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">-69 - 79 - 14</field>
+                                                    <field name="date_scope">from_fiscalyear</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_el_e_apl_plpy" model="account.report.line">
+                                            <field name="name">Profits (Losses) from Previous Years</field>
+                                            <field name="code">BE_BS_14_PLPY</field>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_bs_comp_acon_el_e_apl_plpy_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">-6 - 7 - 14</field>
+                                                    <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_bs_comp_acon_el_e_cs" model="account.report.line">
+                                    <field name="name">15 - Capital Subsidies</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_15</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-15</field>
+                                </record>
+                                <record id="account_financial_report_bs_comp_acon_el_e_asdna" model="account.report.line">
+                                    <field name="name">19 - Advance to Shareholders on the Distribution of Net Assets</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_COMP_19</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">19</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="account_financial_report_bs_comp_acon_el_pdt" model="account.report.line">
+                            <field name="name">16 - Provisions and Deferred Taxes</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_BS_COMP_16</field>
+                            <field name="aggregation_formula">BE_BS_COMP_160_5.balance + BE_BS_168.balance</field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_bs_comp_acon_el_pdt_plc" model="account.report.line">
+                                    <field name="name">160/5 - Provisions for Liabilities and Charges</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_COMP_160_5</field>
+                                    <field name="aggregation_formula">BE_BS_160.balance + BE_BS_161.balance + BE_BS_162.balance + BE_BS_163.balance + BE_BS_164_5.balance</field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_comp_acon_el_pdt_plc_pso" model="account.report.line">
+                                            <field name="name">160 - Pensions and Similar Obligations</field>
+                                            <field name="code">BE_BS_160</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">-160</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_el_pdt_plc_t" model="account.report.line">
+                                            <field name="name">161 - Taxes</field>
+                                            <field name="code">BE_BS_161</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">-161</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_el_pdt_plc_mrm" model="account.report.line">
+                                            <field name="name">162 - Major Repairs and Maintenance</field>
+                                            <field name="code">BE_BS_162</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">-162</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_el_pdt_plc_eo" model="account.report.line">
+                                            <field name="name">163 - Environmental Obligations</field>
+                                            <field name="code">BE_BS_163</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">-163</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_el_pdt_plc_olc" model="account.report.line">
+                                            <field name="name">164/5 - Other Liabilities and Charges</field>
+                                            <field name="code">BE_BS_164_5</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">-164 - 165</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_bs_comp_acon_el_pdt_dt" model="account.report.line">
+                                    <field name="name">168 - Deferred Taxes</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_168</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-168</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="account_financial_report_bs_comp_acon_el_ap" model="account.report.line">
+                            <field name="name">17/49 - Amounts Payable</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="print_on_new_page" eval="True"/>
+                            <field name="code">BE_BS_COMP_A_17_49</field>
+                            <field name="aggregation_formula">BE_BS_A_17.balance + BE_BS_COMP_42_48.balance + BE_BS_492_3.balance + BE_BS_499.balance</field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_bs_comp_acon_el_ap_apamtoy" model="account.report.line">
+                                    <field name="name">17 - Amounts Payable After More Than One Year</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_A_17</field>
+                                    <field name="aggregation_formula">BE_BS_A_170_4.balance + BE_BS_A_175.balance + BE_BS_176.balance + BE_BS_178_9.balance</field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_comp_acon_el_ap_apamtoy_fd" model="account.report.line">
+                                            <field name="name">170/4 - Financial Debts</field>
+                                            <field name="code">BE_BS_A_170_4</field>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_bs_comp_acon_el_ap_apamtoy_fd_remaining_balance" model="account.report.expression">
+                                                    <field name="label">remaining_balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">-170 - 171</field>
+                                                </record>
+                                                <record id="account_financial_report_bs_comp_acon_el_ap_apamtoy_fd_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">aggregation</field>
+                                                    <field name="formula">BE_BS_A_172_3.balance + BE_BS_A_174_0.balance + BE_BS_A_170_4.remaining_balance</field>
+                                                </record>
+                                            </field>
+                                            <field name="children_ids">
+                                                <record id="account_financial_report_bs_comp_acon_el_ap_apamtoy_fd_ciloso" model="account.report.line">
+                                                    <field name="name">172/3 - Credit Institutions, Leasing and Other Similar Obligations</field>
+                                                    <field name="hierarchy_level">5</field>
+                                                    <field name="code">BE_BS_A_172_3</field>
+                                                    <field name="groupby">account_id</field>
+                                                    <field name="foldable" eval="True"/>
+                                                    <field name="account_codes_formula">-172 - 173</field>
+                                                </record>
+                                                <record id="account_financial_report_bs_comp_acon_el_ap_apamtoy_fd_ol" model="account.report.line">
+                                                    <field name="name">174/0 - Other Loans</field>
+                                                    <field name="hierarchy_level">5</field>
+                                                    <field name="code">BE_BS_A_174_0</field>
+                                                    <field name="groupby">account_id</field>
+                                                    <field name="foldable" eval="True"/>
+                                                    <field name="account_codes_formula">-174</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_el_ap_apamtoy_td" model="account.report.line">
+                                            <field name="name">175 - Trade Debts</field>
+                                            <field name="code">BE_BS_A_175</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">-175</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_el_ap_apamtoy_apcp" model="account.report.line">
+                                            <field name="name">176 - Advance Payments on Contracts in Progress</field>
+                                            <field name="code">BE_BS_176</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">-176</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_el_ap_apamtoy_oap" model="account.report.line">
+                                            <field name="name">178/9 - Other Amounts Payable</field>
+                                            <field name="code">BE_BS_178_9</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">-178 - 179</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_bs_comp_acon_el_ap_apwoy" model="account.report.line">
+                                    <field name="name">42/48 - Amounts Payable Within One Year</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_COMP_42_48</field>
+                                    <field name="aggregation_formula">BE_BS_42.balance + BE_BS_43.balance + BE_BS_44.balance + BE_BS_46.balance + BE_BS_45.balance + BE_BS_COMP_47_48.balance</field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_comp_acon_el_ap_apwoy_cpapdwoy" model="account.report.line">
+                                            <field name="name">42 - Current Portion of Amounts Payable After More Than One Year Falling Due Within One Year</field>
+                                            <field name="code">BE_BS_42</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">-42</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_el_ap_apwoy_fd" model="account.report.line">
+                                            <field name="name">43 - Financial Debts</field>
+                                            <field name="code">BE_BS_43</field>
+                                            <field name="aggregation_formula">BE_BS_430_8.balance + BE_BS_439.balance</field>
+                                            <field name="children_ids">
+                                                <record id="account_financial_report_bs_comp_acon_el_ap_apwoy_fd_ci" model="account.report.line">
+                                                    <field name="name">430/8 - Credit Institutions</field>
+                                                    <field name="code">BE_BS_430_8</field>
+                                                    <field name="groupby">account_id</field>
+                                                    <field name="foldable" eval="True"/>
+                                                    <field name="account_codes_formula">-430 - 431 - 432 - 433 - 434 - 435 - 436 - 437 - 438</field>
+                                                </record>
+                                                <record id="account_financial_report_bs_comp_acon_el_ap_apwoy_fd_ol" model="account.report.line">
+                                                    <field name="name">439 - Other Loans</field>
+                                                    <field name="code">BE_BS_439</field>
+                                                    <field name="groupby">account_id</field>
+                                                    <field name="foldable" eval="True"/>
+                                                    <field name="account_codes_formula">-439</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_el_ap_apwoy_td" model="account.report.line">
+                                            <field name="name">44 - Trade Debts</field>
+                                            <field name="code">BE_BS_44</field>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_bs_comp_acon_el_ap_apwoy_td_remaining_balance" model="account.report.expression">
+                                                    <field name="label">remaining_balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">-44\(440,441,442,443,444)</field>
+                                                </record>
+                                                <record id="account_financial_report_bs_comp_acon_el_ap_apwoy_td_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">aggregation</field>
+                                                    <field name="formula">BE_BS_440_4.balance + BE_BS_441.balance + BE_BS_44.remaining_balance</field>
+                                                </record>
+                                            </field>
+                                            <field name="children_ids">
+                                                <record id="account_financial_report_bs_comp_acon_el_ap_apwoy_td_s" model="account.report.line">
+                                                    <field name="name">440/4 - Suppliers</field>
+                                                    <field name="code">BE_BS_440_4</field>
+                                                    <field name="groupby">account_id</field>
+                                                    <field name="foldable" eval="True"/>
+                                                    <field name="account_codes_formula">-440 - 442 - 443 - 444</field>
+                                                </record>
+                                                <record id="account_financial_report_bs_comp_acon_el_ap_apwoy_td_bep" model="account.report.line">
+                                                    <field name="name">441 - Bills of Exchange Payable</field>
+                                                    <field name="code">BE_BS_441</field>
+                                                    <field name="groupby">account_id</field>
+                                                    <field name="foldable" eval="True"/>
+                                                    <field name="account_codes_formula">-441</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_el_ap_apwoy_apcp" model="account.report.line">
+                                            <field name="name">46 - Advance Payments on Contracts in Progress</field>
+                                            <field name="code">BE_BS_46</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">-46</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_el_ap_apwoy_trss" model="account.report.line">
+                                            <field name="name">45 - Taxes, Remuneration and Social Security</field>
+                                            <field name="code">BE_BS_45</field>
+                                            <field name="aggregation_formula">BE_BS_450_3.balance + BE_BS_454_9.balance</field>
+                                            <field name="children_ids">
+                                                <record id="account_financial_report_bs_comp_acon_el_ap_apwoy_trss_t" model="account.report.line">
+                                                    <field name="name">450/3 - Taxes</field>
+                                                    <field name="code">BE_BS_450_3</field>
+                                                    <field name="groupby">account_id</field>
+                                                    <field name="foldable" eval="True"/>
+                                                    <field name="account_codes_formula">-450 - 451 - 452 - 453</field>
+                                                </record>
+                                                <record id="account_financial_report_bs_comp_acon_el_ap_apwoy_trss_rss" model="account.report.line">
+                                                    <field name="name">454/9 - Remuneration and Social Security</field>
+                                                    <field name="code">BE_BS_454_9</field>
+                                                    <field name="groupby">account_id</field>
+                                                    <field name="foldable" eval="True"/>
+                                                    <field name="account_codes_formula">-454 - 455 - 456 - 457 - 458 - 459</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="account_financial_report_bs_comp_acon_el_ap_apwoy_oap" model="account.report.line">
+                                            <field name="name">47/48 - Other Amounts Payable</field>
+                                            <field name="code">BE_BS_COMP_47_48</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">-47 - 48</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_bs_comp_acon_el_ap_adi" model="account.report.line">
+                                    <field name="name">492/3 - Accruals and Deferred Income</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_492_3</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-492 - 493 - 497</field>
+                                </record>
+                                <record id="account_financial_report_bs_comp_acon_el_ap_sa" model="account.report.line">
+                                    <field name="name">499 - Suspense Accounts</field>
+                                    <field name="hierarchy_level">2</field>
+                                    <field name="code">BE_BS_499</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-499</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="account_financial_report_bs_comp_acon_el_tot" model="account.report.line">
+                            <field name="name">10/49 - TOTAL LIABILITIES</field>
+                            <field name="hierarchy_level">1</field>
+                            <field name="code">BE_BS_COMP_ACON_10_49</field>
+                            <field name="aggregation_formula">BE_BS_COMP_ACON_10_15.balance + BE_BS_COMP_16.balance + BE_BS_COMP_A_17_49.balance</field>
+                        </record>
+                    </field>
+                </record>
+            </field>
+        </record>
+    </data>
+    <data>
+        <record id="action_account_report_be_pl_comp_a" model="ir.actions.client">
+            <!--Kept as a separate action to force opening of the correct Belgian P&L, whatever the previous options.-->
+            <field name="name">Profit and Loss</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_financial_report_pl_comp_a')}"/>
+        </record>
+        <record id="account_financial_report_bs_comp_acon_el_e_apl_ply" model="account.report.line">
+            <field name="action_id" ref="action_account_report_be_pl_comp_a"/>
+        </record>
+    </data>
+</odoo>

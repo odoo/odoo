@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+        <record forcecreate="True" id="ir_cron_iap_google_reserve_availabilities" model="ir.cron">
+            <field name="name">Appointment: Upload Availabilities to IAP for Google Reserve</field>
+            <field name="model_id" ref="model_google_reserve_merchant"/>
+            <field name="state">code</field>
+            <field name="code">model._google_reserve_upload_feed()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <!-- 
+                This CRON is purely code initiated with a CRON trigger.
+                It is ran on demand by the IAP server and should not run automatically.
+                We use a CRON as this process can take time and is not supposed to be ran during
+                the span of an HTTP request from the IAP server.
+            -->
+            <field name="interval_number">9999</field>
+            <field name="interval_type">months</field>
+        </record>
+    </data>
+</odoo>

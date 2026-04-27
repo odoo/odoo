@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_pos_tyro" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.tyro</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook invisible="use_payment_terminal != 'tyro'">
+                    <page name="settings" string="Tyro Settings">
+                        <group>
+                            <group>
+                                <field name="tyro_mode" required="use_payment_terminal == 'tyro'"/>
+                                <field name="tyro_merchant_id" required="use_payment_terminal == 'tyro'"/>
+                                <field name="tyro_terminal_id" required="use_payment_terminal == 'tyro'"/>
+                                <field name="tyro_integration_key" readonly="True" groups="base.group_no_one"/>
+                                <button name="action_pair_tyro_terminal" type="object" string="Pair Terminal" class="btn-primary text-nowrap"/>
+                            </group>
+                            <group>
+                                <field name="tyro_integrated_receipts" required="use_payment_terminal == 'tyro'"/>
+                                <field name="tyro_always_print_merchant_receipt" required="use_payment_terminal == 'tyro'" invisible="not tyro_integrated_receipts"/>
+                                <field name="tyro_surcharge_product_id" required="use_payment_terminal == 'tyro'" groups="base.group_no_one"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page name="logs" string="Logs">
+                        <div class="d-flex" style="height: 600px;">
+                            <iframe invisible="tyro_mode != 'prod'" title="Tyro logs" src="https://iclient.tyro.com/logs.html" class="w-100"/>
+                            <iframe invisible="tyro_mode != 'test'" title="Tyro logs" src="https://iclient.test.tyro.com/logs.html" class="w-100"/>
+                            <iframe invisible="tyro_mode != 'simulator'" title="Tyro logs" src="https://iclientsimulator.test.tyro.com/logs.html" class="w-100"/>
+                        </div>
+                    </page>
+                    <page name="reports" string="Reports">
+                        <button name="action_get_tyro_report" type="object" string="View Reports" class="btn-primary text-nowrap"/>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>

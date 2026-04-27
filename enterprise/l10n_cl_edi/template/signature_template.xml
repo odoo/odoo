@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<odoo>
+    <data>
+        <template id="signature_template">
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><t t-out="signed_info"/><SignatureValue t-out="signature_value"/><KeyInfo><KeyValue><RSAKeyValue><Modulus t-out="modulus"/><Exponent t-out="exponent"/></RSAKeyValue></KeyValue><X509Data><X509Certificate t-out="certificate"/></X509Data></KeyInfo></Signature>
+        </template>
+
+        <template id="signed_info_template">
+<SignedInfo xmlns="http://www.w3.org/2000/09/xmldsig#"><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><Reference t-att-URI="uri"><Transforms><Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><DigestValue t-out="digest_value"/></Reference></SignedInfo>
+        </template>
+
+        <template id="signed_info_template_with_xsi">
+<SignedInfo xmlns="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><Reference t-att-URI="uri"><Transforms><Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><DigestValue t-out="digest_value"/></Reference></SignedInfo>
+        </template>
+    </data>
+</odoo>

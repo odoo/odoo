@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name="spreadsheet_sale_management.SpreadsheetFieldSyncAction" class="o_action">
+        <SpreadsheetNavbar t-props="navbarProps">
+            <t t-set-slot="navbar-additional-actions">
+                <button
+                    t-if="data.order_id"
+                    class="btn btn-primary mx-1 py-0 px-1"
+                    t-on-click="writeToOrder"
+                    data-hotkey="s"
+                >
+                    Save in <t t-esc="data.order_display_name"/>
+                </button>
+            </t>
+        </SpreadsheetNavbar>
+        <SpreadsheetComponent model="model"/>
+    </div>
+
+</templates>

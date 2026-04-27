@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_form_inherit_l10n_pe_edi" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n.pe.edi</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='invoicing_settings']" position="after">
+                <!-- TODO: invisible="country_code != 'PE'" ??? -->
+                <block title="Peruvian Electronic Invoicing" id="invoicing_peruvian_settings" invisible="country_code != 'PE'">
+                    <setting help="Operator that will sign your invoices (by default IAP, Odoo take care of this process and give you for free the first 1000 declarations) as part of the enterprise licence.">
+                        <field name="l10n_pe_edi_provider" widget="radio"/>
+                    </setting>
+                    <setting help="In order to avoid sign invoices on your test environment set as true when you do not need the invoices to be really signed (it is blocked after several attempts to avoid abuse, please ensure just use it for testing purposes).">
+                        <field name="l10n_pe_edi_test_env"/>
+                    </setting>
+                    <setting help="SOL Credentials" invisible="l10n_pe_edi_provider == 'iap'">
+                        <div class="text-muted">
+                            This login and password is given by the SUNAT it means by its spanish acronym
+                            <b>"SUNAT Operaciones en Línea - SOL"</b><br/>
+                            Official definition is: <a href="https://www.sunat.gob.pe/menu/ayuda/claveSOL.htm">here</a><br/>
+                            How do you get it?: <a href="http://www.sunat.gob.pe/operacLinea/comoObtener.htm">here</a><br/>
+                        </div>
+                        <div class="content-group">
+                            <div class="row mt32">
+                                <label for="l10n_pe_edi_provider_username" class="col-md-5 o_light_label"/>
+                                <field name="l10n_pe_edi_provider_username"/>
+                                <label for="l10n_pe_edi_provider_password" class="col-md-5 o_light_label"/>
+                                <field name="l10n_pe_edi_provider_password" password="True"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting invisible="l10n_pe_edi_provider == 'iap'">
+                        <field name="l10n_pe_edi_certificate_id" style="width: 100%"/>
+                        <div class="text-muted">
+                            You will need to buy a normal electronic certificate following, you can find a list
+                            of official peruvian companies that can provide to you this service
+                            <a href="https://www.indecopi.gob.pe/web/firmas-digitales/lista-de-servicios-de-confianza-trusted-services-list-tsl-"
+                                target="_NEW">here.</a>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

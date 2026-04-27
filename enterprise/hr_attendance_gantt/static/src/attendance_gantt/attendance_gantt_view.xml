@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr_attendance.AttendanceGanttController" t-inherit="web_gantt.GanttController" t-inherit-mode="primary">
+        <t t-if="showNoContentHelp" position="replace">
+        </t>
+        <t model="model" position="after">
+            <t t-if="showNoContentHelp">
+                <t t-if="props.info.noContentHelp">
+                    <AttendanceActionHelper noContentHelp="props.info.noContentHelp"/>
+                </t>
+                <t t-else="" t-call="web.NoContentHelper"/>
+            </t>
+        </t>
+    </t>
+</odoo>

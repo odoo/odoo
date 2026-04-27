@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="account_sepa_direct_debit_mandate_form">
+            <field name="name">sdd.mandate.form</field>
+            <field name="model">sdd.mandate</field>
+            <field name="arch" type="xml">
+                <form string="Customer mandate">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,active"/>
+                        <!-- When the mandate isn't sent -->
+                        <button string="Send &amp; Print" type="object" name="action_send_and_print" class="btn btn-primary" invisible="state != 'draft' or is_sent"/>
+                        <button string="Validate" type="object" name="action_validate_mandate" class="btn btn-secondary" invisible="state != 'draft' or is_sent"/>
+
+                        <!-- When the mandate is sent -->
+                        <button string="Validate" type="object" name="action_validate_mandate" class="btn btn-primary" invisible="state != 'draft' or not is_sent"/>
+                        <button string="Send &amp; Print" type="object" name="action_send_and_print" class="btn btn-secondary" invisible="state != 'draft' or not is_sent"/>
+
+                        <button string="Cancel" type="object" name="action_cancel_mandate" class="btn btn-secondary" invisible="state != 'draft'"/>
+                        <button string="Close" type="object" name="action_close_mandate" class="btn btn-primary" invisible="state != 'active'"/>
+                        <button string="Revoke" type="object" name="action_revoke_mandate" class="btn btn-secondary"  invisible="state != 'active'"/>
+                    </header>
+
+                    <sheet>
+                        <field name="company_id" invisible="1"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button type="object" name="action_view_payments_to_collect" icon="fa-usd" class="oe_stat_button" invisible="payments_to_collect_nber == 0">
+                                <field name="payments_to_collect_nber" widget="statinfo" string="Collections" help="In-process and completed payments generated under this mandate."/>
+                            </button>
+
+                            <button type="object" name="action_view_paid_invoices" icon="fa-pencil-square-o" class="oe_stat_button" invisible="not paid_invoice_ids">
+                                <field name="paid_invoices_nber" widget="statinfo" string="Invoices Paid" help="Invoices paid with this mandate."/>
+                            </button>
+                        </div>
+                        <div>
+                            <field name="partner_parent_id" invisible="1"/>
+                            <div class="alert alert-warning text-center" invisible="not partner_parent_id" role="alert">
+                                The selected customer is a child of <a type="action" name="action_parent_id_from_sdd_mandate"><field name="partner_parent_id"/></a>.
+                                Make sure the mandate isn't meant for the parent contact.
+                            </div>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="partner_id" readonly="state != 'draft'"/>
+                                <field name="partner_bank_id" domain="[('partner_id', '=', partner_id)]" context="{'default_partner_id':partner_id, 'sdd_mandate': True}" readonly="state != 'draft'"/>
+                                <field name="sdd_scheme" readonly="state != 'draft'"/>
+                                <label for="pre_notification_period"/>
+                                <div colspan="1">
+                                    <field name="pre_notification_period" readonly="state != 'draft'" class="oe_inline"/>
+                                    <span> day(s)</span>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="name" readonly="state != 'draft'"/>
+                                <field name="start_date" readonly="state != 'draft'"/>
+                                <field name="end_date" readonly="state != 'draft'"/>
+                                <field name="company_id" groups="base.group_multi_company" required="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="o_attachment_preview"/>
+                    <!-- Chatter -->
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_partner_bank_form_inherit_account_sepa_direct_debit" model="ir.ui.view">
+            <field name="name">res.partner.bank.view.form.inherit.account.sepa.direct.debit</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="attributes">
+                    <attribute name="invisible">context.get('sdd_mandate') == True</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="account_sepa_direct_debit_mandate_tree">
+            <field name="name">sdd.mandate.list</field>
+            <field name="model">sdd.mandate</field>
+            <field name="arch" type="xml">
+                <list decoration-info="state == 'draft'" decoration-muted="state == 'closed'" decoration-danger="state == 'revoked'" default_order="start_date desc">
+                    <field name="partner_id" readonly="state != 'draft'"/>
+                    <field name="name" readonly="state != 'draft'"/>
+                    <field name="start_date" readonly="state != 'draft'"/>
+                    <field name="end_date" readonly="state == 'closed'"/>
+                    <field name="sdd_scheme"/>
+                    <field name="pre_notification_period" readonly="state != 'draft'"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="state"
+                           decoration-muted="state in ('closed', 'cancelled')"
+                           decoration-success="state == 'active'"
+                           decoration-info="state == 'draft'"
+                           decoration-danger="state == 'revoked'"
+                           widget="badge"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="account_sdd_mandate_search_view" model="ir.ui.view">
+            <field name="name">sdd.mandate.search</field>
+            <field name="model">sdd.mandate</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="partner_id"/>
+                    <field name="partner_bank_id"/>
+                    <field name="name"/>
+                    <filter string="Draft" name="account_sdd_mandate_draft_filter" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Active" name="account_sdd_mandate_active_filter" domain="[('state', '=', 'active')]"/>
+                    <filter string="Closed" name="account_sdd_mandate_closed_filter" domain="[('state', 'in', ('closed','revoked'))]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="account_sepa_direct_debit_mandate_tree_act" model="ir.actions.act_window">
+            <field name="name">Direct Debit Mandates</field>
+            <field name="res_model">sdd.mandate</field>
+            <field name="view_mode">list,form</field>
+            <field name="path">sdd-mandates</field>
+            <field name="context">{'search_default_account_sdd_mandate_active_filter':1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new direct debit customer mandate
+                </p><p>
+                    A mandate represents the authorization you receive from a customer
+                    to automatically collect money on her account.
+                </p><p>
+                    Once an invoice is made
+                    in Odoo for a customer having a mandate active on the invoice date,
+                    its validation will trigger its automatic payment, and you will
+                    then only have to generate a SEPA Direct Debit (SDD) XML file containing this operation
+                    and send it to your bank to effectively get paid.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="account_sepa_direct_debit_customer_mandates_menu"
+            name="Direct Debit Mandates"
+            parent="account.menu_finance_receivables"
+            action="account_sepa_direct_debit_mandate_tree_act"
+            sequence="50"/>
+    </data>
+</odoo>

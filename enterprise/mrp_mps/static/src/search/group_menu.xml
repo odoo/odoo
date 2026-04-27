@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp_mps.GroupMenu">
+        <div class="o_dropdown_container o_rows_menu w-100 w-lg-auto px-3 mb-4 mb-lg-0 border-end">
+            <div class="px-3 fs-5 mb-2">
+                <h5 class="o_dropdown_title d-inline">Rows</h5>
+            </div>
+            <CheckboxItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_starting_inventory }"
+                checked="items.mrp_mps_show_starting_inventory"
+                closingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_starting_inventory')">
+                    Starting Inventory
+            </CheckboxItem>
+            <CheckboxItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_demand_forecast }"
+                checked="items.mrp_mps_show_demand_forecast"
+                closingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_demand_forecast')">
+                    Demand Forecast
+            </CheckboxItem>
+            <CheckboxItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_actual_demand }"
+                checked="items.mrp_mps_show_actual_demand"
+                closingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_actual_demand')">
+                    Actual Demand
+            </CheckboxItem>
+            <CheckboxItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_actual_demand_year_minus_1 }"
+                checked="items.mrp_mps_show_actual_demand_year_minus_1"
+                closingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_actual_demand_year_minus_1')">
+                    Actual Demand Y-1
+            </CheckboxItem>
+            <CheckboxItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_actual_demand_year_minus_2 }"
+                checked="items.mrp_mps_show_actual_demand_year_minus_2"
+                closingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_actual_demand_year_minus_2')">
+                    Actual Demand Y-2
+            </CheckboxItem>
+            <CheckboxItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_indirect_demand }"
+                checked="items.mrp_mps_show_indirect_demand"
+                closingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_indirect_demand')">
+                    Indirect Demand Forecast
+            </CheckboxItem>
+            <CheckboxItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_to_replenish }"
+                checked="items.mrp_mps_show_to_replenish"
+                closingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_to_replenish')">
+                    To Replenish
+            </CheckboxItem>
+            <CheckboxItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_actual_replenishment }"
+                checked="items.mrp_mps_show_actual_replenishment"
+                closingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_actual_replenishment')">
+                    Actual Replenishment
+            </CheckboxItem>
+            <CheckboxItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_safety_stock }"
+                checked="items.mrp_mps_show_safety_stock"
+                closingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_safety_stock')">
+                    Forecasted Stock
+            </CheckboxItem>
+            <CheckboxItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_available_to_promise }"
+                checked="items.mrp_mps_show_available_to_promise"
+                closingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_available_to_promise')">
+                    Available to Promise
+            </CheckboxItem>
+        </div>
+    </t>
+
+</templates>

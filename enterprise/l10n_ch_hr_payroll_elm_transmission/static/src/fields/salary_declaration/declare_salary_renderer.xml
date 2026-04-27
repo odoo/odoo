@@ -1,0 +1,512 @@
+<templates xml:space="preserve">
+    <t t-name="declare_salary_renderer_template">
+        <t t-if="this.state.declaration">
+            <div class="declare-salary-container">
+                <div class="card declare-salary-card">
+                    <div class="card-body">
+                        <t t-if="this.state.declaration.Staff and this.state.declaration.Staff.Person">
+                            <t t-foreach="this.state.declaration.Staff.Person" t-as="person" t-key="person_index">
+                                <AccordionItem
+                                    description="person.Particulars.Lastname + ' ' + person.Particulars.Firstname"
+                                    class="'mb-3 accordion-item'"
+                                >
+                                    <t t-slot="default">
+
+                                        <div class="sub-salary-card">
+                                            <div class="card-body">
+                                                <!-- Basic Info -->
+                                                <ul class="list-unstyled mb-1 text-muted">
+                                                    <li t-if="person.Particulars['Social-InsuranceIdentification']">
+                                                        <span class="info-label">Social Insurance #:</span>
+                                                        <span class="info-value" t-esc="person.Particulars['Social-InsuranceIdentification']['SV-AS-Number'] or 'Unknown'"/>
+                                                    </li>
+                                                    <li t-if="person.Particulars.EmployeeNumber">
+                                                        <span class="info-label">Employee #:</span>
+                                                        <span class="info-value" t-esc="person.Particulars.EmployeeNumber"/>
+                                                    </li>
+                                                </ul>
+
+                                                <!-- AVS Salaries -->
+                                                <t t-if="person['AHV-AVS-Salaries']">
+                                                    <hr class="my-2"/>
+                                                    <h6 class="swissdec-heading">
+                                                        AVS Salaries
+                                                    </h6>
+                                                    <t t-foreach="person['AHV-AVS-Salaries']['AHV-AVS-Salary']" t-as="avs_salary" t-key="avs_salary_index">
+                                                        <div class="sub-salary-card">
+                                                            <div class="card-body">
+                                                                <p class="mb-1">
+                                                                    <span class="info-label">Accounting Period:</span>
+                                                                    <span class="info-value">
+                                                                        <t t-esc="avs_salary.AccountingTime.from"/>
+                                                                        -
+                                                                        <t t-esc="avs_salary.AccountingTime.until"/>
+                                                                    </span>
+                                                                </p>
+                                                                <t t-if="avs_salary.DeclarationCategory">
+                                                                    <div class="mt-1 info-value">
+                                                                        <b>Declaration:</b>
+                                                                        <t t-if="avs_salary.DeclarationCategory.Entry">
+                                                                            <span>Entry : <t t-esc="avs_salary.DeclarationCategory.Entry.ValidAsOf"/></span>
+                                                                        </t>
+                                                                        <t t-if="avs_salary.DeclarationCategory.Withdrawal">
+                                                                            <span>Withdrawal: <t t-esc="avs_salary.DeclarationCategory.Withdrawal.ValidAsOf"/></span>
+                                                                        </t>
+                                                                    </div>
+                                                                </t>
+                                                                <t t-else="">
+                                                                    <div class="mt-1 info-value">
+                                                                        <t t-if="avs_salary['AHV-AVS-Income']">
+                                                                            <span class="info-label">AVS Salary:</span>
+                                                                            <t t-esc="avs_salary['AHV-AVS-Income']"/>
+                                                                        </t>
+                                                                        <br t-if="avs_salary['AHV-AVS-Income']"/>
+                                                                        <t t-if="avs_salary['ALV-AC-Income']">
+                                                                            <span class="info-label">AC Salary:</span>
+                                                                            <t t-esc="avs_salary['ALV-AC-Income']"/>
+                                                                        </t>
+                                                                        <br t-if="avs_salary['ALV-AC-Income']"/>
+                                                                        <t t-if="avs_salary['AHV-AVS-Open']">
+                                                                            <span class="info-label">AVS Exempt:</span>
+                                                                            <t t-esc="avs_salary['AHV-AVS-Open']"/>
+                                                                        </t>
+                                                                        <br t-if="avs_salary['AHV-AVS-Open']"/>
+                                                                        <t t-if="avs_salary['ALV-AC-Open']">
+                                                                            <span class="info-label">AC Exempt:</span>
+                                                                            <t t-esc="avs_salary['ALV-AC-Open']"/>
+                                                                        </t>
+                                                                    </div>
+                                                                </t>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                </t>
+
+                                                <!-- CAF Salaries -->
+                                                <t t-if="person['FAK-CAF-Salaries']">
+                                                    <hr class="my-2"/>
+                                                    <h6 class="swissdec-heading">
+                                                        CAF Salaries
+                                                    </h6>
+                                                    <t t-foreach="person['FAK-CAF-Salaries']['FAK-CAF-Salary']" t-as="avs_salary" t-key="avs_salary_index">
+                                                        <div class="sub-salary-card">
+                                                            <div class="card-body">
+                                                                <t t-if="avs_salary.DeclarationCategory">
+                                                                    <div class="info-value">
+                                                                        <b>Declaration:</b>
+                                                                        <t t-if="avs_salary.DeclarationCategory.Entry">
+                                                                            <span class="ms-2">CAF Entry : <t t-esc="avs_salary.DeclarationCategory.Entry.ValidAsOf"/></span>
+                                                                        </t>
+                                                                        <t t-if="avs_salary.DeclarationCategory.Withdrawal">
+                                                                            <span class="ms-2">CAF Withdrawal: <t t-esc="avs_salary.DeclarationCategory.Withdrawal.ValidAsOf"/></span>
+                                                                        </t>
+                                                                    </div>
+                                                                </t>
+                                                                <t t-else="">
+                                                                    <div class="info-value">
+                                                                        <t t-if="avs_salary['FAK-CAF-ContributorySalary']">
+                                                                            <span class="info-label">FAK-CAF-ContributorySalary:</span>
+                                                                            <t t-esc="avs_salary['FAK-CAF-ContributorySalary']"/>
+                                                                        </t>
+                                                                        <br t-if="avs_salary['FAK-CAF-ContributorySalary']"/>
+                                                                        <t t-if="avs_salary['FAK-CAF-FamilyIncomeSupplement']['FAK-CAF-FamilyIncomeSupplementPerPerson']">
+                                                                            <span class="info-label">Family Allowances:</span>
+                                                                            <t t-esc="avs_salary['FAK-CAF-FamilyIncomeSupplement']['FAK-CAF-FamilyIncomeSupplementPerPerson']"/>
+                                                                        </t>
+                                                                    </div>
+                                                                </t>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                </t>
+
+                                                <!-- LPP Salaries -->
+                                                <t t-if="person['BVG-LPP-Salaries']">
+                                                    <hr class="my-2"/>
+                                                    <h6 class="swissdec-heading">
+                                                        LPP Salaries
+                                                    </h6>
+                                                    <t t-foreach="person['BVG-LPP-Salaries']['BVG-LPP-Salary']" t-as="avs_salary" t-key="avs_salary_index">
+                                                        <div class="sub-salary-card">
+                                                            <div class="card-body">
+                                                                <p class="info-value">
+                                                                    <b>LPP Annual Basis :</b>
+                                                                    <span class="ms-2"> <t t-esc="avs_salary['BVG-LPP-AnnualBasis']"/> CHF</span>
+                                                                </p>
+                                                                <t t-if="avs_salary.DeclarationCategory">
+                                                                    <t t-if="avs_salary.DeclarationCategory.Entry">
+                                                                        <t t-foreach="avs_salary['DeclarationCategory']['Entry']" t-as="lpp_entry" t-key="lpp_entry_index">
+                                                                            <p class="info-value">
+                                                                                <b>Declaration:</b>
+                                                                                <span class="ms-2">LPP Entry - <t t-esc="lpp_entry.Reason"/> :
+                                                                                    <t t-esc="lpp_entry.ValidAsOf"/>
+                                                                                </span>
+                                                                            </p>
+                                                                        </t>
+                                                                    </t>
+                                                                    <t t-if="avs_salary.DeclarationCategory.Withdrawal">
+                                                                        <t t-foreach="avs_salary['DeclarationCategory']['Withdrawal']" t-as="lpp_entry" t-key="lpp_entry_index">
+                                                                            <p class="info-value">
+                                                                                <b>Declaration:</b>
+                                                                                <span class="ms-2">LPP Withdrawal - <t t-esc="lpp_entry.Reason"/> :
+                                                                                    <t t-esc="lpp_entry.ValidAsOf"/>
+                                                                                </span>
+                                                                            </p>
+                                                                        </t>
+                                                                    </t>
+                                                                    <t t-if="avs_salary.DeclarationCategory.Mutation">
+                                                                        <t t-foreach="avs_salary['DeclarationCategory']['Mutation']" t-as="lpp_entry" t-key="lpp_entry_index">
+                                                                            <p class="info-value">
+                                                                                <b>Declaration:</b>
+                                                                                <span class="ms-2">LPP Mutation - <t t-esc="lpp_entry.Reason"/> :
+                                                                                    <t t-esc="lpp_entry.ValidAsOf"/>
+                                                                                </span>
+                                                                            </p>
+                                                                        </t>
+                                                                    </t>
+                                                                </t>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                </t>
+
+                                                <!-- LAA Salaries -->
+                                                <t t-if="person['UVG-LAA-Salaries']">
+                                                    <hr class="my-2"/>
+                                                    <h6 class="swissdec-heading">
+                                                        LAA Salaries
+                                                    </h6>
+                                                    <t t-foreach="person['UVG-LAA-Salaries']['UVG-LAA-Salary']" t-as="avs_salary" t-key="avs_salary_index">
+                                                        <div class="sub-salary-card">
+                                                            <div class="card-body">
+                                                                <p class="mb-1 info-value">
+                                                                    <span class="info-label">Period:</span>
+                                                                    <t t-esc="avs_salary.AccountingTime.from"/> -
+                                                                    <t t-esc="avs_salary.AccountingTime.until"/>
+                                                                </p>
+                                                                <p class="info-value">
+                                                                    <t t-if="avs_salary['UVG-LAA-Code']">
+                                                                        <span class="info-label">LAA Code:</span>
+                                                                        <t t-esc="avs_salary['UVG-LAA-Code']"/>
+                                                                        <br/>
+                                                                    </t>
+                                                                    <t t-if="avs_salary['UVG-LAA-GrossSalary']">
+                                                                        <span class="info-label">Gross Salary:</span>
+                                                                        <t t-esc="avs_salary['UVG-LAA-GrossSalary']"/>
+                                                                        <br/>
+                                                                    </t>
+                                                                    <t t-if="avs_salary['UVG-LAA-BaseSalary']">
+                                                                        <span class="info-label">Base Salary:</span>
+                                                                        <t t-esc="avs_salary['UVG-LAA-BaseSalary']"/>
+                                                                        <br/>
+                                                                    </t>
+                                                                    <t t-if="avs_salary['UVG-LAA-ContributorySalary']">
+                                                                        <span class="info-label">Contributory Salary:</span>
+                                                                        <t t-esc="avs_salary['UVG-LAA-ContributorySalary']"/>
+                                                                    </t>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                </t>
+
+                                                <!-- LAAC Salaries -->
+                                                <t t-if="person['UVGZ-LAAC-Salaries']">
+                                                    <hr class="my-2"/>
+                                                    <h6 class="swissdec-heading">
+                                                        LAAC Salaries
+                                                    </h6>
+                                                    <t t-foreach="person['UVGZ-LAAC-Salaries']['UVGZ-LAAC-Salary']" t-as="avs_salary" t-key="avs_salary_index">
+                                                        <div class="sub-salary-card">
+                                                            <div class="card-body">
+                                                                <p class="mb-1 info-value">
+                                                                    <span class="info-label">Period:</span>
+                                                                    <t t-esc="avs_salary.AccountingTime.from"/> -
+                                                                    <t t-esc="avs_salary.AccountingTime.until"/>
+                                                                </p>
+                                                                <p class="info-value">
+                                                                    <t t-if="avs_salary['UVGZ-LAAC-Code']">
+                                                                        <span class="info-label">LAAC Code:</span>
+                                                                        <t t-esc="avs_salary['UVGZ-LAAC-Code']"/>
+                                                                        <br/>
+                                                                    </t>
+                                                                    <t t-if="avs_salary['UVGZ-LAAC-BaseSalary']">
+                                                                        <span class="info-label">Base Salary:</span>
+                                                                        <t t-esc="avs_salary['UVGZ-LAAC-BaseSalary']"/>
+                                                                        <br/>
+                                                                    </t>
+                                                                    <t t-if="avs_salary['UVGZ-LAAC-ContributorySalary']">
+                                                                        <span class="info-label">Contributory Salary:</span>
+                                                                        <t t-esc="avs_salary['UVGZ-LAAC-ContributorySalary']"/>
+                                                                    </t>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                </t>
+
+                                                <!-- IJM Salaries -->
+                                                <t t-if="person['KTG-AMC-Salaries']">
+                                                    <hr class="my-2"/>
+                                                    <h6 class="swissdec-heading">
+                                                        IJM Salaries
+                                                    </h6>
+                                                    <t t-foreach="person['KTG-AMC-Salaries']['KTG-AMC-Salary']" t-as="avs_salary" t-key="avs_salary_index">
+                                                        <div class="sub-salary-card">
+                                                            <div class="card-body">
+                                                                <p class="mb-1 info-value">
+                                                                    <span class="info-label">Period:</span>
+                                                                    <t t-esc="avs_salary.AccountingTime.from"/> -
+                                                                    <t t-esc="avs_salary.AccountingTime.until"/>
+                                                                </p>
+                                                                <p class="info-value">
+                                                                    <t t-if="avs_salary['KTG-AMC-Code']">
+                                                                        <span class="info-label">IJM Code:</span>
+                                                                        <t t-esc="avs_salary['KTG-AMC-Code']"/>
+                                                                        <br/>
+                                                                    </t>
+                                                                    <t t-if="avs_salary['Reference-AHV-AVS-Salary']">
+                                                                        <span class="info-label">Reference AVS Salary:</span>
+                                                                        <t t-esc="avs_salary['Reference-AHV-AVS-Salary']"/>
+                                                                        <br/>
+                                                                    </t>
+                                                                    <t t-if="avs_salary['KTG-AMC-ContributorySalary']">
+                                                                        <span class="info-label">Contributory Salary:</span>
+                                                                        <t t-esc="avs_salary['KTG-AMC-ContributorySalary']"/>
+                                                                    </t>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                </t>
+
+                                                <!-- Tax Salaries -->
+                                                <t t-if="person['TaxSalaries']">
+                                                    <hr class="my-2"/>
+                                                    <h6 class="swissdec-heading">
+                                                        Tax Salaries
+                                                    </h6>
+                                                    <p class="info-value">
+                                                        <t t-if="person['TaxSalaries']['TaxSalary']">
+                                                            <span class="info-label">Number of Wage Statements:</span>
+                                                            <t t-esc="person['TaxSalaries']['TaxSalary'].length"/>
+                                                        </t>
+                                                        <br t-if="person['TaxSalaries']['TaxSalary']"/>
+                                                        <t t-if="person['TaxSalaries']['TaxAnnuity']">
+                                                            <span class="info-label">Number of Pension Statements:</span>
+                                                            <t t-esc="person['TaxSalaries']['TaxAnnuity'].length"/>
+                                                        </t>
+                                                    </p>
+                                                </t>
+
+                                                <!-- Tax At Source Salaries -->
+                                                <t t-if="person['TaxAtSourceSalaries']">
+                                                    <hr class="my-2"/>
+                                                    <h6 class="swissdec-heading">
+                                                        Tax At Source Salaries
+                                                    </h6>
+                                                    <t t-foreach="person.TaxAtSourceSalaries.TaxAtSourceSalary" t-as="taxSalary" t-key="taxSalary_index">
+                                                        <div class="sub-salary-card">
+                                                            <div class="card-body">
+                                                                <ul class="list-unstyled mb-1 info-value">
+                                                                    <li>
+                                                                        <span class="info-label">Canton:</span>
+                                                                        <t t-esc="taxSalary.TaxAtSourceCanton"/>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span class="info-label">Municipality ID:</span>
+                                                                        <t t-esc="taxSalary.TaxAtSourceMunicipalityID"/>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span class="info-label">Month:</span>
+                                                                        <t t-esc="taxSalary.CurrentMonth[1]"/>-
+                                                                        <t t-esc="taxSalary.CurrentMonth[2]"/>
+                                                                    </li>
+                                                                </ul>
+
+                                                                <!-- Current -->
+                                                                <t t-if="taxSalary.Current">
+                                                                    <table class="table table-sm table-bordered text-center declare-salary-table">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Code</th>
+                                                                                <th>Taxable Earning</th>
+                                                                                <th>Ascertained</th>
+                                                                                <th>Sporadic Benefits</th>
+                                                                                <th>Tax At Source</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <t t-esc="taxSalary.Current.TaxAtSourceCategory.TaxAtSourceCode or taxSalary.Current.TaxAtSourceCategory.CategoryPredefined"/>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <t t-esc="taxSalary.Current.TaxableEarning"/>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <t t-esc="taxSalary.Current.AscertainedTaxableEarning"/>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <t t-esc="taxSalary.Current.SporadicBenefits or 0"/>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <t t-esc="taxSalary.Current.TaxAtSource"/>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </t>
+
+                                                                <!-- Corrections -->
+                                                                <t t-if="taxSalary.Correction">
+                                                                    <t t-foreach="taxSalary.Correction" t-as="reversal" t-key="reversal_index">
+                                                                        <t t-if="reversal">
+                                                                            <hr class="my-2"/>
+                                                                            <h6 class="text-dark fw-bold">Correction Details</h6>
+                                                                            <div class="mb-2 info-value">
+                                                                                <b>Reversed Month:</b>
+                                                                                <t t-esc="reversal.Month[1]"/>-
+                                                                                <t t-esc="reversal.Month[2]"/>
+                                                                            </div>
+                                                                            <table class="table table-sm table-bordered text-center declare-salary-table">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th></th>
+                                                                                        <th>Code</th>
+                                                                                        <th>Taxable</th>
+                                                                                        <th>Ascertained</th>
+                                                                                        <th>Tax At Source</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td class="fw-bold">Old</td>
+                                                                                        <td>
+                                                                                            <t t-esc="reversal.Old.TaxAtSourceCategory.TaxAtSourceCode or reversal.Old.TaxAtSourceCategory.CategoryPredefined"/>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <t t-esc="reversal.Old.TaxableEarning"/>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <t t-esc="reversal.Old.AscertainedTaxableEarning"/>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <t t-esc="reversal.Old.TaxAtSource"/>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="fw-bold">New</td>
+                                                                                        <td>
+                                                                                            <t t-esc="reversal.New.TaxAtSourceCategory.TaxAtSourceCode or reversal.New.TaxAtSourceCategory.CategoryPredefined"/>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <t t-esc="reversal.New.TaxableEarning"/>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <t t-esc="reversal.New.AscertainedTaxableEarning"/>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <t t-esc="reversal.New.TaxAtSource"/>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </t>
+                                                                    </t>
+                                                                </t>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                </t>
+
+                                                <!-- Statistic Salaries -->
+                                                <t t-if="person['StatisticSalaries']">
+                                                    <hr class="my-2"/>
+                                                    <h6 class="swissdec-heading">
+                                                        Statistic Salaries
+                                                    </h6>
+                                                    <t t-foreach="person.StatisticSalaries.StatisticSalary" t-as="taxSalary" t-key="taxSalary_index">
+                                                        <div class="sub-salary-card">
+                                                            <div class="card-body">
+                                                                <ul class="list-unstyled mb-1 info-value">
+                                                                    <li>
+                                                                        <span class="info-label">Month:</span>
+                                                                        <t t-esc="taxSalary.CurrentMonth[1]"/>-
+                                                                        <t t-esc="taxSalary.CurrentMonth[2]"/>
+                                                                    </li>
+                                                                </ul>
+                                                                <t t-if="taxSalary.MonthlyValues">
+                                                                    <table class="table table-sm table-bordered text-center declare-salary-table">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Gross</th>
+                                                                                <th>Allowances</th>
+                                                                                <th>Family Income</th>
+                                                                                <th>3rd Party Pay</th>
+                                                                                <th>Social Contributions</th>
+                                                                                <th>LPP Contributions</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td><t t-esc="taxSalary.MonthlyValues.GrossBaseSalaryAndRegularAllowance"/></td>
+                                                                                <td><t t-esc="taxSalary.MonthlyValues.Allowances"/></td>
+                                                                                <td><t t-esc="taxSalary.MonthlyValues.FamilyIncomeSupplement"/></td>
+                                                                                <td><t t-esc="taxSalary.MonthlyValues.PaymentsByThird"/></td>
+                                                                                <td><t t-esc="taxSalary.MonthlyValues.SocialContributions"/></td>
+                                                                                <td><t t-esc="taxSalary.MonthlyValues['BVG-LPP-RegularContribution']"/></td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </t>
+                                                                <t t-if="taxSalary.AnnualValues">
+                                                                    <h6 class="mt-1p5 fw-bold">Yearly Values</h6>
+                                                                    <t t-foreach="taxSalary.AnnualValues" t-as="statistic_year" t-key="statistic_year_index">
+                                                                        <p class="info-value">
+                                                                            <span class="info-label">Period:</span>
+                                                                            <t t-esc="statistic_year.Period.from"/> -
+                                                                            <t t-esc="statistic_year.Period.until"/>
+                                                                        </p>
+                                                                        <table class="table table-sm table-bordered text-center declare-salary-table">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Overtime</th>
+                                                                                    <th>13th</th>
+                                                                                    <th>Sporadic</th>
+                                                                                    <th>Fringe</th>
+                                                                                    <th>Capital</th>
+                                                                                    <th>Other</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td><t t-esc="statistic_year.Overtime"/></td>
+                                                                                    <td><t t-esc="statistic_year.Earnings13th"/></td>
+                                                                                    <td><t t-esc="statistic_year.SporadicBenefits"/></td>
+                                                                                    <td><t t-esc="statistic_year.FringeBenefits"/></td>
+                                                                                    <td><t t-esc="statistic_year.CapitalPayment"/></td>
+                                                                                    <td><t t-esc="statistic_year.OtherBenefits"/></td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </t>
+                                                                </t>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                </t>
+
+                                            </div>
+                                        </div>
+                                    </t>
+                                </AccordionItem>
+                            </t>
+                        </t>
+                    </div>
+                </div>
+
+            </div>
+        </t>
+    </t>
+</templates>

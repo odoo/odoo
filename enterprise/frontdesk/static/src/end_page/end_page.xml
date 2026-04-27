@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="frontdesk.EndPage">
+        <div class="my-auto text-center">
+            <h1 class="display-6 mb-0"><i class="fa fa-check-circle fa-3x d-block mb-3 text-success"/> Thank you for registering!</h1>
+            <div class="mt-2 fs-4 text-break opacity-50">
+                <t t-if="props.plannedVisitorData?.plannedVisitorMessage" t-out="markupValue"/>
+                <t t-else="">
+                    <t t-if="props.isDrinkSelected">Your drink is on the way. </t>
+                    <t t-if="props.hostData or props.plannedVisitorData?.plannedVisitorHosts?.length">
+                        <t t-if="props.hostData">
+                            <t t-out="props.hostData.hostName"/>
+                        </t>
+                        <t t-elif="props.plannedVisitorData?.plannedVisitorHosts">
+                            <t t-foreach="props.plannedVisitorData.plannedVisitorHosts" t-as="host" t-key="host.id">
+                                <t t-out="host.name"/>,
+                            </t>
+                        </t>
+                        <t t-if="props.hostData or props.plannedVisitorData?.plannedVisitorHosts"> has been informed.</t>
+                    </t>
+                </t>
+                <t t-if="!props.isDrinkSelected and !props.hostData and !props.plannedVisitorData?.plannedVisitorHosts?.length">Please have a seat.</t>
+            </div>
+        </div>
+        <div t-if="!props.isMobile" class="col-lg-6 d-grid mx-lg-auto">
+            <button t-att-class="props.theme === 'light' ? 'bg-200' : 'bg-700'" class="btn" t-on-click="props.onClose">Close</button>
+        </div>
+    </t>
+</templates>

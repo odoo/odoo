@@ -1,0 +1,57 @@
+<odoo>
+    <record id="pk_gross_yearly_salary_rule" model="hr.salary.rule">
+        <field name="name">Gross Yearly</field>
+        <field name="category_id" ref="hr_payroll.GROSS"/>
+        <field name="code">GROSSY</field>
+        <field name="sequence">120</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = GROSS * 12</field>
+        <field name="struct_id" ref="l10n_pk_hr_payroll.hr_payroll_structure_pk_employee_salary"/>
+    </record>
+
+    <record id="pk_tax_bracket_yearly" model="hr.salary.rule">
+        <field name="name">Tax Bracket Yearly</field>
+        <field name="category_id" ref="l10n_pk_hr_payroll.pk_tax_bracket_salary_rule_category"/>
+        <field name="code">TXB</field>
+        <field name="sequence">130</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = (payslip._l10n_pk_get_tax(GROSSY))
+</field>
+        <field name="struct_id" ref="l10n_pk_hr_payroll.hr_payroll_structure_pk_employee_salary"/>
+    </record>
+
+    <record id="pk_end_of_service_benefit" model="hr.salary.rule">
+        <field name="name">End of Service Benefit</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="code">EOS</field>
+        <field name="sequence">180</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = employee.departure_date</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+difference = relativedelta(employee.departure_date, employee.first_contract_date)
+years = difference.years
+if difference.months &gt;= 6:
+    years += 1
+result = 0
+if years &gt;= 5:
+    compensation_per_year = (contract.wage * 30)
+    result = (compensation_per_year * years) / 26
+    result = payslip.company_id.currency_id.round(ceil(result))
+</field>
+        <field name="struct_id" ref="l10n_pk_hr_payroll.hr_payroll_structure_pk_employee_salary"/>
+    </record>
+
+    <record id="pk_total_tak_bracket_monthly" model="hr.salary.rule">
+        <field name="name">Income Tax Withheld</field>
+        <field name="category_id" ref="l10n_pk_hr_payroll.pk_tax_deduction_salary_rule_category"/>
+        <field name="code">TXW</field>
+        <field name="sequence">190</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 600000 &lt; GROSSY</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = -categories["TB"] / 12</field>
+        <field name="struct_id" ref="l10n_pk_hr_payroll.hr_payroll_structure_pk_employee_salary"/>
+    </record>
+</odoo>

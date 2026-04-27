@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="helpdesk_sla_view_form_inherit_sale_timesheet" model="ir.ui.view">
+        <field name='name'>helpdesk.sla.form.inherit.sale.timesheet</field>
+        <field name="model">helpdesk.sla</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_sla_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_ids']" position="attributes">
+                <attribute name="class" separator=" " add="oe_inline"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_ids']" position="after">
+                <div class="ps-2 text-muted text-center text-md-end" invisible="not use_helpdesk_sale_timesheet">OR</div>
+            </xpath>
+            <xpath expr="//div[@name='partners']" position="after">
+                <label for="product_ids" invisible="not use_helpdesk_sale_timesheet"/>
+                <div invisible="not use_helpdesk_sale_timesheet">
+                    <field name="product_ids" widget="many2many_tags"
+                        options="{'no_create_edit': True, 'no_create': True, 'color_field': 'color', 'no_edit_color': True}"
+                        groups="sales_team.group_sale_salesman"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="helpdesk_sla_view_tree_inherit_sale_timesheet" model="ir.ui.view">
+        <field name="name">helpdesk.sla.list.inherit.sale.timesheet</field>
+        <field name="model">helpdesk.sla</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_sla_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_ids']" position="after">
+                <field name="product_ids"
+                    widget="many2many_tags"
+                    optional="hide"
+                    invisible="not use_helpdesk_sale_timesheet"
+                    options="{'no_create_edit': True, 'no_create': True, 'color_field': 'color', 'no_edit_color': True}"
+                    groups="sales_team.group_sale_salesman"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="spreadsheet_edition.SpreadsheetSelectorPanel"
+       >
+        <div class="o-sp-dialog-cp">
+            <div class="o-sp-searchview">
+                <input type="text"
+                    class="o-sp-searchview-input o_input"
+                    placeholder="Search..."
+                    t-on-input="onSearchInput"/>
+                <i class="o-sp-searchview-icon oi oi-search"
+                    role="img"
+                    aria-label="Search..."
+                    title="Search..."></i>
+            </div>
+            <div class="o-pager">
+                <Pager offset="state.pagerProps.offset"
+                    limit="state.pagerProps.limit"
+                    total="state.pagerProps.total"
+                    onUpdate.bind="onUpdatePager"
+                    isEditable="false" />
+            </div>
+        </div>
+		<SpreadsheetSelectorGrid
+            spreadsheets="state.spreadsheets"
+            onSpreadsheetSelected.bind="_selectItem"
+            onSpreadsheetDblClicked.bind="props.onSpreadsheetDblClicked"
+            getThumbnailURL="getThumbnailURL"
+            selectedSpreadsheetId="state.selectedSpreadsheetId"
+            displayBlank="props.displayBlank"
+        />
+    </t>
+
+</templates>

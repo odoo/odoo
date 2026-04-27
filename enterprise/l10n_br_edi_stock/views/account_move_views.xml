@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button"
+                        name="action_l10n_br_view_pickings"
+                        type="object"
+                        icon="fa-truck"
+                        invisible="country_code != 'BR' or not l10n_br_edi_freight_model or l10n_br_is_service_transaction or l10n_br_picking_count == 0">
+                    <field string="Delivery" name="l10n_br_picking_count" widget="statinfo"/>
+                </button>
+            </div>
+            <field name="incoterm_location" position="after">
+                <field name="l10n_br_is_service_transaction" invisible="1"/>
+                <field name="l10n_br_plate_number"
+                       invisible="country_code != 'BR' or not l10n_br_edi_freight_model or l10n_br_is_service_transaction"
+                       readonly="state in ['cancel', 'posted']"/>
+                <field name="l10n_br_package_ids"
+                       widget="many2many_tags"
+                       invisible="country_code != 'BR' or not l10n_br_edi_freight_model or l10n_br_is_service_transaction"
+                       readonly="state in ['cancel', 'posted']"
+                       options="{'no_create': True, 'edit_tags': True}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

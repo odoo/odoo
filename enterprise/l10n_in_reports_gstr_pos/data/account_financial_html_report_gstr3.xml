@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 3.1(a) Outward Taxable supplies (other than zero rated, nil rated and exempted) -->
+    <record id="l10n_in_reports.account_report_gstr3b_3_1_a_tax_base" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+            '&amp;',
+                ('move_id.l10n_in_gst_treatment', 'not in', ['overseas', 'special_economic_zone']),
+                ('move_id.move_type', 'in', ('out_invoice', 'out_receipt', 'out_refund')),
+            '&amp;',
+                ('move_id.move_type', '=', 'entry'),
+                '|',
+                    ('move_id.pos_session_ids', '!=', False),
+                    ('move_id.reversed_pos_order_id', '!=', False),
+        '|',
+            ('move_id.l10n_in_reseller_partner_id', '=', False),
+            ('move_id.l10n_in_reseller_partner_id.industry_id', '!=', ref('l10n_in.eco_under_section_9_5')),
+        ('tax_tag_ids', 'in', [ref('l10n_in.tax_tag_base_sgst'), ref('l10n_in.tax_tag_base_cgst'), ref('l10n_in.tax_tag_base_igst'), ref('l10n_in.tax_tag_base_cess')])
+        ]"/>
+    </record>
+
+    <record id="l10n_in_reports.account_report_gstr3b_3_1_a_tax_cgst" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+            '&amp;',
+                ('move_id.l10n_in_gst_treatment', 'not in', ['overseas', 'special_economic_zone']),
+                ('move_id.move_type', 'in', ('out_invoice', 'out_receipt', 'out_refund')),
+            '&amp;',
+                ('move_id.move_type', '=', 'entry'),
+                '|',
+                    ('move_id.pos_session_ids', '!=', False),
+                    ('move_id.reversed_pos_order_id', '!=', False),
+        '|',
+            ('move_id.l10n_in_reseller_partner_id', '=', False),
+            ('move_id.l10n_in_reseller_partner_id.industry_id', '!=', ref('l10n_in.eco_under_section_9_5')),
+        ('tax_tag_ids', '=', ref('l10n_in.tax_tag_cgst'))
+        ]"/>
+    </record>
+
+    <record id="l10n_in_reports.account_report_gstr3b_3_1_a_tax_sgst" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+            '&amp;',
+                ('move_id.l10n_in_gst_treatment', 'not in', ['overseas', 'special_economic_zone']),
+                ('move_id.move_type', 'in', ('out_invoice', 'out_receipt', 'out_refund')),
+            '&amp;',
+                ('move_id.move_type', '=', 'entry'),
+                '|',
+                    ('move_id.pos_session_ids', '!=', False),
+                    ('move_id.reversed_pos_order_id', '!=', False),
+        '|',
+            ('move_id.l10n_in_reseller_partner_id', '=', False),
+            ('move_id.l10n_in_reseller_partner_id.industry_id', '!=', ref('l10n_in.eco_under_section_9_5')),
+        ('tax_tag_ids', '=', ref('l10n_in.tax_tag_sgst'))
+        ]"/>
+    </record>
+
+    <record id="l10n_in_reports.account_report_gstr3b_3_1_a_tax_igst" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+            '&amp;',
+                ('move_id.l10n_in_gst_treatment', 'not in', ['overseas', 'special_economic_zone']),
+                ('move_id.move_type', 'in', ('out_invoice', 'out_receipt', 'out_refund')),
+            '&amp;',
+                ('move_id.move_type', '=', 'entry'),
+                '|',
+                    ('move_id.pos_session_ids', '!=', False),
+                    ('move_id.reversed_pos_order_id', '!=', False),
+        '|',
+            ('move_id.l10n_in_reseller_partner_id', '=', False),
+            ('move_id.l10n_in_reseller_partner_id.industry_id', '!=', ref('l10n_in.eco_under_section_9_5')),
+        ('tax_tag_ids', '=', ref('l10n_in.tax_tag_igst'))
+        ]"/>
+    </record>
+
+    <record id="l10n_in_reports.account_report_gstr3b_3_1_a_tax_cess" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+            '&amp;',
+                ('move_id.l10n_in_gst_treatment', 'not in', ['overseas', 'special_economic_zone']),
+                ('move_id.move_type', 'in', ('out_invoice', 'out_receipt', 'out_refund')),
+            '&amp;',
+                ('move_id.move_type', '=', 'entry'),
+                '|',
+                    ('move_id.pos_session_ids', '!=', False),
+                    ('move_id.reversed_pos_order_id', '!=', False),
+        '|',
+            ('move_id.l10n_in_reseller_partner_id', '=', False),
+            ('move_id.l10n_in_reseller_partner_id.industry_id', '!=', ref('l10n_in.eco_under_section_9_5')),
+        ('tax_tag_ids', '=', ref('l10n_in.tax_tag_cess'))
+        ]"/>
+    </record>
+
+    <!-- 3.1(b) Outward Taxable supplies (zero rated) -->
+    <record id="l10n_in_reports.account_report_gstr3b_3_1_b_tax_base" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+            '&amp;',
+                ('move_id.l10n_in_gst_treatment', 'in', ['overseas', 'special_economic_zone']),
+                ('move_id.move_type', 'in', ('out_invoice', 'out_receipt', 'out_refund')),
+            '&amp;',
+                ('move_id.move_type', '=', 'entry'),
+                '|',
+                    ('move_id.pos_session_ids', '!=', False),
+                    ('move_id.reversed_pos_order_id', '!=', False),
+        ('tax_tag_ids', 'in', [ref('l10n_in.tax_tag_base_igst'), ref('l10n_in.tax_tag_base_cess'), ref('l10n_in.tax_tag_zero_rated')])
+        ]"/>
+    </record>
+
+    <record id="l10n_in_reports.account_report_gstr3b_3_1_b_tax_igst" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+            '&amp;',
+                ('move_id.l10n_in_gst_treatment', 'in', ['overseas', 'special_economic_zone']),
+                ('move_id.move_type', 'in', ('out_invoice', 'out_receipt', 'out_refund')),
+            '&amp;',
+                ('move_id.move_type', '=', 'entry'),
+                '|',
+                    ('move_id.pos_session_ids', '!=', False),
+                    ('move_id.reversed_pos_order_id', '!=', False),
+        ('tax_tag_ids', '=', ref('l10n_in.tax_tag_igst'))
+        ]"/>
+    </record>
+
+    <record id="l10n_in_reports.account_report_gstr3b_3_1_b_tax_cess" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+            '&amp;',
+                ('move_id.l10n_in_gst_treatment', 'in', ['overseas', 'special_economic_zone']),
+                ('move_id.move_type', 'in', ('out_invoice', 'out_receipt', 'out_refund')),
+            '&amp;',
+                ('move_id.move_type', '=', 'entry'),
+                '|',
+                    ('move_id.pos_session_ids', '!=', False),
+                    ('move_id.reversed_pos_order_id', '!=', False),
+        ('tax_tag_ids', '=', ref('l10n_in.tax_tag_cess'))
+        ]"/>
+    </record>
+
+    <!-- 3.1(c) Other Outward Taxable supplies (Nil rated, exempted) -->
+    <record id="l10n_in_reports.account_report_gstr3b_3_1_c_tax_base" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+            '&amp;',
+                ('move_id.l10n_in_gst_treatment', 'not in', ['overseas', 'special_economic_zone']),
+                ('move_id.move_type', 'in', ('out_invoice', 'out_receipt', 'out_refund')),
+            '&amp;',
+                ('move_id.move_type', '=', 'entry'),
+                '|',
+                    ('move_id.pos_session_ids', '!=', False),
+                    ('move_id.reversed_pos_order_id', '!=', False),
+        ('tax_tag_ids', 'in', [ref('l10n_in.tax_tag_exempt'), ref('l10n_in.tax_tag_nil_rated')])
+        ]"/>
+    </record>
+
+    <!-- 3.1(e) Non-GST Outward supplies -->
+    <record id="l10n_in_reports.account_report_gstr3b_3_1_e_tax_base" model="account.report.expression">
+        <field name="formula" eval="[
+        '|',
+            '&amp;',
+                ('move_id.l10n_in_gst_treatment', 'not in', ['overseas', 'special_economic_zone']),
+                ('move_id.move_type', 'in', ('out_invoice', 'out_receipt', 'out_refund')),
+            '&amp;',
+                ('move_id.move_type', '=', 'entry'),
+                '|',
+                    ('move_id.pos_session_ids', '!=', False),
+                    ('move_id.reversed_pos_order_id', '!=', False),
+        ('tax_tag_ids', '=', ref('l10n_in.tax_tag_non_gst_supplies'))
+        ]"/>
+    </record>
+</odoo>

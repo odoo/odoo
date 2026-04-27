@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="demo_agent_lu" model="res.partner">
+        <field name="name">Fiduciary LU</field>
+        <field name="company_type">company</field>
+        <field name="vat">LU12345613</field>
+        <field name="street">Fidu Street 123</field>
+        <field name="city">Clervaux</field>
+        <field name="country_id" ref="base.lu"/>
+        <field name="zip">9839</field>
+        <field name="phone">+352 628 456 789</field>
+        <field name="email">info@fiduciary.lu</field>
+        <field name="l10n_lu_agent_matr_number">2222222222222</field>
+        <field name="l10n_lu_agent_ecdf_prefix">EFGH34</field>
+    </record>
+
+    <record id="base.demo_company_lu" model="res.company">
+        <field name="matr_number">1111111111111</field>
+        <field name="ecdf_prefix">ABCD12</field>
+        <field name="account_representative_id" ref="l10n_lu_reports.demo_agent_lu"/>
+    </record>
+</odoo>

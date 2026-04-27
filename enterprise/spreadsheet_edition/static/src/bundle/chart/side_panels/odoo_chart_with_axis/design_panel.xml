@@ -1,0 +1,92 @@
+<odoo>
+  <t t-name="spreadsheet_edition.OdooChartWithAxisDesignPanel">
+    <GeneralDesignEditor
+      figureId="props.figureId"
+      definition="props.definition"
+      updateChart="props.updateChart">
+      <t t-set-slot="general-extension">
+        <Section class="'pt-0'">
+          <t t-set-slot="title">Vertical axis position</t>
+          <RadioSelection
+            choices="axisChoices"
+            selectedValue="props.definition.verticalAxisPosition"
+            name="'axis'"
+            onChange.bind="updateVerticalAxisPosition"
+          />
+        </Section>
+        <Section class="'pt-0'">
+          <t t-set-slot="title">Legend position</t>
+          <select
+            t-att-value="props.definition.legendPosition ?? 'top'"
+            class="o-input"
+            t-on-change="this.updateLegendPosition">
+            <option value="none">None</option>
+            <option value="top">Top</option>
+            <option value="bottom">Bottom</option>
+            <option value="left">Left</option>
+            <option value="right">Right</option>
+          </select>
+        </Section>
+        <Section>
+          <Checkbox
+            name="'showValues'"
+            label.translate="Show values"
+            value="props.definition.showValues"
+            onChange="showValues => props.updateChart(this.props.figureId, {showValues})"
+          />
+        </Section>
+        <Section class="'pt-0 o-show-trend-line'">
+          <t t-set="showTrendLineLabel">Show trend line</t>
+          <t t-set="trend" t-value="getTrendLineConfiguration()"/>
+          <t t-set="trendType" t-value="getTrendType(trend)"/>
+          <Checkbox
+            name="'showTrendLine'"
+            label="showTrendLineLabel"
+            value="trend !== undefined and trend.display"
+            onChange.bind="toggleDataTrend"
+          />
+          <div t-if="trend !== undefined and trend.display">
+            <div class="d-flex py-1">
+              <div class="w-100 pe-1">
+                <span class="o-section-title">Type</span>
+                <select class="o-input trend-type-selector" t-on-change="this.onChangeTrendType">
+                  <option value="linear" t-att-selected="trendType === 'linear'">Linear</option>
+                  <option value="exponential" t-att-selected="trendType === 'exponential'">
+                    Exponential
+                  </option>
+                  <option value="polynomial" t-att-selected="trendType === 'polynomial'">
+                    Polynomial
+                  </option>
+                  <option value="logarithmic" t-att-selected="trendType === 'logarithmic'">
+                    Logarithmic
+                  </option>
+                </select>
+              </div>
+              <div class="w-50" t-if="trendType === 'polynomial'">
+                <span class="o-section-title">Degree</span>
+                <input
+                  t-att-value="trend.order"
+                  type="number"
+                  class="w-100 o-input o-number-input trend-order-input"
+                  t-on-change="this.onChangePolynomialDegree"
+                  min="1"
+                />
+              </div>
+            </div>
+          </div>
+        </Section>
+      </t>
+    </GeneralDesignEditor>
+    <SidePanelCollapsible collapsedAtInit="true">
+      <t t-set-slot="title">Axis</t>
+      <t t-set-slot="content">
+        <AxisDesignEditor
+          axesList="axesList"
+          figureId="props.figureId"
+          definition="props.definition"
+          updateChart="props.updateChart"
+        />
+      </t>
+    </SidePanelCollapsible>
+  </t>
+</odoo>

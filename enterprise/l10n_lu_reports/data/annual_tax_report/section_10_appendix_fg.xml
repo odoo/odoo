@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_lu_annual_tax_report_section_appendix_fg" model="account.report">
+        <field name="name">Appendix F, G</field>
+        <field name="sequence">8</field>
+        <field name="country_id" ref="base.lu"/>
+        <field name="availability_condition">country</field>
+        <field name="custom_handler_model_id" ref="model_l10n_lu_annual_tax_report_handler"/>
+        <field name="column_ids">
+            <record id="l10n_lu_annual_tax_report_appendix_fg_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_lu_annual_tax_report_appendix_fg_names" model="account.report.line">
+                <field name="name">Names and addresses to be specified</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_lu_annual_tax_report_appendix_fg_accountant" model="account.report.line">
+                        <field name="name">1. Accountant</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_lu_annual_tax_report_appendix_fg_397" model="account.report.line">
+                                <field name="name">397 - Name</field>
+                                <field name="code">L10N_LU_TAX_397</field>
+                                <field name="external_formula">string</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_appendix_fg_398" model="account.report.line">
+                                <field name="name">398 - Address</field>
+                                <field name="code">L10N_LU_TAX_398</field>
+                                <field name="external_formula">string</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_appendix_fg_399" model="account.report.line">
+                                <field name="name">399 - Address</field>
+                                <field name="code">L10N_LU_TAX_399</field>
+                                <field name="external_formula">string</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_appendix_fg_lessor" model="account.report.line">
+                        <field name="name">2. Lessor</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_lu_annual_tax_report_appendix_fg_400" model="account.report.line">
+                                <field name="name">400 - Name</field>
+                                <field name="code">L10N_LU_TAX_400</field>
+                                <field name="external_formula">string</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_appendix_fg_401" model="account.report.line">
+                                <field name="name">401 - Address</field>
+                                <field name="code">L10N_LU_TAX_401</field>
+                                <field name="external_formula">string</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_appendix_fg_402" model="account.report.line">
+                                <field name="name">402 - Address</field>
+                                <field name="code">L10N_LU_TAX_402</field>
+                                <field name="external_formula">string</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_lu_annual_tax_report_appendix_fg_annual" model="account.report.line">
+                <field name="name">Annual accounts</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_lu_annual_tax_report_appendix_fg_998" model="account.report.line">
+                        <field name="name">Submitted to the Trade and Companies Register (RCS)</field>
+                        <field name="code">L10N_LU_TAX_998</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_fg_998_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                                <field name="figure_type">boolean</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

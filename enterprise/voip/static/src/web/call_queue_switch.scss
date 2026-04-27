@@ -1,0 +1,16 @@
+.o-voip-call-queue-switch-op-icon {
+    left: 5px;
+    bottom: 8px;
+
+    font-size: $font-size-sm;
+}
+
+@include media-breakpoint-up(md) {
+    .o-voip-call-queue-switch {
+        visibility: hidden;
+    }
+
+    .o_kanban_record:hover .o-voip-call-queue-switch {
+        visibility: visible;
+    }
+}

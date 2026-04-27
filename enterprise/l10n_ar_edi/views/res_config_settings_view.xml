@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="res_config_settings_view_form">
+        <field name="name">res.config.settings.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_ar.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <div id="argentina_localization_section" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </div>
+
+            <xpath expr="//block[@id='argentina_localization']" position="inside">
+                <setting string="AFIP Web Services" company_dependent="1">
+                    <field name="l10n_ar_afip_ws_environment" class="o_light_label"  widget="radio"/>
+                    <div class="content-group">
+                        <div class="d-flex align-items-center">
+                            <label for="l10n_ar_afip_ws_key_id" string="Private Key" class="o_light_label col-lg-3"/>
+                            <field name="l10n_ar_afip_ws_key_id" options="{'no_quick_create': True }" help="Select the Key used to sign your AFIP documents"/>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <label for="l10n_ar_afip_ws_crt_id" string="Certificate" class="o_light_label col-lg-3"/>
+                            <field name="l10n_ar_afip_ws_crt_id" help="Select the Certificate that you downloaded from AFIP"/>
+                            <span invisible="l10n_ar_afip_ws_crt_id"> or</span>
+                            <button name="l10n_ar_action_create_certificate_request" icon="oi-arrow-right" type="object" class="oe_link oe_inline" string="Generate Request" invisible="l10n_ar_afip_ws_crt_id" help="Click here to create a Resquest Certificate file. This file need to be uploaded to your AFIP Portal in order to ask AFIP for a certificate"/>
+                        </div>
+                        <div class="mt16">
+                            <button name="l10n_ar_connection_test" icon="oi-arrow-right" type="object" class="oe_link oe_inline" string="Test Connections"/>
+                        </div>
+                        <div class="mt16" invisible="not l10n_ar_afip_ws_crt_id">
+                            <button name="l10n_ar_action_create_certificate_request" icon="oi-arrow-right" type="object" class="oe_link oe_inline" string="Generate Renewal Request"/>
+                        </div>
+                        <div class="mt16" id="get_afip_certificate">
+                            <a href="https://www.afip.gob.ar/ws/WSAA/WSAA.ObtenerCertificado.pdf" target="_blank">
+                                How to get certificate for production?
+                            </a>
+                        </div>
+                    </div>
+                </setting>
+                <setting string="Verify Vendor Bills validity in AFIP" company_dependent="1" help="Allow or Require to do vendor bill verify in AFIP for documents with CAE, CAI or CAEA numbers" invisible="country_code != 'AR'">
+                    <field name="l10n_ar_afip_verification_type" widget="radio"/>
+                </setting>
+                <setting string="Default MiPyME FCE Transmission Option" company_dependent="1" help="This information will be sent to AFIP by default when validating electronic FCE documents. RG 4919/2021 requirement." invisible="country_code != 'AR'">
+                    <field name="l10n_ar_fce_transmission_type" class="o_light_label" widget="radio"/>
+                </setting>
+                <div class="col-xs-12 col-md-6 o_setting_box" invisible="country_code != 'AR'">
+                    <div class="o_setting_left_pane"/>
+                    <div class="o_setting_right_pane">
+                        <label for="l10n_ar_payment_foreign_currency"/>
+                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                        <div class="text-muted">
+                            Please select the default option that will be used to inform ARCA whether the payment is made in a foreign currency, as required by RG 5616/2024:<ul>
+                            <li>Yes → Always report foreign currency payments to ARCA</li>
+                            <li>No → Do not report payments in foreign currency by default</li>
+                            <li>Account's Currency Dependant → The reporting will follow the currency of the Accounts Receivable account used for the transaction</li></ul>
+                        </div>
+                        <div class="content-group">
+                            <field name="l10n_ar_payment_foreign_currency" class="o_light_label" widget="radio"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_ae_rule_parameter_overtime_multiplier" model="hr.rule.parameter">
+            <field name="name">UAE Overtime Multiplier</field>
+            <field name="code">l10n_ae_overtime</field>
+            <field name="country_id" ref="base.ae"/>
+        </record>
+
+        <record id="l10n_ae_rule_parameter_overtime_multiplier_value_2025" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.5</field>
+            <field name="rule_parameter_id" ref="l10n_ae_rule_parameter_overtime_multiplier"/>
+            <field name="date_from" eval="datetime(2025, 1, 1).date()"/>
+        </record>
+    </data>
+</odoo>

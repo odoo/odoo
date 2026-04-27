@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="knowledge.ArticleItemsCalendarController" t-inherit="web.CalendarController">
+        <xpath expr="//Layout" position="inside">
+            <t t-set-slot="control-panel-create-button">
+                <button t-if="model.canCreate" class="btn btn-primary" t-on-click="() => this.createRecord()">New</button>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('o_calendar_container')]//div[hasclass('o_sidebar_toggler')]" position="replace"/>
+        <xpath expr="//div[hasclass('o_calendar_container')]" position="inside">
+            <div t-if="state.missingConfiguration" class="o_view_nocontent o_knowledge_item_calendar_nocontent">
+                <div class="o_nocontent_help">
+                    <p class="o_view_nocontent_empty_folder"/>
+                    <p class="display-6">Missing Calendar configuration.</p>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-name="knowledge.ArticleItemsCalendarCommonPopover.body" t-inherit="web.CalendarCommonPopover.body">
+        <xpath expr="//li[@t-att-class='fieldInfo.attrs.class']" position="attributes">
+            <attribute name="t-if">fieldInfo.type !== 'properties'</attribute>
+        </xpath>
+        <xpath expr="//li[@t-att-class='fieldInfo.attrs.class']" position="after">
+            <li t-elif="slot.record.data[fieldInfo.name].some(property => property.view_in_cards and property.value)"
+                class="list-group-item flex-shrink-0 d-flex align-items-start pt-0" t-att-class="fieldInfo.attrs.class">
+                <Field name="fieldInfo.name" record="slot.record" fieldInfo="fieldInfo" type="fieldInfo.widget"/>
+            </li>
+        </xpath>
+    </t>
+
+    <t t-name="knowledge.ArticleItemsCalendarCommonPopover.footer">
+        <a href="#" class="btn btn-primary" t-on-click="onEditEvent">Open</a>
+        <t t-if="isEventDeletable">
+            <a href="#" class="btn btn-secondary ms-2" t-on-click="onDeleteEvent"><i class="fa fa-trash"/></a>
+        </t>
+    </t>
+
+</templates>

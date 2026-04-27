@@ -1,0 +1,1494 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="rule_parameter_withholding_schedule_9" model="hr.rule.parameter">
+        <field name="name">Seniors Withholding Rates</field>
+        <field name="code">l10n_au_withholding_schedule_9</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="rule_parameter_withholding_schedule_9_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_schedule_9"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "single": [
+                    (585, 0.0, 0.0),
+                    (646, 0.1900, 111.2308),
+                    (693, 0.3150, 192.0529),
+                    (721, 0.4150, 261.3913),
+                    (865, 0.4240, 267.8817),
+                    (989, 0.4727, 309.9183),
+                    (1282, 0.3477, 186.2115),
+                    (2307, 0.3450, 182.7504),
+                    (3461, 0.3900, 286.5965),
+                    ("inf", 0.4700, 563.5196),
+                ],
+                "illness-separated": [
+                    (566, 0.0000, 0.0000),
+                    (627, 0.1900, 107.5769),
+                    (693, 0.3150, 185.9952),
+                    (721, 0.4150, 255.3337),
+                    (865, 0.4240, 261.8240),
+                    (941, 0.4727, 303.8606),
+                    (1282, 0.3477, 186.2115),
+                    (2307, 0.3450, 182.7504),
+                    (3461, 0.3900, 286.5965),
+                    ("inf", 0.4700, 563.5196),
+                ],
+                "couple": [
+                    (521, 0.0000, 0.0000),
+                    (583, 0.1900, 99.1538),
+                    (693, 0.3150, 172.0288),
+                    (721, 0.4150, 241.3673),
+                    (829, 0.4240, 247.8577),
+                    (865, 0.2990, 144.1750),
+                    (1282, 0.3477, 186.2115),
+                    (2307, 0.3450, 182.7504),
+                    (3461, 0.3900, 286.5965),
+                    ("inf", 0.4700, 563.5196),
+                ],
+                "medicare": {
+                    "WEST": 866,
+                    "MLFT": 50191,
+                    "WFTD": 52,
+                    "ADDC": 3533,
+                    "SOPM": 0.1000,
+                    "SOPD": 0.0800,
+                    "WLA": 693.3800,
+                    "ML": 0.020,
+                },
+                "no-tfn": {
+                    "resident": 47,
+                    "foreign": 45,
+                },
+            }
+        </field>
+    </record>
+    <record id="rule_parameter_withholding_schedule_9_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_schedule_9"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "single": [
+                    (629, 0.0, 0.0),
+                    (671, 0.1600, 100.7308),
+                    (721, 0.2850, 184.6707),
+                    (790, 0.2940, 191.1611),
+                    (865, 0.3940, 270.1784),
+                    (987, 0.5277, 385.8803),
+                    (1014, 0.4477, 306.8630),
+                    (1282, 0.3227, 180.0385),
+                    (2596, 0.3200, 176.5769),
+                    (3653, 0.3900, 358.3077),
+                    ("inf", 0.4700, 650.6154),
+                ],
+                "illness-separated": [
+                    (606, 0.0000, 0.0000),
+                    (648, 0.1600, 97.0769),
+                    (721, 0.2850, 178.1635),
+                    (790, 0.2940, 184.6538),
+                    (865, 0.3940, 263.6712),
+                    (962, 0.5277, 379.3731),
+                    (987, 0.4027, 259.0558),
+                    (1282, 0.3227, 180.0385),
+                    (2596, 0.3200, 176.5769),
+                    (3653, 0.3900, 358.3077),
+                    ("inf", 0.4700, 650.6154),
+                ],
+                "couple": [
+                    (554, 0.0000, 0.0000),
+                    (596, 0.1600, 88.6538),
+                    (721, 0.2850, 163.1587),
+                    (790, 0.2940, 169.6490),
+                    (842, 0.3940, 248.6663),
+                    (865, 0.2690, 143.3538),
+                    (987, 0.4027, 259.0558),
+                    (1282, 0.3227, 180.0385),
+                    (2596, 0.3200, 176.5769),
+                    (3653, 0.3900, 358.3077),
+                    ("inf", 0.4700, 650.6154),
+                ],
+                "medicare": {
+                    "WEST": 987,
+                    "MLFT": 57198,
+                    "WFTD": 52,
+                    "ADDC": 4027,
+                    "SOPM": 0.1000,
+                    "SOPD": 0.0800,
+                    "WLA": 790.1700,
+                    "ML": 0.020,
+                },
+                "medicare-half": {
+                    "WEST": 1374,
+                    "MLFT": 57198,
+                    "WFTD": 52,
+                    "ADDC": 4027,
+                    "SOPM": 0.0500,
+                    "SOPD": 0.0400,
+                    "WLA": 1099.9600,
+                    "ML": 0.0100,
+                },
+                "no-tfn": {
+                    "resident": 47,
+                    "foreign": 45,
+                },
+            }
+        </field>
+    </record>
+    <record id="rule_parameter_withholding_schedule_9_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_schedule_9"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "single": [
+                    (629, 0.0, 0.0),
+                    (671, 0.1600, 100.7308),
+                    (721, 0.2850, 184.6707),
+                    (790, 0.2940, 191.1611),
+                    (865, 0.3940, 270.1784),
+                    (987, 0.5277, 385.8803),
+                    (1014, 0.4477, 306.8630),
+                    (1282, 0.3227, 180.0385),
+                    (2596, 0.3200, 176.5769),
+                    (3653, 0.3900, 358.3077),
+                    ("inf", 0.4700, 650.6154),
+                ],
+                "illness-separated": [
+                    (606, 0.0000, 0.0000),
+                    (648, 0.1600, 97.0769),
+                    (721, 0.2850, 178.1635),
+                    (790, 0.2940, 184.6538),
+                    (865, 0.3940, 263.6712),
+                    (962, 0.5277, 379.3731),
+                    (987, 0.4027, 259.0558),
+                    (1282, 0.3227, 180.0385),
+                    (2596, 0.3200, 176.5769),
+                    (3653, 0.3900, 358.3077),
+                    ("inf", 0.4700, 650.6154),
+                ],
+                "couple": [
+                    (554, 0.0000, 0.0000),
+                    (596, 0.1600, 88.6538),
+                    (721, 0.2850, 163.1587),
+                    (790, 0.2940, 169.6490),
+                    (842, 0.3940, 248.6663),
+                    (865, 0.2690, 143.3538),
+                    (987, 0.4027, 259.0558),
+                    (1282, 0.3227, 180.0385),
+                    (2596, 0.3200, 176.5769),
+                    (3653, 0.3900, 358.3077),
+                    ("inf", 0.4700, 650.6154),
+                ],
+                "medicare": {
+                    "WEST": 987,
+                    "MLFT": 57198,
+                    "WFTD": 52,
+                    "ADDC": 4027,
+                    "SOPM": 0.1000,
+                    "SOPD": 0.0800,
+                    "WLA": 790.1700,
+                    "ML": 0.020,
+                },
+                "medicare-half": {
+                    "WEST": 1374,
+                    "MLFT": 57198,
+                    "WFTD": 52,
+                    "ADDC": 4027,
+                    "SOPM": 0.0500,
+                    "SOPD": 0.0400,
+                    "WLA": 1099.9600,
+                    "ML": 0.0100,
+                },
+                "no-tfn": {
+                    "resident": 47,
+                    "foreign": 45,
+                },
+            }
+        </field>
+    </record>
+
+    <record id="rule_parameter_withholding_schedule_1" model="hr.rule.parameter">
+        <field name="name">Regular Withholding Rates</field>
+        <field name="code">l10n_au_withholding_schedule_1</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="rule_parameter_withholding_schedule_1_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_schedule_1"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "no-tax-free": [
+                    (88, 0.1900, 0.1900),
+                    (371, 0.2348, 3.9639),
+                    (515, 0.2190, -1.9003),
+                    (932, 0.3477, 64.4297),
+                    (1957, 0.3450, 61.9132),
+                    (3111, 0.3900, 150.0093),
+                    ("inf", 0.4700, 398.9324),
+                ],
+                "tax-free": [
+                    (359, 0.0, 0.0),
+                    (438, 0.1900, 68.3462),
+                    (548, 0.2900, 112.1942),
+                    (721, 0.2100, 68.3465),
+                    (865, 0.2190, 74.8369),
+                    (1282, 0.3477, 186.2119),
+                    (2307, 0.3450, 182.7504),
+                    (3461, 0.3900, 286.5965),
+                    ("inf", 0.4700, 563.5196),
+                ],
+                "full-exemption": [
+                    (359, 0.0, 0.0),
+                    (721, 0.1900, 68.3462),
+                    (865, 0.1990, 74.8365),
+                    (1282, 0.3277, 186.2115),
+                    (2307, 0.3250, 182.7500),
+                    (3461, 0.3700, 286.5962),
+                    ("inf", 0.4500, 563.5192),
+                ],
+                "half-exemption": [
+                    (359, 0.0, 0.0),
+                    (721, 0.1900, 68.3462),
+                    (739, 0.1990, 74.8365),
+                    (865, 0.2490, 111.8308),
+                    (924, 0.3777, 223.2058),
+                    (1282, 0.3377, 186.2119),
+                    (2307, 0.3350, 182.7504),
+                    (3461, 0.3800, 286.5965),
+                    ("inf", 0.4600, 563.5196),
+                ],
+                "foreign": [
+                    (2307, 0.3250, 0.3250),
+                    (3461, 0.3700, 103.8462),
+                    ("inf", 0.4500, 380.7692),
+                ],
+                "no-tfn": {
+                    "resident": 47,
+                    "foreign": 45,
+                },
+                "medicare": {
+                    "tax-free": {
+                        "WEST": 548,
+                        "MLFT": 38474,
+                        "WFTD": 52,
+                        "ADDC": 3533,
+                        "SOPM": 0.1000,
+                        "SOPD": 0.0800,
+                        "WLA": 438.4800,
+                        "ML": 0.0200,
+                    },
+                    "half-exemption": {
+                        "WEST": 924,
+                        "MLFT": 38474,
+                        "WFTD": 52,
+                        "ADDC": 3533,
+                        "SOPM": 0.0500,
+                        "SOPD": 0.0400,
+                        "WLA": 739.8800,
+                        "ML": 0.010,
+                    },
+                },
+            }
+        </field>
+    </record>
+
+    <record id="rule_parameter_withholding_schedule_1_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_schedule_1"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "no-tax-free": [
+                    (150, 0.1600, 0.1600),
+                    (371, 0.2117, 7.7550),
+                    (515, 0.1890, -0.6702),
+                    (932, 0.3227, 68.2367),
+                    (2246, 0.3200, 65.7202),
+                    (3303, 0.3900, 222.9510),
+                    ("inf", 0.4700, 487.2587),
+                ],
+                "tax-free": [
+                    (361, 0.0, 0.0),
+                    (500, 0.1600, 57.8462),
+                    (625, 0.26, 107.8462),
+                    (721, 0.18, 57.8462),
+                    (865, 0.189, 64.3365),
+                    (1282, 0.3227, 180.0385),
+                    (2596, 0.32, 176.5769),
+                    (3653, 0.39, 358.3077),
+                    ("inf", 0.4700, 650.6154),
+                ],
+                "half-exemption": [
+                    (361, 0.0, 0.0),
+                    (721, 0.1600, 57.8462),
+                    (843, 0.1690, 64.3365),
+                    (865, 0.2190, 106.4962),
+                    (1053, 0.3527, 222.1981),
+                    (1282, 0.3127, 180.0385),
+                    (2596, 0.3100, 176.5769),
+                    (3653, 0.3800, 358.3077),
+                    ("inf", 0.4600, 650.6154),
+                ],
+                "full-exemption": [
+                    (361, 0.0, 0.0),
+                    (721, 0.1600, 57.8462),
+                    (865, 0.1690, 64.3365),
+                    (1282, 0.3027, 180.0385),
+                    (2596, 0.3000, 176.5769),
+                    (3653, 0.3700, 358.3077),
+                    ("inf", 0.4500, 650.6154),
+                ],
+                "foreign": [
+                    (2596, 0.3000, 0.3000),
+                    (3653, 0.3700, 181.7308),
+                    ("inf", 0.4500, 474.0385),
+                ],
+                "no-tfn": {
+                    "resident": 47,
+                    "foreign": 45,
+                },
+                "medicare": {
+                    "tax-free": {
+                        "WEST": 625,
+                        "MLFT": 43846,
+                        "WFTD": 52,
+                        "ADDC": 4027,
+                        "SOPM": 0.1000,
+                        "SOPD": 0.0800,
+                        "WLA": 500.0000,
+                        "ML": 0.0200,
+                    },
+                    "half-exemption": {
+                        "WEST": 1053,
+                        "MLFT": 43846,
+                        "WFTD": 52,
+                        "ADDC": 4027,
+                        "SOPM": 0.0500,
+                        "SOPD": 0.0400,
+                        "WLA": 843.1900,
+                        "ML": 0.010,
+                    },
+                },
+            }
+        </field>
+    </record>
+
+    <record id="rule_parameter_withholding_schedule_1_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_schedule_1"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "no-tax-free": [
+                    (150, 0.1600, 0.1600),
+                    (371, 0.2117, 7.7550),
+                    (515, 0.1890, -0.6702),
+                    (932, 0.3227, 68.2367),
+                    (2246, 0.3200, 65.7202),
+                    (3303, 0.3900, 222.9510),
+                    ("inf", 0.4700, 487.2587),
+                ],
+                "tax-free": [
+                    (361, 0.0, 0.0),
+                    (500, 0.1600, 57.8462),
+                    (625, 0.26, 107.8462),
+                    (721, 0.18, 57.8462),
+                    (865, 0.189, 64.3365),
+                    (1282, 0.3227, 180.0385),
+                    (2596, 0.32, 176.5769),
+                    (3653, 0.39, 358.3077),
+                    ("inf", 0.4700, 650.6154),
+                ],
+                "half-exemption": [
+                    (361, 0.0, 0.0),
+                    (721, 0.1600, 57.8462),
+                    (843, 0.1690, 64.3365),
+                    (865, 0.2190, 106.4962),
+                    (1053, 0.3527, 222.1981),
+                    (1282, 0.3127, 180.0385),
+                    (2596, 0.3100, 176.5769),
+                    (3653, 0.3800, 358.3077),
+                    ("inf", 0.4600, 650.6154),
+                ],
+                "full-exemption": [
+                    (361, 0.0, 0.0),
+                    (721, 0.1600, 57.8462),
+                    (865, 0.1690, 64.3365),
+                    (1282, 0.3027, 180.0385),
+                    (2596, 0.3000, 176.5769),
+                    (3653, 0.3700, 358.3077),
+                    ("inf", 0.4500, 650.6154),
+                ],
+                "foreign": [
+                    (2596, 0.3000, 0.3000),
+                    (3653, 0.3700, 181.7308),
+                    ("inf", 0.4500, 474.0385),
+                ],
+                "no-tfn": {
+                    "resident": 47,
+                    "foreign": 45,
+                },
+                "medicare": {
+                    "tax-free": {
+                        "WEST": 625,
+                        "MLFT": 43846,
+                        "WFTD": 52,
+                        "ADDC": 4027,
+                        "SOPM": 0.1000,
+                        "SOPD": 0.0800,
+                        "WLA": 500.0000,
+                        "ML": 0.0200,
+                    },
+                    "half-exemption": {
+                        "WEST": 1053,
+                        "MLFT": 43846,
+                        "WFTD": 52,
+                        "ADDC": 4027,
+                        "SOPM": 0.0500,
+                        "SOPD": 0.0400,
+                        "WLA": 843.1900,
+                        "ML": 0.010,
+                    },
+                },
+            }
+        </field>
+    </record>
+
+    <record id="rule_parameter_withholding_schedule_10" model="hr.rule.parameter">
+        <field name="name">Voluntary Withholding Rates</field>
+        <field name="code">l10n_au_withholding_schedule_10</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="rule_parameter_withholding_schedule_10_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_schedule_10"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">20</field>
+    </record>
+    <record id="rule_parameter_withholding_schedule_10_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_schedule_10"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">20</field>
+    </record>
+
+    <record id="rule_parameter_withholding_schedule_palm" model="hr.rule.parameter">
+        <field name="name">PALM Withholding Rates</field>
+        <field name="code">l10n_au_withholding_schedule_palm</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="rule_parameter_withholding_schedule_palm_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_schedule_palm"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">
+{
+    "registered": 15,
+    "unregistered": [
+        (2596, 0.3000, 0.3000),
+        (3653, 0.3700, 181.7308),
+        ("inf", 0.4500, 474.0385),
+    ],
+}
+        </field>
+    </record>
+    <record id="rule_parameter_withholding_schedule_palm_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_schedule_palm"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">
+{
+    "registered": 15,
+    "unregistered": [
+        (2596, 0.3000, 0.3000),
+        (3653, 0.3700, 181.7308),
+        ("inf", 0.4500, 474.0385),
+    ],
+}
+        </field>
+    </record>
+
+    <record id="rule_parameter_extra_withholding" model="hr.rule.parameter">
+        <field name="name">53 Pays withholding</field>
+        <field name="code">l10n_au_extra_withholding</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <!-- ( from weekly earning, to weekly earning, additional withholding amount) -->
+    <record id="rule_parameter_extra_withholding_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_extra_withholding"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+        <field name="parameter_value">{
+            "weekly": [
+                (875,  2299,  3),
+                (2300, 3449,  5),
+                (3450, 'inf', 10),
+            ],
+            "bi-weekly": [
+                (1750, 4549,  13),
+                (4550, 6749,  21),
+                (6750, 'inf', 40),
+            ],
+       }</field>
+    </record>
+    <record id="rule_parameter_extra_withholding_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_extra_withholding"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">{
+            "weekly": [
+                (875,  2574,  3),
+                (2575, 3649,  6),
+                (3650, 'inf', 12),
+            ],
+            "bi-weekly": [
+                (1750, 5149,  12),
+                (5150, 7249,  26),
+                (7250, 'inf', 47),
+            ],
+       }</field>
+    </record>
+    <record id="rule_parameter_extra_withholding_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_extra_withholding"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">{
+            "weekly": [
+                (875,  2574,  3),
+                (2575, 3649,  6),
+                (3650, 'inf', 12),
+            ],
+            "bi-weekly": [
+                (1750, 5149,  12),
+                (5150, 7249,  26),
+                (7250, 'inf', 47),
+            ],
+       }</field>
+    </record>
+
+    <record id="rule_parameter_no_tfn_withholding" model="hr.rule.parameter">
+        <field name="name">Withholding rates for when no tfn declaration has been provided</field>
+        <field name="code">l10n_au_withholding_no_tfn</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <record id="rule_parameter_no_tfn_withholding_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_no_tfn_withholding"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+        <field name="parameter_value">{
+            "resident": 47,
+            "foreign": 45,
+        }</field>
+    </record>
+    <record id="rule_parameter_no_tfn_withholding_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_no_tfn_withholding"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">{
+            "resident": 47,
+            "foreign": 45,
+        }</field>
+    </record>
+    <record id="rule_parameter_no_tfn_withholding_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_no_tfn_withholding"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">{
+            "resident": 47,
+            "foreign": 45,
+        }</field>
+    </record>
+
+    <record id="rule_parameter_foreign_resident_withholding" model="hr.rule.parameter">
+        <field name="name">Foreign Resident Withholding Rates</field>
+        <field name="code">l10n_au_withholding_foreign_resident</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <record id="rule_parameter_foreign_resident_withholding_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_foreign_resident_withholding"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "foreign": [
+                    (2307, 0.3250, 0.3250),
+                    (3461, 0.3700, 103.8462),
+                    ("inf", 0.4500, 380.7692),
+                ],
+            }
+        </field>
+    </record>
+    <record id="rule_parameter_foreign_resident_withholding_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_foreign_resident_withholding"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "foreign": [
+                    (2596, 0.3000, 0.3000),
+                    (3653, 0.3700, 181.7308),
+                    ("inf", 0.4500, 474.0385),
+                ],
+            }
+        </field>
+    </record>
+    <record id="rule_parameter_foreign_resident_withholding_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_foreign_resident_withholding"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "foreign": [
+                    (2596, 0.3000, 0.3000),
+                    (3653, 0.3700, 181.7308),
+                    ("inf", 0.4500, 474.0385),
+                ],
+            }
+        </field>
+    </record>
+
+    <record id="rule_parameter_backpay_withholding" model="hr.rule.parameter">
+        <field name="name">Backpay Withholding Rates</field>
+        <field name="code">l10n_au_withholding_backpay</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <record id="rule_parameter_backpay_withholding_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_backpay_withholding"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+        <field name="parameter_value">47</field>
+    </record>
+    <record id="rule_parameter_backpay_withholding_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_backpay_withholding"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">47</field>
+    </record>
+    <record id="rule_parameter_backpay_withholding_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_backpay_withholding"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">47</field>
+    </record>
+
+    <!-- Low leaves threshold 300 -->
+    <record id="rule_parameter_leaves_low_threshold" model="hr.rule.parameter">
+        <field name="name">Unused Leaves: &lt; $300 Rule Threshold</field>
+        <field name="code">rule_parameter_leaves_low_threshold_schedule_7</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="rule_parameter_leaves_low_threshold_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_leaves_low_threshold"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+        <field name="parameter_value">300</field>
+    </record>
+    <record id="rule_parameter_leaves_low_threshold_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_leaves_low_threshold"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">300</field>
+    </record>
+    <record id="rule_parameter_leaves_low_threshold_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_leaves_low_threshold"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">300</field>
+    </record>
+
+    <record id="rule_parameter_leaves_low_withhold" model="hr.rule.parameter">
+        <field name="name">Unused Leaves: &lt; $300 Rule Percentage</field>
+        <field name="code">rule_parameter_leaves_low_withhold_schedule_7</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <record id="rule_parameter_leaves_low_withhold_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_leaves_low_withhold"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+        <field name="parameter_value">32</field>
+    </record>
+    <record id="rule_parameter_leaves_low_withhold_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_leaves_low_withhold"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">32</field>
+    </record>
+    <record id="rule_parameter_leaves_low_withhold_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_leaves_low_withhold"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">32</field>
+    </record>
+
+    <record id="rule_parameter_withholding_schedule_2" model="hr.rule.parameter">
+        <field name="name">Horticulturalist and Shearers Withholding Rates</field>
+        <field name="code">l10n_au_withholding_schedule_2</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <record id="rule_parameter_withholding_schedule_2_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_schedule_2"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "resident": {
+                    "tfn": 13,
+                    "no-tfn": 47,
+                },
+                "foreign": {
+                    "tfn": 32.5,
+                    "no-tfn": 45,
+                },
+            }
+        </field>
+    </record>
+    <record id="rule_parameter_withholding_schedule_2_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_schedule_2"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "resident": {
+                    "tfn": 13,
+                    "no-tfn": 47,
+                },
+                "foreign": {
+                    "tfn": 30,
+                    "no-tfn": 45,
+                },
+            }
+        </field>
+    </record>
+    <record id="rule_parameter_withholding_schedule_2_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_schedule_2"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "resident": {
+                    "tfn": 13,
+                    "no-tfn": 47,
+                },
+                "foreign": {
+                    "tfn": 30,
+                    "no-tfn": 45,
+                },
+            }
+        </field>
+    </record>
+
+    <record id="rule_parameter_withholding_schedule_3" model="hr.rule.parameter">
+        <field name="name">Actor Withholding Rates</field>
+        <field name="code">l10n_au_withholding_schedule_3</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <record id="rule_parameter_withholding_schedule_3_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_schedule_3"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "promotional": {
+                    "underage": {
+                        "weekly": 250,
+                        "fornightly": 700,
+                        "monthly": 1517,
+                    },
+                    "tfn": 20,
+                    "no-tfn": 47,
+                },
+                "tax-free": [
+                    (449, 0, 0),
+                    (548, 0.1520, 68.3462),
+                    (685, 0.2320, 112.1942),
+                    (901, 0.1680, 68.3465),
+                    (1081, 0.1752, 74.8369),
+                    (1602, 0.2782, 186.2119),
+                    (2884, 0.2760, 182.7504),
+                    (4326, 0.3120, 286.5965),
+                    ("inf", 0.3760, 563.5196),
+                ],
+                "no-tax-free": [
+                    (110, 0.1520, 0.1520),
+                    (463, 0.1878, 3.9639),
+                    (644, 0.1752, -1.9003),
+                    (1165, 0.2782, 64.4297),
+                    (2447, 0.2760, 61.9132),
+                    (3889, 0.3120, 150.0093),
+                    ("inf", 0.3760, 398.9324),
+                ],
+                "no-tfn": {
+                    "resident": 47,
+                    "foreign": 45,
+                },
+                "foreigner": [
+                    (0, 2307, 0, 32.5),
+                    (2307, 3461, 749, 37),
+                    (3461, "inf", 1176, 45)
+                ],
+            }
+        </field>
+    </record>
+    <record id="rule_parameter_withholding_schedule_3_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_schedule_3"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "promotional": {
+                    "underage": {
+                        "weekly": 250,
+                        "fornightly": 700,
+                        "monthly": 1517,
+                    },
+                    "tfn": 20,
+                    "no-tfn": 47,
+                },
+                "tax-free": [
+                    (451, 0, 0),
+                    (625, 0.1280, 57.8462),
+                    (781, 0.2080, 107.8462),
+                    (901, 0.1440, 57.8462),
+                    (1081, 0.1512, 64.3365),
+                    (1602, 0.2582, 180.0385),
+                    (3245, 0.2560, 176.5769),
+                    (4567, 0.3120, 358.3077),
+                    ("inf", 0.3760, 650.6154),
+                ],
+                "no-tax-free": [
+                    (187, 0.1280, 0.1280),
+                    (463, 0.1694, 7.7550),
+                    (644, 0.1512, -0.6702),
+                    (1165, 0.2582, 68.2367),
+                    (2807, 0.2560, 65.7202),
+                    (4129, 0.3120, 222.9510),
+                    ("inf", 0.3760, 487.2587),
+                ],
+                "no-tfn": {
+                    "resident": 47,
+                    "foreign": 45,
+                },
+                "foreigner": [
+                    (0, 2307, 0, 32.5),
+                    (2307, 3461, 749, 37),
+                    (3461, "inf", 1176, 45)
+                ],
+            }
+        </field>
+    </record>
+    <record id="rule_parameter_withholding_schedule_3_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_withholding_schedule_3"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "promotional": {
+                    "underage": {
+                        "weekly": 250,
+                        "fornightly": 700,
+                        "monthly": 1517,
+                    },
+                    "tfn": 20,
+                    "no-tfn": 47,
+                },
+                "tax-free": [
+                    (451, 0, 0),
+                    (625, 0.1280, 57.8462),
+                    (781, 0.2080, 107.8462),
+                    (901, 0.1440, 57.8462),
+                    (1081, 0.1512, 64.3365),
+                    (1602, 0.2582, 180.0385),
+                    (3245, 0.2560, 176.5769),
+                    (4567, 0.3120, 358.3077),
+                    ("inf", 0.3760, 650.6154),
+                ],
+                "no-tax-free": [
+                    (187, 0.1280, 0.1280),
+                    (463, 0.1694, 7.7550),
+                    (644, 0.1512, -0.6702),
+                    (1165, 0.2582, 68.2367),
+                    (2807, 0.2560, 65.7202),
+                    (4129, 0.3120, 222.9510),
+                    ("inf", 0.3760, 487.2587),
+                ],
+                "no-tfn": {
+                    "resident": 47,
+                    "foreign": 45,
+                },
+                "foreigner": [
+                    (0, 2307, 0, 32.5),
+                    (2307, 3461, 749, 37),
+                    (3461, "inf", 1176, 45)
+                ],
+            }
+        </field>
+    </record>
+
+    <record id="rule_parameter_super" model="hr.rule.parameter">
+        <field name="name">Super Contribution</field>
+        <field name="code">l10n_au_withholding_super</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <record id="rule_parameter_super_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_super"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+        <field name="parameter_value">11</field>
+    </record>
+    <record id="rule_parameter_super_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_super"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">11.5</field>
+    </record>
+    <record id="rule_parameter_super_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_super"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">12</field>
+    </record>
+
+    <record id="rule_parameter_return_to_work_withholding" model="hr.rule.parameter">
+        <field name="name">Return to work withholding</field>
+        <field name="code">l10n_au_withholding_rtw</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <record id="rule_parameter_return_to_work_withholding_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_return_to_work_withholding"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "tfn": 34.5,
+                "resident": 47,
+                "foreign": 45,
+            }
+        </field>
+    </record>
+    <record id="rule_parameter_return_to_work_withholding_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_return_to_work_withholding"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "tfn": 32,
+                "resident": 47,
+                "foreign": 45,
+            }
+        </field>
+    </record>
+    <record id="rule_parameter_return_to_work_withholding_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_return_to_work_withholding"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "tfn": 32,
+                "resident": 47,
+                "foreign": 45,
+            }
+        </field>
+    </record>
+
+    <record id="rule_parameter_study_loan_coefficients" model="hr.rule.parameter">
+        <field name="name">HELP/STSL Withholding</field>
+        <field name="code">l10n_au_stsl</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <record id="rule_parameter_study_loan_coefficients_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_study_loan_coefficients"/>
+        <field name="date_from" eval="datetime(2023, 7, 1).date()"/>
+        <field name="parameter_value">{
+            "no-tax-free": [
+                (0,       640.99,  0.0),
+                (641.00,  793.99,  1.0),
+                (794.00,  862.99,  2.0),
+                (863.00,  935.99,  2.5),
+                (936.00,  1012.99, 3.0),
+                (1013.00, 1094.99, 3.5),
+                (1095.00, 1180.99, 4.0),
+                (1181.00, 1272.99, 4.5),
+                (1273.00, 1370.99, 5.0),
+                (1371.00, 1473.99, 5.5),
+                (1474.00, 1582.99, 6.0),
+                (1583.00, 1698.99, 6.5),
+                (1699.00, 1821.99, 7.0),
+                (1822.00, 1952.99, 7.5),
+                (1953.00, 2090.99, 8.0),
+                (2091.00, 2236.99, 8.5),
+                (2237.00, 2392.99, 9.0),
+                (2393.00, 2556.99, 9.5),
+                (2557.00, 'inf',   10.0),
+            ],
+            "tax-free": [
+                (0,       990.99,  0.0),
+                (991.00,  1143.99, 1.0),
+                (1144.00, 1212.99, 2.0),
+                (1213.00, 1285.99, 2.5),
+                (1286.00, 1362.99, 3.0),
+                (1363.00, 1444.99, 3.5),
+                (1445.00, 1530.99, 4.0),
+                (1531.00, 1622.99, 4.5),
+                (1623.00, 1720.99, 5.0),
+                (1721.00, 1823.99, 5.5),
+                (1824.00, 1932.99, 6.0),
+                (1933.00, 2048.99, 6.5),
+                (2049.00, 2171.99, 7.0),
+                (2172.00, 2302.99, 7.5),
+                (2303.00, 2440.99, 8.0),
+                (2441.00, 2586.99, 8.5),
+                (2587.00, 2742.99, 9.0),
+                (2743.00, 2906.99, 9.5),
+                (2907.00, 'inf',   10.0),
+            ]
+        }</field>
+    </record>
+    <record id="rule_parameter_study_loan_coefficients_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_study_loan_coefficients"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">{
+            "no-tax-free": [
+                (0,       695.99,  0.0),
+                (696.00,  857.99,  1.0),
+                (858.00,  930.99,  2.0),
+                (931.00,  1007.99,  2.5),
+                (1008.00,  1088.99, 3.0),
+                (1089.00, 1174.99, 3.5),
+                (1175.00, 1266.99, 4.0),
+                (1267.00, 1363.99, 4.5),
+                (1364.00, 1466.99, 5.0),
+                (1467.00, 1575.99, 5.5),
+                (1576.00, 1691.99, 6.0),
+                (1692.00, 1813.99, 6.5),
+                (1814.00, 1943.99, 7.0),
+                (1944.00, 2081.99, 7.5),
+                (2082.00, 2227.99, 8.0),
+                (2228.00, 2381.99, 8.5),
+                (2382.00, 2545.99, 9.0),
+                (2546.00, 2719.99, 9.5),
+                (2720.00, 'inf',   10.0),
+            ],
+            "tax-free": [
+                (0,       1045.99,  0.0),
+                (1046.00,  1207.99, 1.0),
+                (1208.00, 1280.99, 2.0),
+                (1281.00, 1357.99, 2.5),
+                (1358.00, 1438.99, 3.0),
+                (1439.00, 1524.99, 3.5),
+                (1525.00, 1616.99, 4.0),
+                (1617.00, 1713.99, 4.5),
+                (1714.00, 1816.99, 5.0),
+                (1817.00, 1925.99, 5.5),
+                (1926.00, 2041.99, 6.0),
+                (2042.00, 2163.99, 6.5),
+                (2164.00, 2293.99, 7.0),
+                (2294.00, 2431.99, 7.5),
+                (2432.00, 2577.99, 8.0),
+                (2578.00, 2731.99, 8.5),
+                (2732.00, 2895.99, 9.0),
+                (2896.00, 3069.99, 9.5),
+                (3070.00, 'inf',   10.0),
+            ]
+        }</field>
+    </record>
+    <record id="rule_parameter_study_loan_coefficients_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_study_loan_coefficients"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">{
+             "no-tax-free": [
+                  (0, 728.99, 0.0),
+                  (729.00, 895.99, 1.0),
+                  (896.00, 970.99, 2.0),
+                  (971.00, 1050.99, 2.5),
+                  (1051.00, 1134.99, 3.0),
+                  (1135.00, 1223.99, 3.5),
+                  (1224.00, 1317.99, 4.0),
+                  (1318.00, 1417.99, 4.5),
+                  (1418.00, 1523.99, 5.0),
+                  (1524.00, 1636.99, 5.5),
+                  (1637.00, 1755.99, 6.0),
+                  (1756.00, 1882.99, 6.5),
+                  (1883.00, 2015.99, 7.0),
+                  (2016.00, 2157.99, 7.5),
+                  (2158.00, 2308.99, 8.0),
+                  (2309.00, 2468.99, 8.5),
+                  (2469.00, 2637.99, 9.0),
+                  (2638.00, 2816.99, 9.5),
+                  (2817.00, 'inf', 10.0),
+             ],
+             "tax-free": [
+                (0, 1078.99, 0.0),
+                (1079.00, 1245.99, 1.0),
+                (1246.00, 1320.99, 2.0),
+                (1321.00, 1400.99, 2.5),
+                (1401.00, 1484.99, 3.0),
+                (1485.00, 1573.99, 3.5),
+                (1574.00, 1667.99, 4.0),
+                (1668.00, 1767.99, 4.5),
+                (1768.00, 1873.99, 5.0),
+                (1874.00, 1986.99, 5.5),
+                (1987.00, 2105.99, 6.0),
+                (2106.00, 2232.99, 6.5),
+                (2233.00, 2365.99, 7.0),
+                (2366.00, 2507.99, 7.5),
+                (2508.00, 2658.99, 8.0),
+                (2659.00, 2818.99, 8.5),
+                (2819.00, 2987.99, 9.0),
+                (2988.00, 3166.99, 9.5),
+                (3167.00, 'inf', 10.0),
+             ]
+            }</field>
+    </record>
+    <record id="rule_parameter_study_loan_coefficients_2025_sept" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_study_loan_coefficients"/>
+        <field name="date_from" eval="datetime(2025, 9, 24).date()"/>
+        <field name="parameter_value">{
+             "no-tax-free": [
+                (938, 0.0000, 0.0000),
+                (2053, 0.1500, 140.7692),
+                (2597, 0.1700, 181.8462),
+                ("inf", 0.1000, 0.0000),
+             ],
+             "tax-free": [
+                (1288, 0.0000, 0.0000),
+                (2403, 0.1500, 193.2692),
+                (3447, 0.1700, 241.3462),
+                ("inf", 0.1000, 0.0000),
+             ]
+            }</field>
+    </record>
+
+    <record id="rule_parameter_whm_tax_rate" model="hr.rule.parameter">
+        <field name="name">Working holiday makers tax rates</field>
+        <field name="code">l10n_au_withholding_schedule_15</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <!-- ( from YEARLY earning, to YEARLY earning, maximum value, rate) -->
+    <record id="rule_parameter_whm_tax_rate_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_whm_tax_rate"/>
+        <field name="date_from" eval="datetime(2023, 7, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "registered": [
+                    (0, 45000, 6750, 15),
+                    (45000, 120000, 24375, 32.5),
+                    (120000, 180000, 22200, 37),
+                    (180000, "inf", None, 45),
+                ],
+                "no-tfn": 45,
+                "unregistered": [
+                    (2307, 0.3250, 0.3250),
+                    (3461, 0.3700, 103.8462),
+                    ("inf", 0.4500, 380.7692),
+                ],
+            }
+        </field>
+    </record>
+    <record id="rule_parameter_whm_tax_rate_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_whm_tax_rate"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "registered": [
+                    (0, 45000, 6750, 15),
+                    (45000, 135000, 27000, 30),
+                    (135000, 190000, 20350, 37),
+                    (190000, "inf", None, 45),
+                ],
+                "no-tfn": 45,
+                "unregistered": [
+                    (2596, 0.3000, 0.3000),
+                    (3653, 0.3700, 181.7308),
+                    ("inf", 0.4500, 474.0385),
+                ],
+            }
+        </field>
+    </record>
+    <record id="rule_parameter_whm_tax_rate_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_whm_tax_rate"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">
+            {
+                "registered": [
+                    (0, 45000, 6750, 15),
+                    (45000, 135000, 27000, 30),
+                    (135000, 190000, 20350, 37),
+                    (190000, "inf", None, 45),
+                ],
+                "no-tfn": 45,
+                "unregistered": [
+                    (2596, 0.3000, 0.3000),
+                    (3653, 0.3700, 181.7308),
+                    ("inf", 0.4500, 474.0385),
+                ],
+            }
+        </field>
+    </record>
+
+    <!-- Termination payments -->
+
+    <record id="rule_parameter_etp_cap" model="hr.rule.parameter">
+        <field name="name">ETP: Employment Termination Cap</field>
+        <field name="code">l10n_au_etp_cap_schedule_11</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <record id="rule_parameter_etp_cap_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_etp_cap"/>
+        <field name="date_from" eval="datetime(2023, 7, 1).date()"/>
+        <field name="parameter_value">235000</field>
+    </record>
+    <record id="rule_parameter_etp_cap_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_etp_cap"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">245000</field>
+    </record>
+    <record id="rule_parameter_etp_cap_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_etp_cap"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">245000</field>
+    </record>
+
+    <!-- This parameter is not indexed ( as of August 2023 ), there should be no additional value -->
+    <record id="rule_parameter_whoic_cap" model="hr.rule.parameter">
+        <field name="name">ETP: Whole-of-Income Cap</field>
+        <field name="code">l10n_au_whoic_cap_schedule_11</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <record id="rule_parameter_whoic_cap_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_whoic_cap"/>
+        <field name="date_from" eval="datetime(2023, 7, 1).date()"/>
+        <field name="parameter_value">180000</field>
+    </record>
+    <record id="rule_parameter_whoic_cap_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_whoic_cap"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">180000</field>
+    </record>
+    <record id="rule_parameter_whoic_cap_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_whoic_cap"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">180000</field>
+    </record>
+
+    <record id="rule_parameter_tax_free_base_limit" model="hr.rule.parameter">
+        <field name="name">ETP: Tax-Free Base Limit</field>
+        <field name="code">l10n_au_tax_free_base_schedule_11</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <record id="rule_parameter_tax_free_base_limit_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_tax_free_base_limit"/>
+        <field name="date_from" eval="datetime(2023, 7, 1).date()"/>
+        <field name="parameter_value">11985</field>
+    </record>
+    <record id="rule_parameter_tax_free_base_limit_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_tax_free_base_limit"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">12524</field>
+    </record>
+    <record id="rule_parameter_tax_free_base_limit_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_tax_free_base_limit"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">12524</field>
+    </record>
+
+    <record id="rule_parameter_tax_free_yearly_component" model="hr.rule.parameter">
+        <field name="name">ETP: Tax-Free Yearly Component</field>
+        <field name="code">l10n_au_tax_free_yearly_schedule_11</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <record id="rule_parameter_tax_free_yearly_component_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_tax_free_yearly_component"/>
+        <field name="date_from" eval="datetime(2023, 7, 1).date()"/>
+        <field name="parameter_value">5994</field>
+    </record>
+    <record id="rule_parameter_tax_free_yearly_component_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_tax_free_yearly_component"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">6264</field>
+    </record>
+    <record id="rule_parameter_tax_free_yearly_component_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_tax_free_yearly_component"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">6264</field>
+    </record>
+
+    <!-- Preservation age is based on the employee date of birth. Depending on it, the age will vary. -->
+    <record id="rule_parameter_preservation_age" model="hr.rule.parameter">
+        <field name="name">ETP: Preservation Age</field>
+        <field name="code">l10n_au_preservation_age_schedule_11</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <record id="rule_parameter_preservation_age_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_preservation_age"/>
+        <field name="date_from" eval="datetime(2023, 7, 1).date()"/>
+        <field name="parameter_value">{
+            "before": 55,
+            "years": {
+                "1960": 56,
+                "1961": 57,
+                "1962": 58,
+                "1963": 59,
+            },
+            "after": 60,
+        }</field>
+    </record>
+    <record id="rule_parameter_preservation_age_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_preservation_age"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">{
+            "before": 55,
+            "years": {
+                "1960": 56,
+                "1961": 57,
+                "1962": 58,
+                "1963": 59,
+            },
+            "after": 60,
+        }</field>
+    </record>
+    <record id="rule_parameter_preservation_age_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_preservation_age"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">{
+            "before": 55,
+            "years": {
+                "1960": 56,
+                "1961": 57,
+                "1962": 58,
+                "1963": 59,
+            },
+            "after": 60,
+        }</field>
+    </record>
+
+    <!-- Excluded are the rates used by payments excluding the whole of income amount.
+    Non-excluded is of course the payments including the whole of income amount.
+
+    Under and over in each section relate to the preservation age of the employee.
+    If the employee is of preservation age, the over rate is used.
+
+    over_cap should only be used for the part of the amount that is higher than the applicable cap,
+    as computed.
+    -->
+    <record id="rule_parameter_etp_withholding_life_benefits" model="hr.rule.parameter">
+        <field name="name">ETP: Withholding Rates for Life Benefits</field>
+        <field name="code">l10n_au_etp_withholding_life_benefits_schedule_11</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <record id="rule_parameter_etp_withholding_life_benefits_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_etp_withholding_life_benefits"/>
+        <field name="date_from" eval="datetime(2023, 7, 1).date()"/>
+        <field name="parameter_value">{
+            "excluded": {
+                "under": 32.0,
+                "over": 17.0,
+            },
+            "non_excluded": {
+                "under": 32.0,
+                "over": 17.0,
+            },
+            "no_tfn": 47.0,
+            "over_cap": 47.0,
+        }</field>
+    </record>
+    <record id="rule_parameter_etp_withholding_life_benefits_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_etp_withholding_life_benefits"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">{
+            "excluded": {
+                "under": 32.0,
+                "over": 17.0,
+            },
+            "non_excluded": {
+                "under": 32.0,
+                "over": 17.0,
+            },
+            "no_tfn": 47.0,
+            "over_cap": 47.0,
+        }</field>
+    </record>
+    <record id="rule_parameter_etp_withholding_life_benefits_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_etp_withholding_life_benefits"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">{
+            "excluded": {
+                "under": 32.0,
+                "over": 17.0,
+            },
+            "non_excluded": {
+                "under": 32.0,
+                "over": 17.0,
+            },
+            "no_tfn": 47.0,
+            "over_cap": 47.0,
+        }</field>
+    </record>
+
+    <record id="rule_parameter_etp_withholding_death_benefits" model="hr.rule.parameter">
+        <field name="name">ETP: Withholding Rates for Death Benefits</field>
+        <field name="code">l10n_au_etp_withholding_death_benefits_schedule_11</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <record id="rule_parameter_etp_withholding_death_benefits_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_etp_withholding_death_benefits"/>
+        <field name="date_from" eval="datetime(2023, 7, 1).date()"/>
+        <field name="parameter_value">{
+            "dependants": {
+                "up_to_cap": 0.0,
+                "over_cap": 47.0,
+            },
+            "non_dependants": {
+                "up_to_cap": 32.0,
+                "over_cap": 47.0,
+            },
+            "trustee_of_estate": 0.0,
+        }</field>
+    </record>
+    <record id="rule_parameter_etp_withholding_death_benefits_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_etp_withholding_death_benefits"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">{
+            "dependants": {
+                "up_to_cap": 0.0,
+                "over_cap": 47.0,
+            },
+            "non_dependants": {
+                "up_to_cap": 32.0,
+                "over_cap": 47.0,
+            },
+            "trustee_of_estate": 0.0,
+        }</field>
+    </record>
+    <record id="rule_parameter_etp_withholding_death_benefits_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_etp_withholding_death_benefits"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">{
+            "dependants": {
+                "up_to_cap": 0.0,
+                "over_cap": 47.0,
+            },
+            "non_dependants": {
+                "up_to_cap": 32.0,
+                "over_cap": 47.0,
+            },
+            "trustee_of_estate": 0.0,
+        }</field>
+    </record>
+
+    <record id="rule_parameter_leave_withholding" model="hr.rule.parameter">
+        <field name="name">Unused Leaves: Flat Rate</field>
+        <field name="code">l10n_au_leave_withholding_schedule_7</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <record id="rule_parameter_leave_withholding_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_leave_withholding"/>
+        <field name="date_from" eval="datetime(2023, 7, 1).date()"/>
+        <field name="parameter_value">32</field>
+    </record>
+    <record id="rule_parameter_leave_withholding_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_leave_withholding"/>
+        <field name="date_from" eval="datetime(2024, 7, 1).date()"/>
+        <field name="parameter_value">32</field>
+    </record>
+    <record id="rule_parameter_leave_withholding_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_leave_withholding"/>
+        <field name="date_from" eval="datetime(2025, 7, 1).date()"/>
+        <field name="parameter_value">32</field>
+    </record>
+
+    <!-- Child Support -->
+    <record id="rule_parameter_weekly_pea" model="hr.rule.parameter">
+        <field name="name">Weekly Protected Earnings Amount ( for child support )</field>
+        <field name="code">l10n_au_pea</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+    <record id="rule_parameter_weekly_pea_2023" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_weekly_pea"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+        <field name="parameter_value">456.53</field>
+    </record>
+    <record id="rule_parameter_weekly_pea_2024" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_weekly_pea"/>
+        <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+        <field name="parameter_value">514.50</field>
+    </record>
+    <record id="rule_parameter_weekly_pea_2025" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_weekly_pea"/>
+        <field name="date_from" eval="datetime(2025, 1, 1).date()"/>
+        <field name="parameter_value">534.23</field>
+    </record>
+    <record id="rule_parameter_weekly_pea_2026" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_weekly_pea"/>
+        <field name="date_from" eval="datetime(2026, 1, 1).date()"/>
+        <field name="parameter_value">544.88</field>
+    </record>
+</odoo>

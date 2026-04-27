@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="stock_barcode.ApplyQuantDialog">
+        <Dialog title.translate="Some serials where not counted, set them as missing?"
+            contentClass="'o_stock_barcode_apply_quant_dialog'"
+            bodyClass="'d-none'" size="'md'" fullscreen="false">
+            <div /> <!-- Empty div for the Dialog body (not displayed but needed.) -->
+            <t t-set-slot="footer">
+                <button class="o_apply_all btn btn-primary" t-on-click.prevent="onApplyAll">Yes</button>
+                <button class="o_apply btn btn-primary" t-on-click="onApply">No, I'll count them later</button>
+                <button class="o_discard btn btn-secondary" t-on-click="props.close">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

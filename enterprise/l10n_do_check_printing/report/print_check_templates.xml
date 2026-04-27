@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+<template id="print_check_top">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <div t-att-data-oe-model="o._name" t-att-data-oe-id="o.id" t-foreach="o._check_get_pages()" t-as="page" class="page article ckdo_page ckdo_top_page" t-attf-style="top: {{ o.company_id.account_check_printing_margin_top }}in; left: {{ o.company_id.account_check_printing_margin_left }}in;">
+                <t t-call="l10n_do_check_printing.ckdo_check" />
+                <t t-call="l10n_do_check_printing.ckdo_stub"><t t-set="stub_num" t-value="1"/></t>
+                <t t-call="l10n_do_check_printing.ckdo_stub"><t t-set="stub_num" t-value="2"/></t>
+            </div>
+        </t>
+    </t>
+</template>
+
+<template id="print_check_middle">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <div t-att-data-oe-model="o._name" t-att-data-oe-id="o.id" t-foreach="o._check_get_pages()" t-as="page" class="page article ckdo_page ckdo_middle_page" t-attf-style="top: {{ o.company_id.account_check_printing_margin_top }}in; left: {{ o.company_id.account_check_printing_margin_left }}in;">
+                <t t-call="l10n_do_check_printing.ckdo_stub"><t t-set="stub_num" t-value="1"/></t>
+                <t t-call="l10n_do_check_printing.ckdo_check" />
+                <t t-call="l10n_do_check_printing.ckdo_stub"><t t-set="stub_num" t-value="2"/></t>
+            </div>
+        </t>
+    </t>
+</template>
+
+<template id="print_check_bottom">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <div t-att-data-oe-model="o._name" t-att-data-oe-id="o.id" t-foreach="o._check_get_pages()" t-as="page" class="page article ckdo_page ckdo_bottom_page" t-attf-style="top: {{ o.company_id.account_check_printing_margin_top }}in; left: {{ o.company_id.account_check_printing_margin_left }}in;">
+                <t t-call="l10n_do_check_printing.ckdo_stub"><t t-set="stub_num" t-value="1"/></t>
+                <t t-call="l10n_do_check_printing.ckdo_stub"><t t-set="stub_num" t-value="2"/></t>
+                <t t-call="l10n_do_check_printing.ckdo_check" />
+            </div>
+        </t>
+    </t>
+</template>
+
+<template id="print_blank_check_top">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <div t-att-data-oe-model="o._name" t-att-data-oe-id="o.id" t-foreach="o._check_get_pages()" t-as="page" class="page article ckdo_page ckdo_top_page" t-attf-style="top: {{ o.company_id.account_check_printing_margin_top }}in; left: {{ o.company_id.account_check_printing_margin_left }}in;">
+                <t t-call="l10n_do_check_printing.ckdo_check_blank"/>
+                <t t-call="l10n_do_check_printing.ckdo_stub_blank"><t t-set="stub_num" t-value="1"/></t>
+                <t t-call="l10n_do_check_printing.ckdo_stub_blank"><t t-set="stub_num" t-value="2"/></t>
+            </div>
+        </t>
+    </t>
+</template>
+
+<template id="print_blank_check_middle">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <div t-att-data-oe-model="o._name" t-att-data-oe-id="o.id" t-foreach="o._check_get_pages()" t-as="page" class="page article ckdo_page ckdo_middle_page" t-attf-style="top: {{ o.company_id.account_check_printing_margin_top }}in; left: {{ o.company_id.account_check_printing_margin_left }}in;">
+                <t t-call="l10n_do_check_printing.ckdo_stub_blank"><t t-set="stub_num" t-value="1"/></t>
+                <t t-call="l10n_do_check_printing.ckdo_check_blank"/>
+                <t t-call="l10n_do_check_printing.ckdo_stub_blank"><t t-set="stub_num" t-value="2"/></t>
+            </div>
+        </t>
+    </t>
+</template>
+
+<template id="print_blank_check_bottom">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <div t-att-data-oe-model="o._name" t-att-data-oe-id="o.id" t-foreach="o._check_get_pages()" t-as="page" class="page article ckdo_page ckdo_bottom_page" t-attf-style="top: {{ o.company_id.account_check_printing_margin_top }}in; left: {{ o.company_id.account_check_printing_margin_left }}in;">
+                <t t-call="l10n_do_check_printing.ckdo_stub_blank"><t t-set="stub_num" t-value="1"/></t>
+                <t t-call="l10n_do_check_printing.ckdo_stub_blank"><t t-set="stub_num" t-value="2"/></t>
+                <t t-call="l10n_do_check_printing.ckdo_check_blank"/>
+            </div>
+        </t>
+    </t>
+</template>
+
+</data>
+</odoo>

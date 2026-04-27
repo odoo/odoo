@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2017 sp2 (x64) (http://www.altova.com) by rsiino 
+       (Sogei S.p.A.) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="urn:www.agenziaentrate.gov.it:specificheTecniche:common" xmlns:sc="urn:www.agenziaentrate.gov.it:specificheTecniche:sco:common" xmlns:iv="urn:www.agenziaentrate.gov.it:specificheTecniche:sco:ivp" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" targetNamespace="urn:www.agenziaentrate.gov.it:specificheTecniche:sco:ivp" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
+	<xs:annotation>
+		<xs:documentation xml:lang="it"><![CDATA[
+             Versione 1.0 - 13/02/16
+             ]]></xs:documentation>
+	</xs:annotation>
+	<xs:include schemaLocation="intestazioneIvp_2018_v1.xsd"/>
+	<xs:include schemaLocation="comunicazioneIvp_2018_v1.xsd"/>
+	<xs:element name="Fornitura">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Intestazione" type="iv:Intestazione_IVP_Type"/>
+				<xs:element name="Comunicazione" type="iv:Comunicazione_IVP_Type"/>
+				<xs:element ref="ds:Signature" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

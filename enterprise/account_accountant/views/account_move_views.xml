@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_move_line_tree" model="ir.ui.view">
+        <field name="name">account.move.line.list</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree"/>
+        <field name="mode">extension</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="js_class">account_move_line_list</attribute>
+            </xpath>
+            <xpath expr="//list" position="inside">
+               <header>
+                    <button name="action_reconcile" type="object" string="Reconcile" groups="account.group_account_user" data-hotkey="r"/>
+                </header>
+                <field name="is_account_reconcile" column_invisible="True"/>
+                <field name="has_deferred_moves" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//list/field[@name='name']" position="after">
+                <field name="deferred_start_date" optional="hide" readonly="has_deferred_moves"/>
+                <field name="deferred_end_date" optional="hide" readonly="has_deferred_moves"/>
+            </xpath>
+            <xpath expr="//list/field[@name='matching_number']" position="attributes">
+                <attribute name="widget">matching_link_widget</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_line_payment_tree" model="ir.ui.view">
+        <field name="name">account.move.line.payment.list</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_payment_tree"/>
+        <field name="mode">extension</field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_payment_items_register_payment']" position="after">
+                <button name="action_reconcile" type="object" string="Reconcile" groups="account.group_account_user"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_form_inherit" model="ir.ui.view">
+        <field name="name">account.move.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@id='other_tab']//field[@name='fiscal_position_id']" position="after">
+                <field name="inalterable_hash" groups="base.group_no_one"/>
+            </xpath>
+            <xpath expr="//page[@id='other_tab_entry']//field[@name='company_id']" position="after">
+                <field name="inalterable_hash" groups="base.group_no_one"/>
+            </xpath>
+            <xpath expr="//list/field[@name='analytic_distribution']" position="after">
+                <field name="has_abnormal_deferred_dates" column_invisible="1"/>
+                <field name="deferred_start_date" optional="hide" decoration-warning="has_abnormal_deferred_dates"/>
+                <field name="deferred_end_date" optional="hide" decoration-warning="has_abnormal_deferred_dates"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_bank_reconciliation_widget_statement"
+                        class="oe_stat_button"
+                        icon="fa-bars"
+                        type="object"
+                        invisible="not statement_id or state == 'cancel'">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Bank Statement</span>
+                        </div>
+                </button>
+                <button name="action_open_bank_reconciliation_widget"
+                        class="oe_stat_button"
+                        icon="fa-bars"
+                        type="object"
+                        invisible="move_type != 'entry' or not id or not statement_line_id or state == 'cancel'">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">1 Bank Transaction</span>
+                        </div>
+                </button>
+                <field name="deferred_move_ids" invisible="1"/>
+                <field name="deferred_original_move_ids" invisible="1"/>
+                <field name="deferred_entry_type" invisible="1"/>
+                <button name="open_deferred_entries"
+                        class="oe_stat_button"
+                        icon="fa-bars"
+                        type="object"
+                        invisible="not deferred_move_ids"
+                        string="Deferred Entries">
+                </button>
+                <button name="open_deferred_original_entry"
+                        class="oe_stat_button"
+                        icon="fa-bars"
+                        type="object"
+                        invisible="deferred_entry_type == 'revenue' or not deferred_original_move_ids"
+                        string="Related Purchase(s)">
+                </button>
+                <button name="open_deferred_original_entry"
+                        class="oe_stat_button"
+                        icon="fa-bars"
+                        type="object"
+                        invisible="deferred_entry_type == 'expense' or not deferred_original_move_ids"
+                        string="Related Sale(s)">
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_deferred_entries_tree" model="ir.ui.view">
+        <field name="name">account.move.line.deferral.entries.list</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="default_order">date</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='tax_ids']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount_currency']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='analytic_distribution']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='matching_number']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='discount_date']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='discount_amount_currency']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_maturity']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount_residual']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount_residual_currency']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,247 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_winbooks_import
+#
+# Translators:
+# Wil Odoo, 2024
+# Aleš Pipan, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:46+0000\n"
+"PO-Revision-Date: 2024-09-25 09:44+0000\n"
+"Last-Translator: Aleš Pipan, 2025\n"
+"Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
+"Language: sl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3);\n"
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.winbooks_import_form
+msgid ""
+"<span invisible=\"only_open\"/>\n"
+"                    <span class=\"text-warning mb4 mt16\" "
+"invisible=\"only_open\">\n"
+"                        The export of data from Winbooks for closed years "
+"might contain unbalanced entries. However if you want to try to import "
+"everything, Odoo will set the difference of balance in a Suspense Account.\n"
+"                    </span>"
+msgstr ""
+"<span invisible=\"only_open\"/>\n"
+"                    <span class=\"text-warning mb4 mt16\" "
+"invisible=\"only_open\">\n"
+"                        Izvoz podatkov iz Winbooks za zaprta leta lahko "
+"vsebuje neuravnotežene vnose. Če pa želite poskusiti uvoziti vse, bo Odoo "
+"razliko stanja nastavil na začasnem računu.\n"
+"                    </span>"
+
+#. module: account_winbooks_import
+#: model:ir.model,name:account_winbooks_import.model_account_winbooks_import_wizard
+msgid "Account Winbooks import wizard"
+msgstr "Čarovnik za uvoz računov Winbooks"
+
+#. module: account_winbooks_import
+#: model:ir.model,name:account_winbooks_import.model_account_import_summary
+msgid "Account import summary view"
+msgstr "Povzetek uvoza računa"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+msgid "Accounting Settings"
+msgstr "Nastavitve računovodstva"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+msgid ""
+"At least one automatic counterpart has been created at import. This is "
+"probably an error. Please check entry lines with reference: Counterpart "
+"(generated at import from Winbooks)"
+msgstr ""
+"Pri uvozu je bil ustvarjen vsaj en samodejni dvojnik. Verjetno gre za "
+"napako. Preverite vnosne vrstice s sklicem: Dvojnik (ustvarjen pri uvozu iz "
+"Winbooks)"
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.winbooks_import_form
+msgid "Cancel"
+msgstr "Prekliči"
+
+#. module: account_winbooks_import
+#: model:ir.model,name:account_winbooks_import.model_res_company
+msgid "Companies"
+msgstr "Podjetja"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+msgid "Company Settings"
+msgstr "Nastavitve podjetja"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+msgid "Counterpart (generated at import from Winbooks)"
+msgstr "Dvojnik (ustvarjen ob uvozu iz Winbooks)"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__create_uid
+msgid "Created by"
+msgstr "Ustvaril"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__create_date
+msgid "Created on"
+msgstr "Ustvarjeno"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__display_name
+msgid "Display Name"
+msgstr "Prikazani naziv"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__zip_file
+msgid "File"
+msgstr "Datoteka"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.winbooks_import_form
+msgid "Import"
+msgstr "Uvozi"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_import_summary__import_summary_analytic_ids
+msgid "Import Summary Analytic"
+msgstr "Analitika povzetka uvoza"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_import_summary__import_summary_analytic_line_ids
+msgid "Import Summary Analytic Line"
+msgstr "Analitična vrstica povzetka uvoza"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_import_summary__import_summary_len_analytic
+msgid "Import Summary Len Analytic"
+msgstr "Povzetek uvoza Len Analytic"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_import_summary__import_summary_len_analytic_line
+msgid "Import Summary Len Analytic Line"
+msgstr "Povzetek uvoza Len Analitična vrstica"
+
+#. module: account_winbooks_import
+#. odoo-javascript
+#: code:addons/account_winbooks_import/static/src/xml/account_winbooks_import.xml:0
+msgid "Import WBK"
+msgstr "Uvozi WBK"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__only_open
+msgid "Import only open years"
+msgstr "Uvoz samo odprtih let"
+
+#. module: account_winbooks_import
+#: model:ir.model,name:account_winbooks_import.model_account_move_line
+msgid "Journal Item"
+msgstr "Postavka"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Zadnji posodobil"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__write_date
+msgid "Last Updated on"
+msgstr "Zadnjič posodobljeno"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,help:account_winbooks_import.field_account_move_line__winbooks_line_id
+msgid "Line ID that was used in Winbooks"
+msgstr "ID vrstice, ki je bil uporabljen v WinBooks"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+msgid ""
+"No data zip in the main archive. Please use the complete Winbooks export."
+msgstr "V glavnem arhivu ni zip datoteke. Uporabite celoten izvoz Winbooks."
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+msgid "Please define the country on your company."
+msgstr "Prosimo, opredelite državo vašega podjetja."
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.winbooks_import_form
+msgid "Stage Search"
+msgstr "Iskanje faze"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__suspense_code
+msgid "Suspense Account Code"
+msgstr "Koda začasnega računa"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+msgid "The code for the Suspense Account you entered doesn't match any account"
+msgstr "Koda za vneseni začasni račun se ne ujema z nobenim računom."
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,help:account_winbooks_import.field_account_winbooks_import_wizard__suspense_code
+msgid ""
+"This is the code of the account in which you want to put the counterpart of "
+"unbalanced moves. This might be an account from your Winbooks data, or an "
+"account that you created in Odoo before the import."
+msgstr ""
+"To je koda računa, v katerega želite vnesti protipostavko neuravnoteženih "
+"premikov. To je lahko račun iz vaših podatkov Winbooks ali račun, ki ste ga "
+"ustvarili v Odooju pred uvozom."
+
+#. module: account_winbooks_import
+#: model:ir.actions.act_window,name:account_winbooks_import.winbooks_import_action
+msgid "Winbooks Import"
+msgstr "Uvoz iz Winbooks"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_move_line__winbooks_line_id
+msgid "Winbooks Line"
+msgstr "Linija Winbooks"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,help:account_winbooks_import.field_account_winbooks_import_wizard__only_open
+msgid ""
+"Years closed in Winbooks are likely to have incomplete data. The counter "
+"part of incomplete entries will be set in a suspense account"
+msgstr ""
+"Za leta, zaključena v Winbooks, so podatki verjetno nepopolni. Protivrednost "
+"nepopolnih vnosov bo nastavljena na računu začasnih vnosov."
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+msgid "You should install a Fiscal Localization first."
+msgstr "Najprej morate namestiti fiskalno lokalizacijo."
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.account_import_summary_form
+msgid "account analytic lines imported"
+msgstr "uvožene analitične vrstice računa"
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.account_import_summary_form
+msgid "account analytics imported"
+msgstr "uvožena analitika računa"

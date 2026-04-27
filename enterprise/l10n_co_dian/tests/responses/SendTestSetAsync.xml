@@ -1,0 +1,24 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope"
+    xmlns:a="http://www.w3.org/2005/08/addressing"
+    xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+    <s:Header>
+        <a:Action s:mustUnderstand="1">http://wcf.dian.colombia/IWcfDianCustomerServices/SendTestSetAsyncResponse</a:Action>
+        <o:Security s:mustUnderstand="1"
+            xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <u:Timestamp u:Id="_0">
+                <u:Created>2024-02-14T14:24:40.318Z</u:Created>
+                <u:Expires>2024-02-14T14:29:40.318Z</u:Expires>
+            </u:Timestamp>
+        </o:Security>
+    </s:Header>
+    <s:Body>
+        <SendTestSetAsyncResponse xmlns="http://wcf.dian.colombia">
+            <SendTestSetAsyncResult xmlns:b="http://schemas.datacontract.org/2004/07/UploadDocumentResponse"
+                xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+                <b:ErrorMessageList i:nil="true"
+                    xmlns:c="http://schemas.datacontract.org/2004/07/XmlParamsResponseTrackId"/>
+                <b:ZipKey>42424242</b:ZipKey>
+            </SendTestSetAsyncResult>
+        </SendTestSetAsyncResponse>
+    </s:Body>
+</s:Envelope>

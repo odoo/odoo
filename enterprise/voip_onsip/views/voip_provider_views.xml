@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="voip_provider_tree_view_inherit" model="ir.ui.view">
+        <field name="name">voip.provider.list.view.inherit</field>
+        <field name="model">voip.provider</field>
+        <field name="inherit_id" ref="voip.voip_provider_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='pbx_ip']" position="attributes">
+                <attribute name="string">OnSIP Domain</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

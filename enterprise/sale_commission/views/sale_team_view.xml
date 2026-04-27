@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_team_commission_view_form" model="ir.ui.view">
+        <field name="name">crm.team.form</field>
+        <field name="model">crm.team</field>
+        <field name="priority">9</field>
+        <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
+        <field name="arch" type="xml">
+            <group name="left" position="after">
+                <group string="Commission Plans">
+                    <field name="commission_plan_ids" nolabel="1">
+                        <list>
+                            <field name="name"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </list>
+                    </field>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="crm_team_member_commission_view_form" model="ir.ui.view">
+        <field name="name">crm.team.member.view.form</field>
+        <field name="model">crm.team.member</field>
+        <field name="inherit_id" ref="sales_team.crm_team_member_view_form"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <group name="member_partner_info" position="inside">
+                <fields name="filtered_commission_plan_users_ids"/>
+            </group>
+        </field>
+    </record>
+</odoo>

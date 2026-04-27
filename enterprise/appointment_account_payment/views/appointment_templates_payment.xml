@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="appointment_progress_bar" inherit_id="appointment.appointment_progress_bar">
+    <xpath expr="//li[contains(@t-att-class, 'step==STEP_FORM')]" position="after">
+        <t t-set="STEP_PAYMENT" t-value="35"/>
+        <li t-if="appointment_type.has_payment_step and appointment_type.product_id"
+            t-att-class="'d-flex align-items-center ' + (step==STEP_PAYMENT and 'fw-bold' or step&gt;STEP_PAYMENT and '' or 'text-muted')">
+            <span>Payment</span>
+            <span class="d-inline-block mx-sm-3 fa fa-angle-right text-muted fs-5"/>
+        </li>
+    </xpath>
+</template>
+
+<template id="appointment_payment" name="Appointment Payment Providers">
+    <t t-set="no_breadcrumbs" t-value="True"/>
+    <t t-call="portal.portal_layout">
+        <div id="wrap" class="bg-o-color-4 h-100 pb-4 px-4">
+            <t t-set="o_portal_fullwidth_alert" groups="appointment.group_appointment_manager">
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url" t-value="'/odoo/action-appointment.appointment_type_action/%s' % appointment_type.id"/>
+                    <t t-set="custom_html">This is a preview of the customer appointment payment form.</t>
+                </t>
+            </t>
+            <div class="container mt-4">
+                <nav class="d-print-none d-flex justify-content-between">
+                    <t t-call="appointment.appointment_progress_bar">
+                        <t t-set="step" t-value="35"/>
+                    </t>
+                </nav>
+            </div>
+            <div class="oe_structure container o_appointment o_appointment_payment">
+                <t t-set="is_chosen_assign_method" t-value="appointment_type.assign_method != 'time_auto_assign'"/>
+                <t t-set="based_on_users" t-value="appointment_type.schedule_based_on == 'users'"/>
+                <t t-set="staff_user" t-value="booking.staff_user_id"/>
+                <t t-set="resources" t-value="booking.booking_line_ids.appointment_resource_id"/>
+                <div class="d-flex align-items-baseline justify-content-between mt-4">
+                    <h4 class="me-2">
+                        Payment for "<span t-out="appointment_type.name"/>"
+                    </h4>
+                    <a t-att-href="cancel_booking_route"><i class="fa fa-pencil fa-fw me-1"/>Edit my appointment</a>
+                </div>
+                <div t-if="not amount" class="text-center alert alert-info mt-4">
+                    There is nothing to pay.
+                </div>
+                <div t-elif="invoice_state == 'paid'" class="text-center alert alert-success mt-4">
+                    This invoice is already paid for.
+                </div>
+                <div t-elif="not currency" class="text-center alert alert-warning mt-4">
+                    <strong>Warning</strong> The currency is missing or incorrect.
+                </div>
+                <div t-elif="not partner_id" class="text-center alert alert-warning mt-4">
+                    <strong>Warning</strong> You must be logged in to pay.
+                </div>
+                <div t-elif="company_mismatch">
+                    <t t-call="payment.company_mismatch_warning mt-4"/>
+                </div>
+                <div t-else="" class="row gx-0">
+                    <div t-if="partner_is_different" class="col-12 alert alert-warning text-center mb-2 py-2">
+                        <strong>Warning</strong> Make sure you are logged in as the right partner before making this payment.
+                    </div>
+                    <div class="o_cc o_cc2 row row-cols-1 row-cols-md-2 mx-0 py-2 rounded">
+                        <t t-call="payment.summary_item">
+                            <t t-set="name" t-value="'amount'"/>
+                            <t t-set="label">Amount</t>
+                            <t t-set="value" t-value="amount"/>
+                            <t t-set="options"
+                                t-value="{'widget': 'monetary', 'display_currency': currency}"
+                            />
+                        </t>
+                        <t t-call="payment.summary_item">
+                            <t t-set="name" t-value="'service'"/>
+                            <t t-set="label">Service</t>
+                            <t t-set="value" t-value="booking.product_id.name"/>
+                            <t t-set="include_separator" t-value="True"/>
+                        </t>
+                    </div>
+                    <t t-call="payment.form"/>
+                </div>
+                <div class="oe_structure"/>
+            </div>
+        </div>
+    </t>
+</template>
+
+</odoo>

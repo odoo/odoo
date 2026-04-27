@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cce20="http://www.sat.gob.mx/ComercioExterior20" xmlns:implocal="http://www.sat.gob.mx/implocal" xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd" Version="4.0" Sello="___ignore___" Fecha="___ignore___" Folio="___ignore___" Serie="___ignore___" FormaPago="99" NoCertificado="___ignore___" Certificado="___ignore___" SubTotal="47708.64" Moneda="MXN" Total="60047.90" TipoDeComprobante="I" Exportacion="01" MetodoPago="PPD" LugarExpedicion="20914">
+	<cfdi:Emisor Rfc="EKU9003173C9" Nombre="ESCUELA KEMPER URGATE" RegimenFiscal="601"/>
+	<cfdi:Receptor Rfc="ICV060329BY0" Nombre="INMOBILIARIA CVA" DomicilioFiscalReceptor="33826" RegimenFiscalReceptor="601" UsoCFDI="G03"/>
+	<cfdi:Conceptos>
+		<cfdi:Concepto ClaveProdServ="01010101" NoIdentificacion="product_mx" Cantidad="12.000000" ClaveUnidad="KGM" Unidad="KG" Descripcion="[product_mx] product_mx" ValorUnitario="457.920000" Importe="5495.040000" ObjetoImp="02">
+			<cfdi:Impuestos>
+				<cfdi:Traslados>
+					<cfdi:Traslado Base="5495.040000" Importe="1456.185600" Impuesto="003" TipoFactor="Tasa" TasaOCuota="0.265000"/>
+					<cfdi:Traslado Base="6951.225600" Importe="1112.196096" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000"/>
+				</cfdi:Traslados>
+			</cfdi:Impuestos>
+		</cfdi:Concepto>
+		<cfdi:Concepto ClaveProdServ="01010101" NoIdentificacion="product_mx" Cantidad="12.000000" ClaveUnidad="KGM" Unidad="KG" Descripcion="[product_mx] product_mx" ValorUnitario="278.040000" Importe="3336.480000" ObjetoImp="02">
+			<cfdi:Impuestos>
+				<cfdi:Traslados>
+					<cfdi:Traslado Base="3336.480000" Importe="884.167200" Impuesto="003" TipoFactor="Tasa" TasaOCuota="0.265000"/>
+					<cfdi:Traslado Base="4220.647200" Importe="675.303552" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000"/>
+				</cfdi:Traslados>
+			</cfdi:Impuestos>
+		</cfdi:Concepto>
+		<cfdi:Concepto ClaveProdServ="01010101" NoIdentificacion="product_mx" Cantidad="12.000000" ClaveUnidad="KGM" Unidad="KG" Descripcion="[product_mx] product_mx" ValorUnitario="539.760000" Importe="6477.120000" ObjetoImp="02">
+			<cfdi:Impuestos>
+				<cfdi:Traslados>
+					<cfdi:Traslado Base="6477.120000" Importe="1716.436800" Impuesto="003" TipoFactor="Tasa" TasaOCuota="0.265000"/>
+					<cfdi:Traslado Base="8193.556800" Importe="1310.969088" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000"/>
+				</cfdi:Traslados>
+			</cfdi:Impuestos>
+		</cfdi:Concepto>
+		<cfdi:Concepto ClaveProdServ="01010101" NoIdentificacion="product_mx" Cantidad="36.000000" ClaveUnidad="KGM" Unidad="KG" Descripcion="[product_mx] product_mx" ValorUnitario="900.000000" Importe="32400.000000" ObjetoImp="02">
+			<cfdi:Impuestos>
+				<cfdi:Traslados>
+					<cfdi:Traslado Base="32400.000000" Importe="5184.000000" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000"/>
+				</cfdi:Traslados>
+			</cfdi:Impuestos>
+		</cfdi:Concepto>
+	</cfdi:Conceptos>
+	<cfdi:Impuestos TotalImpuestosTrasladados="12339.26">
+		<cfdi:Traslados>
+			<cfdi:Traslado Base="15308.64" Importe="4056.79" Impuesto="003" TipoFactor="Tasa" TasaOCuota="0.265000"/>
+			<cfdi:Traslado Base="51765.43" Importe="8282.47" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000"/>
+		</cfdi:Traslados>
+	</cfdi:Impuestos>
+	<cfdi:Complemento>
+		<tfd:TimbreFiscalDigital xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" Version="1.1" UUID="___ignore___" FechaTimbrado="___ignore___" NoCertificadoSAT="___ignore___" RfcProvCertif="___ignore___" SelloCFD="___ignore___" SelloSAT="___ignore___"/>
+	</cfdi:Complemento>
+</cfdi:Comprobante>

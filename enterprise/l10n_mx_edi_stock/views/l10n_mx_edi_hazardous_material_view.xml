@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_l10n_mx_edi_hazardous_material_list">
+            <field name="name">view.l10n_mx_edi.hazardous.material.list</field>
+            <field name="model">l10n_mx_edi.hazardous.material</field>
+            <field name="arch" type="xml">
+                <list string="Mexico Hazardous Material Catalog">
+                    <field name="code"/>
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_l10n_mx_edi_hazardous_material_form">
+            <field name="name">view.l10n_mx_edi.hazardous.material.form</field>
+            <field name="model">l10n_mx_edi.hazardous.material</field>
+            <field name="arch" type="xml">
+                <form string="Mexico Hazardous Material Catalog">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="code"/>
+                                <field name="name"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
